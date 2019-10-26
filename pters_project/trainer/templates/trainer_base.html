@@ -628,16 +628,16 @@
     
 
     $('#root_content').on("touchmove", function(e){
+        console.log("touchmove")
         e.stopPropagation();
-        console.log("eee");
-        let a = $('body').css('overflow');
         let b = $('#root_content').css('height');
 
-        $('#debug_toolbar').show().text(a, b).fadeOut().css("overflow-y", "auto");
+        $('#debug_toolbar').show().text(b).fadeOut().css("overflow-y", "auto");
     })
 
     $('#root_content').on("touchstart", function(e){
-        // e.stopPropagation();
+        e.stopPropagation();
+        console.log("touchstart")
         // $('#debug_toolbar').show().text("start").fadeOut().css("overflow-y", "auto");
     })
     
