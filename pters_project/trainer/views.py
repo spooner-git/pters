@@ -595,6 +595,7 @@ class GetMemberIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         current_member_data = func_get_member_ing_list(class_id, request.user.id, keyword)
         finish_member_num = len(func_get_class_member_end_list(class_id, keyword))
         sort_info = int(member_sort)
+
         if sort_info == SORT_MEMBER_NAME:
             current_member_data = sorted(current_member_data, key=lambda elem: elem['member_name'],
                                          reverse=int(sort_order_by))
@@ -617,6 +618,7 @@ class GetMemberIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         #
         # context['member_data'] = member_data
         # end_dt = timezone.now()
+
         return JsonResponse({'current_member_data': current_member_data, 'finish_member_num': finish_member_num},
                             json_dumps_params={'ensure_ascii': True})
 
@@ -2673,7 +2675,7 @@ class GetLectureIngMemberListViewAjax(LoginRequiredMixin, AccessTestMixin, View)
                                                    member_ticket_tb__ticket_tb__use=USE,
                                                    member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
                                                    member_ticket_tb__use=USE,
-                                                   use=USE).order_by('member_ticket_tb__member_id',
+                                                   use=USE).order_by('member_ticket_tb__member__name',
                                                                      'member_ticket_tb__end_date')
 
             member_list = func_get_member_from_member_ticket_list(all_class_member_ticket_list, lecture_id,
