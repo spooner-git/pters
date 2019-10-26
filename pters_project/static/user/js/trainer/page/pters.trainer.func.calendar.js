@@ -1499,16 +1499,18 @@ class Calendar {
 
                 if( Math.abs(ts - tm) > Math.abs(tsy - tmy)){
                     if(swiper_x == false){
-                        $('#root_content').on('touchmove', (e) => {
-                            if(e.cancelable){
+                        if(os == IOS){
+                            $('#root_content').on('touchmove', (e) => {
+                                if(e.cancelable){
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    return false;
+                                }
                                 // e.preventDefault();
                                 // e.stopPropagation();
-                                return false;
-                            }
-                            // e.preventDefault();
-                            // e.stopPropagation();
-                            // return false;
-                        });
+                                // return false;
+                            });
+                        }
                         swiper_x = true;
                     }
                     
@@ -1516,13 +1518,17 @@ class Calendar {
                     if(ts - tm>x_threshold){
                         if(this.cal_type == "month"){this.move_month("next");}else if(this.cal_type == "week"){this.move_week("next");}
                         if(swiper_x == true){
-                            $('#root_content').off('touchmove');
+                            if(os == IOS){
+                                $('#root_content').off('touchmove');
+                            }
                             swiper_x = false;
                         }
                     }else if(ts - tm<-x_threshold){
                         if(this.cal_type == "month"){this.move_month("prev");}else if(this.cal_type == "week"){this.move_week("prev");}
                         if(swiper_x == true){
-                            $('#root_content').off('touchmove');
+                            if(os == IOS){
+                                $('#root_content').off('touchmove');
+                            }
                             swiper_x = false;
                         }
                     }
