@@ -1541,7 +1541,7 @@ class Calendar {
             break;
 
         case "off":
-            $('#debug_toolbar').show().text("on");
+            $('#debug_toolbar').show().text("off");
             selector_body.off("touchstart").off("touchend").off('touchmove');
             break;
         }
