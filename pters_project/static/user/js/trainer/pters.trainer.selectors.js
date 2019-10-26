@@ -1577,12 +1577,24 @@ class TimeSelector2{
             mouseWheel : true,
             deceleration:0.005,
             bounce: false,
+            onBeforeScrollStart: function ( e ) {
+                if ( this.absDistX > (this.absDistY + 5 ) ) {
+                    // user is scrolling the x axis, so prevent the browsers' native scrolling
+                    e.preventDefault();
+                }
+            }
         });
         
         this.minute_scroll = new IScroll(`#minute_wrap_${this.instance}`, {
             mouseWheel : true,
             deceleration:0.005,
             bounce: false,
+            onBeforeScrollStart: function ( e ) {
+                if ( this.absDistX > (this.absDistY + 5 ) ) {
+                    // user is scrolling the x axis, so prevent the browsers' native scrolling
+                    e.preventDefault();
+                }
+            }
         });
 
         this.set_scroll_snap();
@@ -1638,7 +1650,6 @@ class TimeSelector2{
                     document.querySelector('.selector_indicator').style.backgroundColor = 'unset';
                 }
             }
-            e.stopPropagation();
         });
 
         self.hour_scroll.on('scrollStart', function (e){
@@ -1672,7 +1683,6 @@ class TimeSelector2{
                     document.querySelector('.selector_indicator').style.backgroundColor = 'unset';
                 }
             }
-            e.stopPropagation();
         });
 
         self.minute_scroll.on('scrollStart', function (){
