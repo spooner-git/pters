@@ -1424,7 +1424,7 @@ class Calendar {
                                         <div class="cal_upper_box">
                                             <div class="cal_date_display page_title">
                                                 <div onclick="${this.instance}.switch_cal_type()" style="display:inline-block;">
-                                                    <span class="display_week">11${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).month[0] :null}월 
+                                                    <span class="display_week">${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).month[0] :null}월 
                                                                             ${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).date[0] :null}일 - 
                                                                             ${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).month[6]: null}월 
                                                                             ${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).date[6]: null}일
@@ -1483,6 +1483,7 @@ class Calendar {
 
         switch(onoff){
         case "on":
+            $('#debug_toolbar').show().text("on");
             selector_body.off("touchstart").on("touchstart", (e) => {
             // $(document).off("touchstart", click_body).on("touchstart", click_body, (e)=>{
                 ts = e.originalEvent.touches[0].clientX;
@@ -1540,6 +1541,7 @@ class Calendar {
             break;
 
         case "off":
+            $('#debug_toolbar').show().text("on");
             selector_body.off("touchstart").off("touchend").off('touchmove');
             break;
         }
