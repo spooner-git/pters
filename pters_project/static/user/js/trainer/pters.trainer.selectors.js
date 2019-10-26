@@ -1577,23 +1577,26 @@ class TimeSelector2{
             mouseWheel : true,
             deceleration:0.005,
             bounce: false,
-
+            bindToWrapper: true
         });
         
         this.minute_scroll = new IScroll(`#minute_wrap_${this.instance}`, {
             mouseWheel : true,
             deceleration:0.005,
             bounce: false,
+            bindToWrapper: true
         });
 
         this.set_scroll_snap();
     }
 
     set_iscroll_minute(){
+        this.minute_scroll.destroy();
         this.minute_scroll = new IScroll(`#minute_wrap_${this.instance}`, {
             mouseWheel : true,
             deceleration:0.005,
             bounce: false,
+            bindToWrapper: true
         });
         this.set_scroll_snap();
     }
@@ -1770,14 +1773,10 @@ class TimeSelector2{
         this.store = this.get_selected_data();
         this.option.callback_when_set(this.store); 
         layer_popup.close_layer_popup();
-        this.hour_scroll.destroy();
-        this.minute_scroll.destroy();
     }
 
     upper_left_button(){
         layer_popup.close_layer_popup();
-        this.hour_scroll.destroy();
-        this.minute_scroll.destroy();
     }
 
 }
