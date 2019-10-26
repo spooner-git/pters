@@ -1600,44 +1600,44 @@ class TimeSelector2{
     set_scroll_snap (){
         let self = this;
         self.hour_scroll.on('scrollEnd', function (e){
-            if(self.user_scroll_hour == true){
-                self.user_scroll_hour = false;
-                let posY = this.y;
-                let min = posY-posY%40;
-                let max = min - 40;
+            // if(self.user_scroll_hour == true){
+            //     self.user_scroll_hour = false;
+            //     let posY = this.y;
+            //     let min = posY-posY%40;
+            //     let max = min - 40;
 
-                let snap;
+            //     let snap;
                 
-                if(Math.abs(posY - max) < Math.abs(posY - min)){
-                    snap = max;
-                }else{
-                    snap = min;
-                }
+            //     if(Math.abs(posY - max) < Math.abs(posY - min)){
+            //         snap = max;
+            //     }else{
+            //         snap = min;
+            //     }
                 
-                // self.hour_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
-                $(`${self.target.install} li[data-hpos="${Math.abs(self.hour_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
-                $(`${self.target.install} li[data-hpos="${Math.abs(self.hour_scroll.y)}"]`).css('color', '#1e1e1e');
+            //     self.hour_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
+            //     $(`${self.target.install} li[data-hpos="${Math.abs(self.hour_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+            //     $(`${self.target.install} li[data-hpos="${Math.abs(self.hour_scroll.y)}"]`).css('color', '#1e1e1e');
 
-                let hour = self.get_selected_data().data.hour;
-                if(hour >= self.option.range.end){
-                    // self.minute_end = 5;
-                    self.render_minute_list(5);
-                    self.set_iscroll_minute();
-                    self.go_snap(hour - self.option.range.start, 0);
-                }else{
-                    // self.minute_end = 60;
-                    self.render_minute_list();
-                    self.set_iscroll_minute();
-                    self.go_snap(hour - self.option.range.start, 0);
-                }
+            //     let hour = self.get_selected_data().data.hour;
+            //     if(hour >= self.option.range.end){
+            //         // self.minute_end = 5;
+            //         self.render_minute_list(5);
+            //         self.set_iscroll_minute();
+            //         self.go_snap(hour - self.option.range.start, 0);
+            //     }else{
+            //         // self.minute_end = 60;
+            //         self.render_minute_list();
+            //         self.set_iscroll_minute();
+            //         self.go_snap(hour - self.option.range.start, 0);
+            //     }
 
-                let data_check = self.check_minimum_time();
-                if(data_check != true){
-                    document.querySelector('.selector_indicator').style.backgroundColor = '#fe4e6547';
-                }else{
-                    document.querySelector('.selector_indicator').style.backgroundColor = 'unset';
-                }
-            }
+            //     let data_check = self.check_minimum_time();
+            //     if(data_check != true){
+            //         document.querySelector('.selector_indicator').style.backgroundColor = '#fe4e6547';
+            //     }else{
+            //         document.querySelector('.selector_indicator').style.backgroundColor = 'unset';
+            //     }
+            // }
         });
 
         self.hour_scroll.on('scrollStart', function (e){
@@ -1645,32 +1645,32 @@ class TimeSelector2{
         });
 
         self.minute_scroll.on('scrollEnd', function (e){
-            if(self.user_scroll_minute == true){
-                self.user_scroll_minute = false;
-                let posY = this.y;
-                let min = posY-posY%40;
-                let max = min - 40;
+            // if(self.user_scroll_minute == true){
+            //     self.user_scroll_minute = false;
+            //     let posY = this.y;
+            //     let min = posY-posY%40;
+            //     let max = min - 40;
 
-                let snap;
+            //     let snap;
                 
-                if(Math.abs(posY - max) < Math.abs(posY - min)){
-                    snap = max;
-                }else{
-                    snap = min;
-                }
+            //     if(Math.abs(posY - max) < Math.abs(posY - min)){
+            //         snap = max;
+            //     }else{
+            //         snap = min;
+            //     }
                 
                     
-                // self.minute_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
-                $(`${self.target.install} li[data-mpos="${Math.abs(self.minute_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
-                $(`${self.target.install} li[data-mpos="${Math.abs(self.minute_scroll.y)}"]`).css('color', '#1e1e1e');
+            //     self.minute_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
+            //     $(`${self.target.install} li[data-mpos="${Math.abs(self.minute_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+            //     $(`${self.target.install} li[data-mpos="${Math.abs(self.minute_scroll.y)}"]`).css('color', '#1e1e1e');
                 
-                let data_check = self.check_minimum_time();
-                if(data_check != true){
-                    document.querySelector('.selector_indicator').style.backgroundColor = '#fe4e6547';
-                }else{
-                    document.querySelector('.selector_indicator').style.backgroundColor = 'unset';
-                }
-            }
+            //     let data_check = self.check_minimum_time();
+            //     if(data_check != true){
+            //         document.querySelector('.selector_indicator').style.backgroundColor = '#fe4e6547';
+            //     }else{
+            //         document.querySelector('.selector_indicator').style.backgroundColor = 'unset';
+            //     }
+            // }
         });
 
         self.minute_scroll.on('scrollStart', function (){
@@ -1682,8 +1682,8 @@ class TimeSelector2{
         let initial_pos_hour = (-hour)*40;
         let initial_pos_minute = -(minute)*8;
 
-        // this.hour_scroll.scrollTo(0, initial_pos_hour, 0, IScroll.utils.ease.bounce);
-        // this.minute_scroll.scrollTo(0, initial_pos_minute, 0, IScroll.utils.ease.bounce);
+        this.hour_scroll.scrollTo(0, initial_pos_hour, 0, IScroll.utils.ease.bounce);
+        this.minute_scroll.scrollTo(0, initial_pos_minute, 0, IScroll.utils.ease.bounce);
 
         $(`${this.target.install} li[data-hpos="${Math.abs(this.hour_scroll.y)}"]`).css('color', '#1e1e1e');
         $(`${this.target.install} li[data-mpos="${Math.abs(this.minute_scroll.y)}"]`).css('color', '#1e1e1e');
