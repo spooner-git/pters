@@ -628,10 +628,16 @@
     
 
     $('#root_content').on("touchmove", function(e){
+        e.stopPropagation();
         console.log("eee");
         let a = $('body').css('overflow');
         let b = $('html').css('overflow');
         $('#debug_toolbar').show().text(a, b).fadeOut().css("overflow-y", "auto");
+    })
+
+    $('#root_content').on("touchstart", function(e){
+        e.stopPropagation();
+        $('#debug_toolbar').show().text("start").fadeOut().css("overflow-y", "auto");
     })
     
 
