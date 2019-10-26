@@ -1614,7 +1614,7 @@ class TimeSelector2{
                     snap = min;
                 }
                 
-                self.hour_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
+                // self.hour_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
                 $(`${self.target.install} li[data-hpos="${Math.abs(self.hour_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
                 $(`${self.target.install} li[data-hpos="${Math.abs(self.hour_scroll.y)}"]`).css('color', '#1e1e1e');
 
@@ -1631,12 +1631,12 @@ class TimeSelector2{
                     self.go_snap(hour - self.option.range.start, 0);
                 }
 
-                // let data_check = self.check_minimum_time();
-                // if(data_check != true){
-                //     document.querySelector('.selector_indicator').style.backgroundColor = '#fe4e6547';
-                // }else{
-                //     document.querySelector('.selector_indicator').style.backgroundColor = 'unset';
-                // }
+                let data_check = self.check_minimum_time();
+                if(data_check != true){
+                    document.querySelector('.selector_indicator').style.backgroundColor = '#fe4e6547';
+                }else{
+                    document.querySelector('.selector_indicator').style.backgroundColor = 'unset';
+                }
             }
         });
 
@@ -1660,16 +1660,16 @@ class TimeSelector2{
                 }
                 
                     
-                self.minute_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
+                // self.minute_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
                 $(`${self.target.install} li[data-mpos="${Math.abs(self.minute_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
                 $(`${self.target.install} li[data-mpos="${Math.abs(self.minute_scroll.y)}"]`).css('color', '#1e1e1e');
                 
-                // let data_check = self.check_minimum_time();
-                // if(data_check != true){
-                //     document.querySelector('.selector_indicator').style.backgroundColor = '#fe4e6547';
-                // }else{
-                //     document.querySelector('.selector_indicator').style.backgroundColor = 'unset';
-                // }
+                let data_check = self.check_minimum_time();
+                if(data_check != true){
+                    document.querySelector('.selector_indicator').style.backgroundColor = '#fe4e6547';
+                }else{
+                    document.querySelector('.selector_indicator').style.backgroundColor = 'unset';
+                }
             }
         });
 
@@ -1682,8 +1682,8 @@ class TimeSelector2{
         let initial_pos_hour = (-hour)*40;
         let initial_pos_minute = -(minute)*8;
 
-        this.hour_scroll.scrollTo(0, initial_pos_hour, 0, IScroll.utils.ease.bounce);
-        this.minute_scroll.scrollTo(0, initial_pos_minute, 0, IScroll.utils.ease.bounce);
+        // this.hour_scroll.scrollTo(0, initial_pos_hour, 0, IScroll.utils.ease.bounce);
+        // this.minute_scroll.scrollTo(0, initial_pos_minute, 0, IScroll.utils.ease.bounce);
 
         $(`${this.target.install} li[data-hpos="${Math.abs(this.hour_scroll.y)}"]`).css('color', '#1e1e1e');
         $(`${this.target.install} li[data-mpos="${Math.abs(this.minute_scroll.y)}"]`).css('color', '#1e1e1e');
@@ -1731,6 +1731,7 @@ class TimeSelector2{
                                 </div>
                                 <div class="time_selector_hour_wrap select_wrapper"></div>
                                 <div class="time_selector_minute_wrap select_wrapper"></div>
+                                <div class="selector_indicator"></div>
                             </div>`
         };
     }
