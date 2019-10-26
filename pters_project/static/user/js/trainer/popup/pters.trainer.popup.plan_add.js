@@ -3,6 +3,7 @@ class Plan_add{
         this.target = {install: install_target, toolbox:'section_plan_add_toolbox', content:'section_plan_add_content'};
         this.instance = instance;
         this.form_id = 'id_plan_add_form';
+        this.data_from_external = data_from_external;
 
         this.list_type = "lesson";
 
@@ -44,6 +45,7 @@ class Plan_add{
             duplicate_plan_when_add:[]
         };
 
+        this.class_hour = 30;
         this.work_time = {start_hour:0, end_hour:24};
 
         //팝업의 날짜, 시간등의 입력란을 미리 외부에서 온 데이터로 채워서 보여준다.
@@ -135,7 +137,9 @@ class Plan_add{
 
         this.render();
         Setting_reserve_func.read((data)=>{
+            this.class_hour = 60; // 테스트
             this.work_time = calendar.calc_worktime_display(data);
+            this.set_initial_data(this.data_from_external);
             this.render();
         });
         func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
@@ -150,8 +154,44 @@ class Plan_add{
         let user_data_time = this.user_data.user_selected_time;
         this.data.start_time = user_data_time.hour == null ? null : `${user_data_time.hour}:${user_data_time.minute}`;
         this.data.start_time_text = user_data_time.text;
-        this.data.end_time = user_data_time.hour2 == null ? null : `${user_data_time.hour2}:${user_data_time.minute2}`;
-        this.data.end_time_text = user_data_time.text2;
+        // this.data.end_time = user_data_time.hour2 == null ? null : `${user_data_time.hour2}:${user_data_time.minute2}`;
+        // this.data.end_time_text = user_data_time.text2;
+        // this.data.end_time = user_data_time.hour2 == null ? null : `${user_data_time.hour2}:${user_data_time.minute2}`;
+        // this.data.end_time_text = user_data_time.text2;
+
+        // let end_time_hour = TimeRobot.add_time(user_data_time.hour, user_data_time.minute, 0, this.class_hour).hour;
+        // let end_time_min = TimeRobot.add_time(user_data_time.hour, user_data_time.minute, 0, this.class_hour).minute;
+        // let end_time = TimeRobot.hm_to_hhmm(`${end_time_hour}:${end_time_min}`).complete;
+        // let end_time_text = TimeRobot.to_text(end_time_hour, end_time_min);
+
+        let end_time_calc = this.calc_end_time_by_start_time(user_data_time, this.class_hour, this.work_time.end_hour);
+        this.data.end_time = end_time_calc.data;
+        this.data.end_time_text = end_time_calc.text;
+    }
+
+    calc_end_time_by_start_time(start_time, class_hour, work_time_end){
+        let end_time_hour = TimeRobot.add_time(start_time.hour, start_time.minute, 0, class_hour).hour;
+        let end_time_min = TimeRobot.add_time(start_time.hour, start_time.minute, 0, class_hour).minute;
+        if(start_time.hour == 24){
+            end_time_hour = 24;
+        }
+        if(end_time_hour >= work_time_end){
+            end_time_min = 0;
+        }
+
+        let end_time = TimeRobot.hm_to_hhmm(`${end_time_hour}:${end_time_min}`).complete;
+        let end_time_text = TimeRobot.to_text(end_time_hour, end_time_min);
+        let hour = TimeRobot.hm_to_hhmm(`${end_time_hour}:${end_time_min}`).hour;
+        let minute = TimeRobot.hm_to_hhmm(`${end_time_hour}:${end_time_min}`).minute;
+
+        if(start_time.hour == null && start_time.minute == null){
+            end_time = null;
+            end_time_text = null;
+            hour = null;
+            minute = null;
+        }
+
+        return {data:end_time, text:end_time_text, hour:hour, minute:minute};
     }
 
     clear(){
@@ -356,12 +396,16 @@ class Plan_add{
                 time_selector = new TimeSelector2('#wrapper_popup_time_selector_function', null, {myname:'time', title:'시작 시각', data:{hour:hour, minute:minute}, range:{start:range_start, end:range_end},
                                                                                                 callback_when_set: (object)=>{
                                                                                                     this.start_time = object;
-                                                                                                    if(this.data.end_time != null){
-                                                                                                        let compare = TimeRobot.compare(`${object.data.hour}:${object.data.minute}`, this.data.end_time);
-                                                                                                        if(compare == true){
-                                                                                                            this.end_time = object;
-                                                                                                        }
-                                                                                                    }
+                                                                                                    // if(this.data.end_time != null){
+                                                                                                    //     let compare = TimeRobot.compare(`${object.data.hour}:${object.data.minute}`, this.data.end_time);
+                                                                                                    //     if(compare == true){
+                                                                                                    //         this.end_time = object;
+                                                                                                    //     }
+                                                                                                    // }
+
+                                                                                                    let end_time = this.calc_end_time_by_start_time(object.data, this.class_hour, this.work_time.end_hour);
+                                                                                                    let end_time_object = {data:{hour:end_time.hour, minute:end_time.minute}, text:end_time.text};
+                                                                                                    this.end_time = end_time_object;
 
                                                                                                     this.check_duplicate_plan_exist((data)=>{
                                                                                                         this.data.duplicate_plan_when_add = data;
