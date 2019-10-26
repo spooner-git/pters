@@ -150,7 +150,7 @@ class Plan_view{
         this.data.start_time = data.schedule_info[0].start_time;
         this.data.start_time_text = TimeRobot.to_text(data.schedule_info[0].start_time.split(':')[0], data.schedule_info[0].start_time.split(':')[1])+' 부터';
         this.data.end_time = data.schedule_info[0].end_time;
-        this.data.end_time_text = TimeRobot.to_text(data.schedule_info[0].end_time.split(':')[0], data.schedule_info[0].end_time.split(':')[1])+' 까지 ('+TimeRobot.diff_min(data.schedule_info[0].start_time, data.schedule_info[0].end_time)+'분 진행)';
+        this.data.end_time_text = TimeRobot.to_text(data.schedule_info[0].end_time.split(':')[0], data.schedule_info[0].end_time.split(':')[1])+' 까지 <span style="font-size:11px;">('+TimeRobot.diff_min(data.schedule_info[0].start_time, data.schedule_info[0].end_time)+'분 진행)</span>';
         this.data.lecture_color = data.schedule_info[0].lecture_ing_color_cd;
         this.data.lecture_font_color = data.schedule_info[0].lecture_ing_font_color_cd;
         this.data.lecture_max_num = data.schedule_info[0].lecture_max_member_num;
@@ -448,7 +448,7 @@ class Plan_view{
         let id = 'select_end_time';
         let title = this.data.end_time_text == null ? '종료 시각*' : this.data.end_time_text;
         let icon = '/static/common/icon/icon_clock_white.png';
-        let icon_r_visible = HIDE;
+        let icon_r_visible = NONE;
         let icon_r_text = "";
         // let style = null;
         let style = this.data.start_time == this.data.end_time && this.data.end_time != null ? {"color":"#fe4e65"} : null;
