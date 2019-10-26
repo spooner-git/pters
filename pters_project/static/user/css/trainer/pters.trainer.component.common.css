@@ -701,10 +701,11 @@ input:disabled{
 	line-height: 24px;
 	/*vertical-align: middle;*/
 }
-.list_type_tab_wrap > div{
+.list_type_tab_wrap > .list_tab_content{
 	position: relative;
 	display: inline-block;
-	width: 36px;
+	min-width: 36px;
+	width: auto;
 	font-size: 13px;
 	color: #b8b4b4;
 	font-weight: bold;
@@ -714,6 +715,17 @@ input:disabled{
 	letter-spacing: -0.6px;
 	vertical-align: middle;
 	cursor: pointer;
+}
+.list_type_tab_wrap > .list_tab_divider{
+	position: relative;
+	display: inline-block;
+	width: 2px; 
+	height: 12px;
+	line-height: 24px;
+	letter-spacing: -0.6px;
+	vertical-align: middle;
+	background-color: #f5f2f3; 
+	margin:8px;
 }
 .list_sort_select_wrap{
 	float: right;

@@ -315,9 +315,9 @@ class Member {
                                     <div class="member_search_tool"></div>
                                     <div class="member_bottom_tools_wrap">
                                         <div class="list_type_tab_wrap">
-                                            <div onclick="${this.instance}.switch_type('ing');" class="${this.list_type == "ing" ? "tab_selected": ""}">진행중</div>
-                                            <div style="width: 2px; height: 12px;background-color: #f5f2f3; margin:8px;"></div>
-                                            <div onclick="${this.instance}.switch_type('end');" style="width:24px;" class="${this.list_type == "end" ? "tab_selected" : ""}">종료</div>
+                                            <div onclick="${this.instance}.switch_type('ing');" class="list_tab_content ${this.list_type == "ing" ? "tab_selected": ""}">진행중</div>
+                                            <div class="list_tab_divider"></div>
+                                            <div onclick="${this.instance}.switch_type('end');" class="list_tab_content ${this.list_type == "end" ? "tab_selected" : ""}">종료</div>
                                         </div>
                                         <div class="list_sort_select_wrap" 
                                         onclick="layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_OPTION_SELECTOR}', 100*(${layer_popup_height})/${root_content_height}, ${POPUP_FROM_BOTTOM}, null, ()=>{
