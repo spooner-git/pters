@@ -1424,7 +1424,7 @@ class Calendar {
                                         <div class="cal_upper_box">
                                             <div class="cal_date_display page_title">
                                                 <div onclick="${this.instance}.switch_cal_type()" style="display:inline-block;">
-                                                    <span class="display_week">${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).month[0] :null}월 
+                                                    <span class="display_week">11${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).month[0] :null}월 
                                                                             ${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).date[0] :null}일 - 
                                                                             ${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).month[6]: null}월 
                                                                             ${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).date[6]: null}일
@@ -1499,18 +1499,16 @@ class Calendar {
 
                 if( Math.abs(ts - tm) > Math.abs(tsy - tmy)){
                     if(swiper_x == false){
-                        if(os == IOS){
-                            $('#root_content').on('touchmove', (e) => {
-                                if(e.cancelable){
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    return false;
-                                }
-                                // e.preventDefault();
-                                // e.stopPropagation();
-                                // return false;
-                            });
-                        }
+                        // $('#root_content').on('touchmove', (e) => {
+                        //     if(e.cancelable){
+                        //         e.preventDefault();
+                        //         e.stopPropagation();
+                        //         return false;
+                        //     }
+                        //     e.preventDefault();
+                        //     e.stopPropagation();
+                        //     return false;
+                        // });
                         swiper_x = true;
                     }
                     
@@ -1518,17 +1516,13 @@ class Calendar {
                     if(ts - tm>x_threshold){
                         if(this.cal_type == "month"){this.move_month("next");}else if(this.cal_type == "week"){this.move_week("next");}
                         if(swiper_x == true){
-                            if(os == IOS){
-                                $('#root_content').off('touchmove');
-                            }
+                            // $('#root_content').off('touchmove');
                             swiper_x = false;
                         }
                     }else if(ts - tm<-x_threshold){
                         if(this.cal_type == "month"){this.move_month("prev");}else if(this.cal_type == "week"){this.move_week("prev");}
                         if(swiper_x == true){
-                            if(os == IOS){
-                                $('#root_content').off('touchmove');
-                            }
+                            // $('#root_content').off('touchmove');
                             swiper_x = false;
                         }
                     }
@@ -1536,16 +1530,13 @@ class Calendar {
             });
 
             //아이폰에서 touchmove를 threshold보다 작게했을때 상하스크롤이 locking되는 현상 방지
-            if(os == IOS){
-                selector_body.off("touchend").on("touchend", (e) => {
+            selector_body.off("touchend").on("touchend", (e) => {
 
-                    if(swiper_x == true){
-                        $('#root_content').off('touchmove');
-                        swiper_x = false;
-                    }
-                });
-            }
-            
+                if(swiper_x == true){
+                    // $('#root_content').off('touchmove');
+                    swiper_x = false;
+                }
+            });
             break;
 
         case "off":
