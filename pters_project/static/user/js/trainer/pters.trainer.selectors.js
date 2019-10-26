@@ -1577,6 +1577,7 @@ class TimeSelector2{
             mouseWheel : true,
             deceleration:0.005,
             bounce: false,
+            vScroll: false,
             onBeforeScrollStart: function ( e ) {
                 if ( this.absDistX > (this.absDistY + 5 ) ) {
                     // user is scrolling the x axis, so prevent the browsers' native scrolling
@@ -1589,6 +1590,7 @@ class TimeSelector2{
             mouseWheel : true,
             deceleration:0.005,
             bounce: false,
+            vScroll: false,
             onBeforeScrollStart: function ( e ) {
                 if ( this.absDistX > (this.absDistY + 5 ) ) {
                     // user is scrolling the x axis, so prevent the browsers' native scrolling
