@@ -94,7 +94,9 @@ class TwoTimeSelector{
     set_iscroll(){
         this.hour_scroll = new IScroll(`#hour_wrap_${this.instance}`,{
                             mouseWheel : true,
+                            disableTouch: false,
                             disablePointer:true,
+                            disableMouse:false,
                             deceleration:0.002,
                             bounce: false
                             // snap: 'li'
@@ -103,7 +105,9 @@ class TwoTimeSelector{
 
         this.hour2_scroll = new IScroll(`#hour2_wrap_${this.instance}`,{
                             mouseWheel : true,
+                            disableTouch: false,
                             disablePointer:true,
+                            disableMouse:false,
                             deceleration:0.002,
                             bounce: false
                             // snap: 'li'
@@ -400,7 +404,9 @@ class DateSelector{
     set_iscroll (){
         this.year_scroll = new IScroll(`#year_wrap_${this.instance}`,{
                             mouseWheel : true,
+                            disableTouch: false,
                             disablePointer:true,
+                            disableMouse:false,
                             deceleration:0.003,
                             bounce: false
                             // snap: 'li'
@@ -408,14 +414,18 @@ class DateSelector{
 
         this.month_scroll = new IScroll(`#month_wrap_${this.instance}`,{
                             mouseWheel : true,
+                            disableTouch: false,
                             disablePointer:true,
+                            disableMouse:false,
                             deceleration:0.005,
                             bounce: false
                             // snap: 'li'
         });
         this.date_scroll = new IScroll(`#date_wrap_${this.instance}`,{
                             mouseWheel : true,
+                            disableTouch: false,
                             disablePointer:true,
+                            disableMouse:false,
                             deceleration:0.005,
                             bounce: false
                             // snap: 'li'
@@ -805,7 +815,9 @@ class TwoDateSelector{
     set_iscroll (){
         this.year_scroll = new IScroll(`#year_wrap_${this.instance}`,{
                             mouseWheel : true,
+                            disableTouch: false,
                             disablePointer:true,
+                            disableMouse:false,
                             deceleration:0.003,
                             bounce: false
                             // snap: 'li'
@@ -813,21 +825,27 @@ class TwoDateSelector{
 
         this.month_scroll = new IScroll(`#month_wrap_${this.instance}`,{
                             mouseWheel : true,
+                            disableTouch: false,
                             disablePointer:true,
+                            disableMouse:false,
                             deceleration:0.005,
                             bounce: false
                             // snap: 'li'
         });
         this.year_scroll2 = new IScroll(`#year_wrap_${this.instance}2`,{
                             mouseWheel : true,
+                            disableTouch: false,
                             disablePointer:true,
+                            disableMouse:false,
                             deceleration:0.003,
                             bounce: false
                             // snap: 'li'
         });
         this.month_scroll2 = new IScroll(`#month_wrap_${this.instance}2`,{
                             mouseWheel : true,
+                            disableTouch: false,
                             disablePointer:true,
+                            disableMouse:false,
                             deceleration:0.005,
                             bounce: false
                             // snap: 'li'
@@ -1210,20 +1228,26 @@ class TimeSelector{
     set_iscroll (){
         this.zone_scroll = new IScroll(`#zone_wrap_${this.instance}`, {
             mouseWheel : true,
+            disableTouch: false,
             disablePointer:true,
+            disableMouse:false,
             deceleration:0.005,
             bounce: false
         });
 
         this.hour_scroll = new IScroll(`#hour_wrap_${this.instance}`, {
             mouseWheel : true,
+            disableTouch: false,
             disablePointer:true,
+            disableMouse:false,
             deceleration:0.005,
             bounce: false
         });
         this.minute_scroll = new IScroll(`#minute_wrap_${this.instance}`, {
             mouseWheel : true,
+            disableTouch: false,
             disablePointer:true,
+            disableMouse:false,
             deceleration:0.005,
             bounce: false
         });
@@ -1587,14 +1611,18 @@ class TimeSelector2{
     set_iscroll (){
         this.hour_scroll = new IScroll(`#hour_wrap_${this.instance}`, {
             mouseWheel : true,
+            disableTouch: false,
             disablePointer:true,
+            disableMouse:false,
             deceleration:0.005,
             bounce: false,
         });
         
         this.minute_scroll = new IScroll(`#minute_wrap_${this.instance}`, {
             mouseWheel : true,
+            disableTouch: false,
             disablePointer:true,
+            disableMouse:false,
             deceleration:0.005,
             bounce: false,
         });
@@ -1605,7 +1633,9 @@ class TimeSelector2{
     set_iscroll_minute(){
         this.minute_scroll = new IScroll(`#minute_wrap_${this.instance}`, {
             mouseWheel : true,
+            disableTouch: false,
             disablePointer:true,
+            disableMouse:false,
             deceleration:0.005,
             bounce: false,
         });
@@ -1964,14 +1994,18 @@ class TimeSelector3{
     set_iscroll (){
         this.hour_scroll = new IScroll(`#hour_wrap_${this.instance}`, {
             mouseWheel : true,
+            disableTouch: false,
             disablePointer:true,
+            disableMouse:false,
             deceleration:0.005,
             bounce: false
         });
         
         this.minute_scroll = new IScroll(`#minute_wrap_${this.instance}`, {
             mouseWheel : true,
+            disableTouch: false,
             disablePointer:true,
+            disableMouse:false,
             deceleration:0.005,
             bounce: false
         });
@@ -1982,7 +2016,9 @@ class TimeSelector3{
     set_iscroll_minute(){
         this.minute_scroll = new IScroll(`#minute_wrap_${this.instance}`, {
             mouseWheel : true,
+            disableTouch: false,
             disablePointer:true,
+            disableMouse:false,
             deceleration:0.005,
             bounce: false
         });
@@ -2271,7 +2307,9 @@ class SpinSelector{
     set_iscroll (){
         this.page_scroll = new IScroll(`#page_wrap_${this.instance}`, {
             mouseWheel : true,
+            disableTouch: false,
             disablePointer:true,
+            disableMouse:false,
             deceleration:0.005,
             bounce: false
         });
