@@ -55,7 +55,6 @@ progress::-webkit-progress-value {
     background-color: #ffffff;
     color: #3b3b3b;
     height: 100%;
-    /* scroll-behavior: smooth; */
     margin: 0 auto;
 }
 

@@ -112,7 +112,7 @@ class TwoTimeSelector{
     set_scroll_snap(){
         let self = this;
         
-        self.hour_scroll.on('scrollEnd', function (){
+        self.hour_scroll.on('scrollEnd', function (e){
             if(self.user_scroll_hour == true){
                 self.user_scroll_hour = false;
                 let posY = this.y;
@@ -1593,7 +1593,7 @@ class TimeSelector2{
             mouseWheel : true,
             deceleration:0.005,
             bounce: false,
-            bindToWrapper: true,
+            // bindToWrapper: true,
 
             scrollX: false, 
             scrollY: true,
@@ -1613,7 +1613,7 @@ class TimeSelector2{
             mouseWheel : true,
             deceleration:0.005,
             bounce: false,
-            bindToWrapper: true,
+            // bindToWrapper: true,
 
             scrollX: false, 
             scrollY: true,
@@ -1629,7 +1629,7 @@ class TimeSelector2{
 
     set_scroll_snap (){
         let self = this;
-        self.hour_scroll.on('scrollEnd', function (){
+        self.hour_scroll.on('scrollEnd', function (e){
             if(self.user_scroll_hour == true){
                 self.user_scroll_hour = false;
                 let posY = this.y;
@@ -1670,11 +1670,11 @@ class TimeSelector2{
             }
         });
 
-        self.hour_scroll.on('scrollStart', function (){
+        self.hour_scroll.on('scrollStart', function (e){
             self.user_scroll_hour = true;
         });
 
-        self.minute_scroll.on('scrollEnd', function (){
+        self.minute_scroll.on('scrollEnd', function (e){
             if(self.user_scroll_minute == true){
                 self.user_scroll_minute = false;
                 let posY = this.y;
@@ -1752,7 +1752,7 @@ class TimeSelector2{
             "initial_html":`<div class="time_selector">
                                 <div class="time_selector_confirm">
                                     <div style="float:left;margin-left:5px;">
-                                        ${CComponent.text_button(this.option.myname+'_cancel_button', '취소', {"padding":"10px 20px"}, ()=>{layer_popup.close_layer_popup();})}
+                                        ${CComponent.text_button(this.option.myname+'_cancel_button', '취소', {"padding":"10px 20px"}, ()=>{this.upper_left_button();})}
                                     </div>
                                     <span class="time_selector_title">${this.option.title}</span>
                                     <div style="float:right;margin-right:5px;color:#fe4e65;">
@@ -1798,6 +1798,10 @@ class TimeSelector2{
 
         this.store = this.get_selected_data();
         this.option.callback_when_set(this.store); 
+        layer_popup.close_layer_popup();
+    }
+
+    upper_left_button(){
         layer_popup.close_layer_popup();
     }
 
