@@ -1530,13 +1530,16 @@ class Calendar {
             });
 
             //아이폰에서 touchmove를 threshold보다 작게했을때 상하스크롤이 locking되는 현상 방지
-            selector_body.off("touchend").on("touchend", (e) => {
+            if(os == IOS){
+                selector_body.off("touchend").on("touchend", (e) => {
 
-                if(swiper_x == true){
-                    $('#root_content').off('touchmove');
-                    swiper_x = false;
-                }
-            });
+                    if(swiper_x == true){
+                        $('#root_content').off('touchmove');
+                        swiper_x = false;
+                    }
+                });
+            }
+            
             break;
 
         case "off":
