@@ -625,26 +625,6 @@
     }
 
     pc_top_toolbar_user_info_update();
-    
-
-    $('#root_content').on("touchmove", function(e){
-        console.log("touchmove")
-        e.stopPropagation();
-        let b = $('#root_content').css('height');
-
-        $('#debug_toolbar').show().text(b).fadeOut()
-        // $('#root_content').css("overflow-y", "auto");
-    })
-
-    $('#root_content').on("touchstart", function(e){
-        // e.stopPropagation();
-        console.log("touchstart");
-        // date_selector.hour_scroll.destroy();
-        // date_selector.minute_scroll.destroy();
-        // date_selector = "";
-        // $('#debug_toolbar').show().text("start").fadeOut().css("overflow-y", "auto");
-    })
-    
 
     // 구글 reCAPTCHA 보이지 않게 하기
     /*

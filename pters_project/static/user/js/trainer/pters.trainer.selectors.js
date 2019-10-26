@@ -1414,7 +1414,6 @@ class TimeSelector{
 class TimeSelector2{
     constructor(install_target, target_instance, user_option){
         this.target = {install: install_target, result: target_instance};
-        this.instance = "time_selector";
 
         this.hour_scroll;
         this.minute_scroll;
