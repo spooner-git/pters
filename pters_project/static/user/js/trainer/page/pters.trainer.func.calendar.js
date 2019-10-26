@@ -1500,9 +1500,14 @@ class Calendar {
                 if( Math.abs(ts - tm) > Math.abs(tsy - tmy)){
                     if(swiper_x == false){
                         $('#root_content').on('touchmove', (e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            return false;
+                            if(e.cancelable){
+                                e.preventDefault();
+                                e.stopPropagation();
+                                return false;
+                            }
+                            // e.preventDefault();
+                            // e.stopPropagation();
+                            // return false;
                         });
                         swiper_x = true;
                     }
