@@ -1582,14 +1582,14 @@ class TimeSelector2{
             bounce: false,
             // bindToWrapper: true,
 
-            scrollX: false, 
-            scrollY: true,
-            click:true, // open click event
-            scrollbars: false, 
-            useTransform: true,
-            useTransition: true,
-            probeType:2,
-            bindToWrapper: true
+            // scrollX: false, 
+            // scrollY: true,
+            // click:true, // open click event
+            // scrollbars: false, 
+            // useTransform: true,
+            // useTransition: true,
+            // probeType:2,
+            // bindToWrapper: true
         });
         
         this.minute_scroll = new IScroll(`#minute_wrap_${this.instance}`, {
@@ -1601,14 +1601,14 @@ class TimeSelector2{
             bounce: false,
             // bindToWrapper: true,
 
-            scrollX: false, 
-            scrollY: true,
-            click:true, // open click event
-            scrollbars: false, 
-            useTransform: true,
-            useTransition: true,
-            probeType:2,
-            bindToWrapper: true
+            // scrollX: false, 
+            // scrollY: true,
+            // click:true, // open click event
+            // scrollbars: false, 
+            // useTransform: true,
+            // useTransition: true,
+            // probeType:2,
+            // bindToWrapper: true
         });
 
         this.set_scroll_snap();
@@ -1624,14 +1624,14 @@ class TimeSelector2{
             bounce: false,
             // bindToWrapper: true,
 
-            scrollX: false, 
-            scrollY: true,
-            click:true, // open click event
-            scrollbars: false, 
-            useTransform: true,
-            useTransition: true,
-            probeType:2,
-            bindToWrapper: true
+            // scrollX: false, 
+            // scrollY: true,
+            // click:true, // open click event
+            // scrollbars: false, 
+            // useTransform: true,
+            // useTransition: true,
+            // probeType:2,
+            // bindToWrapper: true
         });
         this.set_scroll_snap();
     }
