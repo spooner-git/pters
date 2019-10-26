@@ -1577,26 +1577,28 @@ class TimeSelector2{
             mouseWheel : true,
             deceleration:0.005,
             bounce: false,
-            bindToWrapper: true
+            bindToWrapper: true,
+            scrollX: false, 
         });
         
         this.minute_scroll = new IScroll(`#minute_wrap_${this.instance}`, {
             mouseWheel : true,
             deceleration:0.005,
             bounce: false,
-            bindToWrapper: true
+            bindToWrapper: true,
+            scrollX: false, 
         });
 
         this.set_scroll_snap();
     }
 
     set_iscroll_minute(){
-        this.minute_scroll.destroy();
         this.minute_scroll = new IScroll(`#minute_wrap_${this.instance}`, {
             mouseWheel : true,
             deceleration:0.005,
             bounce: false,
-            bindToWrapper: true
+            bindToWrapper: true,
+            scrollX: false, 
         });
         this.set_scroll_snap();
     }
