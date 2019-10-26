@@ -311,13 +311,13 @@
         }
     });
     //팝업이 떠있을때, 팝업을 스크롤하면, 뒤의 root_content 항목이 스크롤되서 위치에서 벗어난 현상 해결
-    $(document).on('touchstart', '.popup_mobile', function(){
-        $('#root_content').css({'overflow-y':'hidden'})
-    });
+    // $(document).on('touchstart', '.popup_mobile', function(){
+    //     $('#root_content').css({'overflow-y':'hidden'})
+    // });
 
-    $(document).on('touchend', '.popup_mobile', function(){
-        $('#root_content').css({'overflow-y':'auto'})
-    });
+    // $(document).on('touchend', '.popup_mobile', function(){
+    //     $('#root_content').css({'overflow-y':'auto'})
+    // });
 
     function nav_bar(action){
         switch(action){

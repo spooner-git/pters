@@ -1468,7 +1468,7 @@ class TimeSelector2{
         this.init_html();
         this.render_hour_list();
         this.render_minute_list(initial_set_time_data.hour >= this.option.range.end ? 5 : 60);
-        // this.set_iscroll();
+        this.set_iscroll();
         this.reset(this.option.data);
     }
 
@@ -1488,7 +1488,7 @@ class TimeSelector2{
         let hour_data = hour - this.option.range.start;
         let minute_data = minute;
 
-        // this.go_snap(hour_data, minute_data);
+        this.go_snap(hour_data, minute_data);
         //값을 저장하고, 스크롤 위치를 들어온 값으로 보낸다.
     }
 
