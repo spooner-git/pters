@@ -1468,8 +1468,8 @@ class TimeSelector2{
         this.init_html();
         this.render_hour_list();
         this.render_minute_list(initial_set_time_data.hour >= this.option.range.end ? 5 : 60);
-        // this.set_iscroll();
-        // this.reset(this.option.data);
+        this.set_iscroll();
+        this.reset(this.option.data);
     }
 
     reset (object){
@@ -1509,24 +1509,24 @@ class TimeSelector2{
         let hour_range_end = this.option.range.end;
     
         for(let i=hour_range_start; i<=hour_range_end; i++){
-                let morningday;
-                let time_for_user;
-                if(i < 12 || i == 24){
-                    morningday = "오전";
-                    time_for_user = i;
-                    if(i == 24){
-                        time_for_user = 12;
-                    }
-                }else if(i >= 12){
-                    morningday = "오후";
-                    time_for_user = i - 12;
-                    if(i == 12){
-                        time_for_user = 12;
-                    }
+            let morningday;
+            let time_for_user;
+            if(i < 12 || i == 24){
+                morningday = "오전";
+                time_for_user = i;
+                if(i == 24){
+                    time_for_user = 12;
                 }
+            }else if(i >= 12){
+                morningday = "오후";
+                time_for_user = i - 12;
+                if(i == 12){
+                    time_for_user = 12;
+                }
+            }
 
-                html_to_join.push(`<li data-hpos=${pos} data-hour="${i}"><span style="margin-right:16px;">${morningday}</span>${time_for_user}</li>`);
-                pos = pos + 40;
+            html_to_join.push(`<li data-hpos=${pos} data-hour="${i}"><span style="margin-right:16px;">${morningday}</span>${time_for_user}</li>`);
+            pos = pos + 40;
         }
 
         let html = `
@@ -1552,8 +1552,8 @@ class TimeSelector2{
             minute_end = 60;
         }
         for(let i=0; i<minute_end; i=i+5){
-                html_to_join.push(`<li data-mpos=${pos} data-min="${i}">${i}</li>`);
-                pos = pos + 40; 
+            html_to_join.push(`<li data-mpos=${pos} data-min="${i}">${i}</li>`);
+            pos = pos + 40; 
         }
 
         let html = `
@@ -1656,12 +1656,12 @@ class TimeSelector2{
                     // self.minute_end = 5;
                     self.render_minute_list(5);
                     self.set_iscroll_minute();
-                    self.go_snap(hour - self.option.range.start, 0);
+                    // self.go_snap(hour - self.option.range.start, 0);
                 }else{
                     // self.minute_end = 60;
                     self.render_minute_list();
                     self.set_iscroll_minute();
-                    self.go_snap(hour - self.option.range.start, 0);
+                    // self.go_snap(hour - self.option.range.start, 0);
                 }
 
                 let data_check = self.check_minimum_time();
