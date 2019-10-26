@@ -1656,12 +1656,12 @@ class TimeSelector2{
                     // self.minute_end = 5;
                     self.render_minute_list(5);
                     self.set_iscroll_minute();
-                    // self.go_snap(hour - self.option.range.start, 0);
+                    self.go_snap(hour - self.option.range.start, 0);
                 }else{
                     // self.minute_end = 60;
                     self.render_minute_list();
                     self.set_iscroll_minute();
-                    // self.go_snap(hour - self.option.range.start, 0);
+                    self.go_snap(hour - self.option.range.start, 0);
                 }
 
                 let data_check = self.check_minimum_time();
@@ -1674,6 +1674,7 @@ class TimeSelector2{
         });
 
         self.hour_scroll.on('scrollStart', function (e){
+            e.stopPropagation();
             self.user_scroll_hour = true;
         });
 
@@ -1706,7 +1707,8 @@ class TimeSelector2{
             }
         });
 
-        self.minute_scroll.on('scrollStart', function (){
+        self.minute_scroll.on('scrollStart', function (e){
+            e.stopPropagation();
             self.user_scroll_minute = true;
         });
     }
