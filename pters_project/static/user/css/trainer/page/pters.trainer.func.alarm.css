@@ -48,6 +48,7 @@
 }
 .alarm_data_u > div:first-child{
 	width: 35px;
+	display: none;
 }
 	.alarm_data_u > div:first-child > img{
 		width: 20px;
@@ -72,6 +73,7 @@
 	}
 	.alarm_data_b > div:first-child{
 		width: 35px;
+		display: none;
 	}
 	.alarm_data_b > div:last-child{
 		width: calc(100% - 55px);
