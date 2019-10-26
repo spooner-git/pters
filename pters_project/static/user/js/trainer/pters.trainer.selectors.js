@@ -1723,7 +1723,7 @@ class TimeSelector2{
             "initial_html":`<div class="time_selector">
                                 <div class="time_selector_confirm">
                                     <div style="float:left;margin-left:5px;">
-                                        ${CComponent.text_button(this.option.myname+'_cancel_button', '취소', {"padding":"10px 20px"}, ()=>{layer_popup.close_layer_popup();})}
+                                        ${CComponent.text_button(this.option.myname+'_cancel_button', '취소', {"padding":"10px 20px"}, ()=>{this.upper_left_button();})}
                                     </div>
                                     <span class="time_selector_title">${this.option.title}</span>
                                     <div style="float:right;margin-right:5px;color:#fe4e65;">
@@ -1770,6 +1770,14 @@ class TimeSelector2{
         this.store = this.get_selected_data();
         this.option.callback_when_set(this.store); 
         layer_popup.close_layer_popup();
+        this.hour_scroll.destroy();
+        this.minute_scroll.destroy();
+    }
+
+    upper_left_button(){
+        layer_popup.close_layer_popup();
+        this.hour_scroll.destroy();
+        this.minute_scroll.destroy();
     }
 
 }
