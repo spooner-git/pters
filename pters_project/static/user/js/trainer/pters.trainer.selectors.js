@@ -112,7 +112,7 @@ class TwoTimeSelector{
     set_scroll_snap(){
         let self = this;
         
-        self.hour_scroll.on('scrollEnd', function (){
+        self.hour_scroll.on('scrollEnd', function (e){
             if(self.user_scroll_hour == true){
                 self.user_scroll_hour = false;
                 let posY = this.y;
@@ -1599,7 +1599,8 @@ class TimeSelector2{
 
     set_scroll_snap (){
         let self = this;
-        self.hour_scroll.on('scrollEnd', function (){
+        self.hour_scroll.on('scrollEnd', function (e){
+            e.stopPropagation();
             if(self.user_scroll_hour == true){
                 self.user_scroll_hour = false;
                 let posY = this.y;
@@ -1640,11 +1641,13 @@ class TimeSelector2{
             }
         });
 
-        self.hour_scroll.on('scrollStart', function (){
+        self.hour_scroll.on('scrollStart', function (e){
+            e.stopPropagation();
             self.user_scroll_hour = true;
         });
 
-        self.minute_scroll.on('scrollEnd', function (){
+        self.minute_scroll.on('scrollEnd', function (e){
+            e.stopPropagation();
             if(self.user_scroll_minute == true){
                 self.user_scroll_minute = false;
                 let posY = this.y;
@@ -1673,7 +1676,8 @@ class TimeSelector2{
             }
         });
 
-        self.minute_scroll.on('scrollStart', function (){
+        self.minute_scroll.on('scrollStart', function (e){
+            e.stopPropagation();
             self.user_scroll_minute = true;
         });
     }

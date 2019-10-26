@@ -1464,7 +1464,6 @@ class Calendar {
 
 
     toggle_touch_move (onoff, input_target_html){
-        return false;
         let ts;
         let tsy;
         let tm;
@@ -1484,22 +1483,15 @@ class Calendar {
 
         switch(onoff){
         case "on":
-            $('#debug_toolbar').show().text("on");
             selector_body.off("touchstart").on("touchstart", (e) => {
             // $(document).off("touchstart", click_body).on("touchstart", click_body, (e)=>{
                 ts = e.originalEvent.touches[0].clientX;
                 tsy = e.originalEvent.touches[0].clientY;
-                $('#debug_toolbar').text("ts, tsy",ts, tsy);
-                console.log(ts,tsy)
             });
 
             selector_body.off('touchmove').on('touchmove', (e) => {
-                
                 tm = e.originalEvent.touches[0].clientX;
                 tmy = e.originalEvent.touches[0].clientY;
-
-                $('#debug_toolbar').text("tm, tmy",tm, tmy);
-                console.log(tm, tmy);
 
                 // 일정이 잡힌채로 스와이프할때, 일정 롱터치 되지 않도록 롱터치이벤트 엔드
                 clearInterval(this.touch_sense);
@@ -1507,16 +1499,16 @@ class Calendar {
 
                 if( Math.abs(ts - tm) > Math.abs(tsy - tmy)){
                     if(swiper_x == false){
-                        // $('#root_content').on('touchmove', (e) => {
-                        //     if(e.cancelable){
-                        //         e.preventDefault();
-                        //         e.stopPropagation();
-                        //         return false;
-                        //     }
-                        //     e.preventDefault();
-                        //     e.stopPropagation();
-                        //     return false;
-                        // });
+                        $('#root_content').on('touchmove', (e) => {
+                            if(e.cancelable){
+                                e.preventDefault();
+                                e.stopPropagation();
+                                return false;
+                            }
+                            // e.preventDefault();
+                            // e.stopPropagation();
+                            // return false;
+                        });
                         swiper_x = true;
                     }
                     
@@ -1524,13 +1516,13 @@ class Calendar {
                     if(ts - tm>x_threshold){
                         if(this.cal_type == "month"){this.move_month("next");}else if(this.cal_type == "week"){this.move_week("next");}
                         if(swiper_x == true){
-                            // $('#root_content').off('touchmove');
+                            $('#root_content').off('touchmove');
                             swiper_x = false;
                         }
                     }else if(ts - tm<-x_threshold){
                         if(this.cal_type == "month"){this.move_month("prev");}else if(this.cal_type == "week"){this.move_week("prev");}
                         if(swiper_x == true){
-                            // $('#root_content').off('touchmove');
+                            $('#root_content').off('touchmove');
                             swiper_x = false;
                         }
                     }
@@ -1541,14 +1533,13 @@ class Calendar {
             selector_body.off("touchend").on("touchend", (e) => {
 
                 if(swiper_x == true){
-                    // $('#root_content').off('touchmove');
+                    $('#root_content').off('touchmove');
                     swiper_x = false;
                 }
             });
             break;
 
         case "off":
-            $('#debug_toolbar').show().text("off");
             selector_body.off("touchstart").off("touchend").off('touchmove');
             break;
         }
