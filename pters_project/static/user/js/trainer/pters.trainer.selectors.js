@@ -1411,8 +1411,6 @@ class TimeSelector{
 }
 
 //시간 선택 (오전오후, 시, 분)
-var hour_scroll;
-var minute_scroll;
 class TimeSelector2{
     constructor(install_target, target_instance, user_option){
         this.target = {install: install_target, result: target_instance};
@@ -1575,13 +1573,13 @@ class TimeSelector2{
     }
 
     set_iscroll (){
-        hour_scroll = new IScroll(`#hour_wrap_${this.instance}`, {
+        this.hour_scroll = new IScroll(`#hour_wrap_${this.instance}`, {
             mouseWheel : true,
             deceleration:0.005,
             bounce: false
         });
         
-        minute_scroll = new IScroll(`#minute_wrap_${this.instance}`, {
+        this.minute_scroll = new IScroll(`#minute_wrap_${this.instance}`, {
             mouseWheel : true,
             deceleration:0.005,
             bounce: false
@@ -1591,7 +1589,7 @@ class TimeSelector2{
     }
 
     set_iscroll_minute(){
-        minute_scroll = new IScroll(`#minute_wrap_${this.instance}`, {
+        this.minute_scroll = new IScroll(`#minute_wrap_${this.instance}`, {
             mouseWheel : true,
             deceleration:0.005,
             bounce: false
@@ -1601,7 +1599,7 @@ class TimeSelector2{
 
     set_scroll_snap (){
         let self = this;
-        hour_scroll.on('scrollEnd', function (e){
+        self.hour_scroll.on('scrollEnd', function (e){
             if(self.user_scroll_hour == true){
                 self.user_scroll_hour = false;
                 let posY = this.y;
@@ -1616,7 +1614,7 @@ class TimeSelector2{
                     snap = min;
                 }
                 
-                hour_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
+                self.hour_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
                 $(`${self.target.install} li[data-hpos="${Math.abs(self.hour_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
                 $(`${self.target.install} li[data-hpos="${Math.abs(self.hour_scroll.y)}"]`).css('color', '#1e1e1e');
 
@@ -1633,20 +1631,20 @@ class TimeSelector2{
                     self.go_snap(hour - self.option.range.start, 0);
                 }
 
-                let data_check = self.check_minimum_time();
-                if(data_check != true){
-                    document.querySelector('.selector_indicator').style.backgroundColor = '#fe4e6547';
-                }else{
-                    document.querySelector('.selector_indicator').style.backgroundColor = 'unset';
-                }
+                // let data_check = self.check_minimum_time();
+                // if(data_check != true){
+                //     document.querySelector('.selector_indicator').style.backgroundColor = '#fe4e6547';
+                // }else{
+                //     document.querySelector('.selector_indicator').style.backgroundColor = 'unset';
+                // }
             }
         });
 
-        hour_scroll.on('scrollStart', function (e){
+        self.hour_scroll.on('scrollStart', function (e){
             self.user_scroll_hour = true;
         });
 
-        minute_scroll.on('scrollEnd', function (e){
+        self.minute_scroll.on('scrollEnd', function (e){
             if(self.user_scroll_minute == true){
                 self.user_scroll_minute = false;
                 let posY = this.y;
@@ -1666,16 +1664,16 @@ class TimeSelector2{
                 $(`${self.target.install} li[data-mpos="${Math.abs(self.minute_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
                 $(`${self.target.install} li[data-mpos="${Math.abs(self.minute_scroll.y)}"]`).css('color', '#1e1e1e');
                 
-                let data_check = self.check_minimum_time();
-                if(data_check != true){
-                    document.querySelector('.selector_indicator').style.backgroundColor = '#fe4e6547';
-                }else{
-                    document.querySelector('.selector_indicator').style.backgroundColor = 'unset';
-                }
+                // let data_check = self.check_minimum_time();
+                // if(data_check != true){
+                //     document.querySelector('.selector_indicator').style.backgroundColor = '#fe4e6547';
+                // }else{
+                //     document.querySelector('.selector_indicator').style.backgroundColor = 'unset';
+                // }
             }
         });
 
-        minute_scroll.on('scrollStart', function (){
+        self.minute_scroll.on('scrollStart', function (){
             self.user_scroll_minute = true;
         });
     }
@@ -1684,18 +1682,18 @@ class TimeSelector2{
         let initial_pos_hour = (-hour)*40;
         let initial_pos_minute = -(minute)*8;
 
-        hour_scroll.scrollTo(0, initial_pos_hour, 0, IScroll.utils.ease.bounce);
-        minute_scroll.scrollTo(0, initial_pos_minute, 0, IScroll.utils.ease.bounce);
+        this.hour_scroll.scrollTo(0, initial_pos_hour, 0, IScroll.utils.ease.bounce);
+        this.minute_scroll.scrollTo(0, initial_pos_minute, 0, IScroll.utils.ease.bounce);
 
-        $(`${this.target.install} li[data-hpos="${Math.abs(hour_scroll.y)}"]`).css('color', '#1e1e1e');
-        $(`${this.target.install} li[data-mpos="${Math.abs(minute_scroll.y)}"]`).css('color', '#1e1e1e');
-        $(`${this.target.install} li[data-hpos="${Math.abs(hour_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
-        $(`${this.target.install} li[data-mpos="${Math.abs(minute_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+        $(`${this.target.install} li[data-hpos="${Math.abs(this.hour_scroll.y)}"]`).css('color', '#1e1e1e');
+        $(`${this.target.install} li[data-mpos="${Math.abs(this.minute_scroll.y)}"]`).css('color', '#1e1e1e');
+        $(`${this.target.install} li[data-hpos="${Math.abs(this.hour_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+        $(`${this.target.install} li[data-mpos="${Math.abs(this.minute_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
     }
 
     get_selected_data (){
-        let hour = $(`${this.target.install} li[data-hpos="${Math.abs(hour_scroll.y)}"]`);
-        let minute = $(`${this.target.install} li[data-mpos="${Math.abs(minute_scroll.y)}"]`);
+        let hour = $(`${this.target.install} li[data-hpos="${Math.abs(this.hour_scroll.y)}"]`);
+        let minute = $(`${this.target.install} li[data-mpos="${Math.abs(this.minute_scroll.y)}"]`);
 
         let hour_text = Number(hour.attr('data-hour'));
         let minute_text = Number(minute.attr('data-min'));
@@ -1733,7 +1731,6 @@ class TimeSelector2{
                                 </div>
                                 <div class="time_selector_hour_wrap select_wrapper"></div>
                                 <div class="time_selector_minute_wrap select_wrapper"></div>
-                                <div class="selector_indicator"></div>
                             </div>`
         };
     }
