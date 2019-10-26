@@ -92,6 +92,7 @@ class Calendar {
             }
             this.current_week = Math.ceil( (this.current_date +  this.first_day_of_the_date)/7 ) - 1;
 
+            this.class_hour = 30; // 테스트
             let work_time = this.calc_worktime_display(data);
             this.work_time_info.calc = work_time;
             this.worktime = [];
@@ -1100,6 +1101,7 @@ class Calendar {
 
         indicator.classList.add('week_indicator');
         indicator.style.top = offset_px+'px';
+        indicator.style.height = this.class_hour+'px';
         indicator.setAttribute('onclick', "event.stopPropagation();$('.week_indicator').remove()");
         event.target.appendChild(indicator);
 
