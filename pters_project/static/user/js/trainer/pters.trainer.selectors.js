@@ -1468,8 +1468,8 @@ class TimeSelector2{
         this.init_html();
         this.render_hour_list();
         this.render_minute_list(initial_set_time_data.hour >= this.option.range.end ? 5 : 60);
-        this.set_iscroll();
-        this.reset(this.option.data);
+        // this.set_iscroll();
+        // this.reset(this.option.data);
     }
 
     reset (object){
