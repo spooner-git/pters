@@ -1577,16 +1577,13 @@ class TimeSelector2{
             mouseWheel : true,
             deceleration:0.005,
             bounce: false,
-            hScroll:false,
-            eventPassthrough:true
+
         });
         
         this.minute_scroll = new IScroll(`#minute_wrap_${this.instance}`, {
             mouseWheel : true,
             deceleration:0.005,
             bounce: false,
-            hScroll:false,
-            eventPassthrough:true
         });
 
         this.set_scroll_snap();
