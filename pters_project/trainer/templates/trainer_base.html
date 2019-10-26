@@ -629,7 +629,9 @@
 
     $('#root_content').on("touchmove", function(e){
         console.log("eee");
-        $('#debug_toolbar').show().text('eee').fadeOut().css("overflow-y", "auto");
+        let a = $('body').css('overflow');
+        let b = $('html').css('overflow');
+        $('#debug_toolbar').show().text(a, b).fadeOut().css("overflow-y", "auto");
     })
     
 
