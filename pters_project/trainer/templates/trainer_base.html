@@ -633,15 +633,15 @@
         let b = $('#root_content').css('height');
 
         $('#debug_toolbar').show().text(b).fadeOut()
-        $('#root_content').css("overflow-y", "auto");
+        // $('#root_content').css("overflow-y", "auto");
     })
 
     $('#root_content').on("touchstart", function(e){
-        e.stopPropagation();
+        // e.stopPropagation();
         console.log("touchstart");
-        date_selector.hour_scroll.destroy();
-        date_selector.minute_scroll.destroy();
-        date_selector = "";
+        // date_selector.hour_scroll.destroy();
+        // date_selector.minute_scroll.destroy();
+        // date_selector = "";
         // $('#debug_toolbar').show().text("start").fadeOut().css("overflow-y", "auto");
     })
     

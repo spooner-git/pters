@@ -1414,6 +1414,7 @@ class TimeSelector{
 class TimeSelector2{
     constructor(install_target, target_instance, user_option){
         this.target = {install: install_target, result: target_instance};
+        this.instance = "time_selector";
 
         this.hour_scroll;
         this.minute_scroll;
@@ -1574,15 +1575,15 @@ class TimeSelector2{
 
     set_iscroll (){
         this.hour_scroll = new IScroll(`#hour_wrap_${this.instance}`, {
-            // mouseWheel : true,
-            // deceleration:0.005,
-            // bounce: false
+            mouseWheel : true,
+            deceleration:0.010,
+            bounce: false
         });
         
         this.minute_scroll = new IScroll(`#minute_wrap_${this.instance}`, {
-            // mouseWheel : true,
-            // deceleration:0.005,
-            // bounce: false
+            mouseWheel : true,
+            deceleration:0.010,
+            bounce: false
         });
 
         this.set_scroll_snap();
@@ -1590,9 +1591,9 @@ class TimeSelector2{
 
     set_iscroll_minute(){
         this.minute_scroll = new IScroll(`#minute_wrap_${this.instance}`, {
-            // mouseWheel : true,
-            // deceleration:0.005,
-            // bounce: false
+            mouseWheel : true,
+            deceleration:0.005,
+            bounce: false
         });
         this.set_scroll_snap();
     }
