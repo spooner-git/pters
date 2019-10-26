@@ -1501,8 +1501,8 @@ class Calendar {
                     if(swiper_x == false){
                         $('#root_content').on('touchmove', (e) => {
                             if(e.cancelable){
-                                e.preventDefault();
-                                e.stopPropagation();
+                                // e.preventDefault();
+                                // e.stopPropagation();
                                 return false;
                             }
                             // e.preventDefault();
