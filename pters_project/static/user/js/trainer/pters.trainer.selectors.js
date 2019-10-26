@@ -1467,7 +1467,7 @@ class TimeSelector2{
         let initial_set_time_data = {hour:this.option.data.hour, minute:this.option.data.minute};
         this.init_html();
         this.render_hour_list();
-        this.render_minute_list(initial_set_time_data.hour >= this.option.range.end ? 5 : 60);
+        // this.render_minute_list(initial_set_time_data.hour >= this.option.range.end ? 5 : 60);
         this.set_iscroll();
         this.reset(this.option.data);
     }
@@ -1590,24 +1590,24 @@ class TimeSelector2{
             bindToWrapper: true
         });
         
-        this.minute_scroll = new IScroll(`#minute_wrap_${this.instance}`, {
-            mouseWheel : true,
-            disableTouch: true,
-            deceleration:0.005,
-            bounce: false,
-            // bindToWrapper: true,
+        // this.minute_scroll = new IScroll(`#minute_wrap_${this.instance}`, {
+        //     mouseWheel : true,
+        //     disableTouch: true,
+        //     deceleration:0.005,
+        //     bounce: false,
+        //     // bindToWrapper: true,
 
-            scrollX: false, 
-            scrollY: true,
-            click:true, // open click event
-            scrollbars: false, 
-            useTransform: true,
-            useTransition: true,
-            probeType:3,
-            bindToWrapper: true
-        });
+        //     scrollX: false, 
+        //     scrollY: true,
+        //     click:true, // open click event
+        //     scrollbars: false, 
+        //     useTransform: true,
+        //     useTransition: true,
+        //     probeType:3,
+        //     bindToWrapper: true
+        // });
 
-        this.set_scroll_snap();
+        // this.set_scroll_snap();
     }
 
     set_iscroll_minute(){
@@ -1674,7 +1674,7 @@ class TimeSelector2{
         });
 
         self.hour_scroll.on('scrollStart', function (e){
-            e.stopPropagation();
+            // e.stopPropagation();
             self.user_scroll_hour = true;
         });
 
@@ -1708,7 +1708,7 @@ class TimeSelector2{
         });
 
         self.minute_scroll.on('scrollStart', function (e){
-            e.stopPropagation();
+            // e.stopPropagation();
             self.user_scroll_minute = true;
         });
     }
