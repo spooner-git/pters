@@ -1574,15 +1574,15 @@ class TimeSelector2{
 
     set_iscroll (){
         this.hour_scroll = new IScroll(`#hour_wrap_${this.instance}`, {
-            mouseWheel : true,
-            deceleration:0.005,
-            bounce: false
+            // mouseWheel : true,
+            // deceleration:0.005,
+            // bounce: false
         });
         
         this.minute_scroll = new IScroll(`#minute_wrap_${this.instance}`, {
-            mouseWheel : true,
-            deceleration:0.005,
-            bounce: false
+            // mouseWheel : true,
+            // deceleration:0.005,
+            // bounce: false
         });
 
         this.set_scroll_snap();
@@ -1590,9 +1590,9 @@ class TimeSelector2{
 
     set_iscroll_minute(){
         this.minute_scroll = new IScroll(`#minute_wrap_${this.instance}`, {
-            mouseWheel : true,
-            deceleration:0.005,
-            bounce: false
+            // mouseWheel : true,
+            // deceleration:0.005,
+            // bounce: false
         });
         this.set_scroll_snap();
     }
@@ -1641,7 +1641,7 @@ class TimeSelector2{
         });
 
         self.hour_scroll.on('scrollStart', function (e){
-            // self.user_scroll_hour = true;
+            self.user_scroll_hour = true;
         });
 
         self.minute_scroll.on('scrollEnd', function (e){
@@ -1674,7 +1674,7 @@ class TimeSelector2{
         });
 
         self.minute_scroll.on('scrollStart', function (){
-            // self.user_scroll_minute = true;
+            self.user_scroll_minute = true;
         });
     }
 
