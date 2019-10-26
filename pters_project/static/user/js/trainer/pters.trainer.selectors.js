@@ -1600,7 +1600,6 @@ class TimeSelector2{
     set_scroll_snap (){
         let self = this;
         self.hour_scroll.on('scrollEnd', function (e){
-            e.stopPropagation();
             if(self.user_scroll_hour == true){
                 self.user_scroll_hour = false;
                 let posY = this.y;
@@ -1639,15 +1638,14 @@ class TimeSelector2{
                     document.querySelector('.selector_indicator').style.backgroundColor = 'unset';
                 }
             }
+            e.stopPropagation();
         });
 
         self.hour_scroll.on('scrollStart', function (e){
-            e.stopPropagation();
             self.user_scroll_hour = true;
         });
 
         self.minute_scroll.on('scrollEnd', function (e){
-            e.stopPropagation();
             if(self.user_scroll_minute == true){
                 self.user_scroll_minute = false;
                 let posY = this.y;
@@ -1674,10 +1672,10 @@ class TimeSelector2{
                     document.querySelector('.selector_indicator').style.backgroundColor = 'unset';
                 }
             }
+            e.stopPropagation();
         });
 
-        self.minute_scroll.on('scrollStart', function (e){
-            e.stopPropagation();
+        self.minute_scroll.on('scrollStart', function (){
             self.user_scroll_minute = true;
         });
     }
