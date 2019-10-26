@@ -1483,6 +1483,7 @@ class Calendar {
 
         switch(onoff){
         case "on":
+            show_error_message('asdfasd')
             $('#debug_toolbar').show().text("on");
             selector_body.off("touchstart").on("touchstart", (e) => {
             // $(document).off("touchstart", click_body).on("touchstart", click_body, (e)=>{
