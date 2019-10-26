@@ -1411,6 +1411,8 @@ class TimeSelector{
 }
 
 //시간 선택 (오전오후, 시, 분)
+var hour_scroll;
+var minute_scroll;
 class TimeSelector2{
     constructor(install_target, target_instance, user_option){
         this.target = {install: install_target, result: target_instance};
@@ -1468,7 +1470,7 @@ class TimeSelector2{
         this.init_html();
         this.render_hour_list();
         this.render_minute_list(initial_set_time_data.hour >= this.option.range.end ? 5 : 60);
-        // this.set_iscroll();
+        this.set_iscroll();
         this.reset(this.option.data);
     }
 
@@ -1573,33 +1575,33 @@ class TimeSelector2{
     }
 
     set_iscroll (){
-        this.hour_scroll = new IScroll(`#hour_wrap_${this.instance}`, {
+        hour_scroll = new IScroll(`#hour_wrap_${this.instance}`, {
             mouseWheel : true,
             deceleration:0.005,
             bounce: false
         });
         
-        this.minute_scroll = new IScroll(`#minute_wrap_${this.instance}`, {
+        minute_scroll = new IScroll(`#minute_wrap_${this.instance}`, {
             mouseWheel : true,
             deceleration:0.005,
             bounce: false
         });
 
-        // this.set_scroll_snap();
+        this.set_scroll_snap();
     }
 
     set_iscroll_minute(){
-        this.minute_scroll = new IScroll(`#minute_wrap_${this.instance}`, {
+        minute_scroll = new IScroll(`#minute_wrap_${this.instance}`, {
             mouseWheel : true,
             deceleration:0.005,
             bounce: false
         });
-        // this.set_scroll_snap();
+        this.set_scroll_snap();
     }
 
     set_scroll_snap (){
         let self = this;
-        self.hour_scroll.on('scrollEnd', function (e){
+        hour_scroll.on('scrollEnd', function (e){
             if(self.user_scroll_hour == true){
                 self.user_scroll_hour = false;
                 let posY = this.y;
@@ -1614,7 +1616,7 @@ class TimeSelector2{
                     snap = min;
                 }
                 
-                self.hour_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
+                hour_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
                 $(`${self.target.install} li[data-hpos="${Math.abs(self.hour_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
                 $(`${self.target.install} li[data-hpos="${Math.abs(self.hour_scroll.y)}"]`).css('color', '#1e1e1e');
 
@@ -1640,11 +1642,11 @@ class TimeSelector2{
             }
         });
 
-        self.hour_scroll.on('scrollStart', function (e){
+        hour_scroll.on('scrollStart', function (e){
             self.user_scroll_hour = true;
         });
 
-        self.minute_scroll.on('scrollEnd', function (e){
+        minute_scroll.on('scrollEnd', function (e){
             if(self.user_scroll_minute == true){
                 self.user_scroll_minute = false;
                 let posY = this.y;
@@ -1673,7 +1675,7 @@ class TimeSelector2{
             }
         });
 
-        self.minute_scroll.on('scrollStart', function (){
+        minute_scroll.on('scrollStart', function (){
             self.user_scroll_minute = true;
         });
     }
@@ -1682,18 +1684,18 @@ class TimeSelector2{
         let initial_pos_hour = (-hour)*40;
         let initial_pos_minute = -(minute)*8;
 
-        this.hour_scroll.scrollTo(0, initial_pos_hour, 0, IScroll.utils.ease.bounce);
-        this.minute_scroll.scrollTo(0, initial_pos_minute, 0, IScroll.utils.ease.bounce);
+        hour_scroll.scrollTo(0, initial_pos_hour, 0, IScroll.utils.ease.bounce);
+        minute_scroll.scrollTo(0, initial_pos_minute, 0, IScroll.utils.ease.bounce);
 
-        $(`${this.target.install} li[data-hpos="${Math.abs(this.hour_scroll.y)}"]`).css('color', '#1e1e1e');
-        $(`${this.target.install} li[data-mpos="${Math.abs(this.minute_scroll.y)}"]`).css('color', '#1e1e1e');
-        $(`${this.target.install} li[data-hpos="${Math.abs(this.hour_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
-        $(`${this.target.install} li[data-mpos="${Math.abs(this.minute_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+        $(`${this.target.install} li[data-hpos="${Math.abs(hour_scroll.y)}"]`).css('color', '#1e1e1e');
+        $(`${this.target.install} li[data-mpos="${Math.abs(minute_scroll.y)}"]`).css('color', '#1e1e1e');
+        $(`${this.target.install} li[data-hpos="${Math.abs(hour_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+        $(`${this.target.install} li[data-mpos="${Math.abs(minute_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
     }
 
     get_selected_data (){
-        let hour = $(`${this.target.install} li[data-hpos="${Math.abs(this.hour_scroll.y)}"]`);
-        let minute = $(`${this.target.install} li[data-mpos="${Math.abs(this.minute_scroll.y)}"]`);
+        let hour = $(`${this.target.install} li[data-hpos="${Math.abs(hour_scroll.y)}"]`);
+        let minute = $(`${this.target.install} li[data-mpos="${Math.abs(minute_scroll.y)}"]`);
 
         let hour_text = Number(hour.attr('data-hour'));
         let minute_text = Number(minute.attr('data-min'));
