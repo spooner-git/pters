@@ -1577,26 +1577,16 @@ class TimeSelector2{
             mouseWheel : true,
             deceleration:0.005,
             bounce: false,
-            vScroll: false,
-            onBeforeScrollStart: function ( e ) {
-                if ( this.absDistX > (this.absDistY + 5 ) ) {
-                    // user is scrolling the x axis, so prevent the browsers' native scrolling
-                    e.preventDefault();
-                }
-            }
+            hScroll:false,
+            eventPassthrough:false
         });
         
         this.minute_scroll = new IScroll(`#minute_wrap_${this.instance}`, {
             mouseWheel : true,
             deceleration:0.005,
             bounce: false,
-            vScroll: false,
-            onBeforeScrollStart: function ( e ) {
-                if ( this.absDistX > (this.absDistY + 5 ) ) {
-                    // user is scrolling the x axis, so prevent the browsers' native scrolling
-                    e.preventDefault();
-                }
-            }
+            hScroll:false,
+            eventPassthrough:false
         });
 
         this.set_scroll_snap();
