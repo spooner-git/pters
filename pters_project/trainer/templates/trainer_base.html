@@ -627,6 +627,10 @@
     pc_top_toolbar_user_info_update();
     
 
+    $('#root_content').on("touchmove", function(e){
+        console.log("eee");
+        $('#debug_toolbar').show().text('eee');
+    })
     
 
     // 구글 reCAPTCHA 보이지 않게 하기
