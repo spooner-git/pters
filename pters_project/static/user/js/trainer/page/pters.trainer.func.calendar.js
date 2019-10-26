@@ -1464,7 +1464,6 @@ class Calendar {
 
 
     toggle_touch_move (onoff, input_target_html){
-        return false;
         let ts;
         let tsy;
         let tm;

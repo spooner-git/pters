@@ -632,7 +632,8 @@
         e.stopPropagation();
         let b = $('#root_content').css('height');
 
-        $('#debug_toolbar').show().text(b).fadeOut().css("overflow-y", "auto");
+        $('#debug_toolbar').show().text(b).fadeOut()
+        $('#root_content').css("overflow-y", "auto");
     })
 
     $('#root_content').on("touchstart", function(e){
