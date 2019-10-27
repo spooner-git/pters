@@ -743,7 +743,7 @@ def func_check_select_date_reserve_setting(class_id, trainer_id, select_date):
         reserve_avail_end_time_temp = reserve_avail_time_split[1]
         if reserve_avail_start_time_temp == '24:00' or reserve_avail_start_time_temp == '24:0':
             reserve_avail_start_time_temp = '23:59'
-        if reserve_avail_end_time_temp == '24:00':
+        if reserve_avail_end_time_temp == '24:00' or reserve_avail_end_time_temp == '24:0':
             reserve_avail_end_time_temp = '23:59'
 
         reserve_avail_start_time = datetime.datetime.strptime(reserve_avail_start_time_temp, '%H:%M')
