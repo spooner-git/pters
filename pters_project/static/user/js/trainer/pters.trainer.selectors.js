@@ -29,7 +29,7 @@ class TwoTimeSelector{
 
         this.listing_option = {
             five_minute_detail: OFF,
-            duplicate_filter : OFF
+            duplicate_filter : ON
         };
         
         if(user_option != undefined){
@@ -372,7 +372,7 @@ class TwoTimeSelector{
                                     </div>
                                     <div style="flex:1 1 0">
                                         ${CComponent.radio_button ("selector_time_duplicate_filter", this.listing_option.duplicate_filter, {"display":"inline-block", "vertical-align":"middle", "margin-bottom":"4px", "width":"20px", "height":"20px"}, ()=>{this.event_duplicate_filter_switch();})}
-                                        <span>중복일정 허용</span>
+                                        <span>중복일정 필터</span>
                                     </div>
                                 </div>
                                 <div class="time_selector_time1_wrap select_wrapper"></div>
