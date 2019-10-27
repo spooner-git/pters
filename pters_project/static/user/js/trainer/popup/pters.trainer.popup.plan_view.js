@@ -733,7 +733,7 @@ class Plan_view{
                     plan_name = data[i].lecture_name;
                 }
 
-                let check = know_whether_plans_has_duplicates (start_time, end_time, plan_starttime, plan_endtime);
+                let check = Plan_calc.know_whether_plans_has_duplicates (start_time, end_time, plan_starttime, plan_endtime);
                 if(check > 0){
                     who_is_duplicated.push(`${plan_starttime} - ${plan_endtime} ${plan_name}`);
                 }

@@ -6,6 +6,7 @@ class Plan_add{
         this.data_from_external = data_from_external;
 
         this.list_type = "lesson";
+        this.time_selector = "classic";
 
         let d = new Date();
         this.dates = {
@@ -135,9 +136,9 @@ class Plan_add{
         }
         this.list_type = type;
 
-        this.render();
+        // this.render();
         Setting_reserve_func.read((data)=>{
-            this.class_hour = 60; // 테스트
+            this.class_hour = 30; // 테스트
             this.work_time = calendar.calc_worktime_display(data);
             this.set_initial_data(this.data_from_external);
             this.render();
@@ -154,19 +155,12 @@ class Plan_add{
         let user_data_time = this.user_data.user_selected_time;
         this.data.start_time = user_data_time.hour == null ? null : `${user_data_time.hour}:${user_data_time.minute}`;
         this.data.start_time_text = user_data_time.text;
-        // this.data.end_time = user_data_time.hour2 == null ? null : `${user_data_time.hour2}:${user_data_time.minute2}`;
-        // this.data.end_time_text = user_data_time.text2;
-        // this.data.end_time = user_data_time.hour2 == null ? null : `${user_data_time.hour2}:${user_data_time.minute2}`;
-        // this.data.end_time_text = user_data_time.text2;
 
-        // let end_time_hour = TimeRobot.add_time(user_data_time.hour, user_data_time.minute, 0, this.class_hour).hour;
-        // let end_time_min = TimeRobot.add_time(user_data_time.hour, user_data_time.minute, 0, this.class_hour).minute;
-        // let end_time = TimeRobot.hm_to_hhmm(`${end_time_hour}:${end_time_min}`).complete;
-        // let end_time_text = TimeRobot.to_text(end_time_hour, end_time_min);
-
-        let end_time_calc = this.calc_end_time_by_start_time(user_data_time, this.class_hour, this.work_time.end_hour);
-        this.data.end_time = end_time_calc.data;
-        this.data.end_time_text = end_time_calc.text;
+        if(this.data.end_time == ""){
+            let end_time_calc = this.calc_end_time_by_start_time(user_data_time, this.class_hour, this.work_time.end_hour);
+            this.data.end_time = end_time_calc.data;
+            this.data.end_time_text = end_time_calc.text;
+        }
     }
 
     calc_end_time_by_start_time(start_time, class_hour, work_time_end){
@@ -233,6 +227,7 @@ class Plan_add{
         let date_select_row = this.dom_row_date_select();
         let start_time_select_row = this.dom_row_start_time_select();
         let end_time_select_row = this.dom_row_end_time_select();
+        let classic_time_selector = this.dom_row_classic_time_selector();
         let repeat_select_row = this.dom_row_repeat_select();
         let memo_select_row = this.dom_row_memo_select();
 
@@ -241,12 +236,27 @@ class Plan_add{
             display = 'none';
         }
 
-        let html =  `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('수업') + lecture_select_row + '</div>' +
+        let html;
+        if(this.time_selector == "classic"){
+            html =  `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('수업') + lecture_select_row + '</div>' +
                     `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('회원') + member_select_row+'</div>' +
-                    '<div class="obj_input_box_full">' +  CComponent.dom_tag('일자') + date_select_row + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>' +
-                                                    CComponent.dom_tag('진행 시간') + start_time_select_row + end_time_select_row +  '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>' +
+                    '<div class="obj_input_box_full">' +  
+                                                    CComponent.dom_tag('일자') + date_select_row + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>' +
+                                                    CComponent.dom_tag('진행 시간') + classic_time_selector +'<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>' +
                                                     CComponent.dom_tag('반복') + repeat_select_row + '</div>' +
                     '<div class="obj_input_box_full">'+  CComponent.dom_tag('메모') + memo_select_row + '</div>';
+        }else{
+            html =  `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('수업') + lecture_select_row + '</div>' +
+                    `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('회원') + member_select_row+'</div>' +
+                    '<div class="obj_input_box_full">' +  
+                                                    CComponent.dom_tag('일자') + date_select_row + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>' +
+                                                    CComponent.dom_tag('진행 시간') + start_time_select_row + end_time_select_row  +'<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>' +
+                                                    CComponent.dom_tag('반복') + repeat_select_row + '</div>' +
+                    '<div class="obj_input_box_full">'+  CComponent.dom_tag('메모') + memo_select_row + '</div>';
+        }
+        
+
+        
 
         return html;
     }
@@ -466,6 +476,66 @@ class Plan_add{
         return html + html_duplication_alert;
     }
 
+    dom_row_classic_time_selector(){
+        let selected_date;
+        if(this.user_data.user_selected_date.year != null){
+            selected_date = DateRobot.to_yyyymmdd(this.user_data.user_selected_date.year, this.user_data.user_selected_date.month, this.user_data.user_selected_date.date);
+        }else{
+            selected_date = DateRobot.to_yyyymmdd(this.dates.current_year, this.dates.current_month, this.dates.current_date);
+        }
+
+        let root_content_height = $root_content.height();
+
+        let id = 'classic_time_selector';
+        let title = this.data.start_time_text == null ? '시작 시각*' : this.data.start_time_text;
+        let icon = '/static/common/icon/icon_clock_white.png';
+        let icon_r_visible = NONE;
+        let icon_r_text = "";
+        let style = null;
+        let callback = ()=>{
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', 100*300/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
+                let time_data = calendar.latest_received_data[selected_date];
+                let user_option = {myname:'time', title:'시간 선택', work_time:this.work_time, class_hour:this.class_hour, initial:TimeRobot.hm_to_hhmm(this.data.start_time).complete, callback_when_set:(object)=>{
+                    this.data.start_time = object.data.start;
+                    this.data.start_time_text = object.text.start + ' 부터';
+                    this.data.end_time = object.data.end;
+                    this.data.end_time_text = object.text.end + ' 까지 <span style="font-size:11px;">('+ object.text.diff +'분 진행)</span>';
+                    
+                    this.render_content();
+                }};
+                time_selector = new TwoTimeSelector("#wrapper_popup_time_selector_function", time_data, user_option);
+            });
+        };
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, callback);
+
+        let id2 = 'classic_time_selector2';
+        let title2 = this.data.end_time_text == null ? '종료 시각*' : this.data.end_time_text;
+        let icon2 = '/static/common/icon/icon_clock_white.png';
+        let icon_r_visible2 = NONE;
+        let icon_r_text2 = "";
+        let style2 = null;
+        let callback2 = ()=>{
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', 100*300/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
+                let time_data = calendar.latest_received_data[selected_date];
+                let user_option = {myname:'time', title:'시간 선택', work_time:this.work_time, class_hour:this.class_hour, initial:TimeRobot.hm_to_hhmm(this.data.start_time).complete, callback_when_set:(object)=>{
+                    console.log(object)
+                    
+                    this.data.start_time = object.data.start;
+                    this.data.start_time_text = object.text.start + ' 부터';
+                    this.data.end_time = object.data.end;
+                    this.data.end_time_text = object.text.end + ' 까지 <span style="font-size:11px;">('+ object.text.diff +'분 진행)</span>';
+                    
+                    this.render_content();
+                }};
+                time_selector = new TwoTimeSelector("#wrapper_popup_time_selector_function", time_data, user_option);
+            });
+        };
+        let html2 = CComponent.create_row(id2, title2, icon2, icon_r_visible2, icon_r_text2, style2, callback2);
+
+        return html + html2;
+    }
+
+
     dom_row_repeat_select(){
         let date_color = "#1f1d1e";
         let this_start_date = this.data.date != null ? DateRobot.to_yyyymmdd(this.data.date.year, this.data.date.month, this.data.date.date) : "";
@@ -641,7 +711,7 @@ class Plan_add{
                     plan_name = data[i].lecture_name;
                 }
 
-                let check = know_whether_plans_has_duplicates (start_time, end_time, plan_starttime, plan_endtime);
+                let check = Plan_calc.know_whether_plans_has_duplicates (start_time, end_time, plan_starttime, plan_endtime);
                 if(check > 0){
                     who_is_duplicated.push(`${plan_starttime} - ${plan_endtime} ${plan_name}`);
                 }

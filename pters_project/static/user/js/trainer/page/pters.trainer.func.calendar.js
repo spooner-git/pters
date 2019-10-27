@@ -222,13 +222,13 @@ class Calendar {
         // let result = {complete:`${start_time_temp}:${end_time_temp}`, start:start_time_temp, end:end_time_temp, start_hour:Number(start_time_temp.split(':')[0]), end_hour:Number(end_time_temp.split(':')[0]), dayoff:dayoff_temp};
         let result = {
                         complete:`${start_time}:${end_time}`, 
-                        start:start_time, 
-                        end:end_time,
+                        start:TimeRobot.hm_to_hhmm(start_time).complete, 
+                        end:TimeRobot.hm_to_hhmm(end_time).complete,
                         start_hour:start_time_hour, 
                         end_hour:end_time_hour,
                         dayoff:dayoff_temp
                     };
-
+        console.log("result", result)
         return result;
     }
 
@@ -938,32 +938,9 @@ class Calendar {
                 }
                 let date_to_search = date_format(`${_year[i]}-${_month[i]}-${_date[i]}`)["yyyy-mm-dd"];
                 if(date_to_search in schedule_data){
-                    schedule_data[date_to_search] = duplicated_plans(schedule_data[date_to_search]); // daily schedule for duplicated plans;
+                    schedule_data[date_to_search] = Plan_calc.duplicated_plans(schedule_data[date_to_search]); // daily schedule for duplicated plans;
                     schedules.push(
                         schedule_data[date_to_search].map( (plan) => {
-                            // 0 : off, 1: 1:1, 2: group
-                            // let plan_name, plan_status_color, plan_font_style, plan_capacity_status;
-                            // if(plan.schedule_type == 0){
-                            //     plan_status_color = '#d2d1cf';
-                            //     plan_name = plan.note != "" ? plan.note : "OFF" ;
-                            //     plan_font_style = '';
-                            // }else if(plan.schedule_type == 1){
-                            //     plan_status_color = plan.lecture_ing_color_cd;
-                            //     plan_name = plan.member_name;
-                            //     plan_font_style = `color:${plan.lecture_ing_font_color_cd};`;
-                            // }else if(plan.schedule_type == 2){
-                            //     plan_capacity_status = '('+plan.lecture_current_member_num + '/' + plan.lecture_max_member_num+')';
-                            //     plan_status_color = plan.lecture_ing_color_cd;
-                            //     plan_name = plan.lecture_name + '<br>' + plan_capacity_status;
-                            //     plan_font_style = `color:${plan.lecture_ing_font_color_cd};`;
-                            // }
-
-                            // if(plan.state_cd != "NP"){
-                            //     plan_status_color = '#d2d1cf';
-                            //     plan_font_style = 'color:#282828;';
-                            //     plan_font_style+='text-decoration:line-through;text-decoration-color:#00000054;';
-                            // }
-
                             let plan_start_split = plan.start_time.split(':');
                             let plan_end_split = plan.end_time.split(':');
                             let start_hour = plan_start_split[0];
@@ -1978,6 +1955,290 @@ class Plan_func{
 
 
 
+
+// 중복일정 관련 함수 - 겹치지 않는 큰 일정으로 만들기
+
+class Plan_calc{
+    static merge_duplicated_time (resultStart_Array, resultEnd_Array){
+
+        let check_duplication = true; // 시작시 중복이 있다고 가정
+        let error_check = 0; //에러 방지 코드
+    
+        while(check_duplication){ // 중복된 값이 있는지 체크 (최대 3번 돌아감)
+            error_check++;
+            check_duplication = false; // 중복된 값이 없다고 초기값 셋팅
+    
+            let temp_resultStart_Array = resultStart_Array; //중복 검사를 위해 중복 걸러진 시작 값 셋팅
+            let temp_resultEnd_Array = resultEnd_Array; //중복 검사를 위해 중복 걸러진 종료 값 셋팅
+            resultStart_Array = []; // 시작시각 결과 값 비우기
+            resultEnd_Array = []; // 종료시각 결과 값 비우기
+    
+            //중복 걸러진 시작값 갯수 기준으로 시작
+            let temp_result_start_array_length = temp_resultStart_Array.length;
+            for(let i=0; i<temp_result_start_array_length; i++){
+                //비교 대상 셋팅
+    
+                let start_time_temp = temp_resultStart_Array[i];
+                let end_time_temp = temp_resultEnd_Array[i];
+    
+                // 비교 대상은 중복 걸러진 시작값중 자신 제외한 모든 값
+                for(let j=0; j<temp_result_start_array_length; j++){
+                    //자기 자신인 경우 제외 (중복 체크가 되어버림)
+                    if(i==j){
+                        continue;
+                    }
+                    // 중복 체크후 합치기 (일정 같은 경우 포함)
+                    if (Plan_calc.know_whether_plans_has_duplicates(temp_resultStart_Array[i], temp_resultEnd_Array[i], temp_resultStart_Array[j], temp_resultEnd_Array[j]) > 0) {
+                        let time_array = [start_time_temp, end_time_temp, temp_resultStart_Array[j], temp_resultEnd_Array[j]];
+                        time_array.sort();
+                        start_time_temp = time_array[0];
+                        end_time_temp = time_array[3];
+                        check_duplication = true; // 중복된 값 체크
+                    }
+    
+                }
+                //시작 시각과 종료시각이 같은 일정이 있는지 확인
+                let start_time_temp_index = resultStart_Array.indexOf(start_time_temp);
+                if(start_time_temp_index == -1 || resultEnd_Array[start_time_temp_index]!=end_time_temp){
+                    //시작 시각과 종료시각이 같은 일정이 없으면 결과값에 추가
+                    resultStart_Array.push(start_time_temp);
+                    resultEnd_Array.push(end_time_temp);
+                }
+            }
+            // 혹시 모를 에러 방지 코드
+            if(error_check>1000){
+                console.log('error 발생 : ');
+                break;
+            }
+        }
+        return {"clear_start_array":resultStart_Array, "clear_end_array":resultEnd_Array};
+    }
+
+    static know_whether_plans_has_duplicates(start_time, end_time, start_time_compare, end_time_compare){
+        if(start_time == start_time_compare && end_time == end_time_compare){
+            // 완전히 같은 경우
+            // a=b a'=b'
+            return 5;
+        }
+        else if(TimeRobot.compare(start_time_compare, start_time) && TimeRobot.compare(end_time, end_time_compare)){
+            // 비교대상 시간이 비교시간안에 쏙 들어갈때
+            // a < b < b' < a'
+            return 1;
+        }
+        else if(TimeRobot.compare(start_time_compare, start_time) && TimeRobot.compare(start_time_compare, end_time)==false && TimeRobot.compare(end_time_compare, end_time)){
+            // 비교대상 시간의 시작시간이 비교시간 안에 들어가 있을때
+            // a <= b < a' <= b'
+            return 2;
+        }
+        else if(TimeRobot.compare(start_time, start_time_compare) && TimeRobot.compare(start_time, end_time_compare)==false && TimeRobot.compare(end_time, end_time_compare)){
+            //비교 대상 시간의 종료시간이 비교 시간 안에 들어가 있을때
+            // b <= a < b' <= a'
+            return 3;
+        }
+        else if(TimeRobot.compare(start_time, start_time_compare) && TimeRobot.compare(end_time_compare, end_time)){
+            //비교 대상 시간이 비교시간을 완전히 감쌀때
+            // b < a < a' < b'
+            return 4;
+        }
+        else {
+            //비교 대상 시간이 비교시간과 겹치지 않을때
+            return 0;
+        }
+    }
+
+    static duplicated_plans (jsondata){
+        // 1:1 일정 / 그룹 일정 / OFF 일정 합치기
+        let result_data = [...jsondata];
+        let start_array = [];
+        let end_array = [];
+        let duplicate_dic = {};
+    
+        jsondata.forEach((plan) => {
+            let start_time = plan.start_time;
+            let end_time = plan.end_time;
+            if(end_time== "00:00"){
+                end_time = "24:00";
+            }
+            start_array.push(start_time);
+            end_array.push(end_time);
+        });
+    
+        //중복일정을 큰 덩어리로 가져오기
+        let clear_result = Plan_calc.merge_duplicated_time(start_array, end_array);
+        let clear_start_date = clear_result.clear_start_array;
+        let clear_end_date = clear_result.clear_end_array;
+    
+        for(let i=0; i<clear_start_date.length; i++){
+            duplicate_dic[clear_start_date[i]+' ~ '+clear_end_date[i]] = [];
+            // 중복 검사
+            for(let j=0; j<start_array.length; j++){
+                //겹치는 dict 를 만든다.
+                if(Plan_calc.know_whether_plans_has_duplicates(clear_start_date[i], clear_end_date[i], start_array[j], end_array[j]) > 0){
+                    duplicate_dic[clear_start_date[i]+' ~ '+clear_end_date[i]].push(start_array[j]+' ~ '+end_array[j]);
+                }
+            }
+        }
+    
+        //겹치지 않는 합쳐진 일정
+        let pp = 0;
+        for(let plan in duplicate_dic){
+            let temp_index = [];
+            let temp_cell_divide;
+    
+            // 겹치는 일정 sorting
+            let array_sorted = duplicate_dic[plan].sort();
+    
+            for(let i=0; i<array_sorted.length; i++){
+                // 기본값 셋팅
+                if(i == 0){
+                    temp_index[i] = 0; //가장 첫번째 값은 항상 왼쪽 첫번째로 고정 위치
+                    continue;
+                }
+                let check_duplication = false;
+                // 비교 대상 확인
+                for(let j=0; j<array_sorted.length; j++){
+                    if(i == j){
+                        break;
+                    }
+                    let ref_split = array_sorted[i].split(' ~ ');
+                    let comp_split = array_sorted[j].split(' ~ ');
+    
+                    if(Plan_calc.know_whether_plans_has_duplicates(ref_split[0], ref_split[1], comp_split[0], comp_split[1]) > 0){ //겹칠때
+                        check_duplication = true;
+                    }else{ //겹치지 않을때
+                        let index_move = 0;
+                        let check = 0;
+                        // 지금 비교 조건에서는 겹치지 않았지만 정말 들어갈수 있는지 전체 array 에서 검사
+                        //이 인덱스(위치)와 같은 값을 갖는 다른 시간대가 있는지 검사
+                        //같은 위치에 있는 일정들 검사 (같은 위치지만 시간이 다르면 겹치지 않을 수 있으므로)
+                        for(let z=0; z<array_element_count(temp_index, temp_index[j]); z++){
+                            let index_loc = temp_index.indexOf(temp_index[j], index_move);
+                            index_move = index_loc + 1;
+                            if(i != index_loc){
+    
+                                // let ref_split = array_sorted[i].split(' ~ ');
+                                let comp_split = array_sorted[index_loc].split(' ~ ');
+    
+                                if(Plan_calc.know_whether_plans_has_duplicates(ref_split[0], ref_split[1], comp_split[0], comp_split[1]) > 0){
+                                    check++;
+                                }
+                            }
+                        }
+                        if(check > 0){ //겹치는게 존재
+                            check_duplication = true;
+                        }else{ //겹치는게 없음
+                            temp_index[i] = temp_index[j];
+                            break;
+                        }
+                    }
+    
+                    if(check_duplication == true){
+                        let temp_array = [];
+                        for(let k=0; k<=j; k++){
+                            temp_array.push(temp_index[k]);
+                        }
+                        temp_index[i] = Math.max.apply(null, temp_array)+1;
+                    }
+                }
+            }
+    
+            temp_cell_divide = Math.max.apply(null, temp_index) +1;
+    
+            for(let p=0; p<temp_index.length; p++){
+                result_data[pp].duplicated_index = temp_index[p];
+                result_data[pp].duplicated_cell = temp_cell_divide;
+                pp++;
+            }
+        }
+        return result_data;
+    }
+
+    static func_start_time_calc(jsondata, setting_info){ //offAddOkArray 채우기 : 시작시간 리스트 채우기!!!!
+        let plan_time = [];
+    
+        let workStartTime_ = TimeRobot.hm_to_hhmm(setting_info.work_time.start_hour + ':00').complete;
+        let workEndTime_ = TimeRobot.hm_to_hhmm(setting_info.work_time.end_hour+':00').complete;
+
+        let start_array = [];
+        let end_array = [];
+        if(jsondata != undefined){
+            jsondata.forEach((plan) => {
+                let start_time = plan.start_time;
+                let end_time = plan.end_time;
+                if(end_time== "00:00"){
+                    end_time = "24:00";
+                }
+                start_array.push(start_time);
+                end_array.push(end_time);
+            });
+        }
+    
+        let clear_result = Plan_calc.merge_duplicated_time(start_array, end_array);
+    
+        //중복일정시 Test
+        let disable_time_array_start_date = clear_result.clear_start_array;
+        let disable_time_array_end_date = clear_result.clear_end_array;
+        let length = disable_time_array_start_date.length;
+        for(let i=0; i<length; i++){
+            let plan_start_time = disable_time_array_start_date[i];
+            let plan_end_time = disable_time_array_end_date[i];
+            
+            if(plan_end_time == "00:00"){
+                plan_time.push("24:00");
+            }else{
+                plan_time.push(plan_end_time);
+            }
+            plan_time.push(plan_start_time);
+        }
+    
+        plan_time.push(setting_info.work_time.start);
+        plan_time.push(setting_info.work_time.end);
+    
+        let sortedlist = plan_time.sort();
+        //index 사이 1-2, 3-4, 5-6, 7-8, 9-10, 11-12, 13-14
+        let semiresult = [];
+        let time_unit;
+        time_unit = Number(setting_info.class_hour);
+        for(let p=0; p<sortedlist.length/2; p++){
+            let zz = 0;
+
+            // while 조건 : 검사하는 시작시각이 이미 존재하는 일정의 시작시각보다 작을때 동작
+            while(!compare_time(add_time(sortedlist[p*2], '0:'+Number(zz+time_unit)), add_time(sortedlist[p*2+1], '0:00'))){
+                // 업무 시작시각보다 큰 시작사각만 추가
+                if( compare_time( workStartTime_, add_time(sortedlist[p*2], '0:'+zz) ) == false){
+                    // 업무 종료시각 - time_unit 보다 작은 시작시각만 추가
+                    if (compare_time( add_time(sortedlist[p*2], '0:'+zz), substract_time(workEndTime_, `00:${time_unit}`) ) ==false){
+                        semiresult.push(add_time(sortedlist[p*2], '0:'+zz));
+                    }
+                }
+                // time_unit 만큼 더해준다.
+                zz += 1;
+                // 방어 코드
+                if(zz>1450){ //하루 24시간 --> 1440분
+                    alert('예상치 못한 에러가 발생했습니다. \n 관리자에게 문의해주세요.');
+                    break;
+                }
+            }
+        }
+    
+        let addOkArrayList = [];
+        for(let t=0; t<semiresult.length; t++){
+    
+            if(compare_time(semiresult[t], add_time(workEndTime_, '00:00')) == false
+                && compare_time(add_time(workStartTime_, '00:00'), semiresult[t]) == false
+                && workStartTime_ != workEndTime_){        //업무시간
+                if(Number(semiresult[t].split(':')[1])%Number(setting_info.start_time_diff) == 0){   //몇분 간격으로 시작시간을 보여줄 것인지?
+                    addOkArrayList.push(semiresult[t]);
+                }
+            }
+            
+        }
+    
+        return {"addOkArray":addOkArrayList, "merged":sortedlist};
+    }
+
+}
+
 function date_format (date){
     let date_raw = date.replace(/[-_., ]/gi, "-").split('-');
     let yyyy = date_raw[0];
@@ -2008,93 +2269,16 @@ function date_format (date){
     };
 }
 
-// 중복일정 관련 함수 - 겹치지 않는 큰 일정으로 만들기
-function clear_duplicated_time (resultStart_Array, resultEnd_Array){
-
-    let check_duplication = true; // 시작시 중복이 있다고 가정
-    let error_check = 0; //에러 방지 코드
-
-    while(check_duplication){ // 중복된 값이 있는지 체크 (최대 3번 돌아감)
-        error_check++;
-        check_duplication = false; // 중복된 값이 없다고 초기값 셋팅
-
-        let temp_resultStart_Array = resultStart_Array; //중복 검사를 위해 중복 걸러진 시작 값 셋팅
-        let temp_resultEnd_Array = resultEnd_Array; //중복 검사를 위해 중복 걸러진 종료 값 셋팅
-        resultStart_Array = []; // 시작시각 결과 값 비우기
-        resultEnd_Array = []; // 종료시각 결과 값 비우기
-
-        //중복 걸러진 시작값 갯수 기준으로 시작
-        let temp_result_start_array_length = temp_resultStart_Array.length;
-        for(let i=0; i<temp_result_start_array_length; i++){
-            //비교 대상 셋팅
-
-            let start_time_temp = temp_resultStart_Array[i];
-            let end_time_temp = temp_resultEnd_Array[i];
-
-            // 비교 대상은 중복 걸러진 시작값중 자신 제외한 모든 값
-            for(let j=0; j<temp_result_start_array_length; j++){
-                //자기 자신인 경우 제외 (중복 체크가 되어버림)
-                if(i==j){
-                    continue;
-                }
-                // 중복 체크후 합치기 (일정 같은 경우 포함)
-                if (know_whether_plans_has_duplicates(temp_resultStart_Array[i], temp_resultEnd_Array[i], temp_resultStart_Array[j], temp_resultEnd_Array[j]) > 0) {
-                    let time_array = [start_time_temp, end_time_temp, temp_resultStart_Array[j], temp_resultEnd_Array[j]];
-                    time_array.sort();
-                    start_time_temp = time_array[0];
-                    end_time_temp = time_array[3];
-                    check_duplication = true; // 중복된 값 체크
-                }
-
-            }
-            //시작 시각과 종료시각이 같은 일정이 있는지 확인
-            let start_time_temp_index = resultStart_Array.indexOf(start_time_temp);
-            if(start_time_temp_index == -1 || resultEnd_Array[start_time_temp_index]!=end_time_temp){
-                //시작 시각과 종료시각이 같은 일정이 없으면 결과값에 추가
-                resultStart_Array.push(start_time_temp);
-                resultEnd_Array.push(end_time_temp);
-            }
-        }
-        // 혹시 모를 에러 방지 코드
-        if(error_check>1000){
-            console.log('error 발생 : ');
-            break;
-        }
+function array_element_count (array, wanted){
+    let counts = {};
+    let len = array.length;
+    for(let i=0; i<len; i++){
+        counts[array[i]] = 0;
     }
-    return {"clear_start_array":resultStart_Array, "clear_end_array":resultEnd_Array};
-}
-
-
-function know_whether_plans_has_duplicates(start_time, end_time, start_time_compare, end_time_compare){
-    if(start_time == start_time_compare && end_time == end_time_compare){
-        // 완전히 같은 경우
-        // a=b a'=b'
-        return 5;
+    for(let j=0; j<len; j++){
+        counts[array[j]] = counts[array[j]] +1;
     }
-    else if(TimeRobot.compare(start_time_compare, start_time) && TimeRobot.compare(end_time, end_time_compare)){
-        // 비교대상 시간이 비교시간안에 쏙 들어갈때
-        // a < b < b' < a'
-        return 1;
-    }
-    else if(TimeRobot.compare(start_time_compare, start_time) && TimeRobot.compare(start_time_compare, end_time)==false && TimeRobot.compare(end_time_compare, end_time)){
-        // 비교대상 시간의 시작시간이 비교시간 안에 들어가 있을때
-        // a <= b < a' <= b'
-        return 2;
-    }
-    else if(TimeRobot.compare(start_time, start_time_compare) && TimeRobot.compare(start_time, end_time_compare)==false && TimeRobot.compare(end_time, end_time_compare)){
-        //비교 대상 시간의 종료시간이 비교 시간 안에 들어가 있을때
-        // b <= a < b' <= a'
-        return 3;
-    }
-    else if(TimeRobot.compare(start_time, start_time_compare) && TimeRobot.compare(end_time_compare, end_time)){
-        //비교 대상 시간이 비교시간을 완전히 감쌀때
-        // b < a < a' < b'
-        return 4;
-    }
-    else {
-        //비교 대상 시간이 비교시간과 겹치지 않을때
-        return 0;
-    }
+    return counts[wanted];
 }
 
 function compare_time (time1, time2){
@@ -2125,154 +2309,432 @@ function compare_time (time1, time2){
     }
 }
 
-// function compare_time (time1, time2){
-//     var hour1 = time1.split(':')[0];
-//     var min1  = time1.split(':')[1];
-//     var hour2 = time2.split(':')[0];
-//     var min2  = time2.split(':')[1];
-//
-//     var time1_num = hour1+min1;
-//     var time2_num = hour2+min2;
-//
-//     if(Number(time1_num) > Number(time2_num) ){
-//         return true;
-//     }else{
-//         return false;
+function add_time(starttime, addvalue){
+    let starttimeSplit = starttime.split(':');
+    let addvalueSplit = addvalue.split(':');
+    let shour = Number(starttimeSplit[0]);
+    let smin = Number(starttimeSplit[1]);
+    let addhour = Number(addvalueSplit[0]);
+    let addmin = Number(addvalueSplit[1]);
+    let resultHour;
+    let resultMin;
+    let hourplus;
+    if(smin + addmin >= 60){
+        if(shour + addhour >= 24){  // 23 + 4 --> 3
+            if(shour + addhour == 24){
+                resultHour = 25;
+            }else{
+                resultHour = addhour - (24-shour);
+            }
+            resultMin = smin + addmin - 60;
+        }else if(shour + addhour < 24){
+            hourplus = parseInt((smin + addmin)/60);
+            resultHour = shour + addhour + hourplus;
+            resultMin = (smin + addmin)%60;
+        }
+    }else if(smin + addmin < 60){
+        if(shour + addhour >= 24){  //23 + 1 --> 00
+            if(shour + addhour == 24){
+                resultHour = 24;
+            }else{
+                resultHour = (shour + addhour) - 24;
+            }
+            resultMin = smin + addmin;
+        }else if(shour + addhour < 24){
+            resultHour = shour + addhour;
+            resultMin = smin + addmin;
+        }
+    }
+
+    if(resultHour<10){
+        resultHour = '0' + resultHour;
+    }
+    if(resultMin<10){
+        resultMin = '0' + resultMin;
+    }
+
+
+    return resultHour + ":" + resultMin;
+}
+
+function substract_time(starttime, subvalue){
+    let shour = Number(starttime.split(':')[0]);
+    let smin = Number(starttime.split(':')[1]);
+    let subhour = Number(subvalue.split(':')[0]);
+    let submin = Number(subvalue.split(':')[1]);
+    let resultHour;
+    let resultMin;
+    if(submin > 60){
+        subhour = subhour + parseInt(submin/60);
+        submin = submin%60;
+    }
+
+    if(smin - submin >= 0){
+        if(shour - subhour >= 0){
+            resultHour = shour - subhour;
+            resultMin = smin - submin;
+        }else if(shour - subhour < 0){
+            resultHour = 24 + (shour - subhour);
+            resultMin = smin - submin;
+        }
+
+    }else if(smin - submin < 0){
+        if(shour - subhour > 0){
+            resultHour = shour - subhour - 1;
+            resultMin = smin + (60 - submin);
+            // var hourminus = parseInt( (submin + smin)/60 );
+            // var resultHour = shour - subhour - hourminus - 1;
+            // var resultMin = (smin - submin)%60;
+            // if(resultMin < 0){
+            //  resultMin = 60 + resultMin;
+            // }
+
+        }else if(shour - subhour <= 0){
+            resultHour = 24 + (shour - subhour) - 1;
+            resultMin = smin + (60 - submin);
+            // var hourminus = parseInt( (smin - submin)/60 );
+            // var resultHour = shour - subhour + hourminus - 1;
+            // var resultMin = (smin - submin)%60;
+            // if(resultMin < 0){
+            //  resultMin = 60 + resultMin;
+            // }
+        }
+    }
+
+    if(resultHour<10){
+        resultHour = '0' + resultHour;
+    }
+    if(resultMin<10){
+        resultMin = '0' + resultMin;
+    }
+
+
+    return resultHour + ":" + resultMin;
+}
+
+// function merge_duplicated_time (resultStart_Array, resultEnd_Array){
+
+//     let check_duplication = true; // 시작시 중복이 있다고 가정
+//     let error_check = 0; //에러 방지 코드
+
+//     while(check_duplication){ // 중복된 값이 있는지 체크 (최대 3번 돌아감)
+//         error_check++;
+//         check_duplication = false; // 중복된 값이 없다고 초기값 셋팅
+
+//         let temp_resultStart_Array = resultStart_Array; //중복 검사를 위해 중복 걸러진 시작 값 셋팅
+//         let temp_resultEnd_Array = resultEnd_Array; //중복 검사를 위해 중복 걸러진 종료 값 셋팅
+//         resultStart_Array = []; // 시작시각 결과 값 비우기
+//         resultEnd_Array = []; // 종료시각 결과 값 비우기
+
+//         //중복 걸러진 시작값 갯수 기준으로 시작
+//         let temp_result_start_array_length = temp_resultStart_Array.length;
+//         for(let i=0; i<temp_result_start_array_length; i++){
+//             //비교 대상 셋팅
+
+//             let start_time_temp = temp_resultStart_Array[i];
+//             let end_time_temp = temp_resultEnd_Array[i];
+
+//             // 비교 대상은 중복 걸러진 시작값중 자신 제외한 모든 값
+//             for(let j=0; j<temp_result_start_array_length; j++){
+//                 //자기 자신인 경우 제외 (중복 체크가 되어버림)
+//                 if(i==j){
+//                     continue;
+//                 }
+//                 // 중복 체크후 합치기 (일정 같은 경우 포함)
+//                 if (know_whether_plans_has_duplicates(temp_resultStart_Array[i], temp_resultEnd_Array[i], temp_resultStart_Array[j], temp_resultEnd_Array[j]) > 0) {
+//                     let time_array = [start_time_temp, end_time_temp, temp_resultStart_Array[j], temp_resultEnd_Array[j]];
+//                     time_array.sort();
+//                     start_time_temp = time_array[0];
+//                     end_time_temp = time_array[3];
+//                     check_duplication = true; // 중복된 값 체크
+//                 }
+
+//             }
+//             //시작 시각과 종료시각이 같은 일정이 있는지 확인
+//             let start_time_temp_index = resultStart_Array.indexOf(start_time_temp);
+//             if(start_time_temp_index == -1 || resultEnd_Array[start_time_temp_index]!=end_time_temp){
+//                 //시작 시각과 종료시각이 같은 일정이 없으면 결과값에 추가
+//                 resultStart_Array.push(start_time_temp);
+//                 resultEnd_Array.push(end_time_temp);
+//             }
+//         }
+//         // 혹시 모를 에러 방지 코드
+//         if(error_check>1000){
+//             console.log('error 발생 : ');
+//             break;
+//         }
+//     }
+//     return {"clear_start_array":resultStart_Array, "clear_end_array":resultEnd_Array};
+// }
+
+
+// function know_whether_plans_has_duplicates(start_time, end_time, start_time_compare, end_time_compare){
+//     if(start_time == start_time_compare && end_time == end_time_compare){
+//         // 완전히 같은 경우
+//         // a=b a'=b'
+//         return 5;
+//     }
+//     else if(TimeRobot.compare(start_time_compare, start_time) && TimeRobot.compare(end_time, end_time_compare)){
+//         // 비교대상 시간이 비교시간안에 쏙 들어갈때
+//         // a < b < b' < a'
+//         return 1;
+//     }
+//     else if(TimeRobot.compare(start_time_compare, start_time) && TimeRobot.compare(start_time_compare, end_time)==false && TimeRobot.compare(end_time_compare, end_time)){
+//         // 비교대상 시간의 시작시간이 비교시간 안에 들어가 있을때
+//         // a <= b < a' <= b'
+//         return 2;
+//     }
+//     else if(TimeRobot.compare(start_time, start_time_compare) && TimeRobot.compare(start_time, end_time_compare)==false && TimeRobot.compare(end_time, end_time_compare)){
+//         //비교 대상 시간의 종료시간이 비교 시간 안에 들어가 있을때
+//         // b <= a < b' <= a'
+//         return 3;
+//     }
+//     else if(TimeRobot.compare(start_time, start_time_compare) && TimeRobot.compare(end_time_compare, end_time)){
+//         //비교 대상 시간이 비교시간을 완전히 감쌀때
+//         // b < a < a' < b'
+//         return 4;
+//     }
+//     else {
+//         //비교 대상 시간이 비교시간과 겹치지 않을때
+//         return 0;
 //     }
 // }
 
-// function compare_times_to_merge_min_max (stime1, etime1, stime2, etime2){
-//     var timearray = [stime1, stime2, etime1, etime2];
-//     var stime_new;
-//     var etime_new;
-//     timearray.sort();
-//
-//     stime_new = timearray[0];
-//     etime_new = timearray[3];
-//
-//     return {"start":`${stime_new}`, "end":`${etime_new}`};
+
+// function array_element_count (array, wanted){
+//     let counts = {};
+//     let len = array.length;
+//     for(let i=0; i<len; i++){
+//         counts[array[i]] = 0;
+//     }
+//     for(let j=0; j<len; j++){
+//         counts[array[j]] = counts[array[j]] +1;
+//     }
+//     return counts[wanted];
 // }
 
-function array_element_count (array, wanted){
-    let counts = {};
-    let len = array.length;
-    for(let i=0; i<len; i++){
-        counts[array[i]] = 0;
-    }
-    for(let j=0; j<len; j++){
-        counts[array[j]] = counts[array[j]] +1;
-    }
-    return counts[wanted];
-}
+// function duplicated_plans (jsondata){
+//     // 1:1 일정 / 그룹 일정 / OFF 일정 합치기
+//     let result_data = [...jsondata];
+//     let start_array = [];
+//     let end_array = [];
+//     let duplicate_dic = {};
 
-function duplicated_plans (jsondata){
-    // 1:1 일정 / 그룹 일정 / OFF 일정 합치기
-    let result_data = [...jsondata];
-    let start_array = [];
-    let end_array = [];
-    let duplicate_dic = {};
+//     jsondata.forEach((plan) => {
+//         let start_time = plan.start_time;
+//         let end_time = plan.end_time;
+//         if(end_time== "00:00"){
+//             end_time = "24:00";
+//         }
+//         start_array.push(start_time);
+//         end_array.push(end_time);
+//     });
 
-    jsondata.forEach((plan) => {
-        let start_time = plan.start_time;
-        let end_time = plan.end_time;
-        if(end_time== "00:00"){
-            end_time = "24:00";
-        }
-        start_array.push(start_time);
-        end_array.push(end_time);
-    });
+//     //중복일정을 큰 덩어리로 가져오기
+//     let clear_result = merge_duplicated_time(start_array, end_array);
+//     let clear_start_date = clear_result.clear_start_array;
+//     let clear_end_date = clear_result.clear_end_array;
 
-    //중복일정을 큰 덩어리로 가져오기
-    let clear_result = clear_duplicated_time(start_array, end_array);
-    let clear_start_date = clear_result.clear_start_array;
-    let clear_end_date = clear_result.clear_end_array;
+//     for(let i=0; i<clear_start_date.length; i++){
+//         duplicate_dic[clear_start_date[i]+' ~ '+clear_end_date[i]] = [];
+//         // 중복 검사
+//         for(let j=0; j<start_array.length; j++){
+//             //겹치는 dict 를 만든다.
+//             if(know_whether_plans_has_duplicates(clear_start_date[i], clear_end_date[i], start_array[j], end_array[j]) > 0){
+//                 duplicate_dic[clear_start_date[i]+' ~ '+clear_end_date[i]].push(start_array[j]+' ~ '+end_array[j]);
+//             }
+//         }
+//     }
 
-    for(let i=0; i<clear_start_date.length; i++){
-        duplicate_dic[clear_start_date[i]+' ~ '+clear_end_date[i]] = [];
-        // 중복 검사
-        for(let j=0; j<start_array.length; j++){
-            //겹치는 dict 를 만든다.
-            if(know_whether_plans_has_duplicates(clear_start_date[i], clear_end_date[i], start_array[j], end_array[j]) > 0){
-                duplicate_dic[clear_start_date[i]+' ~ '+clear_end_date[i]].push(start_array[j]+' ~ '+end_array[j]);
-            }
-        }
-    }
+//     //겹치지 않는 합쳐진 일정
+//     let pp = 0;
+//     for(let plan in duplicate_dic){
+//         let temp_index = [];
+//         let temp_cell_divide;
 
-    //겹치지 않는 합쳐진 일정
-    let pp = 0;
-    for(let plan in duplicate_dic){
-        let temp_index = [];
-        let temp_cell_divide;
+//         // 겹치는 일정 sorting
+//         let array_sorted = duplicate_dic[plan].sort();
 
-        // 겹치는 일정 sorting
-        let array_sorted = duplicate_dic[plan].sort();
+//         for(let i=0; i<array_sorted.length; i++){
+//             // 기본값 셋팅
+//             if(i == 0){
+//                 temp_index[i] = 0; //가장 첫번째 값은 항상 왼쪽 첫번째로 고정 위치
+//                 continue;
+//             }
+//             let check_duplication = false;
+//             // 비교 대상 확인
+//             for(let j=0; j<array_sorted.length; j++){
+//                 if(i == j){
+//                     break;
+//                 }
+//                 let ref_split = array_sorted[i].split(' ~ ');
+//                 let comp_split = array_sorted[j].split(' ~ ');
 
-        for(let i=0; i<array_sorted.length; i++){
-            // 기본값 셋팅
-            if(i == 0){
-                temp_index[i] = 0; //가장 첫번째 값은 항상 왼쪽 첫번째로 고정 위치
-                continue;
-            }
-            let check_duplication = false;
-            // 비교 대상 확인
-            for(let j=0; j<array_sorted.length; j++){
-                if(i == j){
-                    break;
-                }
-                let ref_split = array_sorted[i].split(' ~ ');
-                let comp_split = array_sorted[j].split(' ~ ');
+//                 if(know_whether_plans_has_duplicates(ref_split[0], ref_split[1], comp_split[0], comp_split[1]) > 0){ //겹칠때
+//                     check_duplication = true;
+//                 }else{ //겹치지 않을때
+//                     let index_move = 0;
+//                     let check = 0;
+//                     // 지금 비교 조건에서는 겹치지 않았지만 정말 들어갈수 있는지 전체 array 에서 검사
+//                     //이 인덱스(위치)와 같은 값을 갖는 다른 시간대가 있는지 검사
+//                     //같은 위치에 있는 일정들 검사 (같은 위치지만 시간이 다르면 겹치지 않을 수 있으므로)
+//                     for(let z=0; z<array_element_count(temp_index, temp_index[j]); z++){
+//                         let index_loc = temp_index.indexOf(temp_index[j], index_move);
+//                         index_move = index_loc + 1;
+//                         if(i != index_loc){
 
-                if(know_whether_plans_has_duplicates(ref_split[0], ref_split[1], comp_split[0], comp_split[1]) > 0){ //겹칠때
-                    check_duplication = true;
-                }else{ //겹치지 않을때
-                    let index_move = 0;
-                    let check = 0;
-                    // 지금 비교 조건에서는 겹치지 않았지만 정말 들어갈수 있는지 전체 array 에서 검사
-                    //이 인덱스(위치)와 같은 값을 갖는 다른 시간대가 있는지 검사
-                    //같은 위치에 있는 일정들 검사 (같은 위치지만 시간이 다르면 겹치지 않을 수 있으므로)
-                    for(let z=0; z<array_element_count(temp_index, temp_index[j]); z++){
-                        let index_loc = temp_index.indexOf(temp_index[j], index_move);
-                        index_move = index_loc + 1;
-                        if(i != index_loc){
+//                             // let ref_split = array_sorted[i].split(' ~ ');
+//                             let comp_split = array_sorted[index_loc].split(' ~ ');
 
-                            // let ref_split = array_sorted[i].split(' ~ ');
-                            let comp_split = array_sorted[index_loc].split(' ~ ');
+//                             if(know_whether_plans_has_duplicates(ref_split[0], ref_split[1], comp_split[0], comp_split[1]) > 0){
+//                                 check++;
+//                             }
+//                         }
+//                     }
+//                     if(check > 0){ //겹치는게 존재
+//                         check_duplication = true;
+//                     }else{ //겹치는게 없음
+//                         temp_index[i] = temp_index[j];
+//                         break;
+//                     }
+//                 }
 
-                            if(know_whether_plans_has_duplicates(ref_split[0], ref_split[1], comp_split[0], comp_split[1]) > 0){
-                                check++;
-                            }
-                        }
-                    }
-                    if(check > 0){ //겹치는게 존재
-                        check_duplication = true;
-                    }else{ //겹치는게 없음
-                        temp_index[i] = temp_index[j];
-                        break;
-                    }
-                }
+//                 if(check_duplication == true){
+//                     let temp_array = [];
+//                     for(let k=0; k<=j; k++){
+//                         temp_array.push(temp_index[k]);
+//                     }
+//                     temp_index[i] = Math.max.apply(null, temp_array)+1;
+//                 }
+//             }
+//         }
 
-                if(check_duplication == true){
-                    let temp_array = [];
-                    for(let k=0; k<=j; k++){
-                        temp_array.push(temp_index[k]);
-                    }
-                    temp_index[i] = Math.max.apply(null, temp_array)+1;
-                }
-            }
-        }
+//         temp_cell_divide = Math.max.apply(null, temp_index) +1;
 
-        temp_cell_divide = Math.max.apply(null, temp_index) +1;
-
-        for(let p=0; p<temp_index.length; p++){
-            result_data[pp].duplicated_index = temp_index[p];
-            result_data[pp].duplicated_cell = temp_cell_divide;
-            pp++;
-        }
-    }
-    return result_data;
-}
+//         for(let p=0; p<temp_index.length; p++){
+//             result_data[pp].duplicated_index = temp_index[p];
+//             result_data[pp].duplicated_cell = temp_cell_divide;
+//             pp++;
+//         }
+//     }
+//     return result_data;
+// }
 // 중복일정 관련 함수
 // 중복일정 관련 함수
+
+
+//시작시간 구하기
+// function func_start_time_calc(selected_date, schedule_json, setting_info){ //offAddOkArray 채우기 : 시작시간 리스트 채우기!!!!
+//     //let allplans = [];
+//     let plan_time = [];
+
+//     let selected_date_split = selected_date.split('-');
+//     let this_year = selected_date_split[0];
+//     let this_month = selected_date_split[1];
+//     let this_date = selected_date_split[2];
+//     let thisDay = new Date(this_year, Number(this_month)-1, this_date).getDay();
+
+
+//     let workStartTime_ = time_h_m_to_hh_mm(setting_info.setting_trainer_work_time_available[thisDay].split('-')[0]);
+//     let workEndTime_ = time_h_m_to_hh_mm(setting_info.setting_trainer_work_time_available[thisDay].split('-')[1]);
+//     if(workEndTime_ == "23:59"){
+//         workEndTime_ = "24:00";
+//     }
+
+//     let clear_result = clear_duplicated_date_time(schedule_json, selected_date);
+//     console.log("clear_result", clear_result)
+
+//     //중복일정시 Test
+//     let disable_time_array_start_date = clear_result.clear_start_array;
+//     let disable_time_array_end_date = clear_result.clear_end_array;
+
+//     for(let i=0; i<disable_time_array_start_date.length; i++){
+//         let plan_start_datetime_split = disable_time_array_start_date[i].split(' ');
+//         let plan_start_time_split = plan_start_datetime_split[1].split(':');
+//         let plan_end_datetime_split = disable_time_array_end_date[i].split(' ');
+//         let plan_end_time_split = plan_end_datetime_split[1].split(':');
+
+//         let plan_start_date = plan_start_datetime_split[0];
+//         let plan_start_time = plan_start_time_split[0]+':'+plan_start_time_split[1];
+//         let plan_end_date = plan_end_datetime_split[0];
+//         let plan_end_time = plan_end_time_split[0]+':'+plan_end_time_split[1];
+//         if(plan_start_date == selected_date){
+//             plan_time.push(plan_start_time);
+//         }
+//         if (plan_end_date == selected_date && plan_end_time != "00:00") {
+//             plan_time.push(plan_end_time);
+//         } else if (plan_end_date == date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(selected_date, 1), '-') && plan_end_time == "00:00") {
+//             plan_time.push('24:00');
+//         }
+//     }
+
+
+//     plan_time.push("00:00");
+//     plan_time.push("24:00");
+
+//     let sortedlist = plan_time.sort();
+
+//     //all_plans = sortedlist;
+//     //index 사이 1-2, 3-4, 5-6, 7-8, 9-10, 11-12, 13-14
+//     let semiresult = [];
+//     let time_unit;
+//     if(Number(setting_info.setting_member_time_duration < 10)){
+//         time_unit = Number(setting_info.class_hour)*Number(setting_info.setting_member_time_duration);
+//     }else{
+//         time_unit = Number(setting_info.setting_member_time_duration);
+//     }
+//     for(let p=0; p<sortedlist.length/2; p++){
+//         let zz = 0;
+//         //일정 시작시간이 일정 종료시간보다 작으면,
+//         // if(compare_time(add_time(sortedlist[p*2],'0:'+Number(zz+time_unit)), add_time(sortedlist[p*2+1],'0:00')) ==false &&
+//         //     compare_time( add_time(sortedlist[p*2],'0:'+Number(zz+time_unit)), add_time(workEndTime_ ,'00:00')) == false  ){
+
+//         // while 조건 : 검사하는 시작시각이 이미 존재하는 일정의 시작시각보다 작을때 동작
+//         while(!compare_time(add_time(sortedlist[p*2], '0:'+Number(zz+time_unit)), add_time(sortedlist[p*2+1], '0:00'))){
+//             // 업무 시작시각보다 큰 시작사각만 추가
+//             if( compare_time( workStartTime_, add_time(sortedlist[p*2], '0:'+zz) ) == false){
+//                 // 업무 종료시각 - time_unit 보다 작은 시작시각만 추가
+//                 if (compare_time( add_time(sortedlist[p*2], '0:'+zz), substract_time(workEndTime_, `00:${time_unit}`) ) ==false){
+//                     semiresult.push(add_time(sortedlist[p*2], '0:'+zz));
+//                 }
+//             }
+//             // time_unit 만큼 더해준다.
+//             zz += 1;
+//             // 방어 코드
+//             if(zz>1450){ //하루 24시간 --> 1440분
+//                 alert('예상치 못한 에러가 발생했습니다. \n 관리자에게 문의해주세요.');
+//                 break;
+//             }
+//         }
+//         // }
+//     }
+
+//     let addOkArrayList = [];
+//     let start_option = setting_info.setting_member_start_time;
+//     for(let t=0; t<semiresult.length; t++){
+
+//         if(compare_time(semiresult[t], add_time(workEndTime_, '00:00')) == false
+//             && compare_time(add_time(workStartTime_, '00:00'), semiresult[t]) == false
+//             && workStartTime_ != workEndTime_){        //업무시간
+//             let starttimeOption_split = start_option.split('-');
+//             if(starttimeOption_split[0] == "A"){
+//                 if(Number(semiresult[t].split(':')[1]) == Number(starttimeOption_split[1])){  //매시간의 몇분을 시작시간을 보여줄 것인지?
+//                     addOkArrayList.push(semiresult[t]);
+//                 }
+//             }else if(starttimeOption_split[0] == "E"){
+//                 if(Number(semiresult[t].split(':')[1])%Number(starttimeOption_split[1]) == 0){   //몇분 간격으로 시작시간을 보여줄 것인지?
+//                     addOkArrayList.push(semiresult[t]);
+//                 }
+//             }
+//         }
+        
+//     }
+
+//     console.log({"addOkArray":addOkArrayList})
+//     return {"addOkArray":addOkArrayList};
+// }
+
+
 
 
 

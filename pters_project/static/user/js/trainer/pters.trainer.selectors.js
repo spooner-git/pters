@@ -1,98 +1,175 @@
 //시간 선택 (시작시간, 종료시간)
 class TwoTimeSelector{
-    constructor(target, instance, user_option){
+    constructor(target, time_data, user_option){
+
         this.targetHTML = target;
         this.result_target;
 
-        this.data;
-        this.instance = instance;
+        this.data = {start:[], end:[], end_diff:[]};
+        this.received_data = time_data;
+        this.instance = "classic_time_selector";
         this.hour_scroll;
         this.hour2_scroll;
         this.user_scroll_hour = false;
         this.user_scroll_minute = false;
         this.hour_scroll_snapped = 0;
 
-        document.querySelector(this.targetHTML).innerHTML = this.static_component().initial_html;
+        let current_time = TimeRobot.hm_to_hhmm(`${new Date().getHours()}:${new Date().getMinutes}`);
 
-        this.default_option = {
-                                time_start : this.current_year - 100,
-                                time_end : this.current_year,
-                                init_time1 : 1986,
-                                init_time2 : 2
-                            }
+        this.option = { 
+                        myname: null,
+                        title: null,
+                        class_hour: null,
+                        work_time:null,
+                        initial : current_time,
+                        callback_when_set : ()=>{
+                            return false;
+                        }
+                    }
+
+        this.listing_option = {
+            five_minute_detail: OFF,
+            duplicate_filter : OFF
+        };
+        
         if(user_option != undefined){
             //user_option이 들어왔을경우 default_option의 값을 user_option값으로 바꿔준다.
             for(let option in user_option){
-                this.default_option[option] = user_option[option];
+                if(user_option[option] != null){
+                    this.option[option] = user_option[option];
+                }
             }
         }
 
+        
+        this.data.start = this.refine_start_data();
+        this.data.end = this.refine_end_data(this.option.initial).end_time_list;
+        this.data.end_diff = this.refine_end_data(this.option.initial).end_time_diff_list;
         this.init();
     }
 
     init(){
+        this.init_html();
         this.render_time1_list();
         this.render_time2_list();
         this.set_iscroll();
-        this.reset();
+        this.reset(this.option.initial);
     }
 
-    reset(result_target1, result_target2, init_hour, init_minute){
-        let d = new Date();
-        let h = d.getHours();
-        let m = d.getMinutes();
-        this.go_snap(init_hour == undefined? h : init_hour, init_minute == undefined? m : init_minute);
+    refresh(){
+        this.data.start = this.refine_start_data();
+        this.data.end = this.refine_end_data(this.option.initial).end_time_list;
+        this.data.end_diff = this.refine_end_data(this.option.initial).end_time_diff_list;
+        this.init_html();
+        this.render_time1_list();
+        this.render_time2_list();
+        this.set_iscroll();
+        this.reset(this.option.initial);
+    }
+
+    init_html(){
+        document.querySelector(this.targetHTML).innerHTML = this.static_component().initial_html;
+    }
+
+    refine_start_data(){
+        let start_time_diff_unit = this.listing_option.five_minute_detail == OFF ? this.option.class_hour : 5;
+        let setting_info = {work_time:this.option.work_time, class_hour:this.option.class_hour, start_time_diff:start_time_diff_unit};
+        let plan_add_avail_times_array = Plan_calc.func_start_time_calc(this.received_data, setting_info).addOkArray;
+        return plan_add_avail_times_array;
+    }
+
+    refine_end_data(start_time){
+        let end_time_diff_unit = this.listing_option.five_minute_detail == OFF ? this.option.class_hour : 5;
+        // let end_time_diff_unit = this.option.class_hour;
+        let setting_info = {work_time:this.option.work_time, class_hour:this.option.class_hour, start_time_diff:this.option.class_hour};
+        let plan_add_avail_times_merged_array = Plan_calc.func_start_time_calc(this.received_data, setting_info).merged;
+
+        let end_time_max;
+        for(let i=1; i<plan_add_avail_times_merged_array.length; i=i+2){
+            let end_time = plan_add_avail_times_merged_array[i];
+            console.log(start_time, end_time);
+            let compare = TimeRobot.compare(start_time, end_time);
+            if(compare == false){
+                end_time_max = plan_add_avail_times_merged_array[i];
+                break;
+            }
+        }
+
+        if(this.listing_option.duplicate_filter == OFF){
+            end_time_max = this.option.work_time.end;
+        }
+
+        let end_time_list = [];
+        let end_time_diff_list = [];
+        let zz = 0;
+
+        while( TimeRobot.compare(TimeRobot.add_time(start_time.split(':')[0], start_time.split(':')[1], 0, zz).complete, end_time_max ) == false){
+            zz = zz + end_time_diff_unit;
+            end_time_list.push(TimeRobot.add_time(start_time.split(':')[0], start_time.split(':')[1], 0, zz).complete);
+            end_time_diff_list.push(zz);
+            if(zz > 1440){
+                show_error_message("Classic selector - Error - 80");
+                break;
+            }
+        }
+        return {end_time_list:end_time_list, end_time_diff_list:end_time_diff_list};
+    }
+
+    reset(time_to_snap){
+        this.go_snap(time_to_snap);
     }
 
     render_time1_list(){
         let html_to_join = [];
         let pos = 0;
-        for(let i=0; i<24; i++){
-            for(let j=0; j<60; j=j+5){
-                html_to_join.push(`<li data-spos=${pos}>${i < 10 ? '0'+i : i }:${j < 10 ? '0'+j : j}</li>`);
-                pos = pos + 50;
-            }
+        let length = this.data.start.length;
+        for(let i=0; i<length; i++){
+            html_to_join.push(`<li data-spos=${pos}>${this.data.start[i]}</li>`);
+            pos = pos + 40;
         }
 
         let html = `
                         <div id="hour_wrap_${this.instance}" class="select_wrapper_child">
                             <ul>
                                 <li></li>
+                                <li></li>
                                 ${html_to_join.join('')}
+                                <li></li>
                                 <li></li>
                             </ul>
                         </div>
-                        <div class="selector_unit">시작</div>
-                    `
+                        <div class="selector_unit"  style="top:50px;text-align:left;">시작</div>
+                    `;
         document.querySelector(`${this.targetHTML} .time_selector_time1_wrap`).innerHTML = html;
     }
 
     render_time2_list(){
         let html_to_join = [];
         let pos = 0;
-        for(let i=0; i<24; i++){
-            for(let j=0; j<60; j=j+5){
-                html_to_join.push(`<li data-epos=${pos}>${i < 10 ? '0'+i : i }:${j < 10 ? '0'+j : j}</li>`);
-                pos = pos + 50;
-            }
+        let length = this.data.end.length;
+        for(let i=0; i<length; i++){
+            html_to_join.push(`<li data-epos=${pos}>${this.data.end[i]} (${this.data.end_diff[i]}분)</li>`);
+            pos = pos + 40;
         }
 
         let html = `
                         <div id="hour2_wrap_${this.instance}" class="select_wrapper_child">
                             <ul>
                                 <li></li>
+                                <li></li>
                                 ${html_to_join.join('')}
+                                <li></li>
                                 <li></li>
                             </ul>
                         </div>
-                        <div class="selector_unit">종료</div>
-                    `
+                        <div class="selector_unit" style="top:50px;text-align:left;">종료</div>
+                    `;
 
         document.querySelector(`${this.targetHTML} .time_selector_time2_wrap`).innerHTML = html;
     }
 
     set_iscroll(){
-        this.hour_scroll = new IScroll(`#hour_wrap_${this.instance}`,{
+        this.hour_scroll = new IScroll(`#hour_wrap_${this.instance}`, {
                             mouseWheel : true,
                             disableTouch: false,
                             disablePointer:true,
@@ -103,7 +180,7 @@ class TwoTimeSelector{
                         })
                         //default : 0.0006, 0.01 (no momentum);
 
-        this.hour2_scroll = new IScroll(`#hour2_wrap_${this.instance}`,{
+        this.hour2_scroll = new IScroll(`#hour2_wrap_${this.instance}`, {
                             mouseWheel : true,
                             disableTouch: false,
                             disablePointer:true,
@@ -115,6 +192,19 @@ class TwoTimeSelector{
         this.set_scroll_snap();
     }
 
+    set_iscroll_hour2(){
+        this.hour2_scroll = new IScroll(`#hour2_wrap_${this.instance}`, {
+            mouseWheel : true,
+            disableTouch: false,
+            disablePointer:true,
+            disableMouse:false,
+            deceleration:0.002,
+            bounce: false
+            // snap: 'li'
+        });
+        this.set_scroll_snap();
+    }
+
     set_scroll_snap(){
         let self = this;
         
@@ -122,8 +212,8 @@ class TwoTimeSelector{
             if(self.user_scroll_hour == true){
                 self.user_scroll_hour = false;
                 let posY = this.y;
-                let min = posY-posY%50;
-                let max = min - 50;
+                let min = posY-posY%40;
+                let max = min - 40;
 
                 let snap;
                 
@@ -136,23 +226,31 @@ class TwoTimeSelector{
                 $(`${self.targetHTML} li[data-spos="${Math.abs(self.hour_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
                 $(`${self.targetHTML} li[data-spos="${Math.abs(self.hour_scroll.y)}"]`).css('color', '#1e1e1e');
                 self.hour_scroll_snapped = snap;
-                self.hour2_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
-                $(`${self.targetHTML} li[data-epos="${Math.abs(self.hour2_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
-                $(`${self.targetHTML} li[data-epos="${Math.abs(self.hour2_scroll.y)}"]`).css('color', '#1e1e1e');
+
+                console.log(self.get_selected_data().data.start)
+                self.data.end = self.refine_end_data(self.get_selected_data().data.start).end_time_list;
+                self.data.end_diff = self.refine_end_data(self.get_selected_data().data.start).end_time_diff_list;
+                self.render_time2_list();
+                self.set_iscroll_hour2();
+                self.go_snap(self.get_selected_data().data.start);
+
+                // self.hour2_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
+                // $(`${self.targetHTML} li[data-epos="${Math.abs(self.hour2_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+                // $(`${self.targetHTML} li[data-epos="${Math.abs(self.hour2_scroll.y)}"]`).css('color', '#1e1e1e');
             }
-        })
+        });
 
         self.hour_scroll.on('scrollStart', function (){
             self.user_scroll_hour = true;
-        })
+        });
 
         
         self.hour2_scroll.on('scrollEnd', function (){
             if(self.user_scroll_minute == true){
                 self.user_scroll_minute = false;
                 let posY = this.y;
-                let min = posY-posY%50;
-                let max = min - 50;
+                let min = posY-posY%40;
+                let max = min - 40;
 
                 let snap;
                 
@@ -161,28 +259,29 @@ class TwoTimeSelector{
                 }else{
                     snap = min;
                 }
-                if(snap > self.hour_scroll_snapped){
-                    self.hour2_scroll.scrollTo(0, self.hour_scroll_snapped, 0, IScroll.utils.ease.bounce);
-                    show_error_message('종료 시각이 시작 시각보다 빠릅니다.')
-                }else{
-                    self.hour2_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
-                }
-                
+                // if(snap > self.hour_scroll_snapped){
+                //     self.hour2_scroll.scrollTo(0, self.hour_scroll_snapped, 0, IScroll.utils.ease.bounce);
+                //     show_error_message('종료 시각이 시작 시각보다 빠릅니다.')
+                // }else{
+                //     self.hour2_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
+                // }
+                self.hour2_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
                 $(`${self.targetHTML} li[data-epos="${Math.abs(self.hour2_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
                 $(`${self.targetHTML} li[data-epos="${Math.abs(self.hour2_scroll.y)}"]`).css('color', '#1e1e1e');
                 
             }
-        })
+        });
 
         self.hour2_scroll.on('scrollStart', function (){
             self.user_scroll_minute = true;
-        })
+        });
     }
 
-    go_snap(hour, minute){
-        let initial_pos = -(Number(hour)*600 + Math.round(Number(minute)/5)*5*10);
+    go_snap(time){
+        // let initial_pos = -(Number(hour)*600 + Math.round(Number(minute)/5)*5*10);
+        let initial_pos = -this.data.start.indexOf(time)*40;
         this.hour_scroll.scrollTo(0, initial_pos, 0, IScroll.utils.ease.bounce);
-        this.hour2_scroll.scrollTo(0, initial_pos, 0, IScroll.utils.ease.bounce);
+        this.hour2_scroll.scrollTo(0, 0, 0, IScroll.utils.ease.bounce);
         this.hour_scroll_snapped = initial_pos;
 
         $(`${this.targetHTML} li[data-spos="${Math.abs(this.hour_scroll.y)}"]`).css('color', '#1e1e1e');
@@ -196,11 +295,20 @@ class TwoTimeSelector{
         let end = $(`${this.targetHTML} li[data-epos="${Math.abs(this.hour2_scroll.y)}"]`);
 
         let start_text = start.text();
-        let end_text = end.text();
+        let end_text = end.text().split(' ')[0];
+        let diff_text = end.text().split(' ')[1].replace(/[\)\( 분]/gi, "");
 
         return {
-            start : start_text,
-            end : end_text
+            data:{
+                start : start_text,
+                end : end_text
+            },
+            text:{
+                start: TimeRobot.to_text(start_text),
+                end: TimeRobot.to_text(end_text),
+                diff: diff_text
+            }
+            
         };
     }
 
@@ -218,20 +326,70 @@ class TwoTimeSelector{
         }
     }
 
-    set_selected_data(){
-        let result = this.get_selected_data();
-        $(this.result_target).val(result.start + ' - ' + result.end);
+    // set_selected_data(){
+    //     let result = this.get_selected_data();
+    //     $(this.result_target).val(result.start + ' - ' + result.end);
+    // }
+
+    event_five_minute_detail_switch(){
+        if(this.listing_option.five_minute_detail == ON){
+            this.listing_option.five_minute_detail = OFF;
+        }else{
+            this.listing_option.five_minute_detail = ON;
+        }
+
+        this.refresh();
+        
+    }
+
+    event_duplicate_filter_switch(){
+        if(this.listing_option.duplicate_filter == ON){
+            this.listing_option.duplicate_filter = OFF;
+        }else{
+            this.listing_option.duplicate_filter = ON;
+        }
+
+        this.refresh();
+        
     }
 
     static_component(){
         return{
-            "initial_html":`<div class="time_selector">
-                                <div class="time_selector_confirm"><span onclick="${this.instance}.set_selected_data()">확인</span></div>
+            "initial_html":`<div class="classic_time_selector">
+                                <div class="time_selector_confirm">
+                                    <div style="float:left;margin-left:5px;">
+                                        ${CComponent.text_button(this.option.myname+'_cancel_button', '취소', {"padding":"10px 20px"}, ()=>{this.upper_left_button();})}
+                                    </div>
+                                    <span class="time_selector_title">${this.option.title}</span>
+                                    <div style="float:right;margin-right:5px;color:#fe4e65;">
+                                        ${CComponent.text_button(this.option.myname+'_confirm_button', '확인', {"padding":"10px 20px"}, ()=>{this.upper_right_button();})}
+                                    </div>
+                                </div>
+                                <div class="time_selector_option_wrap" style="display:flex;height:45px;line-height:45px;border-bottom:1px solid #f2f2f2;box-sizing:border-box;">
+                                    <div style="flex:1 1 0">
+                                        ${CComponent.radio_button ("selector_time_detail_view", this.listing_option.five_minute_detail, {"display":"inline-block", "vertical-align":"middle", "margin-bottom":"4px", "width":"20px", "height":"20px"}, ()=>{this.event_five_minute_detail_switch();})}
+                                        <span>5분단위 상세 선택</span>
+                                    </div>
+                                    <div style="flex:1 1 0">
+                                        ${CComponent.radio_button ("selector_time_duplicate_filter", this.listing_option.duplicate_filter, {"display":"inline-block", "vertical-align":"middle", "margin-bottom":"4px", "width":"20px", "height":"20px"}, ()=>{this.event_duplicate_filter_switch();})}
+                                        <span>중복일정 허용</span>
+                                    </div>
+                                </div>
                                 <div class="time_selector_time1_wrap select_wrapper"></div>
                                 <div class="time_selector_time2_wrap select_wrapper"></div>
-                                <div class="selector_indicator"></div>
+                                <div class="selector_indicator" style="top:177px"></div>
                             </div>`
-        }
+        };
+    }
+
+    upper_right_button(){
+        let selected_data = this.get_selected_data();
+        this.option.callback_when_set(selected_data); 
+        layer_popup.close_layer_popup();
+    }
+
+    upper_left_button(){
+        layer_popup.close_layer_popup();
     }
 }
 
