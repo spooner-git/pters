@@ -7,6 +7,7 @@ from html import parser
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
+from django.utils import timezone
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, redirect
@@ -14,11 +15,14 @@ from django.utils.datastructures import MultiValueDictKeyError
 from django.views.generic import TemplateView, RedirectView
 
 from configs import settings
-from configs.const import USE
+from configs.const import USE, STATE_CD_NOT_PROGRESS, ON_SCHEDULE_TYPE, AUTO_FINISH_ON, STATE_CD_FINISH, \
+    STATE_CD_ABSENCE, AUTO_ABSENCE_ON, AUTO_CANCEL_ON, UN_USE, AUTO_FINISH_OFF
 from board.models import QATb
 from configs.functions import func_delete_profile_image_logic, func_upload_profile_image_logic
 from login.models import PushInfoTb, MemberTb
 from payment.models import ProductFunctionAuthTb, PaymentInfoTb
+from schedule.functions import func_refresh_member_ticket_count
+from schedule.models import ScheduleTb, DeleteScheduleTb
 from trainer.functions import func_get_trainer_setting_list
 from trainer.models import ClassTb, SettingTb, BackgroundImgTb
 
@@ -122,11 +126,13 @@ class AccessTestMixin(UserPassesTestMixin):
                 if group_name == 'trainee':
                     func_setting_data_update(self.request, group_name)
                     get_function_auth_type_cd(self.request)
+                    update_finish_schedule_data(self.request)
                     test_result = True
             if url[1] == 'trainer':
                 if group_name == 'trainer':
                     func_setting_data_update(self.request, group_name)
                     get_function_auth_type_cd(self.request)
+                    update_finish_schedule_data(self.request)
                     test_result = True
             if url[1] == 'center':
                 if group_name == 'center':
@@ -438,3 +444,66 @@ def app_version_error(request):
         return redirect(app_version_error_next_page)
     else:
         return render(request, template_name, {'app_version': settings.APP_VERSION})
+
+
+# 지난 일정 처리
+def update_finish_schedule_data(request):
+    now = timezone.now()
+    class_id = request.session.get('class_id', '')
+    setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
+    if class_id is not None and class_id != '':
+        if str(setting_schedule_auto_finish) != str(AUTO_FINISH_OFF):
+            not_finish_schedule_data = ScheduleTb.objects.select_related(
+                'member_ticket_tb'
+            ).filter(class_tb_id=class_id, state_cd=STATE_CD_NOT_PROGRESS,
+                     en_dis_type=ON_SCHEDULE_TYPE, end_dt__lte=now, use=USE
+                     )
+            for not_finish_schedule_info in not_finish_schedule_data:
+                lecture_tb = not_finish_schedule_info.lecture_tb
+                lecture_tb_id = None
+                member_ticket_tb = not_finish_schedule_info.member_ticket_tb
+                member_ticket_tb_id = None
+                repeat_schedule_tb = not_finish_schedule_info.repeat_schedule_tb
+                repeat_schedule_tb_id = None
+
+                if member_ticket_tb is not None and member_ticket_tb != '':
+                    member_ticket_tb_id = not_finish_schedule_info.member_ticket_tb_id
+                if lecture_tb is not None and lecture_tb != '':
+                    lecture_tb_id = not_finish_schedule_info.lecture_tb_id
+                if repeat_schedule_tb is not None and repeat_schedule_tb != '':
+                    repeat_schedule_tb_id = not_finish_schedule_info.repeat_schedule_tb_id
+
+                if str(setting_schedule_auto_finish) == str(AUTO_FINISH_ON):
+                    not_finish_schedule_info.state_cd = STATE_CD_FINISH
+                    not_finish_schedule_info.save()
+                elif str(setting_schedule_auto_finish) == str(AUTO_ABSENCE_ON):
+                    not_finish_schedule_info.state_cd = STATE_CD_ABSENCE
+                    not_finish_schedule_info.save()
+                elif str(setting_schedule_auto_finish) == str(AUTO_CANCEL_ON):
+                    finish_lecture_member_schedule_count = 0
+                    if lecture_tb_id is not None and lecture_tb_id != '':
+                        if member_ticket_tb_id is None or member_ticket_tb_id == '':
+                            finish_lecture_member_schedule_count = ScheduleTb.objects.filter(
+                                lecture_schedule_id=not_finish_schedule_info.schedule_id,
+                                use=USE).exclude(state_cd=STATE_CD_NOT_PROGRESS).count()
+
+                    if finish_lecture_member_schedule_count == 0:
+                        delete_schedule_info = DeleteScheduleTb(
+                            schedule_id=not_finish_schedule_info.schedule_id, class_tb_id=not_finish_schedule_info.class_tb_id,
+                            lecture_tb_id=lecture_tb_id,
+                            member_ticket_tb_id=member_ticket_tb_id,
+                            lecture_schedule_id=not_finish_schedule_info.lecture_schedule_id,
+                            delete_repeat_schedule_tb=repeat_schedule_tb_id,
+                            start_dt=not_finish_schedule_info.start_dt, end_dt=not_finish_schedule_info.end_dt,
+                            permission_state_cd=not_finish_schedule_info.permission_state_cd,
+                            state_cd=not_finish_schedule_info.state_cd, note=not_finish_schedule_info.note,
+                            en_dis_type=not_finish_schedule_info.en_dis_type, member_note=not_finish_schedule_info.member_note,
+                            reg_member_id=not_finish_schedule_info.reg_member_id, del_member='auto',
+                            reg_dt=not_finish_schedule_info.reg_dt, mod_dt=timezone.now(),
+                            use=UN_USE)
+                        delete_schedule_info.save()
+                        not_finish_schedule_info.delete()
+                    # member_ticket_tb_id = delete_schedule_info.member_ticket_tb_id
+                if member_ticket_tb_id is not None:
+                    func_refresh_member_ticket_count(not_finish_schedule_info.class_tb_id, member_ticket_tb_id)
+    return render(request, 'ajax/task_error_info.html')
