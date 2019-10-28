@@ -367,11 +367,11 @@ class TwoTimeSelector{
                                 </div>
                                 <div class="time_selector_option_wrap" style="display:flex;height:45px;line-height:45px;border-bottom:1px solid #f2f2f2;box-sizing:border-box;">
                                     <div style="flex:1 1 0">
-                                        ${CComponent.radio_button ("selector_time_detail_view", this.listing_option.five_minute_detail, {"display":"inline-block", "vertical-align":"middle", "margin-bottom":"4px", "width":"20px", "height":"20px"}, ()=>{this.event_five_minute_detail_switch();})}
+                                        ${CComponent.toggle_button ("selector_time_detail_view", this.listing_option.five_minute_detail, {"display":"inline-block", "vertical-align":"middle", "margin-bottom":"4px", "transform":"scale(0.8)"}, ()=>{this.event_five_minute_detail_switch();})}
                                         <span>5분단위 상세 선택</span>
                                     </div>
                                     <div style="flex:1 1 0">
-                                        ${CComponent.radio_button ("selector_time_duplicate_filter", this.listing_option.duplicate_filter, {"display":"inline-block", "vertical-align":"middle", "margin-bottom":"4px", "width":"20px", "height":"20px"}, ()=>{this.event_duplicate_filter_switch();})}
+                                        ${CComponent.toggle_button ("selector_time_duplicate_filter", this.listing_option.duplicate_filter, {"display":"inline-block", "vertical-align":"middle", "margin-bottom":"4px", "transform":"scale(0.8)"}, ()=>{this.event_duplicate_filter_switch();})}
                                         <span>중복일정 필터</span>
                                     </div>
                                 </div>
