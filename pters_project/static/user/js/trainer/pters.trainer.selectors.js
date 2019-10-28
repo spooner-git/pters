@@ -14,14 +14,14 @@ class TwoTimeSelector{
         this.user_scroll_minute = false;
         this.hour_scroll_snapped = 0;
 
-        let current_time = TimeRobot.hm_to_hhmm(`${new Date().getHours()}:${new Date().getMinutes}`);
+        let current_time = TimeRobot.hm_to_hhmm(`${new Date().getHours()}:${new Date().getMinutes()}`);
 
         this.option = { 
                         myname: null,
                         title: null,
                         class_hour: null,
                         work_time:null,
-                        initial : current_time,
+                        initial : null,
                         callback_when_set : ()=>{
                             return false;
                         }
@@ -43,6 +43,9 @@ class TwoTimeSelector{
 
         
         this.data.start = this.refine_start_data();
+        if(this.option.initial == null){
+            this.option.initial = this.data.start[0];
+        }
         this.data.end = this.refine_end_data(this.option.initial).end_time_list;
         this.data.end_diff = this.refine_end_data(this.option.initial).end_time_diff_list;
         this.init();

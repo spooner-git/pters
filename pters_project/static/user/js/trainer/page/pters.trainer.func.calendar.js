@@ -1079,6 +1079,9 @@ class Calendar {
         indicator.classList.add('week_indicator');
         indicator.style.top = offset_px+'px';
         indicator.style.height = this.class_hour+'px';
+        if(this.week_zoomed.vertical.activate == true){
+            indicator.style.height = 3*this.class_hour+'px';
+        }
         indicator.setAttribute('onclick', "event.stopPropagation();$('.week_indicator').remove()");
         event.target.appendChild(indicator);
 

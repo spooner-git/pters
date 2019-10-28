@@ -478,10 +478,10 @@ class Plan_add{
 
     dom_row_classic_time_selector(){
         let selected_date;
-        if(this.user_data.user_selected_date.year != null){
-            selected_date = DateRobot.to_yyyymmdd(this.user_data.user_selected_date.year, this.user_data.user_selected_date.month, this.user_data.user_selected_date.date);
-        }else{
+        if(this.data.date == null){
             selected_date = DateRobot.to_yyyymmdd(this.dates.current_year, this.dates.current_month, this.dates.current_date);
+        }else{
+            selected_date = DateRobot.to_yyyymmdd(this.data.date.year, this.data.date.month, this.data.date.date);
         }
 
         let root_content_height = $root_content.height();
@@ -495,7 +495,9 @@ class Plan_add{
         let callback = ()=>{
             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', 100*300/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
                 let time_data = calendar.latest_received_data[selected_date];
-                let user_option = {myname:'time', title:'시간 선택', work_time:this.work_time, class_hour:this.class_hour, initial:TimeRobot.hm_to_hhmm(this.data.start_time).complete, callback_when_set:(object)=>{
+                let initial_time = this.data.start_time != null ? TimeRobot.hm_to_hhmm(this.data.start_time).complete : null;
+
+                let user_option = {myname:'time', title:'시간 선택', work_time:this.work_time, class_hour:this.class_hour, initial:initial_time, callback_when_set:(object)=>{
                     this.data.start_time = object.data.start;
                     this.data.start_time_text = object.text.start + ' 부터';
                     this.data.end_time = object.data.end;
