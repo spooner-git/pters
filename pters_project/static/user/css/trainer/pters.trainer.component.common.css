@@ -87,8 +87,6 @@ input:disabled{
 	padding: 0;
 	margin: 0;
 	background-color: transparent;
-	white-space:nowrap;
-	word-break: keep-all;
 }
 
 /* .create_input_row input::-webkit-input-placeholder, .create_input_row textarea::-webkit-input-placeholder{

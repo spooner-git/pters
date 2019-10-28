@@ -53,7 +53,7 @@ textarea{
     border: 0;
     border-radius: 0;
     word-break: break-all;
-    white-space: normal;
+    /*white-space: normal;*/
 }
 
 textarea::-webkit-input-placeholder{
