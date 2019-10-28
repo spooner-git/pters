@@ -82,8 +82,8 @@ function pc_keyboard_event(){
 }
 
 function resize_textarea(obj) {
-    // obj.style.height = "1px";
-    // obj.style.height = (12+obj.scrollHeight)+"px";
+    obj.style.height = "1px";
+    obj.style.height = (12+obj.scrollHeight)+"px";
 }
 
 function ajax_load_image(option){

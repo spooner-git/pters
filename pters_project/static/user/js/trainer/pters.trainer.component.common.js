@@ -155,7 +155,7 @@ class CComponent{
                             </div>
                             <div class="cell_content">
                                 <textarea pattern="${pattern}" data-pattern-message="${pattern_message}" wrap="hard"
-                                        onkeydown="resize_textarea(this)" onkeyup="limit_char_auto_correction(event.target);"
+                                        onkeydown="resize_textarea(this)" onkeyup="resize_textarea(this); limit_char_auto_correction(event.target);"
                                         placeholder="${placeholder}" style="height:100%;min-height:${title_sentence_height}px;resize:none" title="메모" minlength="${min_max_length[0]}" maxlength="${min_max_length[1]}"
                                         data-error-message="${placeholder} : 필수 입력입니다."
                                         spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" data-valid="false" ${required}>${title}</textarea>
