@@ -12,7 +12,8 @@ from django.db.models.expressions import RawSQL
 
 from configs.const import USE, UN_USE, AUTO_FINISH_OFF, FROM_TRAINEE_LESSON_ALARM_ON, \
     TO_TRAINEE_LESSON_ALARM_OFF, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, STATE_CD_IN_PROGRESS, STATE_CD_FINISH,\
-    STATE_CD_ABSENCE, AUTH_TYPE_DELETE, STATE_CD_NOT_PROGRESS, SHOW, CALENDAR_TIME_SELECTOR_BASIC
+    STATE_CD_ABSENCE, AUTH_TYPE_DELETE, STATE_CD_NOT_PROGRESS, SHOW, CALENDAR_TIME_SELECTOR_BASIC, \
+    LECTURE_TYPE_ONE_TO_ONE
 
 from login.models import MemberTb
 from schedule.models import ScheduleTb, RepeatScheduleTb
@@ -606,7 +607,7 @@ def func_get_trainer_setting_list(context, user_id, class_id, class_hour):
     lt_res_05 = '7'
     lt_res_cancel_time = -1
     lt_res_enable_time = -1
-    lt_res_member_time_duration = 60
+    one_to_one_lecture_time_duration = 60
     lt_res_member_start_time = 'A-0'
     lt_schedule_auto_finish = AUTO_FINISH_OFF
     lt_member_ticket_auto_finish = AUTO_FINISH_OFF
@@ -650,8 +651,8 @@ def func_get_trainer_setting_list(context, user_id, class_id, class_hour):
             lt_res_cancel_time = int(setting_info.setting_info)
         if setting_info.setting_type_cd == 'LT_RES_ENABLE_TIME':
             lt_res_enable_time = int(setting_info.setting_info)
-        if setting_info.setting_type_cd == 'LT_RES_MEMBER_TIME_DURATION':
-            lt_res_member_time_duration = int(setting_info.setting_info)
+        # if setting_info.setting_type_cd == 'LT_RES_MEMBER_TIME_DURATION':
+        #     lt_res_member_time_duration = int(setting_info.setting_info)
         if setting_info.setting_type_cd == 'LT_RES_MEMBER_START_TIME':
             lt_res_member_start_time = setting_info.setting_info
         if setting_info.setting_type_cd == 'LT_SCHEDULE_AUTO_FINISH':
@@ -678,6 +679,11 @@ def func_get_trainer_setting_list(context, user_id, class_id, class_hour):
             setting_calendar_basic_select_time = setting_info.setting_info
         if setting_info.setting_type_cd == 'LT_CALENDAR_TIME_SELECTOR_TYPE':
             setting_calendar_time_selector_type = setting_info.setting_info
+    try:
+        lecture_info = LectureTb.objects.get(class_tb_id=class_id, lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, use=USE)
+        one_to_one_lecture_time_duration = lecture_info.lecture_minute
+    except ObjectDoesNotExist:
+        one_to_one_lecture_time_duration = 60
 
     if lt_res_cancel_time == -1:
         lt_res_cancel_time = lt_res_02*60
@@ -702,8 +708,8 @@ def func_get_trainer_setting_list(context, user_id, class_id, class_hour):
     for i in range(0, reserve_date_available):
         avail_date_list.append(str(today + datetime.timedelta(days=i)))
 
-    if lt_res_member_time_duration < 10:
-        lt_res_member_time_duration *= int(class_hour)
+    # if lt_res_member_time_duration < 10:
+    #     lt_res_member_time_duration *= int(class_hour)
 
     context['avail_date_data'] = avail_date_list
     context['setting_member_reserve_time_available'] = lt_res_01
@@ -719,7 +725,8 @@ def func_get_trainer_setting_list(context, user_id, class_id, class_hour):
     context['setting_member_reserve_date_available'] = lt_res_05
     context['setting_member_reserve_enable_time'] = lt_res_enable_time
     context['setting_member_reserve_cancel_time'] = lt_res_cancel_time
-    context['setting_member_time_duration'] = lt_res_member_time_duration
+    context['setting_member_time_duration'] = one_to_one_lecture_time_duration
+    context['one_to_one_lecture_time_duration'] = one_to_one_lecture_time_duration
     context['setting_member_start_time'] = lt_res_member_start_time
     context['setting_schedule_auto_finish'] = lt_schedule_auto_finish
     context['setting_member_ticket_auto_finish'] = lt_member_ticket_auto_finish

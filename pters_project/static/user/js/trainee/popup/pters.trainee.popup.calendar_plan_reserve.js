@@ -197,11 +197,11 @@ function func_start_time_calc(selected_date, schedule_json, setting_info){ //off
     //index 사이 1-2, 3-4, 5-6, 7-8, 9-10, 11-12, 13-14
     let semiresult = [];
     let time_unit;
-    if(Number(setting_info.setting_member_time_duration < 10)){
-        time_unit = Number(setting_info.class_hour)*Number(setting_info.setting_member_time_duration);
-    }else{
+    // if(Number(setting_info.setting_member_time_duration < 10)){
+    //     time_unit = Number(setting_info.class_hour)*Number(setting_info.setting_member_time_duration);
+    // }else{
         time_unit = Number(setting_info.setting_member_time_duration);
-    }
+    // }
     for(let p=0; p<sortedlist.length/2; p++){
         let zz = 0;
         //일정 시작시간이 일정 종료시간보다 작으면,
@@ -294,11 +294,11 @@ function func_start_time_dom_draw(target_html, selected_date, schedule_json, set
     let offOkLen = addOkArray.length;
     let timeArray = [];
     let classDur;
-    if(setting_info.setting_member_time_duration < 10){
-        classDur = setting_info.class_hour*setting_info.setting_member_time_duration;
-    }else{
+    // if(setting_info.setting_member_time_duration < 10){
+    //     classDur = setting_info.class_hour*setting_info.setting_member_time_duration;
+    // }else{
         classDur = setting_info.setting_member_time_duration;
-    }
+    // }
     for(let i=0; i<offOkLen; i++){
         let offHour = addOkArray[i].split(':')[0];
         let offmin = addOkArray[i].split(':')[1];

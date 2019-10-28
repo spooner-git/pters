@@ -264,6 +264,7 @@ def func_setting_data_update(request, group):
 
         request.session['setting_calendar_basic_select_time'] = context['setting_calendar_basic_select_time']
         request.session['setting_calendar_time_selector_type'] = context['setting_calendar_time_selector_type']
+        request.session['one_to_one_lecture_time_duration'] = context['one_to_one_lecture_time_duration']
 
         if group == 'trainee':
             try:
