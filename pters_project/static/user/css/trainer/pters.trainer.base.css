@@ -54,13 +54,8 @@ progress::-webkit-progress-value {
     z-index: 0;
     background-color: #ffffff;
     color: #3b3b3b;
-    height: calc(100% - 56px);
+    height: 100%;
     margin: 0 auto;
-}
-@media(min-width:650px){
-    #root_content{
-        height: 100%;
-    }
 }
 
 
