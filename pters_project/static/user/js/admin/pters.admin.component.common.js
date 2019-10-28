@@ -713,7 +713,7 @@ class LimitChar{
 function limit_char_auto_correction(event){
     let pattern = event.attributes['pattern'].value;
     let limit_reg_pattern = pattern.replace('[', '[^').split('{')[0];
-    let limit = new RegExp(limit_reg_pattern, "gi");
+    let limit = new RegExp(limit_reg_pattern, "/g");
     let min_length = event.attributes['minlength'].value;
     let title = event.attributes['title'].value;
     event.value = event.value.replace(limit, "");
