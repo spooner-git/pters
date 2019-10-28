@@ -105,8 +105,7 @@ class TwoTimeSelector{
         let end_time_list = [];
         let end_time_diff_list = [];
         let zz = 0;
-
-        while( TimeRobot.compare(TimeRobot.add_time(start_time.split(':')[0], start_time.split(':')[1], 0, zz).complete, end_time_max ) == false){
+        while( TimeRobot.compare(end_time_max, TimeRobot.add_time(start_time.split(':')[0], start_time.split(':')[1], 0, zz + end_time_diff_unit).complete ) == true){
             zz = zz + end_time_diff_unit;
             end_time_list.push(TimeRobot.add_time(start_time.split(':')[0], start_time.split(':')[1], 0, zz).complete);
             end_time_diff_list.push(zz);
