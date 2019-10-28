@@ -76,7 +76,7 @@ class Setting_time_input_method{
                             <img src="/static/common/img/time_input_method/time_input_method_new.png">
                         </div>
                     </div>`;
-        $(document).on('click', '#input_method_new', (e)=>{
+        $(document).off('click', '#input_method_new').on('click', '#input_method_new', (e)=>{
             e.stopPropagation();
             this.data.time_input_method = 0; 
             this.render_content();
@@ -96,7 +96,7 @@ class Setting_time_input_method{
                             <img src="/static/common/img/time_input_method/time_input_method_classic.png">
                         </div>
                     </div>`;
-        $(document).on('click', '#input_method_classic', (e)=>{
+        $(document).off('click', '#input_method_classic').on('click', '#input_method_classic', (e)=>{
             e.stopPropagation();
             this.data.time_input_method = 1; 
             this.render_content();
