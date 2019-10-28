@@ -284,7 +284,7 @@ def func_get_member_lecture_list(class_id, member_id):
                             'lecture_name': lecture_tb.name,
                             'lecture_note': lecture_tb.note,
                             'lecture_max_num': lecture_tb.member_num,
-                            'lecture_hour': lecture_tb.lecture_hour
+                            'lecture_minute': lecture_tb.lecture_minute
                             }
             member_lecture_list[str(lecture_tb.lecture_id)] = lecture_info
 
@@ -884,7 +884,7 @@ def func_get_lecture_info(class_id, lecture_id, user_id):
                         'lecture_end_color_cd': lecture_tb.end_color_cd,
                         'lecture_end_font_color_cd': lecture_tb.end_font_color_cd,
                         'lecture_type_cd': lecture_tb.lecture_type_cd,
-                        'lecture_hour': lecture_tb.lecture_hour,
+                        'lecture_minute': lecture_tb.lecture_minute,
                         'lecture_member_list': member_list}
     else:
         lecture_info = None

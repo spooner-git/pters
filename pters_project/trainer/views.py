@@ -2084,7 +2084,7 @@ def add_lecture_info_logic(request):
     end_color_cd = request.POST.get('end_color_cd', '#d2d1cf')
     ing_font_color_cd = request.POST.get('ing_font_color_cd', '#282828')
     end_font_color_cd = request.POST.get('end_font_color_cd', '#282828')
-    lecture_hour = request.POST.get('lecture_hour', 60)
+    lecture_minute = request.POST.get('lecture_minute', 60)
     error = None
     lecture_id = None
 
@@ -2093,7 +2093,7 @@ def add_lecture_info_logic(request):
             lecture_info = LectureTb(class_tb_id=class_id, member_num=member_num, lecture_type_cd=LECTURE_TYPE_NORMAL,
                                      name=name, note=note, ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
                                      ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
-                                     lecture_hour=lecture_hour, state_cd=STATE_CD_IN_PROGRESS, use=USE)
+                                     lecture_minute=lecture_minute, state_cd=STATE_CD_IN_PROGRESS, use=USE)
 
             lecture_info.save()
             lecture_id = lecture_info.lecture_id
@@ -2218,7 +2218,7 @@ def update_lecture_info_logic(request):
     end_color_cd = request.POST.get('end_color_cd', '')
     ing_font_color_cd = request.POST.get('ing_font_color_cd', '')
     end_font_color_cd = request.POST.get('end_font_color_cd', '')
-    lecture_hour = request.POST.get('lecture_hour', 60)
+    lecture_minute = request.POST.get('lecture_minute', 60)
     lecture_info = None
     error = None
 
@@ -2249,8 +2249,8 @@ def update_lecture_info_logic(request):
         if end_font_color_cd == '' or end_font_color_cd is None:
             end_font_color_cd = lecture_info.end_font_color_cd
 
-        if lecture_hour == '' or lecture_hour is None:
-            lecture_hour = lecture_info.lecture_hour
+        if lecture_minute == '' or lecture_minute is None:
+            lecture_minute = lecture_info.lecture_minute
 
     if error is None:
         try:
@@ -2277,7 +2277,7 @@ def update_lecture_info_logic(request):
         lecture_info.end_color_cd = end_color_cd
         lecture_info.ing_font_color_cd = ing_font_color_cd
         lecture_info.end_font_color_cd = end_font_color_cd
-        lecture_info.lecture_hour = lecture_hour
+        lecture_info.lecture_minute = lecture_minute
         lecture_info.save()
 
     if error is not None:
@@ -2471,7 +2471,7 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                  'lecture_ing_font_color_cd': lecture_tb.ing_font_color_cd,
                                                  'lecture_end_color_cd': lecture_tb.end_color_cd,
                                                  'lecture_end_font_color_cd': lecture_tb.end_font_color_cd,
-                                                 'lecture_hour': lecture_tb.lecture_hour,
+                                                 'lecture_minute': lecture_tb.lecture_minute,
                                                  'lecture_type_cd': lecture_tb.lecture_type_cd,
                                                  'lecture_reg_dt': lecture_tb.reg_dt,
                                                  'lecture_ticket_list': [],
@@ -2497,7 +2497,7 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                      'lecture_ing_font_color_cd': lecture_info.ing_font_color_cd,
                                                      'lecture_end_color_cd': lecture_info.end_color_cd,
                                                      'lecture_end_font_color_cd': lecture_info.end_font_color_cd,
-                                                     'lecture_hour': lecture_info.lecture_hour,
+                                                     'lecture_minute': lecture_info.lecture_minute,
                                                      'lecture_type_cd': lecture_info.lecture_type_cd,
                                                      'lecture_reg_dt': lecture_info.reg_dt,
                                                      'lecture_ticket_list': [],
@@ -2595,7 +2595,7 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                  'lecture_ing_font_color_cd': lecture_tb.ing_font_color_cd,
                                                  'lecture_end_color_cd': lecture_tb.end_color_cd,
                                                  'lecture_end_font_color_cd': lecture_tb.end_font_color_cd,
-                                                 'lecture_hour': lecture_tb.lecture_hour,
+                                                 'lecture_minute': lecture_tb.lecture_minute,
                                                  'lecture_type_cd': lecture_tb.lecture_type_cd,
                                                  'lecture_reg_dt': lecture_tb.reg_dt,
                                                  'lecture_ticket_list': [],
@@ -2621,7 +2621,7 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                      'lecture_ing_font_color_cd': lecture_info.ing_font_color_cd,
                                                      'lecture_end_color_cd': lecture_info.end_color_cd,
                                                      'lecture_end_font_color_cd': lecture_info.end_font_color_cd,
-                                                     'lecture_hour': lecture_info.lecture_hour,
+                                                     'lecture_minute': lecture_info.lecture_minute,
                                                      'lecture_type_cd': lecture_info.lecture_type_cd,
                                                      'lecture_reg_dt': lecture_info.reg_dt,
                                                      'lecture_ticket_list': [],
@@ -3471,7 +3471,7 @@ def add_program_info_logic(request):
                                                     ing_color_cd='#fbf3bd', end_color_cd='#d2d1cf',
                                                     ing_font_color_cd='#282828', end_font_color_cd='#282828',
                                                     state_cd=STATE_CD_IN_PROGRESS,
-                                                    lecture_hour=60,
+                                                    lecture_minute=60,
                                                     lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, member_num=1, use=USE)
                 one_to_one_lecture_info.save()
 
