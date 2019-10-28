@@ -75,7 +75,8 @@ class TwoTimeSelector{
     }
 
     refine_start_data(){
-        let start_time_diff_unit = this.listing_option.five_minute_detail == OFF ? this.option.class_hour : 5;
+        // let start_time_diff_unit = this.listing_option.five_minute_detail == OFF ? this.option.class_hour : 5;
+        let start_time_diff_unit = this.listing_option.five_minute_detail == OFF ? 30 : 5;
         let setting_info = {work_time:this.option.work_time, class_hour:this.option.class_hour, start_time_diff:start_time_diff_unit};
         let plan_add_avail_times_array = Plan_calc.func_start_time_calc(this.received_data, setting_info).addOkArray;
         return plan_add_avail_times_array;
@@ -90,7 +91,6 @@ class TwoTimeSelector{
         let end_time_max;
         for(let i=1; i<plan_add_avail_times_merged_array.length; i=i+2){
             let end_time = plan_add_avail_times_merged_array[i];
-            console.log(start_time, end_time);
             let compare = TimeRobot.compare(start_time, end_time);
             if(compare == false){
                 end_time_max = plan_add_avail_times_merged_array[i];
@@ -284,7 +284,8 @@ class TwoTimeSelector{
         // let initial_pos = -(Number(hour)*600 + Math.round(Number(minute)/5)*5*10);
         let initial_pos = -this.data.start.indexOf(time)*40;
         this.hour_scroll.scrollTo(0, initial_pos, 0, IScroll.utils.ease.bounce);
-        this.hour2_scroll.scrollTo(0, 0, 0, IScroll.utils.ease.bounce);
+        let end_pos = this.listing_option.five_minute_detail == OFF ? 0 : -40*( (Number(this.option.class_hour)/5)-1 )
+        this.hour2_scroll.scrollTo(0, end_pos, 0, IScroll.utils.ease.bounce);
         this.hour_scroll_snapped = initial_pos;
 
         $(`${this.targetHTML} li[data-spos="${Math.abs(this.hour_scroll.y)}"]`).css('color', '#1e1e1e');
