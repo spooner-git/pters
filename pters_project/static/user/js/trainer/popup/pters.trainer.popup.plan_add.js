@@ -520,7 +520,6 @@ class Plan_add{
             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', 100*300/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
                 let time_data = calendar.latest_received_data[selected_date];
                 let user_option = {myname:'time', title:'시간 선택', work_time:this.work_time, class_hour:this.class_hour, initial:TimeRobot.hm_to_hhmm(this.data.start_time).complete, callback_when_set:(object)=>{
-                    console.log(object)
                     
                     this.data.start_time = object.data.start;
                     this.data.start_time_text = object.text.start + ' 부터';
