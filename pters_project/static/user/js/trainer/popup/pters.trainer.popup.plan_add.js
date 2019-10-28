@@ -6,7 +6,7 @@ class Plan_add{
         this.data_from_external = data_from_external;
 
         this.list_type = "lesson";
-        this.time_selector = "classic";
+        this.time_selector = "classicx";
 
         let d = new Date();
         this.dates = {
