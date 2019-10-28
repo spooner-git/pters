@@ -66,9 +66,9 @@ class Setting_time_input_method{
 
     dom_row_time_input_method_new(){
         let selected_or_not = this.data.time_input_method == 0 ? "selected" : "";
-        let html = `<div class="select_wrap ${selected_or_not}">
+        let html = `<div class="select_wrap ${selected_or_not}" id="input_method_new">
                         <div class="select_indicator">
-                            ${CComponent.radio_button("time_input_select_new", this.data.time_input_method == 0 ? ON : OFF, {"transform":"scale(1.2)", "display":"inline-block", "margin-right":"5px"}, ()=>{this.data.time_input_method = 0; console.log(this.data); this.render_content();})}
+                            ${CComponent.radio_button("time_input_select_new", this.data.time_input_method == 0 ? ON : OFF, {"transform":"scale(1.2)", "display":"inline-block", "margin-right":"5px"}, ()=>{})}
                             <span>기본</span>
                             <p>시작과 종료시간을 각각 상세하게 설정 합니다. <br>겹치는 일정을 상관없이 모두 표기해 줍니다.</p>
                         </div>
@@ -76,14 +76,19 @@ class Setting_time_input_method{
                             <img src="/static/common/img/time_input_method/time_input_method_new.png">
                         </div>
                     </div>`;
+        $(document).on('click', '#input_method_new', (e)=>{
+            e.stopPropagation();
+            this.data.time_input_method = 0; 
+            this.render_content();
+        });
         return html;
     }
 
     dom_row_time_input_method_classic(){
         let selected_or_not = this.data.time_input_method == 1 ? "selected" : "";
-        let html = `<div class="select_wrap ${selected_or_not}">
+        let html = `<div class="select_wrap ${selected_or_not}" id="input_method_classic">
                         <div class="select_indicator">
-                            ${CComponent.radio_button("time_input_select_classic", this.data.time_input_method == 1 ? ON : OFF, {"transform":"scale(1.2)", "display":"inline-block", "margin-right":"5px"}, ()=>{this.data.time_input_method = 1; this.render_content();})}
+                            ${CComponent.radio_button("time_input_select_classic", this.data.time_input_method == 1 ? ON : OFF, {"transform":"scale(1.2)", "display":"inline-block", "margin-right":"5px"}, ()=>{})}
                             <span>클래식</span>
                             <p>시작과 종료시각을 한번에 설정 합니다. <br>겹치는 일정은 필터링 할 수 있습니다.</p>
                         </div>
@@ -91,6 +96,11 @@ class Setting_time_input_method{
                             <img src="/static/common/img/time_input_method/time_input_method_classic.png">
                         </div>
                     </div>`;
+        $(document).on('click', '#input_method_classic', (e)=>{
+            e.stopPropagation();
+            this.data.time_input_method = 1; 
+            this.render_content();
+        });
         return html;
     }
 
