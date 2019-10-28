@@ -72,7 +72,7 @@ class Menu {
                         this.dom_menu_statistics() + 
                         this.dom_menu_attendmode() + 
                        CComponent.dom_tag('설정', dom_tag_style) + 
-                        this.dom_menu_setting_time_input_method() + 
+                        this.dom_menu_setting_calendar() + 
                         this.dom_menu_setting_worktime() + 
                         this.dom_menu_setting_autocomplete() +
                         this.dom_menu_setting_reserve() + 
@@ -201,15 +201,15 @@ class Menu {
         return html;
     }
 
-    dom_menu_setting_time_input_method(){
-        let id = 'menu_setting_time_input_method';
-        let title = '시간 입력 방식';
+    dom_menu_setting_calendar(){
+        let id = 'menu_setting_calendar';
+        let title = '일정 설정';
         let icon = '/static/common/icon/icon_setting_worktime2_black.png';
         let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            sideGoPopup("setting_time_input_method");
+            sideGoPopup("setting_calendar");
         });
         return html;
     }

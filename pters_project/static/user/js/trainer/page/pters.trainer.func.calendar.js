@@ -15,7 +15,7 @@ class Calendar {
         this.date_start = 0; //시작을 월요일부터 옵션을 위한 코드
         this.cal_type = "week";
         this.current_page_num = 1;
-        this.class_hour;
+        this.calendar_basic_time_select;
 
         this.week_zoomed = {
             activate : false,
@@ -93,7 +93,7 @@ class Calendar {
             }
             this.current_week = Math.ceil( (this.current_date +  this.first_day_of_the_date)/7 ) - 1;
 
-            this.class_hour = 30; // 테스트
+            this.calendar_basic_time_select = Number(data.setting_calendar_basic_select_time); // 달력 기본 입력 시간
             let work_time = this.calc_worktime_display(data);
             this.work_time_info.calc = work_time;
             this.worktime = [];
@@ -229,7 +229,6 @@ class Calendar {
                         end_hour:end_time_hour,
                         dayoff:dayoff_temp
                     };
-        console.log("result", result)
         return result;
     }
 
@@ -1079,9 +1078,9 @@ class Calendar {
 
         indicator.classList.add('week_indicator');
         indicator.style.top = offset_px+'px';
-        indicator.style.height = this.class_hour+'px';
+        indicator.style.height = this.calendar_basic_time_select+'px';
         if(this.week_zoomed.vertical.activate == true){
-            indicator.style.height = 3*this.class_hour+'px';
+            indicator.style.height = 3*this.calendar_basic_time_select+'px';
         }
         indicator.setAttribute('onclick', "event.stopPropagation();$('.week_indicator').remove()");
         event.target.appendChild(indicator);

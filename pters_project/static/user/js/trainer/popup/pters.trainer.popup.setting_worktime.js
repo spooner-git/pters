@@ -3,7 +3,6 @@ class Setting_worktime{
         this.target = {install: install_target, toolbox:'section_setting_worktime_toolbox', content:'section_setting_worktime_content'};
 
         this.data = {
-            class_hour:{value:[], text:[]},
             start_day: null,
             dayoff_visibility: OFF,
             GENERAL:{
@@ -48,12 +47,6 @@ class Setting_worktime{
             }
         };
 
-        this.data_for_selector = {
-            class_hour : 
-                {value:[10, 15, 20, 30, 60, 90, 120], text:["10 분", "15 분", "20 분", "30 분", "1 시간", "1시간 30분", "2 시간"]}
-        };
-        this.class_hour_test = 60;
-        
         this.data_received;
 
         this.init();
@@ -67,9 +60,6 @@ class Setting_worktime{
     set_initial_data (){
         Setting_worktime_func.read((data)=>{
             this.data_received = data;
-            //수업 기본 시간
-            this.data.class_hour.value[0] = this.class_hour_test;
-            this.data.class_hour.text[0] = this.data_for_selector.class_hour.text[ this.data_for_selector.class_hour.value.indexOf(Number(this.class_hour_test) ) ];
 
             //업무시간 데이터 체크
             let worktime_all_same = true;
@@ -144,14 +134,13 @@ class Setting_worktime{
     }
     
     dom_assembly_content(){
-        let class_hour = this.dom_row_class_hour();
         let general_worktime = this.dom_row_general_worktime();
         // let dayoff_visibility = this.dom_row_dayoff_visibility();
         let start_day_setting = this.dom_row_start_day_setting();
 
         // let main_assembly = start_day_setting + dayoff_visibility + general_worktime;
 
-        let main_assembly = class_hour + start_day_setting +  general_worktime;
+        let main_assembly = start_day_setting +  general_worktime;
         
         let sub_assembly = "";
         if(this.data.GENERAL.detail_switch == ON){
@@ -265,40 +254,11 @@ class Setting_worktime{
         return html;
     }
 
-    dom_row_class_hour(){
-        let id = "class_hour";
-        let title = "기본 수업 단위";
-        let icon = NONE;
-        let icon_r_visible = SHOW;
-        let icon_r_text = this.data.class_hour.text.length == 0 ? '' : this.data.class_hour.text;
-        let style = null;
-        let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            let title = "개인 수업 예약 시간";
-            let install_target = "#wrapper_box_custom_select";
-            let multiple_select = 1;
-            let data = this.data_for_selector.class_hour;
-            let selected_data = this.data.class_hour;
-            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, popup_style, null, ()=>{
-                custom_selector = new CustomSelector(title, install_target, multiple_select, data, selected_data, (set_data)=>{
-                    this.data.class_hour = set_data;
-                    this.render_content();
-                });
-            });
-        });
-        let html = `<article class="setting_worktime_wrapper obj_input_box_full" style="padding-right:10px;">
-                        ${row}
-                    </article>
-                    `;
-        return html;
-    }
-
     dom_row_dayoff_visibility(){
         let id = "dayoff_visibility";
         let power = this.data.dayoff_visibility;
         let style = null;
         let detail_setting = CComponent.toggle_button (id, power, style, (data)=>{
-            console.log('data:::'+data);
             this.data.dayoff_visibility = data; // ON or OFF
             this.render_content();
         });

@@ -35,13 +35,12 @@ class Setting_reserve{
 
     set_initial_data (){
         Setting_reserve_func.read((data)=>{
-            console.log(data)
             this.data.stop_reserve = data.setting_member_reserve_prohibition;
-            this.data.time_for_private_reserve.value[0] = data.setting_member_time_duration;
-            this.data.time_for_private_reserve.text[0] = this.data_for_selector.time_for_private_reserve.text[ this.data_for_selector.time_for_private_reserve.value.indexOf(Number(data.setting_member_time_duration) ) ];
+            // this.data.time_for_private_reserve.value[0] = data.setting_member_time_duration;
+            // this.data.time_for_private_reserve.text[0] = this.data_for_selector.time_for_private_reserve.text[ this.data_for_selector.time_for_private_reserve.value.indexOf(Number(data.setting_member_time_duration) ) ];
 
-            this.data.start_time_for_private_reserve.value[0] = data.setting_member_start_time;
-            this.data.start_time_for_private_reserve.text[0] = this.data_for_selector.start_time_for_private_reserve.text[ this.data_for_selector.start_time_for_private_reserve.value.indexOf(data.setting_member_start_time) ];
+            // this.data.start_time_for_private_reserve.value[0] = data.setting_member_start_time;
+            // this.data.start_time_for_private_reserve.text[0] = this.data_for_selector.start_time_for_private_reserve.text[ this.data_for_selector.start_time_for_private_reserve.value.indexOf(data.setting_member_start_time) ];
 
             this.data.available_reserve_date.value[0] = data.setting_member_reserve_date_available;
             this.data.available_reserve_date.text[0] = this.data_for_selector.available_reserve_date.text[ this.data_for_selector.available_reserve_date.value.indexOf(Number(data.setting_member_reserve_date_available) ) ];
@@ -89,11 +88,17 @@ class Setting_reserve{
     }
     
     dom_assembly_content(){
+        // let html = this.dom_row_stop_reserve() + 
+        //             '<article class="obj_input_box_full">' +
+        //                this.dom_row_time_for_private_reserve() + 
+        //                this.dom_row_start_time_for_private_reserve() +
+        //             '</article>' +
+        //             '<article class="obj_input_box_full">' +
+        //                 this.dom_row_available_reserve_date() + 
+        //                 this.dom_row_available_reserve_time() + 
+        //                 this.dom_row_available_cancel_time() +
+        //             '</article>';
         let html = this.dom_row_stop_reserve() + 
-                    '<article class="obj_input_box_full">' +
-                       this.dom_row_time_for_private_reserve() + 
-                       this.dom_row_start_time_for_private_reserve() +
-                    '</article>' +
                     '<article class="obj_input_box_full">' +
                         this.dom_row_available_reserve_date() + 
                         this.dom_row_available_reserve_time() + 

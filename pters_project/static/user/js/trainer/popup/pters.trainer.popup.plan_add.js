@@ -6,7 +6,7 @@ class Plan_add{
         this.data_from_external = data_from_external;
 
         this.list_type = "lesson";
-        this.time_selector = "classic";
+        this.time_selector = BASIC;
 
         let d = new Date();
         this.dates = {
@@ -46,7 +46,7 @@ class Plan_add{
             duplicate_plan_when_add:[]
         };
 
-        this.class_hour;
+        this.lecture_minute;
         this.work_time = {start_hour:0, end_hour:24};
 
         //팝업의 날짜, 시간등의 입력란을 미리 외부에서 온 데이터로 채워서 보여준다.
@@ -138,7 +138,8 @@ class Plan_add{
 
         // this.render();
         Setting_reserve_func.read((data)=>{
-            this.class_hour = 20; // 테스트
+            this.lecture_minute = Number(data.setting_calendar_basic_select_time);
+            this.time_selector = Number(data.setting_calendar_time_selector_type);
             this.work_time = calendar.calc_worktime_display(data);
             this.set_initial_data(this.data_from_external);
             this.render();
@@ -157,15 +158,16 @@ class Plan_add{
         this.data.start_time_text = user_data_time.text;
 
         // if(this.data.end_time == ""){
-            let end_time_calc = this.calc_end_time_by_start_time(user_data_time, this.class_hour, this.work_time.end_hour);
-            this.data.end_time = end_time_calc.data;
-            this.data.end_time_text = end_time_calc.text;
+        let end_time_calc = this.calc_end_time_by_start_time(`${user_data_time.hour}:${user_data_time.minute}`, this.lecture_minute, this.work_time.end_hour);
+        this.data.end_time = end_time_calc.data;
+        this.data.end_time_text = end_time_calc.text;
         // }
     }
 
-    calc_end_time_by_start_time(start_time, class_hour, work_time_end){
-        let end_time_hour = TimeRobot.add_time(start_time.hour, start_time.minute, 0, class_hour).hour;
-        let end_time_min = TimeRobot.add_time(start_time.hour, start_time.minute, 0, class_hour).minute;
+    calc_end_time_by_start_time(start_time_, lecture_minute, work_time_end){
+        let start_time = {hour:start_time_.split(':')[0], minute:start_time_.split(':')[1]};
+        let end_time_hour = TimeRobot.add_time(start_time.hour, start_time.minute, 0, lecture_minute).hour;
+        let end_time_min = TimeRobot.add_time(start_time.hour, start_time.minute, 0, lecture_minute).minute;
         if(start_time.hour == 24){
             end_time_hour = 24;
         }
@@ -237,7 +239,7 @@ class Plan_add{
         }
 
         let html;
-        if(this.time_selector == "classic"){
+        if(this.time_selector == CLASSIC){
             html =  `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('수업') + lecture_select_row + '</div>' +
                     `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('회원') + member_select_row+'</div>' +
                     '<div class="obj_input_box_full">' +  
@@ -245,7 +247,7 @@ class Plan_add{
                                                     CComponent.dom_tag('진행 시간') + classic_time_selector +'<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>' +
                                                     CComponent.dom_tag('반복') + repeat_select_row + '</div>' +
                     '<div class="obj_input_box_full">'+  CComponent.dom_tag('메모') + memo_select_row + '</div>';
-        }else{
+        }else if(this.time_selector == BASIC){
             html =  `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('수업') + lecture_select_row + '</div>' +
                     `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('회원') + member_select_row+'</div>' +
                     '<div class="obj_input_box_full">' +  
@@ -298,6 +300,7 @@ class Plan_add{
 
                     //수업에 속한 고정회원들을 추가
                     Lecture_func.read({"lecture_id": set_data.id[0]}, (data)=>{
+                        this.lecture_minute = data.lecture_minute;
                         let member_length = data.lecture_member_list.length;
                         let data_to_set = {id:[], name:[]};
 
@@ -317,6 +320,10 @@ class Plan_add{
                             show_error_message(`예약 횟수가 없는 고정회원 ${omitted_fixed_member_name.length}명 
                                             (${omitted_fixed_member_name.join(" ,")})은 제외 되었습니다.`);
                         }
+                        
+                        let end_time_calc = this.calc_end_time_by_start_time(this.data.start_time, this.lecture_minute, this.work_time.end_hour);
+                        this.data.end_time = end_time_calc.data;
+                        this.data.end_time_text = end_time_calc.text;
                         this.member = data_to_set;
                     });
                 });
@@ -406,14 +413,8 @@ class Plan_add{
                 time_selector = new TimeSelector2('#wrapper_popup_time_selector_function', null, {myname:'time', title:'시작 시각', data:{hour:hour, minute:minute}, range:{start:range_start, end:range_end},
                                                                                                 callback_when_set: (object)=>{
                                                                                                     this.start_time = object;
-                                                                                                    // if(this.data.end_time != null){
-                                                                                                    //     let compare = TimeRobot.compare(`${object.data.hour}:${object.data.minute}`, this.data.end_time);
-                                                                                                    //     if(compare == true){
-                                                                                                    //         this.end_time = object;
-                                                                                                    //     }
-                                                                                                    // }
-
-                                                                                                    let end_time = this.calc_end_time_by_start_time(object.data, this.class_hour, this.work_time.end_hour);
+                                                                                                    
+                                                                                                    let end_time = this.calc_end_time_by_start_time(this.data.start_time, this.lecture_minute, this.work_time.end_hour);
                                                                                                     let end_time_object = {data:{hour:end_time.hour, minute:end_time.minute}, text:end_time.text};
                                                                                                     this.end_time = end_time_object;
 
@@ -497,7 +498,7 @@ class Plan_add{
                 let time_data = calendar.latest_received_data[selected_date];
                 let initial_time = this.data.start_time != null ? TimeRobot.hm_to_hhmm(this.data.start_time).complete : null;
 
-                let user_option = {myname:'time', title:'시간 선택', work_time:this.work_time, class_hour:this.class_hour, initial:initial_time, callback_when_set:(object)=>{
+                let user_option = {myname:'time', title:'시간 선택', work_time:this.work_time, class_hour:this.lecture_minute, initial:initial_time, callback_when_set:(object)=>{
                     this.data.start_time = object.data.start;
                     this.data.start_time_text = object.text.start + ' 부터';
                     this.data.end_time = object.data.end;
@@ -519,7 +520,7 @@ class Plan_add{
         let callback2 = ()=>{
             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', 100*300/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
                 let time_data = calendar.latest_received_data[selected_date];
-                let user_option = {myname:'time', title:'시간 선택', work_time:this.work_time, class_hour:this.class_hour, initial:TimeRobot.hm_to_hhmm(this.data.start_time).complete, callback_when_set:(object)=>{
+                let user_option = {myname:'time', title:'시간 선택', work_time:this.work_time, class_hour:this.lecture_minute, initial:TimeRobot.hm_to_hhmm(this.data.start_time).complete, callback_when_set:(object)=>{
                     
                     this.data.start_time = object.data.start;
                     this.data.start_time_text = object.text.start + ' 부터';
