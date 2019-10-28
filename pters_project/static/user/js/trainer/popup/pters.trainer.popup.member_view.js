@@ -656,7 +656,7 @@ class Member_view{
                     });
                 }
             },
-            lesson_history:{text:"수업 이력", callback:()=>{
+            lesson_history:{text:"일정 이력", callback:()=>{
                     layer_popup.close_layer_popup();
                     let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_SCHEDULE_HISTORY, 100, popup_style, null, ()=>{

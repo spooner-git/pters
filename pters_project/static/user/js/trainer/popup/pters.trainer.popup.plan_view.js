@@ -225,7 +225,7 @@ class Plan_view{
         if(this.data.schedule_type == 0){
             lecture_name =`OFF 일정 ${this.data.memo != "" ? '('+this.data.memo+')' : ''}`;
         }else if(this.data.schedule_type == 1){
-            lecture_name = this.data.member_name;
+            lecture_name = this.data.member_name + '<img src="/static/common/icon/icon_arrow_expand_black.png" style="height:17px;">';
             // lecture_name = this.data.lecture_name;
         }else if(this.data.schedule_type == 2){
             lecture_name = this.data.lecture_name;
@@ -245,6 +245,13 @@ class Plan_view{
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SIMPLE_VIEW, 100*(400/root_content_height), POPUP_FROM_BOTTOM, null, ()=>{
                         member_simple_view_popup = new Member_simple_view('.popup_member_simple_view', this.data.member_id[0], 'member_simple_view_popup');
                         //회원 간단 정보 팝업 열기
+                    });
+                }},
+                schedule_history:{text:"회원 일정 이력", callback:()=>{
+                    layer_popup.close_layer_popup();
+                    let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_SCHEDULE_HISTORY, 100, popup_style, null, ()=>{
+                        member_schedule_history = new Member_schedule_history('.popup_member_schedule_history', this.data.member_id[0], null);
                     });
                 }},
                 sign_image:{text:"출석 서명 확인", callback:()=>{
@@ -347,6 +354,13 @@ class Plan_view{
                             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SIMPLE_VIEW, 100*(400/root_content_height), POPUP_FROM_BOTTOM, {'member_id':member_id}, ()=>{
                                 member_simple_view_popup = new Member_simple_view('.popup_member_simple_view', member_id, 'member_simple_view_popup');
                                 //회원 간단 정보 팝업 열기
+                            });
+                        }},
+                        schedule_history:{text:"회원 일정 이력", callback:()=>{
+                            layer_popup.close_layer_popup();
+                            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_SCHEDULE_HISTORY, 100, popup_style, null, ()=>{
+                                member_schedule_history = new Member_schedule_history('.popup_member_schedule_history', member_id, null);
                             });
                         }},
                         sign_image:{text:"출석 서명 확인", callback:()=>{
