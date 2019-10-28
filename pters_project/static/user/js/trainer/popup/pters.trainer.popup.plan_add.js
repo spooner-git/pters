@@ -46,7 +46,7 @@ class Plan_add{
             duplicate_plan_when_add:[]
         };
 
-        this.class_hour = 30;
+        this.class_hour;
         this.work_time = {start_hour:0, end_hour:24};
 
         //팝업의 날짜, 시간등의 입력란을 미리 외부에서 온 데이터로 채워서 보여준다.
@@ -138,9 +138,9 @@ class Plan_add{
 
         // this.render();
         Setting_reserve_func.read((data)=>{
-            this.class_hour = 30; // 테스트
+            this.class_hour = 20; // 테스트
             this.work_time = calendar.calc_worktime_display(data);
-            // this.set_initial_data(this.data_from_external);
+            this.set_initial_data(this.data_from_external);
             this.render();
         });
         func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
@@ -599,11 +599,13 @@ class Plan_add{
         }
         switch(type){
             case "lesson":
-                this.init("lesson");
+                this.list_type = "lesson";
+                this.render();
             break;
 
             case "off":
-                this.init("off");
+                this.list_type = "off";
+                this.render();
             break;
         }
     }

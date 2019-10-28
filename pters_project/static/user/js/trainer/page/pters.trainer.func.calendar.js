@@ -15,6 +15,7 @@ class Calendar {
         this.date_start = 0; //시작을 월요일부터 옵션을 위한 코드
         this.cal_type = "week";
         this.current_page_num = 1;
+        this.class_hour;
 
         this.week_zoomed = {
             activate : false,
