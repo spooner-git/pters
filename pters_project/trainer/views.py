@@ -4090,7 +4090,7 @@ def update_setting_reserve_logic(request):
     setting_member_reserve_prohibition = request.POST.get('setting_member_reserve_prohibition',
                                                           MEMBER_RESERVE_PROHIBITION_ON)
     setting_member_reserve_date_available = request.POST.get('setting_member_reserve_date_available', '7')
-    setting_member_time_duration = request.POST.get('setting_member_time_duration', '60')
+    # setting_member_time_duration = request.POST.get('setting_member_time_duration', '60')
     setting_member_start_time = request.POST.get('setting_member_start_time', 'A-0')
     class_id = request.session.get('class_id', '')
 
@@ -4104,8 +4104,8 @@ def update_setting_reserve_logic(request):
         setting_member_reserve_prohibition = MEMBER_RESERVE_PROHIBITION_ON
     if setting_member_reserve_date_available is None or setting_member_reserve_date_available == '':
         setting_member_reserve_date_available = '7'
-    if setting_member_time_duration is None or setting_member_time_duration == '':
-        setting_member_time_duration = '60'
+    # if setting_member_time_duration is None or setting_member_time_duration == '':
+    #     setting_member_time_duration = '60'
     if setting_member_start_time is None or setting_member_start_time == '':
         setting_member_start_time = 'A-0'
 
@@ -4113,8 +4113,7 @@ def update_setting_reserve_logic(request):
                             'LT_RES_ENABLE_TIME', 'LT_RES_MEMBER_TIME_DURATION', 'LT_RES_MEMBER_START_TIME']
     setting_info_data = [setting_member_reserve_time_available, setting_member_reserve_prohibition,
                          setting_member_reserve_date_available, setting_member_reserve_cancel_time,
-                         setting_member_reserve_enable_time, setting_member_time_duration,
-                         setting_member_start_time]
+                         setting_member_reserve_enable_time, setting_member_start_time]
     error = update_setting_data(class_id, request.user.id, setting_type_cd_data, setting_info_data)
 
     if error is None:
@@ -4123,7 +4122,7 @@ def update_setting_reserve_logic(request):
         request.session['setting_member_reserve_enable_time'] = setting_member_reserve_enable_time
         request.session['setting_member_reserve_cancel_time'] = setting_member_reserve_cancel_time
         request.session['setting_member_reserve_date_available'] = setting_member_reserve_date_available
-        request.session['setting_member_time_duration'] = setting_member_time_duration
+        # request.session['setting_member_time_duration'] = setting_member_time_duration
         request.session['setting_member_start_time'] = setting_member_start_time
 
     else:
