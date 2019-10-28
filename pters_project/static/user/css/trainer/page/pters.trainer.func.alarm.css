@@ -24,7 +24,9 @@
 		width: 100px;
 		height: 100%;
 	}
-
+#alarm_content_wrap{
+	padding-bottom: 56px;
+}
 
 
 .alarm_wrapper{
