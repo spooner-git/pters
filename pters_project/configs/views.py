@@ -262,6 +262,9 @@ def func_setting_data_update(request, group):
         request.session['setting_week_start_date'] = context['setting_week_start_date']
         request.session['setting_holiday_hide'] = context['setting_holiday_hide']
 
+        request.session['setting_calendar_basic_select_time'] = context['setting_calendar_basic_select_time']
+        request.session['setting_calendar_time_selector_type'] = context['setting_calendar_time_selector_type']
+
         if group == 'trainee':
             try:
                 setting_data = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_LAN_01')

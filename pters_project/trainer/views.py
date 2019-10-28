@@ -33,7 +33,8 @@ from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO
     GROUP_SCHEDULE, SCHEDULE_DUPLICATION_ENABLE, LECTURE_TYPE_ONE_TO_ONE, STATE_CD_IN_PROGRESS, STATE_CD_NOT_PROGRESS, \
     STATE_CD_ABSENCE, STATE_CD_FINISH, PERMISSION_STATE_CD_APPROVE, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, AUTH_TYPE_DELETE, \
     LECTURE_TYPE_NORMAL, SHOW, SORT_TICKET_TYPE, SORT_TICKET_NAME, SORT_TICKET_MEMBER_COUNT, SORT_TICKET_CREATE_DATE, \
-    SORT_LECTURE_NAME, SORT_LECTURE_MEMBER_COUNT, SORT_LECTURE_CAPACITY_COUNT, SORT_LECTURE_CREATE_DATE, ON_SCHEDULE
+    SORT_LECTURE_NAME, SORT_LECTURE_MEMBER_COUNT, SORT_LECTURE_CAPACITY_COUNT, SORT_LECTURE_CREATE_DATE, ON_SCHEDULE, \
+    CALENDAR_TIME_SELECTOR_BASIC
 from board.models import BoardTb
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 from schedule.functions import func_refresh_member_ticket_count, func_get_trainer_attend_schedule, \
@@ -2276,6 +2277,7 @@ def update_lecture_info_logic(request):
         lecture_info.end_color_cd = end_color_cd
         lecture_info.ing_font_color_cd = ing_font_color_cd
         lecture_info.end_font_color_cd = end_font_color_cd
+        lecture_info.lecture_hour = lecture_hour
         lecture_info.save()
 
     if error is not None:
@@ -2469,6 +2471,7 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                  'lecture_ing_font_color_cd': lecture_tb.ing_font_color_cd,
                                                  'lecture_end_color_cd': lecture_tb.end_color_cd,
                                                  'lecture_end_font_color_cd': lecture_tb.end_font_color_cd,
+                                                 'lecture_hour': lecture_tb.lecture_hour,
                                                  'lecture_type_cd': lecture_tb.lecture_type_cd,
                                                  'lecture_reg_dt': lecture_tb.reg_dt,
                                                  'lecture_ticket_list': [],
@@ -2494,6 +2497,7 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                      'lecture_ing_font_color_cd': lecture_info.ing_font_color_cd,
                                                      'lecture_end_color_cd': lecture_info.end_color_cd,
                                                      'lecture_end_font_color_cd': lecture_info.end_font_color_cd,
+                                                     'lecture_hour': lecture_info.lecture_hour,
                                                      'lecture_type_cd': lecture_info.lecture_type_cd,
                                                      'lecture_reg_dt': lecture_info.reg_dt,
                                                      'lecture_ticket_list': [],
@@ -2591,6 +2595,7 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                  'lecture_ing_font_color_cd': lecture_tb.ing_font_color_cd,
                                                  'lecture_end_color_cd': lecture_tb.end_color_cd,
                                                  'lecture_end_font_color_cd': lecture_tb.end_font_color_cd,
+                                                 'lecture_hour': lecture_tb.lecture_hour,
                                                  'lecture_type_cd': lecture_tb.lecture_type_cd,
                                                  'lecture_reg_dt': lecture_tb.reg_dt,
                                                  'lecture_ticket_list': [],
@@ -2616,6 +2621,7 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                      'lecture_ing_font_color_cd': lecture_info.ing_font_color_cd,
                                                      'lecture_end_color_cd': lecture_info.end_color_cd,
                                                      'lecture_end_font_color_cd': lecture_info.end_font_color_cd,
+                                                     'lecture_hour': lecture_info.lecture_hour,
                                                      'lecture_type_cd': lecture_info.lecture_type_cd,
                                                      'lecture_reg_dt': lecture_info.reg_dt,
                                                      'lecture_ticket_list': [],
@@ -3463,7 +3469,9 @@ def add_program_info_logic(request):
 
                 one_to_one_lecture_info = LectureTb(class_tb_id=class_info.class_id, name='개인 레슨',
                                                     ing_color_cd='#fbf3bd', end_color_cd='#d2d1cf',
+                                                    ing_font_color_cd='#282828', end_font_color_cd='#282828',
                                                     state_cd=STATE_CD_IN_PROGRESS,
+                                                    lecture_hour=60,
                                                     lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, member_num=1, use=USE)
                 one_to_one_lecture_info.save()
 
@@ -3952,6 +3960,35 @@ def update_setting_push_logic(request):
 
 
 # 강사 기본 setting 업데이트 api
+def update_setting_calendar_setting_logic(request):
+    setting_calendar_basic_select_time = request.POST.get('setting_calendar_basic_select_time', '60')
+    # CALENDAR_TIME_SELECTOR_BASIC : 0 (신 PTERS 기본) / CALENDAR_TIME_SELECTOR_ORIGIN : 1 (구 PTERS 기본)
+    setting_calendar_time_selector_type = request.POST.get('setting_calendar_time_selector_type',
+                                                           CALENDAR_TIME_SELECTOR_BASIC)
+    class_id = request.session.get('class_id', '')
+
+    if setting_calendar_basic_select_time is None or setting_calendar_basic_select_time == '':
+        setting_calendar_basic_select_time = '60'
+    if setting_calendar_time_selector_type is None or setting_calendar_time_selector_type == '':
+        setting_calendar_time_selector_type = CALENDAR_TIME_SELECTOR_BASIC
+
+    setting_type_cd_data = ['LT_CALENDAR_BASIC_SETTING_TIME', 'LT_CALENDAR_TIME_SELECTOR_TYPE']
+    setting_info_data = [setting_calendar_basic_select_time, setting_calendar_time_selector_type]
+
+    error = update_setting_data(class_id, request.user.id, setting_type_cd_data, setting_info_data)
+
+    if error is None:
+        request.session['setting_calendar_basic_select_time'] = setting_calendar_basic_select_time
+        request.session['setting_calendar_time_selector_type'] = setting_calendar_time_selector_type
+
+    else:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
+# 강사 기본 setting 업데이트 api
 def update_setting_work_time_logic(request):
     # setting_trainer_work_time_available = request.POST.get('setting_trainer_work_time_available', '00:00-23:59')
     setting_trainer_work_sun_time_avail = request.POST.get('setting_trainer_work_sun_time_avail', '00:00-24:00')
@@ -3963,6 +4000,7 @@ def update_setting_work_time_logic(request):
     setting_trainer_work_sat_time_avail = request.POST.get('setting_trainer_work_sat_time_avail', '00:00-24:00')
     setting_holiday_hide = request.POST.get('setting_holiday_hide', SHOW)
     setting_week_start_date = request.POST.get('setting_week_start_date', 'SUN')
+    setting_calendar_basic_select_time = request.POST.get('setting_calendar_basic_select_time', '60')
     class_id = request.session.get('class_id', '')
 
     if setting_trainer_work_sun_time_avail is None or setting_trainer_work_sun_time_avail == '':
@@ -3983,15 +4021,19 @@ def update_setting_work_time_logic(request):
         setting_holiday_hide = SHOW
     if setting_week_start_date is None or setting_week_start_date == '':
         setting_week_start_date = 'SUN'
+    if setting_calendar_basic_select_time is None or setting_calendar_basic_select_time == '':
+        setting_calendar_basic_select_time = '60'
 
     setting_type_cd_data = ['LT_WORK_SUN_TIME_AVAIL', 'LT_WORK_MON_TIME_AVAIL',
                             'LT_WORK_TUE_TIME_AVAIL', 'LT_WORK_WED_TIME_AVAIL',
                             'LT_WORK_THS_TIME_AVAIL', 'LT_WORK_FRI_TIME_AVAIL',
-                            'LT_WORK_SAT_TIME_AVAIL', 'LT_HOLIDAY_HIDE', 'LT_WEEK_START_DATE']
+                            'LT_WORK_SAT_TIME_AVAIL', 'LT_HOLIDAY_HIDE', 'LT_WEEK_START_DATE',
+                            'LT_CALENDAR_BASIC_SETTING_TIME']
     setting_info_data = [setting_trainer_work_sun_time_avail, setting_trainer_work_mon_time_avail,
                          setting_trainer_work_tue_time_avail, setting_trainer_work_wed_time_avail,
                          setting_trainer_work_ths_time_avail, setting_trainer_work_fri_time_avail,
-                         setting_trainer_work_sat_time_avail, setting_holiday_hide, setting_week_start_date]
+                         setting_trainer_work_sat_time_avail, setting_holiday_hide, setting_week_start_date,
+                         setting_calendar_basic_select_time]
 
     error = update_setting_data(class_id, request.user.id, setting_type_cd_data, setting_info_data)
 
@@ -4005,6 +4047,7 @@ def update_setting_work_time_logic(request):
         request.session['setting_trainer_work_sat_time_avail'] = setting_trainer_work_sat_time_avail
         request.session['setting_week_start_date'] = setting_week_start_date
         request.session['setting_holiday_hide'] = setting_holiday_hide
+        request.session['setting_calendar_basic_select_time'] = setting_calendar_basic_select_time
 
     else:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
