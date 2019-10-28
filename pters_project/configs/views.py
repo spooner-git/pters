@@ -249,7 +249,7 @@ def func_setting_data_update(request, group):
         request.session['setting_member_reserve_date_available'] = context['setting_member_reserve_date_available']
         request.session['setting_member_reserve_enable_time'] = context['setting_member_reserve_enable_time']
         request.session['setting_member_reserve_cancel_time'] = context['setting_member_reserve_cancel_time']
-        request.session['setting_member_time_duration'] = context['setting_member_time_duration']
+        # request.session['setting_member_time_duration'] = context['setting_member_time_duration']
         request.session['setting_member_start_time'] = context['setting_member_start_time']
         request.session['setting_schedule_auto_finish'] = context['setting_schedule_auto_finish']
         request.session['setting_member_ticket_auto_finish'] = context['setting_member_ticket_auto_finish']

@@ -725,7 +725,7 @@ def func_get_trainer_setting_list(context, user_id, class_id, class_hour):
     context['setting_member_reserve_date_available'] = lt_res_05
     context['setting_member_reserve_enable_time'] = lt_res_enable_time
     context['setting_member_reserve_cancel_time'] = lt_res_cancel_time
-    context['setting_member_time_duration'] = one_to_one_lecture_time_duration
+    # context['setting_member_time_duration'] = one_to_one_lecture_time_duration
     context['one_to_one_lecture_time_duration'] = one_to_one_lecture_time_duration
     context['setting_member_start_time'] = lt_res_member_start_time
     context['setting_schedule_auto_finish'] = lt_schedule_auto_finish
