@@ -99,6 +99,7 @@
 	transition: 0.2s ease-in-out;
 	background-color: #ffffff;
 	z-index: 1;
+	padding-bottom: 56px;
 }
 
 .week_upper_float_tool{
