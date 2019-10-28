@@ -22,7 +22,7 @@ class Member_schedule_history{
 
     render(){
         let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();member_schedule_history.clear();" class="obj_icon_prev"></span>`;
-        let top_center = `<span class="icon_center"><span id="">수업 이력</span></span>`;
+        let top_center = `<span class="icon_center"><span id="">일정 이력</span></span>`;
         let top_right = `<span class="icon_right"></span>`;
         let content =   `<section style="margin-top:8px;">${this.dom_list()}</section>`;
         
