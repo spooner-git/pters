@@ -140,7 +140,7 @@ class Plan_add{
         Setting_reserve_func.read((data)=>{
             this.class_hour = 30; // 테스트
             this.work_time = calendar.calc_worktime_display(data);
-            this.set_initial_data(this.data_from_external);
+            // this.set_initial_data(this.data_from_external);
             this.render();
         });
         func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
@@ -156,11 +156,11 @@ class Plan_add{
         this.data.start_time = user_data_time.hour == null ? null : `${user_data_time.hour}:${user_data_time.minute}`;
         this.data.start_time_text = user_data_time.text;
 
-        if(this.data.end_time == ""){
+        // if(this.data.end_time == ""){
             let end_time_calc = this.calc_end_time_by_start_time(user_data_time, this.class_hour, this.work_time.end_hour);
             this.data.end_time = end_time_calc.data;
             this.data.end_time_text = end_time_calc.text;
-        }
+        // }
     }
 
     calc_end_time_by_start_time(start_time, class_hour, work_time_end){
