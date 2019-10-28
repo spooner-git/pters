@@ -130,7 +130,7 @@ class Service_inquiry {
             this.data.inquiry_subject = data;
             this.render_content();
         };
-        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+., 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+.,\\r 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
         let pattern_message = "+ - _ . , 제외 특수문자는 입력 불가";
         let required = "";
         let row = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, onfocusout, pattern, pattern_message, required);
@@ -150,7 +150,7 @@ class Service_inquiry {
             this.render_content();
         };
         let style = {"height":`${windowHeight - 61 - 82 - 69 - 69 - 12 - 16 - 28}px`};
-        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_:.,+\\n 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_:.,\\r+\\n 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
         let pattern_message = "+ - _ : 제외 특수문자는 입력 불가";
         let required = "";
         let row = CComponent.create_input_textarea_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, onfocusout, pattern, pattern_message, required);
