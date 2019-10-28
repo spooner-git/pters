@@ -22,7 +22,7 @@ class Member_schedule_history{
 
     render(){
         let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();member_schedule_history.clear();" class="obj_icon_prev"></span>`;
-        let top_center = `<span class="icon_center"><span id="">수업 이력</span></span>`;
+        let top_center = `<span class="icon_center"><span id="">일정 이력</span></span>`;
         let top_right = `<span class="icon_right"></span>`;
         let content =   `<section style="margin-top:8px;">${this.dom_list()}</section>`;
         
@@ -67,16 +67,43 @@ class Member_schedule_history{
                     let user_option = {
                         absence:{text:"결석", callback:()=>{Plan_func.status({"schedule_id":schedule_id, "state_cd":SCHEDULE_ABSENCE}, ()=>{
                                                                 this.init();
-                                                                member_view_popup.init();
+                                                                try{
+                                                                    member_view_popup.init();
+                                                                }catch(e){}
+                                                                try{
+                                                                    plan_view_popup.init();
+                                                                }catch(e){}
+                                                                try{
+                                                                    current_page.init();
+                                                                }catch(e){}
+                                                                
                                                             });
                                                             layer_popup.close_layer_popup();}},
                         attend:{text:"출석", callback:()=>{Plan_func.status({"schedule_id":schedule_id, "state_cd":SCHEDULE_FINISH}, ()=>{
                                                                 this.init();
-                                                                member_view_popup.init();
+                                                                try{
+                                                                    member_view_popup.init();
+                                                                }catch(e){}
+                                                                try{
+                                                                    plan_view_popup.init();
+                                                                }catch(e){}
+                                                                try{
+                                                                    current_page.init();
+                                                                }catch(e){}
+
                                                             });layer_popup.close_layer_popup();}},
                         cancel:{text:"일정 취소", callback:()=>{Plan_func.delete({"schedule_id":schedule_id}, ()=>{
                                                             this.init();
-                                                            member_view_popup.init();
+                                                            try{
+                                                                member_view_popup.init();
+                                                            }catch(e){}
+                                                            try{
+                                                                plan_view_popup.init();
+                                                            }catch(e){}
+                                                            try{
+                                                                current_page.init();
+                                                            }catch(e){}
+
                                                         });layer_popup.close_layer_popup();}}
                     };
                     let options_padding_top_bottom = 16;

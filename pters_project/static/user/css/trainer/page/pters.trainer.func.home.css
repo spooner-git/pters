@@ -31,6 +31,14 @@
 #home_content_wrap{
 	padding: 16px;
 	box-sizing: border-box;
+
+	top:unset;
+	left:unset;
+	background-color:unset;
+	position:relative;
+	min-height:calc(100% - 68px);
+	padding-top:20px; 
+	padding-bottom:56px;
 }
 
 #home_content_wrap .contents{
