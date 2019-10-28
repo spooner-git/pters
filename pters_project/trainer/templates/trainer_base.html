@@ -297,19 +297,19 @@
     pc_keyboard_event();
     func_set_webkit_overflow_scrolling('#root_content');
     
-    $root_content.css('height', `100%`);
-    $root_content.scroll(function(){
-        let scroll_loc = $(this).scrollTop();
-        let element_height = $(this).innerHeight();
-        let scroll_height = $(this).prop('scrollHeight');
+    $root_content.css('height', `calc(100% - 56px)`);
+    // $root_content.scroll(function(){
+    //     let scroll_loc = $(this).scrollTop();
+    //     let element_height = $(this).innerHeight();
+    //     let scroll_height = $(this).prop('scrollHeight');
    
-        let scroll_loc_percent = 100*(scroll_loc)/(scroll_height-element_height);
-        if( scroll_loc_percent > 10 && scroll_loc_percent > 90){
-            nav_bar('off');
-        }else{
-            nav_bar('on');
-        }
-    });
+    //     let scroll_loc_percent = 100*(scroll_loc)/(scroll_height-element_height);
+    //     if( scroll_loc_percent > 10 && scroll_loc_percent > 90){
+    //         nav_bar('off');
+    //     }else{
+    //         nav_bar('on');
+    //     }
+    // });
     //팝업이 떠있을때, 팝업을 스크롤하면, 뒤의 root_content 항목이 스크롤되서 위치에서 벗어난 현상 해결
     $(document).on('touchstart', '.popup_mobile', function(){
         $('#root_content').css({'overflow-y':'hidden'})
