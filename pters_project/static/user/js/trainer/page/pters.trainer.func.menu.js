@@ -356,7 +356,7 @@ class Menu {
                                     </div>
                                         `
                 ,
-                initial_page:`<div id="menu_display_panel"></div><div id="menu_content_wrap" class="pages" style="top:unset;left:unset;background-color:unset;position:relative;min-height:calc(100% - 68px); padding:8px 16px 20px 16px;box-sizing:border-box"></div>`
+                initial_page:`<div id="menu_display_panel"></div><div id="menu_content_wrap" class="pages"></div>`
             }
         );
     }
