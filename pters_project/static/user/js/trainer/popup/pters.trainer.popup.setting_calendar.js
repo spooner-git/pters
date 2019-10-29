@@ -69,8 +69,9 @@ class Setting_calendar{
     }
     
     dom_assembly_content(){
-        let html =  '<article class="obj_input_box_full">' +
+        let html =  '<article class="obj_input_box_full" style="padding-top:5px;">' +
                         this.dom_row_calendar_basic_select_time() + 
+                        "<span style='font-size:12px;color:#3b3b3b;letter-spacing:-0.6px;font-weight:normal'>달력에서 선택되는 기본 시간</span>" + 
                     '</article>' +
                     '<article class="obj_input_box_full">' +
                         this.dom_row_calendar_title() +
@@ -82,11 +83,11 @@ class Setting_calendar{
 
     dom_row_calendar_basic_select_time(){
         let id = "calendar_basic_select_time";
-        let title = "시간 선택 단위<br><span style='font-size:12px;color:#3b3b3b;letter-spacing:-0.6px;font-weight:normal'>달력에서 선택되는 기본 시간</span>";
+        let title = "시간 선택 단위";
         let icon = DELETE;
         let icon_r_visible = SHOW;
         let icon_r_text = this.data.calendar_basic_select_time.text.length == 0 ? '' : this.data.calendar_basic_select_time.text;
-        let style = {"height":"auto"};
+        let style = {"height":"auto", "padding-bottom":"0"};
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             let title = "달력 시간 선택 단위";
             let install_target = "#wrapper_box_custom_select";

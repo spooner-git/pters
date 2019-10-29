@@ -99,8 +99,9 @@ class Setting_reserve{
         //                 this.dom_row_available_cancel_time() +
         //             '</article>';
         let html = this.dom_row_stop_reserve() + 
-                    '<article class="obj_input_box_full" style="padding-bottom:10px;">' +
+                    '<article class="obj_input_box_full" style="padding-top:5px;">' +
                        this.dom_row_start_time_for_private_reserve() +
+                       "<span style='font-size:12px;color:#3b3b3b;letter-spacing:-0.6px;font-weight:normal'>수강 회원님께서 선택 가능한 시작 시각</span>" + 
                     '</article>' +
                     '<article class="obj_input_box_full">' +
                         this.dom_row_available_reserve_date() + 
@@ -158,11 +159,11 @@ class Setting_reserve{
 
     dom_row_start_time_for_private_reserve(){
         let id = "start_time_for_private_reserve";
-        let title = "개인 수업 예약 시작 시각<br><span style='font-size:12px;color:#3b3b3b;letter-spacing:-0.6px;font-weight:normal'>수강 회원님께서 선택 가능한 시작 시각</span>";
+        let title = "개인 수업 예약 시작 시각";
         let icon = DELETE;
         let icon_r_visible = SHOW;
         let icon_r_text = this.data.start_time_for_private_reserve.text.length == 0 ? '' : this.data.start_time_for_private_reserve.text;
-        let style = {"height":"auto"};
+        let style = {"height":"auto", "padding-bottom":"0"};
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             let title = "개인 수업 예약 시간";
             let install_target = "#wrapper_box_custom_select";
