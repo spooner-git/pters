@@ -28,7 +28,7 @@ class TwoTimeSelector{
                     }
 
         this.listing_option = {
-            five_minute_detail: OFF,
+            five_minute_detail: ON, // 5분단위 상세 선택 토글 버튼 숨김 -> 무조건 5분단위
             duplicate_filter : ON
         };
         
@@ -369,7 +369,7 @@ class TwoTimeSelector{
                                     </div>
                                 </div>
                                 <div class="time_selector_option_wrap" style="display:flex;height:45px;line-height:45px;border-bottom:1px solid #f2f2f2;box-sizing:border-box;">
-                                    <div style="flex:1 1 0">
+                                    <div style="flex:1 1 0; display:none;">
                                         ${CComponent.toggle_button ("selector_time_detail_view", this.listing_option.five_minute_detail, {"display":"inline-block", "vertical-align":"middle", "margin-bottom":"4px", "transform":"scale(0.8)"}, ()=>{this.event_five_minute_detail_switch();})}
                                         <span>5분단위 상세 선택</span>
                                     </div>
