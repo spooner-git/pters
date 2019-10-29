@@ -40,6 +40,7 @@
     transform: translate(-50%, -50%); */
     display: table-cell;
     vertical-align: middle;
+    word-break: keep-all;
 }
 
 .wrapper_popup_basic_buttons{
