@@ -167,7 +167,7 @@ class LectureTb(TimeStampedModel):
                                        default=LECTURE_TYPE_ONE_TO_ONE)
     name = models.CharField(db_column='NAME', max_length=255, blank=True, null=True, default='')
     note = models.CharField(db_column='NOTE', max_length=1000, blank=True, null=True, default='')
-    lecture_hour = models.IntegerField(db_column='GROUP_HOUR', default=60)  # Field name made lowercase.
+    lecture_minute = models.IntegerField(db_column='GROUP_MINUTE', default=60)  # Field name made lowercase.
     use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
 
     class Meta:
