@@ -240,7 +240,12 @@ class DateRobot{
         //     diff_date_text = "일 지남";
         //     diff_date = Math.abs(diff_date);
         // }
-        return Math.round((new Date(date1).getTime() - new Date(date2).getTime()) / (1000*60*60*24));
+        let date1_split = date1.split('-');
+        let date2_split = date2.split('-');
+        let date1_format_yyyymmdd = DateRobot.to_yyyymmdd(date1_split[0], date1_split[1], date1_split[2]);
+        let date2_format_yyyymmdd = DateRobot.to_yyyymmdd(date2_split[0], date2_split[1], date2_split[2]);
+
+        return Math.round((new Date(date1_format_yyyymmdd).getTime() - new Date(date2_format_yyyymmdd).getTime()) / (1000*60*60*24));
     }
 
     static diff_month(date_1, date_2){
@@ -267,8 +272,8 @@ class DateRobot{
 
         let added = new Date(yyyy, (mm-1)+add, dd);
 
-        let new_date = `${added.getFullYear()}-${added.getMonth()+1}-${added.getDate()}`;
-
+        // let new_date = `${added.getFullYear()}-${added.getMonth()+1}-${added.getDate()}`;
+        let new_date = DateRobot.to_yyyymmdd(added.getFullYear(), added.getMonth()+1, added.getDate());
         return new_date;
     }
 }
