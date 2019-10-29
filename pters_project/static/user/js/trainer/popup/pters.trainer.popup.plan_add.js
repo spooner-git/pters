@@ -160,7 +160,7 @@ class Plan_add{
         // if(this.data.end_time == ""){
             let end_time_calc = this.calc_end_time_by_start_time(`${user_data_time.hour}:${user_data_time.minute}`, this.lecture_minute, this.work_time.end_hour);
             this.data.end_time = user_data_time.hour == null ? null : end_time_calc.data;
-            this.data.end_time_text = user_data_time.hour == null ? null : end_time_calc.text;
+            this.data.end_time_text = user_data_time.hour == null ? null : end_time_calc.text + ' 까지 <span style="font-size:11px;">('+TimeRobot.diff_min(this.data.start_time, this.data.end_time)+'분 진행)</span>';
         // }
     }
 
