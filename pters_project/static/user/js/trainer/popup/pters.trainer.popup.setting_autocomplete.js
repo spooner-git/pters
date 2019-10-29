@@ -85,8 +85,8 @@ class Setting_autocomplete{
         let description = "";
         let html = `
         <div class="setting_autocomplete_upper_box" style="">
-            <div style="display:inline-block;width:320px;">
-                <span style="display:inline-block;width:320px;font-size:23px;font-weight:bold">
+            <div style="display:inline-block;">
+                <span style="display:inline-block;font-size:23px;font-weight:bold">
                     ${title}
                     ${description}
                 </span>

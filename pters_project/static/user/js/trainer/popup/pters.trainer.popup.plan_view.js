@@ -406,7 +406,7 @@ class Plan_view{
         let id = 'select_date';
         let title = this.data.date_text == null ? '일자*' : this.data.date_text;
         let icon = '/static/common/icon/icon_cal_black.png';
-        let icon_r_visible = HIDE;
+        let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
@@ -434,7 +434,7 @@ class Plan_view{
         let id = 'select_start_time';
         let title = this.data.start_time_text == null ? '시작 시각*' : this.data.start_time_text;
         let icon = '/static/common/icon/icon_clock_black.png';
-        let icon_r_visible = HIDE;
+        let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 

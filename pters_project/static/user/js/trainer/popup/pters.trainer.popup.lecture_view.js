@@ -300,6 +300,11 @@ class Lecture_view{
                 this.render_content();
                 return false;
             }
+            if(Number(user_input_data) <= 0){
+                show_error_message("기본 수업 시간은 0분 보다 크게 설정해주세요.");
+                this.render_content();
+                return false;
+            }
             this.data.lecture_minute = user_input_data;
             this.send_data();
         };

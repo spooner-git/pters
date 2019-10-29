@@ -141,7 +141,7 @@ class Statistics{
         let title2 = "회원 통계";
         let html = `
                     <div class="lecture_view_upper_box">
-                        <div style="display:inline-block;width:320px;">
+                        <div style="display:inline-block;">
                             <span class="sales_type_select_text_button" style="color:${this.tab=="sales" ? "#3d3b3b" :"#b8b4b4"}" onclick="statistics_popup.switch('sales')">
                                 ${title}
                             </span>
