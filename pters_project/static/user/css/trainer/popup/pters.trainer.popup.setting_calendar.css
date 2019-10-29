@@ -36,7 +36,7 @@
 }
 .popup_setting_calendar .select_wrap img{
 	width: 100%;
-
+	border: 1px solid #f5f2f2;
 }
 .popup_setting_calendar .select_indicator{
 	margin-bottom: 10px;

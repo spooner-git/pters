@@ -136,7 +136,7 @@ class Setting_calendar{
                             <p>시작과 종료시간을 각각 상세하게 설정 합니다. <br>겹치는 일정을 상관없이 모두 표기해 줍니다.</p>
                         </div>
                         <div>
-                            <img src="/static/common/img/time_input_method/calendar_time_input_type_new.png">
+                            <img src="/static/common/img/time_input_method/calendar_time_input_type_new.png?v2">
                         </div>
                     </div>`;
         $(document).off('click', '#input_method_new').on('click', '#input_method_new', (e)=>{
@@ -156,7 +156,7 @@ class Setting_calendar{
                             <p>시작과 종료시각을 한번에 설정 합니다. <br>겹치는 일정은 필터링 할 수 있습니다.</p>
                         </div>
                         <div>
-                            <img src="/static/common/img/time_input_method/calendar_time_input_type_classic.png">
+                            <img src="/static/common/img/time_input_method/calendar_time_input_type_classic.png?v2">
                         </div>
                     </div>`;
         $(document).off('click', '#input_method_classic').on('click', '#input_method_classic', (e)=>{
