@@ -105,7 +105,7 @@ class Service_inquiry_faq {
         let title2 = "자주 묻는 질문";
         let html = `
                     <div class="lecture_view_upper_box">
-                        <div style="display:inline-block;width:320px;">
+                        <div style="display:inline-block;">
                             <span class="sales_type_select_text_button" style="color:${this.tab=="manual" ? "#3d3b3b" :"#b8b4b4"}" onclick="service_inquiry_faq_popup.switch('manual')">
                                 ${title}
                             </span>

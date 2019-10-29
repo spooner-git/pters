@@ -174,8 +174,8 @@ class Setting_calendar{
         let description = "<p style='font-size:14px;font-weight:500;'>일정 메뉴와 관련된 설정입니다.</p>";
         let html = `
         <div class="setting_reserve_upper_box" style="">
-            <div style="display:inline-block;width:320px;">
-                <span style="display:inline-block;width:320px;font-size:23px;font-weight:bold">
+            <div style="display:inline-block;">
+                <span style="display:inline-block;font-size:23px;font-weight:bold">
                     ${title}
                     ${description}
                 </span>
