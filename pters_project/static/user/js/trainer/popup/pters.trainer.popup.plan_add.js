@@ -361,7 +361,7 @@ class Plan_add{
         let id = 'select_date';
         let title = this.data.date_text == null ? '일자*' : this.data.date_text;
         let icon = '/static/common/icon/icon_cal_black.png';
-        let icon_r_visible = HIDE;
+        let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
