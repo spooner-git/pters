@@ -470,11 +470,6 @@ class Member_add{
                     }
                 }
 
-                //data_to_send의 선택날짜가 빈값이라면 오늘로 셋팅한다.
-                // let year = this.data.end_date == null ? this.dates.current_year : this.data.end_date.year; 
-                // let month = this.data.end_date == null ? this.dates.current_month : this.data.end_date.month;
-                // let date = this.data.end_date == null ? this.dates.current_date : this.data.end_date.date;    
-                
                 let min = this.data.start_date != null ? {year:this.data.start_date.year, month:this.data.start_date.month, date: this.data.start_date.date} : null;
 
                 date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'end_date', title:'종료일',
@@ -486,8 +481,109 @@ class Member_add{
                 }});
             });
         });
+        let end_date_simple_input = this.dom_row_end_date_simple_input_machine();
+        return html + end_date_simple_input;
+    }
+
+    dom_row_end_date_simple_input_machine(){
+        let button_style = {"flex":"1 1 0", "padding":"10px 8px"};
+
+        let button_week_2 = CComponent.button ("button_week_2", "+ 7일", button_style, ()=>{
+            if(this.data.start_date == null){
+                show_error_message("시작 일자를 먼저 선택해주세요.");
+                return;
+            }
+
+            let end_date_ = this.data.end_date == null ? this.data.start_date : this.data.end_date;
+            let end_date = DateRobot.to_yyyymmdd(end_date_.year, end_date_.month, end_date_.date);
+            if(end_date_.year == "9999"){
+                end_date = DateRobot.to_yyyymmdd(this.data.start_date.year, this.data.start_date.month, this.data.start_date.date);
+            }
+
+            let new_date = DateRobot.add_date(end_date, 7);
+            let new_date_year = new_date.split('-')[0];
+            let new_date_month = new_date.split('-')[1];
+            let new_date_date = new_date.split('-')[2];
+            
+            this.data.end_date = {year:Number(new_date_year), month:Number(new_date_month), date:Number(new_date_date)};
+            this.data.end_date_text = DateRobot.to_text(new_date_year, new_date_month, new_date_date);
+            this.render_content();
+        });
+
+        let button_month_1 = CComponent.button ("button_month_1", "+ 30일", button_style, ()=>{
+            if(this.data.start_date == null){
+                show_error_message("시작 일자를 먼저 선택해주세요.");
+                return;
+            }
+            // let start_date = DateRobot.to_yyyymmdd(this.data.start_date.year, this.data.start_date.month, this.data.start_date.date);
+            let end_date_ = this.data.end_date == null ? this.data.start_date : this.data.end_date;
+            let end_date = DateRobot.to_yyyymmdd(end_date_.year, end_date_.month, end_date_.date);
+            if(end_date_.year == "9999"){
+                end_date = DateRobot.to_yyyymmdd(this.data.start_date.year, this.data.start_date.month, this.data.start_date.date);
+            }
+
+            let new_date = DateRobot.add_date(end_date, 30);
+            let new_date_year = new_date.split('-')[0];
+            let new_date_month = new_date.split('-')[1];
+            let new_date_date = new_date.split('-')[2];
+            
+            this.data.end_date = {year:Number(new_date_year), month:Number(new_date_month), date:Number(new_date_date)};
+            this.data.end_date_text = DateRobot.to_text(new_date_year, new_date_month, new_date_date);
+            this.render_content();
+        });
+
+        let button_year_1 = CComponent.button ("button_year_1", "+ 1년", button_style, ()=>{
+            if(this.data.start_date == null){
+                show_error_message("시작 일자를 먼저 선택해주세요.");
+                return;
+            }
+            // let start_date = DateRobot.to_yyyymmdd(this.data.start_date.year, this.data.start_date.month, this.data.start_date.date);
+            let end_date_ = this.data.end_date == null ? this.data.start_date : this.data.end_date;
+            let end_date = DateRobot.to_yyyymmdd(end_date_.year, end_date_.month, end_date_.date);
+            if(end_date_.year == "9999"){
+                end_date = DateRobot.to_yyyymmdd(this.data.start_date.year, this.data.start_date.month, this.data.start_date.date);
+            }
+
+            let new_date = DateRobot.add_date(end_date, 366);
+            let new_date_year = new_date.split('-')[0];
+            let new_date_month = new_date.split('-')[1];
+            let new_date_date = new_date.split('-')[2];
+            
+            this.data.end_date = {year:Number(new_date_year), month:Number(new_date_month), date:Number(new_date_date)};
+            this.data.end_date_text = DateRobot.to_text(new_date_year, new_date_month, new_date_date);
+            this.render_content();
+        });
+
+        let button_no_duration = CComponent.button ("button_no_duration", "소진 시", button_style, ()=>{
+            if(this.data.start_date == null){
+                show_error_message("시작 일자를 먼저 선택해주세요.");
+                return;
+            }
+            
+            this.data.end_date = {year:9999, month:12, date:31};
+            this.data.end_date_text = "소진 시까지";
+            this.render_content();
+        });
+
+        let button_clear = CComponent.button ("button_clear", "지우기", button_style, ()=>{
+
+            this.data.end_date = null;
+            this.data.end_date_text = null;
+            this.render_content();
+        });
+        
+        let wrapper_style = "display:flex;padding:0px 0 0px 20px;font-size:12px;";
+        let html = `<div style="${wrapper_style}">
+                        ${button_week_2} <div style="flex-basis:1px;height:100%;background-color:#f5f2f2;"></div>
+                        ${button_month_1} <div style="flex-basis:1px;height:100%;background-color:#f5f2f2;"></div>
+                        ${button_year_1} <div style="flex-basis:1px;height:100%;background-color:#f5f2f2;"></div>
+                        ${button_no_duration} <div style="flex-basis:1px;height:100%;background-color:#f5f2f2;"></div>
+                        ${button_clear} <div style="flex-basis:1px;height:100%;background-color:#f5f2f2;"></div>
+                    </div>`;
+
         return html;
     }
+
 
     dom_row_member_reg_count_input(){
         let unit = '회';
@@ -530,6 +626,30 @@ class Member_add{
             }
             this.reg_price = input_data;
         }, pattern, pattern_message, required);
+        
+        let price_simple_input = this.dom_row_price_simple_input_machine();
+        return html + price_simple_input;
+    }
+
+    dom_row_price_simple_input_machine(){
+        let button_style = {"flex":"1 1 0", "padding":"10px 8px"};
+
+        let button_100 = CComponent.button ("button_100", "+ 100만", button_style, ()=>{ this.data.ticket_price =this.data.ticket_price + 1000000;this.render_content(); });
+        let button_50 = CComponent.button ("button_50", "+ 50만", button_style, ()=>{ this.data.ticket_price = this.data.ticket_price + 500000;this.render_content(); });
+        let button_10 = CComponent.button ("button_10", "+ 10만", button_style, ()=>{ this.data.ticket_price = this.data.ticket_price + 100000;this.render_content(); });
+        let button_1 = CComponent.button ("button_1", "+ 1만", button_style, ()=>{ this.data.ticket_price = this.data.ticket_price + 10000;this.render_content(); });
+        let button_delete = CComponent.button ("button_delete", "지우기", button_style, ()=>{ this.data.ticket_price = 0;this.render_content(); });
+        
+        let wrapper_style = "display:flex;padding:0px 0 0px 20px;font-size:12px;";
+        let divider_style = "flex-basis:1px;height:100%;background-color:#f5f2f2;";
+        let html = `<div style="${wrapper_style}">
+                        ${button_100} <div style="${divider_style}"></div>
+                        ${button_50} <div style="${divider_style}"></div>
+                        ${button_10} <div style="${divider_style}"></div>
+                        ${button_1} <div style="${divider_style}"></div>
+                        ${button_delete}
+                    </div>`;
+
         return html;
     }
 

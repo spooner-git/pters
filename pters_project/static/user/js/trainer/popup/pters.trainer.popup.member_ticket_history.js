@@ -49,7 +49,6 @@ class Member_ticket_history{
         for(let i=0; i<member_ticket_list.length; i++){
             numbering++;
             let data = member_ticket_list[i];
-            console.log(data);
             let member_ticket_id = data.member_ticket_id;
             let ticket_name = data.member_ticket_name;
             let ticket_start_date = data.member_ticket_start_date;
@@ -66,6 +65,9 @@ class Member_ticket_history{
             let refund_price = data.member_ticket_refund_price == "" ? null : data.member_ticket_refund_price;
             let date_diff = DateRobot.diff_date(data.member_ticket_end_date, data.member_ticket_start_date) + 1;
             let date = DateRobot.to_text(data.member_ticket_start_date, '', '', SHORT) + ' - ' + DateRobot.to_text(data.member_ticket_end_date, '', '', SHORT) + ' ('+UnitRobot.numberWithCommas(date_diff)+'일)';
+            if(data.member_ticket_end_date == "9999-12-31"){
+                date = DateRobot.to_text(data.member_ticket_start_date, '', '', SHORT) + ' - ' + '소진 시까지';
+            }
             let onclick = ()=>{
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_TICKET_MODIFY, 100, popup_style, null, ()=>{
