@@ -110,8 +110,8 @@ class Program_add_new_member{
         let title = "반갑습니다 <p style='font-size:12px;font-weight:500;color:#858282;'>본인에게 해당하는 프로그램을 설정해주세요.</p>";
         let html = `
         <div class="program_add_upper_box" style="">
-            <div style="display:inline-block;width:320px;">
-                <span style="display:inline-block;width:320px;font-size:23px;font-weight:bold">
+            <div style="display:inline-block;">
+                <span style="display:inline-block;font-size:23px;font-weight:bold">
                     ${title}
                 </span>
                 <span style="display:none;">${title}</span>

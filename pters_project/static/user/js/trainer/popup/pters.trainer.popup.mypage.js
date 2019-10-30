@@ -92,7 +92,7 @@ class Mypage{
         let title = `<img src=${this.data.photo == null ? '/static/common/icon/icon_account.png' : this.data.photo} style='width:100%;border-radius:50%'>`;
         let html = `
         <div class="mypage_upper_box" style="text-align:center;">
-            <div style="display:inline-block;width:320px;">
+            <div style="display:inline-block;">
                 <div class="photo_wrap" onclick="mypage_popup.event_edit_photo();">
                     ${title}
                 </div>

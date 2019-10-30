@@ -158,9 +158,9 @@ class Plan_add{
         this.data.start_time_text = user_data_time.text;
 
         // if(this.data.end_time == ""){
-        let end_time_calc = this.calc_end_time_by_start_time(`${user_data_time.hour}:${user_data_time.minute}`, this.lecture_minute, this.work_time.end_hour);
-        this.data.end_time = end_time_calc.data;
-        this.data.end_time_text = end_time_calc.text;
+            let end_time_calc = this.calc_end_time_by_start_time(`${user_data_time.hour}:${user_data_time.minute}`, this.lecture_minute, this.work_time.end_hour);
+            this.data.end_time = user_data_time.hour == null ? null : end_time_calc.data;
+            this.data.end_time_text = user_data_time.hour == null ? null : end_time_calc.text + ' 까지 <span style="font-size:11px;">('+TimeRobot.diff_min(this.data.start_time, this.data.end_time)+'분 진행)</span>';
         // }
     }
 
@@ -361,7 +361,7 @@ class Plan_add{
         let id = 'select_date';
         let title = this.data.date_text == null ? '일자*' : this.data.date_text;
         let icon = '/static/common/icon/icon_cal_black.png';
-        let icon_r_visible = HIDE;
+        let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 

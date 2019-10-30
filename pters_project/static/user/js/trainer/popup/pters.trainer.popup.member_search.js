@@ -56,7 +56,7 @@ class Member_search {
         document.querySelector("#section_member_search_content").innerHTML = 
             `<div style="position:fixed;top:50%;left:50%;transform:translate(-50%, -50%);text-align:center;">
                 <img src="/static/common/loading.svg">
-                <div style="font-size:12px;color:#858282">검색중...</div>
+                <div style="font-size:12px;color:#858282;word-break:keep-all">검색중...</div>
             </div>`;
     }
 
@@ -233,7 +233,7 @@ class Member_search {
         let html = 
                     `<div style="position:fixed;top:50%;left:50%;transform:translate(-50%, -50%);text-align:center;">
                         <img src="/static/common/loading.svg">
-                        <div style="font-size:12px;color:#858282">사용자 데이터를 불러오고 있습니다.</div>
+                        <div style="font-size:12px;color:#858282;word-break:keep-all">사용자 데이터를 불러오고 있습니다.</div>
                     </div>`;
         return html;
     }

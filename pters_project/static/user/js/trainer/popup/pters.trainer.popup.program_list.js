@@ -111,8 +111,8 @@ class Program_list{
         let title = "프로그램";
         let html = `
         <div class="lecture_view_upper_box" style="">
-            <div style="display:inline-block;width:320px;">
-                <span style="display:inline-block;width:320px;font-size:23px;font-weight:bold">
+            <div style="display:inline-block;">
+                <span style="display:inline-block;font-size:23px;font-weight:bold">
                     ${title}
                 </span>
             </div>

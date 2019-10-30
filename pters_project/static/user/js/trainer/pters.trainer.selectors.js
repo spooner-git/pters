@@ -28,7 +28,7 @@ class TwoTimeSelector{
                     }
 
         this.listing_option = {
-            five_minute_detail: OFF,
+            five_minute_detail: ON, // 5분단위 상세 선택 토글 버튼 숨김 -> 무조건 5분단위
             duplicate_filter : ON
         };
         
@@ -140,7 +140,7 @@ class TwoTimeSelector{
                                 <li></li>
                             </ul>
                         </div>
-                        <div class="selector_unit"  style="top:50px;text-align:left;">시작</div>
+                        <div class="selector_unit"  style="text-align:left;">시작</div>
                     `;
         document.querySelector(`${this.targetHTML} .time_selector_time1_wrap`).innerHTML = html;
     }
@@ -164,7 +164,7 @@ class TwoTimeSelector{
                                 <li></li>
                             </ul>
                         </div>
-                        <div class="selector_unit" style="top:50px;text-align:left;">종료</div>
+                        <div class="selector_unit" style="text-align:left;">종료</div>
                     `;
 
         document.querySelector(`${this.targetHTML} .time_selector_time2_wrap`).innerHTML = html;
@@ -369,7 +369,7 @@ class TwoTimeSelector{
                                     </div>
                                 </div>
                                 <div class="time_selector_option_wrap" style="display:flex;height:45px;line-height:45px;border-bottom:1px solid #f2f2f2;box-sizing:border-box;">
-                                    <div style="flex:1 1 0">
+                                    <div style="flex:1 1 0; display:none;">
                                         ${CComponent.toggle_button ("selector_time_detail_view", this.listing_option.five_minute_detail, {"display":"inline-block", "vertical-align":"middle", "margin-bottom":"4px", "transform":"scale(0.8)"}, ()=>{this.event_five_minute_detail_switch();})}
                                         <span>5분단위 상세 선택</span>
                                     </div>
@@ -378,8 +378,8 @@ class TwoTimeSelector{
                                         <span>중복일정 필터</span>
                                     </div>
                                 </div>
-                                <div class="time_selector_time1_wrap select_wrapper"></div>
-                                <div class="time_selector_time2_wrap select_wrapper"></div>
+                                <div class="time_selector_time1_wrap select_wrapper" style="width:calc(40% - 20px);"></div>
+                                <div class="time_selector_time2_wrap select_wrapper" style="width:calc(40% + 20px);"></div>
                                 <div class="selector_indicator" style="top:177px"></div>
                             </div>`
         };
@@ -2582,7 +2582,7 @@ class OptionSelector{
             let id = option_value;
             let title = option_name;
             let icon = DELETE;
-            let icon_r_visible = HIDE;
+            let icon_r_visible = NONE;
             let icon_r_text = "";
             let style = {"padding-top":"14px", "padding-bottom":"14px"};
             html_to_join.push(

@@ -10,7 +10,7 @@ class Setting_calendar{
         this.data_for_selector = {
             calendar_basic_select_time : 
                 // {value:[10, 15, 20, 30, 60, 90, 120], text:["10 분", "15 분", "20 분", "30 분", "1 시간", "1시간 30분", "2 시간"]}
-                {value:[30, 60], text:["30 분", "60 분"]}
+                {value:[10, 20, 30, 40, 50, 60], text:["10분", "20분", "30 분", "40분", "50분", "1 시간"]}
         };
 
         this.init();
@@ -69,8 +69,9 @@ class Setting_calendar{
     }
     
     dom_assembly_content(){
-        let html =  '<article class="obj_input_box_full">' +
+        let html =  '<article class="obj_input_box_full" style="padding-top:5px;">' +
                         this.dom_row_calendar_basic_select_time() + 
+                        "<span style='font-size:12px;color:#3b3b3b;letter-spacing:-0.6px;font-weight:normal'>달력 클릭/OFF 일정 클릭시 설정되는 기본 시간입니다.</span>" +
                     '</article>' +
                     '<article class="obj_input_box_full">' +
                         this.dom_row_calendar_title() +
@@ -81,15 +82,14 @@ class Setting_calendar{
     }
 
     dom_row_calendar_basic_select_time(){
-        
         let id = "calendar_basic_select_time";
-        let title = "달력 기본 단위";
+        let title = "기본 선택 시간";
         let icon = DELETE;
         let icon_r_visible = SHOW;
         let icon_r_text = this.data.calendar_basic_select_time.text.length == 0 ? '' : this.data.calendar_basic_select_time.text;
-        let style = null;
+        let style = {"height":"auto", "padding-bottom":"0"};
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            let title = "개인 수업 예약 시간";
+            let title = "기본 선택 시간";
             let install_target = "#wrapper_box_custom_select";
             let multiple_select = 1;
             let data = this.data_for_selector.calendar_basic_select_time;
@@ -136,7 +136,7 @@ class Setting_calendar{
                             <p>시작과 종료시간을 각각 상세하게 설정 합니다. <br>겹치는 일정을 상관없이 모두 표기해 줍니다.</p>
                         </div>
                         <div>
-                            <img src="/static/common/img/time_input_method/calendar_time_input_type_new.png">
+                            <img src="/static/common/img/time_input_method/calendar_time_input_type_new.png?v2">
                         </div>
                     </div>`;
         $(document).off('click', '#input_method_new').on('click', '#input_method_new', (e)=>{
@@ -156,7 +156,7 @@ class Setting_calendar{
                             <p>시작과 종료시각을 한번에 설정 합니다. <br>겹치는 일정은 필터링 할 수 있습니다.</p>
                         </div>
                         <div>
-                            <img src="/static/common/img/time_input_method/calendar_time_input_type_classic.png">
+                            <img src="/static/common/img/time_input_method/calendar_time_input_type_classic.png?v2">
                         </div>
                     </div>`;
         $(document).off('click', '#input_method_classic').on('click', '#input_method_classic', (e)=>{
@@ -174,8 +174,8 @@ class Setting_calendar{
         let description = "<p style='font-size:14px;font-weight:500;'>일정 메뉴와 관련된 설정입니다.</p>";
         let html = `
         <div class="setting_reserve_upper_box" style="">
-            <div style="display:inline-block;width:320px;">
-                <span style="display:inline-block;width:320px;font-size:23px;font-weight:bold">
+            <div style="display:inline-block;">
+                <span style="display:inline-block;font-size:23px;font-weight:bold">
                     ${title}
                     ${description}
                 </span>
