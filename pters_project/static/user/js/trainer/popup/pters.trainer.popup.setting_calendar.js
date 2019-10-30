@@ -71,7 +71,7 @@ class Setting_calendar{
     dom_assembly_content(){
         let html =  '<article class="obj_input_box_full" style="padding-top:5px;">' +
                         this.dom_row_calendar_basic_select_time() + 
-                        "<span style='font-size:12px;color:#3b3b3b;letter-spacing:-0.6px;font-weight:normal'>시작 시간 선택 시 종료 시간을 자동으로 계산 합니다.</span>" + 
+                        "<span style='font-size:12px;color:#3b3b3b;letter-spacing:-0.6px;font-weight:normal'>달력 클릭/OFF 일정 클릭시 설정되는 기본 시간입니다.</span>" +
                     '</article>' +
                     '<article class="obj_input_box_full">' +
                         this.dom_row_calendar_title() +
@@ -83,13 +83,13 @@ class Setting_calendar{
 
     dom_row_calendar_basic_select_time(){
         let id = "calendar_basic_select_time";
-        let title = "종료 시간 자동 계산";
+        let title = "기본 선택 시간";
         let icon = DELETE;
         let icon_r_visible = SHOW;
         let icon_r_text = this.data.calendar_basic_select_time.text.length == 0 ? '' : this.data.calendar_basic_select_time.text;
         let style = {"height":"auto", "padding-bottom":"0"};
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            let title = "종료시간 자동 계산 기준";
+            let title = "기본 선택 시간";
             let install_target = "#wrapper_box_custom_select";
             let multiple_select = 1;
             let data = this.data_for_selector.calendar_basic_select_time;
