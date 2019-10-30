@@ -573,7 +573,7 @@ input:disabled{
 	width: auto;
 	vertical-align: middle; */
 	flex: 1 1 0;
-	min-width: 120px;
+	min-width: 150px;
 	text-align: right;
 }
 .select_attend_row .cell_attend_select > div{
