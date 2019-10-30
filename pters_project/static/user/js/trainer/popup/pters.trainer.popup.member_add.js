@@ -486,7 +486,7 @@ class Member_add{
     }
 
     dom_row_end_date_simple_input_machine(){
-        let button_style = {"flex":"1 1 0", "padding":"10px 8px"};
+        let button_style = {"flex":"1 1 0", "padding":"10px 8px", "color":"#636363"};
 
         let button_week_2 = CComponent.button ("button_week_2", "+ 7일", button_style, ()=>{
             if(this.data.start_date == null){
@@ -633,7 +633,7 @@ class Member_add{
     }
 
     dom_row_price_simple_input_machine(){
-        let button_style = {"flex":"1 1 0", "padding":"10px 8px"};
+        let button_style = {"flex":"1 1 0", "padding":"10px 8px", "color":"#636363"};
 
         let button_100 = CComponent.button ("button_100", "+ 100만", button_style, ()=>{ this.data.ticket_price =this.data.ticket_price + 1000000;this.render_content(); });
         let button_50 = CComponent.button ("button_50", "+ 50만", button_style, ()=>{ this.data.ticket_price = this.data.ticket_price + 500000;this.render_content(); });
