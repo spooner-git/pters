@@ -573,12 +573,12 @@ input:disabled{
 	width: auto;
 	vertical-align: middle; */
 	flex: 1 1 0;
-	min-width: 160px;
+	min-width: 120px;
 	text-align: right;
 }
 .select_attend_row .cell_attend_select > div{
 	display: inline-block;
-	width: 56px;
+	width: 60px;
 	font-size: 13px;
 	color: #858282;
 	cursor: pointer;
