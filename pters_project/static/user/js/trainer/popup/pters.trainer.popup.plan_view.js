@@ -4,7 +4,7 @@ class Plan_view{
         this.instance = instance;
         this.form_id = 'id_plan_view_form';
 
-        this.time_selector = "classic";
+        this.time_selector = BASIC;
 
         let d = new Date();
         this.dates = {
@@ -57,7 +57,8 @@ class Plan_view{
         };
 
         this.work_time = {start_hour:0, end_hour:24};
-        this.class_hour = 30;
+        this.lecture_minute;
+        this.date_start = 0;
     
         this.init();
     }
@@ -125,9 +126,15 @@ class Plan_view{
         this.request_data(()=>{
             // this.render();
             Setting_reserve_func.read((data)=>{
-                this.class_hour = 30;
+                this.time_selector = Number(data.setting_calendar_time_selector_type);
+                this.lecture_minute = Number(data.setting_calendar_basic_select_time);
+                let date_start_array = {"SUN":0, "MON":1};
+                this.date_start = date_start_array[data.setting_week_start_date];
                 this.work_time = calendar.calc_worktime_display(data);
                 this.render();
+            });
+            Lecture_func.read({"lecture_id": this.data.lecture_id}, (data)=>{
+                this.lecture_minute = data.lecture_minute;
             });
             func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
         });
@@ -162,6 +169,32 @@ class Plan_view{
         this.data.lecture_state_cd = data.schedule_info[0].state_cd;
         this.data.memo = data.schedule_info[0].note;
         this.data.schedule_type = data.schedule_info[0].schedule_type;
+    }
+
+    calc_end_time_by_start_time(start_time_, lecture_minute, work_time_end){
+        let start_time = {hour:start_time_.split(':')[0], minute:start_time_.split(':')[1]};
+        let end_time_hour = TimeRobot.add_time(start_time.hour, start_time.minute, 0, lecture_minute).hour;
+        let end_time_min = TimeRobot.add_time(start_time.hour, start_time.minute, 0, lecture_minute).minute;
+        if(start_time.hour == 24){
+            end_time_hour = 24;
+        }
+        if(end_time_hour >= work_time_end){
+            end_time_min = 0;
+        }
+
+        let end_time = TimeRobot.hm_to_hhmm(`${end_time_hour}:${end_time_min}`).complete;
+        let end_time_text = TimeRobot.to_text(end_time_hour, end_time_min);
+        let hour = TimeRobot.hm_to_hhmm(`${end_time_hour}:${end_time_min}`).hour;
+        let minute = TimeRobot.hm_to_hhmm(`${end_time_hour}:${end_time_min}`).minute;
+
+        if(start_time.hour == null && start_time.minute == null){
+            end_time = null;
+            end_time_text = null;
+            hour = null;
+            minute = null;
+        }
+
+        return {data:end_time, text:end_time_text, hour:hour, minute:minute};
     }
 
     clear(){
@@ -452,12 +485,15 @@ class Plan_view{
                 time_selector = new TimeSelector2('#wrapper_popup_time_selector_function', null, {myname:'time', title:'시작 시각', data:{hour:hour, minute:minute}, range:{start:range_start, end:range_end},
                                                                                                 callback_when_set: (object)=>{
                                                                                                     this.start_time = object;
-                                                                                                    if(this.data.end_time != null){
-                                                                                                        let compare = TimeRobot.compare(`${object.data.hour}:${object.data.minute}`, this.data.end_time);
-                                                                                                        if(compare == true){
-                                                                                                            this.end_time = object;
-                                                                                                        }
-                                                                                                    }
+                                                                                                    // if(this.data.end_time != null){
+                                                                                                    //     let compare = TimeRobot.compare(`${object.data.hour}:${object.data.minute}`, this.data.end_time);
+                                                                                                    //     if(compare == true){
+                                                                                                    //         this.end_time = object;
+                                                                                                    //     }
+                                                                                                    // }
+                                                                                                    let end_time = this.calc_end_time_by_start_time(this.data.start_time, this.lecture_minute, this.work_time.end_hour);
+                                                                                                    let end_time_object = {data:{hour:end_time.hour, minute:end_time.minute}, text:end_time.text};
+                                                                                                    this.end_time = end_time_object;
                                                                                                     
                                                                                                     this.check_duplicate_plan_exist((data)=>{
                                                                                                         this.data.duplicate_plan_when_add = data;
@@ -542,7 +578,7 @@ class Plan_view{
                     }
                 }
 
-                let user_option = {myname:'time', title:'시간 선택', work_time:this.work_time, class_hour:this.class_hour, initial:TimeRobot.hm_to_hhmm(this.data.start_time).complete, callback_when_set:(object)=>{
+                let user_option = {myname:'time', title:'시간 선택', work_time:this.work_time, class_hour:this.lecture_minute, initial:TimeRobot.hm_to_hhmm(this.data.start_time).complete, callback_when_set:(object)=>{
                     this.data.start_time = object.data.start;
                     this.data.start_time_text = object.text.start + ' 부터';
                     this.data.end_time = object.data.end;
@@ -572,7 +608,7 @@ class Plan_view{
                     }
                 }
 
-                let user_option = {myname:'time', title:'시간 선택', work_time:this.work_time, class_hour:this.class_hour, initial:TimeRobot.hm_to_hhmm(this.data.start_time).complete, callback_when_set:(object)=>{
+                let user_option = {myname:'time', title:'시간 선택', work_time:this.work_time, class_hour:this.lecture_minute, initial:TimeRobot.hm_to_hhmm(this.data.start_time).complete, callback_when_set:(object)=>{
                     this.data.start_time = object.data.start;
                     this.data.start_time_text = object.text.start + ' 부터';
                     this.data.end_time = object.data.end;
