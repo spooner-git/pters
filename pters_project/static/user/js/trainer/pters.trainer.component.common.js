@@ -267,7 +267,7 @@ class CComponent{
     }
 
     //수업 선택 팝업에 사용되는 행
-    static select_lecture_row (multiple_select, checked, location, lecture_id, lecture_name, color_code, max_member_num, ing_member_num, lecture_state_cd, onclick){
+    static select_lecture_row (multiple_select, checked, location, lecture_id, lecture_name, color_code, max_member_num, ing_member_num, lecture_state_cd, lecture_time, onclick){
         let html = `
                     <li class="select_lecture_row slr_${location}" id="select_lecture_row_${lecture_id}" ${lecture_state_cd == "end" ? "style='opacity:0.6'": ""}>
                         <div class="obj_table_raw">
@@ -277,8 +277,8 @@ class CComponent{
                             </div>
                             <div class="cell_lecture_info">
                                 <div>${lecture_state_cd == "end" ? "(비활성)": ""} ${lecture_name}</div>
-                                <div class="lecture_additional_info" ${lecture_state_cd == "end" ? "style='display:none'": ""}>정원: ${max_member_num} 명 / 진행중  ${ing_member_num} 명</div>
-                                <div class="lecture_additional_info" ${lecture_state_cd == "ing" ? "style='display:none'": ""}>정원: ${max_member_num} 명</div>
+                                <div class="lecture_additional_info" ${lecture_state_cd == "end" ? "style='display:none'": ""}>정원: ${max_member_num} 명 / 진행중  ${ing_member_num} 명 / 수업시간 ${lecture_time} 분</div>
+                                <div class="lecture_additional_info" ${lecture_state_cd == "ing" ? "style='display:none'": ""}>정원: ${max_member_num} 명 / 수업시간 ${lecture_time} 분</div>
                             </div>
                             <div class="cell_lecture_selected">
                                 <img src="/static/common/icon/icon_confirm_black.png" class="obj_icon_basic ${checked == 0 ? 'none' : 'lecture_selected'}">

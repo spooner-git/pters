@@ -2805,9 +2805,10 @@ class LectureSelector{
             let lecture_state_cd = data.lecture_ing_member_num == undefined ? "end" : "ing";
             let lecture_type_cd = data.lecture_type_cd;
             let lecture_ing_member_num = data.lecture_ing_member_num;
+            let lecture_time = data.lecture_minute;
             let checked = this.target_instance.lecture.id.indexOf(lecture_id) >= 0 ? 1 : 0;
             let html = CComponent.select_lecture_row(
-                this.multiple_select, checked, this.unique_instance, lecture_id, lecture_name, lecture_color_code, lecture_max_num, lecture_ing_member_num, lecture_state_cd, (add_or_substract)=>{
+                this.multiple_select, checked, this.unique_instance, lecture_id, lecture_name, lecture_color_code, lecture_max_num, lecture_ing_member_num, lecture_state_cd, lecture_time, (add_or_substract)=>{
                     if(add_or_substract == "add"){
                         this.data.id.push(lecture_id);
                         this.data.name.push(lecture_name);
