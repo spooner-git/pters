@@ -15,14 +15,6 @@ from trainer.models import ClassTb, ClassMemberTicketTb, SettingTb, TicketLectur
 from .models import MemberTicketTb
 
 
-def func_get_holiday_schedule(context):
-
-    holiday = HolidayTb.objects.filter(use=USE)
-    context['holiday'] = holiday
-
-    return context
-
-
 def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_date):
     schedule_list = []
     all_schedule_check = 0

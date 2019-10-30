@@ -20,6 +20,8 @@ urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
     # 강사 일정 기능 #####################################################################################################
     # 일정 등록 - refactoring 진행중
+
+    url(r'^get_holiday_schedule/$', views.GetHolidayScheduleView.as_view(), name='get_holiday_schedule'),
     url(r'^add_schedule/$', views.add_schedule_logic, name='add_schedule'),
     # 일정 삭제 - refactoring 진행중, push 관련 내용 추가 필요
     url(r'^delete_schedule/$', views.delete_schedule_logic, name='delete_schedule'),

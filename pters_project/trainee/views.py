@@ -22,14 +22,14 @@ from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, DEL_SCHEDULE, USE, UN_
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 from schedule.functions import func_get_member_ticket_id, func_check_lecture_available_member_before,\
     func_check_lecture_available_member_after, func_add_schedule, func_refresh_member_ticket_count, \
-    func_get_lecture_member_ticket_id_from_trainee, func_send_push_trainee
+    func_get_lecture_member_ticket_id_from_trainee, func_send_push_trainee, func_get_holiday_schedule
 from schedule.models import ScheduleTb, DeleteScheduleTb
 from trainer.functions import func_get_trainer_setting_list
 from trainer.models import ClassMemberTicketTb,  ClassTb, SettingTb, LectureTb, TicketLectureTb,\
     TicketTb
 from .functions import func_get_class_member_ticket_count, func_get_member_ticket_list, func_get_class_list, \
     func_get_trainee_on_schedule, func_get_trainee_off_schedule, func_get_trainee_lecture_schedule, \
-    func_get_holiday_schedule, func_get_trainee_on_repeat_schedule, func_check_select_time_reserve_setting, \
+    func_get_trainee_on_repeat_schedule, func_check_select_time_reserve_setting, \
     func_get_member_ticket_connection_list, func_get_trainee_next_schedule_by_class_id,\
     func_get_trainee_select_schedule, func_get_trainee_ing_member_ticket_list, func_check_select_date_reserve_setting, \
     func_get_trainee_ticket_list, func_get_class_list_only_view
@@ -214,19 +214,19 @@ class TraineeCalendarView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = super(TraineeCalendarView, self).get_context_data(**kwargs)
         # class_id = self.request.session.get('class_id', '')
 
-        # date = self.request.GET.get('date', '')
-        # day = self.request.GET.get('day', '')
-        # today = datetime.date.today()
-        # if date != '':
-        #     today = datetime.datetime.strptime(date, '%Y-%m-%d')
-        # if day == '':
-        #     day = 46
-        # start_date = today - datetime.timedelta(days=int(day))
-        # end_date = today + datetime.timedelta(days=int(day))
+        date = self.request.GET.get('date', '')
+        day = self.request.GET.get('day', '')
+        today = datetime.date.today()
+        if date != '':
+            today = datetime.datetime.strptime(date, '%Y-%m-%d')
+        if day == '':
+            day = 46
+        start_date = today - datetime.timedelta(days=int(day))
+        end_date = today + datetime.timedelta(days=int(day))
 
         # context = func_get_class_member_ticket_count(context, class_id, self.request.user.id)
 
-        context = func_get_holiday_schedule(context)
+        context['holiday'] = func_get_holiday_schedule(start_date, end_date)
 
         return context
 

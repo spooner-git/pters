@@ -24,7 +24,7 @@ from configs.const import ON_SCHEDULE_TYPE, USE, AUTO_FINISH_OFF, AUTO_FINISH_ON
 from configs import settings
 from login.models import LogTb, MemberTb
 from schedule.forms import AddScheduleTbForm
-from schedule.functions import func_send_push_trainee, func_send_push_trainer
+from schedule.functions import func_send_push_trainee, func_send_push_trainer, func_get_holiday_schedule
 from trainee.models import MemberTicketTb
 from trainer.models import LectureTb, ClassTb
 from .functions import func_get_member_ticket_id, func_add_schedule, func_refresh_member_ticket_count, func_date_check,\
@@ -44,6 +44,24 @@ class IndexView(TemplateView):
         context = super(IndexView, self).get_context_data(**kwargs)
 
         return context
+
+
+class GetHolidayScheduleView(LoginRequiredMixin, View):
+
+    def get(self, request):
+        date = request.GET.get('date', '')
+        day = request.GET.get('day', '')
+        today = datetime.date.today()
+
+        if date != '':
+            today = datetime.datetime.strptime(date, '%Y-%m-%d')
+        if day == '':
+            day = 31
+        start_date = today - datetime.timedelta(days=int(day))
+        end_date = today + datetime.timedelta(days=int(day))
+        holiday_schedule = func_get_holiday_schedule(start_date, end_date)
+
+        return JsonResponse(holiday_schedule, json_dumps_params={'ensure_ascii': True})
 
 
 # 일정 추가
