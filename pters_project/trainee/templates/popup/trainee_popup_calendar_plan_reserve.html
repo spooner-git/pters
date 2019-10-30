@@ -11,10 +11,13 @@
             <div class="wrapper_popup_title_date obj_font_size_13_weight_500">{{ select_date | date:'Y.m.d (l)'|cut:"요일" }}</div>
         </div>
         <div class="func_tab_wrap obj_font_size_13_weight_500">
-            <div class="func_tab_element func_tab_selected" data-tab="personal">개인 수업</div>
-            {% if lecture_data %}
-                <div class="func_tab_element" data-tab="lecture">그룹 수업</div>
+            {% if one_to_one_lecture_check %}
+            <div class="func_tab_element func_tab_selected" data-tab="personal" id="func_tab_element_personal">개인 수업</div>
             {% endif %}
+            {% if lecture_data %}
+                <div class="func_tab_element {% if not one_to_one_lecture_check %}func_tab_selected{% endif %}" data-tab="lecture" id="func_tab_element_lecture">그룹 수업</div>
+            {% endif %}
+
         </div>
 
         <!-- <div class="obj_box_full obj_font_bg_white_dark_grey" style="display: none;">
@@ -34,34 +37,35 @@
             </div>    
         </div> -->
 
-        <div class="wrapper_reserve_form _target_link_to_tab" id="reserve_form_personal">
-            <div class="obj_box_full">
-                <div class="obj_table_raw wrapper_ticket_info">
-                    <div class="wrapper_ticket_icon_personal obj_table_cell_x3"><img src="/static/common/icon/member_icon_person_black.png"></div>
-                    <div class="wrapper_ticket_name obj_table_cell_x3 obj_font_size_15_weight_normal ">개인 수업</div>
-                    <div class="wrapper_ticket_reserve_avail_count obj_table_cell_x3 obj_font_size_12_weight_normal">(예약 가능:{{ member_ticket_avail_count }}  번)</div>
-                </div>
-                <div class="wrapper_reserve_form_data">
-                    <div class="obj_table_raw">
-                        <select class="obj_font_size_14_weight_500 obj_font_color_light_grey" title="time_select">
-                            <option selected disabled>예약 시간 선택</option>
-                            <option data-start="2019-03-04 08:00" data-end="2019-03-04 09:00">08:00 ~ 09:00</option>
-                            <option data-start="2019-03-04 11:00" data-end="2019-03-04 13:00">11:00 ~ 13:00</option>
-                            <option data-start="2019-03-04 21:00" data-end="2019-03-04 22:00">21:00 ~ 22:00</option>
-                        </select>
-                        <img src="/static/common/icon/member_icon_expand_more_black.png" class="obj_icon_arrow">
+        {% if one_to_one_lecture_check %}
+            <div class="wrapper_reserve_form _target_link_to_tab" id="reserve_form_personal">
+                <div class="obj_box_full">
+                    <div class="obj_table_raw wrapper_ticket_info">
+                        <div class="wrapper_ticket_icon_personal obj_table_cell_x3"><img src="/static/common/icon/member_icon_person_black.png"></div>
+                        <div class="wrapper_ticket_name obj_table_cell_x3 obj_font_size_15_weight_normal ">개인 수업</div>
+                        <div class="wrapper_ticket_reserve_avail_count obj_table_cell_x3 obj_font_size_12_weight_normal">(예약 가능:{{ member_ticket_avail_count }}  번)</div>
+                    </div>
+                    <div class="wrapper_reserve_form_data">
+                        <div class="obj_table_raw">
+                            <select class="obj_font_size_14_weight_500 obj_font_color_light_grey" title="time_select">
+                                <option selected disabled>예약 시간 선택</option>
+                                <option data-start="2019-03-04 08:00" data-end="2019-03-04 09:00">08:00 ~ 09:00</option>
+                                <option data-start="2019-03-04 11:00" data-end="2019-03-04 13:00">11:00 ~ 13:00</option>
+                                <option data-start="2019-03-04 21:00" data-end="2019-03-04 22:00">21:00 ~ 22:00</option>
+                            </select>
+                            <img src="/static/common/icon/member_icon_expand_more_black.png" class="obj_icon_arrow">
+                        </div>
+                    </div>
+                    <div class="wrapper_reserve_caution obj_font_size_11_weight_500 obj_font_color_grey">
+                        <p><span class="obj_font_color_coral"> {{ request.session.one_to_one_lecture_time_duration }}분 단위로 예약</span> 할 수 있습니다.</p>
+                        <p><span class="obj_font_color_coral">수업 시작 {% widthratio request.session.setting_member_reserve_enable_time 60 1 %}시간 전까지 예약</span> 할 수 있습니다.</p>
+                        <p><span class="obj_font_color_coral">수업 시작 {% widthratio request.session.setting_member_reserve_cancel_time 60 1 %}시간 전까지 취소</span> 할 수 있습니다.</p>
                     </div>
                 </div>
-                <div class="wrapper_reserve_caution obj_font_size_11_weight_500 obj_font_color_grey">
-                    <p><span class="obj_font_color_coral"> {{ request.session.one_to_one_lecture_time_duration }}분 단위로 예약</span> 할 수 있습니다.</p>
-                    <p><span class="obj_font_color_coral">수업 시작 {% widthratio request.session.setting_member_reserve_enable_time 60 1 %}시간 전까지 예약</span> 할 수 있습니다.</p>
-                    <p><span class="obj_font_color_coral">수업 시작 {% widthratio request.session.setting_member_reserve_cancel_time 60 1 %}시간 전까지 취소</span> 할 수 있습니다.</p>
-                </div>
             </div>
-        </div>
-
+        {% endif %}
         {% if lecture_data %}
-            <div class="wrapper_reserve_form _target_link_to_tab" id="reserve_form_lecture">
+            <div class="wrapper_reserve_form _target_link_to_tab" id="reserve_form_lecture" {% if not one_to_one_lecture_check %}style="display:block;"{% endif %}>
                 {% for lecture_info in lecture_data %}
                     <div class="obj_box_full">
                         <div class="obj_table_raw wrapper_ticket_info">
@@ -89,6 +93,11 @@
                 {% endfor %}
             </div>
         {% endif %}
+        {% if not one_to_one_lecture_check %}
+            {% if not lecture_data %}
+                <div style="text-align: center;">예약 할 수 있는 수업이 없습니다.</div>
+            {% endif %}
+        {% endif %}
     </div>
 {% endblock %}
 {% block popoup_base_wrapper_bottom_inside %}
@@ -105,6 +114,11 @@
                 func_start_time_dom_draw('select[title="time_select"]', selected_date, schedule_json, setting_info);
                 {#                func_lecture_time_dom_draw('#reserve_form_lecture', selected_date, schedule_json, setting_info);#}
             });
+            {% if not one_to_one_lecture_check %}
+                {% if lecture_data %}
+                    $('#func_tab_element_lecture').trigger("click");
+                {% endif %}
+            {% endif %}
         });
 
         function cancel_enable_check_func(){
