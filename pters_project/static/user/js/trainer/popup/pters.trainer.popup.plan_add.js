@@ -324,7 +324,7 @@ class Plan_add{
                         
                         let end_time_calc = this.calc_end_time_by_start_time(this.data.start_time, this.lecture_minute, this.work_time.end_hour);
                         this.data.end_time = end_time_calc.data;
-                        this.data.end_time_text = end_time_calc.text;
+                        this.data.end_time_text = end_time_calc.text + ' 까지 <span style="font-size:11px;">('+ TimeRobot.diff_min(this.data.start_time, this.data.end_time) +'분 진행)</span>';
                         this.member = data_to_set;
                     });
                 });
