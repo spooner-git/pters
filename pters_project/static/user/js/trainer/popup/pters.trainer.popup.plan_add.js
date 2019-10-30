@@ -257,9 +257,6 @@ class Plan_add{
                     '<div class="obj_input_box_full">'+  CComponent.dom_tag('메모') + memo_select_row + '</div>';
         }
         
-
-        
-
         return html;
     }
 
