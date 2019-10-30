@@ -55,6 +55,7 @@ class Member_ticket_history{
             let ticket_end_date = data.member_ticket_end_date;
             let reg_count = data.member_ticket_reg_count;
             let ticket_price = data.member_ticket_price;
+            let ticket_refund_price = data.member_ticket_refund_price;
             let remain_count = data.member_ticket_rem_count;
             let avail_count = data.member_ticket_avail_count;
             let status_code = data.member_ticket_state_cd;
@@ -63,7 +64,10 @@ class Member_ticket_history{
             let refund_date = data.member_ticket_refund_date == "" || data.member_ticket_refund_date == "None" ? null : data.member_ticket_refund_date;
             let refund_price = data.member_ticket_refund_price == "" ? null : data.member_ticket_refund_price;
             let date_diff = DateRobot.diff_date(data.member_ticket_end_date, data.member_ticket_start_date) + 1;
-            let date = DateRobot.to_text(data.member_ticket_start_date, '', '', SHORT) + ' - ' + DateRobot.to_text(data.member_ticket_end_date, '', '', SHORT) + ' ('+date_diff+'일)';
+            let date = DateRobot.to_text(data.member_ticket_start_date, '', '', SHORT) + ' - ' + DateRobot.to_text(data.member_ticket_end_date, '', '', SHORT) + ' ('+UnitRobot.numberWithCommas(date_diff)+'일)';
+            if(data.member_ticket_end_date == "9999-12-31"){
+                date = DateRobot.to_text(data.member_ticket_start_date, '', '', SHORT) + ' - ' + '소진 시까지';
+            }
             let onclick = ()=>{
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_TICKET_MODIFY, 100, popup_style, null, ()=>{
@@ -74,7 +78,7 @@ class Member_ticket_history{
                 });
             };
 
-            html = CComponent.ticket_history_row (numbering, member_ticket_id, date, ticket_name, reg_count, remain_count, avail_count, status, note, onclick);
+            html = CComponent.ticket_history_row (numbering, member_ticket_id, date, ticket_name, UnitRobot.numberWithCommas(ticket_price), UnitRobot.numberWithCommas(ticket_refund_price), reg_count, remain_count, avail_count, status_code, note, onclick);
 
             html_to_join.push(html);
         }

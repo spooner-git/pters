@@ -226,7 +226,7 @@ class Member_view{
                                             start_date:ticket_reg_date_of_this_member,
                                             start_date_text:DateRobot.to_text(ticket_reg_date_of_this_member, '', '', SHORT),
                                             end_date:ticket_end_date_of_this_member,
-                                            end_date_text:ticket_remain_date+'일'+ ticket_remain_alert_text +'/ '+DateRobot.to_text(ticket_end_date_of_this_member, '', '', SHORT)+' 까지',
+                                            end_date_text:ticket_end_date_of_this_member == "9999-12-31" ? "소진시까지" :  ticket_remain_date+'일'+ ticket_remain_alert_text +'/ '+DateRobot.to_text(ticket_end_date_of_this_member, '', '', SHORT)+' 까지',
                                             lecture_id:member_ticket_list[i].ticket_lecture_id_list,
                                             lecture_name:member_ticket_list[i].ticket_lecture_list,
                                             lecture_state:member_ticket_list[i].ticket_lecture_state_cd_list,
@@ -816,7 +816,7 @@ class Member_simple_view{
                                             start_date:ticket_reg_date_of_this_member,
                                             start_date_text:DateRobot.to_text(ticket_reg_date_of_this_member, '', '', SHORT),
                                             end_date:ticket_end_date_of_this_member,
-                                            end_date_text:ticket_remain_date+'일'+ ticket_remain_alert_text +'/ '+DateRobot.to_text(ticket_end_date_of_this_member, '', '', SHORT)+' 까지',
+                                            end_date_text:ticket_end_date_of_this_member == "9999-12-31" ? "소진시까지" :  ticket_remain_date+'일'+ ticket_remain_alert_text +'/ '+DateRobot.to_text(ticket_end_date_of_this_member, '', '', SHORT)+' 까지',
                                             lecture_id:member_ticket_list[i].ticket_lecture_id_list,
                                             lecture_name:member_ticket_list[i].ticket_lecture_list,
                                             lecture_state:member_ticket_list[i].ticket_lecture_state_cd_list,
@@ -1067,6 +1067,7 @@ class Member_simple_view{
 
         let html_to_join = [];
         for(let i=0; i<ticket_length; i++){
+            console.log("1", this.data.ticket[i])
             let ticket_name = this.data.ticket[i].ticket_name;
             if(this.data.ticket[i].ticket_state == STATE_END_PROGRESS){
                 ticket_name = `<span style="color:#888888;">${this.data.ticket[i].ticket_name}</span><span style="font-size:13px;"> (비활성)</span>`;

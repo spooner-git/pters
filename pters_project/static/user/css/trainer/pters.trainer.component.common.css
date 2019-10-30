@@ -465,14 +465,22 @@ input:disabled{
 	padding-bottom:6px;
 	padding-left:14px;
 	/* border-bottom: 1px solid #cccccc; */
+	box-shadow: 0 0 16px 0 #e6e6e6;
+	border: solid 1px #f5f2f3;
+	margin-bottom: 10px;
+
 }
 /*.ticket_history_row > div{*/
 	/*margin-bottom: 4px;*/
 /*}*/
 
+.ticket_history_row .table_basic_info{
+	font-size: 14px;
+}
+
 .ticket_history_row .cell_ticket_num{
 	display: table-cell;
-	width: 45px;
+	width: 30px;
 	height: 20px;
 	vertical-align: middle;
 	padding-right: 14px;
@@ -487,6 +495,7 @@ input:disabled{
 
 .ticket_history_row .cell_ticket_attend{
 	display: table-cell;
+	font-size: 12px;
 	width: 70px;
 	height: 20px;
 	vertical-align: middle;
@@ -498,10 +507,11 @@ input:disabled{
 .ticket_history_row .table_date_info, .ticket_history_row .table_memo_info{
 	padding-top:4px;
 	height: 16px;
-	font-size: 11px;
+	font-size: 12px;
   	font-weight: 500;
   	letter-spacing: -0.5px;
-	color: #858282;
+	/* color: #858282; */
+	color: #3b3d3d;
 }
 
 
