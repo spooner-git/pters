@@ -19,11 +19,25 @@ from login.models import PushInfoTb
 from trainee.models import MemberTicketTb
 from trainer.functions import func_update_lecture_member_fix_status_cd
 from trainer.models import MemberClassTb, ClassMemberTicketTb, LectureTb, TicketLectureTb
-from .models import ScheduleTb, RepeatScheduleTb, DeleteScheduleTb, DeleteRepeatScheduleTb
+from .models import ScheduleTb, RepeatScheduleTb, DeleteScheduleTb, DeleteRepeatScheduleTb, HolidayTb
 
 if DEBUG is False:
     from kombu.exceptions import OperationalError
     from tasks.tasks import task_send_fire_base_push
+
+
+def func_get_holiday_schedule(start_date, end_date):
+
+    holiday_data = HolidayTb.objects.filter(holiday_dt__gte=start_date, holiday_dt__lt=end_date,use=USE)
+
+    # 그룹 수업에 속한 회원들의 일정은 제외하고 불러온다.
+    ordered_schedule_dict = collections.OrderedDict()
+    for holiday_info in holiday_data:
+        # array 에 값을 추가후 dictionary 에 추가
+        ordered_schedule_dict[holiday_info.holiday_dt] = {'holiday_dt': holiday_info.holiday_dt,
+                                                          'holiday_name': holiday_info.holiday_name}
+
+    return ordered_schedule_dict
 
 
 # 1:1 member_ticket id 조회 - 자유형 문제
