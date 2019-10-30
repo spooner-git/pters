@@ -1443,6 +1443,31 @@ class PopupCalendarPlanReserveView(LoginRequiredMixin, AccessTestMixin, Template
         start_date = datetime.datetime.strptime(select_date + ' 00:00', '%Y-%m-%d %H:%M')
         end_date = datetime.datetime.strptime(select_date + ' 23:59', '%Y-%m-%d %H:%M')
 
+        member_ticket_data = ClassMemberTicketTb.objects.select_related(
+            'member_ticket_tb__ticket_tb').filter(class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW,
+                                                  member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+                                                  member_ticket_tb__member_id=self.request.user.id,
+                                                  member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
+                                                  member_ticket_tb__use=USE,
+                                                  use=USE).order_by('-member_ticket_tb__start_date',
+                                                                    '-member_ticket_tb__reg_dt')
+
+        if len(member_ticket_data) > 0:
+            query_ticket_list = Q()
+            for member_ticket_info in member_ticket_data:
+                ticket_info = member_ticket_info.member_ticket_tb.ticket_tb
+                query_ticket_list |= Q(ticket_tb_id=ticket_info.ticket_id)
+
+            ticket_lecture_data_count = TicketLectureTb.objects.select_related(
+                'lecture_tb').filter(query_ticket_list, class_tb_id=class_id,
+                                     lecture_tb__lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE,
+                                     lecture_tb__state_cd=STATE_CD_IN_PROGRESS,
+                                     lecture_tb__use=USE, use=USE).count()
+            if ticket_lecture_data_count == 0:
+                context['one_to_one_lecture_check'] = False
+            else:
+                context['one_to_one_lecture_check'] = True
+
         try:
             lecture_tb_info = LectureTb.objects.get(class_tb_id=class_id, lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, use=USE)
             context['one_to_one_lecture_time_duration'] = lecture_tb_info.lecture_minute
