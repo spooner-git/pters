@@ -506,7 +506,7 @@ class Member_add{
             let new_date_date = new_date.split('-')[2];
             
             this.data.end_date = {year:Number(new_date_year), month:Number(new_date_month), date:Number(new_date_date)};
-            this.data.end_date_text = DateRobot.to_text(new_date_year, new_date_month, new_date_date);
+            this.data.end_date_text = DateRobot.to_text(new_date_year, new_date_month, new_date_date, SHORT);
             this.render_content();
         });
 
@@ -528,7 +528,7 @@ class Member_add{
             let new_date_date = new_date.split('-')[2];
             
             this.data.end_date = {year:Number(new_date_year), month:Number(new_date_month), date:Number(new_date_date)};
-            this.data.end_date_text = DateRobot.to_text(new_date_year, new_date_month, new_date_date);
+            this.data.end_date_text = DateRobot.to_text(new_date_year, new_date_month, new_date_date, SHORT);
             this.render_content();
         });
 
@@ -550,7 +550,7 @@ class Member_add{
             let new_date_date = new_date.split('-')[2];
             
             this.data.end_date = {year:Number(new_date_year), month:Number(new_date_month), date:Number(new_date_date)};
-            this.data.end_date_text = DateRobot.to_text(new_date_year, new_date_month, new_date_date);
+            this.data.end_date_text = DateRobot.to_text(new_date_year, new_date_month, new_date_date, SHORT);
             this.render_content();
         });
 
