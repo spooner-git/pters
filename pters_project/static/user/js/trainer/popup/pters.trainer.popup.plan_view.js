@@ -126,7 +126,6 @@ class Plan_view{
         this.request_data(()=>{
             // this.render();
             Setting_reserve_func.read((data)=>{
-                this.class_hour = 30;
                 this.time_selector = Number(data.setting_calendar_time_selector_type);
                 this.lecture_minute = Number(data.setting_calendar_basic_select_time);
                 let date_start_array = {"SUN":0, "MON":1};
