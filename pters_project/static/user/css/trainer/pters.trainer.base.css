@@ -75,12 +75,25 @@ progress::-webkit-progress-value {
     transition: 0.2s;
 }
     .nav_img{
+        position: relative;
+        width: 40px;
         height: 30px;
+        margin: 0 auto;
         line-height: 30px;
     }
         .nav_img>img{
             height: 25px;
             vertical-align: middle;
+        }
+        .nav_img> .new_indicator{
+            display: none;
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 5px;
+            height:5px;
+            border-radius: 50%;
+            background-color: #fe4e65;
         }
     .nav_text{
         /* display: none; */

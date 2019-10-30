@@ -6,6 +6,8 @@ class Alarm {
 
         this.data;
         this.paging = 0;
+
+        this.new_alarms_id_cache = [];
     }
 
     init (){
@@ -24,6 +26,7 @@ class Alarm {
             this.render_list(this.data);
             this.render_upper_box();
             $root_content.scrollTop(1);
+            this.new_alarms_id_cache = [];
         });
     }
 
@@ -88,7 +91,11 @@ class Alarm {
                 }
 
                 let read_check = data.read_check;
-                let html = `<article class="alarm_wrapper" data-alarm_id="${alarm_id}" style="background-color:${read_check == 1 ? "" : '#ffe8eb'}">
+                let alarm_highlight = "";
+                if(this.new_alarms_id_cache.indexOf(alarm_id) != -1){
+                    alarm_highlight = "#ffe8eb";
+                }
+                let html = `<article class="alarm_wrapper" data-alarm_id="${alarm_id}" style="background-color:${alarm_highlight}">
                                 <div class="alarm_data_u">
                                     <div>
                                         <img src="/static/common/icon/icon_gap_black.png" style="float:left;margin-right:16px;">
@@ -124,6 +131,31 @@ class Alarm {
         return html_temp;
     }
 
+    are_there_new_alarm(callback){
+        let READ = 1;
+        let UNREAD = 0;
+
+        Alarm_func.read((data)=>{
+            let are_there_new_alarm = 0;
+            let new_alarms_id = [];
+            for(let date in data){
+                let length = data[date].length;
+                for(let i=0; i<length; i++){
+                    let read_check = data[date][i].read_check;
+                    let alarm_id = data[date][i].alarm_id;
+                    if(read_check == UNREAD){
+                        are_there_new_alarm++;
+                        new_alarms_id.push(alarm_id);
+                    }
+                }
+            }
+            if(this.new_alarms_id_cache.length > 0){
+                return false;
+            }
+            this.new_alarms_id_cache = new_alarms_id;
+            callback(are_there_new_alarm);
+        });
+    }
 
     static_component (){
         return(

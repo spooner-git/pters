@@ -150,7 +150,8 @@
                             <!-- <div class="nav_text">회원</div> -->
                         </div>
                         <div class="obj_table_cell_x5 nav_item" onclick="sideGoPage('alarm', this)" id="alarm">
-                            <div class="nav_img"><img src={% static_url "common/icon/tab_bar/icon_alarm_off.png" %} alt=""></div>
+                            <div class="nav_img"><img src={% static_url "common/icon/tab_bar/icon_alarm_off.png" %} alt=""><div class="new_indicator"></div></div>
+                            
                             <!-- <div class="nav_text">알림</div> -->
                         </div>
                         <div class="obj_table_cell_x5 nav_item" onclick="sideGoPage('menu', this)" id="menu">
@@ -431,6 +432,7 @@
     }
 
     function sideGoPage(page){
+        are_there_new_alarm();
         // current_page = page;
         current_page_text = page;
         $('#debug_toolbar').hide();
@@ -619,6 +621,42 @@
     //     sideGoPopup("helper");
     // }
 
+    //새로운 알림이 있을때 알림 아이콘에 표시해주기
+    // function are_there_new_alarm(){
+    //     let READ = 1;
+    //     let UNREAD = 0;
+
+    //     Alarm_func.read((data)=>{
+    //         let are_there_new_alarm = 0;
+    //         for(let date in data){
+    //             let length = data[date].length;
+    //             for(let i=0; i<length; i++){
+    //                 let read_check = data[date][i].read_check;
+    //                 if(read_check == UNREAD){
+    //                     are_there_new_alarm++
+    //                 }
+    //             }
+    //         }
+
+    //         if(are_there_new_alarm > 0){
+    //             $('.new_indicator').show();
+    //         }else{
+    //             $('.new_indicator').hide();
+    //         }
+    //     })
+    // }
+    
+    function are_there_new_alarm(){
+        alarm.are_there_new_alarm((new_alarm_number)=>{
+            if(new_alarm_number > 0){
+                $('.new_indicator').show();
+            }else{
+                $('.new_indicator').hide();
+            }
+        });
+    }
+    
+
     //PC버전 상단 툴바에 사용자 정보 채우기
     function pc_top_toolbar_user_info_update(){
         Mypage_func.read((data)=>{
@@ -631,6 +669,7 @@
     }
 
     pc_top_toolbar_user_info_update();
+    are_there_new_alarm();
 
     // 구글 reCAPTCHA 보이지 않게 하기
     /*
