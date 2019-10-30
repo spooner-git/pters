@@ -126,7 +126,10 @@ class Pters_pass_pay_cancel{
         let onfocusout = (input_data)=>{
             this.data.cancel_reason = input_data;
         };
-        let html = CComponent.create_input_textarea_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, onfocusout);
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_:.,!@#\\s\\n 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
+        let pattern_message = "+ - _ : ! @ # 제외 특수문자는 입력 불가";
+        let required = "";
+        let html = CComponent.create_input_textarea_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, onfocusout, pattern, pattern_message, required);
         return html;
     }
 
