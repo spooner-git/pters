@@ -85,7 +85,7 @@ progress::-webkit-progress-value {
             height: 25px;
             vertical-align: middle;
         }
-        .nav_img> .new_indicator{
+        .new_alarm_indicator{
             display: none;
             position: absolute;
             top: 0;

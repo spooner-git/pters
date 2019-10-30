@@ -119,7 +119,7 @@
             </div>
             <div class="up_menu_tool">
                 <div style="flex:1 0 140px" id="up_menu_user_info" onclick="sideGoPopup('mypage')"><img src={% static_url "common/loading.svg" %} alt="" class="up_menu_img"><span>불러오는 중</span></div>
-                <div style="flex:1 0 0"><img src="/static/common/icon/tab_bar/icon_alarm_off.png" alt="" class="up_menu_img" onclick="sideGoPage('alarm')"></div>
+                <div style="flex:1 0 0;position:relative"><img src="/static/common/icon/tab_bar/icon_alarm_off.png" alt="" class="up_menu_img" onclick="sideGoPage('alarm')"><div class="new_alarm_indicator" style="top:15px;right:5px;"></div></div>
                 <div style="flex:1 0 0"><img src="/static/common/icon/icon_help_black.png" alt="" class="up_menu_img" onclick="sideGoPopup('helper')"></div>
             </div>
         </div>
@@ -150,7 +150,7 @@
                             <!-- <div class="nav_text">회원</div> -->
                         </div>
                         <div class="obj_table_cell_x5 nav_item" onclick="sideGoPage('alarm', this)" id="alarm">
-                            <div class="nav_img"><img src={% static_url "common/icon/tab_bar/icon_alarm_off.png" %} alt=""><div class="new_indicator"></div></div>
+                            <div class="nav_img"><img src={% static_url "common/icon/tab_bar/icon_alarm_off.png" %} alt=""><div class="new_alarm_indicator"></div></div>
                             
                             <!-- <div class="nav_text">알림</div> -->
                         </div>
@@ -622,36 +622,12 @@
     // }
 
     //새로운 알림이 있을때 알림 아이콘에 표시해주기
-    // function are_there_new_alarm(){
-    //     let READ = 1;
-    //     let UNREAD = 0;
-
-    //     Alarm_func.read((data)=>{
-    //         let are_there_new_alarm = 0;
-    //         for(let date in data){
-    //             let length = data[date].length;
-    //             for(let i=0; i<length; i++){
-    //                 let read_check = data[date][i].read_check;
-    //                 if(read_check == UNREAD){
-    //                     are_there_new_alarm++
-    //                 }
-    //             }
-    //         }
-
-    //         if(are_there_new_alarm > 0){
-    //             $('.new_indicator').show();
-    //         }else{
-    //             $('.new_indicator').hide();
-    //         }
-    //     })
-    // }
-    
     function are_there_new_alarm(){
         alarm.are_there_new_alarm((new_alarm_number)=>{
             if(new_alarm_number > 0){
-                $('.new_indicator').show();
+                $('.new_alarm_indicator').show();
             }else{
-                $('.new_indicator').hide();
+                $('.new_alarm_indicator').hide();
             }
         });
     }
