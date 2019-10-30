@@ -78,7 +78,11 @@ class TwoTimeSelector{
         // let start_time_diff_unit = this.listing_option.five_minute_detail == OFF ? this.option.class_hour : 5;
         let start_time_diff_unit = this.listing_option.five_minute_detail == OFF ? 30 : 5;
         let setting_info = {work_time:this.option.work_time, class_hour:this.option.class_hour, start_time_diff:start_time_diff_unit};
-        let plan_add_avail_times_array = Plan_calc.func_start_time_calc(this.received_data, setting_info).addOkArray;
+        let schedule_data = this.received_data;
+        if(this.listing_option.duplicate_filter == OFF){
+            schedule_data = [];
+        }
+        let plan_add_avail_times_array = Plan_calc.func_start_time_calc(schedule_data, setting_info).addOkArray;
         return plan_add_avail_times_array;
     }
 
