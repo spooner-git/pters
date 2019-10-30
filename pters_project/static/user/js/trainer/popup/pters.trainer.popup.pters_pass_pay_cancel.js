@@ -68,12 +68,22 @@ class Pters_pass_pay_cancel{
         if(this.data.cancel_type == 5){
             cancel_reason = this.dom_row_cancel_reason_textarea();
         }
-        let html =  '<article class="obj_input_box_full">' +
+        let html =  '<article class="obj_input_box_full" style="border-bottom:1px solid #f5f2f2;">' +
+                        this.dom_row_cancel_caution() + 
+                    '</article>' +
+                    '<article class="obj_input_box_full">' +
                         this.dom_assembly_sub_content() +
                         cancel_reason + 
                         this.dom_row_pters_pass_cancel_request_button() +
                     '</article>';
 
+        return html;
+    }
+
+    dom_row_cancel_caution(){
+        let html = `<div style="font-size:13px;color:#3b3d3d;">
+                        <p style="margin:0">해지 신청 시 다음 결제일 부터 미청구 됩니다.<br>즉시 해지를 원하실 경우, 해지 신청을 하신 후 [이용 문의]메뉴 를 통해 문의 주시면 처리를 도와 드리겠습니다.</p>
+                    </div>`;
         return html;
     }
     
