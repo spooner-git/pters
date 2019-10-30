@@ -3363,7 +3363,7 @@ class DatePickerSelector{
         };
 
         this.option = {
-            start_day: 0, //시작 요일 0: 일요일(기본), 1:월요일
+            start_day: 0, //시작 요일 0: 일요일(기본), 1:월요일,
             myname:null,
             title:null,
             data:{
@@ -3375,7 +3375,7 @@ class DatePickerSelector{
             }
         };
 
-        
+        this.holiday = null;
 
         this.store = {
             text: null,
@@ -3417,6 +3417,11 @@ class DatePickerSelector{
         this.data.year = next_year;
         this.data.month = next_month;
         this.render_datepicker();
+        let date = DateRobot.to_yyyymmdd(this.data.year, this.data.month, 1);
+        Plan_func.read_holiday(date, 36, (data)=>{
+            this.holiday = data;
+            this.render_datepicker();
+        });
     }
 
     prev(){
@@ -3426,12 +3431,22 @@ class DatePickerSelector{
         this.data.year = prev_year;
         this.data.month = prev_month;
         this.render_datepicker();
+        let date = DateRobot.to_yyyymmdd(this.data.year, this.data.month, 1);
+        Plan_func.read_holiday(date, 36, (data)=>{
+            this.holiday = data;
+            this.render_datepicker();
+        });
     }
 
 
     init (){
         this.init_html();
         this.render_datepicker();
+        let date = DateRobot.to_yyyymmdd(this.data.year, this.data.month, 1);
+        Plan_func.read_holiday(date, 36, (data)=>{
+            this.holiday = data;
+            this.render_datepicker();
+        });
     }
 
     init_html (){
@@ -3552,8 +3567,17 @@ class DatePickerSelector{
                 }else if(date_cache > reference_date_month_last_day){ // 마지막 날짜가 끝난 이후 처리
                     dateCellsToJoin.push(`<div class="obj_table_cell_x7"></div>`);
                 }else{
+                    let holiday_color = "";
+                    let holiday_name = "";
+                    if(this.holiday != null){
+                        if(Object.keys(this.holiday).indexOf(data_date) != -1){
+                            holiday_color = "color:#fe4e65;";
+                            holiday_name = this.holiday[data_date].holiday_name;
+                        }
+                    }
+
                     dateCellsToJoin.push(`<div class="obj_table_cell_x7 obj_font_size_13_weight_500" data-date="${data_date}" id="calendar_cell_${data_date}"" style="cursor:pointer;">
-                                               <div class="calendar_date_number" style="${font_color}${today_style}">${date}</div>
+                                               <div class="calendar_date_number" style="${font_color}${holiday_color}${today_style}">${date}</div>
                                           </div>`);
                     $(document).off('click', `#calendar_cell_${data_date}`).on('click', `#calendar_cell_${data_date}`, ()=>{
                         if(date_compare != true){

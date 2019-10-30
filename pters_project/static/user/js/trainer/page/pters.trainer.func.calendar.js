@@ -40,6 +40,7 @@ class Calendar {
         this.work_time_info = {full:null, calc:null};
         this.worktime = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
         this.dayoff = [];
+        this.holiday = null;
 
         this.user_data = {
             user_selected_date: {year:this.current_year, month:this.current_month, date:this.current_date},
@@ -130,12 +131,15 @@ class Calendar {
             this.render_upper_box(cal_type);
             this.render_month_cal( this.current_page_num, this.current_year, this.current_month);
             this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
-                this.latest_received_data = jsondata;
-                if(this.cal_type == cal_type){
-                    if(date == `${this.current_year}-${this.current_month}-01`){
-                        this.render_month_cal( this.current_page_num, this.current_year, this.current_month, jsondata);
+                Plan_func.read_holiday(`${this.current_year}-${this.current_month}-01`, 36, (holiday_data)=>{
+                    this.holiday = holiday_data;
+                    this.latest_received_data = jsondata;
+                    if(this.cal_type == cal_type){
+                        if(date == `${this.current_year}-${this.current_month}-01`){
+                            this.render_month_cal( this.current_page_num, this.current_year, this.current_month, jsondata);
+                        }
                     }
-                }
+                });
             });
             this.toggle_touch_move('on', '#calendar_wrap');
             break;
@@ -156,23 +160,27 @@ class Calendar {
             }
 
             this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
-                this.latest_received_data = jsondata;
-                if(this.cal_type == cal_type){
-                    if(date == `${this.current_year}-${this.current_month}-01`){
-                        this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
-                        // this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata);
-                        //일일 일정표에서 일정을 등록했을때, 다시 렌더링시에도 일일 일정으로 표시해주도록
-                        if(this.week_zoomed.target_row != null && this.week_zoomed.activate == true){
-                            this.week_zoomed.activate = false;
-                            this.zoom_week_cal();
-                        }
-
-                        if(this.week_zoomed.vertical.activate == true){
-                            this.week_zoomed.vertical.activate = false;
-                            this.zoom_week_cal_vertical();
+                Plan_func.read_holiday(`${this.current_year}-${this.current_month}-01`, 36, (holiday_data)=>{
+                    this.holiday = holiday_data;
+                    this.latest_received_data = jsondata;
+                    if(this.cal_type == cal_type){
+                        if(date == `${this.current_year}-${this.current_month}-01`){
+                            this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
+                            // this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata);
+                            //일일 일정표에서 일정을 등록했을때, 다시 렌더링시에도 일일 일정으로 표시해주도록
+                            if(this.week_zoomed.target_row != null && this.week_zoomed.activate == true){
+                                this.week_zoomed.activate = false;
+                                this.zoom_week_cal();
+                            }
+    
+                            if(this.week_zoomed.vertical.activate == true){
+                                this.week_zoomed.vertical.activate = false;
+                                this.zoom_week_cal_vertical();
+                            }
                         }
                     }
-                }
+                });
+               
             });
             
             this.toggle_touch_move('on', '#calendar_wrap');
@@ -376,10 +384,14 @@ class Calendar {
         this.render_upper_box("month");
         this.render_month_cal( this.current_page_num, this.current_year, this.current_month);
         this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
-            this.latest_received_data = jsondata;
-            if(date == `${this.current_year}-${this.current_month}-01`){
-                this.render_month_cal(this.current_page_num, this.current_year, this.current_month, jsondata);
-            }
+            Plan_func.read_holiday(`${this.current_year}-${this.current_month}-01`, 36, (holiday_data)=>{
+                this.holiday = holiday_data;
+                this.latest_received_data = jsondata;
+                if(date == `${this.current_year}-${this.current_month}-01`){
+                    this.render_month_cal(this.current_page_num, this.current_year, this.current_month, jsondata);
+                }
+            });
+            
         });
 
     }
@@ -422,22 +434,26 @@ class Calendar {
         }
 
         this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
-            this.latest_received_data = jsondata;
-            if(date == `${this.current_year}-${this.current_month}-01`){
-                this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
+            Plan_func.read_holiday(`${this.current_year}-${this.current_month}-01`, 36, (holiday_data)=>{
+                this.holiday = holiday_data;
+                this.latest_received_data = jsondata;
+                if(date == `${this.current_year}-${this.current_month}-01`){
+                    this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
 
-                //일일 일정표에서 일정을 등록했을때, 다시 렌더링시에도 일일 일정으로 표시해주도록
-                if(this.week_zoomed.target_row != null && this.week_zoomed.activate == true){
-                    this.week_zoomed.activate = false;
-                    this.zoom_week_cal();
-                }
+                    //일일 일정표에서 일정을 등록했을때, 다시 렌더링시에도 일일 일정으로 표시해주도록
+                    if(this.week_zoomed.target_row != null && this.week_zoomed.activate == true){
+                        this.week_zoomed.activate = false;
+                        this.zoom_week_cal();
+                    }
 
-                if(this.week_zoomed.vertical.activate == true){
-                    this.week_zoomed.vertical.activate = false;
-                    this.zoom_week_cal_vertical();
+                    if(this.week_zoomed.vertical.activate == true){
+                        this.week_zoomed.vertical.activate = false;
+                        this.zoom_week_cal_vertical();
+                    }
+                    
                 }
-                
-            }
+            });
+            
         });
     }
 
@@ -459,10 +475,14 @@ class Calendar {
             this.render_upper_box("month");
             this.render_month_cal( this.current_page_num, this.current_year, this.current_month);
             this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
-                this.latest_received_data = jsondata;
-                if(date == `${this.current_year}-${this.current_month}-01`){
-                    this.render_month_cal(this.current_page_num, this.current_year, this.current_month, jsondata);
-                }
+                Plan_func.read_holiday(`${this.current_year}-${this.current_month}-01`, 36, (holiday_data)=>{
+                    this.holiday = holiday_data;
+                    this.latest_received_data = jsondata;
+                    if(date == `${this.current_year}-${this.current_month}-01`){
+                        this.render_month_cal(this.current_page_num, this.current_year, this.current_month, jsondata);
+                    }
+                });
+                
             });
             break;
 
@@ -482,10 +502,14 @@ class Calendar {
             this.render_upper_box("month");
             this.render_month_cal(this.current_page_num, this.current_year, this.current_month);
             this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
-                this.latest_received_data = jsondata;
-                if(date == `${this.current_year}-${this.current_month}-01`){
-                    this.render_month_cal(this.current_page_num, this.current_year, this.current_month, jsondata);
-                }
+                Plan_func.read_holiday(`${this.current_year}-${this.current_month}-01`, 36, (holiday_data)=>{
+                    this.holiday = holiday_data;
+                    this.latest_received_data = jsondata;
+                    if(date == `${this.current_year}-${this.current_month}-01`){
+                        this.render_month_cal(this.current_page_num, this.current_year, this.current_month, jsondata);
+                    }
+                });
+                
             });
             break;
         }
@@ -514,14 +538,18 @@ class Calendar {
                 this.zoom_week_cal_vertical();
             }
             this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
-                this.latest_received_data = jsondata;
-                if(date == `${this.current_year}-${this.current_month}-01`){
-                    this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
-                    if(this.week_zoomed.vertical.activate == true){
-                        this.week_zoomed.vertical.activate = false;
-                        this.zoom_week_cal_vertical();
+                Plan_func.read_holiday(`${this.current_year}-${this.current_month}-01`, 36, (holiday_data)=>{
+                    this.holiday = holiday_data;
+                    this.latest_received_data = jsondata;
+                    if(date == `${this.current_year}-${this.current_month}-01`){
+                        this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
+                        if(this.week_zoomed.vertical.activate == true){
+                            this.week_zoomed.vertical.activate = false;
+                            this.zoom_week_cal_vertical();
+                        }
                     }
-                }
+                });
+                
             });
             break;
 
@@ -546,14 +574,18 @@ class Calendar {
                 this.zoom_week_cal_vertical();
             }
             this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
-                this.latest_received_data = jsondata;
-                if(date == `${this.current_year}-${this.current_month}-01`){
-                    this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
-                    if(this.week_zoomed.vertical.activate == true){
-                        this.week_zoomed.vertical.activate = false;
-                        this.zoom_week_cal_vertical();
+                Plan_func.read_holiday(`${this.current_year}-${this.current_month}-01`, 36, (holiday_data)=>{
+                    this.holiday = holiday_data;
+                    this.latest_received_data = jsondata;
+                    if(date == `${this.current_year}-${this.current_month}-01`){
+                        this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
+                        if(this.week_zoomed.vertical.activate == true){
+                            this.week_zoomed.vertical.activate = false;
+                            this.zoom_week_cal_vertical();
+                        }
                     }
-                }
+                });
+                
             });
             break;
         }
@@ -876,13 +908,28 @@ class Calendar {
                     today_marking = `<div class="today_marking" style="${month_or_week == "week" ? '' : 'top:7%; width:20px; height:20px; border-radius:12px;'}"></div>`;
                     today_text_style = 'color:#fe4e65;font-weight:bold;';
                 }
+
+                let this_date_yyyymmdd = DateRobot.to_yyyymmdd(_year[i], _month[i], _date[i]);
+                let holiday_color = "";
+                let holiday_name = "";
+                if(this.holiday != null){
+                    if(Object.keys(this.holiday).indexOf(this_date_yyyymmdd) != -1){
+                        holiday_color = "color:#fe4e65;";
+                        holiday_name = this.holiday[this_date_yyyymmdd].holiday_name;
+                    }
+                }
+                
+
                 
                 let onclick = month_or_week == "week" ? `${this.instance}.zoom_week_cal(this, ${_year[i]}, ${_month[i]}, ${_date[i]})` : `;calendar.week_zoomed.activate = true;calendar.week_zoomed.target_row = this.dataset.row;${this.instance}.go_week(${_year[i]}, ${_month[i]}, ${_date[i]});`;
 
                 dates_to_join.push(
                     `
                     <div ${height_style} class="${saturday} ${sunday} ${border_style} _week_row_${i+1}" data-row="${i+1}" ${this.dayoff.indexOf(i) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""} onclick="event.stopPropagation();${onclick}">
-                        <span style="${today_text_style}">${_date[i]}</span>
+                        <span style="${today_text_style} ${holiday_color}" data-holiday="${holiday_name}">
+                            ${_date[i]}
+                            <div ${month_or_week == "month" ? "" : "hidden"}>${holiday_name}</div>
+                        </span>
                         <div class="${schedule_number_display} ${has_schedule}">${schedule_date}</div>
                         ${today_marking}
                     </div>
@@ -1695,6 +1742,46 @@ class Plan_func{
                 }
                 if(callback != undefined){
                     callback(data);
+                }
+                return data;
+            },
+
+            complete:function (){
+                ajax_load_image(HIDE);
+            },
+
+            error:function (){
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                // location.reload();
+            }
+        });
+    }
+
+    static read_holiday(date, days, callback){
+        let date_ = date;
+        let days_ = days;
+        if(date_ == undefined){date_ = `${this.current_year}-${this.current_month}-01`;}
+        if(days_ == undefined){days_ = 31;}
+
+        $.ajax({
+            url: '/schedule/get_holiday_schedule/',
+            type : 'GET',
+            data : {"date":date_, "day":days_},
+            dataType: "JSON",
+
+            beforeSend:function (){
+                ajax_load_image(SHOW);
+            },
+            success:function (data){
+                check_app_version(data.app_version);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message(data.messageArray);
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(data, date_);
                 }
                 return data;
             },
