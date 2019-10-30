@@ -109,6 +109,7 @@ class Calendar {
             }else if(this.cal_type == "month"){
                 this.go_month();
             }
+            this.toggle_touch_move('on', '#calendar_wrap');
         });
     }
 
