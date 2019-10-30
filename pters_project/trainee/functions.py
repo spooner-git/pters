@@ -897,10 +897,10 @@ def func_check_select_time_reserve_setting(class_id, trainer_id, start_date, end
     # 강사 업무 시간 확인
     if error is None:
         if add_del_start_time < work_avail_start_time:
-            error = '예약/취소 가능 시간이 아닙니다.'
+            error = '강사님의 업무 시간이 아닙니다.'
 
         if add_del_end_time > work_avail_end_time:
-            error = '예약/취소 가능 시간이 아닙니다.'
+            error = '강사님의 업무 시간이 아닙니다.'
 
     # 근접 예약 시간 확인
     if error is None:
