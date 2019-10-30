@@ -58,6 +58,12 @@ class Plan_view{
 
         this.work_time = {start_hour:0, end_hour:24};
         this.class_hour = 30;
+
+        this.date_start = 0;
+        Setting_reserve_func.read((data)=>{
+            let date_start_array = {"SUN":0, "MON":1};
+            this.date_start = date_start_array[data.setting_week_start_date];
+        });
     
         this.init();
     }
@@ -419,7 +425,7 @@ class Plan_view{
                 let month = this.data.date == null ? this.dates.current_month : this.data.date.month;
                 let date = this.data.date == null ? this.dates.current_date : this.data.date.date;
                 
-                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'birth', title:'일자', data:{year:year, month:month, date:date},
+                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'birth', title:'일자', data:{year:year, month:month, date:date}, start_day:this.date_start,
                                                                                                 callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
                                                                                                     this.date = object; 
                                                                                                     this.if_user_changed_any_information = true;

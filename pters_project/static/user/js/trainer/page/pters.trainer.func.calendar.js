@@ -93,6 +93,9 @@ class Calendar {
             // }
             // this.current_week = Math.ceil( (this.current_date +  this.first_day_of_the_date)/7 ) - 1;
 
+            let date_start_array = {"SUN":0, "MON":1};
+            this.date_start = date_start_array[data.setting_week_start_date];
+
             this.calendar_basic_time_select = Number(data.setting_calendar_basic_select_time); // 달력 기본 입력 시간
             let work_time = this.calc_worktime_display(data);
             this.work_time_info.calc = work_time;

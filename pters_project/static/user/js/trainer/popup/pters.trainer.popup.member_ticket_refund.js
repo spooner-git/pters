@@ -28,6 +28,12 @@ class Member_ticket_refund{
             refund_date: null
         };
 
+        this.date_start = 0;
+        Setting_reserve_func.read((data)=>{
+            let date_start_array = {"SUN":0, "MON":1};
+            this.date_start = date_start_array[data.setting_week_start_date];
+        });
+
         //팝업의 날짜, 시간등의 입력란을 미리 외부에서 온 데이터로 채워서 보여준다.
        
         this.init();
@@ -132,7 +138,7 @@ class Member_ticket_refund{
                 let month_min = Number(this.data.member_ticket_start_date.split('-')[1]);
                 let date_min = Number(this.data.member_ticket_start_date.split('-')[2]);
                 
-                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'refund_date', title:'환불 일자', data:{year:year, month:month, date:date}, min:{year:year_min, month:month_min, date:date_min},callback_when_set: (object)=>{ 
+                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'refund_date', title:'환불 일자', data:{year:year, month:month, date:date}, min:{year:year_min, month:month_min, date:date_min}, start_day:this.date_start, callback_when_set: (object)=>{ 
                     this.data.refund_date = `${object.data.year}-${object.data.month}-${object.data.date}`;
                     this.render_content();
                 }});

@@ -46,6 +46,8 @@ class Plan_add{
             duplicate_plan_when_add:[]
         };
 
+        this.date_start = 0;
+
         this.lecture_minute;
         this.work_time = {start_hour:0, end_hour:24};
 
@@ -141,6 +143,8 @@ class Plan_add{
             this.lecture_minute = Number(data.setting_calendar_basic_select_time);
             this.time_selector = Number(data.setting_calendar_time_selector_type);
             this.work_time = calendar.calc_worktime_display(data);
+            let date_start_array = {"SUN":0, "MON":1};
+            this.date_start = date_start_array[data.setting_week_start_date];
             this.set_initial_data(this.data_from_external);
             this.render();
         });
@@ -371,7 +375,7 @@ class Plan_add{
                 let month = this.data.date == null ? this.dates.current_month : this.data.date.month;
                 let date = this.data.date == null ? this.dates.current_date : this.data.date.date;
                 
-                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'plan_add_datepicker', title:'일자', data:{year:year, month:month, date:date},
+                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'plan_add_datepicker', title:'일자', data:{year:year, month:month, date:date}, start_day: this.date_start,
                                                                                                 callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
                                                                                                     if(this.data.repeat.repeat_end.year != null){ // 반복일정의 종료일자보다 미래 일자를 시작일자로 선택하면, 반복일정 종료일자를 시작일자랑 같게 설정한다.
                                                                                                         let this_start_date = DateRobot.to_yyyymmdd(object.data.year, object.data.month, object.data.date);
@@ -533,7 +537,6 @@ class Plan_add{
 
         return html + html2;
     }
-
 
     dom_row_repeat_select(){
         let date_color = "#1f1d1e";

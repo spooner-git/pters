@@ -36,6 +36,12 @@ class Member_add{
                 end_date_text:null
         };
 
+        this.date_start = 0;
+        Setting_reserve_func.read((data)=>{
+            let date_start_array = {"SUN":0, "MON":1};
+            this.date_start = date_start_array[data.setting_week_start_date];
+        });
+
         //팝업의 날짜, 시간등의 입력란을 미리 외부에서 온 데이터로 채워서 보여준다.
         this.set_initial_data(this.data_from_external);
         this.init();
@@ -414,7 +420,7 @@ class Member_add{
                 let month = this.data.start_date == null ? this.dates.current_month : this.data.start_date.month;
                 let date = this.data.start_date == null ? this.dates.current_date : this.data.start_date.date;
                 
-                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'start_date', title:'시작일',
+                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'start_date', title:'시작일', start_day:this.date_start,
                                                                                                 data:{year:year, month:month, date:date},
                                                                                                 // min:{year:year, month:month, date:date},
                                                                                                 callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
@@ -472,7 +478,7 @@ class Member_add{
 
                 let min = this.data.start_date != null ? {year:this.data.start_date.year, month:this.data.start_date.month, date: this.data.start_date.date} : null;
 
-                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'end_date', title:'종료일',
+                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'end_date', title:'종료일', start_day: this.date_start,
                                                                                                 data:{year:year, month:month, date:date},  
                                                                                                 min:min,
                                                                                                 callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
