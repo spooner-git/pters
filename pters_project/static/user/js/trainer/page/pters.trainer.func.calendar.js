@@ -79,19 +79,19 @@ class Calendar {
         this.mode_to_plan_change(OFF);
         Setting_reserve_func.read((data)=>{
             this.work_time_info.full = data;
-            // this.dayoff_hide = data.setting_holiday_hide; // 휴무일 숨기기 기능 없앰
-            let date_start_array = {"SUN":0, "MON":1};
-            this.date_start = date_start_array[data.setting_week_start_date];
-            //this.current_week를 구하기 위한 코드
-            this.first_day_of_the_date = new Date(this.current_year, this.current_month-1, 1).getDay();
-            if(this.date_start == 1){
-                if(this.first_day_of_the_date == 0){
-                    this.first_day_of_the_date = 6;
-                }else{
-                    this.first_day_of_the_date--;
-                }
-            }
-            this.current_week = Math.ceil( (this.current_date +  this.first_day_of_the_date)/7 ) - 1;
+            // // this.dayoff_hide = data.setting_holiday_hide; // 휴무일 숨기기 기능 없앰
+            // let date_start_array = {"SUN":0, "MON":1};
+            // this.date_start = date_start_array[data.setting_week_start_date];
+            // //this.current_week를 구하기 위한 코드
+            // this.first_day_of_the_date = new Date(this.current_year, this.current_month-1, 1).getDay();
+            // if(this.date_start == 1){
+            //     if(this.first_day_of_the_date == 0){
+            //         this.first_day_of_the_date = 6;
+            //     }else{
+            //         this.first_day_of_the_date--;
+            //     }
+            // }
+            // this.current_week = Math.ceil( (this.current_date +  this.first_day_of_the_date)/7 ) - 1;
 
             this.calendar_basic_time_select = Number(data.setting_calendar_basic_select_time); // 달력 기본 입력 시간
             let work_time = this.calc_worktime_display(data);
@@ -101,7 +101,14 @@ class Calendar {
                 this.worktime.push(i);
             }
             this.dayoff = work_time.dayoff;
-            this.init(cal_type);
+            // this.init(cal_type);
+
+            //다른페이지에서 일정 페이지로 넘어오면 무조건 오늘을 기준으로 달력을 뿌려준다.
+            if(this.cal_type == "week"){
+                this.go_week();
+            }else if(this.cal_type == "month"){
+                this.go_month();
+            }
         });
     }
 
