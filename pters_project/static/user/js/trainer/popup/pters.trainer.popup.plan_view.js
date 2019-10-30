@@ -251,7 +251,7 @@ class Plan_view{
         }
         
         let html;
-        if(this.time_selector == "classic"){
+        if(this.time_selector == CLASSIC){
             html =  `<div class="obj_input_box_full" style="display:${display}; border:0;">`+ CComponent.dom_tag('회원') + member_select_row + member_list_row+'</div>' +
                         '<div class="obj_input_box_full">' +  CComponent.dom_tag('일자') + date_select_row +
                                                         CComponent.dom_tag('진행시간') + classic_time_selector + '</div>' +
