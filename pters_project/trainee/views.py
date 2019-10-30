@@ -609,13 +609,16 @@ def delete_trainee_schedule_logic(request):
         # func_update_member_schedule_alarm(class_id)
         # class_info.schedule_check = 1
         # class_info.save()
+        push_info_schedule_start_date = str(start_date).split(':')
+        push_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
         if lecture_name == '':
             lecture_name = '개인 레슨'
         log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
                          from_member_name=request.user.first_name,
                          class_tb_id=class_id, member_ticket_tb_id=member_ticket_info.member_ticket_id,
                          log_info=lecture_name + ' 수업',
-                         log_how='예약 취소', log_detail=str(start_date) + '/' + str(end_date), use=USE)
+                         log_how='예약 취소', log_detail=push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
+                                                     + '/' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1], use=USE)
         log_data.save()
 
         try:
@@ -625,8 +628,6 @@ def delete_trainee_schedule_logic(request):
         except ObjectDoesNotExist:
             lt_pus_from_trainee_lesson_alarm = FROM_TRAINEE_LESSON_ALARM_ON
         if lt_pus_from_trainee_lesson_alarm == FROM_TRAINEE_LESSON_ALARM_ON:
-            push_info_schedule_start_date = str(start_date).split(':')
-            push_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
             func_send_push_trainee(class_id,
                                    class_type_name + ' - 수업 알림',
                                    request.user.first_name + '님이 '
@@ -1262,20 +1263,26 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
             error = '예약 가능한 횟수를 확인해주세요.'
 
     if error is None:
+        log_info_schedule_start_date = str(start_date).split(':')
+        log_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
+
         if lecture_schedule_id is not None and lecture_schedule_id != '':
             log_data = LogTb(log_type='LS01', auth_member_id=request.user.id,
                              from_member_name=request.user.first_name,
                              class_tb_id=class_id,
                              member_ticket_tb_id=member_ticket_id,
                              log_info=lecture_schedule_info.get_lecture_name() + ' 수업', log_how='예약',
-                             log_detail=str(start_date) + '/' + str(end_date),  use=USE)
+                             log_detail=log_info_schedule_start_date[0] + ':' + log_info_schedule_start_date[1]
+                                        + '/' + log_info_schedule_end_date[0] + ':' + log_info_schedule_end_date[1],
+                             use=USE)
             log_data.save()
         else:
             log_data = LogTb(log_type='LS01', auth_member_id=request.user.id,
                              from_member_name=request.user.first_name,
                              class_tb_id=class_id, member_ticket_tb_id=member_ticket_id,
                              log_info='개인 레슨 수업', log_how='예약',
-                             log_detail=str(start_date) + '/' + str(end_date),
+                             log_detail=log_info_schedule_start_date[0] + ':' + log_info_schedule_start_date[1]
+                                        + '/' + log_info_schedule_end_date[0] + ':' + log_info_schedule_end_date[1],
                              use=USE)
             log_data.save()
     return schedule_result
