@@ -762,9 +762,14 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
             lecture_name = ''
             lecture_current_member_num = ''
             if lecture_one_to_one is not None:
-                lecture_id = lecture_one_to_one.lecture_id
-                lecture_name = lecture_one_to_one.name
-                lecture_current_member_num = 1
+                if schedule_type == 0:
+                    lecture_id = ''
+                    lecture_name = 'OFF'
+                    lecture_current_member_num = 0
+                else:
+                    lecture_id = lecture_one_to_one.lecture_id
+                    lecture_name = lecture_one_to_one.name
+                    lecture_current_member_num = 1
 
         lecture_schedule_list = []
         lecture_member_schedule_data = ScheduleTb.objects.select_related(
