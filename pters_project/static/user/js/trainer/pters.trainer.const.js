@@ -236,9 +236,9 @@ const COLOR_NAME_CODE = {"#fbf3bd":"바나나", "#dbe6f7":"하늘", "#ffd3d9": "
 const SEX_CODE = {"M": "남성", "W": "여성"};
 const SCHEDULE_STATUS = {"NP" : "진행전", "PC": "결석", "PE": "출석"};
 const TICKET_STATUS = {"IP": "진행중", "PE": "종료", "RF": "환불"};
-const PAY_TYPE_NAME = {"SINGLE": "1회 결제", "PERIOD": "정기 결제 / 1 개월", "":"없음"};
+const PAY_TYPE_NAME = {"SINGLE": "1회 결제", "PERIOD": "정기 결제 / 1 개월", "":"없음", "FREE_EVENT":"무료 이벤트"};
 const PAY_STATUS = {"paid":"결제 완료", "failed":"결제 실패", "cancelled":"결제 취소", "reserve":"결제 예정"};
-const PAY_METHOD = {"card":"카드 결제", "iap": "인앱 결제", "":"-"};
+const PAY_METHOD = {"card":"카드 결제", "iap": "인앱 결제", "":"-", "event":"이벤트"};
 const PAYMENT_ID = "imp53133818";
 const PASS_PRODUCT = {"standard":{id:7, text:"스탠다드", price:9900}, "premium":{id:8, text:"프리미엄", price:15000}};
 
