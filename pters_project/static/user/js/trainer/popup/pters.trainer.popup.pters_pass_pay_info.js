@@ -8,6 +8,8 @@ class Pters_pass_pay_info{
                 card_name:[""],
                 pay_method:[""],
                 start_date:[""],
+                end_date:[""],
+                paid_date:[""],
                 payment_type_cd:[""],
                 customer_uid:[""],
             },
@@ -39,6 +41,8 @@ class Pters_pass_pay_info{
             this.data.current.card_name = data.card_name;
             this.data.current.pay_method = data.pay_method;
             this.data.current.start_date = data.start_date;
+            this.data.current.end_date = data.end_date;
+            this.data.current.paid_date = data.paid_date;
             this.data.current.payment_type_cd = data.payment_type_cd;
             this.data.current.customer_uid = data.customer_uid;
             Pters_pass_func.read('Pay_list', (data)=>{
@@ -188,7 +192,9 @@ class Pters_pass_pay_info{
         for(let i=0; i<length; i++){
             let pass_name = this.data.history.name[i].split(' - ')[0];
             let pass_type = PAY_TYPE_NAME[this.data.history.payment_type_cd[i]];
-            let pay_date = this.data.history.start_date[i].replace(/-/gi, ' .');
+            let start_date = this.data.history.start_date[i].replace(/-/gi, ' .');
+            let end_date = this.data.history.end_date[i].replace(/-/gi, ' .');
+            let paid_date = this.data.history.paid_date[i].replace(/-/gi, ' .');
             let pay_method = this.data.history.pay_method[i];
             let pay_price = this.data.history.price[i];
             let pay_status = this.data.history.status[i];
@@ -199,7 +205,10 @@ class Pters_pass_pay_info{
                             <div class="pay_history_title">${pass_name} (${pass_type})</div>
                             <div>
                                 <div class="pass_article_detail_row">
-                                    <div>결제일</div><div>${pay_date}</div>
+                                    <div>기간</div><div>${start_date}~${end_date}</div>
+                                </div>
+                                <div class="pass_article_detail_row">
+                                    <div>결제일</div><div>${paid_date}</div>
                                 </div>
                                 <div class="pass_article_detail_row">
                                     <div>결제수단</div><div>${PAY_METHOD[pay_method]} - ${pay_card_name}</div>
