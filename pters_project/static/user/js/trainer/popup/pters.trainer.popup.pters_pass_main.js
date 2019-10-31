@@ -222,12 +222,15 @@ class Pters_pass_main{
     dom_row_toolbox(){
         // let title_upper = `<span style=" font-size: 12px;display:block;line-height: 5px;color: #7d7d7d;font-weight: 500;">이용중인 PTERS 패스</span>${this.dom_button_go_to_status()}`;
         let title_upper = `<span style=" font-size: 12px;display:block;line-height: 5px;color: #7d7d7d;font-weight: 500;">이용중인 PTERS 패스</span>`;
-        let current_pass_name = this.data.current.name[0] == "" ? "무료 이용자" : this.data.current.name[0];
+        let current_pass_name = this.data.current.name[0] == "" ? "무료 이용자 (11월 이벤트)" : this.data.current.name[0];
         let title = this.data.current.name.length == 0 ? "" :title_upper + current_pass_name;
         
         let current_start_date = this.data.current.start_date[0].replace(/-/gi, '.');
         let current_end_date = this.data.current.end_date[0].replace(/-/gi, '.');
         let expire_date =  current_start_date + ' - ' + current_end_date;
+        if(current_start_date == ''){
+            expire_date = '2019.11.01 - 2019.11.30'
+        }
         let next_pay_date = this.data.next.paid_date[0].replace(/-/gi, '.');
         let pay_type = PAY_TYPE_NAME[this.data.next.payment_type_cd[0]];
         let description = `<p style="font-size:13px;letter-spacing:-0.5px;font-weight:500;margin-bottom:0;">
