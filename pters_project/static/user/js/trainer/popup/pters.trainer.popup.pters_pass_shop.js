@@ -124,7 +124,7 @@ class Pters_pass_shop{
         let title = "스탠다드 이용권";
         let icon = DELETE;
         let icon_r_visible = SHOW;
-        let icon_r_text = "구매 9,900원";
+        let icon_r_text = "매월 9,900원";
         let style = {"color":"#fe4e65", "font-weight":"bold", "border-bottom":"1px solid #e8e8e8"};
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP_AGREEMENT, 100, POPUP_FROM_BOTTOM, null, ()=>{
