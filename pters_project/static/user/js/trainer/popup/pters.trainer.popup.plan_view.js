@@ -134,7 +134,6 @@ class Plan_view{
                 this.render();
             });
             Lecture_func.read({"lecture_id": this.data.lecture_id}, (data)=>{
-                console.log("data", data);
                 this.lecture_minute = data.lecture_minute;
             });
             func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
@@ -653,7 +652,6 @@ class Plan_view{
 
     request_data (callback){
         Plan_func.read_plan(this.schedule_id, (data)=>{
-            console.log("data1", data);
             this.received_data = data;
             this.set_initial_data(data); // 초기값을 미리 셋팅한다.
             callback(data);

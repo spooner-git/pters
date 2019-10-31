@@ -240,7 +240,6 @@ class TwoTimeSelector{
                 $(`${self.targetHTML} li[data-spos="${Math.abs(self.hour_scroll.y)}"]`).css('color', '#1e1e1e');
                 self.hour_scroll_snapped = snap;
 
-                console.log(self.get_selected_data().data.start)
                 self.data.end = self.refine_end_data(self.get_selected_data().data.start).end_time_list;
                 self.data.end_diff = self.refine_end_data(self.get_selected_data().data.start).end_time_diff_list;
                 self.render_time2_list();
@@ -1600,7 +1599,6 @@ class TimeSelector{
             if(selected_time_data_form == '0:0'){
                 selected_time_data_form = '24:00';
             }
-            console.log(selected_time_data_form, min_time_data_form, TimeRobot.compare(selected_time_data_form, min_time_data_form));
 
             let time_compare = TimeRobot.compare(selected_time_data_form, min_time_data_form); // >= 일경우 true;
             if(time_compare == false){
@@ -2231,13 +2229,11 @@ class TimeSelector3{
                     self.render_minute_list(5);
                     self.set_iscroll_minute();
                     self.go_snap(hour - self.option.range.start, 0);
-                    console.log("go_snap", hour, 0)
                 }else{
                     // self.minute_end = 60;
                     self.render_minute_list();
                     self.set_iscroll_minute();
                     self.go_snap(hour - self.option.range.start, 0);
-                    console.log("go_snap", hour, 0)
                 }
 
                 let data_check = self.check_minimum_time();
@@ -2613,13 +2609,6 @@ class OptionSelector{
         document.querySelector(this.target.install).innerHTML = html_to_join.join('');
     }
 
-
-    //data 형태
-    // `{
-    //     사과:{value: 'apple', callback: ()=>{console.log('사과 Apple')} }, 
-    //     수박:{value: 'water_melon', callback: ()=>{console.log('수박 Water melon')} }, 
-    //     바나나:{value: 'banana', callback: ()=>{console.log('바나나 Banana')} }
-    // }`;
 }
 
 class TicketSelector{
