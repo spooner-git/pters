@@ -79,20 +79,8 @@ class Calendar {
         document.querySelector(this.targetHTML).innerHTML = component.initial_page;
         this.mode_to_plan_change(OFF);
         Setting_reserve_func.read((data)=>{
+
             this.work_time_info.full = data;
-            // // this.dayoff_hide = data.setting_holiday_hide; // 휴무일 숨기기 기능 없앰
-            // let date_start_array = {"SUN":0, "MON":1};
-            // this.date_start = date_start_array[data.setting_week_start_date];
-            // //this.current_week를 구하기 위한 코드
-            // this.first_day_of_the_date = new Date(this.current_year, this.current_month-1, 1).getDay();
-            // if(this.date_start == 1){
-            //     if(this.first_day_of_the_date == 0){
-            //         this.first_day_of_the_date = 6;
-            //     }else{
-            //         this.first_day_of_the_date--;
-            //     }
-            // }
-            // this.current_week = Math.ceil( (this.current_date +  this.first_day_of_the_date)/7 ) - 1;
 
             let date_start_array = {"SUN":0, "MON":1};
             this.date_start = date_start_array[data.setting_week_start_date];

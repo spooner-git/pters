@@ -573,7 +573,8 @@ input:disabled{
 	/* display: table-cell; */
 	/* width: 150px; */
 	/* vertical-align: middle; */
-	flex-basis: 150px;
+	/* flex-basis: 150px; */
+	flex:1 1 0;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
@@ -584,11 +585,12 @@ input:disabled{
 	width: auto;
 	vertical-align: middle; */
 	flex: 1 1 0;
+	min-width: 150px;
 	text-align: right;
 }
 .select_attend_row .cell_attend_select > div{
 	display: inline-block;
-	width: 56px;
+	width: 60px;
 	font-size: 13px;
 	color: #858282;
 	cursor: pointer;
