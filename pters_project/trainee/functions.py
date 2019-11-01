@@ -105,25 +105,39 @@ def func_get_trainee_lecture_schedule(context, user_id, class_id, start_date, en
     query = "select count(*) from SCHEDULE_TB as B where B.GROUP_SCHEDULE_ID = `SCHEDULE_TB`.`ID`" \
             "AND B.STATE_CD !=\'PC\' AND B.USE=1"
     # query_member_auth_cd \
-    #     = "select count(`LECTURE_TB_ID`) from GROUP_LECTURE_TB as B" \
-    #       " where B.USE=1 and B.GROUP_TB_ID = `SCHEDULE_TB`.`GROUP_TB_ID`" \
-    #       " and (select `STATE_CD` from LECTURE_TB as D WHERE D.ID=B.LECTURE_TB_ID)=\'IP\'" \
-    #       " and (select `MEMBER_AUTH_CD` from LECTURE_TB as C WHERE C.ID = B.LECTURE_TB_ID" \
-    #       " and C.MEMBER_ID= "+str(user_id)+")=\'VIEW\'"
+    #     = "select count(A.ID) from LECTURE_TB as A" \
+    #       " where A.USE=1 and (SELECT count(B.GROUP_TB_ID) FROM PACKAGE_GROUP_TB as B where B.GROUP_TB_ID = `SCHEDULE_TB`.`GROUP_TB_ID` and B.PACKAGE_TB_ID=A.PACKAGE_TB_ID and B.USE=1)>0" \
+    #       " and A.STATE_CD=\'IP\'" \
+    #       " and A.MEMBER_AUTH_CD=\'VIEW\' and A.MEMBER_ID="+str(user_id)
 
-    query_member_auth_cd \
-        = "select count(A.ID) from LECTURE_TB as A" \
-          " where A.USE=1 and (SELECT count(B.GROUP_TB_ID) FROM PACKAGE_GROUP_TB as B where B.GROUP_TB_ID = `SCHEDULE_TB`.`GROUP_TB_ID` and B.PACKAGE_TB_ID=A.PACKAGE_TB_ID and B.USE=1)>0" \
-          " and A.STATE_CD=\'IP\'" \
-          " and A.MEMBER_AUTH_CD=\'VIEW\' and A.MEMBER_ID="+str(user_id)
+    member_ticket_data = ClassMemberTicketTb.objects.select_related(
+        'member_ticket_tb__ticket_tb').filter(class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW,
+                                              member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+                                              member_ticket_tb__member_id=user_id,
+                                              member_ticket_tb__use=USE,
+                                              use=USE).order_by('-member_ticket_tb__start_date',
+                                                                '-member_ticket_tb__reg_dt')
+
+    query_lecture_list = Q()
+    if len(member_ticket_data) > 0:
+        query_ticket_list = Q()
+        for member_ticket_info in member_ticket_data:
+            ticket_info = member_ticket_info.member_ticket_tb.ticket_tb
+            query_ticket_list |= Q(ticket_tb_id=ticket_info.ticket_id)
+
+        ticket_lecture_data = TicketLectureTb.objects.select_related(
+            'lecture_tb').filter(query_ticket_list, class_tb_id=class_id, lecture_tb__state_cd=STATE_CD_IN_PROGRESS,
+                                 lecture_tb__use=USE, use=USE)
+
+        for ticket_lecture_info in ticket_lecture_data:
+            query_lecture_list |= Q(lecture_tb_id=ticket_lecture_info.lecture_tb_id)
 
     lecture_schedule_data = ScheduleTb.objects.select_related(
-        'lecture_tb').filter(class_tb_id=class_id, lecture_tb__isnull=False, member_ticket_tb__isnull=True,
+        'lecture_tb').filter(query_lecture_list, class_tb_id=class_id, lecture_tb__isnull=False,
+                             member_ticket_tb__isnull=True,
                              en_dis_type=ON_SCHEDULE_TYPE, start_dt__gte=start_date,
                              start_dt__lt=end_date, use=USE
-                             ).annotate(lecture_current_member_num=RawSQL(query, []),
-                                        lecture_check=RawSQL('IFNULL(('+query_member_auth_cd+' ), 0)', [])
-                                        ).filter(lecture_check__gt=0).order_by('start_dt')
+                             ).annotate(lecture_current_member_num=RawSQL(query, [])).order_by('start_dt')
     for lecture_schedule_info in lecture_schedule_data:
         lecture_schedule_info.note = lecture_schedule_info.note.replace('\n', '<br/>')
     context['lecture_schedule_data'] = lecture_schedule_data
@@ -175,7 +189,7 @@ def func_get_class_member_ticket_count(context, class_id, user_id):
         # 강사에 해당하는 강좌 정보 불러오기
 
         class_member_ticket_list = ClassMemberTicketTb.objects.select_related(
-            'member_ticket_tb__ticket_tb'
+            'member_ticket_tb__ticket_tb', 'member_ticket_tb__member'
         ).filter(class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__member_id=user_id,
                  member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS, member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
                  member_ticket_tb__use=USE, use=USE).order_by('member_ticket_tb__start_date')
@@ -883,10 +897,10 @@ def func_check_select_time_reserve_setting(class_id, trainer_id, start_date, end
     # 강사 업무 시간 확인
     if error is None:
         if add_del_start_time < work_avail_start_time:
-            error = '예약/취소 가능 시간이 아닙니다.'
+            error = '강사님의 업무 시간이 아닙니다.'
 
         if add_del_end_time > work_avail_end_time:
-            error = '예약/취소 가능 시간이 아닙니다.'
+            error = '강사님의 업무 시간이 아닙니다.'
 
     # 근접 예약 시간 확인
     if error is None:

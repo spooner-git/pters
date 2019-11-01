@@ -476,7 +476,8 @@ class TimeRobot{
         if(hour!=24){
             hour = hour%24;
         }
-        return {hour:hour, minute:(minute + plus_minute)%60};
+        let complete_form = TimeRobot.hm_to_hhmm(`${hour}:${(minute + plus_minute)%60}`).complete;
+        return {hour:hour, minute:(minute + plus_minute)%60, complete:complete_form};
     }
 
     // 시간 비교하 (시, 분)

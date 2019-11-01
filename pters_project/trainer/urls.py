@@ -182,8 +182,11 @@ urlpatterns = [
     # 푸시 Setting 수정
     url(r'^update_setting_push/$', views.update_setting_push_logic, name='update_setting_push'),
     # 일반 설정 관련 Setting 수정
+    url(r'^update_setting_calendar_setting/$', views.update_setting_calendar_setting_logic,
+        name='update_setting_calendar_setting'),
     url(r'^update_setting_work_time/$', views.update_setting_work_time_logic, name='update_setting_work_time'),
-    url(r'^update_setting_auto_complete/$', views.update_setting_auto_complete_logic, name='update_setting_auto_complete'),
+    url(r'^update_setting_auto_complete/$', views.update_setting_auto_complete_logic,
+        name='update_setting_auto_complete'),
     # 출석체크 모드 Setting 수정
     url(r'^update_attend_mode_setting/$', views.update_attend_mode_setting_logic, name='update_attend_mode_setting'),
 

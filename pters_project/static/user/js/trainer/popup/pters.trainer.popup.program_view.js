@@ -133,8 +133,8 @@ class Program_view{
 
         let html = `
         <div class="program_view_upper_box" style="">
-            <div style="display:inline-block;width:320px;">
-                <div style="display:inline-block;width:320px;font-size:23px;font-weight:bold">
+            <div style="display:inline-block;">
+                <div style="display:inline-block;font-size:23px;font-weight:bold">
                     ${sub_html}
                 </div>
                 <span style="display:none;">${title}</span>

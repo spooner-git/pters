@@ -68,12 +68,22 @@ class Pters_pass_pay_cancel{
         if(this.data.cancel_type == 5){
             cancel_reason = this.dom_row_cancel_reason_textarea();
         }
-        let html =  '<article class="obj_input_box_full">' +
+        let html =  '<article class="obj_input_box_full" style="border-bottom:1px solid #f5f2f2;">' +
+                        this.dom_row_cancel_caution() + 
+                    '</article>' +
+                    '<article class="obj_input_box_full">' +
                         this.dom_assembly_sub_content() +
                         cancel_reason + 
                         this.dom_row_pters_pass_cancel_request_button() +
                     '</article>';
 
+        return html;
+    }
+
+    dom_row_cancel_caution(){
+        let html = `<div style="font-size:13px;color:#3b3d3d;">
+                        <p style="margin:0">해지 신청 시 다음 결제일 부터 미청구 됩니다.<br>즉시 해지를 원하실 경우, 해지 신청을 하신 후 [이용 문의]메뉴 를 통해 문의 주시면 처리를 도와 드리겠습니다.</p>
+                    </div>`;
         return html;
     }
     
@@ -126,7 +136,10 @@ class Pters_pass_pay_cancel{
         let onfocusout = (input_data)=>{
             this.data.cancel_reason = input_data;
         };
-        let html = CComponent.create_input_textarea_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, onfocusout);
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_:.,!@#\\s\\n 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
+        let pattern_message = "+ - _ : ! @ # 제외 특수문자는 입력 불가";
+        let required = "";
+        let html = CComponent.create_input_textarea_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, onfocusout, pattern, pattern_message, required);
         return html;
     }
 

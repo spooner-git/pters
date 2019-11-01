@@ -46,7 +46,7 @@ class Setting_worktime{
                 "dayoff":OFF
             }
         };
-        
+
         this.data_received;
 
         this.init();
@@ -60,6 +60,7 @@ class Setting_worktime{
     set_initial_data (){
         Setting_worktime_func.read((data)=>{
             this.data_received = data;
+
             //업무시간 데이터 체크
             let worktime_all_same = true;
             let worktimes = [data.setting_trainer_work_mon_time_avail, data.setting_trainer_work_tue_time_avail,
@@ -258,7 +259,6 @@ class Setting_worktime{
         let power = this.data.dayoff_visibility;
         let style = null;
         let detail_setting = CComponent.toggle_button (id, power, style, (data)=>{
-            console.log('data:::'+data);
             this.data.dayoff_visibility = data; // ON or OFF
             this.render_content();
         });
@@ -354,8 +354,8 @@ class Setting_worktime{
         let description = "<p style='font-size:14px;font-weight:500;'>설정된 시간만 일정표에 나타납니다.</p>";
         let html = `
         <div class="setting_worktime_upper_box">
-            <div style="display:inline-block;width:320px;">
-                <span style="display:inline-block;width:320px;font-size:23px;font-weight:bold">
+            <div style="display:inline-block;">
+                <span style="display:inline-block;font-size:23px;font-weight:bold">
                     ${title}
                     ${description}
                 </span>

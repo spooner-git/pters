@@ -119,9 +119,10 @@ class Lecture {
             let data = whole_data[i];
             let lecture_id = data.lecture_id;
             let lecture_name = data.lecture_name;
-            let lecture_note = data.lecture_note != "" ? data.lecture_note : " - ";
+            // let lecture_note = data.lecture_note != "" ? data.lecture_note : " - ";
             let lecture_max_member_number = data.lecture_max_num;
             let lecture_member_number = data.lecture_ing_member_num;
+            let lecture_class_hour = data.lecture_minute;
             let lecture_ing_bg_color = data.lecture_ing_color_cd;
 
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
@@ -137,7 +138,7 @@ class Lecture {
                                         ${lecture_name} 
                                     </div>
                                     <div class="lecture_note">
-                                        정원 - ${lecture_max_member_number}명
+                                        정원 - ${lecture_max_member_number}명 / 수업시간 - ${lecture_class_hour}분
                                     </div>
                                 </div>
                                 <div class="lecture_data_r">

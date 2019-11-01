@@ -688,6 +688,7 @@ def add_repeat_schedule_logic(request):
     lecture_id = request.POST.get('lecture_id', None)
     member_ids = request.POST.getlist('member_ids[]', '')
     en_dis_type = request.POST.get('en_dis_type', ON_SCHEDULE_TYPE)
+    note = request.POST.get('note', '')
     duplication_enable_flag = request.POST.get('duplication_enable_flag', SCHEDULE_DUPLICATION_ENABLE)
     class_id = request.session.get('class_id', '')
 
@@ -840,7 +841,7 @@ def add_repeat_schedule_logic(request):
                             schedule_result = func_add_schedule(class_id, member_ticket_id,
                                                                 repeat_schedule_info.repeat_schedule_id,
                                                                 lecture_id, None,
-                                                                schedule_start_datetime, schedule_end_datetime, '',
+                                                                schedule_start_datetime, schedule_end_datetime, note,
                                                                 en_dis_type, request.user.id,
                                                                 permission_state_cd,
                                                                 state_cd, duplication_enable_flag)
@@ -1044,7 +1045,8 @@ def add_repeat_schedule_confirm(request):
                                                         member_repeat_schedule_info.repeat_schedule_id,
                                                         lecture_info.lecture_id, schedule_info.schedule_id,
                                                         schedule_info.start_dt, schedule_info.end_dt,
-                                                        '', ON_SCHEDULE_TYPE, request.user.id, permission_state_cd,
+                                                        schedule_info.note,
+                                                        ON_SCHEDULE_TYPE, request.user.id, permission_state_cd,
                                                         state_cd, SCHEDULE_DUPLICATION_ENABLE)
 
                                                     error_temp = schedule_result['error']

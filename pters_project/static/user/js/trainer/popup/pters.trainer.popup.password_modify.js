@@ -76,8 +76,8 @@ class Password_modify{
         let title = "비밀번호 변경";
         let html = `
         <div class="password_modify_upper_box" style="">
-            <div style="display:inline-block;width:320px;">
-                <span style="display:inline-block;width:320px;font-size:23px;font-weight:bold">
+            <div style="display:inline-block;">
+                <span style="display:inline-block;font-size:23px;font-weight:bold">
                     ${title}
                 </span>
                 <span style="display:none;">${title}</span>

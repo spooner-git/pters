@@ -20,6 +20,7 @@ class Lecture_add{
                 name:null,
                 time:null,
                 capacity:null,
+                lecture_minute:null,
                 fixed_member_id:[],
                 fixed_member_name:[],
                 color_bg:[],
@@ -133,7 +134,7 @@ class Lecture_add{
     
     dom_assembly_content(){
         let name = this.dom_row_lecture_name_input();
-        let time = this.dom_row_lecture_time_input(); //수업 진행시간
+        let time = this.dom_row_lecture_minute_input(); //수업 진행시간
         let capacity = this.dom_row_capacity_input();
         let fixed_member = this.dom_row_fiexd_member_select();
         let fixed_member_list = this.dom_row_fixed_member_list();
@@ -143,6 +144,7 @@ class Lecture_add{
 
         let html =  '<div class="obj_input_box_full">'+CComponent.dom_tag('수업명') + name+'</div>' +
                     '<div class="obj_input_box_full">'+CComponent.dom_tag('정원') + capacity + '</div>' +
+                    '<div class="obj_input_box_full">'+CComponent.dom_tag('기본 수업 시간') + time + '</div>' +
                     '<div class="obj_input_box_full">'+CComponent.dom_tag('색상 태그')+ color+ '</div>' +
                     '<div class="obj_input_box_full">'+CComponent.dom_tag('생성시 수강권에 추가')+ ticket+ '</div>'
                      + '<div class="obj_input_box_full">'+CComponent.dom_tag('생성시 같은 이름의 수강권을 함께 생성')+ ticket_make+ '</div>';
@@ -181,25 +183,33 @@ class Lecture_add{
         return html;
     }
 
-    dom_row_lecture_time_input(){
-        let unit = '분';
-        let id = 'input_lecture_time';
-        let title = this.data.time == null ? '' : this.data.time+unit;
-        let placeholder = '진행 시간';
-        let icon = '/static/common/icon/icon_clock_black.png';
+    dom_row_lecture_minute_input(){
+        let id = "lecture_minute_input";
+        let title = this.data.lecture_minute == null ? "" : this.data.lecture_minute+'분';
+        let placeholder = "5분단위 입력가능*";
+        let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
         let disabled = false;
-        let pattern = "[0-9]{1,4}";
+        let onfocusout = (user_input_data)=>{
+            if(Number(user_input_data)%5 != 0){
+                show_error_message("기본 수업 시간은 5분 단위로 입력해주세요.");
+                this.render_content();
+                return false;
+            }
+            if(Number(user_input_data) <= 0){
+                show_error_message("기본 수업 시간은 0분 보다 크게 설정해주세요.");
+                this.render_content();
+                return false;
+            }
+            this.data.lecture_minute = user_input_data;
+            // console.log(user_input_data)
+        };
+        let pattern = "[0-9]{0,4}";
         let pattern_message = "";
         let required = "";
-        let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
-            if(input_data != '' && input_data != null){
-                input_data = Number(input_data);
-            }
-            this.time = input_data;
-        }, pattern, pattern_message, required);
+        let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, onfocusout, pattern, pattern_message, required);
         return html;
     }
   
@@ -361,15 +371,14 @@ class Lecture_add{
             "ing_color_cd":this.data.color_bg[0],
             "end_color_cd":"",
             "ing_font_color_cd":this.data.color_font[0],
-            "end_font_color_cd":""
+            "end_font_color_cd":"",
+            "lecture_minute":this.data.lecture_minute
         };
 
         Lecture_func.create(data, (received)=>{
-            console.log("received", received);
             //수업추가시 수강권에 바로 집어넣기 - Lecture_func.create에서 서버에서 lecture_id를 반환해줘야함
             for(let i=0; i<this.ticket.id.length; i++){
                 let data_to_send = {"ticket_id":this.ticket.id[i], "lecture_id":received.lecture_id};
-                console.log(data_to_send);
                 Ticket_func.update_lecture(ADD, data_to_send);
                 if(this.callback != undefined){
                     this.callback();
@@ -402,6 +411,10 @@ class Lecture_add{
         else{
             if(this.data.capacity <= 1){
                 show_error_message('정원은 2명보다 크게 설정해주세요.');
+                return false;
+            }
+            if(this.data.lecture_minute == null){
+                show_error_message("기본 수업 시간을 입력해주세요.");
                 return false;
             }
             return true;

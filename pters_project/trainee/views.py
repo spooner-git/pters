@@ -323,7 +323,7 @@ def add_trainee_schedule_logic(request):
     schedule_info = None
     member_ticket_id = None
     member_ticket_info = None
-    lt_res_member_time_duration = 60
+    # lt_res_member_time_duration = 60
 
     if class_id is None or class_id == '':
         error = '수강 정보를 불러오지 못했습니다.'
@@ -343,20 +343,31 @@ def add_trainee_schedule_logic(request):
     if error is None:
         error = func_check_select_date_reserve_setting(class_id, class_info.member_id, training_date)
 
-    if error is None:
-        try:
-            setting_data = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_id,
-                                                 setting_type_cd='LT_RES_MEMBER_TIME_DURATION')
-            lt_res_member_time_duration = int(setting_data.setting_info)
-        except ObjectDoesNotExist:
-            lt_res_member_time_duration = 60
+    # if error is None:
+    #     try:
+    #         setting_data = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_id,
+    #                                              setting_type_cd='LT_RES_MEMBER_TIME_DURATION')
+    #         lt_res_member_time_duration = int(setting_data.setting_info)
+    #     except ObjectDoesNotExist:
+    #         lt_res_member_time_duration = 60
 
     if error is None:
         if lecture_schedule_id is None or lecture_schedule_id == '':
-            if int(lt_res_member_time_duration) < 10:
-                time_duration_temp = class_info.class_hour*int(lt_res_member_time_duration)
+            try:
+                lecture_info = LectureTb.objects.get(class_tb_id=class_id, lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, use=USE)
+            except ObjectDoesNotExist:
+                lecture_info = None
+
+            if lecture_info is not None:
+                time_duration_temp = lecture_info.lecture_minute
             else:
-                time_duration_temp = int(lt_res_member_time_duration)
+                time_duration_temp = 60
+
+            # if int(lt_res_member_time_duration) < 10:
+            #     time_duration_temp = class_info.class_hour*int(lt_res_member_time_duration)
+            # else:
+            #     time_duration_temp = int(lt_res_member_time_duration)
+
             start_date = datetime.datetime.strptime(training_date+' '+training_time, '%Y-%m-%d %H:%M')
             end_date = start_date + datetime.timedelta(minutes=int(time_duration_temp))
         else:
@@ -598,13 +609,16 @@ def delete_trainee_schedule_logic(request):
         # func_update_member_schedule_alarm(class_id)
         # class_info.schedule_check = 1
         # class_info.save()
+        push_info_schedule_start_date = str(start_date).split(':')
+        push_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
         if lecture_name == '':
             lecture_name = '개인 레슨'
         log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
                          from_member_name=request.user.first_name,
                          class_tb_id=class_id, member_ticket_tb_id=member_ticket_info.member_ticket_id,
                          log_info=lecture_name + ' 수업',
-                         log_how='예약 취소', log_detail=str(start_date) + '/' + str(end_date), use=USE)
+                         log_how='예약 취소', log_detail=push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
+                                                     + '/' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1], use=USE)
         log_data.save()
 
         try:
@@ -614,8 +628,6 @@ def delete_trainee_schedule_logic(request):
         except ObjectDoesNotExist:
             lt_pus_from_trainee_lesson_alarm = FROM_TRAINEE_LESSON_ALARM_ON
         if lt_pus_from_trainee_lesson_alarm == FROM_TRAINEE_LESSON_ALARM_ON:
-            push_info_schedule_start_date = str(start_date).split(':')
-            push_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
             func_send_push_trainee(class_id,
                                    class_type_name + ' - 수업 알림',
                                    request.user.first_name + '님이 '
@@ -1251,20 +1263,26 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
             error = '예약 가능한 횟수를 확인해주세요.'
 
     if error is None:
+        log_info_schedule_start_date = str(start_date).split(':')
+        log_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
+
         if lecture_schedule_id is not None and lecture_schedule_id != '':
             log_data = LogTb(log_type='LS01', auth_member_id=request.user.id,
                              from_member_name=request.user.first_name,
                              class_tb_id=class_id,
                              member_ticket_tb_id=member_ticket_id,
                              log_info=lecture_schedule_info.get_lecture_name() + ' 수업', log_how='예약',
-                             log_detail=str(start_date) + '/' + str(end_date),  use=USE)
+                             log_detail=log_info_schedule_start_date[0] + ':' + log_info_schedule_start_date[1]
+                                        + '/' + log_info_schedule_end_date[0] + ':' + log_info_schedule_end_date[1],
+                             use=USE)
             log_data.save()
         else:
             log_data = LogTb(log_type='LS01', auth_member_id=request.user.id,
                              from_member_name=request.user.first_name,
                              class_tb_id=class_id, member_ticket_tb_id=member_ticket_id,
                              log_info='개인 레슨 수업', log_how='예약',
-                             log_detail=str(start_date) + '/' + str(end_date),
+                             log_detail=log_info_schedule_start_date[0] + ':' + log_info_schedule_start_date[1]
+                                        + '/' + log_info_schedule_end_date[0] + ':' + log_info_schedule_end_date[1],
                              use=USE)
             log_data.save()
     return schedule_result
@@ -1425,6 +1443,12 @@ class PopupCalendarPlanReserveView(LoginRequiredMixin, AccessTestMixin, Template
         start_date = datetime.datetime.strptime(select_date + ' 00:00', '%Y-%m-%d %H:%M')
         end_date = datetime.datetime.strptime(select_date + ' 23:59', '%Y-%m-%d %H:%M')
 
+        try:
+            lecture_tb_info = LectureTb.objects.get(class_tb_id=class_id, lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, use=USE)
+            context['one_to_one_lecture_time_duration'] = lecture_tb_info.lecture_minute
+        except ObjectDoesNotExist:
+            context['one_to_one_lecture_time_duration'] = 60
+
         # 그룹 스케쥴과 예약 가능 횟수 동시에 들고 와야할듯
         context = func_get_trainee_lecture_schedule(context, self.request.user.id, class_id, start_date, end_date)
         lecture_data = []
@@ -1457,7 +1481,6 @@ class PopupCalendarPlanReserveView(LoginRequiredMixin, AccessTestMixin, Template
                                 'lecture_name': lecture_schedule_info.lecture_tb.name,
                                 'lecture_member_ticket_avail_count': lecture_member_ticket_avail_count}
                 lecture_data.append(lecture_info)
-
         context['lecture_data'] = lecture_data
 
         return context

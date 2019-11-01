@@ -70,8 +70,8 @@ class Setting_alarm{
         let title = "알림";
         let html = `
         <div class="setting_autocomplete_upper_box" style="">
-            <div style="display:inline-block;width:320px;">
-                <span style="display:inline-block;width:320px;font-size:23px;font-weight:bold">
+            <div style="display:inline-block;">
+                <span style="display:inline-block;font-size:23px;font-weight:bold">
                     ${title}
                 </span>
                 <span style="display:none;">${title}</span>
