@@ -66,7 +66,7 @@ class Plan_repeat_list{
         document.querySelector(this.target.content).innerHTML = 
             `<div style="position:fixed;top:50%;left:50%;transform:translate(-50%, -50%);text-align:center;">
                 <img src="/static/common/loading.svg">
-                <div style="font-size:12px;color:#858282">사용자 데이터를 불러오고 있습니다.</div>
+                <div style="font-size:12px;color:#858282;word-break:keep-all">사용자 데이터를 불러오고 있습니다.</div>
             </div>`;
     }
 
@@ -270,8 +270,8 @@ class Plan_repeat_list{
         let title = "반복 일정";
         let html = `
         <div class="lecture_view_upper_box" style="">
-            <div style="display:inline-block;width:320px;">
-                <span style="display:inline-block;width:320px;font-size:23px;font-weight:bold">
+            <div style="display:inline-block;">
+                <span style="display:inline-block;font-size:23px;font-weight:bold">
                     ${title}
                 </span>
             </div>

@@ -19,7 +19,7 @@ class Lecture_view{
 
         this.data = {
                 name:null,
-                time:null,
+                lecture_minute:null,
                 capacity:null,
                 member_number:null,
                 member:[],
@@ -53,13 +53,13 @@ class Lecture_view{
         return this.data.name;
     }
 
-    set time(text){
-        this.data.time = text;
+    set lecture_minute(text){
+        this.data.lecture_minute = text;
         this.render_content();
     }
 
-    get time(){
-        return this.data.time;
+    get lecture_minute(){
+        return this.data.lecture_minute;
     }
 
     set capacity(number){
@@ -109,6 +109,7 @@ class Lecture_view{
     set_initial_data (){
         Lecture_func.read({"lecture_id": this.lecture_id}, (data)=>{
             this.data.name = data.lecture_name;
+            this.data.lecture_minute = data.lecture_minute; // lecture_minute 여기
             this.data.capacity = data.lecture_max_num;
             this.data.member_number = data.lecture_ing_member_num;
             this.data.member = data.lecture_member_list;
@@ -166,7 +167,7 @@ class Lecture_view{
     }
     
     dom_assembly_content(){
-        // let time = this.dom_row_lecture_time_input(); //수업 진행시간
+        let time = this.dom_row_lecture_minute_input(); //수업 진행시간
         // let name = this.dom_row_lecture_name_input();
         let capacity = this.dom_row_capacity_view();
         let color = this.dom_row_color_view();
@@ -174,7 +175,8 @@ class Lecture_view{
         let member_list = this.dom_row_member_list();
 
         let capacity_assembly = '<div class="obj_input_box_full">' + CComponent.dom_tag('정원') + capacity + '</div>';
-        let color_select_assembly =  '<div class="obj_input_box_full">' + CComponent.dom_tag('색상 태그') + color +  '</div>'
+        let lecture_lecture_minute = '<div class="obj_input_box_full">' + CComponent.dom_tag('기본 수업 시간') + time + '</div>';
+        let color_select_assembly =  '<div class="obj_input_box_full">' + CComponent.dom_tag('색상 태그') + color +  '</div>';
         let ticket_list_assembly = '<div class="obj_input_box_full" style="padding-top:16px;">' + CComponent.dom_tag(`이 수업을 포함하는 수강권 (${this.data.active_ticket_length} 개)`,
                                     {"font-size":"13px", "font-weight":"bold", "letter-spacing":"-0.6px", "padding":"0","padding-bottom":"8px", "color":"#858282", "height":"20px"})
                                     + ticket_list + '</div>';
@@ -188,6 +190,7 @@ class Lecture_view{
         }
 
         let html =  capacity_assembly +
+                    lecture_lecture_minute +
                     color_select_assembly +
                     ticket_list_assembly +
                     member_list_assembly;
@@ -279,6 +282,36 @@ class Lecture_view{
             this.capacity = user_input_data;
             this.send_data();
         }, pattern, pattern_message, required);
+        return html;
+    }
+
+    dom_row_lecture_minute_input(){
+        let id = "lecture_minute_input";
+        let title = this.data.lecture_minute == null ? "" : this.data.lecture_minute+'분';
+        let placeholder = "5분 단위로 입력";
+        let icon = NONE;
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
+        let style = null;
+        let disabled = false;
+        let onfocusout = (user_input_data)=>{
+            if(Number(user_input_data)%5 != 0){
+                show_error_message("기본 수업 시간은 5분 단위로 입력해주세요.");
+                this.render_content();
+                return false;
+            }
+            if(Number(user_input_data) <= 0){
+                show_error_message("기본 수업 시간은 0분 보다 크게 설정해주세요.");
+                this.render_content();
+                return false;
+            }
+            this.data.lecture_minute = user_input_data;
+            this.send_data();
+        };
+        let pattern = "[0-9]{0,4}";
+        let pattern_message = "";
+        let required = "";
+        let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, onfocusout, pattern, pattern_message, required);
         return html;
     }
 
@@ -416,6 +449,7 @@ class Lecture_view{
         }
         let data = {
             "lecture_id":this.lecture_id,
+            "lecture_minute":this.data.lecture_minute,
             "name":this.data.name,
             "member_num":this.data.capacity,
             "ing_color_cd":this.data.color_bg[0],

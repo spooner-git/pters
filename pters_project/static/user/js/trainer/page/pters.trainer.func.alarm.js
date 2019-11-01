@@ -155,7 +155,6 @@ class Alarm_func{
     
             //통신성공시 처리
             success:function (data){
-                console.log(data);
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
@@ -163,7 +162,6 @@ class Alarm_func{
                         return false;
                     }
                 }
-                // let jsondata = JSON.parse(data);
                 if(callback != undefined){
                     callback(data);
                 }

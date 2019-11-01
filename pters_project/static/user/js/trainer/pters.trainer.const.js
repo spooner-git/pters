@@ -130,6 +130,9 @@ const NOTICE = 'NOTICE';
 const NOTICE_FAQ = 'FAQ';
 const NOTICE_USAGE = 'SYS_USAGE';
 
+/* 시간 입력기 */
+const BASIC = 0;
+const CLASSIC = 1;
 
 /* 팝업 주소 */
 
@@ -169,6 +172,7 @@ const POPUP_ADDRESS_PROGRAM_LIST = 'popup_program_list';
 const POPUP_ADDRESS_PROGRAM_ADD = 'popup_program_add';
 const POPUP_ADDRESS_PROGRAM_VIEW = 'popup_program_view';
 
+const POPUP_ADDRESS_SETTING_CALENDAR = 'popup_setting_calendar';
 const POPUP_ADDRESS_SETTING_WORKTIME = 'popup_setting_worktime';
 const POPUP_ADDRESS_SETTING_AUTOCOMPLETE = 'popup_setting_autocomplete';
 const POPUP_ADDRESS_SETTING_RESERVE = 'popup_setting_reserve';

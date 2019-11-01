@@ -58,7 +58,7 @@ class Home {
         document.querySelector("#home_content_wrap").innerHTML = 
             `<div style="position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);text-align:center;">
                 <img src="/static/common/loading.svg">
-                <div style="font-size:12px;color:#858282">사용자 데이터를 불러오고 있습니다.</div>
+                <div style="font-size:12px;color:#858282;word-break:keep-all">사용자 데이터를 불러오고 있습니다.</div>
             </div>`;
     }
 

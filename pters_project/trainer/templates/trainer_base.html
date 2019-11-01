@@ -219,6 +219,7 @@
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.statistics.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.statistics_detail.js" %}></script>
 
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_calendar.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_worktime.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_autocomplete.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_reserve.js" %}></script>
@@ -384,6 +385,7 @@
     var program_add_popup;
     var program_view_popup;
 
+    var setting_calendar_popup;
     var setting_worktime_popup;
     var setting_autocomplete_popup;
     var setting_reserve_popup;
@@ -556,6 +558,10 @@
                 // menu.init();
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PROGRAM_LIST, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     program_list_popup = new Program_list('.popup_program_list')});
+            break;
+            case 'setting_calendar':
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_CALENDAR, 100, POPUP_FROM_RIGHT, null, ()=>{
+                                                    setting_calendar_popup = new Setting_calendar('.popup_setting_calendar')});
             break;
             case 'setting_worktime':
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_WORKTIME, 100, POPUP_FROM_RIGHT, null, ()=>{

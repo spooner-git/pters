@@ -12,7 +12,8 @@ from django.db.models.expressions import RawSQL
 
 from configs.const import USE, UN_USE, AUTO_FINISH_OFF, FROM_TRAINEE_LESSON_ALARM_ON, \
     TO_TRAINEE_LESSON_ALARM_OFF, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, STATE_CD_IN_PROGRESS, STATE_CD_FINISH,\
-    STATE_CD_ABSENCE, AUTH_TYPE_DELETE, STATE_CD_NOT_PROGRESS, SHOW
+    STATE_CD_ABSENCE, AUTH_TYPE_DELETE, STATE_CD_NOT_PROGRESS, SHOW, CALENDAR_TIME_SELECTOR_BASIC, \
+    LECTURE_TYPE_ONE_TO_ONE
 
 from login.models import MemberTb
 from schedule.models import ScheduleTb, RepeatScheduleTb
@@ -283,7 +284,8 @@ def func_get_member_lecture_list(class_id, member_id):
             lecture_info = {'lecture_id': str(lecture_tb.lecture_id),
                             'lecture_name': lecture_tb.name,
                             'lecture_note': lecture_tb.note,
-                            'lecture_max_num': lecture_tb.member_num
+                            'lecture_max_num': lecture_tb.member_num,
+                            'lecture_minute': lecture_tb.lecture_minute
                             }
             member_lecture_list[str(lecture_tb.lecture_id)] = lecture_info
 
@@ -605,7 +607,7 @@ def func_get_trainer_setting_list(context, user_id, class_id, class_hour):
     lt_res_05 = '7'
     lt_res_cancel_time = -1
     lt_res_enable_time = -1
-    lt_res_member_time_duration = 60
+    one_to_one_lecture_time_duration = 60
     lt_res_member_start_time = 'A-0'
     lt_schedule_auto_finish = AUTO_FINISH_OFF
     lt_member_ticket_auto_finish = AUTO_FINISH_OFF
@@ -619,6 +621,8 @@ def func_get_trainer_setting_list(context, user_id, class_id, class_hour):
     setting_week_start_date = 'SUN'
     setting_holiday_hide = SHOW
     setting_data = SettingTb.objects.filter(member_id=user_id, class_tb_id=class_id, use=USE)
+    setting_calendar_basic_select_time = 60
+    setting_calendar_time_selector_type = CALENDAR_TIME_SELECTOR_BASIC
 
     for setting_info in setting_data:
         if setting_info.setting_type_cd == 'LT_RES_01':
@@ -647,8 +651,8 @@ def func_get_trainer_setting_list(context, user_id, class_id, class_hour):
             lt_res_cancel_time = int(setting_info.setting_info)
         if setting_info.setting_type_cd == 'LT_RES_ENABLE_TIME':
             lt_res_enable_time = int(setting_info.setting_info)
-        if setting_info.setting_type_cd == 'LT_RES_MEMBER_TIME_DURATION':
-            lt_res_member_time_duration = int(setting_info.setting_info)
+        # if setting_info.setting_type_cd == 'LT_RES_MEMBER_TIME_DURATION':
+        #     lt_res_member_time_duration = int(setting_info.setting_info)
         if setting_info.setting_type_cd == 'LT_RES_MEMBER_START_TIME':
             lt_res_member_start_time = setting_info.setting_info
         if setting_info.setting_type_cd == 'LT_SCHEDULE_AUTO_FINISH':
@@ -671,6 +675,15 @@ def func_get_trainer_setting_list(context, user_id, class_id, class_hour):
             setting_week_start_date = setting_info.setting_info
         if setting_info.setting_type_cd == 'LT_HOLIDAY_HIDE':
             setting_holiday_hide = setting_info.setting_info
+        if setting_info.setting_type_cd == 'LT_CALENDAR_BASIC_SETTING_TIME':
+            setting_calendar_basic_select_time = setting_info.setting_info
+        if setting_info.setting_type_cd == 'LT_CALENDAR_TIME_SELECTOR_TYPE':
+            setting_calendar_time_selector_type = setting_info.setting_info
+    try:
+        lecture_info = LectureTb.objects.get(class_tb_id=class_id, lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, use=USE)
+        one_to_one_lecture_time_duration = lecture_info.lecture_minute
+    except ObjectDoesNotExist:
+        one_to_one_lecture_time_duration = 60
 
     if lt_res_cancel_time == -1:
         lt_res_cancel_time = lt_res_02*60
@@ -695,8 +708,8 @@ def func_get_trainer_setting_list(context, user_id, class_id, class_hour):
     for i in range(0, reserve_date_available):
         avail_date_list.append(str(today + datetime.timedelta(days=i)))
 
-    if lt_res_member_time_duration < 10:
-        lt_res_member_time_duration *= int(class_hour)
+    # if lt_res_member_time_duration < 10:
+    #     lt_res_member_time_duration *= int(class_hour)
 
     context['avail_date_data'] = avail_date_list
     context['setting_member_reserve_time_available'] = lt_res_01
@@ -712,7 +725,8 @@ def func_get_trainer_setting_list(context, user_id, class_id, class_hour):
     context['setting_member_reserve_date_available'] = lt_res_05
     context['setting_member_reserve_enable_time'] = lt_res_enable_time
     context['setting_member_reserve_cancel_time'] = lt_res_cancel_time
-    context['setting_member_time_duration'] = lt_res_member_time_duration
+    # context['setting_member_time_duration'] = one_to_one_lecture_time_duration
+    context['one_to_one_lecture_time_duration'] = one_to_one_lecture_time_duration
     context['setting_member_start_time'] = lt_res_member_start_time
     context['setting_schedule_auto_finish'] = lt_schedule_auto_finish
     context['setting_member_ticket_auto_finish'] = lt_member_ticket_auto_finish
@@ -724,6 +738,8 @@ def func_get_trainer_setting_list(context, user_id, class_id, class_hour):
     context['setting_attend_class_after_display_time'] = setting_attend_class_after_display_time
     context['setting_week_start_date'] = setting_week_start_date
     context['setting_holiday_hide'] = setting_holiday_hide
+    context['setting_calendar_basic_select_time'] = setting_calendar_basic_select_time
+    context['setting_calendar_time_selector_type'] = setting_calendar_time_selector_type
 
     return context
 
@@ -875,6 +891,7 @@ def func_get_lecture_info(class_id, lecture_id, user_id):
                         'lecture_end_color_cd': lecture_tb.end_color_cd,
                         'lecture_end_font_color_cd': lecture_tb.end_font_color_cd,
                         'lecture_type_cd': lecture_tb.lecture_type_cd,
+                        'lecture_minute': lecture_tb.lecture_minute,
                         'lecture_member_list': member_list}
     else:
         lecture_info = None
