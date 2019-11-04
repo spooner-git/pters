@@ -3125,7 +3125,16 @@ class ColorSelector{
             {color_code:"#ceeac4", color_font_code:"#282828"},
             {color_code:"#d8d6ff", color_font_code:"#282828"},
             {color_code:"#ead8f2", color_font_code:"#282828"},
-            {color_code:"#d9c3ab", color_font_code:"#282828"}
+            {color_code:"#d9c3ab", color_font_code:"#282828"},
+
+            {color_code:"#fe764e", color_font_code:"#f5f2f3"},
+            {color_code:"#ffd652", color_font_code:"#282828"},
+            {color_code:"#9de048", color_font_code:"#282828"},
+            {color_code:"#30c842", color_font_code:"#282828"},
+            {color_code:"#4b8aeb", color_font_code:"#f5f2f3"},
+            {color_code:"#5e51fe", color_font_code:"#f5f2f3"},
+            {color_code:"#9e41cc", color_font_code:"#f5f2f3"},
+            {color_code:"#664120", color_font_code:"#f5f2f3"}
         ];
         this.received_data = color_data;
         callback();
