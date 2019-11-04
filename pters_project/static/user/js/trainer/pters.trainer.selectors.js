@@ -46,6 +46,13 @@ class TwoTimeSelector{
         if(this.option.initial == null){
             this.option.initial = this.data.start[0];
         }
+
+        //일정 변경시, 일정의 원래 시작시간이 중복 일정에 걸러져 리스트에 없기 때문에 추가한다.
+        if(this.data.start.indexOf(this.option.initial) == -1){
+            this.data.start.push(this.option.initial);
+            this.data.start = this.data.start.sort();
+        }
+
         this.data.end = this.refine_end_data(this.option.initial).end_time_list;
         this.data.end_diff = this.refine_end_data(this.option.initial).end_time_diff_list;
         this.init();
@@ -233,7 +240,6 @@ class TwoTimeSelector{
                 $(`${self.targetHTML} li[data-spos="${Math.abs(self.hour_scroll.y)}"]`).css('color', '#1e1e1e');
                 self.hour_scroll_snapped = snap;
 
-                console.log(self.get_selected_data().data.start)
                 self.data.end = self.refine_end_data(self.get_selected_data().data.start).end_time_list;
                 self.data.end_diff = self.refine_end_data(self.get_selected_data().data.start).end_time_diff_list;
                 self.render_time2_list();
@@ -284,10 +290,17 @@ class TwoTimeSelector{
     }
 
     go_snap(time){
-        // let initial_pos = -(Number(hour)*600 + Math.round(Number(minute)/5)*5*10);
-        let initial_pos = -this.data.start.indexOf(time)*40;
+        let initial_index = this.data.start.indexOf(time);
+        let initial_pos = -initial_index*40;
         this.hour_scroll.scrollTo(0, initial_pos, 0, IScroll.utils.ease.bounce);
-        let end_pos = this.listing_option.five_minute_detail == OFF ? 0 : -40*( (Number(this.option.class_hour)/5)-1 )
+        
+        let end_index = (Number(this.option.class_hour)/5)-1;
+        if(this.data.end.length < end_index){
+            //종료시각 리스트 중에 찾고자 하는 값이 없을 경우, 종료시각 리스트의 가장 아래 값으로 선택한다.
+            end_index = this.data.end.length-1;
+        }
+        let end_pos = this.listing_option.five_minute_detail == OFF ? 0 : -40*end_index;
+
         this.hour2_scroll.scrollTo(0, end_pos, 0, IScroll.utils.ease.bounce);
         this.hour_scroll_snapped = initial_pos;
 
@@ -1586,7 +1599,6 @@ class TimeSelector{
             if(selected_time_data_form == '0:0'){
                 selected_time_data_form = '24:00';
             }
-            console.log(selected_time_data_form, min_time_data_form, TimeRobot.compare(selected_time_data_form, min_time_data_form));
 
             let time_compare = TimeRobot.compare(selected_time_data_form, min_time_data_form); // >= 일경우 true;
             if(time_compare == false){
@@ -2217,13 +2229,11 @@ class TimeSelector3{
                     self.render_minute_list(5);
                     self.set_iscroll_minute();
                     self.go_snap(hour - self.option.range.start, 0);
-                    console.log("go_snap", hour, 0)
                 }else{
                     // self.minute_end = 60;
                     self.render_minute_list();
                     self.set_iscroll_minute();
                     self.go_snap(hour - self.option.range.start, 0);
-                    console.log("go_snap", hour, 0)
                 }
 
                 let data_check = self.check_minimum_time();
@@ -2599,13 +2609,6 @@ class OptionSelector{
         document.querySelector(this.target.install).innerHTML = html_to_join.join('');
     }
 
-
-    //data 형태
-    // `{
-    //     사과:{value: 'apple', callback: ()=>{console.log('사과 Apple')} }, 
-    //     수박:{value: 'water_melon', callback: ()=>{console.log('수박 Water melon')} }, 
-    //     바나나:{value: 'banana', callback: ()=>{console.log('바나나 Banana')} }
-    // }`;
 }
 
 class TicketSelector{

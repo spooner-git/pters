@@ -2432,10 +2432,28 @@ class GetLectureInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
         class_id = self.request.session.get('class_id', '')
+        off_minute = self.request.session.get('setting_calendar_basic_select_time', 60)
         lecture_id = request.GET.get('lecture_id', '')
-
-        return JsonResponse(func_get_lecture_info(class_id, lecture_id, request.user.id),
-                            json_dumps_params={'ensure_ascii': True})
+        lecture_info = {}
+        if lecture_id is not None and lecture_id != '':
+            lecture_info = func_get_lecture_info(class_id, lecture_id, request.user.id)
+        else:
+            lecture_info = {'lecture_id': '', 'lecture_name': 'OFF',
+                            'lecture_note': '',
+                            'lecture_state_cd': STATE_CD_IN_PROGRESS, 'lecture_max_num': 0,
+                            'lecture_reg_dt': '', 'lecture_mod_dt': '',
+                            'lecture_ticket_list': [],
+                            'lecture_ticket_state_cd_list': [],
+                            'lecture_ticket_id_list': [],
+                            'lecture_ing_member_num': 0,
+                            'lecture_ing_color_cd': '',
+                            'lecture_ing_font_color_cd': '',
+                            'lecture_end_color_cd': '',
+                            'lecture_end_font_color_cd': '',
+                            'lecture_type_cd': 'OFF',
+                            'lecture_minute': off_minute,
+                            'lecture_member_list': []}
+        return JsonResponse(lecture_info, json_dumps_params={'ensure_ascii': True})
 
 
 class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):

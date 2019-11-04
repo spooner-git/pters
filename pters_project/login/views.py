@@ -47,7 +47,7 @@ from payment.functions import func_cancel_period_billing_schedule
 from payment.models import PaymentInfoTb, BillingInfoTb, BillingCancelInfoTb
 from schedule.models import ScheduleTb
 from trainee.models import MemberTicketTb, MemberMemberTicketTb
-from trainer.models import LectureMemberTb
+from trainer.models import LectureMemberTb, ClassTb, SettingTb, LectureTb
 from trainer.models import LectureMemberTicketTb
 from .forms import MyPasswordResetForm, MyPasswordChangeForm, MyRegistrationForm
 from .models import MemberTb, PushInfoTb, SnsInfoTb
@@ -164,42 +164,98 @@ class ServiceTestLoginView(TemplateView):
         context = super(ServiceTestLoginView, self).get_context_data(**kwargs)
 
         # db 업데이트용
-        group_lecture_list = LectureMemberTicketTb.objects.select_related('lecture_tb',
-                                                                          'member_ticket_tb__member').filter(fix_state_cd='FIX', use=USE)
-
-        for group_lecture_info in group_lecture_list:
-            lecture_member_count = LectureMemberTb.objects.filter(lecture_tb_id=group_lecture_info.lecture_tb_id,
-                                                                  member_id=group_lecture_info.member_ticket_tb.member_id,
-                                                                  use=USE).count()
-            if lecture_member_count == 0:
-                group_member_info = LectureMemberTb(class_tb_id=group_lecture_info.lecture_tb.class_tb_id,
-                                                    fix_state_cd='FIX',
-                                                    lecture_tb_id=group_lecture_info.lecture_tb_id,
-                                                    member_id=group_lecture_info.member_ticket_tb.member_id, use=USE)
-                group_member_info.save()
-        member_ticket_data = MemberTicketTb.objects.filter(member_auth_cd__isnull=True)
-        for member_ticket_info in member_ticket_data:
+        # DB 수업 시간 업데이트
+        class_data = ClassTb.objects.filter(use=USE)
+        for class_info in class_data:
+        #     setting_data = SettingTb.objects.filter(class_tb_id=class_info.class_id,
+        #                                             setting_type_cd='LT_CALENDAR_BASIC_SETTING_TIME')
+        #     if len(setting_data) > 1:
+        #         print('LT_CALENDAR_BASIC_SETTING_TIME:'+str(class_info.class_id))
+        #     setting_data2 = SettingTb.objects.filter(class_tb_id=class_info.class_id,
+        #                                              setting_type_cd='LT_CALENDAR_TIME_SELECTOR_TYPE')
+        #     if len(setting_data2) > 1:
+        #         print('LT_CALENDAR_TIME_SELECTOR_TYPE:'+str(class_info.class_id))
             try:
-                member_member_ticket_info = MemberMemberTicketTb.objects.get(member_ticket_tb_id=member_ticket_info.member_ticket_id)
-                member_ticket_info.member_auth_cd = member_member_ticket_info.auth_cd
-                member_ticket_info.save()
+                setting_info = SettingTb.objects.get(class_tb_id=class_info.class_id,
+                                                     setting_type_cd='LT_RES_MEMBER_TIME_DURATION')
+                update_setting_hour = int(setting_info.setting_info)
+                if update_setting_hour < 10:
+                    update_setting_hour = int(class_info.class_hour)*int(setting_info.setting_info)
+
+                try:
+                    update_setting_data = SettingTb.objects.get(member_id=class_info.member_id,
+                                                                class_tb_id=class_info.class_id,
+                                                                setting_type_cd='LT_CALENDAR_BASIC_SETTING_TIME')
+                except ObjectDoesNotExist:
+                    update_setting_data = SettingTb(member_id=class_info.member_id,  class_tb_id=class_info.class_id,
+                                                    setting_type_cd='LT_CALENDAR_BASIC_SETTING_TIME', use=USE)
+                update_setting_data.setting_info = str(update_setting_hour)
+                update_setting_data.save()
+
+                lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id)
+                lecture_data.update(lecture_minute=update_setting_hour)
             except ObjectDoesNotExist:
-                member_lecture = None
-        schedule_data = ScheduleTb.objects.select_related('lecture_tb').filter(ing_color_cd__isnull=True,
-                                                                               en_dis_type=ON_SCHEDULE_TYPE)
-        for schedule_info in schedule_data:
-            if schedule_info.lecture_tb is not None and schedule_info.lecture_tb != '':
-                schedule_info.max_mem_count = schedule_info.lecture_tb.member_num
-                schedule_info.ing_color_cd = schedule_info.lecture_tb.ing_color_cd
-                schedule_info.ing_font_color_cd = schedule_info.lecture_tb.ing_font_color_cd
-                schedule_info.end_color_cd = schedule_info.lecture_tb.end_color_cd
-                schedule_info.end_font_color_cd = schedule_info.lecture_tb.end_font_color_cd
-            else:
-                schedule_info.ing_color_cd = '#fbf3bd'
-                schedule_info.ing_font_color_cd = '#282828'
-                schedule_info.end_color_cd = '#d2d1cf'
-                schedule_info.end_font_color_cd = '#282828'
-            schedule_info.save()
+                try:
+                    update_setting_data = SettingTb.objects.get(member_id=class_info.member_id,
+                                                                class_tb_id=class_info.class_id,
+                                                                setting_type_cd='LT_CALENDAR_BASIC_SETTING_TIME')
+                except ObjectDoesNotExist:
+                    update_setting_data = SettingTb(member_id=class_info.member_id,  class_tb_id=class_info.class_id,
+                                                    setting_type_cd='LT_CALENDAR_BASIC_SETTING_TIME', use=USE)
+                update_setting_data.setting_info = str(class_info.class_hour)
+                update_setting_data.save()
+                lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id)
+                lecture_data.update(lecture_minute=class_info.class_hour)
+
+            try:
+                update_setting_data2 = SettingTb.objects.get(member_id=class_info.member_id,
+                                                             class_tb_id=class_info.class_id,
+                                                             setting_type_cd='LT_CALENDAR_TIME_SELECTOR_TYPE')
+            except ObjectDoesNotExist:
+                update_setting_data2 = SettingTb(member_id=class_info.member_id, class_tb_id=class_info.class_id,
+                                                 setting_type_cd='LT_CALENDAR_TIME_SELECTOR_TYPE', use=USE)
+
+            update_setting_data2.setting_info = '0'
+            update_setting_data2.save()
+
+            # setting_data.delete()
+
+        # group_lecture_list = LectureMemberTicketTb.objects.select_related('lecture_tb',
+        #                                                                   'member_ticket_tb__member').filter(fix_state_cd='FIX', use=USE)
+        #
+        # for group_lecture_info in group_lecture_list:
+        #     lecture_member_count = LectureMemberTb.objects.filter(lecture_tb_id=group_lecture_info.lecture_tb_id,
+        #                                                           member_id=group_lecture_info.member_ticket_tb.member_id,
+        #                                                           use=USE).count()
+        #     if lecture_member_count == 0:
+        #         group_member_info = LectureMemberTb(class_tb_id=group_lecture_info.lecture_tb.class_tb_id,
+        #                                             fix_state_cd='FIX',
+        #                                             lecture_tb_id=group_lecture_info.lecture_tb_id,
+        #                                             member_id=group_lecture_info.member_ticket_tb.member_id, use=USE)
+        #         group_member_info.save()
+        # member_ticket_data = MemberTicketTb.objects.filter(member_auth_cd__isnull=True)
+        # for member_ticket_info in member_ticket_data:
+        #     try:
+        #         member_member_ticket_info = MemberMemberTicketTb.objects.get(member_ticket_tb_id=member_ticket_info.member_ticket_id)
+        #         member_ticket_info.member_auth_cd = member_member_ticket_info.auth_cd
+        #         member_ticket_info.save()
+        #     except ObjectDoesNotExist:
+        #         member_lecture = None
+        # schedule_data = ScheduleTb.objects.select_related('lecture_tb').filter(ing_color_cd__isnull=True,
+        #                                                                        en_dis_type=ON_SCHEDULE_TYPE)
+        # for schedule_info in schedule_data:
+        #     if schedule_info.lecture_tb is not None and schedule_info.lecture_tb != '':
+        #         schedule_info.max_mem_count = schedule_info.lecture_tb.member_num
+        #         schedule_info.ing_color_cd = schedule_info.lecture_tb.ing_color_cd
+        #         schedule_info.ing_font_color_cd = schedule_info.lecture_tb.ing_font_color_cd
+        #         schedule_info.end_color_cd = schedule_info.lecture_tb.end_color_cd
+        #         schedule_info.end_font_color_cd = schedule_info.lecture_tb.end_font_color_cd
+        #     else:
+        #         schedule_info.ing_color_cd = '#fbf3bd'
+        #         schedule_info.ing_font_color_cd = '#282828'
+        #         schedule_info.end_color_cd = '#d2d1cf'
+        #         schedule_info.end_font_color_cd = '#282828'
+        #     schedule_info.save()
         return context
 
 

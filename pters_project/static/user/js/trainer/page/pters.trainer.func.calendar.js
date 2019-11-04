@@ -62,6 +62,7 @@ class Calendar {
         this.touch_timer = 0;
         this.touch_sense;
         this.long_touch_target = null;
+        this.long_touch_target_height;
 
         this.latest_received_data;
     }
@@ -1121,12 +1122,17 @@ class Calendar {
         let hour = Math.floor(offset_hour);
         let minute = 60*(offset_hour - hour);
         let period_min = 30;
+        let indicator_height = this.long_touch == ON ? Number(this.long_touch_target_height) : Number(this.calendar_basic_time_select);
 
         indicator.classList.add('week_indicator');
         indicator.style.top = offset_px+'px';
-        indicator.style.height = this.calendar_basic_time_select+'px';
+        indicator.style.height = indicator_height+'px';
+
+
         if(this.week_zoomed.vertical.activate == true){
-            indicator.style.height = 3*this.calendar_basic_time_select+'px';
+            if(this.long_touch != ON){
+                indicator.style.height = 3*indicator_height+'px';
+            }
         }
         indicator.setAttribute('onclick', "event.stopPropagation();$('.week_indicator').remove()");
         event.target.appendChild(indicator);
@@ -1249,6 +1255,7 @@ class Calendar {
 
     longtouchstart(this_, callback){
         if(this.long_touch == OFF){
+            this.long_touch_target_height = $(this_).height();
             this.touch_sense = setInterval(()=>{this.touch_timer+= 100;
                                         if(this.touch_timer >= 900){
                                             this.mode_to_plan_change(ON, this_);

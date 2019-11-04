@@ -27,11 +27,11 @@
                         <div class="obj_tag obj_font_bg_white_black">예약완료</div>
                     </div> -->
                     <div  class="wrapper_img_lesson_type">
-                        <img src="{% static_url "common/icon/member_icon_people_black.png" %}">
+                       {% if schedule_info.max_mem_count == 1 %}<img src="{% static_url "common/icon/member_icon_person_black.png" %}">{% else %}<img src="{% static_url "common/icon/member_icon_people_black.png" %}">{% endif %}
                     </div>
                     
                     <div class="wrapper_member_ticket_title obj_font_size_15_weight_500">
-                        ({% if schedule_info.lecture_tb.member_num == 1 %}개인{% else %}그룹{% endif %}) {{ schedule_info.lecture_tb.name }}
+                        ({% if schedule_info.max_mem_count == 1 %}개인{% else %}그룹{% endif %}) {% if schedule_info.max_mem_count == 1 %}개인 수업{% else %}{{ schedule_info.lecture_tb.name }}{% endif %}
                     </div>
                     <div class="wrapper_plan_info">
                         <div class="obj_table_raw obj_font_size_10_weight_500 obj_font_color_light_grey">

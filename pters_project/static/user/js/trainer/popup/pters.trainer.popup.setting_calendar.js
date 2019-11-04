@@ -152,7 +152,7 @@ class Setting_calendar{
         let html = `<div class="select_wrap ${selected_or_not}" id="input_method_classic">
                         <div class="select_indicator">
                             ${CComponent.radio_button("time_input_select_classic", this.data.calendar_time_input_type == CLASSIC ? ON : OFF, {"transform":"scale(1.2)", "display":"inline-block", "margin-right":"5px"}, ()=>{})}
-                            <span>클래식</span>
+                            <span>클래식</span><span style="color:#fe4e65;font-size:11px;"> (베타)</span>
                             <p>시작과 종료시각을 한번에 설정 합니다. <br>겹치는 일정은 필터링 할 수 있습니다.</p>
                         </div>
                         <div>
