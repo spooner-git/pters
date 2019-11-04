@@ -230,54 +230,54 @@ class Mypage{
     event_edit_photo(){
         let user_option = {
             change:{text:"프로필 사진 변경", callback:()=>{
-                    show_error_message("기능을 준비중입니다.");
-                    // layer_popup.close_layer_popup();
-                    // let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
-                    // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MYPAGE_PHOTO_UPDATE, 100, popup_style, null, ()=>{
-                    //     mypage_photo_update_popup = new Mypage_photo_update('.popup_mypage_photo_update', 'mypage_photo_update_popup'); 
-                    // });
+                    // show_error_message("기능을 준비중입니다.");
+                    layer_popup.close_layer_popup();
+                    let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MYPAGE_PHOTO_UPDATE, 100, popup_style, null, ()=>{
+                        mypage_photo_update_popup = new Mypage_photo_update('.popup_mypage_photo_update', 'mypage_photo_update_popup');
+                    });
                 }
             },
             delete:{text:"프로필 사진 삭제", callback:()=>{
-                    show_error_message("기능을 준비중입니다.");
-                    // $.ajax({
-                    //     url: '/delete_profile_img/',
-                    //     dataType : 'html',
-                    //     type:'POST',
+                    // show_error_message("기능을 준비중입니다.");
+                    $.ajax({
+                        url: '/delete_profile_img/',
+                        dataType : 'html',
+                        type:'POST',
 
-                    //     beforeSend: function (xhr, settings) {
-                    //         if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                    //             xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                    //         }
-                    //         ajax_load_image(SHOW);
-                    //     },
+                        beforeSend: function (xhr, settings) {
+                            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                            }
+                            ajax_load_image(SHOW);
+                        },
 
-                    //     success:function(data){
-                    //         check_app_version(data);
-                    //         let jsondata = JSON.parse(data);
-                    //         if(jsondata.messageArray.length>0){
-                    //             show_error_message(jsondata.messageArray);
-                    //             return false;
-                    //         }
-                    //         try{
-                    //             current_page.init();
-                    //         }catch(e){}
-                    //         try{
-                    //             pc_top_toolbar_user_info_update();
-                    //             mypage_popup.init();
-                    //         }catch(e){}
-                    //     },
+                        success:function(data){
+                            check_app_version(data);
+                            let jsondata = JSON.parse(data);
+                            if(jsondata.messageArray.length>0){
+                                show_error_message(jsondata.messageArray);
+                                return false;
+                            }
+                            try{
+                                current_page.init();
+                            }catch(e){}
+                            try{
+                                pc_top_toolbar_user_info_update();
+                                mypage_popup.init();
+                            }catch(e){}
+                        },
 
-                    //     complete:function(){
-                    //         ajax_load_image(HIDE);
-                    //     },
+                        complete:function(){
+                            ajax_load_image(HIDE);
+                        },
 
-                    //     error:function(){
-                    //         //alert('통신이 불안정합니다.');
-                    //         show_error_message('통신이 불안정합니다.');
-                    //     }
-                    // });
-                    // layer_popup.close_layer_popup();
+                        error:function(){
+                            //alert('통신이 불안정합니다.');
+                            show_error_message('통신이 불안정합니다.');
+                        }
+                    });
+                    layer_popup.close_layer_popup();
                 }
             }
         };
