@@ -78,7 +78,9 @@ class Calendar {
 
         let component = this.static_component();
         document.querySelector(this.targetHTML).innerHTML = component.initial_page;
-        this.mode_to_plan_change(OFF);
+        if(this.long_touch == ON){
+            this.mode_to_plan_change(OFF);
+        }
         Setting_reserve_func.read((data)=>{
 
             this.work_time_info.full = data;
@@ -1282,6 +1284,10 @@ class Calendar {
     }
 
     mode_to_plan_change(switching, this_){
+        if(this.cal_type == "month"){
+            this.go_month();
+            return;
+        }
         switch(switching){
             case ON:
                 this.long_touch = ON;
