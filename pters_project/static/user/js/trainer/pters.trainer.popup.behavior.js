@@ -176,7 +176,15 @@ let layer_popup = (function (){
             }
         },
 
-        "stack": popup_array
+        "stack": popup_array,
+
+        "disable_shade_click_close": function(){
+            $('#shade_for_popup_basic').attr('onclick', '');
+        },
+        
+        "enable_shade_click_close": function(){
+            $('#shade_for_popup_basic').attr('onclick', 'layer_popup.close_layer_popup()');
+        }
 
     };
 
@@ -383,6 +391,8 @@ function func_set_shade (popup_array_length){
         $('#shade_for_popup_basic').css({"display":'none', "z-index":0});
     }
 }
+
+
 
 /**
  * @param popup_name            basic 팝업 이름
