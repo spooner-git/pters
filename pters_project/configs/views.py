@@ -314,10 +314,10 @@ def get_function_auth_type_cd(request):
             if len(function_list) > 0:
                 if payment_data_counter == 0:
                     request.session['product_type_name'] += function_list[0].product_tb.name
-                    request.session['product_id'] = function_list[0].product_tb.product_id
+                    request.session['product_id'] = str(function_list[0].product_tb.product_id)
                 else:
                     request.session['product_type_name'] += ',' + function_list[0].product_tb.name
-                    request.session['product_id'] += ',' + function_list[0].product_tb.product_id
+                    request.session['product_id'] += ',' + str(function_list[0].product_tb.product_id)
 
             for function_info in function_list:
                 auth_info = {}
