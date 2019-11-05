@@ -42,7 +42,7 @@ class Member_ticket_refund{
 
     set_initial_data (){
         this.data.member_ticket_id = this.external_data.member_ticket_id;
-        this.data.refund_date = `${this.dates.current_year}-${this.dates.current_month}-${this.dates.current_date}`;
+        this.data.refund_date = DateRobot.to_yyyymmdd(this.dates.current_year, this.dates.current_month, this.dates.current_date);
         this.data.member_ticket_name = this.external_data.member_ticket_name;
         this.data.member_ticket_price = this.external_data.member_ticket_price;
         this.data.member_ticket_start_date = this.external_data.member_ticket_start_date;
@@ -133,7 +133,7 @@ class Member_ticket_refund{
                 let date_min = Number(this.data.member_ticket_start_date.split('-')[2]);
                 
                 date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'refund_date', title:'환불 일자', data:{year:year, month:month, date:date}, min:{year:year_min, month:month_min, date:date_min},callback_when_set: (object)=>{ 
-                    this.data.refund_date = `${object.data.year}-${object.data.month}-${object.data.date}`;
+                    this.data.refund_date = DateRobot.to_yyyymmdd(object.data.year, object.data.month, object.data.date);
                     this.render_content();
                 }});
             });

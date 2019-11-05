@@ -29,7 +29,7 @@ class Statistics{
         };
 
         this.target_date_start = DateRobot.add_month(`${this.dates.current_year}-${this.dates.current_month}-1`, -2);
-        this.target_date_end = `${this.dates.current_year}-${this.dates.current_month}-${this.dates.current_last_date}`;
+        this.target_date_end = DateRobot.to_yyyymmdd(this.dates.current_year, this.dates.current_month, this.dates.current_last_date);
         let inspect = pass_inspector.statistics(this.target_date_start, this.target_date_end);
         if(inspect.barrier == BLOCKED){
             this.target_date_start = DateRobot.add_month(`${this.dates.current_year}-${this.dates.current_month}-1`, (1 - inspect.limit_num) );
@@ -164,7 +164,7 @@ class Statistics{
         let end_month_date = data.month_date[length-1];
         
         let last_date_of_end_month = new Date(end_month_date.split('-')[0], end_month_date.split('-')[1], 0).getDate();
-        let end_month_last_date = `${end_month_date.split('-')[0]}-${end_month_date.split('-')[1]}-${last_date_of_end_month}`;
+        let end_month_last_date = DateRobot.to_yyyymmdd(end_month_date.split('-')[0], end_month_date.split('-')[1], last_date_of_end_month);
         end_month_date = end_month_last_date.replace(/-/gi, ".");
         
         let price_sum = MathRobot.array_sum(data.price);
@@ -206,7 +206,7 @@ class Statistics{
         let end_month_date = data.month_date[length-1];
         
         let last_date_of_end_month = new Date(end_month_date.split('-')[0], end_month_date.split('-')[1], 0).getDate();
-        let end_month_last_date = `${end_month_date.split('-')[0]}-${end_month_date.split('-')[1]}-${last_date_of_end_month}`;
+        let end_month_last_date = DateRobot.to_yyyymmdd(end_month_date.split('-')[0], end_month_date.split('-')[1], last_date_of_end_month);
         end_month_date = end_month_last_date.replace(/-/gi, ".");
 
         let search_button = this.dom_search_button();
@@ -508,7 +508,7 @@ class Statistics{
         let user_option = {
             one:{text:"1 개월", callback:()=>{  
                 let date1 = DateRobot.add_month(`${this.dates.current_year}-${this.dates.current_month}-1`, 0);
-                let date2 = `${this.dates.current_year}-${this.dates.current_month}-${this.dates.current_last_date}`;
+                let date2 = DateRobot.to_yyyymmdd(this.dates.current_year, this.dates.current_month, this.dates.current_last_date);
                 if(this.pass_inspect(date1, date2) == false){
                     return false;
                 }
@@ -519,7 +519,7 @@ class Statistics{
             },
             three:{text:"3 개월", callback:()=>{  
                 let date1 = DateRobot.add_month(`${this.dates.current_year}-${this.dates.current_month}-1`, -2);
-                let date2 = `${this.dates.current_year}-${this.dates.current_month}-${this.dates.current_last_date}`;
+                let date2 = DateRobot.to_yyyymmdd(this.dates.current_year, this.dates.current_month, this.dates.current_last_date);
                 if(this.pass_inspect(date1, date2) == false){
                     return false;
                 }
@@ -530,7 +530,7 @@ class Statistics{
             },
             six:{text:"6 개월", callback:()=>{  
                 let date1 = DateRobot.add_month(`${this.dates.current_year}-${this.dates.current_month}-1`, -5);
-                let date2 = `${this.dates.current_year}-${this.dates.current_month}-${this.dates.current_last_date}`;
+                let date2 = DateRobot.to_yyyymmdd(this.dates.current_year, this.dates.current_month, this.dates.current_last_date);
                 if(this.pass_inspect(date1, date2) == false){
                     return false;
                 }
@@ -541,7 +541,7 @@ class Statistics{
             },
             twelve:{text:"12 개월", callback:()=>{  
                 let date1 = DateRobot.add_month(`${this.dates.current_year}-${this.dates.current_month}-1`, -11);
-                let date2 = `${this.dates.current_year}-${this.dates.current_month}-${this.dates.current_last_date}`;
+                let date2 = DateRobot.to_yyyymmdd(this.dates.current_year, this.dates.current_month, this.dates.current_last_date);
                 if(this.pass_inspect(date1, date2) == false){
                     return false;
                 }
@@ -569,10 +569,10 @@ class Statistics{
                             if(this.pass_inspect(date_1, date_2) == false){
                                 return false;
                             }
-                            let date1 = date_1;
-                            let date2 = date_2;
-                            this.target_date_start = `${date1}-01`;
-                            this.target_date_end = `${date2}-01`;
+                            // let date1 = date_1;
+                            // let date2 = date_2;
+                            this.target_date_start = DateRobot.to_yyyymmdd(selected_data.data1.year, selected_data.data1.month, 1);
+                            this.target_date_end = DateRobot.to_yyyymmdd(selected_data.data2.year, selected_data.data2.month, 1);
                             this.init();
                             layer_popup.close_layer_popup();
                         }});

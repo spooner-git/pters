@@ -613,7 +613,7 @@ class Member_view{
                     "member_id": this.member_id,
                     "first_name": this.data.name,
                     "phone":this.data.phone == null ? "" : this.data.phone,
-                    "birthday": `${this.data.birth != null ? this.data.birth.year+'-'+this.data.birth.month+'-'+this.data.birth.date : ''}`,
+                    "birthday": `${this.data.birth != null ? DateRobot.to_yyyymmdd(this.data.birth.year, this.data.birth.month, this.data.birth.date) : ''}`,
                     "sex":this.data.sex == null ? "" : this.data.sex,
                     // "note":this.data.memo,
         };

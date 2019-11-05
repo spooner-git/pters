@@ -225,7 +225,7 @@ class Member_ticket_modify{
                 let date = this.data.start_date.split('-')[2];
                 
                 date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'birth', title:'일자', data:{year:year, month:month, date:date}, callback_when_set: (object)=>{ 
-                    this.data.start_date = `${object.data.year}-${object.data.month}-${object.data.date}`;
+                    this.data.start_date = DateRobot.to_yyyymmdd(object.data.year, object.data.month, object.data.date);
                     this.render_content();
                 }});
             });
@@ -253,7 +253,7 @@ class Member_ticket_modify{
                 let date_min = Number(this.data.start_date.split('-')[2]);
                 
                 date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'birth', title:'일자', data:{year:year, month:month, date:date}, min:{year:year_min, month:month_min, date:date_min}, callback_when_set: (object)=>{ 
-                    this.data.end_date = `${object.data.year}-${object.data.month}-${object.data.date}`;
+                    this.data.end_date = DateRobot.to_yyyymmdd(object.data.year, object.data.month, object.data.date);
                     this.render_content();
                 }});
             });
@@ -281,7 +281,7 @@ class Member_ticket_modify{
                 let date_min = this.data.start_date.split('-')[2];
                 
                 date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'birth', title:'일자', data:{year:year, month:month, date:date}, min:{year:year_min, month:month_min, date:date_min}, callback_when_set: (object)=>{ 
-                    this.data.refund_date = `${object.data.year}-${object.data.month}-${object.data.date}`;
+                    this.data.refund_date = DateRobot.to_yyyymmdd(object.data.year, object.data.month, object.data.date);
                     this.render_content();
                 }});
             });

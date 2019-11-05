@@ -93,7 +93,7 @@ class Plan_view{
     }
 
     set start_time (data){
-        this.data.start_time = `${data.data.hour}:${data.data.minute}`;
+        this.data.start_time = TimeRobot.to_hhmm(data.data.hour, data.data.minute).complete;
         this.data.start_time_text = data.text + ' 부터';
         this.data.end_time_text = TimeRobot.to_text(this.data.end_time) + ' 까지 <span style="font-size:11px;">('+TimeRobot.diff_min(this.data.start_time, this.data.end_time)+'분 진행)</span>';
         this.render_content();
@@ -104,7 +104,7 @@ class Plan_view{
     }
 
     set end_time (data){
-        this.data.end_time = `${data.data.hour}:${data.data.minute}`;
+        this.data.end_time = TimeRobot.to_hhmm(data.data.hour, data.data.minute);
         this.data.end_time_text = data.text + ' 까지 <span style="font-size:11px;">('+TimeRobot.diff_min(this.data.start_time, this.data.end_time)+'분 진행)</span>';
         this.render_content();
     }
