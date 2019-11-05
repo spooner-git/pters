@@ -165,8 +165,8 @@ class ServiceTestLoginView(TemplateView):
 
         # db 업데이트용
         # DB 수업 시간 업데이트
-        # class_data = ClassTb.objects.filter(use=USE)
-        # for class_info in class_data:
+        class_data = ClassTb.objects.filter(use=USE)
+        for class_info in class_data:
         #     setting_data = SettingTb.objects.filter(class_tb_id=class_info.class_id,
         #                                             setting_type_cd='LT_CALENDAR_BASIC_SETTING_TIME')
         #     if len(setting_data) > 1:
@@ -175,48 +175,48 @@ class ServiceTestLoginView(TemplateView):
         #                                              setting_type_cd='LT_CALENDAR_TIME_SELECTOR_TYPE')
         #     if len(setting_data2) > 1:
         #         print('LT_CALENDAR_TIME_SELECTOR_TYPE:'+str(class_info.class_id))
-            # try:
-            #     setting_info = SettingTb.objects.get(class_tb_id=class_info.class_id,
-            #                                          setting_type_cd='LT_RES_MEMBER_TIME_DURATION')
-            #     update_setting_hour = int(setting_info.setting_info)
-            #     if update_setting_hour < 10:
-            #         update_setting_hour = int(class_info.class_hour)*int(setting_info.setting_info)
-            #
-            #     try:
-            #         update_setting_data = SettingTb.objects.get(member_id=class_info.member_id,
-            #                                                     class_tb_id=class_info.class_id,
-            #                                                     setting_type_cd='LT_CALENDAR_BASIC_SETTING_TIME')
-            #     except ObjectDoesNotExist:
-            #         update_setting_data = SettingTb(member_id=class_info.member_id,  class_tb_id=class_info.class_id,
-            #                                         setting_type_cd='LT_CALENDAR_BASIC_SETTING_TIME', use=USE)
-            #     update_setting_data.setting_info = str(update_setting_hour)
-            #     update_setting_data.save()
-            #
-            #     lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id)
-            #     lecture_data.update(lecture_minute=update_setting_hour)
-            # except ObjectDoesNotExist:
-            #     try:
-            #         update_setting_data = SettingTb.objects.get(member_id=class_info.member_id,
-            #                                                     class_tb_id=class_info.class_id,
-            #                                                     setting_type_cd='LT_CALENDAR_BASIC_SETTING_TIME')
-            #     except ObjectDoesNotExist:
-            #         update_setting_data = SettingTb(member_id=class_info.member_id,  class_tb_id=class_info.class_id,
-            #                                         setting_type_cd='LT_CALENDAR_BASIC_SETTING_TIME', use=USE)
-            #     update_setting_data.setting_info = str(class_info.class_hour)
-            #     update_setting_data.save()
-            #     lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id)
-            #     lecture_data.update(lecture_minute=class_info.class_hour)
-            #
-            # try:
-            #     update_setting_data2 = SettingTb.objects.get(member_id=class_info.member_id,
-            #                                                  class_tb_id=class_info.class_id,
-            #                                                  setting_type_cd='LT_CALENDAR_TIME_SELECTOR_TYPE')
-            # except ObjectDoesNotExist:
-            #     update_setting_data2 = SettingTb(member_id=class_info.member_id, class_tb_id=class_info.class_id,
-            #                                      setting_type_cd='LT_CALENDAR_TIME_SELECTOR_TYPE', use=USE)
-            #
-            # update_setting_data2.setting_info = '0'
-            # update_setting_data2.save()
+            try:
+                setting_info = SettingTb.objects.get(class_tb_id=class_info.class_id,
+                                                     setting_type_cd='LT_RES_MEMBER_TIME_DURATION')
+                update_setting_hour = int(setting_info.setting_info)
+                if update_setting_hour < 10:
+                    update_setting_hour = int(class_info.class_hour)*int(setting_info.setting_info)
+
+                try:
+                    update_setting_data = SettingTb.objects.get(member_id=class_info.member_id,
+                                                                class_tb_id=class_info.class_id,
+                                                                setting_type_cd='LT_CALENDAR_BASIC_SETTING_TIME')
+                except ObjectDoesNotExist:
+                    update_setting_data = SettingTb(member_id=class_info.member_id,  class_tb_id=class_info.class_id,
+                                                    setting_type_cd='LT_CALENDAR_BASIC_SETTING_TIME', use=USE)
+                update_setting_data.setting_info = str(update_setting_hour)
+                update_setting_data.save()
+
+                lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id)
+                lecture_data.update(lecture_minute=update_setting_hour)
+            except ObjectDoesNotExist:
+                try:
+                    update_setting_data = SettingTb.objects.get(member_id=class_info.member_id,
+                                                                class_tb_id=class_info.class_id,
+                                                                setting_type_cd='LT_CALENDAR_BASIC_SETTING_TIME')
+                except ObjectDoesNotExist:
+                    update_setting_data = SettingTb(member_id=class_info.member_id,  class_tb_id=class_info.class_id,
+                                                    setting_type_cd='LT_CALENDAR_BASIC_SETTING_TIME', use=USE)
+                update_setting_data.setting_info = str(class_info.class_hour)
+                update_setting_data.save()
+                lecture_data = LectureTb.objects.filter(class_tb_id=class_info.class_id)
+                lecture_data.update(lecture_minute=class_info.class_hour)
+
+            try:
+                update_setting_data2 = SettingTb.objects.get(member_id=class_info.member_id,
+                                                             class_tb_id=class_info.class_id,
+                                                             setting_type_cd='LT_CALENDAR_TIME_SELECTOR_TYPE')
+            except ObjectDoesNotExist:
+                update_setting_data2 = SettingTb(member_id=class_info.member_id, class_tb_id=class_info.class_id,
+                                                 setting_type_cd='LT_CALENDAR_TIME_SELECTOR_TYPE', use=USE)
+
+            update_setting_data2.setting_info = '0'
+            update_setting_data2.save()
 
             # setting_data.delete()
 
