@@ -92,7 +92,7 @@ class Plan_add{
     }
 
     set start_time(data){
-        this.data.start_time = `${data.data.hour}:${data.data.minute}`;
+        this.data.start_time = TimeRobot.to_hhmm(data.data.hour, data.data.minute).complete ;
         this.data.start_time_text = data.text + ' 부터';
         if(this.data.end_time != null){
             this.data.end_time_text = TimeRobot.to_text(this.data.end_time) + ' 까지 <span style="font-size:11px;">('+TimeRobot.diff_min(this.data.start_time, this.data.end_time)+'분 진행)</span>';
@@ -105,7 +105,7 @@ class Plan_add{
     }
 
     set end_time(data){
-        this.data.end_time = `${data.data.hour}:${data.data.minute}`;
+        this.data.end_time = TimeRobot.to_hhmm(data.data.hour, data.data.minute).complete;
         this.data.end_time_text = data.text + ' 까지 <span style="font-size:11px;">('+TimeRobot.diff_min(this.data.start_time, this.data.end_time)+'분 진행)</span>';
         this.render_content();
     }
@@ -158,11 +158,11 @@ class Plan_add{
         this.data.date_text = user_data_date.text;
         
         let user_data_time = this.user_data.user_selected_time;
-        this.data.start_time = user_data_time.hour == null ? null : `${user_data_time.hour}:${user_data_time.minute}`;
+        this.data.start_time = user_data_time.hour == null ? null : TimeRobot.to_hhmm(user_data_time.hour, user_data_time.minute).complete;
         this.data.start_time_text = user_data_time.text;
 
         // if(this.data.end_time == ""){
-            let end_time_calc = this.calc_end_time_by_start_time(`${user_data_time.hour}:${user_data_time.minute}`, this.lecture_minute, this.work_time.end_hour);
+            let end_time_calc = this.calc_end_time_by_start_time(TimeRobot.to_hhmm(user_data_time.hour, user_data_time.minute).complete, this.lecture_minute, this.work_time.end_hour);
             this.data.end_time = user_data_time.hour == null ? null : end_time_calc.data;
             this.data.end_time_text = user_data_time.hour == null ? null : end_time_calc.text + ' 까지 <span style="font-size:11px;">('+TimeRobot.diff_min(this.data.start_time, this.data.end_time)+'분 진행)</span>';
         // }
@@ -615,23 +615,29 @@ class Plan_add{
             return false;
         }
 
+        let start_dt = DateRobot.to_yyyymmdd(this.data.date.year, this.data.date.month, this.data.date.date)+ ' ' + this.data.start_time;
+        let end_dt = DateRobot.to_yyyymmdd(this.data.date.year, this.data.date.month, this.data.date.date) + ' ' + this.data.end_time;
+        let repeat_start_date = DateRobot.to_yyyymmdd(this.data.date.year, this.data.date.month, this.data.date.date);
+        let repeat_end_date = DateRobot.to_yyyymmdd(this.data.repeat.repeat_end.year, this.data.repeat.repeat_end.month, this.data.repeat.repeat_end.date);
+
         let data = {"lecture_id":this.list_type == "off" ? "" : this.data.lecture_id[0],
-                    "start_dt": this.data.date.year+'-'+this.data.date.month+'-'+this.data.date.date + ' ' + this.data.start_time,
-                    "end_dt":this.data.date.year+'-'+this.data.date.month+'-'+this.data.date.date + ' ' + this.data.end_time,
+                    "start_dt": start_dt,
+                    "end_dt": end_dt,
                     "note":this.data.memo, "duplication_enable_flag": 1,
                     "en_dis_type":this.list_type == "off" ? 0 : 1, "member_ids":this.list_type == "off" ? [] : this.data.member_id,
 
                     //repeat 관련
                     "repeat_freq":"WW", 
-                    "repeat_start_date":this.data.date.year+'-'+this.data.date.month+'-'+this.data.date.date,
-                    "repeat_end_date":this.data.repeat.repeat_end.year+'-'+this.data.repeat.repeat_end.month+'-'+this.data.repeat.repeat_end.date,
+                    "repeat_start_date":repeat_start_date,
+                    "repeat_end_date":repeat_end_date,
                     "repeat_start_time":this.data.start_time, "repeat_end_time":this.data.end_time, "repeat_day":this.data.repeat.day.join('/')
         };
         
         //en_dis_type 0: off일정, 1:레슨일정
         //duplication_enable_flag 0: 중복불허 1:중복허용
         if(this.data.repeat.power == OFF){
-            let pass_inspect = this.pass_inspect(this.data.date.year+'-'+this.data.date.month+'-'+this.data.date.date);
+            let inspect_date = DateRobot.to_yyyymmdd(this.data.date.year, this.data.date.month, this.data.date.date);
+            let pass_inspect = this.pass_inspect(inspect_date);
             if(pass_inspect == false){
                 return false;
             }
@@ -646,7 +652,8 @@ class Plan_add{
             });
             
         }else if(this.data.repeat.power == ON){
-            let pass_inspect = this.pass_inspect(this.data.repeat.repeat_end.year+'-'+this.data.repeat.repeat_end.month+'-'+this.data.repeat.repeat_end.date);
+            let inspect_date = DateRobot.to_yyyymmdd(this.data.repeat.repeat_end.year, this.data.repeat.repeat_end.month, this.data.repeat.repeat_end.date);
+            let pass_inspect = this.pass_inspect(inspect_date);
             if(pass_inspect == false){
                 return false;
             }

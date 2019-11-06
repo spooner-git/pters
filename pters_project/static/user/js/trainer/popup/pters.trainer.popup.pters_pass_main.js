@@ -229,7 +229,7 @@ class Pters_pass_main{
         let current_end_date = this.data.current.end_date[0].replace(/-/gi, '.');
         let expire_date =  current_start_date + ' - ' + current_end_date;
         if(current_start_date == ''){
-            expire_date = '2019.11.01 - 2019.11.30'
+            expire_date = '2019.11.01 - 2019.11.30';
         }
         let next_pay_date = this.data.next.paid_date[0].replace(/-/gi, '.');
         let pay_type = PAY_TYPE_NAME[this.data.next.payment_type_cd[0]];
