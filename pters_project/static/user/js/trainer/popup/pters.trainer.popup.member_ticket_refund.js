@@ -118,7 +118,6 @@ class Member_ticket_refund{
         return html;
     }
 
-
     dom_row_refund_date_input(){
         let id = 'member_ticket_start_refund';
         let title = this.data.refund_date == null ||this.data.refund_date == 'None' ? '환불 날짜' : this.data.refund_date.replace(/-/gi, '.');
