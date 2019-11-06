@@ -563,7 +563,7 @@ class Plan_add{
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_REPEAT_SELECT, 100, popup_style, null, ()=>{
-                repeat_select = new RepeatSelector('#wrapper_box_repeat_select', this, this.data.date, (set_data)=>{
+                repeat_select = new RepeatSelector('#wrapper_box_repeat_select', this, {repeat_start_date:this.data.date, start_day:this.date_start}, (set_data)=>{
                     this.repeat = set_data;
                     this.render_content();
                 });
