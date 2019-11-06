@@ -136,24 +136,20 @@ class Alarm {
         let UNREAD = 0;
 
         Alarm_func.read((data)=>{
-            let are_there_new_alarm = 0;
-            let new_alarms_id = [];
             for(let date in data){
                 let length = data[date].length;
                 for(let i=0; i<length; i++){
                     let read_check = data[date][i].read_check;
                     let alarm_id = data[date][i].alarm_id;
                     if(read_check == UNREAD){
-                        are_there_new_alarm++;
-                        new_alarms_id.push(alarm_id);
+                        this.new_alarms_id_cache.push(alarm_id);
                     }
                 }
             }
-            if(this.new_alarms_id_cache.length > 0){
-                return false;
-            }
-            this.new_alarms_id_cache = new_alarms_id;
-            callback(are_there_new_alarm);
+            // if(this.new_alarms_id_cache.length > 0){
+            //     return false;
+            // }
+            callback(this.new_alarms_id_cache.length);
         });
     }
 
