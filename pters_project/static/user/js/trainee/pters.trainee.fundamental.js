@@ -218,7 +218,7 @@ function send_push_func(class_id, title, message){
     $.ajax({
         url: '/schedule/send_push_to_trainer/',
         type : 'POST',
-        dataType: 'html',
+        dataType: 'JSON',
         data : {"class_id":class_id, "title":title, "message":message, "next_page":'/trainee/get_trainee_error_info/'},
 
         beforeSend:function(xhr, settings) {
