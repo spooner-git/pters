@@ -2286,12 +2286,20 @@ def update_lecture_info_logic(request):
         lecture_info.save()
 
     if error is None:
-        # 오늘 이전의 일정
-        schedule_data_past = ScheduleTb.objects.filter(class_tb_id=class_id, lecture_tb_id=lecture_id,
-                                                       end_dt__lte=timezone.now(), en_dis_type=ON_SCHEDULE_TYPE)
-        # 오늘 이후의 일정
-        schedule_data_future = ScheduleTb.objects.filter(class_tb_id=class_id, lecture_tb_id=lecture_id,
-                                                         end_dt__gt=timezone.now(), en_dis_type=ON_SCHEDULE_TYPE)
+        if str(lecture_info.lecture_type_cd) == str(LECTURE_TYPE_ONE_TO_ONE):
+            # 오늘 이전의 일정
+            schedule_data_past = ScheduleTb.objects.filter(class_tb_id=class_id, lecture_tb__isnull=True,
+                                                           end_dt__lte=timezone.now(), en_dis_type=ON_SCHEDULE_TYPE)
+            # 오늘 이후의 일정
+            schedule_data_future = ScheduleTb.objects.filter(class_tb_id=class_id, lecture_tb__isnull=True,
+                                                             end_dt__gt=timezone.now(), en_dis_type=ON_SCHEDULE_TYPE)
+        else:
+            # 오늘 이전의 일정
+            schedule_data_past = ScheduleTb.objects.filter(class_tb_id=class_id, lecture_tb_id=lecture_id,
+                                                           end_dt__lte=timezone.now(), en_dis_type=ON_SCHEDULE_TYPE)
+            # 오늘 이후의 일정
+            schedule_data_future = ScheduleTb.objects.filter(class_tb_id=class_id, lecture_tb_id=lecture_id,
+                                                             end_dt__gt=timezone.now(), en_dis_type=ON_SCHEDULE_TYPE)
         if str(update_this_to_all_plans) == str(USE):
             schedule_data_past.update(ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
                                       ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
