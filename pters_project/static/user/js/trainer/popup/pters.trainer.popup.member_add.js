@@ -478,6 +478,12 @@ class Member_add{
 
                 let min = this.data.start_date != null ? {year:this.data.start_date.year, month:this.data.start_date.month, date: this.data.start_date.date} : null;
 
+                if(Number(year) == 9999){
+                    year = this.data.start_date.year;
+                    month = this.data.start_date.month;
+                    date = this.data.start_date.date;
+                }
+
                 date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'end_date', title:'종료일', start_day: this.date_start,
                                                                                                 data:{year:year, month:month, date:date},  
                                                                                                 min:min,

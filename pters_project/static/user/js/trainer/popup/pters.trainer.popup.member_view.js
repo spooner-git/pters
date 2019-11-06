@@ -226,7 +226,7 @@ class Member_view{
                                             start_date:ticket_reg_date_of_this_member,
                                             start_date_text:DateRobot.to_text(ticket_reg_date_of_this_member, '', '', SHORT),
                                             end_date:ticket_end_date_of_this_member,
-                                            end_date_text:ticket_end_date_of_this_member == "9999-12-31" ? "소진시까지" :  ticket_remain_date+'일'+ ticket_remain_alert_text +'/ '+DateRobot.to_text(ticket_end_date_of_this_member, '', '', SHORT)+' 까지',
+                                            end_date_text:ticket_end_date_of_this_member == "9999-12-31" ? "소진 시까지" :  ticket_remain_date+'일'+ ticket_remain_alert_text +'/ '+DateRobot.to_text(ticket_end_date_of_this_member, '', '', SHORT)+' 까지',
                                             lecture_id:member_ticket_list[i].ticket_lecture_id_list,
                                             lecture_name:member_ticket_list[i].ticket_lecture_list,
                                             lecture_state:member_ticket_list[i].ticket_lecture_state_cd_list,
@@ -561,9 +561,12 @@ class Member_view{
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_TICKET_MODIFY, 100, popup_style, null, ()=>{
                     let data = {"member_name":this.name, "member_ticket_id":member_ticket_id, "member_ticket_name":ticket_name, 
-                                "start_date": ticket_start_date, "end_date": ticket_end_date, "reg_count":ticket_reg_count, "price":ticket_price, "status":ticket_status,
-                                "refund_date":ticket_refund_date, "refund_price":ticket_refund_price, "note":ticket_note};
-                    console.log("이 데이터", data)
+                                "start_date": DateRobot.to_split(ticket_start_date), "start_date_text": DateRobot.to_text(ticket_start_date, "", "", SHORT),
+                                "end_date": DateRobot.to_split(ticket_end_date), "end_date_text": ticket_end_date == "9999-12-31" ? "소진 시까지" : DateRobot.to_text(ticket_end_date, "", "", SHORT),
+                                "reg_count":ticket_reg_count, "price":ticket_price, "status":ticket_status,
+                                "refund_date": ticket_refund_date == null ? null : DateRobot.to_split(ticket_refund_date), 
+                                "refund_date_text": ticket_refund_date == null ? null : DateRobot.to_text(ticket_refund_date, "", "", SHORT),
+                                "refund_price":ticket_refund_price, "note":ticket_note};
                     member_ticket_modify = new Member_ticket_modify('.popup_member_ticket_modify', data, 'member_ticket_modify');
                 });
             });
@@ -816,7 +819,7 @@ class Member_simple_view{
                                             start_date:ticket_reg_date_of_this_member,
                                             start_date_text:DateRobot.to_text(ticket_reg_date_of_this_member, '', '', SHORT),
                                             end_date:ticket_end_date_of_this_member,
-                                            end_date_text:ticket_end_date_of_this_member == "9999-12-31" ? "소진시까지" :  ticket_remain_date+'일'+ ticket_remain_alert_text +'/ '+DateRobot.to_text(ticket_end_date_of_this_member, '', '', SHORT)+' 까지',
+                                            end_date_text:ticket_end_date_of_this_member == "9999-12-31" ? "소진 시까지" :  ticket_remain_date+'일'+ ticket_remain_alert_text +'/ '+DateRobot.to_text(ticket_end_date_of_this_member, '', '', SHORT)+' 까지',
                                             lecture_id:member_ticket_list[i].ticket_lecture_id_list,
                                             lecture_name:member_ticket_list[i].ticket_lecture_list,
                                             lecture_state:member_ticket_list[i].ticket_lecture_state_cd_list,

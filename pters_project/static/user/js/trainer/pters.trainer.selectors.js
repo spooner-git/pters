@@ -3295,7 +3295,7 @@ class DatePickerSelector_backup{
                     font_color = 'color:#5c5859;';
                 }
                 if(date_compare == true){
-                    font_color = 'color:#cccccc';
+                    font_color = 'color:#cccccc;';
                 }
 
                 //오늘 날짜 표기
@@ -3565,7 +3565,7 @@ class DatePickerSelector{
                 }
 
                 if(date_compare == true){
-                    font_color = 'color:#cccccc';
+                    font_color = 'color:#cccccc;';
                 }
 
                 //오늘 날짜 표기

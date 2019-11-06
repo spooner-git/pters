@@ -72,8 +72,12 @@ class Member_ticket_history{
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_TICKET_MODIFY, 100, popup_style, null, ()=>{
                     let data = {"member_name":this.member_name, "member_ticket_id":member_ticket_id, "member_ticket_name":ticket_name, 
-                                "start_date": ticket_start_date, "end_date": ticket_end_date, "reg_count":reg_count, "price":ticket_price, "status":status_code,
-                                "refund_date":refund_date, "refund_price":refund_price, "note":note};
+                                "start_date": DateRobot.to_split(ticket_start_date), "start_date_text": DateRobot.to_text(ticket_start_date, "", "", SHORT),
+                                "end_date": DateRobot.to_split(ticket_end_date), "end_date_text": ticket_end_date == "9999-12-31" ? "소진 시까지" : DateRobot.to_text(ticket_end_date, "", "", SHORT),
+                                "reg_count":reg_count, "price":ticket_price, "status":status_code,
+                                "refund_date":refund_date == null ? null : DateRobot.to_split(refund_date), 
+                                "refund_date_text": refund_date == null? null : DateRobot.to_text(refund_date, "", "", SHORT),
+                                "refund_price":refund_price, "note":note};
                     member_ticket_modify = new Member_ticket_modify('.popup_member_ticket_modify', data, 'member_ticket_modify');
                 });
             };
