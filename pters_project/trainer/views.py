@@ -1771,8 +1771,8 @@ def add_member_ticket_info_logic(request):
     if end_date == '':
         end_date = '9999-12-31'
 
-    if start_date > end_date:
-        error = '종료일은 시작일보다 빠를수 없습니다.'
+    # if start_date > end_date:
+    #     error = '종료일은 시작일보다 빠를수 없습니다.'
     if counts == '':
         error = '등록 횟수를 입력해 주세요.'
     elif start_date == '':
@@ -1834,9 +1834,9 @@ def update_member_ticket_info_logic(request):
             refund_date = member_ticket_info.refund_date
         if member_ticket_reg_count is None or member_ticket_reg_count == '':
             member_ticket_reg_count = member_ticket_info.member_ticket_reg_count
-
-        if start_date > end_date:
-            error = '종료일은 시작일보다 빠를수 없습니다.'
+        #
+        # if start_date > end_date:
+        #     error = '종료일은 시작일보다 빠를수 없습니다.'
 
         try:
             price = int(price)

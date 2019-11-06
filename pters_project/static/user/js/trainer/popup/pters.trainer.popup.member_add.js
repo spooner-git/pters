@@ -693,8 +693,8 @@ class Member_add{
                     "sex":this.data.sex,
                     "contents":this.data.memo,
                     "ticket_id":this.data.ticket_id[0],
-                    "start_date": `${this.data.start_date.year}-${this.data.start_date.month}-${this.data.start_date.date}`,
-                    "end_date":`${this.data.end_date.year}-${this.data.end_date.month}-${this.data.end_date.date}`,
+                    "start_date": DateRobot.to_yyyymmdd(this.data.start_date.year, this.data.start_date.month, this.data.start_date.date),
+                    "end_date":DateRobot.to_yyyymmdd(this.data.end_date.year, this.data.end_date.month, this.data.end_date.date),
                     "counts":this.data.ticket_reg_count,
                     "price":this.data.ticket_price
         };
@@ -708,11 +708,11 @@ class Member_add{
             // "sex":this.data.sex,
             "contents":this.data.memo,
             "ticket_id":this.data.ticket_id[0],
-            "start_date": `${this.data.start_date.year}-${this.data.start_date.month}-${this.data.start_date.date}`,
-            "end_date":`${this.data.end_date.year}-${this.data.end_date.month}-${this.data.end_date.date}`,
+            "start_date": DateRobot.to_yyyymmdd(this.data.start_date.year, this.data.start_date.month, this.data.start_date.date),
+            "end_date":DateRobot.to_yyyymmdd(this.data.end_date.year, this.data.end_date.month, this.data.end_date.date),
             "counts":this.data.ticket_reg_count,
             "price":this.data.ticket_price
-};
+        };
 
         if(this.data_from_external == null){ //신규 회원 등록
             Member_func.create_pre(data_for_new, (received)=>{
