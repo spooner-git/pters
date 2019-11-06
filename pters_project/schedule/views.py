@@ -77,7 +77,7 @@ def add_schedule_logic(request):
                                                           TO_TRAINEE_LESSON_ALARM_OFF)
     error = None
     info_message = None
-    context = {}
+    context = {'messageArray': ''}
     if schedule_input_form.is_valid():
         schedule_start_datetime = schedule_input_form.cleaned_data['start_dt']
         schedule_end_datetime = schedule_input_form.cleaned_data['end_dt']
@@ -251,7 +251,7 @@ def delete_schedule_logic(request):
     end_dt = None
     push_schedule_info = None
     log_info = None
-    context = {}
+    context = {'messageArray': ''}
     if schedule_id == '':
         error = '스케쥴을 선택하세요.'
 
@@ -399,7 +399,7 @@ def update_schedule_logic(request):
     end_dt = schedule_end_datetime
     log_detail_info = ''
     lecture_name = '개인 레슨'
-    context = {}
+    context = {'messageArray': ''}
 
     if end_dt is None or end_dt == '':
         error = '종료 시각을 선택해주세요.'
@@ -508,7 +508,7 @@ def update_schedule_state_cd_logic(request):
     member_name = None
     start_date = None
     end_date = None
-    context = {}
+    context = {'messageArray': ''}
 
     if schedule_id == '':
         error = '일정을 선택하세요.'
@@ -668,7 +668,7 @@ def update_memo_schedule_logic(request):
     note = request.POST.get('add_memo', '')
     error = None
     schedule_info = None
-    context = {}
+    context = {'messageArray': ''}
 
     if schedule_id == '':
         error = '일정을 선택하세요.'
@@ -711,7 +711,7 @@ def add_repeat_schedule_logic(request):
     class_id = request.session.get('class_id', '')
 
     week_info = ['(일)', '(월)', '(화)', '(수)', '(목)', '(금)', '(토)']
-    context = {}
+    context = {'messageArray': ''}
     error = None
     member_id = None
     member_ticket_id = None
@@ -941,7 +941,7 @@ def add_repeat_schedule_confirm(request):
     information = None
     member_ticket_id = ''
     lecture_info = None
-    context = {}
+    context = {'messageArray': ''}
 
     if repeat_schedule_id == '':
         error = '확인할 반복 일정을 선택해주세요.'
@@ -1138,7 +1138,7 @@ def delete_repeat_schedule_logic(request):
 
     error = None
     repeat_schedule_info = None
-    context = {}
+    context = {'messageArray': ''}
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
                                                           TO_TRAINEE_LESSON_ALARM_OFF)
 
@@ -1331,7 +1331,7 @@ def delete_repeat_schedule_logic2(request):
     push_message = []
     lecture_id = None
     lecture_name = ''
-    context = {'push_member_ticket_id': '', 'push_title': '', 'push_message': ''}
+    context = {'messageArray': '', 'push_member_ticket_id': '', 'push_title': '', 'push_message': ''}
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
                                                           TO_TRAINEE_LESSON_ALARM_OFF)
 
@@ -1553,7 +1553,7 @@ def finish_lecture_schedule_logic(request):
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
                                                           TO_TRAINEE_LESSON_ALARM_OFF)
 
-    context = {'push_member_ticket_id': '', 'push_title': '', 'push_message': ''}
+    context = {'messageArray': '','push_member_ticket_id': '', 'push_title': '', 'push_message': ''}
 
     if schedule_id == '':
         error = '일정을 선택하세요.'
@@ -1740,7 +1740,7 @@ def add_member_lecture_schedule_logic(request):
     member_info = None
     lecture_id = ''
     member_ticket_id = ''
-    context = {}
+    context = {'messageArray': ''}
     log_info_schedule_start_dt = ''
     log_info_schedule_end_dt = ''
 
@@ -1884,7 +1884,7 @@ def add_other_member_lecture_schedule_logic(request):
     push_member_ticket_id = []
     push_title = []
     push_message = []
-    context = {'push_member_ticket_id': '', 'push_title': '', 'push_message': ''}
+    context = {'messageArray': '', 'push_member_ticket_id': '', 'push_title': '', 'push_message': ''}
 
     if lecture_schedule_id == '':
         error = '일정을 선택해 주세요.'
@@ -2018,7 +2018,7 @@ def delete_lecture_repeat_schedule_logic(request):
     push_member_ticket_id = []
     push_title = []
     push_message = []
-    context = {'push_member_ticket_id': '', 'push_title': '', 'push_message': ''}
+    context = {'messageArray':'', 'push_member_ticket_id': '', 'push_title': '', 'push_message': ''}
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
                                                           TO_TRAINEE_LESSON_ALARM_OFF)
 
@@ -2175,7 +2175,7 @@ def send_push_to_trainer_logic(request):
     message = request.POST.get('message', '')
 
     error = None
-    context = {}
+    context = {'messageArray': ''}
 
     if class_id == '':
         error = 'push를 전송하는중 오류가 발생했습니다.'
@@ -2195,7 +2195,7 @@ def send_push_to_trainee_logic(request):
     member_ticket_id = request.POST.get('member_ticket_id', '')
     title = request.POST.get('title', '')
     message = request.POST.get('message', '')
-    context = {}
+    context = {'messageArray': ''}
 
     error = None
     if member_ticket_id == '':

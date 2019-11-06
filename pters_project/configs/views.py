@@ -313,18 +313,18 @@ def get_function_auth_type_cd(request):
                                                                            'auth_type_cd')
             if len(function_list) > 0:
                 if payment_data_counter == 0:
-                    request.session['product_type_name'] += function_list[0].product_tb.name
-                    request.session['product_id'] = function_list[0].product_tb.product_id
+                    request.session['product_type_name'] += str(function_list[0].product_tb.name)
+                    request.session['product_id'] = str(function_list[0].product_tb.product_id)
                 else:
-                    request.session['product_type_name'] += ',' + function_list[0].product_tb.name
-                    request.session['product_id'] += ',' + function_list[0].product_tb.product_id
+                    request.session['product_type_name'] += ',' + str(function_list[0].product_tb.name)
+                    request.session['product_id'] += ',' + str(function_list[0].product_tb.product_id)
 
             for function_info in function_list:
                 auth_info = {}
                 if function_info.auth_type_cd is None:
-                    function_auth_type_cd_name = function_info.function_auth_tb.function_auth_type_cd
+                    function_auth_type_cd_name = str(function_info.function_auth_tb.function_auth_type_cd)
                 else:
-                    function_auth_type_cd_name = function_info.function_auth_tb.function_auth_type_cd \
+                    function_auth_type_cd_name = str(function_info.function_auth_tb.function_auth_type_cd) \
                                                  + str(function_info.auth_type_cd)
 
                 auth_info['active'] = 1
@@ -339,19 +339,19 @@ def get_function_auth_type_cd(request):
                                                                                             'function_auth_tb_id',
                                                                                             'auth_type_cd')
             if len(function_list) > 0:
-                request.session['product_type_name'] += function_list[0].product_tb.name
-                request.session['product_id'] = function_list[0].product_tb.product_id
+                request.session['product_type_name'] += str(function_list[0].product_tb.name)
+                request.session['product_id'] = str(function_list[0].product_tb.product_id)
 
             for function_info in function_list:
                 auth_info = {}
                 if function_info.auth_type_cd is None:
-                    function_auth_type_cd_name = function_info.function_auth_tb.function_auth_type_cd
+                    function_auth_type_cd_name = str(function_info.function_auth_tb.function_auth_type_cd)
                 else:
-                    function_auth_type_cd_name = function_info.function_auth_tb.function_auth_type_cd \
+                    function_auth_type_cd_name = str(function_info.function_auth_tb.function_auth_type_cd) \
                                                  + str(function_info.auth_type_cd)
                 auth_info['active'] = 1
                 auth_info['limit_num'] = function_info.counts
-                auth_info['limit_type'] = function_info.product_tb.name
+                auth_info['limit_type'] = str(function_info.product_tb.name)
                 request.session['auth_info'][function_auth_type_cd_name] = auth_info
 
 
@@ -493,7 +493,8 @@ def update_finish_schedule_data(request):
 
                     if finish_lecture_member_schedule_count == 0:
                         delete_schedule_info = DeleteScheduleTb(
-                            schedule_id=not_finish_schedule_info.schedule_id, class_tb_id=not_finish_schedule_info.class_tb_id,
+                            schedule_id=not_finish_schedule_info.schedule_id,
+                            class_tb_id=not_finish_schedule_info.class_tb_id,
                             lecture_tb_id=lecture_tb_id,
                             member_ticket_tb_id=member_ticket_tb_id,
                             lecture_schedule_id=not_finish_schedule_info.lecture_schedule_id,
@@ -501,7 +502,8 @@ def update_finish_schedule_data(request):
                             start_dt=not_finish_schedule_info.start_dt, end_dt=not_finish_schedule_info.end_dt,
                             permission_state_cd=not_finish_schedule_info.permission_state_cd,
                             state_cd=not_finish_schedule_info.state_cd, note=not_finish_schedule_info.note,
-                            en_dis_type=not_finish_schedule_info.en_dis_type, member_note=not_finish_schedule_info.member_note,
+                            en_dis_type=not_finish_schedule_info.en_dis_type,
+                            member_note=not_finish_schedule_info.member_note,
                             reg_member_id=not_finish_schedule_info.reg_member_id, del_member='auto',
                             reg_dt=not_finish_schedule_info.reg_dt, mod_dt=timezone.now(),
                             use=UN_USE)
