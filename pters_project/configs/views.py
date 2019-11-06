@@ -493,7 +493,8 @@ def update_finish_schedule_data(request):
 
                     if finish_lecture_member_schedule_count == 0:
                         delete_schedule_info = DeleteScheduleTb(
-                            schedule_id=not_finish_schedule_info.schedule_id, class_tb_id=not_finish_schedule_info.class_tb_id,
+                            schedule_id=not_finish_schedule_info.schedule_id,
+                            class_tb_id=not_finish_schedule_info.class_tb_id,
                             lecture_tb_id=lecture_tb_id,
                             member_ticket_tb_id=member_ticket_tb_id,
                             lecture_schedule_id=not_finish_schedule_info.lecture_schedule_id,
@@ -501,7 +502,8 @@ def update_finish_schedule_data(request):
                             start_dt=not_finish_schedule_info.start_dt, end_dt=not_finish_schedule_info.end_dt,
                             permission_state_cd=not_finish_schedule_info.permission_state_cd,
                             state_cd=not_finish_schedule_info.state_cd, note=not_finish_schedule_info.note,
-                            en_dis_type=not_finish_schedule_info.en_dis_type, member_note=not_finish_schedule_info.member_note,
+                            en_dis_type=not_finish_schedule_info.en_dis_type,
+                            member_note=not_finish_schedule_info.member_note,
                             reg_member_id=not_finish_schedule_info.reg_member_id, del_member='auto',
                             reg_dt=not_finish_schedule_info.reg_dt, mod_dt=timezone.now(),
                             use=UN_USE)
