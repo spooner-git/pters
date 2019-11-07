@@ -75,8 +75,38 @@
             font-size: 13px;
         }
 
+        #mobile_button_for_show{
+            width: 100%;
+            height: 40px;
+            line-height: 40px;
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+            cursor: pointer;
+            
+        }
+        #mobile_button_for_show img{
+            width: 24px;
+            vertical-align: middle;
+            animation: blinker 1s linear infinite;
+        }
+
+        @keyframes blinker {
+            90% {
+                opacity: 0.3;
+            }
+        }
+        #description_wrapper{
+            display: none;
+        }
         /* PC버전 화면 */
         @media(min-width:800px){
+            #mobile_button_for_show{
+                display: none;
+            }
+            #description_wrapper{
+                display: block;
+            }
             #root_nav{
                 display: block;
                 position: sticky;
@@ -318,96 +348,126 @@
             </div>
         </section>
 
-        <section class="front_page_section" style="background-color:#ffffff;" id="feature_first_page">
-            <div class="article_title_wrapper">
-                <h2>레슨 관리를 스마트 하게</h2>
-                <p>복잡한 횟수 차감과 일정 관리 시간은 줄이고, 레슨에 집중할 수 있습니다.</p>
-            </div>
-            <div class="article_wrapper">
-                <article class="section_article_up">
-                    <img src="/static/common/img/front_page/appstore_mobile_3.jpg" alt="">
-                </article>
-                <article class="section_article_down">
-                    <div class="article_description_wrap">
-                        <h3>일정 관리</h3>
-                        <p>일정을 등록하고, 완료 처리를 하면 참석 회원님의 횟수가 자동 차감 됩니다.</p>
-                    </div>
-                    <div class="article_description_wrap">
-                        <h3>실시간 예약</h3>
-                        <p>수강 회원님께서 직접 예약이 가능한 시간에 예약할 수 있습니다.<br>그룹형 레슨과 개인 레슨을 지원합니다.</p>
-                    </div>
-                    <div class="article_description_wrap">
-                        <h3>다양한 커스터마이징</h3>
-                        <p>나만의 예약 규칙을 만들 수 있는 다양한 옵션 지원</p>
-                        <div class="block_description">
-                            <div><img src="/static/common/icon/icon_setting_worktime_black.png" alt=""></div>
-                            <div>업무 시간을 지정하면, 그 안에서만 예약이 가능</div>
-                        </div>
-                        <div class="block_description">
-                            <div><img src="/static/common/icon/icon_setting_worktime2_black.png" alt=""></div>
-                            <div>예약 시 선택 가능한 시작 시간을 설정 <br>(매시각 정시, 20분 마다..)</div>
-                        </div>
-                        <div class="block_description">
-                            <div><img src="/static/common/icon/icon_setting_autocomplete_black.png" alt=""></div>
-                            <div>예약이 가능한 날짜 구간 <br>(1 ~ 14일 후까지)</div>
-                        </div>
-                        <div class="block_description">
-                            <div><img src="/static/common/icon/icon_attend_check_black.png" alt=""></div>
-                            <div>최소 예약 가능 시간 <br>(0분 전 ... 48시간 전)</div>
-                        </div>
-                        <div class="block_description">
-                            <div><img src="/static/common/icon/icon_delete_black.png" alt=""></div>
-                            <div>최소 예약 취소 가능 시간 <br>(0분 전 ... 48시간 전)</div>
-                        </div>
-                        <div class="block_description">
-                            <div><img src="/static/common/icon/tab_bar/icon_member_off.png" alt=""></div>
-                            <div>혹은 나 혼자 쓰기 <br>(예약 기능을 OFF)</div>
-                        </div>
-                    </div>
-                </article>
-            </div>
+        <section id="mobile_button_for_show" onclick="show_description();">
+            <p style="margin:0"><img src="/static/common/icon/icon_arrow_expand_pink.png" alt="">  더 알아보기</p>
         </section>
 
-        <section class="front_page_section" style="background-color:#ffffff;padding-top:50px">
-            <div class="article_title_wrapper">
-                <h2>나만의 상품 만들기</h2>
-                <p>수강권에 수업을 자유롭게 넣고 빼서, 상황에 맞는 운용이 가능합니다.</p>
-            </div>
-            <div class="article_wrapper">
+        <div id="description_wrapper">
+            <section class="front_page_section" style="background-color:#f4f4f4;min-height:unset;" id="feature_first_page">
+                <div class="article_title_wrapper">
+                    <h2>레슨 관리를 스마트 하게</h2>
+                    <p>복잡한 횟수 차감과 일정 관리 시간은 줄이고, 레슨에 집중할 수 있습니다.</p>
+                </div>
+            </section>
+
+            <section class="front_page_section" style="background-color:#ffffff;">
+                <!-- <div class="article_title_wrapper">
+                    <h2>레슨 관리를 스마트 하게</h2>
+                    <p>복잡한 횟수 차감과 일정 관리 시간은 줄이고, 레슨에 집중할 수 있습니다.</p>
+                </div> -->
+                <div class="article_wrapper">
                     <article class="section_article_up">
-                        <img src="/static/common/img/front_page/appstore_mobile_5.jpg" alt="">
-                        <div class="article_description_wrap" style="text-align:center;">
-                            <h3>다양한 옵션</h3>
-                            <p>
-                                수업별 색상, 수업 진행 시간, 정원을 설정 할 수 있습니다.
-                                <br>
-                                한눈에 현재 진행중인 수업들을 확인하고, 
-                                <br>
-                                참가 중인 회원들을 확인해 보세요.
-                            </p>
-                        </div>
+                        <img src="/static/common/img/front_page/appstore_mobile_3.jpg" alt="">
                     </article>
                     <article class="section_article_down">
-                        <img src="/static/common/img/front_page/appstore_mobile_6.jpg" alt="">
-                        <div class="article_description_wrap" style="text-align:center;">
-                            <h3>상품 만들기</h3>
-                            <p>
-                                수업을 묶어 수강권으로 만들고, 회원을 등록합니다.
-                                <br>
-                                언제라도 회원이 참가 가능한 수업을 수정할 수 있고,
-                                <br>
-                                시즌별로 수강권을 달리 운용하는 등으로 활용 해보세요.
-                            </p>
+                        <div class="article_description_wrap">
+                            <h3>일정 관리</h3>
+                            <p>일정을 등록하고, 완료 처리를 하면 참석 회원님의 횟수가 자동 차감 됩니다.</p>
+                        </div>
+                        <div class="article_description_wrap">
+                            <h3>실시간 예약</h3>
+                            <p>수강 회원님께서 직접 예약이 가능한 시간에 예약할 수 있습니다.<br>그룹형 레슨과 개인 레슨을 지원합니다.</p>
+                        </div>
+                        <div class="article_description_wrap">
+                            <h3>다양한 커스터마이징</h3>
+                            <p>나만의 예약 규칙을 만들 수 있는 다양한 옵션 지원</p>
+                            <div class="block_description">
+                                <div><img src="/static/common/icon/icon_setting_worktime_black.png" alt=""></div>
+                                <div>업무 시간을 지정하면, 그 안에서만 예약이 가능</div>
+                            </div>
+                            <div class="block_description">
+                                <div><img src="/static/common/icon/icon_setting_worktime2_black.png" alt=""></div>
+                                <div>예약 시 선택 가능한 시작 시간을 설정 <br>(매시각 정시, 20분 마다..)</div>
+                            </div>
+                            <div class="block_description">
+                                <div><img src="/static/common/icon/icon_setting_autocomplete_black.png" alt=""></div>
+                                <div>예약이 가능한 날짜 구간 <br>(1 ~ 14일 후까지)</div>
+                            </div>
+                            <div class="block_description">
+                                <div><img src="/static/common/icon/icon_attend_check_black.png" alt=""></div>
+                                <div>최소 예약 가능 시간 <br>(0분 전 ... 48시간 전)</div>
+                            </div>
+                            <div class="block_description">
+                                <div><img src="/static/common/icon/icon_delete_black.png" alt=""></div>
+                                <div>최소 예약 취소 가능 시간 <br>(0분 전 ... 48시간 전)</div>
+                            </div>
+                            <div class="block_description">
+                                <div><img src="/static/common/icon/tab_bar/icon_member_off.png" alt=""></div>
+                                <div>혹은 나 혼자 쓰기 <br>(예약 기능을 OFF)</div>
+                            </div>
                         </div>
                     </article>
-            </div>
-        </section>
+                </div>
+            </section>
+            
+            <div style="width:100%;height:50px;background-color:#ffffff;"></div>
 
-        <section class="front_page_section" style="background-color:#ffffff;padding-top:50px">
+            <section class="front_page_section" style="background-color:#f4f4f4;min-height:unset;" id="feature_first_page">
                 <div class="article_title_wrapper">
+                    <h2>나만의 상품 만들기</h2>
+                    <p>수강권에 수업을 자유롭게 넣고 빼서, 상황에 맞는 운용이 가능합니다.</p>
+                </div>
+            </section>
+
+            <section class="front_page_section" style="background-color:#ffffff;">
+                <!-- <div class="article_title_wrapper">
+                    <h2>나만의 상품 만들기</h2>
+                    <p>수강권에 수업을 자유롭게 넣고 빼서, 상황에 맞는 운용이 가능합니다.</p>
+                </div> -->
+                <div class="article_wrapper">
+                        <article class="section_article_up">
+                            <img src="/static/common/img/front_page/appstore_mobile_5.jpg" alt="">
+                            <div class="article_description_wrap" style="text-align:center;">
+                                <h3>다양한 옵션</h3>
+                                <p>
+                                    수업별 색상, 수업 진행 시간, 정원을 설정 할 수 있습니다.
+                                    <br>
+                                    한눈에 현재 진행중인 수업들을 확인하고, 
+                                    <br>
+                                    참가 중인 회원들을 확인해 보세요.
+                                </p>
+                            </div>
+                        </article>
+                        <article class="section_article_down">
+                            <img src="/static/common/img/front_page/appstore_mobile_6.jpg" alt="">
+                            <div class="article_description_wrap" style="text-align:center;">
+                                <h3>상품 만들기</h3>
+                                <p>
+                                    수업을 묶어 수강권으로 만들고, 회원을 등록합니다.
+                                    <br>
+                                    언제라도 회원이 참가 가능한 수업을 수정할 수 있고,
+                                    <br>
+                                    시즌별로 수강권을 달리 운용하는 등으로 활용 해보세요.
+                                </p>
+                            </div>
+                        </article>
+                </div>
+            </section>
+
+            <div style="width:100%;height:50px;background-color:#ffffff;"></div>
+
+            <section class="front_page_section" style="background-color:#f4f4f4;min-height:unset;" id="feature_first_page">
+                <div class="article_title_wrapper">
+                    <h2>한눈에 보는 현황</h2>
+                    <p>내 활동에 따른 자동 실시간 매출과 회원 통계</p>
+                </div>
+            </section>
+
+            <section class="front_page_section" style="background-color:#ffffff;">
+                    <!-- <div class="article_title_wrapper">
                         <h2>한눈에 보는 현황</h2>
                         <p>내 활동에 따른 자동 실시간 매출과 회원 통계</p>
-                    </div>
+                    </div> -->
                     <div class="article_wrapper">
                         <article class="section_article_up">
                             <img src="/static/common/img/front_page/appstore_mobile_7.jpg" alt="">
@@ -444,23 +504,25 @@
                             </div>
                         </article>
                     </div>
-        </section>
+            </section>
 
-        <section class="front_page_section" style="background-color:#ffffff;padding-top:50px;min-height:unset;padding-bottom:100px;" id="app_first_page">
-                <div class="article_title_wrapper">
-                        <h2>사용하기</h2>
-                        <p>클라우드 서비스로 웹브라우저, 앱 (iOS, 안드로이드)으로 언제 어디서나</p>
-                    </div>
-                    <div class="article_wrapper">
-                        <article class="section_article_up">
-                            <img src="/static/common/img/front_page/apple.svg" alt="PTERS 앱스토어 앱 다운로드" style="width:200px;">
-                        </article>
-                        <article class="section_article_down">
-                            <img src="/static/common/img/front_page/android.svg" alt="PTERS 안드로이드 앱 다운로드" style="width:200px;">
-                        </article>
-                    </div>
-        </section>
+            <div style="width:100%;height:50px;background-color:#ffffff;"></div>
 
+            <section class="front_page_section" style="background-color:#f4f4f4;padding-top:50px;min-height:unset;padding-bottom:100px;" id="app_first_page">
+                    <div class="article_title_wrapper">
+                            <h2>사용하기</h2>
+                            <p>클라우드 서비스로 웹브라우저, 앱 (iOS, 안드로이드)으로 언제 어디서나</p>
+                        </div>
+                        <div class="article_wrapper">
+                            <article class="section_article_up">
+                                <img src="/static/common/img/front_page/apple.svg" alt="PTERS 앱스토어 앱 다운로드" style="width:200px;">
+                            </article>
+                            <article class="section_article_down">
+                                <img src="/static/common/img/front_page/android.svg" alt="PTERS 안드로이드 앱 다운로드" style="width:200px;">
+                            </article>
+                        </div>
+            </section>
+        </div>
     </div>
     <!--
     <div class="album_wrap_ie" id="IE_block_explain" style="display: none;">
@@ -642,7 +704,11 @@ function go_to(location){
             $root_content.animate({scrollTop:loc}, 300);
             break;
     }
+}
 
+function show_description(){
+    $('#description_wrapper').show();
+    go_to("feature");
 }
 </script>
 {% endblock %}
