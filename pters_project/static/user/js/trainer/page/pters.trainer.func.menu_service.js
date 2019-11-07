@@ -82,7 +82,8 @@ class Menu_service {
                         this.dom_menu_pters_pass() + 
                         this.dom_menu_service_notice() + 
                         this.dom_menu_service_faq() +
-                        this.dom_menu_service_inquiry();
+                        this.dom_menu_service_inquiry() +
+                        this.dom_menu_service_about_us();
                         // + this.dom_menu_service_help();
           
         return assembly;
@@ -328,6 +329,19 @@ class Menu_service {
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             sideGoPopup('helper');
+        });
+        return html;
+    }
+
+    dom_menu_service_about_us(){
+        let id = 'menu_about_us';
+        let title = 'About us';
+        let icon = NONE;
+        let icon_r_visible = NONE;
+        let icon_r_text = "";
+        let style = {"font-size":"17px", "padding":"13px 0"};
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            sideGoPopup('service_about_us');
         });
         return html;
     }

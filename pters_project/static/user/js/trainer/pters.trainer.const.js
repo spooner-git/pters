@@ -184,6 +184,7 @@ const POPUP_ADDRESS_SERVICE_INQUIRY = 'popup_service_inquiry';
 const POPUP_ADDRESS_SERVICE_INQUIRY_HISTORY = 'popup_service_inquiry_history';
 const POPUP_ADDRESS_SERVICE_INQUIRY_FAQ = 'popup_service_inquiry_faq';
 const POPUP_ADDRESS_SERVICE_HELPER = 'popup_service_helper';
+const POPUP_ADDRESS_SERVICE_ABOUT_US = 'popup_service_about_us';
 
 const POPUP_ADDRESS_MYPAGE = 'popup_mypage';
 const POPUP_ADDRESS_MYPAGE_MODIFY = 'popup_mypage_modify';

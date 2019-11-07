@@ -242,7 +242,7 @@
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.pters_pass_shop.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.pters_pass_shop_agreement.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.pters_pass_pay_cancel.js" %}></script>
-
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.service_about_us.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.service_helper.js" %}></script>
 <!-- ajax 팝업 JS 로드 -->
 <!-- 각종 셀렉터 -->
@@ -398,6 +398,7 @@
     var service_inquiry_history_popup;
     var service_inquiry_faq_popup;
     var service_helper_popup;
+    var service_about_us_popup;
 
     var pters_pass_main_popup;
     var pters_pass_pay_info_popup;
@@ -609,6 +610,10 @@
             case 'helper':
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SERVICE_HELPER, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     service_helper_popup = new Service_helper('.popup_service_helper')});
+            break;
+            case 'service_about_us':
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SERVICE_ABOUT_US, 100, POPUP_FROM_RIGHT, null, ()=>{
+                                                    service_about_us_popup = new Service_about_us('.popup_service_about_us')});
             break;
         }
     }
