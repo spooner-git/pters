@@ -75,6 +75,9 @@ urlpatterns = [
     # 개인정보 처리방침
     url(r'^trainee_privacy_policy/$', views.PrivacyPolicyView.as_view(), name='trainee_privacy_policy'),
 
+    # About us
+    url(r'^trainee_about_us/$', views.AboutusView.as_view(), name='trainee_about_us'),
+
     # Mypage 페이지
     url(r'^trainee_mypage/$', views.MyPageView.as_view(), name='trainee_mypage'),
 

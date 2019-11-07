@@ -1,0 +1,85 @@
+{% extends "trainee_base.html" %}
+{% load static_url %}
+
+{% block local_css %}
+    <style type="text/css">
+        .wrapper_title{
+            margin-top: 10px;
+            background-color: #ffffff;
+            border-top: 1px solid #e6e6e6;
+            padding: 15px 20px;
+            /* padding: 15px 0; */
+            /* text-align: center; */
+            /* line-height: 30px; */
+            /* height: 30px; */
+        }
+        .obj_box_full{
+            border-left: 0;
+            border-right: 0;
+            padding: 15px 20px;
+        }
+
+        .trainee_user_policy .about_us_tag{
+            font-size: 12px;
+            color: #858282;
+            margin-right: 5px;
+        }
+        
+        .trainee_user_policy .about_us_name{
+            font-size: 12px;
+            color: #3b3b3b;
+            margin-right: 10px;
+        }
+        
+    </style>
+{% endblock %}
+
+{% block content %}
+
+    <div class="trainee_user_policy">
+        <div class="wrapper_title obj_font_size_15_weight_bold">About us</div>
+        <div class="obj_box_full">
+            <div>
+                <span class="about_us_tag">대표</span><span class="about_us_name">김선겸</span>
+                <span class="about_us_tag">CTO</span><span class="about_us_name">김현기</span>
+                <span class="about_us_tag">디자인</span><span class="about_us_name">손욱</span>
+            </div>
+            <div>
+                <div><span class="about_us_tag">대표 자문</span><span class="about_us_name">박상혁 골프 프로님</span></div>
+                <div><span class="about_us_tag">자문</span><span class="about_us_name">목동 서울 플루트 김민아 원장님</span></div>
+                <div><span class="about_us_tag">자문</span><span class="about_us_name">Bns발레 강현화 대표님</span></div>
+            </div>
+        </div>
+        <div class="obj_box_full">
+            <div class="about_us_tag">문의</div>
+            <div class="about_us_name">전화: 070-8816-1010 (응대 시간: 평일 10:00 ~ 18:00, 13:00 ~ 14:00 점심시간)</div>
+            <div class="about_us_name">메일: Support@pters.co.kr</div>
+            <div class="about_us_name">주소: 서울시 동작구 보라매로 5가길 7, 820</div>
+        </div>
+        <div class="obj_box_full">
+            <div class="about_us_tag">사업자 정보</div>
+            <div class="about_us_name">사업자 등록번호: 463-56-00284</div>
+            <div class="about_us_name">통신판매업 신고: 2017-서울동작-0672</div>
+        </div>
+    </div>
+
+
+
+{% endblock %}
+
+{% block local_js_footer %}
+    <script type="text/javascript" src={% static_url "user/js/trainee/func/pters.trainee.func.schedule.js" %}></script>
+    <script type="text/javascript">
+    	//Nav바에 현재 페이지에 밑줄 표기
+
+        window.addEventListener('load', function () {
+        {% for message in messages %}
+            {% if message.tags == "error" %}
+                alert('{{ message }}');
+            {% endif %}
+        {% endfor %}
+        });
+
+    </script>
+
+{% endblock %}
