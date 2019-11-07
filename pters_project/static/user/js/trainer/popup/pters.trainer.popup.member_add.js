@@ -215,9 +215,9 @@ class Member_add{
             '</div>' +
             '<div class="obj_input_box_full">'
                 + CComponent.dom_tag('수강권') + ticket + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag('횟수') + reg_count + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('시작일') + start_date + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('종료일') + end_date + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
-                + CComponent.dom_tag('횟수') + reg_count + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('가격') + reg_price + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('특이사항') + memo +
             '</div>';
@@ -229,9 +229,9 @@ class Member_add{
             '</div>' +
             '<div class="obj_input_box_full">'
                 + CComponent.dom_tag('수강권') + ticket + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag('횟수') + reg_count + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('시작일') + start_date + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('종료일') + end_date + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
-                + CComponent.dom_tag('횟수') + reg_count + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('가격') + reg_price + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('특이사항') + memo +
             '</div>';

@@ -122,9 +122,9 @@ class Member_ticket_modify{
                 + status
                 + refund_date
                 + refund_price
+                + count
                 + start
                 + end
-                + count
                 + price
                 + note +
             '</div>';
