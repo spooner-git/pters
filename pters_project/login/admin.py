@@ -4,28 +4,11 @@ from .models import CommonCdTb, PushInfoTb, LogTb, MemberTb, SnsInfoTb
 
 
 # Register your models here.
-
-
-@admin.register(CommonCdTb)
-class CommonCdTbAdmin(admin.ModelAdmin):
-    list_display = ('common_cd', 'common_cd_nm', 'group_cd', 'group_cd_nm',
-                    'upper_common_cd', 'upper_group_cd', 'attribute1', 'order', 'use')
-    search_fields = ['common_cd_nm', 'upper_common_cd']
-
-
-@admin.register(LogTb)
-class LogTbAdmin(admin.ModelAdmin):
-    list_display = ('log_id', 'log_type', 'auth_member_id', 'from_member_name', 'to_member_name',
-                    'class_tb_id', 'member_ticket_tb_id',
-                    'log_info', 'log_how', 'log_detail', 'ip',
-                    'reg_dt', 'read', 'use')
-    search_fields = ['class_tb_id']
-
-
 @admin.register(MemberTb)
 class MemberTbAdmin(admin.ModelAdmin):
-    list_display = ('user', 'get_user_group', 'name', 'phone', 'age', 'sex', 'birthday_dt',
-                    'address', 'job', 'contents', 'reg_dt', 'mod_dt', 'use')
+    list_display = ('member_id', 'get_user_group', 'user', 'name', 'phone', 'age', 'sex', 'birthday_dt',
+                    'address', 'job', 'contents', 'profile_url', 'phone_is_active', 'reg_info',
+                    'reg_dt', 'mod_dt', 'use')
     search_fields = ['name']
 
     def get_user_group(self, obj):
@@ -44,15 +27,29 @@ class MemberTbAdmin(admin.ModelAdmin):
     get_user_group.short_description = 'Group'
 
 
+@admin.register(CommonCdTb)
+class CommonCdTbAdmin(admin.ModelAdmin):
+    list_display = ('common_cd_id', 'common_cd', 'common_cd_nm', 'group_cd', 'group_cd_nm',
+                    'upper_common_cd', 'upper_group_cd', 'attribute1', 'order', 'use')
+    search_fields = ['common_cd_nm', 'upper_common_cd']
+
+
+@admin.register(LogTb)
+class LogTbAdmin(admin.ModelAdmin):
+    list_display = ('log_id', 'log_type', 'auth_member_id', 'from_member_name', 'to_member_name', 'class_tb_id',
+                    'member_ticket_tb_id', 'log_info', 'log_how', 'log_detail', 'ip', 'reg_dt', 'read', 'use')
+    search_fields = ['class_tb_id']
+
+
 @admin.register(PushInfoTb)
 class PushInfoTbAdmin(admin.ModelAdmin):
-    list_display = ('push_info_id', 'member', 'device_info', 'token', 'badge_counter', 'device_id',
-                    'last_login', 'use')
+    list_display = ('push_info_id', 'member', 'device_id', 'token', 'badge_counter', 'session_info', 'device_info',
+                    'last_login', 'reg_dt', 'mod_dt', 'use')
     search_fields = ['member__name', 'device_id', 'device_info']
 
 
 @admin.register(SnsInfoTb)
 class SnsInfoTbAdmin(admin.ModelAdmin):
     list_display = ('sns_info_id', 'member', 'sns_id', 'sns_type', 'sns_name', 'sns_profile',
-                    'sns_connect_date', 'reg_dt', 'mod_dt', 'use')
+                    'sns_connect_date', 'change_password_check', 'reg_dt', 'mod_dt', 'use')
     search_fields = ['member__name', 'sns_type']

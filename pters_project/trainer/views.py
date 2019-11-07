@@ -43,7 +43,7 @@ from schedule.functions import func_refresh_member_ticket_count, func_get_traine
     func_get_member_schedule_all, func_get_lecture_schedule_all
 from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb
 from stats.functions import get_sales_data
-from trainee.models import MemberTicketTb, MemberMemberTicketTb
+from trainee.models import MemberTicketTb
 from .functions import func_get_trainer_setting_list, \
     func_get_member_ing_list, func_get_member_end_list, func_get_class_member_ing_list, func_get_class_member_end_list,\
     func_get_member_info, func_get_member_from_member_ticket_list, \

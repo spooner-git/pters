@@ -46,7 +46,7 @@ from configs import settings
 from payment.functions import func_cancel_period_billing_schedule
 from payment.models import PaymentInfoTb, BillingInfoTb, BillingCancelInfoTb
 from schedule.models import ScheduleTb
-from trainee.models import MemberTicketTb, MemberMemberTicketTb
+from trainee.models import MemberTicketTb
 from trainer.models import LectureMemberTb, ClassTb, SettingTb, LectureTb
 from trainer.models import LectureMemberTicketTb
 from .forms import MyPasswordResetForm, MyPasswordChangeForm, MyRegistrationForm
