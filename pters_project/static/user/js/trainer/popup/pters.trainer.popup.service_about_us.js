@@ -80,7 +80,7 @@ class Service_about_us {
     }
 
     dom_row_toolbox(){
-        let title = `About us <p style="font-size:14px;font-weight:500;">PTERS를 만드는 사람들</p>`;
+        let title = `About us <p style="font-size:14px;font-weight:500;">PTERS 팀</p>`;
         let html = `<div class="about_us_upper_box">
                         <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:#3b3b3b; letter-spacing: -1px; height:28px;">
                             <span style="display:inline-block;">${title}</span>
