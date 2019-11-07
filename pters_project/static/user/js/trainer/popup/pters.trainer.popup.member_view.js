@@ -579,9 +579,8 @@ class Member_view{
                 let lecture_name = this.data.ticket[i].lecture_name[j];
                 let lecture_state_cd = this.data.ticket[i].lecture_state[j];
                 let lecture_color = this.data.ticket[i].lecture_color[j];
-                console.log(lecture_name, lecture_state_cd, STATE_END_PROGRESS)
                 let text_decoration = (lecture_state_cd == STATE_END_PROGRESS ? 'color:#cccccc; text-decoration:line-through;' : '');
-                let icon_button_style = {"display":"block", "padding":"12px 0 12px 42px", "font-size":"13px", "height":"24px", "line-height":"24px"};
+                let icon_button_style = {"display":"block", "padding":"4px 0 4px 42px", "font-size":"13px", "height":"24px", "line-height":"24px"};
                 let lecture_name_set = `<div style="display:inline-block;width:4px;height:16px;border-radius: 8px;background-color:${lecture_color};margin-right:10px;margin-top:4px;"></div>
                                         <div style="display:inline-block;vertical-align:top;${text_decoration}">${lecture_name}</div>`;
                 let html_lecture_list_info = CComponent.text_button (lecture_id, lecture_name_set, icon_button_style, ()=>{
@@ -596,9 +595,10 @@ class Member_view{
             }
             //티켓내 남은횟수, 남은 기간 표기 부분
             let icon_button_style_remain_count_info = {"display":"block", "padding":"6px 0 0 38px", "font-size":"11px", "font-weight":"500", "color":"#858282", "height":"16px"};
-            let icon_button_style_remain_data_info = {"display":"block", "padding":"4px 0 12px 38px", "font-size":"11px", "font-weight":"500", "color":"#858282", "height":"16px"};
+            let icon_button_style_remain_data_info = {"display":"block", "padding":"6px 0 12px 38px", "font-size":"11px", "font-weight":"500", "color":"#858282", "height":"16px"};
             let html_remain_info = CComponent.text_button('reg_count', `남은 횟수  <span style="font-size:11px; font-weight:bold; color:#fe4e65; margin-left:8px;">${this.data.ticket[i].ticket_rem_count}회</span>`, icon_button_style_remain_count_info, ()=>{}) +
-                                    CComponent.text_button('reg_date', `남은 기간 <span style="font-size:11px; font-weight:bold; color:#fe4e65; margin-left:8px;">${this.data.ticket[i].end_date_text}</span>`, icon_button_style_remain_data_info, ()=>{});
+                                    CComponent.text_button('reg_date', `남은 기간 <span style="font-size:11px; font-weight:bold; color:#fe4e65; margin-left:8px;">${this.data.ticket[i].end_date_text}</span>`, icon_button_style_remain_count_info, ()=>{}) + 
+                                    CComponent.text_button('reg_date', `특이사항 <span style="font-size:11px; font-weight:bold; color:#fe4e65; margin-left:8px;">${ticket_note}</span>`, icon_button_style_remain_data_info, ()=>{});
             let html_ticket_lecture_list = `<div>${html_to_join_lecture_list.join('')}</div>`;
 
             html_to_join.push(html_ticket_name + html_ticket_lecture_list + html_remain_info);
