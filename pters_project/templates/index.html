@@ -4,6 +4,9 @@
 {% block local_css %}
     <link rel="stylesheet" href={% static_url "user/css/login/login.registration.css" %}>
     <style>
+        #root_nav{
+            display: none;
+        }
         #root_content{
             background-color: #ffffff;
         }
@@ -37,12 +40,128 @@
             }
         }
 
+        .front_page_section{
+            min-height: 800px;
+        }
+        .front_page_section > .article_title_wrapper{
+            display: block;
+            padding: 20px;
+            word-break: keep-all;
+            text-align: center;
+        }
+        .front_page_section > .article_wrapper{
+            display: flex;
+            flex-direction: column;
+        }
+        .front_page_section .section_article_up{
+            flex: 1 1 0;
+            text-align: center;
+        }
+        .front_page_section .section_article_down{
+            flex: 1 1 0;
+            text-align: center;
+        }
+        .front_page_section .article_description_wrap{
+            text-align: center;
+            word-break: keep-all;
+            padding: 10px 0;
+        }
+        .block_description{
+            display:inline-block;
+            width:150px;
+            text-align:center;
+            padding:20px 5px;
+            vertical-align: top;
+            font-size: 13px;
+        }
 
         /* PC버전 화면 */
         @media(min-width:800px){
+            #root_nav{
+                display: block;
+                position: sticky;
+                position: -webkit-sticky;
+                top: 0;
+                width: 100%;
+                height: 60px;
+                background-color: #ffffff;
+                z-index: 1;
+            }
+            #root_nav > div{
+                display: flex;
+                width: 100%;
+                max-width: 1024px;
+                margin: 0 auto;
+                padding: 0 20px;
+                box-sizing: border-box;
+            }
+            #login_wrapper{
+                flex: 1 1 0;
+                max-width: 150px;
+                line-height: 60px;
+                margin: 0 auto;
+            }
+                #logo{
+                    width: 32px;
+                    height: 32px;
+                    vertical-align: middle;
+                    margin-right: 10px;
+                    margin-bottom: 3px;
+                }
+                #logo_text{
+                    font-size: 20px;
+                    font-weight: 900;
+                    letter-spacing: -1px;
+                    color: #1f1d1e;
+                    vertical-align: middle;
+                }
+            #menu_wrapper{
+                flex: 1 1 0;
+                text-align: right;
+                line-height: 60px;
+            }
+                #menu_wrapper > ul{
+                    list-style-type: none;
+                    margin: 0;
+                }
+                #menu_wrapper > ul > li{
+                    display: inline-block;
+                    width: 90px;
+                    float: right;
+                    font-size: 14px;
+                }
+                #menu_wrapper > ul > li > a{
+                    color: #1f1d1e;
+                }
+
+
             #root_content{
                 background-color: #f4f4f4;
+                height: calc(100% - 60px);
             }
+
+            .front_page_section > .article_wrapper{
+                flex-direction: row;
+                width: 100%;
+                height: 100%;
+                max-width: 1024px;
+                margin:0 auto;
+            }
+
+            .front_page_section > .article_title_wrapper{
+                width: 100%;
+                height: 100%;
+                max-width: 1024px;
+                margin:0 auto;
+            }
+            .front_page_section .article_description_wrap{
+                text-align: left;
+                word-break: keep-all;
+                padding: 10px 0;
+            }
+
+
+
             #login_box{
                 display: flex;
                 max-width: 1024px;
@@ -75,112 +194,273 @@
     </style>
 {% endblock %}
 {% block content %}
-    <div id="root_content">
-
-        <div id="login_box">
-
-            <div class="login_content">
-                <!-- <div class="pters_logo">
-                    <a href="/">
-                        <img src="/static/common/icon/logo/PTERS_logo_short.png" alt="PTERS 피터스 로고" style="width:100%;">
-                    </a>
-                </div> -->
-                <div class="pters_description">
-                    <span style="font-weight:500;">쉽고 빠르게</span> <br/>
-                    <span style="font-weight:bold;">레슨을 관리하는 방법</span> <br>
-                    <span style="font-weight:bold;color:#fe4e65;font-size:22px">피터스 PTERS</span></div>
+    <nav id="root_nav">
+        <div>
+            <div id="login_wrapper">
+                <a href="/"><img src="/static/common/icon/logo/PTERS_logo_short.png" alt="PTERS 로고" id="logo"></a>
+                <a href="/"><span id="logo_text">PTERS</span></a>
             </div>
-            <div class="login_foot">
-                <form action="{% url 'login:login' %}" id="login-form" method="post">
-                    <input type="hidden" name="auto_login_check" value="1">
-                    <input type="hidden" name="next_page" value = '{% url 'index' %}'>
-                    {% csrf_token %}
-
-                    <!-- PTERS 로그인 입력 영역 -->
-                    <div>
-                        <input class="pters_login_input" type="text" name="username" id="username_id" placeholder="아이디" autofocus>
-                    </div>
-                    <div style="margin-top:8px;">
-                        <input class="pters_login_input" type="password" name="password" id="password_id" placeholder="비밀번호" onkeyup="enter_key();">
-                    </div>
-                    <!-- PTERS 로그인 버튼 노출 영역 -->
-                    <div class="social_login_box" onclick="document.getElementById('login-form').submit();" style="background-color: #fe4e65; margin-top:12px;">
-                        <div class="social_login_img" style="display:none;"></div>
-                        <span class="social_login_text" style="color:#ffffff; text-align:center;">로그인</span>
-                        <div style="display:table-cell; width:60px;display:none;"></div>
-                    </div>
-
-                    <div style="width:100%;height:2px;background-color:#f5f2f3;margin-top:15px;margin-bottom:15px;">
-
-                    </div>
-
-                    <div class="social_login_box_wrapper">
-                        <!-- 네이버 로그인 버튼 노출 영역 -->
-                        <div class="social_login_box" onclick="location.href=naverLogin.generateAuthorizeUrl();" style="background-color: #0dd25a;">
-                            <div class="social_login_img">
-                                <img src="/static/common/icon/icon_naver_logo.png" style="width: 24px; height: 24px; vertical-align:middle;" alt="PTERS 네이버로 로그인">
-                            </div>
-                            <span class="social_login_text">네이버 로그인</span>
-                            <div class="social_login_arrow">
-                                <img src="/static/common/icon/icon_arrow_r_small_white.png" style="width: 24px; height: 24px; vertical-align:middle;">
-                            </div>
-                        </div>
-
-                        <div style="flex-basis:8px;"></div>
-
-                        <!-- 카카오톡 로그인 버튼 노출 영역 -->
-                        <div class="social_login_box" id="custom-login-btn" onclick="loginWithKakao();" style="background-color: #ffeb00;">
-                            <div class="social_login_img">
-                                <img src="/static/common/icon/icon_kakao_logo.png" style="width: 24px; height: 24px; vertical-align:middle;" alt="PTERS 카카오로 로그인">
-                            </div>
-                            <span class="social_login_text" style="color:#3a1c1d;">카카오 로그인</span>
-                            <div class="social_login_arrow">
-                                <img src="/static/common/icon/icon_arrow_r_small_black.png" style="width: 24px; height: 24px; vertical-align:middle;">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 일반 로그인 버튼 노출 영역 -->
-                    <!-- <div class="social_login_box" id="custom-login-btn" onclick="location.href='{% url 'login:index' %}';" style="background-color: #ffffff; margin-top:8px;  border:1px solid #ebe6e6;">
-                        <div class="social_login_img">
-                            <img src="/static/common/icon/icon_pters_logo.png" style="width: 24px; height: 24px; vertical-align:middle;" alt="PTERS 로그인">
-                        </div>
-                        <span class="social_login_text" style="color:#3a1c1d;">일반 로그인</span>
-                        <div style="display:table-cell; width:60px; vertical-align: middle; text-align:right; padding-right:8px;">
-                            <img src="/static/common/icon/icon_arrow_r_small_light_grey.png" style="width: 24px; height: 24px; vertical-align:middle;">
-                        </div>
-                    </div> -->
-
-                    <!-- 구글아이디로그인 버튼 노출 영역 -->
-                    <!--<div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark" style="width:179px;margin-bottom:8px;"></div>-->
-                    <!-- 페이스북아이디로그인 버튼 노출 영역 -->
-                    <!-- <fb:login-button
-                      scope="public_profile, email" onlogin="checkLoginState();" class="fb-login-button" data-max-rows="1" data-size="medium" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false" style="text-align: center;display: block">
-                    </fb:login-button> -->
-                    <!--<div style="width:320px; height: 1px;background:#f5f2f3;margin-top: 16px; margin-bottom: 8px; opacity: 0.3"></div>-->
-                    <!-- 회원가입, 일반 로그인 버튼 노출 영역역 -->
-                    <!-- <div class="general_text" style="display:table; width:100%; height: 48px; margin-top:24px;color:#858282">
-                        계정이 필요하지 않으십니까? &nbsp;&nbsp;&nbsp;<span onclick="location.href='{% url 'login:check_registration' %}'" style="color:#fe4e65;font-weight:bold;text-decoration: underline;">회원가입</span>
-                    </div> -->
-                    <div style="width:100%;height:2px;background-color:#f5f2f3;margin-top:15px;margin-bottom:0px;">
-
-                    </div>
-                    <div style="display:table; width:100%; height: 48px;">
-                        <div class="general_text" style="color:#858282;" onclick="location.href='{% url 'login:check_registration' %}'">회원 가입</div>
-                        <div class="general_text" style="color:#858282;" onclick="location.href='{% url 'login:reset_password' %}'">비밀번호 초기화</div>
-                    </div>
-                    <div style="width:100%;height:2px;background-color:#f5f2f3;margin-bottom:0px;">
-
-                    </div>
-                    <div style="display:table; width:100%; height: 28px;">
-                        <div class="general_text" style="color:#858282; height:28px; font-size: 11px;">문의 : 070-8816-1010 / support@pters.co.kr</div>
-                    </div>
-                    <div style="display:table; width:100%; height: 28px; font-size: 10px;">
-                        <div class="general_text" style="color:#858282; height:28px; font-size: 11px;">고객센터 운영시간 : 10:00 ~ 18:00(점심시간 13:00~14:00)</div>
-                    </div>
-                </form>
+            <div id="menu_wrapper">
+                <ul>
+                    <li><a onclick="go_to('app');" style="cursor: pointer;">앱</a></li>
+                    <li><a onclick="go_to('feature')" style="cursor: pointer;">특징</a></li>
+                </ul>
             </div>
         </div>
+        
+    </nav>
+
+    <div id="root_content">
+        <section class="front_page_section">
+            <div id="login_box">
+
+                <div class="login_content">
+                    <!-- <div class="pters_logo">
+                        <a href="/">
+                            <img src="/static/common/icon/logo/PTERS_logo_short.png" alt="PTERS 피터스 로고" style="width:100%;">
+                        </a>
+                    </div> -->
+                    <div class="pters_description">
+                        <span style="font-weight:500;">쉽고 빠르게</span> <br/>
+                        <span style="font-weight:bold;">레슨을 관리하는 방법</span> <br>
+                        <span style="font-weight:bold;color:#fe4e65;font-size:22px">피터스 PTERS</span></div>
+                </div>
+                <div class="login_foot">
+                    <form action="{% url 'login:login' %}" id="login-form" method="post">
+                        <input type="hidden" name="auto_login_check" value="1">
+                        <input type="hidden" name="next_page" value = '{% url 'index' %}'>
+                        {% csrf_token %}
+
+                        <!-- PTERS 로그인 입력 영역 -->
+                        <div>
+                            <input class="pters_login_input" type="text" name="username" id="username_id" placeholder="아이디" autofocus>
+                        </div>
+                        <div style="margin-top:8px;">
+                            <input class="pters_login_input" type="password" name="password" id="password_id" placeholder="비밀번호" onkeyup="enter_key();">
+                        </div>
+                        <!-- PTERS 로그인 버튼 노출 영역 -->
+                        <div class="social_login_box" onclick="document.getElementById('login-form').submit();" style="background-color: #fe4e65; margin-top:12px;">
+                            <div class="social_login_img" style="display:none;"></div>
+                            <span class="social_login_text" style="color:#ffffff; text-align:center;">로그인</span>
+                            <div style="display:table-cell; width:60px;display:none;"></div>
+                        </div>
+
+                        <div style="width:100%;height:2px;background-color:#f5f2f3;margin-top:15px;margin-bottom:15px;">
+
+                        </div>
+
+                        <div class="social_login_box_wrapper">
+                            <!-- 네이버 로그인 버튼 노출 영역 -->
+                            <div class="social_login_box" onclick="location.href=naverLogin.generateAuthorizeUrl();" style="background-color: #0dd25a;">
+                                <div class="social_login_img">
+                                    <img src="/static/common/icon/icon_naver_logo.png" style="width: 24px; height: 24px; vertical-align:middle;" alt="PTERS 네이버로 로그인">
+                                </div>
+                                <span class="social_login_text">네이버 로그인</span>
+                                <div class="social_login_arrow">
+                                    <img src="/static/common/icon/icon_arrow_r_small_white.png" style="width: 24px; height: 24px; vertical-align:middle;">
+                                </div>
+                            </div>
+
+                            <div style="flex-basis:8px;"></div>
+
+                            <!-- 카카오톡 로그인 버튼 노출 영역 -->
+                            <div class="social_login_box" id="custom-login-btn" onclick="loginWithKakao();" style="background-color: #ffeb00;">
+                                <div class="social_login_img">
+                                    <img src="/static/common/icon/icon_kakao_logo.png" style="width: 24px; height: 24px; vertical-align:middle;" alt="PTERS 카카오로 로그인">
+                                </div>
+                                <span class="social_login_text" style="color:#3a1c1d;">카카오 로그인</span>
+                                <div class="social_login_arrow">
+                                    <img src="/static/common/icon/icon_arrow_r_small_black.png" style="width: 24px; height: 24px; vertical-align:middle;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 일반 로그인 버튼 노출 영역 -->
+                        <!-- <div class="social_login_box" id="custom-login-btn" onclick="location.href='{% url 'login:index' %}';" style="background-color: #ffffff; margin-top:8px;  border:1px solid #ebe6e6;">
+                            <div class="social_login_img">
+                                <img src="/static/common/icon/icon_pters_logo.png" style="width: 24px; height: 24px; vertical-align:middle;" alt="PTERS 로그인">
+                            </div>
+                            <span class="social_login_text" style="color:#3a1c1d;">일반 로그인</span>
+                            <div style="display:table-cell; width:60px; vertical-align: middle; text-align:right; padding-right:8px;">
+                                <img src="/static/common/icon/icon_arrow_r_small_light_grey.png" style="width: 24px; height: 24px; vertical-align:middle;">
+                            </div>
+                        </div> -->
+
+                        <!-- 구글아이디로그인 버튼 노출 영역 -->
+                        <!--<div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark" style="width:179px;margin-bottom:8px;"></div>-->
+                        <!-- 페이스북아이디로그인 버튼 노출 영역 -->
+                        <!-- <fb:login-button
+                        scope="public_profile, email" onlogin="checkLoginState();" class="fb-login-button" data-max-rows="1" data-size="medium" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false" style="text-align: center;display: block">
+                        </fb:login-button> -->
+                        <!--<div style="width:320px; height: 1px;background:#f5f2f3;margin-top: 16px; margin-bottom: 8px; opacity: 0.3"></div>-->
+                        <!-- 회원가입, 일반 로그인 버튼 노출 영역역 -->
+                        <!-- <div class="general_text" style="display:table; width:100%; height: 48px; margin-top:24px;color:#858282">
+                            계정이 필요하지 않으십니까? &nbsp;&nbsp;&nbsp;<span onclick="location.href='{% url 'login:check_registration' %}'" style="color:#fe4e65;font-weight:bold;text-decoration: underline;">회원가입</span>
+                        </div> -->
+                        <div style="width:100%;height:2px;background-color:#f5f2f3;margin-top:15px;margin-bottom:0px;">
+
+                        </div>
+                        <div style="display:table; width:100%; height: 48px;">
+                            <div class="general_text" style="color:#858282;" onclick="location.href='{% url 'login:check_registration' %}'">회원 가입</div>
+                            <div class="general_text" style="color:#858282;" onclick="location.href='{% url 'login:reset_password' %}'">비밀번호 초기화</div>
+                        </div>
+                        <div style="width:100%;height:2px;background-color:#f5f2f3;margin-bottom:0px;">
+
+                        </div>
+                        <div style="display:table; width:100%; height: 28px;">
+                            <div class="general_text" style="color:#858282; height:28px; font-size: 11px;">문의 : 070-8816-1010 / support@pters.co.kr</div>
+                        </div>
+                        <div style="display:table; width:100%; height: 28px; font-size: 10px;">
+                            <div class="general_text" style="color:#858282; height:28px; font-size: 11px;">고객센터 운영시간 : 10:00 ~ 18:00(점심시간 13:00~14:00)</div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <section class="front_page_section" style="background-color:#ffffff;" id="feature_first_page">
+            <div class="article_title_wrapper">
+                <h2>레슨 관리를 스마트 하게</h2>
+                <p>복잡한 횟수 차감과 일정 관리 시간은 줄이고, 레슨에 집중할 수 있습니다.</p>
+            </div>
+            <div class="article_wrapper">
+                <article class="section_article_up">
+                    <img src="/static/common/img/front_page/appstore_mobile_3.jpg" alt="">
+                </article>
+                <article class="section_article_down">
+                    <div class="article_description_wrap">
+                        <h3>일정 관리</h3>
+                        <p>일정을 등록하고, 완료 처리를 하면 참석 회원님의 횟수가 자동 차감 됩니다.</p>
+                    </div>
+                    <div class="article_description_wrap">
+                        <h3>실시간 예약</h3>
+                        <p>수강 회원님께서 직접 예약이 가능한 시간에 예약할 수 있습니다.<br>그룹형 레슨과 개인 레슨을 지원합니다.</p>
+                    </div>
+                    <div class="article_description_wrap">
+                        <h3>다양한 커스터마이징</h3>
+                        <p>나만의 예약 규칙을 만들 수 있는 다양한 옵션 지원</p>
+                        <div class="block_description">
+                            <div><img src="/static/common/icon/icon_setting_worktime_black.png" alt=""></div>
+                            <div>업무 시간을 지정하면, 그 안에서만 예약이 가능</div>
+                        </div>
+                        <div class="block_description">
+                            <div><img src="/static/common/icon/icon_setting_worktime2_black.png" alt=""></div>
+                            <div>예약 시 선택 가능한 시작 시간을 설정 <br>(매시각 정시, 20분 마다..)</div>
+                        </div>
+                        <div class="block_description">
+                            <div><img src="/static/common/icon/icon_setting_autocomplete_black.png" alt=""></div>
+                            <div>예약이 가능한 날짜 구간 <br>(1 ~ 14일 후까지)</div>
+                        </div>
+                        <div class="block_description">
+                            <div><img src="/static/common/icon/icon_attend_check_black.png" alt=""></div>
+                            <div>최소 예약 가능 시간 <br>(0분 전 ... 48시간 전)</div>
+                        </div>
+                        <div class="block_description">
+                            <div><img src="/static/common/icon/icon_delete_black.png" alt=""></div>
+                            <div>최소 예약 취소 가능 시간 <br>(0분 전 ... 48시간 전)</div>
+                        </div>
+                        <div class="block_description">
+                            <div><img src="/static/common/icon/tab_bar/icon_member_off.png" alt=""></div>
+                            <div>혹은 나 혼자 쓰기 <br>(예약 기능을 OFF)</div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="front_page_section" style="background-color:#ffffff;padding-top:50px">
+            <div class="article_title_wrapper">
+                <h2>나만의 상품 만들기</h2>
+                <p>수강권에 수업을 자유롭게 넣고 빼서, 상황에 맞는 운용이 가능합니다.</p>
+            </div>
+            <div class="article_wrapper">
+                    <article class="section_article_up">
+                        <img src="/static/common/img/front_page/appstore_mobile_5.jpg" alt="">
+                        <div class="article_description_wrap" style="text-align:center;">
+                            <h3>다양한 옵션</h3>
+                            <p>
+                                수업별 색상, 수업 진행 시간, 정원을 설정 할 수 있습니다.
+                                <br>
+                                한눈에 현재 진행중인 수업들을 확인하고, 
+                                <br>
+                                참가 중인 회원들을 확인해 보세요.
+                            </p>
+                        </div>
+                    </article>
+                    <article class="section_article_down">
+                        <img src="/static/common/img/front_page/appstore_mobile_6.jpg" alt="">
+                        <div class="article_description_wrap" style="text-align:center;">
+                            <h3>상품 만들기</h3>
+                            <p>
+                                수업을 묶어 수강권으로 만들고, 회원을 등록합니다.
+                                <br>
+                                언제라도 회원이 참가 가능한 수업을 수정할 수 있고,
+                                <br>
+                                시즌별로 수강권을 달리 운용하는 등으로 활용 해보세요.
+                            </p>
+                        </div>
+                    </article>
+            </div>
+        </section>
+
+        <section class="front_page_section" style="background-color:#ffffff;padding-top:50px">
+                <div class="article_title_wrapper">
+                        <h2>한눈에 보는 현황</h2>
+                        <p>내 활동에 따른 자동 실시간 매출과 회원 통계</p>
+                    </div>
+                    <div class="article_wrapper">
+                        <article class="section_article_up">
+                            <img src="/static/common/img/front_page/appstore_mobile_7.jpg" alt="">
+                        </article>
+                        <article class="section_article_down">
+                            <div class="article_description_wrap">
+                                <h3>실시간 통계 데이터</h3>
+                                <p>회원을 등록하고, 일정을 완료하고, 내가 활동하는 데이터가 자동으로 실시간 집계됩니다.
+                                </p>
+                            </div>
+                            <div class="article_description_wrap">
+                                <h3>기간별 조회</h3>
+                                <p>과거 데이터를 다시 검색 해볼 수 있습니다. 현재 내 비즈니스 현황을 점검하고 새로운 전략을 도모해보세요.</p>
+                            </div>
+                            <div class="article_description_wrap">
+                                <h3>다양한 분류</h3>
+                                <p>다각도로 현황을 분석할 수 있습니다.</p>
+                                <div class="block_description">
+                                    <div><img src="/static/common/icon/icon_statistics_black.png" alt=""></div>
+                                    <div>월별 매출 현황을 그래프로 한 눈에</div>
+                                </div>
+                                <div class="block_description">
+                                    <div><img src="/static/common/icon/icon_ticket_black.png" alt=""></div>
+                                    <div>회원등록 시 입력한 금액을 토대로 자동 매출 계산</div>
+                                </div>
+                                <div class="block_description">
+                                    <div><img src="/static/common/icon/icon_member_card_black.png" alt=""></div>
+                                    <div>월별 등록/ 환불 회원 현황</div>
+                                </div>
+                                <div class="block_description">
+                                    <div><img src="/static/common/icon/icon_attend_check_black.png" alt=""></div>
+                                    <div>월별 레슨 완료 횟수</div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+        </section>
+
+        <section class="front_page_section" style="background-color:#ffffff;padding-top:50px;min-height:unset;padding-bottom:100px;" id="app_first_page">
+                <div class="article_title_wrapper">
+                        <h2>사용하기</h2>
+                        <p>클라우드 서비스로 웹브라우저, 앱 (iOS, 안드로이드)으로 언제 어디서나</p>
+                    </div>
+                    <div class="article_wrapper">
+                        <article class="section_article_up">
+                            <img src="/static/common/img/front_page/apple.svg" alt="PTERS 앱스토어 앱 다운로드" style="width:200px;">
+                        </article>
+                        <article class="section_article_down">
+                            <img src="/static/common/img/front_page/android.svg" alt="PTERS 안드로이드 앱 다운로드" style="width:200px;">
+                        </article>
+                    </div>
+        </section>
+
     </div>
     <!--
     <div class="album_wrap_ie" id="IE_block_explain" style="display: none;">
@@ -347,5 +627,22 @@
         google_login_check = true;
       }
 */
+
+function go_to(location){
+    
+    let loc;
+    let $root_content = $('#root_content');
+    switch(location){
+        case 'feature':
+            loc = $('#feature_first_page').offset().top - 60 + $root_content.scrollTop();
+            $root_content.animate({scrollTop:loc}, 300);
+            break;
+        case 'app':
+            loc = $('#app_first_page').offset().top + $('#app_first_page').height() + $root_content.scrollTop();
+            $root_content.animate({scrollTop:loc}, 300);
+            break;
+    }
+
+}
 </script>
 {% endblock %}
