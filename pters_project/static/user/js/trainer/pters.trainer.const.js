@@ -184,6 +184,7 @@ const POPUP_ADDRESS_SERVICE_INQUIRY = 'popup_service_inquiry';
 const POPUP_ADDRESS_SERVICE_INQUIRY_HISTORY = 'popup_service_inquiry_history';
 const POPUP_ADDRESS_SERVICE_INQUIRY_FAQ = 'popup_service_inquiry_faq';
 const POPUP_ADDRESS_SERVICE_HELPER = 'popup_service_helper';
+const POPUP_ADDRESS_SERVICE_ABOUT_US = 'popup_service_about_us';
 
 const POPUP_ADDRESS_MYPAGE = 'popup_mypage';
 const POPUP_ADDRESS_MYPAGE_MODIFY = 'popup_mypage_modify';
@@ -236,7 +237,10 @@ const DAYNAME_MATCH = {"SUN":'일', "MON":'월', "TUE":'화', "WED":'수', "THS"
 const DAYNAME_EN_SHORT = ['SUN', 'MON', 'TUE', 'WED', 'THS', 'FRI', 'SAT'];
 const COLOR_NAME_CODE = {"#fbf3bd":"바나나", "#dbe6f7":"하늘", "#ffd3d9": "복숭아",
               "#ffe3c2":"살구", "#ceeac4":"키위", "#d8d6ff":"포도",
-              "#ead8f2":"블루베리", "#d9c3ab":"고구마", "#ffacb7":"복숭아"};
+              "#ead8f2":"블루베리", "#d9c3ab":"고구마", "#ffacb7":"복숭아",
+
+              "#fe764e":"당근", "#ffd652":"망고", "#9de048": "아보카도", "#30c842":"양배추", "#4b8aeb": "여름 하늘", "#5e51fe": "머루", "#9e41cc":"오디", "#664120":"밤" 
+            };
 const SEX_CODE = {"M": "남성", "W": "여성"};
 const SCHEDULE_STATUS = {"NP" : "진행전", "PC": "결석", "PE": "출석"};
 const TICKET_STATUS = {"IP": "진행중", "PE": "종료", "RF": "환불"};

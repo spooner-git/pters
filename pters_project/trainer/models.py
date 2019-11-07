@@ -10,6 +10,7 @@ from login.models import MemberTb, CommonCdTb
 from trainee.models import MemberTicketTb
 
 
+# 센터 <-> 강사 정보
 class CenterTb(TimeStampedModel):
     center_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     member = models.ForeignKey(MemberTb, on_delete=models.CASCADE)  # Field name made lowercase.
@@ -27,6 +28,7 @@ class CenterTb(TimeStampedModel):
         return self.center_name.__str__()+'_center'
 
 
+# 센터 <-> 강사 연결 정보
 class CenterTrainerTb(TimeStampedModel):
     center_trainer_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     member = models.ForeignKey(MemberTb, on_delete=models.CASCADE)  # Field name made lowercase.
@@ -38,6 +40,7 @@ class CenterTrainerTb(TimeStampedModel):
         db_table = 'CENTER_TRAINER_TB'
 
 
+# 회사 정보
 class CompanyTb(TimeStampedModel):
     company_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     name = models.CharField(db_column='NAME', max_length=20, blank=True, default='')  # Field name made lowercase.
@@ -52,6 +55,7 @@ class CompanyTb(TimeStampedModel):
         db_table = 'COMPANY_TB'
 
 
+# 프로그램 정보
 class ClassTb(TimeStampedModel):
     class_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     member = models.ForeignKey(MemberTb, on_delete=models.CASCADE)  # Field name made lowercase.
@@ -118,6 +122,7 @@ class ClassTb(TimeStampedModel):
         return center_name
 
 
+# 강사 <-> 강사 프로그램 연결 정보
 class MemberClassTb(TimeStampedModel):
     member_class_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
@@ -132,6 +137,7 @@ class MemberClassTb(TimeStampedModel):
         db_table = 'MEMBER_CLASS_TB'
 
 
+# 강사 프로그램 <-> 회원 수강권 연결 정보
 class ClassMemberTicketTb(TimeStampedModel):
     class_member_ticket_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, null=True)
@@ -154,6 +160,7 @@ class ClassMemberTicketTb(TimeStampedModel):
         return auth_cd_name
 
 
+# 수업 정보
 class LectureTb(TimeStampedModel):
     lecture_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, blank=True, null=True)
@@ -186,6 +193,7 @@ class LectureTb(TimeStampedModel):
         return state_cd_name
 
 
+# 수강권 정보
 class TicketTb(TimeStampedModel):
     ticket_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, blank=True, null=True)
@@ -208,6 +216,7 @@ class TicketTb(TimeStampedModel):
         return self.name.__str__()+'_ticket'
 
 
+# 수업 <-> 회원 수강권 연결 설정 (이제 사용 안함)
 class LectureMemberTicketTb(TimeStampedModel):
     lecture_member_ticket_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     lecture_tb = models.ForeignKey(LectureTb, on_delete=models.CASCADE, db_column='group_tb_id', blank=True, null=True)
@@ -221,6 +230,7 @@ class LectureMemberTicketTb(TimeStampedModel):
         db_table = 'GROUP_LECTURE_TB'
 
 
+# 수업 <-> 회원 연결 설정 (고정 회원)
 class LectureMemberTb(TimeStampedModel):
     lecture_member_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, db_column='class_tb_id', blank=True, null=True)
@@ -235,6 +245,7 @@ class LectureMemberTb(TimeStampedModel):
         db_table = 'GROUP_MEMBER_TB'
 
 
+# 수강권 <-> 수업 연결 설정
 class TicketLectureTb(TimeStampedModel):
     ticket_lecture_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, blank=True, null=True)

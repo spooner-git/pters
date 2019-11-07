@@ -36,6 +36,12 @@ class Member_add{
                 end_date_text:null
         };
 
+        this.date_start = 0;
+        Setting_reserve_func.read((data)=>{
+            let date_start_array = {"SUN":0, "MON":1};
+            this.date_start = date_start_array[data.setting_week_start_date];
+        });
+
         //팝업의 날짜, 시간등의 입력란을 미리 외부에서 온 데이터로 채워서 보여준다.
         this.set_initial_data(this.data_from_external);
         this.init();
@@ -209,9 +215,9 @@ class Member_add{
             '</div>' +
             '<div class="obj_input_box_full">'
                 + CComponent.dom_tag('수강권') + ticket + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag('횟수') + reg_count + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('시작일') + start_date + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('종료일') + end_date + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
-                + CComponent.dom_tag('횟수') + reg_count + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('가격') + reg_price + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('특이사항') + memo +
             '</div>';
@@ -223,9 +229,9 @@ class Member_add{
             '</div>' +
             '<div class="obj_input_box_full">'
                 + CComponent.dom_tag('수강권') + ticket + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag('횟수') + reg_count + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('시작일') + start_date + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('종료일') + end_date + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
-                + CComponent.dom_tag('횟수') + reg_count + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('가격') + reg_price + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('특이사항') + memo +
             '</div>';
@@ -368,8 +374,10 @@ class Member_add{
         let icon_r_text = "";
         let style = null;
         let input_disabled = false;
-        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+.,@\\s 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
-        let pattern_message = "+ - _ @ . , 제외 특수문자는 입력 불가";
+        // let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+.,@\\s 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
+        // let pattern_message = "+ - _ @ . , 제외 특수문자는 입력 불가";
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+.,:()\\[\\]\\s 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{1,20}";
+        let pattern_message = "+ - _ : ()[] . , 제외 특수문자는 입력 불가";
         let required = "";
         let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, input_disabled, (input_data)=>{
             this.memo = input_data;
@@ -414,7 +422,7 @@ class Member_add{
                 let month = this.data.start_date == null ? this.dates.current_month : this.data.start_date.month;
                 let date = this.data.start_date == null ? this.dates.current_date : this.data.start_date.date;
                 
-                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'start_date', title:'시작일',
+                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'start_date', title:'시작일', start_day:this.date_start,
                                                                                                 data:{year:year, month:month, date:date},
                                                                                                 // min:{year:year, month:month, date:date},
                                                                                                 callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
@@ -470,14 +478,15 @@ class Member_add{
                     }
                 }
 
-                //data_to_send의 선택날짜가 빈값이라면 오늘로 셋팅한다.
-                // let year = this.data.end_date == null ? this.dates.current_year : this.data.end_date.year; 
-                // let month = this.data.end_date == null ? this.dates.current_month : this.data.end_date.month;
-                // let date = this.data.end_date == null ? this.dates.current_date : this.data.end_date.date;    
-                
                 let min = this.data.start_date != null ? {year:this.data.start_date.year, month:this.data.start_date.month, date: this.data.start_date.date} : null;
 
-                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'end_date', title:'종료일',
+                if(Number(year) == 9999){
+                    year = this.data.start_date.year;
+                    month = this.data.start_date.month;
+                    date = this.data.start_date.date;
+                }
+
+                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'end_date', title:'종료일', start_day: this.date_start,
                                                                                                 data:{year:year, month:month, date:date},  
                                                                                                 min:min,
                                                                                                 callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
@@ -486,8 +495,110 @@ class Member_add{
                 }});
             });
         });
+        let end_date_simple_input = this.dom_row_end_date_simple_input_machine();
+        return html + end_date_simple_input;
+    }
+
+    dom_row_end_date_simple_input_machine(){
+        let button_style = {"flex":"1 1 0", "padding":"10px 8px", "color":"#636363"};
+
+        let button_week_2 = CComponent.button ("button_week_2", "+ 7일", button_style, ()=>{
+            if(this.data.start_date == null){
+                show_error_message("시작 일자를 먼저 선택해주세요.");
+                return;
+            }
+
+            let end_date_ = this.data.end_date == null ? this.data.start_date : this.data.end_date;
+            let end_date = DateRobot.to_yyyymmdd(end_date_.year, end_date_.month, end_date_.date);
+            if(end_date_.year == "9999"){
+                end_date = DateRobot.to_yyyymmdd(this.data.start_date.year, this.data.start_date.month, this.data.start_date.date);
+            }
+
+            let new_date = DateRobot.add_date(end_date, 7);
+            let new_date_year = new_date.split('-')[0];
+            let new_date_month = new_date.split('-')[1];
+            let new_date_date = new_date.split('-')[2];
+            
+            this.data.end_date = {year:Number(new_date_year), month:Number(new_date_month), date:Number(new_date_date)};
+            this.data.end_date_text = DateRobot.to_text(new_date_year, new_date_month, new_date_date, SHORT);
+            this.render_content();
+        });
+
+        let button_month_1 = CComponent.button ("button_month_1", "+ 30일", button_style, ()=>{
+            if(this.data.start_date == null){
+                show_error_message("시작 일자를 먼저 선택해주세요.");
+                return;
+            }
+            // let start_date = DateRobot.to_yyyymmdd(this.data.start_date.year, this.data.start_date.month, this.data.start_date.date);
+            let end_date_ = this.data.end_date == null ? this.data.start_date : this.data.end_date;
+            let end_date = DateRobot.to_yyyymmdd(end_date_.year, end_date_.month, end_date_.date);
+            if(end_date_.year == "9999"){
+                end_date = DateRobot.to_yyyymmdd(this.data.start_date.year, this.data.start_date.month, this.data.start_date.date);
+            }
+
+            let new_date = DateRobot.add_date(end_date, 30);
+            let new_date_year = new_date.split('-')[0];
+            let new_date_month = new_date.split('-')[1];
+            let new_date_date = new_date.split('-')[2];
+            
+            this.data.end_date = {year:Number(new_date_year), month:Number(new_date_month), date:Number(new_date_date)};
+            this.data.end_date_text = DateRobot.to_text(new_date_year, new_date_month, new_date_date, SHORT);
+            this.render_content();
+        });
+
+        let button_year_1 = CComponent.button ("button_year_1", "+ 1년", button_style, ()=>{
+            if(this.data.start_date == null){
+                show_error_message("시작 일자를 먼저 선택해주세요.");
+                return;
+            }
+            // let start_date = DateRobot.to_yyyymmdd(this.data.start_date.year, this.data.start_date.month, this.data.start_date.date);
+            let end_date_ = this.data.end_date == null ? this.data.start_date : this.data.end_date;
+            let end_date = DateRobot.to_yyyymmdd(end_date_.year, end_date_.month, end_date_.date);
+            if(end_date_.year == "9999"){
+                end_date = DateRobot.to_yyyymmdd(this.data.start_date.year, this.data.start_date.month, this.data.start_date.date);
+            }
+
+            let new_date = DateRobot.add_date(end_date, 366);
+            let new_date_year = new_date.split('-')[0];
+            let new_date_month = new_date.split('-')[1];
+            let new_date_date = new_date.split('-')[2];
+            
+            this.data.end_date = {year:Number(new_date_year), month:Number(new_date_month), date:Number(new_date_date)};
+            this.data.end_date_text = DateRobot.to_text(new_date_year, new_date_month, new_date_date, SHORT);
+            this.render_content();
+        });
+
+        let button_no_duration = CComponent.button ("button_no_duration", "소진 시", button_style, ()=>{
+            if(this.data.start_date == null){
+                show_error_message("시작 일자를 먼저 선택해주세요.");
+                return;
+            }
+            
+            this.data.end_date = {year:9999, month:12, date:31};
+            this.data.end_date_text = "소진 시까지";
+            this.render_content();
+        });
+
+        let button_clear = CComponent.button ("button_clear", "지우기", button_style, ()=>{
+
+            this.data.end_date = null;
+            this.data.end_date_text = null;
+            this.render_content();
+        });
+        
+        let wrapper_style = "display:flex;padding:0px 0 0px 20px;font-size:12px;";
+        let divider_style = "flex-basis:1px;height:20px;margin-top:10px;background-color:#f5f2f2;display:none;";
+        let html = `<div style="${wrapper_style}">
+                        ${button_week_2} <div style="${divider_style}"></div>
+                        ${button_month_1} <div style="${divider_style}"></div>
+                        ${button_year_1} <div style="${divider_style}"></div>
+                        ${button_no_duration} <div style="${divider_style}"></div>
+                        ${button_clear}
+                    </div>`;
+
         return html;
     }
+
 
     dom_row_member_reg_count_input(){
         let unit = '회';
@@ -530,6 +641,30 @@ class Member_add{
             }
             this.reg_price = input_data;
         }, pattern, pattern_message, required);
+        
+        let price_simple_input = this.dom_row_price_simple_input_machine();
+        return html + price_simple_input;
+    }
+
+    dom_row_price_simple_input_machine(){
+        let button_style = {"flex":"1 1 0", "padding":"10px 8px", "color":"#636363"};
+
+        let button_100 = CComponent.button ("button_100", "+ 100만", button_style, ()=>{ this.data.ticket_price =this.data.ticket_price + 1000000;this.render_content(); });
+        let button_50 = CComponent.button ("button_50", "+ 50만", button_style, ()=>{ this.data.ticket_price = this.data.ticket_price + 500000;this.render_content(); });
+        let button_10 = CComponent.button ("button_10", "+ 10만", button_style, ()=>{ this.data.ticket_price = this.data.ticket_price + 100000;this.render_content(); });
+        let button_1 = CComponent.button ("button_1", "+ 1만", button_style, ()=>{ this.data.ticket_price = this.data.ticket_price + 10000;this.render_content(); });
+        let button_delete = CComponent.button ("button_delete", "지우기", button_style, ()=>{ this.data.ticket_price = null;this.render_content(); });
+        
+        let wrapper_style = "display:flex;padding:0px 0 0px 20px;font-size:12px;";
+        let divider_style = "flex-basis:1px;height:20px;margin-top:10px;background-color:#f5f2f2;display:none;";
+        let html = `<div style="${wrapper_style}">
+                        ${button_100} <div style="${divider_style}"></div>
+                        ${button_50} <div style="${divider_style}"></div>
+                        ${button_10} <div style="${divider_style}"></div>
+                        ${button_1} <div style="${divider_style}"></div>
+                        ${button_delete}
+                    </div>`;
+
         return html;
     }
 
@@ -566,8 +701,8 @@ class Member_add{
                     "sex":this.data.sex,
                     "contents":this.data.memo,
                     "ticket_id":this.data.ticket_id[0],
-                    "start_date": `${this.data.start_date.year}-${this.data.start_date.month}-${this.data.start_date.date}`,
-                    "end_date":`${this.data.end_date.year}-${this.data.end_date.month}-${this.data.end_date.date}`,
+                    "start_date": DateRobot.to_yyyymmdd(this.data.start_date.year, this.data.start_date.month, this.data.start_date.date),
+                    "end_date":DateRobot.to_yyyymmdd(this.data.end_date.year, this.data.end_date.month, this.data.end_date.date),
                     "counts":this.data.ticket_reg_count,
                     "price":this.data.ticket_price
         };
@@ -581,11 +716,11 @@ class Member_add{
             // "sex":this.data.sex,
             "contents":this.data.memo,
             "ticket_id":this.data.ticket_id[0],
-            "start_date": `${this.data.start_date.year}-${this.data.start_date.month}-${this.data.start_date.date}`,
-            "end_date":`${this.data.end_date.year}-${this.data.end_date.month}-${this.data.end_date.date}`,
+            "start_date": DateRobot.to_yyyymmdd(this.data.start_date.year, this.data.start_date.month, this.data.start_date.date),
+            "end_date":DateRobot.to_yyyymmdd(this.data.end_date.year, this.data.end_date.month, this.data.end_date.date),
             "counts":this.data.ticket_reg_count,
             "price":this.data.ticket_price
-};
+        };
 
         if(this.data_from_external == null){ //신규 회원 등록
             Member_func.create_pre(data_for_new, (received)=>{

@@ -93,7 +93,7 @@ class Plan_view{
     }
 
     set start_time (data){
-        this.data.start_time = `${data.data.hour}:${data.data.minute}`;
+        this.data.start_time = TimeRobot.to_hhmm(data.data.hour, data.data.minute).complete;
         this.data.start_time_text = data.text + ' 부터';
         this.data.end_time_text = TimeRobot.to_text(this.data.end_time) + ' 까지 <span style="font-size:11px;">('+TimeRobot.diff_min(this.data.start_time, this.data.end_time)+'분 진행)</span>';
         this.render_content();
@@ -104,7 +104,7 @@ class Plan_view{
     }
 
     set end_time (data){
-        this.data.end_time = `${data.data.hour}:${data.data.minute}`;
+        this.data.end_time = TimeRobot.to_hhmm(data.data.hour, data.data.minute);
         this.data.end_time_text = data.text + ' 까지 <span style="font-size:11px;">('+TimeRobot.diff_min(this.data.start_time, this.data.end_time)+'분 진행)</span>';
         this.render_content();
     }
@@ -452,7 +452,7 @@ class Plan_view{
                 let month = this.data.date == null ? this.dates.current_month : this.data.date.month;
                 let date = this.data.date == null ? this.dates.current_date : this.data.date.date;
                 
-                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'birth', title:'일자', data:{year:year, month:month, date:date},
+                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'birth', title:'일자', data:{year:year, month:month, date:date}, start_day:this.date_start,
                                                                                                 callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
                                                                                                     this.date = object; 
                                                                                                     this.if_user_changed_any_information = true;

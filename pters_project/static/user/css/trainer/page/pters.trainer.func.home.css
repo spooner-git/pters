@@ -64,12 +64,11 @@
 	letter-spacing: -0.5px;
 	font-weight: 500;
 	box-sizing: border-box;
-	cursor: pointer;
 }
 
-#home_content_wrap .today_plan_wrapper:active{
+/* #home_content_wrap .today_plan_wrapper:active{
 	background-color: #e8e8e8;
-}
+} */
 
 .today_plan_lecture_color{
 	display:inline-block;

@@ -2,7 +2,13 @@ from django.contrib import admin
 
 # Register your models here.
 from .models import PaymentInfoTb, BillingInfoTb, ProductTb, ProductPriceTb, ProductFunctionAuthTb, FunctionAuthTb, \
-    BillingCancelInfoTb
+    BillingCancelInfoTb, IosReceiptCheckTb
+
+
+@admin.register(ProductTb)
+class ProductTbAdmin(admin.ModelAdmin):
+    list_display = ('product_id', 'upper_product_id', 'name', 'contents', 'order', 'reg_dt', 'mod_dt', 'use')
+    search_fields = ['name']
 
 
 @admin.register(PaymentInfoTb)
@@ -16,29 +22,29 @@ class PaymentInfoTbAdmin(admin.ModelAdmin):
 
 @admin.register(BillingInfoTb)
 class BillingInfoTbAdmin(admin.ModelAdmin):
-    list_display = ('billing_info_id', 'member', 'pay_method', 'product_tb',
-                    'payment_type_cd', 'merchant_uid', 'customer_uid', 'payment_reg_date',
-                    'next_payment_date', 'payed_date', 'reg_dt', 'mod_dt', 'use')
+    list_display = ('billing_info_id', 'name', 'member', 'pay_method', 'product_tb', 'payment_type_cd', 'period_month',
+                    'merchant_uid', 'customer_uid', 'payment_reg_date', 'next_payment_date', 'payed_date',
+                    'reg_dt', 'mod_dt', 'use')
     search_fields = ['member__name', 'product_tb__name']
 
 
-@admin.register(ProductTb)
-class ProductTbAdmin(admin.ModelAdmin):
-    list_display = ('product_id', 'upper_product_id', 'name', 'contents',
-                    'reg_dt', 'mod_dt', 'order', 'use')
-    search_fields = ['name']
+@admin.register(BillingCancelInfoTb)
+class BillingCancelInfoTbAdmin(admin.ModelAdmin):
+    list_display = ('billing_info_id', 'member', 'billing_info_tb', 'cancel_type', 'cancel_reason',
+                    'reg_dt', 'mod_dt', 'use')
+    search_fields = ['member__name']
 
 
 @admin.register(ProductPriceTb)
 class ProductPriceTbAdmin(admin.ModelAdmin):
-    list_display = ('product_price_id', 'product_tb', 'name', 'price', 'sale_price',
-                    'payment_type_cd', 'order', 'reg_dt', 'mod_dt', 'use')
-    search_fields = ['product_tb__name']
+    list_display = ('product_price_id', 'product_tb', 'name', 'price', 'sale_price', 'payment_type_cd', 'period_month',
+                    'order', 'reg_dt', 'mod_dt', 'use')
+    search_fields = ['product_tb__name', 'name']
 
 
 @admin.register(FunctionAuthTb)
 class FunctionAuthTbAdmin(admin.ModelAdmin):
-    list_display = ('function_auth_id', 'function_auth_type_cd', 'function_auth_type_name',
+    list_display = ('function_auth_id', 'function_auth_type_cd', 'function_auth_type_name', 'order',
                     'reg_dt', 'mod_dt', 'use')
 
 
@@ -49,8 +55,8 @@ class ProductFunctionAuthTbAdmin(admin.ModelAdmin):
     search_fields = ['product_tb__name', 'function_auth_tb__function_auth_type_name']
 
 
-@admin.register(BillingCancelInfoTb)
-class BillingCancelInfoTbAdmin(admin.ModelAdmin):
-    list_display = ('billing_info_id', 'member', 'billing_info_tb', 'cancel_type', 'cancel_reason',
-                    'reg_dt', 'mod_dt', 'use')
+@admin.register(IosReceiptCheckTb)
+class IosReceiptCheckTbAdmin(admin.ModelAdmin):
+    list_display = ('ios_receipt_check_id', 'member', 'payment_tb', 'original_transaction_id', 'transaction_id',
+                    'cancellation_date', 'receipt_data', 'iap_status_cd', 'reg_dt', 'mod_dt', 'use')
     search_fields = ['member__name']

@@ -291,7 +291,7 @@ class Setting_worktime{
                 
                 time_selector = new TimeSelector2('#wrapper_popup_time_selector_function', null, {myname:'time', title:'시작 시각', data:{hour:hour, minute:minute},
                                                                                                 callback_when_set: (object)=>{
-                                                                                                    this.data[day].start_time = `${object.data.hour}:${object.data.minute}`;
+                                                                                                    this.data[day].start_time = TimeRobot.to_hhmm(object.data.hour, object.data.minute).complete;
                                                                                                     this.data[day].start_time_text = object.text;
                                                                                                     this.render_content();
 
@@ -299,7 +299,7 @@ class Setting_worktime{
                                                                                                         let compare = TimeRobot.compare(`${object.data.hour}:${object.data.minute}`, this.data[day].end_time);
                                                                                                         if(compare == true){
                                                                                                             //유저가 선택할 수 있는 최저 시간을 셋팅한다. 이시간보다 작은값을 선택하려면 메세지를 띄우기 위함
-                                                                                                            this.data[day].end_time = `${object.data.hour}:${object.data.minute}`;
+                                                                                                            this.data[day].end_time = TimeRobot.to_hhmm(object.data.hour, object.data.minute).complete;
                                                                                                             this.data[day].end_time_text = object.text;
                                                                                                             this.render_content();
                                                                                                         }
@@ -338,7 +338,7 @@ class Setting_worktime{
                 time_selector = new TimeSelector2('#wrapper_popup_time_selector_function', null, {myname:'time', title:'종료 시각',
                                                                                                 data:{hour:hour_init, minute:minute_init}, min:{hour:hour_min, minute:minute_min},
                                                                                                 callback_when_set: (object)=>{
-                                                                                                    this.data[day].end_time = `${object.data.hour}:${object.data.minute}`;
+                                                                                                    this.data[day].end_time = TimeRobot.to_hhmm(object.data.hour, object.data.minute).complete;
                                                                                                     this.data[day].end_time_text = object.text;
                                                                                                     this.render_content();
                                                                                                     //셀렉터에서 선택된 값(object)을 this.data_to_send에 셋팅하고 rerender 한다.

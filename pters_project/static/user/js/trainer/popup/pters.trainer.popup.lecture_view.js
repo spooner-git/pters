@@ -37,7 +37,8 @@ class Lecture_view{
                 memo:null,
                 lecture_state:null,
                 lecture_type_cd:null,
-                active_ticket_length:null
+                active_ticket_length:null,
+                update_this_to_all_plans:null
         };
 
         this.init();
@@ -280,10 +281,28 @@ class Lecture_view{
                 return;
             }
             this.capacity = user_input_data;
-            this.send_data();
+            this.dom_row_option_select_capacity();
+            // this.send_data();
         }, pattern, pattern_message, required);
         return html;
     }
+
+    dom_row_option_select_capacity(){
+        let user_option = {
+            stay:{text:"지난 일정은 변경하지 않음", callback:()=>{this.update_this_to_all_plans = OFF;layer_popup.close_layer_popup();this.send_data();layer_popup.enable_shade_click_close(); }},
+            change:{text:"모두 변경", callback:()=>{this.update_this_to_all_plans = ON;layer_popup.close_layer_popup();this.send_data();layer_popup.enable_shade_click_close(); }}
+        };
+        let options_padding_top_bottom = 16;
+        let button_height = 8 + 8 + 52;
+        // let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
+        let layer_popup_height = options_padding_top_bottom + 52*Object.keys(user_option).length;
+        let root_content_height = $root_content.height();
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
+            option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+            layer_popup.disable_shade_click_close();
+        });
+    }
+
 
     dom_row_lecture_minute_input(){
         let id = "lecture_minute_input";
@@ -327,7 +346,8 @@ class Lecture_view{
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_COLOR_SELECT, 100, popup_style, null, ()=>{
                 color_select = new ColorSelector('#wrapper_box_color_select', this, 1, (set_data)=>{
                     this.color = set_data;
-                    this.send_data();
+                    this.dom_row_option_select_capacity();
+                    // this.send_data();
                 });
             });
         });
@@ -456,6 +476,7 @@ class Lecture_view{
             "end_color_cd":"",
             "ing_font_color_cd":this.data.color_font[0],
             "end_font_color_cd":"",
+            "update_this_to_all_plans":this.update_this_to_all_plans
         };
 
         Lecture_func.update(data, ()=>{

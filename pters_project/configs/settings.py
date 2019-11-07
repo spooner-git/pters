@@ -27,7 +27,7 @@ SECRET_KEY = os.environ.get("PTERS_DJANGO_SECRET", '')
 
 DEBUG = True
 
-APP_VERSION = '2.7'
+APP_VERSION = '2.1'
 
 # ALLOWED_HOSTS = ['pters.co.kr','www.pters.co.kr','kr.pters.co.kr','jp.pters.co.kr','us.pters.co.kr','13.125.37.117']
 ALLOWED_HOSTS = ['*']
@@ -223,6 +223,7 @@ LOG_FILE_PAYMENT = os.path.join(os.path.dirname(__file__), '..', 'logs/payment_l
 LOG_FILE_TASKS = os.path.join(os.path.dirname(__file__), '..', 'logs/tasks_log.log')
 LOG_FILE_ADMIN_SPOONER = os.path.join(os.path.dirname(__file__), '..', 'logs/admin_spooner_log.log')
 LOG_FILE_BOARD = os.path.join(os.path.dirname(__file__), '..', 'logs/board_log.log')
+LOG_FILE_CONFIGS = os.path.join(os.path.dirname(__file__), '..', 'logs/configs_log.log')
 
 LOGGING = {
     'version': 1,
@@ -309,6 +310,14 @@ LOGGING = {
             'maxBytes': 1024*1024*10,
             'backupCount': 5,
         },
+        'configs_file': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'formatter': 'verbose',
+            'filename': LOG_FILE_CONFIGS,
+            'maxBytes': 1024*1024*10,
+            'backupCount': 5,
+        },
     },
     'loggers': {
         '': {
@@ -356,6 +365,10 @@ LOGGING = {
         },
         'board': {
             'handlers': ['board_file'],
+            'level': 'DEBUG',
+        },
+        'configs': {
+            'handlers': ['configs_file'],
             'level': 'DEBUG',
         },
     }

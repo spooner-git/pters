@@ -272,7 +272,19 @@ class DateRobot{
 
         let added = new Date(yyyy, (mm-1)+add, dd);
 
-        // let new_date = `${added.getFullYear()}-${added.getMonth()+1}-${added.getDate()}`;
+        let new_date = DateRobot.to_yyyymmdd(added.getFullYear(), added.getMonth()+1, added.getDate());
+        return new_date;
+    }
+
+    static add_date(date, add_date){
+        let split = date.split('-');
+        let yyyy = Number(split[0]);
+        let mm = Number(split[1]);
+        let dd = Number(split[2]);
+        let add = Number(add_date);
+
+        let added = new Date(yyyy, (mm-1), dd + add);
+
         let new_date = DateRobot.to_yyyymmdd(added.getFullYear(), added.getMonth()+1, added.getDate());
         return new_date;
     }
