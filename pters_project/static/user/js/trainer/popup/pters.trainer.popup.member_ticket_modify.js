@@ -233,7 +233,16 @@ class Member_ticket_modify{
                 let date = this.data.start_date.date;
                 
                 date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'birth', title:'일자', data:{year:year, month:month, date:date}, callback_when_set: (object)=>{ 
-                    // this.data.start_date = DateRobot.to_yyyymmdd(object.data.year, object.data.month, object.data.date);
+                    if(this.data.end_date != null){
+                        let compare = DateRobot.compare(
+                            object.data.year+'-'+object.data.month+'-'+object.data.date, 
+                            this.data.end_date.year+'-'+this.data.end_date.month+'-'+this.data.end_date.date
+                        );
+                        if(compare == true){
+                            this.data.end_date = object.data;
+                            this.data.end_date_text = object.text;
+                        }
+                    }
                     this.data.start_date = object.data;
                     this.data.start_date_text = object.text;
                     this.render_content();
