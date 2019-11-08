@@ -60,7 +60,7 @@ class Member_schedule_history{
                 let date =  DateRobot.to_text(data.start_dt.split(' ')[0], '', '', SHORT) +' '+ TimeRobot.to_text(data.start_dt.split(' ')[1], '', SHORT) + ' - '+
                             TimeRobot.to_text(data.end_dt.split(' ')[1], '', SHORT);
                 let schedule_name = data.lecture_name;
-                let attend_status = SCHEDULE_STATUS[data.state_cd];
+                let attend_status = data.state_cd;
                 let memo = data.note;
     
                 html = CComponent.schedule_history_row (numbering, schedule_id, date, schedule_name, attend_status, memo, ()=>{

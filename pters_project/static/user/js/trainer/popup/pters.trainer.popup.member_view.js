@@ -226,7 +226,7 @@ class Member_view{
                                             start_date:ticket_reg_date_of_this_member,
                                             start_date_text:DateRobot.to_text(ticket_reg_date_of_this_member, '', '', SHORT),
                                             end_date:ticket_end_date_of_this_member,
-                                            end_date_text:ticket_remain_date+'일'+ ticket_remain_alert_text +'/ '+DateRobot.to_text(ticket_end_date_of_this_member, '', '', SHORT)+' 까지',
+                                            end_date_text:ticket_end_date_of_this_member == "9999-12-31" ? "소진 시까지" :  ticket_remain_date+'일'+ ticket_remain_alert_text +'/ '+DateRobot.to_text(ticket_end_date_of_this_member, '', '', SHORT)+' 까지',
                                             lecture_id:member_ticket_list[i].ticket_lecture_id_list,
                                             lecture_name:member_ticket_list[i].ticket_lecture_list,
                                             lecture_state:member_ticket_list[i].ticket_lecture_state_cd_list,
@@ -523,8 +523,8 @@ class Member_view{
         let icon_r_text = "";
         let style = null;
         let disabled = false;
-        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+.,@\\s 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
-        let pattern_message = "+ - _ @ . , 제외 특수문자는 입력 불가";
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+.,:()\\[\\]\\s 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{1,20}";
+        let pattern_message = "+ - _ : ()[] . , 제외 특수문자는 입력 불가";
         let required = "";
         let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             this.memo = input_data;
@@ -561,9 +561,12 @@ class Member_view{
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_TICKET_MODIFY, 100, popup_style, null, ()=>{
                     let data = {"member_name":this.name, "member_ticket_id":member_ticket_id, "member_ticket_name":ticket_name, 
-                                "start_date": ticket_start_date, "end_date": ticket_end_date, "reg_count":ticket_reg_count, "price":ticket_price, "status":ticket_status,
-                                "refund_date":ticket_refund_date, "refund_price":ticket_refund_price, "note":ticket_note};
-                    console.log("이 데이터", data)
+                                "start_date": DateRobot.to_split(ticket_start_date), "start_date_text": DateRobot.to_text(ticket_start_date, "", "", SHORT),
+                                "end_date": DateRobot.to_split(ticket_end_date), "end_date_text": ticket_end_date == "9999-12-31" ? "소진 시까지" : DateRobot.to_text(ticket_end_date, "", "", SHORT),
+                                "reg_count":ticket_reg_count, "price":ticket_price, "status":ticket_status,
+                                "refund_date": ticket_refund_date == null ? null : DateRobot.to_split(ticket_refund_date), 
+                                "refund_date_text": ticket_refund_date == null ? null : DateRobot.to_text(ticket_refund_date, "", "", SHORT),
+                                "refund_price":ticket_refund_price, "note":ticket_note};
                     member_ticket_modify = new Member_ticket_modify('.popup_member_ticket_modify', data, 'member_ticket_modify');
                 });
             });
@@ -576,9 +579,8 @@ class Member_view{
                 let lecture_name = this.data.ticket[i].lecture_name[j];
                 let lecture_state_cd = this.data.ticket[i].lecture_state[j];
                 let lecture_color = this.data.ticket[i].lecture_color[j];
-                console.log(lecture_name, lecture_state_cd, STATE_END_PROGRESS)
                 let text_decoration = (lecture_state_cd == STATE_END_PROGRESS ? 'color:#cccccc; text-decoration:line-through;' : '');
-                let icon_button_style = {"display":"block", "padding":"12px 0 12px 42px", "font-size":"13px", "height":"24px", "line-height":"24px"};
+                let icon_button_style = {"display":"block", "padding":"4px 0 4px 42px", "font-size":"13px", "height":"24px", "line-height":"24px"};
                 let lecture_name_set = `<div style="display:inline-block;width:4px;height:16px;border-radius: 8px;background-color:${lecture_color};margin-right:10px;margin-top:4px;"></div>
                                         <div style="display:inline-block;vertical-align:top;${text_decoration}">${lecture_name}</div>`;
                 let html_lecture_list_info = CComponent.text_button (lecture_id, lecture_name_set, icon_button_style, ()=>{
@@ -593,9 +595,10 @@ class Member_view{
             }
             //티켓내 남은횟수, 남은 기간 표기 부분
             let icon_button_style_remain_count_info = {"display":"block", "padding":"6px 0 0 38px", "font-size":"11px", "font-weight":"500", "color":"#858282", "height":"16px"};
-            let icon_button_style_remain_data_info = {"display":"block", "padding":"4px 0 12px 38px", "font-size":"11px", "font-weight":"500", "color":"#858282", "height":"16px"};
+            let icon_button_style_remain_data_info = {"display":"block", "padding":"6px 0 12px 38px", "font-size":"11px", "font-weight":"500", "color":"#858282", "height":"16px"};
             let html_remain_info = CComponent.text_button('reg_count', `남은 횟수  <span style="font-size:11px; font-weight:bold; color:#fe4e65; margin-left:8px;">${this.data.ticket[i].ticket_rem_count}회</span>`, icon_button_style_remain_count_info, ()=>{}) +
-                                    CComponent.text_button('reg_date', `남은 기간 <span style="font-size:11px; font-weight:bold; color:#fe4e65; margin-left:8px;">${this.data.ticket[i].end_date_text}</span>`, icon_button_style_remain_data_info, ()=>{});
+                                    CComponent.text_button('reg_date', `남은 기간 <span style="font-size:11px; font-weight:bold; color:#fe4e65; margin-left:8px;">${this.data.ticket[i].end_date_text}</span>`, icon_button_style_remain_count_info, ()=>{}) + 
+                                    CComponent.text_button('reg_date', `특이사항 <span style="font-size:11px; font-weight:bold; color:#fe4e65; margin-left:8px;">${ticket_note}</span>`, icon_button_style_remain_data_info, ()=>{});
             let html_ticket_lecture_list = `<div>${html_to_join_lecture_list.join('')}</div>`;
 
             html_to_join.push(html_ticket_name + html_ticket_lecture_list + html_remain_info);
@@ -613,7 +616,7 @@ class Member_view{
                     "member_id": this.member_id,
                     "first_name": this.data.name,
                     "phone":this.data.phone == null ? "" : this.data.phone,
-                    "birthday": `${this.data.birth != null ? this.data.birth.year+'-'+this.data.birth.month+'-'+this.data.birth.date : ''}`,
+                    "birthday": `${this.data.birth != null ? DateRobot.to_yyyymmdd(this.data.birth.year, this.data.birth.month, this.data.birth.date) : ''}`,
                     "sex":this.data.sex == null ? "" : this.data.sex,
                     // "note":this.data.memo,
         };
@@ -816,7 +819,7 @@ class Member_simple_view{
                                             start_date:ticket_reg_date_of_this_member,
                                             start_date_text:DateRobot.to_text(ticket_reg_date_of_this_member, '', '', SHORT),
                                             end_date:ticket_end_date_of_this_member,
-                                            end_date_text:ticket_remain_date+'일'+ ticket_remain_alert_text +'/ '+DateRobot.to_text(ticket_end_date_of_this_member, '', '', SHORT)+' 까지',
+                                            end_date_text:ticket_end_date_of_this_member == "9999-12-31" ? "소진 시까지" :  ticket_remain_date+'일'+ ticket_remain_alert_text +'/ '+DateRobot.to_text(ticket_end_date_of_this_member, '', '', SHORT)+' 까지',
                                             lecture_id:member_ticket_list[i].ticket_lecture_id_list,
                                             lecture_name:member_ticket_list[i].ticket_lecture_list,
                                             lecture_state:member_ticket_list[i].ticket_lecture_state_cd_list,
@@ -1067,6 +1070,7 @@ class Member_simple_view{
 
         let html_to_join = [];
         for(let i=0; i<ticket_length; i++){
+            console.log("1", this.data.ticket[i])
             let ticket_name = this.data.ticket[i].ticket_name;
             if(this.data.ticket[i].ticket_state == STATE_END_PROGRESS){
                 ticket_name = `<span style="color:#888888;">${this.data.ticket[i].ticket_name}</span><span style="font-size:13px;"> (비활성)</span>`;

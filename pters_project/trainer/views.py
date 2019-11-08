@@ -43,7 +43,7 @@ from schedule.functions import func_refresh_member_ticket_count, func_get_traine
     func_get_member_schedule_all, func_get_lecture_schedule_all
 from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb
 from stats.functions import get_sales_data
-from trainee.models import MemberTicketTb, MemberMemberTicketTb
+from trainee.models import MemberTicketTb
 from .functions import func_get_trainer_setting_list, \
     func_get_member_ing_list, func_get_member_end_list, func_get_class_member_ing_list, func_get_class_member_end_list,\
     func_get_member_info, func_get_member_from_member_ticket_list, \
@@ -83,14 +83,18 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
 
             else:
                 self.url = '/trainer/trainer_main/'
+                temp_class_counter = 0
                 for class_info in class_auth_data:
-                    request.session['class_id'] = class_info.class_tb_id
-                    request.session['class_hour'] = class_info.class_tb.class_hour
-                    request.session['class_type_code'] = class_info.class_tb.subject_cd
-                    request.session['class_type_name'] = class_info.class_tb.get_class_type_cd_name()
-                    request.session['class_center_name'] = class_info.class_tb.get_center_name()
-                    if class_info.class_tb_id == '127':
-                        break
+                    class_member_ticket_counter = ClassMemberTicketTb.objects.filter(class_tb_id=class_info.class_tb_id,
+                                                                                     auth_cd=AUTH_TYPE_VIEW,
+                                                                                     use=USE).count()
+                    if class_member_ticket_counter > temp_class_counter:
+                        request.session['class_id'] = class_info.class_tb_id
+                        request.session['class_hour'] = class_info.class_tb.class_hour
+                        request.session['class_type_code'] = class_info.class_tb.subject_cd
+                        request.session['class_type_name'] = class_info.class_tb.get_class_type_cd_name()
+                        request.session['class_center_name'] = class_info.class_tb.get_center_name()
+                        temp_class_counter = class_member_ticket_counter
 
                 # self.url = '/trainer/class_select/'
         else:
@@ -2219,6 +2223,7 @@ def update_lecture_info_logic(request):
     ing_font_color_cd = request.POST.get('ing_font_color_cd', '')
     end_font_color_cd = request.POST.get('end_font_color_cd', '')
     lecture_minute = request.POST.get('lecture_minute', 60)
+    update_this_to_all_plans = request.POST.get('update_this_to_all_plans', UN_USE)
     lecture_info = None
     error = None
 
@@ -2279,6 +2284,32 @@ def update_lecture_info_logic(request):
         lecture_info.end_font_color_cd = end_font_color_cd
         lecture_info.lecture_minute = lecture_minute
         lecture_info.save()
+
+    if error is None:
+        if str(lecture_info.lecture_type_cd) == str(LECTURE_TYPE_ONE_TO_ONE):
+            # 오늘 이전의 일정
+            schedule_data_past = ScheduleTb.objects.filter(class_tb_id=class_id, lecture_tb__isnull=True,
+                                                           end_dt__lte=timezone.now(), en_dis_type=ON_SCHEDULE_TYPE)
+            # 오늘 이후의 일정
+            schedule_data_future = ScheduleTb.objects.filter(class_tb_id=class_id, lecture_tb__isnull=True,
+                                                             end_dt__gt=timezone.now(), en_dis_type=ON_SCHEDULE_TYPE)
+        else:
+            # 오늘 이전의 일정
+            schedule_data_past = ScheduleTb.objects.filter(class_tb_id=class_id, lecture_tb_id=lecture_id,
+                                                           end_dt__lte=timezone.now(), en_dis_type=ON_SCHEDULE_TYPE)
+            # 오늘 이후의 일정
+            schedule_data_future = ScheduleTb.objects.filter(class_tb_id=class_id, lecture_tb_id=lecture_id,
+                                                             end_dt__gt=timezone.now(), en_dis_type=ON_SCHEDULE_TYPE)
+        if str(update_this_to_all_plans) == str(USE):
+            schedule_data_past.update(ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
+                                      ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
+                                      max_mem_count=member_num)
+
+        schedule_data_future.update(ing_color_cd=ing_color_cd,
+                                    end_color_cd=end_color_cd,
+                                    ing_font_color_cd=ing_font_color_cd,
+                                    end_font_color_cd=end_font_color_cd,
+                                    max_mem_count=member_num)
 
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
@@ -2371,51 +2402,47 @@ def update_fix_lecture_member_logic(request):
             error = '오류가 발생했습니다.'
 
     if error is None:
-        if lecture_info.state_cd != STATE_CD_IN_PROGRESS:
-            error = '진행중인 수업만 고정회원 추가가 가능합니다.'
+        if str(lecture_info.state_cd) == str(STATE_CD_IN_PROGRESS):
+            for member_id in member_ids:
+                if error is None:
+                    member_lecture_list = func_get_member_lecture_list(class_id, member_id)
+                    try:
+                        member_lecture_list[lecture_id]
+                    except KeyError:
+                        error = '해당 회원님은 수업에 참여할 수 있는 수강권이 없습니다.'
 
-    if error is None:
+                if error is None:
+                    try:
+                        with transaction.atomic():
+                            lecture_member_fix_data = LectureMemberTb.objects.filter(class_tb_id=class_id,
+                                                                                     lecture_tb_id=lecture_id, use=USE)
+                            # 이미 고정 회원의 경우 제거하기
+                            try:
+                                lecture_member_fix = LectureMemberTb.objects.get(class_tb_id=class_id, lecture_tb_id=lecture_id,
+                                                                                 member_id=member_id, use=USE)
+                                lecture_member_fix.delete()
+                            except ObjectDoesNotExist:
 
-        for member_id in member_ids:
-            if error is None:
-                member_lecture_list = func_get_member_lecture_list(class_id, member_id)
-                try:
-                    member_lecture_list[lecture_id]
-                except KeyError:
-                    error = '해당 회원님은 수업에 참여할 수 있는 수강권이 없습니다.'
+                                # 수업에 고정회원 가능 여부 체크
+                                if len(lecture_member_fix_data) + 1 > lecture_info.member_num:
+                                    error = '정원보다 고정 회원이 많습니다.'
+                                    raise InternalError()
 
-            if error is None:
-                try:
-                    with transaction.atomic():
-                        lecture_member_fix_data = LectureMemberTb.objects.filter(class_tb_id=class_id,
-                                                                                 lecture_tb_id=lecture_id, use=USE)
-                        # 이미 고정 회원의 경우 제거하기
-                        try:
-                            lecture_member_fix = LectureMemberTb.objects.get(class_tb_id=class_id, lecture_tb_id=lecture_id,
-                                                                             member_id=member_id, use=USE)
-                            lecture_member_fix.delete()
-                        except ObjectDoesNotExist:
+                                # 수업에 고정회원 추가하기
+                                lecture_member_fix = LectureMemberTb(class_tb_id=class_id, lecture_tb_id=lecture_id,
+                                                                     member_id=member_id, fix_state_cd='FIX', use=USE)
+                                lecture_member_fix.save()
 
-                            # 수업에 고정회원 가능 여부 체크
-                            if len(lecture_member_fix_data) + 1 > lecture_info.member_num:
-                                error = '정원보다 고정 회원이 많습니다.'
-                                raise InternalError()
-
-                            # 수업에 고정회원 추가하기
-                            lecture_member_fix = LectureMemberTb(class_tb_id=class_id, lecture_tb_id=lecture_id,
-                                                                 member_id=member_id, fix_state_cd='FIX', use=USE)
-                            lecture_member_fix.save()
-
-                except ValueError:
-                    error = '오류가 발생했습니다. [4]'
-                except IntegrityError:
-                    error = '오류가 발생했습니다. [5]'
-                except TypeError:
-                    error = '오류가 발생했습니다. [6]'
-                except ValidationError:
-                    error = '오류가 발생했습니다. [7]'
-                except InternalError:
-                    error = error
+                    except ValueError:
+                        error = '오류가 발생했습니다. [4]'
+                    except IntegrityError:
+                        error = '오류가 발생했습니다. [5]'
+                    except TypeError:
+                        error = '오류가 발생했습니다. [6]'
+                    except ValidationError:
+                        error = '오류가 발생했습니다. [7]'
+                    except InternalError:
+                        error = error
 
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)

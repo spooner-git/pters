@@ -119,7 +119,7 @@
             </div>
             <div class="up_menu_tool">
                 <div style="flex:1 0 140px" id="up_menu_user_info" onclick="sideGoPopup('mypage')"><img src={% static_url "common/loading.svg" %} alt="" class="up_menu_img"><span>불러오는 중</span></div>
-                <div style="flex:1 0 0"><img src="/static/common/icon/tab_bar/icon_alarm_off.png" alt="" class="up_menu_img" onclick="sideGoPage('alarm')"></div>
+                <div style="flex:1 0 0;position:relative"><img src="/static/common/icon/tab_bar/icon_alarm_off.png" alt="" class="up_menu_img" onclick="sideGoPage('alarm')"><div class="new_alarm_indicator" style="top:15px;right:5px;"></div></div>
                 <div style="flex:1 0 0"><img src="/static/common/icon/icon_help_black.png" alt="" class="up_menu_img" onclick="sideGoPopup('helper')"></div>
             </div>
         </div>
@@ -150,7 +150,8 @@
                             <!-- <div class="nav_text">회원</div> -->
                         </div>
                         <div class="obj_table_cell_x5 nav_item" onclick="sideGoPage('alarm', this)" id="alarm">
-                            <div class="nav_img"><img src={% static_url "common/icon/tab_bar/icon_alarm_off.png" %} alt=""></div>
+                            <div class="nav_img"><img src={% static_url "common/icon/tab_bar/icon_alarm_off.png" %} alt=""><div class="new_alarm_indicator"></div></div>
+                            
                             <!-- <div class="nav_text">알림</div> -->
                         </div>
                         <div class="obj_table_cell_x5 nav_item" onclick="sideGoPage('menu', this)" id="menu">
@@ -241,7 +242,7 @@
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.pters_pass_shop.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.pters_pass_shop_agreement.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.pters_pass_pay_cancel.js" %}></script>
-
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.service_about_us.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.service_helper.js" %}></script>
 <!-- ajax 팝업 JS 로드 -->
 <!-- 각종 셀렉터 -->
@@ -397,6 +398,7 @@
     var service_inquiry_history_popup;
     var service_inquiry_faq_popup;
     var service_helper_popup;
+    var service_about_us_popup;
 
     var pters_pass_main_popup;
     var pters_pass_pay_info_popup;
@@ -431,6 +433,7 @@
     }
 
     function sideGoPage(page){
+        are_there_new_alarm();
         // current_page = page;
         current_page_text = page;
         $('#debug_toolbar').hide();
@@ -608,6 +611,10 @@
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SERVICE_HELPER, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     service_helper_popup = new Service_helper('.popup_service_helper')});
             break;
+            case 'service_about_us':
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SERVICE_ABOUT_US, 100, POPUP_FROM_RIGHT, null, ()=>{
+                                                    service_about_us_popup = new Service_about_us('.popup_service_about_us')});
+            break;
         }
     }
     //페이지에 들어오면 홈화면을 띄우기
@@ -618,6 +625,18 @@
     // if(tutorial_view != "1"){
     //     sideGoPopup("helper");
     // }
+
+    //새로운 알림이 있을때 알림 아이콘에 표시해주기
+    function are_there_new_alarm(){
+        alarm.are_there_new_alarm((new_alarm_number)=>{
+            if(new_alarm_number > 0){
+                $('.new_alarm_indicator').show();
+            }else{
+                $('.new_alarm_indicator').hide();
+            }
+        });
+    }
+    
 
     //PC버전 상단 툴바에 사용자 정보 채우기
     function pc_top_toolbar_user_info_update(){
@@ -631,6 +650,7 @@
     }
 
     pc_top_toolbar_user_info_update();
+    are_there_new_alarm();
 
     // 구글 reCAPTCHA 보이지 않게 하기
     /*

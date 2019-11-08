@@ -15,14 +15,6 @@ from trainer.models import ClassTb, ClassMemberTicketTb, SettingTb, TicketLectur
 from .models import MemberTicketTb
 
 
-def func_get_holiday_schedule(context):
-
-    holiday = HolidayTb.objects.filter(use=USE)
-    context['holiday'] = holiday
-
-    return context
-
-
 def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_date):
     schedule_list = []
     all_schedule_check = 0
@@ -114,10 +106,11 @@ def func_get_trainee_lecture_schedule(context, user_id, class_id, start_date, en
         'member_ticket_tb__ticket_tb').filter(class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW,
                                               member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
                                               member_ticket_tb__member_id=user_id,
+                                              member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
                                               member_ticket_tb__use=USE,
                                               use=USE).order_by('-member_ticket_tb__start_date',
                                                                 '-member_ticket_tb__reg_dt')
-
+    lecture_schedule_data = []
     query_lecture_list = Q()
     if len(member_ticket_data) > 0:
         query_ticket_list = Q()
@@ -132,14 +125,14 @@ def func_get_trainee_lecture_schedule(context, user_id, class_id, start_date, en
         for ticket_lecture_info in ticket_lecture_data:
             query_lecture_list |= Q(lecture_tb_id=ticket_lecture_info.lecture_tb_id)
 
-    lecture_schedule_data = ScheduleTb.objects.select_related(
-        'lecture_tb').filter(query_lecture_list, class_tb_id=class_id, lecture_tb__isnull=False,
-                             member_ticket_tb__isnull=True,
-                             en_dis_type=ON_SCHEDULE_TYPE, start_dt__gte=start_date,
-                             start_dt__lt=end_date, use=USE
-                             ).annotate(lecture_current_member_num=RawSQL(query, [])).order_by('start_dt')
-    for lecture_schedule_info in lecture_schedule_data:
-        lecture_schedule_info.note = lecture_schedule_info.note.replace('\n', '<br/>')
+        lecture_schedule_data = ScheduleTb.objects.select_related(
+            'lecture_tb').filter(query_lecture_list, class_tb_id=class_id, lecture_tb__isnull=False,
+                                 member_ticket_tb__isnull=True,
+                                 en_dis_type=ON_SCHEDULE_TYPE, start_dt__gte=start_date,
+                                 start_dt__lt=end_date, use=USE
+                                 ).annotate(lecture_current_member_num=RawSQL(query, [])).order_by('start_dt')
+        for lecture_schedule_info in lecture_schedule_data:
+            lecture_schedule_info.note = lecture_schedule_info.note.replace('\n', '<br/>')
     context['lecture_schedule_data'] = lecture_schedule_data
 
     return context

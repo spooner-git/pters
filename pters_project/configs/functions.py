@@ -1,10 +1,13 @@
 import base64
 
 import boto3
+import logging
 from botocore.exceptions import ClientError
 from django.core.files.base import ContentFile
 
 from configs import settings
+
+logger = logging.getLogger(__name__)
 
 
 def func_upload_profile_image_logic(file, file_name, group):

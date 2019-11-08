@@ -22,14 +22,14 @@ from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, DEL_SCHEDULE, USE, UN_
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 from schedule.functions import func_get_member_ticket_id, func_check_lecture_available_member_before,\
     func_check_lecture_available_member_after, func_add_schedule, func_refresh_member_ticket_count, \
-    func_get_lecture_member_ticket_id_from_trainee, func_send_push_trainee
+    func_get_lecture_member_ticket_id_from_trainee, func_send_push_trainee, func_get_holiday_schedule
 from schedule.models import ScheduleTb, DeleteScheduleTb
 from trainer.functions import func_get_trainer_setting_list
 from trainer.models import ClassMemberTicketTb,  ClassTb, SettingTb, LectureTb, TicketLectureTb,\
     TicketTb
 from .functions import func_get_class_member_ticket_count, func_get_member_ticket_list, func_get_class_list, \
     func_get_trainee_on_schedule, func_get_trainee_off_schedule, func_get_trainee_lecture_schedule, \
-    func_get_holiday_schedule, func_get_trainee_on_repeat_schedule, func_check_select_time_reserve_setting, \
+    func_get_trainee_on_repeat_schedule, func_check_select_time_reserve_setting, \
     func_get_member_ticket_connection_list, func_get_trainee_next_schedule_by_class_id,\
     func_get_trainee_select_schedule, func_get_trainee_ing_member_ticket_list, func_check_select_date_reserve_setting, \
     func_get_trainee_ticket_list, func_get_class_list_only_view
@@ -214,19 +214,19 @@ class TraineeCalendarView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = super(TraineeCalendarView, self).get_context_data(**kwargs)
         # class_id = self.request.session.get('class_id', '')
 
-        # date = self.request.GET.get('date', '')
-        # day = self.request.GET.get('day', '')
-        # today = datetime.date.today()
-        # if date != '':
-        #     today = datetime.datetime.strptime(date, '%Y-%m-%d')
-        # if day == '':
-        #     day = 46
-        # start_date = today - datetime.timedelta(days=int(day))
-        # end_date = today + datetime.timedelta(days=int(day))
+        date = self.request.GET.get('date', '')
+        day = self.request.GET.get('day', '')
+        today = datetime.date.today()
+        if date != '':
+            today = datetime.datetime.strptime(date, '%Y-%m-%d')
+        if day == '':
+            day = 46
+        start_date = today - datetime.timedelta(days=int(day))
+        end_date = today + datetime.timedelta(days=int(day))
 
         # context = func_get_class_member_ticket_count(context, class_id, self.request.user.id)
 
-        context = func_get_holiday_schedule(context)
+        context['holiday'] = func_get_holiday_schedule(start_date, end_date)
 
         return context
 
@@ -1443,6 +1443,31 @@ class PopupCalendarPlanReserveView(LoginRequiredMixin, AccessTestMixin, Template
         start_date = datetime.datetime.strptime(select_date + ' 00:00', '%Y-%m-%d %H:%M')
         end_date = datetime.datetime.strptime(select_date + ' 23:59', '%Y-%m-%d %H:%M')
 
+        member_ticket_data = ClassMemberTicketTb.objects.select_related(
+            'member_ticket_tb__ticket_tb').filter(class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW,
+                                                  member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+                                                  member_ticket_tb__member_id=self.request.user.id,
+                                                  member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
+                                                  member_ticket_tb__use=USE,
+                                                  use=USE).order_by('-member_ticket_tb__start_date',
+                                                                    '-member_ticket_tb__reg_dt')
+
+        if len(member_ticket_data) > 0:
+            query_ticket_list = Q()
+            for member_ticket_info in member_ticket_data:
+                ticket_info = member_ticket_info.member_ticket_tb.ticket_tb
+                query_ticket_list |= Q(ticket_tb_id=ticket_info.ticket_id)
+
+            ticket_lecture_data_count = TicketLectureTb.objects.select_related(
+                'lecture_tb').filter(query_ticket_list, class_tb_id=class_id,
+                                     lecture_tb__lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE,
+                                     lecture_tb__state_cd=STATE_CD_IN_PROGRESS,
+                                     lecture_tb__use=USE, use=USE).count()
+            if ticket_lecture_data_count == 0:
+                context['one_to_one_lecture_check'] = False
+            else:
+                context['one_to_one_lecture_check'] = True
+
         try:
             lecture_tb_info = LectureTb.objects.get(class_tb_id=class_id, lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, use=USE)
             context['one_to_one_lecture_time_duration'] = lecture_tb_info.lecture_minute
@@ -1708,6 +1733,12 @@ class PrivacyPolicyView(TemplateView):
         context = super(PrivacyPolicyView, self).get_context_data(**kwargs)
         return context
 
+class AboutusView(TemplateView):
+    template_name = 'trainee_about_us.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(AboutusView, self).get_context_data(**kwargs)
+        return context
 
 class TraineeInquiryView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'trainee_inquiry.html'
