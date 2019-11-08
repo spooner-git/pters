@@ -3132,9 +3132,9 @@ class ColorSelector{
             {color_code:"#9de048", color_font_code:"#282828"},
             {color_code:"#30c842", color_font_code:"#282828"},
             {color_code:"#4b8aeb", color_font_code:"#f5f2f3"},
-            {color_code:"#5e51fe", color_font_code:"#f5f2f3"},
-            {color_code:"#9e41cc", color_font_code:"#f5f2f3"},
-            {color_code:"#664120", color_font_code:"#f5f2f3"}
+            // {color_code:"#5e51fe", color_font_code:"#f5f2f3"},
+            // {color_code:"#9e41cc", color_font_code:"#f5f2f3"},
+            // {color_code:"#664120", color_font_code:"#f5f2f3"}
         ];
         this.received_data = color_data;
         callback();
