@@ -281,7 +281,11 @@ class Lecture_view{
                 return;
             }
             this.capacity = user_input_data;
-            this.dom_row_option_select_capacity();
+            setTimeout(()=>{
+                this.dom_row_option_select_capacity();
+            }, 250);
+            //안드로이드 키보드가 올라오면서 옵션셀렉터 위치가 상단으로 밀리리 때문에, 키보드가 사라질때 까지 기다렸다가 실행한다.
+            
             // this.send_data();
         }, pattern, pattern_message, required);
         return html;
