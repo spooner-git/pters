@@ -2402,7 +2402,7 @@ def update_fix_lecture_member_logic(request):
             error = '오류가 발생했습니다.'
 
     if error is None:
-        if lecture_info.state_cd != STATE_CD_IN_PROGRESS:
+        if str(lecture_info.state_cd) == str(STATE_CD_IN_PROGRESS):
             for member_id in member_ids:
                 if error is None:
                     member_lecture_list = func_get_member_lecture_list(class_id, member_id)
