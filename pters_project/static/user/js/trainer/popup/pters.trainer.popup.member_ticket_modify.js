@@ -142,7 +142,7 @@ class Member_ticket_modify{
         let title = this.data.member_ticket_name == null ||this.data.member_ticket_name == 'None' ? '수강권명' : this.data.member_ticket_name;
         let icon = '/static/common/icon/icon_ticket_black.png';
         let icon_r_visible = SHOW;
-        let icon_r_text = `상태 (${TICKET_STATUS[this.data.status]})`;
+        let icon_r_text = `상태 (<span style="color:${TICKET_STATUS_COLOR[this.data.status]}">${TICKET_STATUS[this.data.status]}</span>)`;
         let style = null;
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             let user_option = {

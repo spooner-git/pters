@@ -521,7 +521,7 @@ class CComponent{
         let raw_1 = `<div class="obj_table_raw">
                             <div class="cell_schedule_num">${numbering}</div>
                             <div class="cell_schedule_info">${schedule_name}</div>
-                            <div class="cell_schedule_attend">${attend_status}</div>
+                            <div class="cell_schedule_attend" style="color:${SCHEDULE_STATUS_COLOR[attend_status]}">${SCHEDULE_STATUS[attend_status]}</div>
                         </div>`;
         let raw_2 = `<div class="obj_table_raw table_date_info">
                             <div class="cell_schedule_num"></div>
