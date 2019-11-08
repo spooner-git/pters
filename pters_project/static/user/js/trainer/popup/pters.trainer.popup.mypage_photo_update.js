@@ -18,11 +18,7 @@ class Mypage_photo_update{
     init(){
         this.render();
         this.event_croppie();
-        // if(device_info=='app' && os==ANDROID){
-        //     window.android_photo.callMethodName("");
-        // }else{
-            $('#upload').trigger('click');
-        // }
+        $('#upload').trigger('click');
         func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
     }
 
@@ -90,7 +86,8 @@ class Mypage_photo_update{
         let html = `<div class="upload-result" style="display:none;">result</div>
                     <div style="display:none;"><img id="result"></div>
                      <div id="upload-croppie"></div>
-                    <input type="file" id="upload" value="Choose a file" accept="image/*" style="visibility:hidden">
+                    <input type="file" id="upload" value="Choose a file" accept="image/*">
+                    <!--<input type="file" id="upload" value="Choose a file" accept="image/*" style="visibility:hidden">-->
                     `;
         return html;
     }
