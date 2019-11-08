@@ -164,6 +164,7 @@
             let device = PC;
             let os = IOS;
             let browser = CHROME;
+            let device_info = '{{ request.session.device_info }}';
             if (varUA.match(/android/) != null) {
                 device = MOBILE;
                 os = ANDROID;
