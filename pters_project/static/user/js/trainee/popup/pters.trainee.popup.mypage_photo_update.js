@@ -6,49 +6,49 @@ var mypage_photo_update_popup;
 function update_trainee_profile_photo(){
     let user_option = {
     change:{text:"프로필 사진 변경", callback:()=>{
-            show_error_message("기능을 준비중 입니다.");
-            // layer_popup.close_layer_popup();
-            // layer_popup.open_layer_popup(POPUP_BASIC, 'popup_mypage_photo_update', 100, POPUP_FROM_RIGHT, null, ()=>{
-            //     mypage_photo_update_popup = new Mypage_photo_update('.popup_mypage_photo_update', 'mypage_photo_update_popup'); 
-            // });
+            // show_error_message("기능을 준비중 입니다.");
+            layer_popup.close_layer_popup();
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_mypage_photo_update', 100, POPUP_FROM_RIGHT, null, ()=>{
+                mypage_photo_update_popup = new Mypage_photo_update('.popup_mypage_photo_update', 'mypage_photo_update_popup');
+            });
         }
     },
     delete:{text:"프로필 사진 삭제", callback:()=>{
-                show_error_message("기능을 준비중 입니다.");
-                // $.ajax({
-                //     url: '/delete_profile_img/',
-                //     dataType : 'html',
-                //     type:'POST',
+                // show_error_message("기능을 준비중 입니다.");
+                $.ajax({
+                    url: '/delete_profile_img/',
+                    dataType : 'html',
+                    type:'POST',
 
-                //     beforeSend: function (xhr, settings) {
-                //         if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                //             xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                //         }
-                //         ajax_load_image(SHOW);
-                //     },
+                    beforeSend: function (xhr, settings) {
+                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                        }
+                        ajax_load_image(SHOW);
+                    },
 
-                //     success:function(data){
-                //         let jsondata = $.parseJSON(data);
-                //         if(jsondata.messageArray.length>0){
-                //             show_error_message(jsondata.messageArray);
-                //         }
-                //         try{
-                //             location.reload();
-                //         }catch(e){
-                //             console.log(e);
-                //         }
-                //     },
+                    success:function(data){
+                        let jsondata = $.parseJSON(data);
+                        if(jsondata.messageArray.length>0){
+                            show_error_message(jsondata.messageArray);
+                        }
+                        try{
+                            location.reload();
+                        }catch(e){
+                            console.log(e);
+                        }
+                    },
 
-                //     complete:function(){
-                //         ajax_load_image(HIDE);
-                //     },
+                    complete:function(){
+                        ajax_load_image(HIDE);
+                    },
 
-                //     error:function(){
-                //         //alert('통신이 불안정합니다.');
-                //         show_error_message('통신이 불안정합니다.');
-                //     }
-                // });
-                // layer_popup.close_layer_popup();
+                    error:function(){
+                        //alert('통신이 불안정합니다.');
+                        show_error_message('통신이 불안정합니다.');
+                    }
+                });
+                layer_popup.close_layer_popup();
             }
         }
     };
