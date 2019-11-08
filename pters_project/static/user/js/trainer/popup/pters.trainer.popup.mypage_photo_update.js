@@ -18,8 +18,11 @@ class Mypage_photo_update{
     init(){
         this.render();
         this.event_croppie();
-        alert(device_info);
-        $('#upload').trigger('click');
+        // if(device_info=='app' && os==ANDROID){
+        //     window.android_photo.callMethodName("");
+        // }else{
+            $('#upload').trigger('click');
+        // }
         func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
     }
 
