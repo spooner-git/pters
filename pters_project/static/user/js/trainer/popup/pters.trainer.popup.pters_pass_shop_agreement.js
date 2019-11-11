@@ -200,6 +200,10 @@ class Pters_pass_shop_agreement{
         let product_name = PASS_PRODUCT["standard"].text + ' - 정기 결제 - 1개월';
         let pay_method = CARD;
         let payment_type_cd = PERIOD;
+        if(device == MOBILE && device_info != 'web' && user_username =='guest'){
+            payment_type_cd = SINGLE;
+            product_name = PASS_PRODUCT["standard"].text + ' - 30일';
+        }
         let product_id = PASS_PRODUCT["standard"].id;
         let price = PASS_PRODUCT["standard"].price;
         let period_month = 1;
