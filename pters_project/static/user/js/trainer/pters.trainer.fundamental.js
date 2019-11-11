@@ -919,7 +919,6 @@ function payment_for_iap(payment_date , product_price_id, os_info){
     $.ajax({
         url: "/payment/payment_for_iap/", // 서비스 웹서버
         type: "POST",
-        headers: {"Content-Type": "application/json"},
         data: {'product_price_id': mobile_product_id, 'start_date': payment_date, 'os_info': os_info},
 
         beforeSend: function (xhr, settings) {
@@ -959,7 +958,6 @@ function payment_for_ios(receipt_data , ios_data, product_id, transaction_id){
     else{
         mobile_product_id = product_id;
     }
-    alert('product_id::'+product_id);
     $.ajax({
         url: "/payment/payment_for_ios/", // 서비스 웹서버
         type: "POST",

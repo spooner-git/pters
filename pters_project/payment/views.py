@@ -916,6 +916,9 @@ def payment_for_ios_logic(request):
     error = None
     today = datetime.date.today()
     pay_info = '인앱 결제'
+    logger.info('test1::'+ str(product_id))
+    logger.info('test2::'+ str(receipt_data))
+    logger.info('test3::'+ str(transaction_id))
 
     if error is None:
         try:
@@ -925,43 +928,48 @@ def payment_for_ios_logic(request):
             start_date = payment_info.end_date + datetime.timedelta(days=1)
         except ObjectDoesNotExist:
             start_date = today
+    logger.info('test4')
 
     if error is None:
-            date = int(start_date.strftime('%d'))
-            end_date = str(func_get_end_date(payment_type_cd, start_date, 1, date)).split(' ')[0]
-            start_date = str(start_date).split(' ')[0]
+        logger.info('test5')
+        date = int(start_date.strftime('%d'))
+        end_date = str(func_get_end_date(payment_type_cd, start_date, 1, date)).split(' ')[0]
+        start_date = str(start_date).split(' ')[0]
 
-            payment_info = PaymentInfoTb(member_id=str(request.user.id),
-                                         product_tb_id=product_id,
-                                         payment_type_cd='SINGLE',
-                                         merchant_uid='m_'+str(request.user.id)+'_'+str(product_id)+'_'+str(timezone.now().timestamp()),
-                                         customer_uid='c_'+str(request.user.id)+'_'+str(product_id)+'_'+str(timezone.now().timestamp()),
-                                         start_date=start_date, end_date=end_date,
-                                         paid_date=today,
-                                         period_month=1,
-                                         price=9900,
-                                         name='스탠다드 - 30일권',
-                                         imp_uid='',
-                                         # imp_uid=input_transaction_id,
-                                         channel='iap',
-                                         card_name=pay_info,
-                                         buyer_email=request.user.email,
-                                         status='paid',
-                                         fail_reason='',
-                                         currency='',
-                                         pay_method=pay_info,
-                                         pg_provider='IOS',
-                                         receipt_url='',
-                                         buyer_name=str(request.user.first_name),
-                                         # amount=int(payment_result['amount']),
-                                         use=USE)
+        logger.info('test6')
+        payment_info = PaymentInfoTb(member_id=str(request.user.id),
+                                     product_tb_id=product_id,
+                                     payment_type_cd='SINGLE',
+                                     merchant_uid='m_'+str(request.user.id)+'_'+str(product_id)+'_'+str(timezone.now().timestamp()),
+                                     customer_uid='c_'+str(request.user.id)+'_'+str(product_id)+'_'+str(timezone.now().timestamp()),
+                                     start_date=start_date, end_date=end_date,
+                                     paid_date=today,
+                                     period_month=1,
+                                     price=9900,
+                                     name='스탠다드 - 30일권',
+                                     imp_uid='',
+                                     # imp_uid=input_transaction_id,
+                                     channel='iap',
+                                     card_name=pay_info,
+                                     buyer_email=request.user.email,
+                                     status='paid',
+                                     fail_reason='',
+                                     currency='',
+                                     pay_method=pay_info,
+                                     pg_provider='IOS',
+                                     receipt_url='',
+                                     buyer_name=str(request.user.first_name),
+                                     # amount=int(payment_result['amount']),
+                                     use=USE)
 
-            payment_info.save()
-            ios_receipt_check = IosReceiptCheckTb(member_id=request.user.id,
-                                                  payment_tb_id=payment_info.payment_info_id,
-                                                  original_transaction_id=transaction_id, receipt_data=receipt_data,
-                                                  iap_status_cd='YET_VALIDATION')
-            ios_receipt_check.save()
+        payment_info.save()
+        logger.info('test7')
+        ios_receipt_check = IosReceiptCheckTb(member_id=request.user.id,
+                                              payment_tb_id=payment_info.payment_info_id,
+                                              original_transaction_id=transaction_id, receipt_data=receipt_data,
+                                              iap_status_cd='YET_VALIDATION')
+        ios_receipt_check.save()
+        logger.info('test8')
 
     if error is None:
         logger.info(str(request.user.last_name) + str(request.user.first_name)
