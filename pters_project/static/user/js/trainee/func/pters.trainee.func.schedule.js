@@ -14,13 +14,8 @@
 // }
 
 function func_schedule(data, call_method, type){
-    console.log('func_schedule_test');
-    console.log(data);
-    console.log(call_method);
-    console.log(type);
     if(call_method == CALL_AJAX){
         let ajax_url = `/trainee/${type}_trainee_schedule/`;
-        console.log(ajax_url);
         $.ajax({
             url: ajax_url,
             data: data,

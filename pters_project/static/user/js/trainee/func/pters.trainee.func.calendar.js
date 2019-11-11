@@ -330,6 +330,39 @@ function pters_month_calendar(calendar_name, calendar_options){
         });
     }
 
+    function func_get_ajax_holiday_data(date, day, callback){
+        $.ajax({
+            url: '/schedule/get_holiday_schedule/',
+            type : 'GET',
+            data : {"date":date, "day":day},
+            dataType: "JSON",
+
+            beforeSend:function (){
+            },
+
+            success:function (data){
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message(data.messageArray);
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(data, date);
+                }
+                return data;
+            },
+
+            complete:function (){
+            },
+
+            error:function (){
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                // location.reload();
+            }
+        });
+    }
+
     function func_set_avail_date(avail_date_array){
         let length = avail_date_array.length;
         let temp_array = [];
@@ -350,6 +383,12 @@ function pters_month_calendar(calendar_name, calendar_options){
      * @param jsondata.classTimeArray_start_date    시작 시각.
      * @param jsondata.lecture_schedule_start_datetime 그룹 스케쥴 시작 시각
      */
+    function func_draw_holiday_data(jsondata){
+        for(let date in jsondata){
+            $(`#calendar_cell_${date}`).css('color', '#f25050');
+        }
+    }
+
     function func_draw_schedule_data(jsondata){
         $('.schedule_marking, .schedule_marking_lecture').remove();
         let schedule_number_dic = {"general":{}, "lecture":{}};
@@ -389,7 +428,7 @@ function pters_month_calendar(calendar_name, calendar_options){
     }
     //일정 표기 관련
 
-    function func_draw_schedule_timeline_data(jsondata, type){
+    function func_draw_schedule_timeline_data(jsondata, holiday_data, type){
         // type = SCHEDULE_ALL, SCHEDULE_FINISH_ANYWAY, SCHEDULE_NOT_FINISH
 
         let data_dic_form = func_make_schedule_data_for_timeline(jsondata);
@@ -461,10 +500,18 @@ function pters_month_calendar(calendar_name, calendar_options){
             if(temp_array.length == 0){
                 continue;
             }
+
+            let holiday_name = "";
+            let holiday_color = "";
+            if(Object.keys(holiday_data).indexOf(date) != -1){
+                holiday_name = `(${holiday_data[date].holiday_name})`;
+                holiday_color = '#f25050';
+            }
+
             html_to_join_array.push(
                                         `
                                         <div class="timeline_element_date" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_view', 90, POPUP_FROM_BOTTOM, {'select_date':'${date}'})">
-                                            <div class="timeline_date_text obj_font_size_11_weight_bold" id="timeline_${date}">${date_format(date)["yyyy.mm.dd"]}</div>
+                                            <div class="timeline_date_text obj_font_size_11_weight_bold" id="timeline_${date}" style="color:${holiday_color}">${date_format(date)["yyyy.mm.dd"]} ${holiday_name}</div>
                                             ${temp_array.join('')}
                                         </div>
                                         `
@@ -666,11 +713,14 @@ function pters_month_calendar(calendar_name, calendar_options){
 
             let type = $(this).attr('data-timeline');
 
-            func_get_ajax_schedule_data(reference_date, "callback", function(jsondata){
-                func_set_avail_date(jsondata.avail_date_data);
-                func_draw_schedule_data(jsondata);
-                func_draw_schedule_timeline_data(jsondata, type);
-                func_set_timeline_to_today_or_near();
+            func_get_ajax_holiday_data(reference_date, 30, (holiday_data)=>{
+                func_draw_holiday_data(holiday_data);
+                func_get_ajax_schedule_data(reference_date, "callback", function(jsondata){
+                    func_set_avail_date(jsondata.avail_date_data);
+                    func_draw_schedule_data(jsondata);
+                    func_draw_schedule_timeline_data(jsondata, holiday_data, type);
+                    func_set_timeline_to_today_or_near();
+                });
             });
         });
     }
@@ -727,11 +777,14 @@ function pters_month_calendar(calendar_name, calendar_options){
             if(input_reference_date==undefined){
                 input_reference_date = current_year+'-'+(current_month)+'-'+1;
             }
-            func_get_ajax_schedule_data(input_reference_date, "callback", function(jsondata){
-                func_set_avail_date(jsondata.avail_date_data);
-                func_draw_schedule_data(jsondata);
-                func_draw_schedule_timeline_data(jsondata, SCHEDULE_NOT_FINISH);
-                func_set_timeline_to_today_or_near();
+            func_get_ajax_holiday_data(input_reference_date, 30, (holiday_data)=>{
+                    func_draw_holiday_data(holiday_data);
+                func_get_ajax_schedule_data(input_reference_date, "callback", function (jsondata){
+                    func_set_avail_date(jsondata.avail_date_data);
+                    func_draw_schedule_data(jsondata);
+                    func_draw_schedule_timeline_data(jsondata, holiday_data, SCHEDULE_NOT_FINISH);
+                    func_set_timeline_to_today_or_near();
+                });
             });
         },
         "get_current_month":function(){
