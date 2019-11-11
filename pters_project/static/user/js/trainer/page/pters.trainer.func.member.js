@@ -291,6 +291,8 @@ class Member {
         user_options_array.push(`'${SORT_REMAIN_COUNT+'_'+SORT_ORDER_DESC}':{text:'남은 횟수 적은 순', callback:()=>{member.sort_val = '${SORT_REMAIN_COUNT}'; member.sort_order_by= ${SORT_ORDER_ASC};member.sort_value_text = '남은 횟수 적은 순';member.init();layer_popup.close_layer_popup();}}`);
         user_options_array.push(`'${SORT_START_DATE+'_'+SORT_ORDER_ASC}':{text:'시작 일자 최근 순', callback:()=>{member.sort_val = '${SORT_START_DATE}'; member.sort_order_by= ${SORT_ORDER_DESC};member.sort_value_text = '시작 일자 최근 순';member.init();layer_popup.close_layer_popup();}}`);
         user_options_array.push(`'${SORT_START_DATE+'_'+SORT_ORDER_DESC}':{text:'시작 일자 과거 순', callback:()=>{member.sort_val = '${SORT_START_DATE}'; member.sort_order_by= ${SORT_ORDER_ASC};member.sort_value_text = '시작 일자 과거 순';member.init();layer_popup.close_layer_popup();}}`);
+        user_options_array.push(`'${SORT_END_DATE+'_'+SORT_ORDER_ASC}':{text:'남은 일자 많은 순', callback:()=>{member.sort_val = '${SORT_END_DATE}'; member.sort_order_by= ${SORT_ORDER_DESC};member.sort_value_text = '남은 일자 많은 순';member.init();layer_popup.close_layer_popup();}}`);
+        user_options_array.push(`'${SORT_END_DATE+'_'+SORT_ORDER_DESC}':{text:'남은 일자 적은 순', callback:()=>{member.sort_val = '${SORT_END_DATE}'; member.sort_order_by= ${SORT_ORDER_ASC};member.sort_value_text = '남은 일자 적은 순';member.init();layer_popup.close_layer_popup();}}`);
         let user_option = `{`;
         for(let i=0; i<user_options_array.length; i++){
             user_option += user_options_array[i] + ',';

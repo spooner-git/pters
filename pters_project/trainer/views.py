@@ -34,7 +34,7 @@ from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO
     STATE_CD_ABSENCE, STATE_CD_FINISH, PERMISSION_STATE_CD_APPROVE, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, AUTH_TYPE_DELETE, \
     LECTURE_TYPE_NORMAL, SHOW, SORT_TICKET_TYPE, SORT_TICKET_NAME, SORT_TICKET_MEMBER_COUNT, SORT_TICKET_CREATE_DATE, \
     SORT_LECTURE_NAME, SORT_LECTURE_MEMBER_COUNT, SORT_LECTURE_CAPACITY_COUNT, SORT_LECTURE_CREATE_DATE, ON_SCHEDULE, \
-    CALENDAR_TIME_SELECTOR_BASIC
+    CALENDAR_TIME_SELECTOR_BASIC, SORT_END_DATE
 from board.models import BoardTb
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 from schedule.functions import func_refresh_member_ticket_count, func_get_trainer_attend_schedule, \
@@ -613,6 +613,9 @@ class GetMemberIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         elif sort_info == SORT_REG_COUNT:
             current_member_data = sorted(current_member_data, key=lambda elem: elem['member_ticket_reg_count'],
                                          reverse=int(sort_order_by))
+        elif sort_info == SORT_END_DATE:
+            current_member_data = sorted(current_member_data, key=lambda elem: elem['end_date'],
+                                         reverse=int(sort_order_by))
         # context['total_member_num'] = len(member_data)
         # if page != 0:
         #     paginator = Paginator(member_data, 20)  # Show 20 contacts per page
@@ -653,6 +656,9 @@ class GetMemberEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                         reverse=int(sort_order_by))
         elif sort_info == SORT_REG_COUNT:
             finish_member_data = sorted(finish_member_data, key=lambda elem: elem['member_ticket_reg_count'],
+                                        reverse=int(sort_order_by))
+        elif sort_info == SORT_END_DATE:
+            finish_member_data = sorted(finish_member_data, key=lambda elem: elem['end_date'],
                                         reverse=int(sort_order_by))
 
         # context['total_member_num'] = len(member_data)

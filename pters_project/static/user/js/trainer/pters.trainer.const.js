@@ -105,6 +105,7 @@ const SORT_MEMBER_NAME = 0;
 const SORT_REMAIN_COUNT = 1;
 const SORT_START_DATE = 2;
 const SORT_REG_COUNT = 3;
+const SORT_END_DATE = 4;
 
 
 const SORT_LECTURE_NAME = 0;
