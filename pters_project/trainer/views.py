@@ -4010,21 +4010,26 @@ def update_setting_calendar_setting_logic(request):
     # CALENDAR_TIME_SELECTOR_BASIC : 0 (신 PTERS 기본) / CALENDAR_TIME_SELECTOR_ORIGIN : 1 (구 PTERS 기본)
     setting_calendar_time_selector_type = request.POST.get('setting_calendar_time_selector_type',
                                                            CALENDAR_TIME_SELECTOR_BASIC)
+    setting_week_start_date = request.POST.get('setting_week_start_date', 'SUN')
     class_id = request.session.get('class_id', '')
 
     if setting_calendar_basic_select_time is None or setting_calendar_basic_select_time == '':
         setting_calendar_basic_select_time = '60'
     if setting_calendar_time_selector_type is None or setting_calendar_time_selector_type == '':
         setting_calendar_time_selector_type = CALENDAR_TIME_SELECTOR_BASIC
+    if setting_week_start_date is None or setting_week_start_date == '':
+        setting_week_start_date = 'SUN'
 
-    setting_type_cd_data = ['LT_CALENDAR_BASIC_SETTING_TIME', 'LT_CALENDAR_TIME_SELECTOR_TYPE']
-    setting_info_data = [setting_calendar_basic_select_time, setting_calendar_time_selector_type]
+    setting_type_cd_data = ['LT_CALENDAR_BASIC_SETTING_TIME', 'LT_CALENDAR_TIME_SELECTOR_TYPE', 'LT_WEEK_START_DATE']
+    setting_info_data = [setting_calendar_basic_select_time, setting_calendar_time_selector_type,
+                         setting_week_start_date]
 
     error = update_setting_data(class_id, request.user.id, setting_type_cd_data, setting_info_data)
 
     if error is None:
         request.session['setting_calendar_basic_select_time'] = setting_calendar_basic_select_time
         request.session['setting_calendar_time_selector_type'] = setting_calendar_time_selector_type
+        request.session['setting_week_start_date'] = setting_week_start_date
 
     else:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
@@ -4044,8 +4049,6 @@ def update_setting_work_time_logic(request):
     setting_trainer_work_fri_time_avail = request.POST.get('setting_trainer_work_fri_time_avail', '00:00-24:00')
     setting_trainer_work_sat_time_avail = request.POST.get('setting_trainer_work_sat_time_avail', '00:00-24:00')
     setting_holiday_hide = request.POST.get('setting_holiday_hide', SHOW)
-    setting_week_start_date = request.POST.get('setting_week_start_date', 'SUN')
-    setting_calendar_basic_select_time = request.POST.get('setting_calendar_basic_select_time', '60')
     class_id = request.session.get('class_id', '')
 
     if setting_trainer_work_sun_time_avail is None or setting_trainer_work_sun_time_avail == '':
@@ -4064,21 +4067,14 @@ def update_setting_work_time_logic(request):
         setting_trainer_work_sat_time_avail = '00:00-24:00'
     if setting_holiday_hide is None or setting_holiday_hide == '':
         setting_holiday_hide = SHOW
-    if setting_week_start_date is None or setting_week_start_date == '':
-        setting_week_start_date = 'SUN'
-    if setting_calendar_basic_select_time is None or setting_calendar_basic_select_time == '':
-        setting_calendar_basic_select_time = '60'
-
     setting_type_cd_data = ['LT_WORK_SUN_TIME_AVAIL', 'LT_WORK_MON_TIME_AVAIL',
                             'LT_WORK_TUE_TIME_AVAIL', 'LT_WORK_WED_TIME_AVAIL',
                             'LT_WORK_THS_TIME_AVAIL', 'LT_WORK_FRI_TIME_AVAIL',
-                            'LT_WORK_SAT_TIME_AVAIL', 'LT_HOLIDAY_HIDE', 'LT_WEEK_START_DATE',
-                            'LT_CALENDAR_BASIC_SETTING_TIME']
+                            'LT_WORK_SAT_TIME_AVAIL', 'LT_HOLIDAY_HIDE']
     setting_info_data = [setting_trainer_work_sun_time_avail, setting_trainer_work_mon_time_avail,
                          setting_trainer_work_tue_time_avail, setting_trainer_work_wed_time_avail,
                          setting_trainer_work_ths_time_avail, setting_trainer_work_fri_time_avail,
-                         setting_trainer_work_sat_time_avail, setting_holiday_hide, setting_week_start_date,
-                         setting_calendar_basic_select_time]
+                         setting_trainer_work_sat_time_avail, setting_holiday_hide]
 
     error = update_setting_data(class_id, request.user.id, setting_type_cd_data, setting_info_data)
 
@@ -4090,9 +4086,7 @@ def update_setting_work_time_logic(request):
         request.session['setting_trainer_work_ths_time_avail'] = setting_trainer_work_ths_time_avail
         request.session['setting_trainer_work_fri_time_avail'] = setting_trainer_work_fri_time_avail
         request.session['setting_trainer_work_sat_time_avail'] = setting_trainer_work_sat_time_avail
-        request.session['setting_week_start_date'] = setting_week_start_date
         request.session['setting_holiday_hide'] = setting_holiday_hide
-        request.session['setting_calendar_basic_select_time'] = setting_calendar_basic_select_time
 
     else:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
