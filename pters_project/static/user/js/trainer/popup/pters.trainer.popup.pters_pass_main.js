@@ -444,11 +444,6 @@ class Pters_pass_func{
             mobile_product_id = product_id;
         }
 
-        alert(os);
-        alert(device);
-        alert(device_info);
-        alert(user_username);
-        alert(mobile_product_id);
         if(os == IOS && device == MOBILE && device_info != 'web' && user_username =='guest'){
             // ios 인앱 결제 호출
             window.webkit.messageHandlers.payment_method.postMessage(mobile_product_id);
@@ -723,11 +718,11 @@ class Pters_pass_func{
 
 function payment_for_iap(payment_date , product_price_id, os_info){
     let mobile_product_id = "7";
-    if(product_id == "9" || product_id == 9){
+    if(product_price_id == "9" || product_price_id == 9){
         mobile_product_id = "7";
     }
     else{
-        mobile_product_id = product_id;
+        mobile_product_id = product_price_id;
     }
     $.ajax({
         url: "/payment/payment_for_iap/", // 서비스 웹서버
@@ -754,6 +749,7 @@ function payment_for_iap(payment_date , product_price_id, os_info){
                 msg += ' : ' + jsondata.messageArray;
                 alert(msg);
             } else {
+                location.href = '/';
             }
         },
 
@@ -802,9 +798,7 @@ function payment_for_ios(receipt_data , ios_data, product_id, transaction_id){
                 msg += ' : ' + jsondata.messageArray;
                 alert(msg);
             } else {
-                // if(jsondata.test_info != ''){
-                //     alert(jsondata.test_info);
-                // }
+                location.href = '/';
             }
         },
 
