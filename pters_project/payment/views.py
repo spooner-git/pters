@@ -847,33 +847,15 @@ class PaymentCompleteView(LoginRequiredMixin, TemplateView):
 
 
 def payment_for_iap_logic(request):
-
-    json_data = request.body.decode('utf-8')
-    json_loading_data = None
-
-    product_id = None
+    product_id = request.POST.get('product_price_id', '')
+    start_date = request.POST.get('start_date', '')
+    os_info = request.POST.get('os_info', '')
     payment_type_cd = None
-    start_date = None
     end_date = None
     context = {}
     error = None
-    os_info = ''
     today = datetime.date.today()
 
-    try:
-        json_loading_data = json.loads(json_data)
-    except ValueError:
-        error = '오류가 발생했습니다.'
-    except TypeError:
-        error = '오류가 발생했습니다.'
-    #
-    if error is None:
-        try:
-            product_id = json_loading_data['product_price_id']
-            start_date = json_loading_data['start_date']
-            os_info = json_loading_data['os_info']
-        except KeyError:
-            error = '오류가 발생했습니다.'
     if error is None:
         try:
             payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id, status='paid',
@@ -925,16 +907,13 @@ def payment_for_iap_logic(request):
 
 
 def payment_for_ios_logic(request):
-
-    json_data = request.body.decode('utf-8')
-    json_loading_data = None
-
-    product_id = None
+    product_id = request.POST.get('product_id', '')
+    receipt_data = request.POST.get('receipt_data', '')
+    transaction_id = request.POST.get('transaction_id', '')
     payment_type_cd = None
     start_date = None
     context = {}
     error = None
-    inner_error = None
     today = datetime.date.today()
     pay_info = '인앱 결제'
 
@@ -948,61 +927,46 @@ def payment_for_ios_logic(request):
             start_date = today
 
     if error is None:
-        date = int(start_date.strftime('%d'))
-        end_date = str(func_get_end_date(payment_type_cd, start_date, 1, date)).split(' ')[0]
-        start_date = str(start_date).split(' ')[0]
+            date = int(start_date.strftime('%d'))
+            end_date = str(func_get_end_date(payment_type_cd, start_date, 1, date)).split(' ')[0]
+            start_date = str(start_date).split(' ')[0]
 
-        payment_info = PaymentInfoTb(member_id=str(request.user.id),
-                                     product_tb_id=json_loading_data['product_id'],
-                                     payment_type_cd='SINGLE',
-                                     merchant_uid='m_'+str(request.user.id)+'_'+str(json_loading_data['product_id'])+'_'+str(timezone.now().timestamp()),
-                                     customer_uid='c_'+str(request.user.id)+'_'+str(json_loading_data['product_id'])+'_'+str(timezone.now().timestamp()),
-                                     start_date=start_date, end_date=end_date,
-                                     paid_date=today,
-                                     period_month=1,
-                                     price=9900,
-                                     name='스탠다드 - 30일권',
-                                     imp_uid='',
-                                     # imp_uid=input_transaction_id,
-                                     channel='iap',
-                                     card_name=pay_info,
-                                     buyer_email=request.user.email,
-                                     status='paid',
-                                     fail_reason='',
-                                     currency='',
-                                     pay_method=pay_info,
-                                     pg_provider='IOS',
-                                     receipt_url='',
-                                     buyer_name=str(request.user.first_name),
-                                     # amount=int(payment_result['amount']),
-                                     use=USE)
+            payment_info = PaymentInfoTb(member_id=str(request.user.id),
+                                         product_tb_id=product_id,
+                                         payment_type_cd='SINGLE',
+                                         merchant_uid='m_'+str(request.user.id)+'_'+str(product_id)+'_'+str(timezone.now().timestamp()),
+                                         customer_uid='c_'+str(request.user.id)+'_'+str(product_id)+'_'+str(timezone.now().timestamp()),
+                                         start_date=start_date, end_date=end_date,
+                                         paid_date=today,
+                                         period_month=1,
+                                         price=9900,
+                                         name='스탠다드 - 30일권',
+                                         imp_uid='',
+                                         # imp_uid=input_transaction_id,
+                                         channel='iap',
+                                         card_name=pay_info,
+                                         buyer_email=request.user.email,
+                                         status='paid',
+                                         fail_reason='',
+                                         currency='',
+                                         pay_method=pay_info,
+                                         pg_provider='IOS',
+                                         receipt_url='',
+                                         buyer_name=str(request.user.first_name),
+                                         # amount=int(payment_result['amount']),
+                                         use=USE)
 
-        payment_info.save()
-
-        try:
-            json_loading_data = json.loads(json_data)
-        except ValueError:
-            inner_error = '오류가 발생했습니다.'
-        except TypeError:
-            inner_error = '오류가 발생했습니다.'
-
-        if inner_error is None:
-            try:
-                receipt_data = json_loading_data['receipt_data']
-                product_id = json_loading_data['product_id']
-                transaction_id = json_loading_data['transaction_id']
-                ios_receipt_check = IosReceiptCheckTb(member_id=request.user.id,
-                                                      payment_tb_id=payment_info.payment_info_id,
-                                                      original_transaction_id=transaction_id, receipt_data=receipt_data,
-                                                      iap_status_cd='YET_VALIDATION')
-                ios_receipt_check.save()
-            except KeyError:
-                inner_error = ''
+            payment_info.save()
+            ios_receipt_check = IosReceiptCheckTb(member_id=request.user.id,
+                                                  payment_tb_id=payment_info.payment_info_id,
+                                                  original_transaction_id=transaction_id, receipt_data=receipt_data,
+                                                  iap_status_cd='YET_VALIDATION')
+            ios_receipt_check.save()
 
     if error is None:
         logger.info(str(request.user.last_name) + str(request.user.first_name)
                     + '(' + str(request.user.id) + ')님 ios 결제 완료:' + str(product_id) + ':' + ' '
-                    + str(start_date) + '/' + str(inner_error))
+                    + str(start_date))
     else:
         messages.error(request, error)
         logger.error(str(request.user.last_name)+str(request.user.first_name)

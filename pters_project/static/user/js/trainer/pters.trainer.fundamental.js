@@ -920,11 +920,7 @@ function payment_for_iap(payment_date , product_price_id, os_info){
         url: "/payment/payment_for_iap/", // 서비스 웹서버
         type: "POST",
         headers: {"Content-Type": "application/json"},
-        data: JSON.stringify({
-            product_price_id: mobile_product_id,
-            start_date: payment_date,
-            os_info: os_info
-        }),
+        data: {'product_price_id': mobile_product_id, 'start_date': payment_date, 'os_info': os_info},
 
         beforeSend: function (xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -956,7 +952,6 @@ function payment_for_iap(payment_date , product_price_id, os_info){
 }
 
 function payment_for_ios(receipt_data , ios_data, product_id, transaction_id){
-    var url_move = "";
     let mobile_product_id = "7";
     if(product_id == "9" || product_id == 9){
         mobile_product_id = "7";
@@ -968,13 +963,8 @@ function payment_for_ios(receipt_data , ios_data, product_id, transaction_id){
     $.ajax({
         url: "/payment/payment_for_ios/", // 서비스 웹서버
         type: "POST",
-        headers: {"Content-Type": "application/json"},
-        data: JSON.stringify({
-            receipt_data: receipt_data,
-            ios_data: ios_data,
-            product_id: mobile_product_id,
-            transaction_id: transaction_id
-        }),
+        data: {'receipt_data': receipt_data, 'ios_data': ios_data,
+               'product_id': mobile_product_id, 'transaction_id': transaction_id},
 
         beforeSend: function (xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
