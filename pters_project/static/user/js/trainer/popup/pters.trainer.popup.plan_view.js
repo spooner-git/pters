@@ -554,11 +554,6 @@ class Plan_view{
 
     dom_row_classic_time_selector(){
         let selected_date = DateRobot.to_yyyymmdd(this.selected_date.year, this.selected_date.month, this.selected_date.date);
-        // if(this.user_data.user_selected_date.year != null){
-        //     selected_date = DateRobot.to_yyyymmdd(this.user_data.user_selected_date.year, this.user_data.user_selected_date.month, this.user_data.user_selected_date.date);
-        // }else{
-        //     selected_date = DateRobot.to_yyyymmdd(this.dates.current_year, this.dates.current_month, this.dates.current_date);
-        // }
 
         let root_content_height = $root_content.height();
 
@@ -585,7 +580,11 @@ class Plan_view{
                     this.data.end_time_text = object.text.end + ' 까지 <span style="font-size:11px;">('+ object.text.diff +'분 진행)</span>';
 
                     this.if_user_changed_any_information = true;
-                    this.render_content();
+                    // this.render_content();
+                    this.check_duplicate_plan_exist((data)=>{
+                        this.data.duplicate_plan_when_add = data;
+                        this.render_content();
+                    });
                 }};
                 time_selector = new TwoTimeSelector("#wrapper_popup_time_selector_function", time_data, user_option);
             });
@@ -615,14 +614,23 @@ class Plan_view{
                     this.data.end_time_text = object.text.end + ' 까지 <span style="font-size:11px;">('+ object.text.diff +'분 진행)</span>';
 
                     this.if_user_changed_any_information = true;
-                    this.render_content();
+                    // this.render_content();
+                    this.check_duplicate_plan_exist((data)=>{
+                        this.data.duplicate_plan_when_add = data;
+                        this.render_content();
+                    });
                 }};
                 time_selector = new TwoTimeSelector("#wrapper_popup_time_selector_function", time_data, user_option);
             });
         };
         let html2 = CComponent.create_row(id2, title2, icon2, icon_r_visible2, icon_r_text2, style2, callback2);
 
-        return html + html2;
+        let html_duplication_alert = `<div style="font-size:11px;color:#fe4e65;padding-left:45px;box-sizing:border-box;display:${this.data.duplicate_plan_when_add.length == 0 ? 'none' : 'block'}">
+                                            ${this.data.duplicate_plan_when_add.length}건 겹치는 일정이 존재합니다.<br>
+                                            ${this.data.duplicate_plan_when_add.join('<br/>')}
+                                        </div>`;
+
+        return html + html2 + html_duplication_alert;
     }
 
     dom_row_memo_select (){

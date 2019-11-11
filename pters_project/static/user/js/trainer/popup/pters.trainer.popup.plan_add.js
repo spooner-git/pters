@@ -147,6 +147,10 @@ class Plan_add{
             this.date_start = date_start_array[data.setting_week_start_date];
             this.set_initial_data(this.data_from_external);
             this.render();
+            this.check_duplicate_plan_exist((data)=>{
+                this.data.duplicate_plan_when_add = data;
+                this.render_content();
+            });
         });
         func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
     }
@@ -500,12 +504,23 @@ class Plan_add{
                 let initial_time = this.data.start_time != null ? TimeRobot.hm_to_hhmm(this.data.start_time).complete : null;
 
                 let user_option = {myname:'time', title:'시간 선택', work_time:this.work_time, class_hour:this.lecture_minute, initial:initial_time, callback_when_set:(object)=>{
+                    if(this.data.date == null){
+                        show_error_message("날짜를 먼저 선택해주세요.");
+                        this.render_content();
+                        return;
+                    }
+                    
                     this.data.start_time = object.data.start;
                     this.data.start_time_text = object.text.start + ' 부터';
                     this.data.end_time = object.data.end;
                     this.data.end_time_text = object.text.end + ' 까지 <span style="font-size:11px;">('+ object.text.diff +'분 진행)</span>';
                     
-                    this.render_content();
+                    // this.render_content();
+
+                    this.check_duplicate_plan_exist((data)=>{
+                        this.data.duplicate_plan_when_add = data;
+                        this.render_content();
+                    });
                 }};
                 time_selector = new TwoTimeSelector("#wrapper_popup_time_selector_function", time_data, user_option);
             });
@@ -522,20 +537,35 @@ class Plan_add{
             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', 100*300/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
                 let time_data = calendar.latest_received_data[selected_date];
                 let user_option = {myname:'time', title:'시간 선택', work_time:this.work_time, class_hour:this.lecture_minute, initial:TimeRobot.hm_to_hhmm(this.data.start_time).complete, callback_when_set:(object)=>{
-                    
+                    if(this.data.date == null){
+                        show_error_message("날짜를 먼저 선택해주세요.");
+                        this.render_content();
+                        return;
+                    }
+
                     this.data.start_time = object.data.start;
                     this.data.start_time_text = object.text.start + ' 부터';
                     this.data.end_time = object.data.end;
                     this.data.end_time_text = object.text.end + ' 까지 <span style="font-size:11px;">('+ object.text.diff +'분 진행)</span>';
                     
-                    this.render_content();
+                    // this.render_content();
+
+                    this.check_duplicate_plan_exist((data)=>{
+                        this.data.duplicate_plan_when_add = data;
+                        this.render_content();
+                    });
                 }};
                 time_selector = new TwoTimeSelector("#wrapper_popup_time_selector_function", time_data, user_option);
             });
         };
         let html2 = CComponent.create_row(id2, title2, icon2, icon_r_visible2, icon_r_text2, style2, callback2);
 
-        return html + html2;
+        let html_duplication_alert = `<div style="font-size:11px;color:#fe4e65;padding-left:45px;box-sizing:border-box;display:${this.data.duplicate_plan_when_add.length == 0 ? 'none' : 'block'}">
+                                            ${this.data.duplicate_plan_when_add.length}건 겹치는 일정이 존재합니다.<br>
+                                            ${this.data.duplicate_plan_when_add.join('<br/>')}
+                                        </div>`;
+
+        return html + html2 + html_duplication_alert;
     }
 
     dom_row_repeat_select(){
