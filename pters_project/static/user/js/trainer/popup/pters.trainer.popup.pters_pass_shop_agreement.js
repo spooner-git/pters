@@ -146,9 +146,6 @@ class Pters_pass_shop_agreement{
         let html_checkbox = CComponent.radio_button (id, checked, style, onclick);
 
         let text = `<span style="font-size:14px;font-weight:bold;line-height:30px;">신용카드</span>`;
-        alert(device);
-        alert(device_info);
-        alert(user_username);
         if(device == MOBILE && device_info != 'web' && user_username =='guest'){
             text = `<span style="font-size:14px;font-weight:bold;line-height:30px;">인앱결제</span>`;
         }
