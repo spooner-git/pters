@@ -125,7 +125,9 @@ class Pters_pass_shop{
         let icon = DELETE;
         let icon_r_visible = SHOW;
         let icon_r_text = "매월 9,900원";
-
+        alert(device);
+        alert(device_info);
+        alert(user_username);
         if(device == MOBILE && device_info != 'web' && user_username =='guest'){
             icon_r_text = "30일 9,900원";
         }

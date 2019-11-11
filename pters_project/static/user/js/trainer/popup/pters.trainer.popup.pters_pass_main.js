@@ -444,6 +444,11 @@ class Pters_pass_func{
             mobile_product_id = product_id;
         }
 
+        alert(os);
+        alert(device);
+        alert(device_info);
+        alert(user_username);
+        alert(mobile_product_id);
         if(os == IOS && device == MOBILE && device_info != 'web' && user_username =='guest'){
             // ios 인앱 결제 호출
             window.webkit.messageHandlers.payment_method.postMessage(mobile_product_id);
