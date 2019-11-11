@@ -3932,7 +3932,7 @@ class CategorySelector{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="category_select.upper_right_menu();" class="obj_icon_prev"></span>`;
+        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="category_select.upper_left_menu();" class="obj_icon_prev"></span>`;
         let top_center = `<span class="icon_center"><span id="">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="category_select.upper_right_menu();">완료</span></span>`;
         let content =   `<section>${this.dom_list()}</section>`;
@@ -3982,6 +3982,11 @@ class CategorySelector{
 
     upper_right_menu(){
         this.callback(this.data);
+        layer_popup.close_layer_popup();
+        this.clear();
+    }
+
+    upper_left_menu(){
         layer_popup.close_layer_popup();
         this.clear();
     }
