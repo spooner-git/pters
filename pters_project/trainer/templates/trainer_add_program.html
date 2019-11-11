@@ -178,7 +178,9 @@
     // 범용 셀렉터 인스턴스
 
     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PROGRAM_ADD, 100, POPUP_FROM_BOTTOM, null, ()=>{
-        program_add_popup = new Program_add_new_member('.popup_program_add')});
+        program_add_popup = new Program_add_new_member('.popup_program_add');
+        layer_popup.disable_shade_click_close();
+    });
 
     
 </script>
