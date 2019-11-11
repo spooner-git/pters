@@ -19,7 +19,7 @@ let layer_popup = (function (){
             $popup_selector = $popup_name_selector.parents('.popup_mobile');
             //왼쪽 오른쪽에서 팝업이 열리는 경우 height 조정을 100%와 동일하도록
             if(animation_type == POPUP_FROM_LEFT || animation_type == POPUP_FROM_RIGHT){
-                popup_size=100
+                popup_size = 100;
             }
             //height px 값으로 변환 - top 이 있는 경우 해당 길이 제외
             let popup_height = popup_size * windowHeight / 100 - $popup_name_selector[0].offsetTop;
@@ -45,7 +45,7 @@ let layer_popup = (function (){
         return popup_data;
     }
 
-    function func_close_layer_popup (popup_size, popup_specified){
+    function func_close_layer_popup (popup_size){
         let popup_data = {};
         //혹시 있을 pop 에러 방지
         if(popup_array.length > 0){

@@ -172,8 +172,8 @@ class Program_add_new_member{
         let icon_r_text = "";
         let style = null;
         let multiple_select = 1;
-        let upper_category = this.category.code[0];
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            let upper_category = this.category.code[0];
             if(upper_category == undefined){
                 show_error_message('상위 분야를 먼저 선택해주세요');
                 return false;
