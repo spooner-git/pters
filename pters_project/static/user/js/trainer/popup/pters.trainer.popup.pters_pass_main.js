@@ -436,17 +436,23 @@ class Pters_pass_func{
         });
     }
 
-    static request_payment(product_name, user_email, user_name, pay_method, payment_type_cd, price, merchant_uid, customer_uid){
+    static request_payment(product_name, user_email, user_name, pay_method, payment_type_cd, price, merchant_uid, customer_uid, product_id){
+        let mobile_product_id = "9";
+        if(product_id == '7' || product_id == 7){
+            mobile_product_id="9";
+        }else{
+            mobile_product_id = product_id;
+        }
 
-        // if(os == IOS && device == MOBILE && device_info != 'web'){
-        //     // ios 인앱 결제 호출
-        //     window.webkit.messageHandlers.payment_method.postMessage("9");
-        // }
-        // else if(os == ANDROID && device == MOBILE && device_info != 'web') {
-        //     // 안드로이드 인앱 결제 호출
-        //     window.android_payment_function.callMethodName("9");
-        // }
-        // else {
+        if(os == IOS && device == MOBILE && device_info != 'web' && user_username =='guest'){
+            // ios 인앱 결제 호출
+            window.webkit.messageHandlers.payment_method.postMessage(mobile_product_id);
+        }
+        else if(os == ANDROID && device == MOBILE && device_info != 'web' && user_username =='guest') {
+            // 안드로이드 인앱 결제 호출
+            window.android_payment_function.callMethodName(mobile_product_id);
+        }
+        else {
             var request_pay_data = {
                 pg: 'danal', // version 1.1.0부터 지원.
                 pay_method: pay_method,
@@ -509,7 +515,7 @@ class Pters_pass_func{
                     // location.href = "/payment/";
                 }
             });
-        // }
+        }
     }
 
     // static check_payment_for_update(name, current_customer_uid, product_id, period_month, merchant_uid, customer_uid, callback){
@@ -709,3 +715,101 @@ class Pters_pass_func{
     }
 }
 
+
+function payment_for_iap(payment_date , product_price_id, os_info){
+    let mobile_product_id = "7";
+    if(product_id == "9" || product_id == 9){
+        mobile_product_id = "7";
+    }
+    else{
+        mobile_product_id = product_id;
+    }
+    $.ajax({
+        url: "/payment/payment_for_iap/", // 서비스 웹서버
+        type: "POST",
+        headers: {"Content-Type": "application/json"},
+        data: JSON.stringify({
+            product_price_id: mobile_product_id,
+            start_date: payment_date,
+            os_info: os_info
+        }),
+
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+            beforeSend();
+        },
+
+        success: function (data) {
+            var jsondata = JSON.parse(data);
+            var msg = "결제에 실패했습니다.";
+            if (jsondata.messageArray.length > 0) {
+                msg = '결제에 실패했습니다.';
+                msg += ' : ' + jsondata.messageArray;
+                alert(msg);
+            } else {
+            }
+        },
+
+        complete: function () {
+            completeSend();
+        },
+
+        error: function () {
+            console.log('server error');
+        }
+    });
+}
+
+function payment_for_ios(receipt_data , ios_data, product_id, transaction_id){
+    var url_move = "";
+    let mobile_product_id = "7";
+    if(product_id == "9" || product_id == 9){
+        mobile_product_id = "7";
+    }
+    else{
+        mobile_product_id = product_id;
+    }
+    $.ajax({
+        url: "/payment/payment_for_ios/", // 서비스 웹서버
+        type: "POST",
+        headers: {"Content-Type": "application/json"},
+        data: JSON.stringify({
+            receipt_data: receipt_data,
+            ios_data: ios_data,
+            product_id: mobile_product_id,
+            transaction_id: transaction_id
+        }),
+
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+            beforeSend();
+        },
+
+        success: function (data) {
+            var jsondata = JSON.parse(data);
+            if (jsondata.messageArray.length > 0) {
+                var msg = '';
+                msg = '결제에 실패했습니다.';
+                msg += ' : ' + jsondata.messageArray;
+                alert(msg);
+            } else {
+                // if(jsondata.test_info != ''){
+                //     alert(jsondata.test_info);
+                // }
+            }
+        },
+
+        complete: function () {
+            completeSend();
+        },
+
+        error: function () {
+            alert('결제에 실패했습니다.');
+            console.log('server error');
+        }
+    });
+}

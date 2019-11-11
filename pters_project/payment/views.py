@@ -936,7 +936,6 @@ def payment_for_ios_logic(request):
     error = None
     inner_error = None
     today = datetime.date.today()
-    context['test_info'] = ''
     pay_info = '인앱 결제'
 
     if error is None:

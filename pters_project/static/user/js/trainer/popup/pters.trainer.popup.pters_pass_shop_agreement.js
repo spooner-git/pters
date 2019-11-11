@@ -222,7 +222,7 @@ class Pters_pass_shop_agreement{
                     }
                 }
                 layer_popup.close_layer_popup();
-                Pters_pass_func.request_payment(product_name, user_email, user_name, pay_method, payment_type_cd, price, merchant_uid, customer_uid);
+                Pters_pass_func.request_payment(product_name, user_email, user_name, pay_method, payment_type_cd, price, merchant_uid, customer_uid, product_id);
             });
         };
 
