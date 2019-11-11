@@ -670,7 +670,8 @@ def func_get_trainer_schedule_all(class_id, start_date, end_date):
         schedule_start_date = schedule_start_date_split[0]
         schedule_start_time = schedule_start_time_split[0]+':'+schedule_start_time_split[1]
         schedule_end_time = schedule_end_time_split[0]+':'+schedule_end_time_split[1]
-
+        if schedule_end_time == '00:00':
+            schedule_end_time = '24:00'
         # 일정 구분 (0:OFF, 1:개인, 2:그룹)
         schedule_type = schedule_info.en_dis_type
 
@@ -753,7 +754,8 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
         # 날짜 셋팅
         schedule_start_time = schedule_start_time_split[0] + ':' + schedule_start_time_split[1]
         schedule_end_time = schedule_end_time_split[0] + ':' + schedule_end_time_split[1]
-
+        if schedule_end_time == '00:00':
+            schedule_end_time = '24:00'
         # 일정 구분 (0:OFF, 1:개인, 2:그룹)
         schedule_type = schedule_info.en_dis_type
 
@@ -866,6 +868,11 @@ def func_get_member_schedule_all(class_id, member_id):
             lecture_name = '개인수업'
             lecture_max_member_num = '1'
 
+        end_dt_time = str(member_schedule_info.end_dt).split(' ')[1]
+        if end_dt_time == '00:00:00':
+            end_dt_time = '24:00'
+
+        end_dt = str(member_schedule_info.start_dt).split(' ')[0] + ' ' + end_dt_time
         # 일정 정보를 추가하고 수강권에 할당
         schedule_info = {'schedule_id': str(member_schedule_info.schedule_id),
                          'lecture_id': str(lecture_id),
@@ -873,7 +880,7 @@ def func_get_member_schedule_all(class_id, member_id):
                          'lecture_max_member_num': lecture_max_member_num,
                          'schedule_type': schedule_type,
                          'start_dt': str(member_schedule_info.start_dt),
-                         'end_dt': str(member_schedule_info.end_dt),
+                         'end_dt': str(end_dt),
                          'state_cd': member_schedule_info.state_cd,
                          'note': member_schedule_info.note
                          }
@@ -914,10 +921,13 @@ def func_get_lecture_schedule_all(class_id, lecture_id):
             lecture_name = ''
             lecture_max_member_num = ''
             lecture_current_member_num = ''
-
+        end_dt_time = str(schedule_info.end_dt).split(' ')[1]
+        if end_dt_time == '00:00:00':
+            end_dt_time = '24:00'
+        end_dt = str(schedule_info.start_dt).split(' ')[0] + ' ' + end_dt_time
         lecture_schedule_list.append({'schedule_id': str(schedule_info.schedule_id),
                                       'start_dt': str(schedule_info.start_dt),
-                                      'end_dt': str(schedule_info.end_dt),
+                                      'end_dt': str(end_dt),
                                       'state_cd': schedule_info.state_cd,
                                       'schedule_type': schedule_type,
                                       'note': schedule_info.note,

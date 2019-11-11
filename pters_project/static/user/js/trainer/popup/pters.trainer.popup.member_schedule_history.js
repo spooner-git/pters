@@ -62,7 +62,6 @@ class Member_schedule_history{
                 let schedule_name = data.lecture_name;
                 let attend_status = data.state_cd;
                 let memo = data.note;
-    
                 html = CComponent.schedule_history_row (numbering, schedule_id, date, schedule_name, attend_status, memo, ()=>{
                     let user_option = {
                         absence:{text:"결석", callback:()=>{Plan_func.status({"schedule_id":schedule_id, "state_cd":SCHEDULE_ABSENCE}, ()=>{
