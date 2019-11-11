@@ -925,7 +925,6 @@ function payment_for_iap(payment_date , product_price_id, os_info){
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
-            beforeSend();
         },
 
         success: function (data) {
@@ -970,7 +969,6 @@ function payment_for_ios(receipt_data , ios_data, product_id, transaction_id){
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
-            beforeSend();
             alert('test2');
         },
 
