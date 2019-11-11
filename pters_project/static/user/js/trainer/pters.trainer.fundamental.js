@@ -958,7 +958,6 @@ function payment_for_ios(receipt_data , ios_data, product_id, transaction_id){
     else{
         mobile_product_id = product_id;
     }
-    alert('test1');
     $.ajax({
         url: "/payment/payment_for_ios/", // 서비스 웹서버
         type: "POST",
@@ -969,13 +968,10 @@ function payment_for_ios(receipt_data , ios_data, product_id, transaction_id){
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
-            alert('test2');
         },
 
         success: function (data) {
-            alert('test3::');
             var jsondata = JSON.parse(data);
-            alert('test4::'+jsondata);
             if (jsondata.messageArray.length > 0) {
                 var msg = '';
                 msg = '결제에 실패했습니다.';

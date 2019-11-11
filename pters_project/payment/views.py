@@ -882,13 +882,13 @@ def payment_for_iap_logic(request):
                                      price=9900,
                                      name='스탠다드 - 30일권',
                                      imp_uid='',
-                                     channel='Android',
+                                     channel='iap',
                                      card_name='인앱 결제',
                                      buyer_email=request.user.email,
                                      status='paid',
                                      fail_reason='',
                                      currency='',
-                                     pay_method='인앱 결제',
+                                     pay_method='android',
                                      pg_provider=os_info,
                                      receipt_url='',
                                      buyer_name=str(request.user.first_name),
@@ -907,7 +907,6 @@ def payment_for_iap_logic(request):
 
 
 def payment_for_ios_logic(request):
-    logger.error('test0::')
     product_id = request.POST.get('product_id', '')
     receipt_data = request.POST.get('receipt_data', '')
     transaction_id = request.POST.get('transaction_id', '')
@@ -917,9 +916,6 @@ def payment_for_ios_logic(request):
     error = None
     today = datetime.date.today()
     pay_info = '인앱 결제'
-    logger.error('test1::'+ str(product_id))
-    logger.error('test2::'+ str(receipt_data))
-    logger.error('test3::'+ str(transaction_id))
 
     if error is None:
         try:
@@ -929,15 +925,12 @@ def payment_for_ios_logic(request):
             start_date = payment_info.end_date + datetime.timedelta(days=1)
         except ObjectDoesNotExist:
             start_date = today
-    logger.error('test4')
 
     if error is None:
-        logger.error('test5')
         date = int(start_date.strftime('%d'))
         end_date = str(func_get_end_date(payment_type_cd, start_date, 1, date)).split(' ')[0]
         start_date = str(start_date).split(' ')[0]
 
-        logger.error('test6')
         payment_info = PaymentInfoTb(member_id=str(request.user.id),
                                      product_tb_id=product_id,
                                      payment_type_cd='SINGLE',
@@ -956,7 +949,7 @@ def payment_for_ios_logic(request):
                                      status='paid',
                                      fail_reason='',
                                      currency='',
-                                     pay_method=pay_info,
+                                     pay_method='ios',
                                      pg_provider='IOS',
                                      receipt_url='',
                                      buyer_name=str(request.user.first_name),
@@ -964,13 +957,11 @@ def payment_for_ios_logic(request):
                                      use=USE)
 
         payment_info.save()
-        logger.error('test7')
         ios_receipt_check = IosReceiptCheckTb(member_id=request.user.id,
                                               payment_tb_id=payment_info.payment_info_id,
                                               original_transaction_id=transaction_id, receipt_data=receipt_data,
                                               iap_status_cd='YET_VALIDATION')
         ios_receipt_check.save()
-        logger.error('test8')
 
     if error is None:
         logger.info(str(request.user.last_name) + str(request.user.first_name)
