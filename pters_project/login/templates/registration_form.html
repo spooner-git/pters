@@ -63,7 +63,7 @@
                     <!-- 이름 입력 영역 -->
                     <div style="margin-top:8px;">
                         <input class="pters_login_input" type="text" name="name" id="id_name" placeholder="이름 (-_ 제외 특수문자 불가)" minlength="2" maxlength="10" title="이름"
-                               pattern="[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{2,8}" onkeyup="limit_char_check(event.target);" data-valid="false" autofocus>
+                               pattern="[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{2,8}" onkeyup="limit_char_auto_correction(event.target);" data-valid="false" autofocus>
                         <div class="input_description">
                             <div class="input_description_text" id="id_name_confirm"></div>
                             <div id="id_name_default_confirm"></div>
@@ -73,7 +73,7 @@
                     <!-- 아이디 입력 영역 -->
                    <div style="margin-top:8px;">
                         <input class="pters_login_input" type="text" name="username" id="id_username" placeholder="아이디(영어, 숫자, -_@ 제외 불가)" minlength="4" maxlength="20" title="아이디"
-                               pattern="[a-zA-Z0-9-._@]{4,20}" onkeyup="limit_char_check(event.target);" data-valid="false">
+                               pattern="[a-zA-Z0-9-._@]{4,20}" onkeyup="limit_char_auto_correction(event.target);" data-valid="false">
                         <div class="input_description">
                             <div class="input_description_text" id="id_username_confirm"></div>
                             <div id="id_username_default_confirm"></div>
