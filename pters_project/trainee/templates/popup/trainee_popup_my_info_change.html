@@ -31,7 +31,7 @@
                     <input type="date" name="birthday" class="wrapper_my_info_change_input_box obj_font_size_14_weight_500" value="{{ member_info.birthday_dt }}" max="2025-12-31" min="1919-01-01">
                 </article>
                 <article>
-                    <div class="wrapper_sub_title obj_font_size_11_weight_500 obj_font_color_dark_grey">휴대폰 번호</div>
+                    <div class="wrapper_sub_title obj_font_size_11_weight_500 obj_font_color_dark_grey">휴대폰 번호 <span class="obj_font_color_coral">({% if not member_info.phone_is_active %}미인증{% else %}인증완료{% endif %})</div>
                     <div style="margin-top:5px;">
                         <input type="tel" name="phone" id="id_phone" class="pters_login_input" minlength="10" maxlength="11" placeholder="{{ member_info.phone }}"
                                 style="width: 225px;" pattern="[0-9]{10,11}" onkeyup="limit_char_auto_correction(event.target); check_sms_activation_button(event.target);" data-valid="false">
