@@ -343,7 +343,7 @@ class Plan_view{
             //회원 선택 팝업 열기
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SELECT, 100, popup_style, {'data':null}, ()=>{
-                let appendix =  {lecture_id:this.data.lecture_id, title:"회원", disable_zero_avail_count:ON};
+                let appendix =  {lecture_id:this.data.lecture_id, title:"회원", disable_zero_avail_count:ON, list_switch:SHOW};
                 member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.lecture_max_num, appendix, (set_data)=>{
                     this.member = set_data;
                     let changed = this.func_update_member();
@@ -356,6 +356,14 @@ class Plan_view{
 
                     for(let i=0; i<changed.add.length; i++){
                         Plan_func.create('/schedule/add_member_lecture_schedule/', {"member_id":changed.add[i], "schedule_id": this.schedule_id, "async":false}, ()=>{});
+                    }
+
+                    if(set_data.id_other.length > 0){ //전체 회원에서 추가한 것이 있을 때
+                        for(let i=0; i<set_data.id_other.length; i++){
+                            let member_ticket_id = set_data.ticket_id_other[i];
+                            let member_id = set_data.id_other[i];
+                            Plan_func.create('/schedule/add_other_member_lecture_schedule/', {"member_id":member_id, "member_ticket_id": member_ticket_id, "schedule_id": this.schedule_id, "async":false}, ()=>{}); 
+                        }
                     }
                     
                     this.init();

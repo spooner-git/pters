@@ -253,7 +253,7 @@ class Member_schedule_history{
     switch_type(){
         let user_option = {
             by_ticket:{text:"수강권별", callback:()=>{this.sort_val = SORT_MEMBER_TICKET;this.init();layer_popup.close_layer_popup();}},
-            by_time:{text:"시간순", callback:()=>{;this.sort_val = SORT_SCHEDULE_DT;this.init();layer_popup.close_layer_popup();}}
+            by_time:{text:"시간순", callback:()=>{this.sort_val = SORT_SCHEDULE_DT;this.init();layer_popup.close_layer_popup();}}
         };
         let options_padding_top_bottom = 16;
         let button_height = 8 + 8 + 52;
