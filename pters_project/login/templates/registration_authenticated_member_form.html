@@ -31,7 +31,9 @@
         <div id="registration_box">
             <!-- 헤더 영역 -->
             <div class="registration_top" style="border-bottom:0px;">
-                <div class="registration_left" onclick="location.href='{% url "login:index" %}'">X</div>
+                <div class="registration_left" onclick="location.href='{% url "login:index" %}'">
+                    <img src="/static/common/icon/icon_x_black.png" style="width:24px; height:24px;">
+                </div>
                 <div class="registration_title" style="display:none;">인증을 완료해주세요.</div>
                 <div class="registration_right"></div>
             </div>
@@ -55,7 +57,8 @@
                     <!-- 휴대폰 번호 입력 영역 -->
                     <div style="margin-top:8px;">
                         <input class="pters_login_input" type="text" name="phone" id="id_phone" placeholder="휴대폰 번호" minlength="10" maxlength="11" title="휴대폰 번호"
-                               autocomplete="off" style="width:225px;" pattern="[0-9]{10,11}" onkeyup="limit_char_auto_correction(event.target); check_sms_activation_button(event.target);" data-valid="false">
+                               autocomplete="off" style="width:225px;" pattern="[0-9]{10,11}" onkeyup="limit_char_auto_correction(event.target); check_sms_activation_button(event.target);"
+                               data-error-message="" data-valid="false">
                         <div class="activation_button" id="id_activation_button" onclick="activate_sms();" style="pointer-events:none;">인증</div>
                     </div>
 
@@ -63,7 +66,7 @@
                     <div style="margin-top:8px;">
                         <div id="wrapper_id_activation" style="width: 225px; border: solid 1px #d6d2d2; display:inline-block">
                             <input class="pters_login_input" type="text" name="activation_code" id="id_activation_code" placeholder="인증 번호" minlength="3" maxlength="8" title="휴대폰 인증"
-                                   style="width:70%; border:0" pattern="[0-9]{3,8}" onkeyup="limit_char_auto_correction(event.target);" data-valid="false">
+                                   style="width:70%; border:0" pattern="[0-9]{3,8}" onkeyup="limit_char_auto_correction(event.target);" data-error-message="" data-valid="false">
                             <div id="activation_timer" style="display:none; width:20%; text-align:right; padding-right:12px; color: #ff001f; font-size: 13px; font-weight: 500; letter-spacing: -0.5px;">
                                 03:00
                             </div>
