@@ -34,13 +34,14 @@ from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO
     STATE_CD_ABSENCE, STATE_CD_FINISH, PERMISSION_STATE_CD_APPROVE, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, AUTH_TYPE_DELETE, \
     LECTURE_TYPE_NORMAL, SHOW, SORT_TICKET_TYPE, SORT_TICKET_NAME, SORT_TICKET_MEMBER_COUNT, SORT_TICKET_CREATE_DATE, \
     SORT_LECTURE_NAME, SORT_LECTURE_MEMBER_COUNT, SORT_LECTURE_CAPACITY_COUNT, SORT_LECTURE_CREATE_DATE, ON_SCHEDULE, \
-    CALENDAR_TIME_SELECTOR_BASIC, SORT_END_DATE
+    CALENDAR_TIME_SELECTOR_BASIC, SORT_END_DATE, SORT_MEMBER_TICKET, SORT_SCHEDULE_DT
 from board.models import BoardTb
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 from schedule.functions import func_refresh_member_ticket_count, func_get_trainer_attend_schedule, \
     func_get_lecture_member_ticket_id, func_check_lecture_available_member_before, func_add_schedule, \
     func_check_lecture_available_member_after, func_get_trainer_schedule_all, func_get_trainer_schedule_info, \
-    func_get_member_schedule_all, func_get_lecture_schedule_all
+    func_get_lecture_schedule_all, func_get_member_schedule_all_by_member_ticket, \
+    func_get_member_schedule_all_by_schedule_dt
 from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb
 from stats.functions import get_sales_data
 from trainee.models import MemberTicketTb
@@ -192,6 +193,8 @@ class GetMemberScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
     def get(self, request):
         class_id = self.request.session.get('class_id', '')
         member_id = request.GET.get('member_id', '')
+        sort = request.GET.get('sort_val', SORT_MEMBER_TICKET)
+
         error = None
         ordered_schedule_dict = collections.OrderedDict()
 
@@ -199,7 +202,12 @@ class GetMemberScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
             error = '회원 정보를 불러오지 못했습니다.'
 
         if error is None:
-            ordered_schedule_dict = func_get_member_schedule_all(class_id, member_id)
+            if str(sort) == str(SORT_MEMBER_TICKET):
+                ordered_schedule_dict = func_get_member_schedule_all_by_member_ticket(class_id, member_id)
+            elif str(sort) == str(SORT_SCHEDULE_DT):
+                ordered_schedule_dict = {
+                    'member_schedule': func_get_member_schedule_all_by_schedule_dt(class_id, member_id)
+                }
         else:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
             messages.error(request, error)

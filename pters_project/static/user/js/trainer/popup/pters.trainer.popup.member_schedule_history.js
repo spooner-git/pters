@@ -5,6 +5,7 @@ class Member_schedule_history{
         this.callback = callback;
         this.received_data;
         this.data = null;
+        this.sort_val = SORT_MEMBER_TICKET;
         this.init();
     }
 
@@ -151,7 +152,7 @@ class Member_schedule_history{
     }
 
     request_list (callback){
-        let send_data = {"member_id": this.member_id};
+        let send_data = {"member_id": this.member_id, "sort_val": this.sort_val};
         Member_func.read_schedule_list_by_ticket(send_data, (data)=>{
             this.received_data = data;
             callback();

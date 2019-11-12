@@ -118,8 +118,12 @@ const SORT_TICKET_NAME = 1;
 const SORT_TICKET_MEMBER_COUNT = 2;
 const SORT_TICKET_CREATE_DATE = 3;
 
+const SORT_MEMBER_TICKET = 0;
+const SORT_SCHEDULE_DT = 1;
+
 const SORT_ORDER_ASC = 0;
 const SORT_ORDER_DESC = 1;
+
 
 /* px */
 const MAX_WIDTH = 800;
