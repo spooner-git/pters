@@ -128,15 +128,15 @@ def login_trainer(request):
                         group_name = 'trainer'
                         if len(group_list) == 1:
                             group_name = group_list[0].name
-                        # if group_name == 'trainee' and not user.check_password('0000'):
-                        if group_name == 'trainee':
+                        if group_name == 'trainee' and not user.check_password('0000'):
+                        # if group_name == 'trainee':
                             login(request, user)
                             # if auto_login_check == '0':
                             #     request.session.set_expiry(0)
                         else:
                             request.session['member_id'] = user.id
                             request.session['username'] = user.username
-                            next_page = '/login/authenticated_member/'
+                            next_page = '/login/registration_temp/'
                 else:
                     error = '이미 탈퇴한 회원입니다.'
         else:
