@@ -49,6 +49,10 @@ class Member_attend{
         }
 
         this.data = new_data;
+        this.schedule_state_cd = data.state_cd;
+        if(this.schedule_state_cd == SCHEDULE_FINISH && Object.keys(this.data).length == 0){
+            this.check_entire = true;
+        }
         this.lecture_max_num = data.lecture_max_member_num;
         this.lecture_current_num = data.lecture_current_member_num;
     }
@@ -78,7 +82,7 @@ class Member_attend{
                     </div>
                     <div style="display:table-cell;width:auto;font-size:13px;font-weight:500;text-align:right;vertical-align:middle;cursor:pointer; letter-spacing: -0.5px; color: #858282;" id="check_entire_${this.schedule_id}">
                         <span style="color:#858282">${Object.keys(this.data).length == 0 ? "일정 완료" : "전원 출석"}</span>
-                        ${this.check_entire == true 
+                        ${this.check_entire == true
                             ? `<div class="pters_checkbox checkbox_selected"><div class="checkbox_selected_inner"></div></div>`
                             : `<div class="pters_checkbox"></div>`
                         }
