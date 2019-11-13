@@ -688,7 +688,9 @@ class Plan_view{
             ()=>{
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_ATTEND, 100, popup_style, null, ()=>{
-                    member_attend = new Member_attend('.popup_member_attend', this.schedule_id, (set_data)=>{
+                    member_attend = new Member_attend('.popup_member_attend', this.schedule_id, (data)=>{
+                        let schedule = data.schedule;
+                        let set_data = data.member_schedule;
                         //출석체크 팝업에서 완료버튼을 눌렀을때 할 행동
                         //개인일정 일때
                         if(this.data.schedule_type == 1){
@@ -739,6 +741,8 @@ class Plan_view{
                                 data_to_send.push(send_data);
                             // }
                         }
+                        //일정 껍데기 완료하기
+                        data_to_send.push({"schedule_id":String(schedule.schedule_id), "state_cd":schedule.state_cd, "upload_file": null});
                         let length = data_to_send.length;
                         let ajax_send_order = 0;
                         for(let i=0; i<data_to_send.length; i++){
