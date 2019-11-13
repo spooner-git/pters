@@ -862,7 +862,8 @@ class Calendar {
         if(week_dates_info == false){
             dates_to_join.push(
                 `<div class="cal_week_line">
-                    <div style="background-image:url('/static/user/res/PTERS_logo_pure.png');background-position:center;background-repeat:no-repeat;background-size:100px;height:30px;"></div>
+                    <div style="color:#fe4e65; font-size:25px; font-weight:bold; text-align:center; background-size:100px;height:30px;">PTERS</div>
+                    <!--<div style="background-image:url('/static/user/res/PTERS_logo_pure.png');background-position:center;background-repeat:no-repeat;background-size:100px;height:30px;"></div>-->
                 </div>`
             );
         }else{
