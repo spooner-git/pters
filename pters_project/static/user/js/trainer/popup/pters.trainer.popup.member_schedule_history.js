@@ -64,31 +64,54 @@ class Member_schedule_history{
             member_ticket_list.push(this.received_data[ticket]);
         }
         member_ticket_list.sort(function(a, b){
-            return a.member_ticket_start_date > b.member_ticket_start_date ? -1 : a.member_ticket_start_date < b.member_ticket_start_date ? 1 : 0;
+            let return_val = 0;
+            if(a.member_ticket_start_date < b.member_ticket_start_date){
+              return_val = -1;
+            }
+            else if(a.member_ticket_start_date > b.member_ticket_start_date){
+                return_val = 1;
+            }
+            else{
+                if(a.member_ticket_end_date < b.member_ticket_end_date) {
+                    return_val = -1;
+                }
+                else if(a.member_ticket_end_date > b.member_ticket_end_date){
+                    return_val = 1;
+                }
+                else{
+                    if(a.member_ticket_reg_dt < b.member_ticket_reg_dt) {
+                        return_val = -1;
+                    }
+                    else if(a.member_ticket_reg_dt > b.member_ticket_reg_dt) {
+                        return_val = 1;
+                    }
+                }
+            }
+            return return_val;
         });
-
+        console.log(member_ticket_list);
         for(let i=member_ticket_list.length-1; i>=0; i--){
-            let length = member_ticket_list[i].length;
+            let length = member_ticket_list[i].schedule_data.length;
             let html_sub_assembly_to_join = [];
             let expand_button;
             let expand_status;
             let expand_style;
-            let ticket_name = member_ticket_list[i][0].member_ticket_name;
-            let ticket_reg_count = member_ticket_list[i][0].member_ticket_reg_count;
-            let ticket_rem_count = member_ticket_list[i][0].member_ticket_rem_count;
-            let ticket_avail_count = member_ticket_list[i][0].member_ticket_avail_count;
-            let ticket_status = member_ticket_list[i][0].member_ticket_state_cd;
-            let ticket_start_date = DateRobot.to_text(member_ticket_list[i][0].member_ticket_start_date.split('-')[0],
-                                                        member_ticket_list[i][0].member_ticket_start_date.split('-')[1],
-                                                        member_ticket_list[i][0].member_ticket_start_date.split('-')[2],
+            let ticket_name = member_ticket_list[i].member_ticket_name;
+            let ticket_reg_count = member_ticket_list[i].member_ticket_reg_count;
+            let ticket_rem_count = member_ticket_list[i].member_ticket_rem_count;
+            let ticket_avail_count = member_ticket_list[i].member_ticket_avail_count;
+            let ticket_status = member_ticket_list[i].member_ticket_state_cd;
+            let ticket_start_date = DateRobot.to_text(member_ticket_list[i].member_ticket_start_date.split('-')[0],
+                                                        member_ticket_list[i].member_ticket_start_date.split('-')[1],
+                                                        member_ticket_list[i].member_ticket_start_date.split('-')[2],
                                                         SHORT);
-            let ticket_end_date =  DateRobot.to_text(member_ticket_list[i][0].member_ticket_end_date.split('-')[0],
-                                                        member_ticket_list[i][0].member_ticket_end_date.split('-')[1],
-                                                        member_ticket_list[i][0].member_ticket_end_date.split('-')[2],
+            let ticket_end_date =  DateRobot.to_text(member_ticket_list[i].member_ticket_end_date.split('-')[0],
+                                                        member_ticket_list[i].member_ticket_end_date.split('-')[1],
+                                                        member_ticket_list[i].member_ticket_end_date.split('-')[2],
                                                         SHORT);
 
             for(let j=length-1; j>=0; j--){
-                let data = member_ticket_list[i][j];
+                let data = member_ticket_list[i].schedule_data[j];
                 let schedule_id = data.schedule_id;
                 let numbering = Number(j+1) + ' 회차';
                 let date =  DateRobot.to_text(data.start_dt.split(' ')[0], '', '', SHORT) +' '+ TimeRobot.to_text(data.start_dt.split(' ')[1], '', SHORT) + ' - '+
