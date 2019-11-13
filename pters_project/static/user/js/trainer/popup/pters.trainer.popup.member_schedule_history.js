@@ -109,6 +109,9 @@ class Member_schedule_history{
                                                         member_ticket_list[i].member_ticket_end_date.split('-')[1],
                                                         member_ticket_list[i].member_ticket_end_date.split('-')[2],
                                                         SHORT);
+            if(member_ticket_list[i].member_ticket_end_date == "9999-12-31"){
+                ticket_end_date = "소진 시까지";
+            }
 
             for(let j=length-1; j>=0; j--){
                 let data = member_ticket_list[i].schedule_data[j];
