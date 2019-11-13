@@ -34,7 +34,7 @@ from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO
     STATE_CD_ABSENCE, STATE_CD_FINISH, PERMISSION_STATE_CD_APPROVE, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, AUTH_TYPE_DELETE, \
     LECTURE_TYPE_NORMAL, SHOW, SORT_TICKET_TYPE, SORT_TICKET_NAME, SORT_TICKET_MEMBER_COUNT, SORT_TICKET_CREATE_DATE, \
     SORT_LECTURE_NAME, SORT_LECTURE_MEMBER_COUNT, SORT_LECTURE_CAPACITY_COUNT, SORT_LECTURE_CREATE_DATE, ON_SCHEDULE, \
-    CALENDAR_TIME_SELECTOR_BASIC, SORT_END_DATE, SORT_MEMBER_TICKET, SORT_SCHEDULE_DT
+    CALENDAR_TIME_SELECTOR_BASIC, SORT_END_DATE, SORT_MEMBER_TICKET, SORT_SCHEDULE_DT, STATE_CD_REFUND
 from board.models import BoardTb
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 from schedule.functions import func_refresh_member_ticket_count, func_get_trainer_attend_schedule, \
@@ -1901,6 +1901,8 @@ def update_member_ticket_info_logic(request):
         member_ticket_info.member_ticket_avail_count = member_ticket_reg_count - reserve_schedule_count
         if member_ticket_info.state_cd == STATE_CD_FINISH:
             member_ticket_info.member_ticket_rem_count = 0
+            member_ticket_info.member_ticket_avail_count = 0
+        if member_ticket_info.state_cd == STATE_CD_REFUND:
             member_ticket_info.member_ticket_avail_count = 0
         member_ticket_info.save()
 

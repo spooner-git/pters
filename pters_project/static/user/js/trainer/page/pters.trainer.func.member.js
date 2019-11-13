@@ -145,12 +145,12 @@ class Member {
             let end_date = data.end_date;
             let end_date_text = DateRobot.to_text(end_date, '', '', SHORT);
             let remain_date = Math.round((new Date(end_date).getTime() - new Date().getTime()) / (1000*60*60*24));
-            let member_counts_text = list_type == "ing" ? member_rem+'회 / '+remain_date+'일 / - '+end_date_text+' 까지' : '종료됨';
+            let member_counts_text = list_type == "ing" ? '잔여 '+member_rem+'회 / -'+end_date_text+' 까지 ('+remain_date+'일)' : '종료됨';
             if(end_date == "9999-12-31"){
-                member_counts_text = list_type == "ing" ? member_rem+'회 / '+ '소진 시까지' : '종료됨';
+                member_counts_text = list_type == "ing" ? '잔여 '+member_rem+'회 / '+ '소진 시까지' : '종료됨';
             }
             if(remain_date < 0 && list_type == "ing"){
-                member_counts_text = member_rem+'회 / ' + "<span style='color:#fe4e65;'>"+Math.abs(remain_date) +"일 지남</span>";
+                member_counts_text = '잔여 '+member_rem+'회 / ' + "<span style='color:#fe4e65;'>"+Math.abs(remain_date) +"일 지남</span>";
             }
             
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
