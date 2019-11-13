@@ -75,7 +75,8 @@
 <div id="base">
     <section id="section_side">
         <div class="top_logo">
-            <img src="/static/common/icon/logo/PTERS_logo_full.png" alt="" style="width: 64px;" id="top_logo_image">
+            <span style='color:#fe4e65; width:64px; font-size:25px; font-weight:bold; text-align:center;' id="top_logo_image">PTERS</span>
+            <!--<img src="/static/common/icon/logo/PTERS_logo_full.png" alt="" style="width: 64px;" id="top_logo_image">-->
         </div>
         <div class="side_menu">
             <div class="side_menu_item" onclick="sideGoPage('home')" id="side_home">
@@ -353,8 +354,9 @@
                 $sidemenu_text.show();
             }, 150);
             $toplogo.html(
-                `<img src="/static/common/icon/logo/PTERS_logo_full.png" alt="" style="width: 64px;" id="top_logo_image">`
-            )
+                `<span style='color:#fe4e65; width:64px; font-size:25px; font-weight:bold; text-align:center;'>PTERS</span>`
+                //`<img src="/static/common/icon/logo/PTERS_logo_full.png" alt="" style="width: 64px;" id="top_logo_image">`
+            );
             $sidemenu_button.css('transform', 'rotate(90deg)');
         }else{
             $sidemenu.css('flex-basis', '70px');
@@ -362,7 +364,7 @@
             $sidemenu_text.hide();
             $toplogo.html(
                 `<img src="/static/common/icon/logo/PTERS_logo_short.png" alt="" style="width: 32px;vertical-align:middle" id="top_logo_image">`
-            )
+            );
             $sidemenu_button.css('transform', 'rotate(-90deg)');
         }
     }
