@@ -843,7 +843,7 @@ def func_get_member_schedule_all_by_member_ticket(class_id, member_id):
         class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, use=USE, member_ticket_tb__member_id=member_id,
         member_ticket_tb__use=USE).annotate(auth_cd=RawSQL(query_auth,
                                                            [])).filter(auth_cd=AUTH_TYPE_VIEW).order_by(
-        '-member_ticket_tb__start_date', '-member_ticket_tb__reg_dt', 'start_dt')
+        '-member_ticket_tb__start_date', '-member_ticket_tb__end_date', '-member_ticket_tb__reg_dt', 'start_dt')
 
     schedule_list = []
     temp_member_ticket_id = None
@@ -884,21 +884,24 @@ def func_get_member_schedule_all_by_member_ticket(class_id, member_id):
                          'end_dt': str(end_dt),
                          'state_cd': member_schedule_info.state_cd,
                          'note': member_schedule_info.note,
-                         'member_ticket_id': str(member_ticket_tb.member_ticket_id),
-                         'member_ticket_name': member_ticket_tb.ticket_tb.name,
-                         'member_ticket_state_cd': member_ticket_tb.state_cd,
-                         'member_ticket_reg_count': member_ticket_tb.member_ticket_reg_count,
-                         'member_ticket_rem_count': member_ticket_tb.member_ticket_rem_count,
-                         'member_ticket_avail_count': member_ticket_tb.member_ticket_avail_count,
-                         'member_ticket_start_date': str(member_ticket_tb.start_date),
-                         'member_ticket_end_date': str(member_ticket_tb.end_date),
-                         'member_ticket_price': member_ticket_tb.price,
-                         'member_ticket_refund_date': str(member_ticket_tb.refund_date),
-                         'member_ticket_refund_price': member_ticket_tb.refund_price,
-                         'member_ticket_note': str(member_ticket_tb.note)
                          }
         schedule_list.append(schedule_info)
-        ordered_schedule_dict[member_ticket_id] = schedule_list
+        ordered_schedule_dict[member_ticket_id] = {'schedule_data': schedule_list,
+                                                   'member_ticket_id': str(member_ticket_tb.member_ticket_id),
+                                                   'member_ticket_name': member_ticket_tb.ticket_tb.name,
+                                                   'member_ticket_state_cd': member_ticket_tb.state_cd,
+                                                   'member_ticket_reg_count': member_ticket_tb.member_ticket_reg_count,
+                                                   'member_ticket_rem_count': member_ticket_tb.member_ticket_rem_count,
+                                                   'member_ticket_avail_count': member_ticket_tb.member_ticket_avail_count,
+                                                   'member_ticket_start_date': str(member_ticket_tb.start_date),
+                                                   'member_ticket_end_date': str(member_ticket_tb.end_date),
+                                                   'member_ticket_price': member_ticket_tb.price,
+                                                   'member_ticket_refund_date': str(member_ticket_tb.refund_date),
+                                                   'member_ticket_refund_price': member_ticket_tb.refund_price,
+                                                   'member_ticket_note': str(member_ticket_tb.note),
+                                                   'member_ticket_reg_dt': str(member_ticket_tb.reg_dt)
+                                                   }
+
     return ordered_schedule_dict
 
 
