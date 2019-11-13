@@ -295,7 +295,7 @@ class Plan_add{
         let icon = '/static/common/icon/icon_lecture_black.png';
         let icon_r_visible = SHOW;
         let icon_r_text = "";
-        let style = null;
+        let style = this.data.lecture_name.length == 0 ? {"color":"#b8b4b4"} : null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SELECT, 100, popup_style, {'member_id':null}, ()=>{
@@ -343,7 +343,7 @@ class Plan_add{
         let icon = '/static/common/icon/icon_people_black.png';
         let icon_r_visible = SHOW;
         let icon_r_text = "";
-        let style = {"height":"auto"};
+        let style = this.data.member_name.length == 0 ? {"color":"#b8b4b4", "height":"auto"} : {"height":"auto"};
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             if(this.data.lecture_id.length != 0){
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
@@ -368,7 +368,7 @@ class Plan_add{
         let icon = '/static/common/icon/icon_cal_black.png';
         let icon_r_visible = NONE;
         let icon_r_text = "";
-        let style = null;
+        let style = this.data.date_text == null ? {"color":"#b8b4b4"} : null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             //행을 클릭했을때 실행할 내용
             let root_content_height = $root_content.height();
@@ -402,7 +402,7 @@ class Plan_add{
         let icon = '/static/common/icon/icon_clock_black.png';
         let icon_r_visible = NONE;
         let icon_r_text = "";
-        let style = null;
+        let style = this.data.start_time_text == null ? {"color":"#b8b4b4"} : null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ //data : 직전 셋팅값
             //행을 클릭했을때 실행할 내용
             let root_content_height = $root_content.height();
@@ -440,7 +440,16 @@ class Plan_add{
         let icon = '/static/common/icon/icon_clock_white.png';
         let icon_r_visible = NONE;
         let icon_r_text = "";
-        let style = this.data.start_time == this.data.end_time && this.data.end_time != null ? {"color":"#fe4e65"} : null;
+        let style;
+        if(this.data.end_time_text == null){
+            style = {"color":"#b8b4b4"};
+        }else if(this.data.end_time_text != null){
+            if(this.data.start_time == this.data.end_time){
+                style = {"color":"#fe4e65"};
+            }else{
+                style = null;
+            }
+        }
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ //data : 직전 셋팅값
             //행을 클릭했을때 실행할 내용
             if(this.data.start_time == null){
@@ -497,7 +506,7 @@ class Plan_add{
         let icon = '/static/common/icon/icon_clock_white.png';
         let icon_r_visible = NONE;
         let icon_r_text = "";
-        let style = null;
+        let style = this.data.start_time_text == null ? {"color":"#b8b4b4"} : null;
         let callback = ()=>{
             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', 100*300/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
                 let time_data = calendar.latest_received_data[selected_date];
@@ -532,7 +541,7 @@ class Plan_add{
         let icon2 = '/static/common/icon/icon_clock_white.png';
         let icon_r_visible2 = NONE;
         let icon_r_text2 = "";
-        let style2 = null;
+        let style2 = this.data.end_time_text == null ? {"color":"#b8b4b4"} : null;
         let callback2 = ()=>{
             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', 100*300/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
                 let time_data = calendar.latest_received_data[selected_date];
@@ -581,14 +590,11 @@ class Plan_add{
         if(this.data.repeat.day.length==7){
             repeat_title = '<span style="float:left">'+ '매일 / ' + '</span>';
         }
-        let title =this.data.repeat.power == OFF ? '반복 일정' : repeat_title + repeat_end_date_in_text;
+        let title = this.data.repeat.power == OFF ? '반복 일정' : repeat_title + repeat_end_date_in_text;
         let icon = '/static/common/icon/icon_repeat_black.png';
         let icon_r_visible = SHOW;
         let icon_r_text = "";
-        let style = {"height":"auto"};
-
-        
-
+        let style = this.data.repeat.power == OFF ? {"color":"#b8b4b4", "height":"auto"} : {"height":"auto"};
 
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
