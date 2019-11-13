@@ -69,6 +69,7 @@ class LogTb(TimeStampedModel):
     log_detail = models.CharField(db_column='LOG_DETAIL', max_length=255, blank=True, default='')
     ip = models.CharField(db_column='IP', max_length=255, blank=True, default='')
     read = models.IntegerField(db_column='READ', default=0)  # Field name made lowercase.
+    member_read = models.IntegerField(db_column='MEMBER_READ', default=0)
     push_check = models.IntegerField(db_column='PUSH_CHECK', default=0)
     use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
 
