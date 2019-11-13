@@ -3198,8 +3198,8 @@ class MemberSelector{
     }
 
     dom_assembly(){
-        let lecture_member_list = `<div style="background-color:#f4f4f4;">${this.dom_list_lecture_member()}</div>`;
-        let all_member_list = `<div style="background-color:#ffffff;">${this.dom_list()}</div>`;
+        let lecture_member_list = `<div>${this.dom_list_lecture_member()}</div>`;
+        let all_member_list = `<div>${this.dom_list()}</div>`;
 
         let html;
         if(this.appendix.lecture_id != null){ //특정 수업의 회원들을 조회할 때
