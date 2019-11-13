@@ -837,10 +837,16 @@ class Calendar {
                 if(week_dates_info == false){
                     continue;
                 }
-
                 let date_to_search = date_format(`${_year[i]}-${_month[i]}-${_date[i]}`)["yyyy-mm-dd"];
                 if(date_to_search in schedule_data){
-                    schedule_num.push(schedule_data[date_to_search].length);
+                    let schedule_number = 0;
+                    schedule_data[date_to_search].forEach((el)=>{
+                        if(el.schedule_type != 0){
+                            schedule_number++;
+                        }
+                    });
+                    schedule_num.push(schedule_number);
+                    // schedule_num.push(schedule_data[date_to_search].length);
                 }else{
                     schedule_num.push(0);
                 }

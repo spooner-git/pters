@@ -343,7 +343,7 @@ class Plan_view{
             //회원 선택 팝업 열기
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SELECT, 100, popup_style, {'data':null}, ()=>{
-                let appendix =  {lecture_id:this.data.lecture_id, title:"회원", disable_zero_avail_count:ON, list_switch:SHOW};
+                let appendix =  {lecture_id:this.data.lecture_id, title:"회원", disable_zero_avail_count:ON, entire_member:SHOW};
                 member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.lecture_max_num, appendix, (set_data)=>{
                     this.member = set_data;
                     let changed = this.func_update_member();
