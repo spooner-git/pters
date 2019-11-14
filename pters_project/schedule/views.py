@@ -286,7 +286,7 @@ def delete_schedule_logic(request):
             func_send_push_trainer(member_ticket_id,
                                    class_type_name + ' - 수업 알림',
                                    request.user.first_name + '님이 ' + push_schedule_info
-                                   + ' [개인 레슨] 수업을 취소했습니다.')
+                                   + ' [개인] 수업을 취소했습니다.')
             # logger.error(request.user.first_name + '[' + str(request.user.id) + ']'
             #              + member_name + '님에게 push 알림 전송에 실패했습니다.')
 
@@ -295,7 +295,7 @@ def delete_schedule_logic(request):
                              to_member_name=member_name,
                              class_tb_id=class_id,
                              member_ticket_tb_id=member_ticket_id,
-                             log_info='개인 레슨',
+                             log_info='개인',
                              log_how='취소',
                              log_detail=log_info, use=USE)
             log_data.save()
@@ -398,7 +398,7 @@ def update_schedule_logic(request):
     start_dt = schedule_start_datetime
     end_dt = schedule_end_datetime
     log_detail_info = ''
-    lecture_name = '개인 레슨'
+    lecture_name = '개인'
     context = {'messageArray': ''}
 
     if end_dt is None or end_dt == '':
@@ -589,10 +589,10 @@ def update_schedule_state_cd_logic(request):
         # member_ticket_tb = schedule_info.member_ticket_tb
         # push_member_ticket_id.append(schedule_info.member_ticket_tb_id)
         # push_title.append(class_type_name + ' - '+schedule_state_cd_name)
-        log_info = '개인 레슨'
+        log_info = '개인'
         push_info = push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1] \
                     + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] \
-                    + ' [개인 레슨] 수업을 '+schedule_state_cd_name+' 처리 했습니다.'
+                    + ' [개인] 수업을 '+schedule_state_cd_name+' 처리 했습니다.'
 
         log_detail_info = push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1] \
                         + '/' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] \
@@ -1116,7 +1116,7 @@ def add_repeat_schedule_confirm(request):
                                            class_type_name + ' - 수업 알림',
                                            request.user.first_name + '님이 '
                                            + str(start_date) + '~' + str(end_date)
-                                           + ' [개인 레슨] 반복 일정을 등록했습니다')
+                                           + ' [개인] 수업 반복 일정을 등록했습니다')
 
     if error is None:
         if information is not None:
@@ -1230,7 +1230,7 @@ def delete_repeat_schedule_logic(request):
             with transaction.atomic():
                 start_date = repeat_schedule_info.start_date
                 end_date = repeat_schedule_info.end_date
-                lecture_name = '개인 레슨'
+                lecture_name = '개인'
                 member_ticket_id = ''
                 member_name = ''
                 if str(repeat_schedule_info.en_dis_type) == str(ON_SCHEDULE_TYPE):
@@ -1409,7 +1409,7 @@ def delete_repeat_schedule_logic2(request):
     if error is None:
 
         # func_update_member_schedule_alarm(class_id)
-        log_info = '개인 레슨 반복 일정'
+        log_info = '개인 수업 반복 일정'
         if lecture_id is not None and lecture_id != '':
             log_info = lecture_name + ' 반복 일정'
 
@@ -1427,7 +1427,7 @@ def delete_repeat_schedule_logic2(request):
             push_member_ticket_id.append(member_ticket_id)
             push_title.append(class_type_name + ' - 수업 알림')
             push_message_info = request.user.first_name + '님이 ' + str(start_date)\
-                                + '~' + str(end_date) + ' [개인 레슨] 반복 일정을 취소했습니다'
+                                + '~' + str(end_date) + ' [개인] 수업 반복 일정을 취소했습니다'
             if lecture_id is not None and lecture_id == '':
                 push_message_info = request.user.first_name + '님이 ' + str(start_date)\
                                     + '~' + str(end_date)\
