@@ -258,7 +258,7 @@ class Member_add{
         let id = 'input_member_name';
         let title = this.data.name == null ? '' : this.data.name;
         let placeholder = '회원명*';
-        let icon = '/static/common/icon/icon_people_black.png';
+        let icon = CImg.member();
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -388,7 +388,7 @@ class Member_add{
     dom_row_ticket_select(){
         let id = 'input_ticket_select';
         let title = this.data.ticket_id.length == 0 ? '수강권*' : this.data.ticket_name.join(', ');
-        let icon = '/static/common/icon/icon_ticket_black.png';
+        let icon = CImg.ticket();
         let icon_r_visible = SHOW;
         let icon_r_text = "";
         let style = this.data.ticket_id.length == 0 ? {"color":"#b8b4b4"} : null;

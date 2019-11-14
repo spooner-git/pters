@@ -242,7 +242,7 @@ class Ticket_view{
             }
         }
         let title = this.data.lecture_id.length == 0  && this.data.name != null ? '<span style="color:#fe4e65;">포함된 수업이 없습니다.</span>' : ing_lecture_length+'개';
-        let icon = '/static/common/icon/icon_lecture_black.png';
+        let icon = CImg.lecture();
         let icon_r_visible = SHOW;
         let icon_r_text = CComponent.text_button ('ticket_lecture_list_view', "수업 목록", null, ()=>{
 
@@ -340,7 +340,7 @@ class Ticket_view{
         let id = 'ticket_memo_view';
         let title = this.data.memo == null ? '' : this.data.memo;
         let placeholder = '설명';
-        let icon = '/static/common/icon/icon_note_black.png';
+        let icon = CImg.memo();
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -693,7 +693,7 @@ class Ticket_simple_view{
         <div style="height:48px;line-height:48px;">
             <div style="float:left;width:auto;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
                 <span style="font-size:16px;font-weight:bold;">
-                    <img src="/static/common/icon/icon_ticket_black.png" style="width:20px;vertical-align:middle;margin-right:8px;margin-bottom:3px;">
+                    ${CImg.ticket("", {"width":"20px", "vertical-align":"middle", "margin-right":"8px", "margin-bottom":"3px"})}
                     ${ticket_name}
                 </span>
             </div>

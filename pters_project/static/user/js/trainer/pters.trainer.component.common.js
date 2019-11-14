@@ -58,13 +58,13 @@ class CComponent{
         let min_max_length = pattern.split('{')[1].replace('}', '').split(',');
 
         if(icon == NONE){
-            icon = '/static/common/icon/icon_gap_black.png';
+            icon = '';
         }
 
         let html = `<li class="create_input_row" id="c_i_r_${id}" style="${CComponent.data_to_style_code(style)}">
                         <div style="display:flex;height:100%;">
                             <div class="cell_title" style="display:${icon == DELETE ? 'none' : ''}">
-                                <img src="${icon == DELETE ? '' : icon}">
+                                ${icon == DELETE ? '' : icon}
                             </div>
                             <div class="cell_content">
                                 <input type="text" class="cell_text" title="${placeholder}" placeholder="${placeholder}" pattern="${pattern}" value="${title}"
@@ -102,12 +102,12 @@ class CComponent{
         let min_max_length = pattern.split('{')[1].replace('}', '').split(',');
 
         if(icon == NONE){
-            icon = '/static/common/icon/icon_gap_black.png';
+            icon = '';
         }
         let html = `<li class="create_input_row" id="c_i_n_r_${id}" style="${CComponent.data_to_style_code(style)}">
                         <div style="display:flex;height:100%;">
                             <div class="cell_title" style="display:${icon == DELETE ? 'none' : ''}">
-                                <img src="${icon == DELETE ? '' : icon}">
+                                ${icon == DELETE ? '' : icon}
                             </div>
                             <div class="cell_content">
                                 <input class="cell_text" title="${placeholder}" placeholder="${placeholder}" type="tel" pattern="${pattern}" value="${title}"
@@ -144,14 +144,14 @@ class CComponent{
 
     static create_input_textarea_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, onfocusout, pattern, pattern_message, required){
         if(icon == NONE){
-            icon = '/static/common/icon/icon_gap_black.png';
+            icon = '';
         }
         let min_max_length = pattern.split('{')[1].replace('}', '').split(',');
         let title_sentence_height = title.split('\n').length > 0 ? title.split('\n').length * 25 : 25;
         let html = `<li class="create_input_row create_input_textarea_row" id="c_i_t_r_${id}" style="${CComponent.data_to_style_code(style)}">
                         <div style="height:100%;display:flex;">
                             <div class="cell_title" style="vertical-align:top;display:${icon == DELETE ? 'none' : ''}">
-                                <img src="${icon == DELETE ? '' : icon}">
+                                ${icon == DELETE ? '' : icon}
                             </div>
                             <div class="cell_content">
                                 <textarea pattern="${pattern}" data-pattern-message="${pattern_message}" wrap="hard"
@@ -910,7 +910,106 @@ class CImg{
         return svg;
     }
 
-  
+    static arrow_right(ex_class, style){
+        let svg = ` <svg class="${ex_class}" style="${CComponent.data_to_style_code(style)}" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <g id="아이콘/들어가기/999696" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <polygon id="Path-2" fill="var(--img-sub1)" points="15.0710678 11.6568542 9.41421356 17.3137085 8 15.8994949 12.2426407 11.6568542 8 7.41421356 9.41421356 6"></polygon>
+                        </g>
+                    </svg>
+                    `;
+        return svg;
+    }
+
+    static arrow_left(ex_class, style){
+        let svg = ` <svg class="${ex_class}" style="${CComponent.data_to_style_code(style)}" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <g id="아이콘/뒤로가기/999696" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <polygon id="Path-2" fill="var(--img-sub1)" points="-1.91543548e-13 11.7781746 7.77817459 19.5563492 9.19238816 18.1421356 2.82842712 11.7781746 9.19238816 5.41421356 7.77817459 4"></polygon>
+                        </g>
+                    </svg>
+                    `;
+        return svg;
+    }
+
+    static arrow_expand(ex_class, style){
+        let svg = ` <svg class="${ex_class}" style="${CComponent.data_to_style_code(style)}" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <g id="아이콘/펼치기/5C5859" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <polygon id="Path-2" fill="var(--img-main)" points="12.0710678 16.4852814 5 9.41421356 6.41421356 8 12.0710678 13.6568542 17.7279221 8 19.1421356 9.41421356"></polygon>
+                        </g>
+                    </svg>
+                    `;
+        return svg;
+    }
+
+    static plus(ex_class, style){
+        let svg = ` <svg class="${ex_class}" style="${CComponent.data_to_style_code(style)}" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <g id="아이콘/생성/FE4E65" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <path id="Combined-Shape" fill="var(--img-highlight)" d="M13,2 L13,11 L22,11 L22,13 L13,13 L13,22 L11,22 L11,13 L2,13 L2,11 L11,11 L11,2 L13,2 Z"></path>
+                        </g>
+                    </svg>
+                    `;
+        return svg;
+    }
+
+    static plus(ex_class, style){
+        let svg = ` <svg class="${ex_class}" style="${CComponent.data_to_style_code(style)}" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <g id="아이콘/생성/FE4E65" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <path id="Combined-Shape" fill="var(--img-highlight)" d="M13,2 L13,11 L22,11 L22,13 L13,13 L13,22 L11,22 L11,13 L2,13 L2,11 L11,11 L11,2 L13,2 Z"></path>
+                        </g>
+                    </svg>
+                    `;
+        return svg;
+    }
+
+    static today(ex_class, style){
+        let svg = ` <svg class="${ex_class}" style="${CComponent.data_to_style_code(style)}" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <g id="아이콘/오늘/5C5859" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <path id="Combined-Shape" fill="var(--img-main)" d="M4.5,20.5 L19.5,20.5 L19.5,5.5 L4.5,5.5 L4.5,20.5 Z M21.5,3.5 L21.5,20.5025781 C21.5,21.6057238 20.6090746,22.5 19.5025781,22.5 L4.49742191,22.5 C3.39427625,22.5 2.5,21.6090746 2.5,20.5025781 L2.5,3.5 L6.5,3.5 L6.5,1.5 L8.5,1.5 L8.5,3.5 L15.5,3.5 L15.5,1.5 L17.5,1.5 L17.5,3.5 L21.5,3.5 Z"></path>
+                            <circle id="Oval" fill="var(--img-highlight)" cx="15.5" cy="16.5" r="2"></circle>
+                        </g>
+                    </svg>
+                    `;
+        return svg;
+    }
+
+    static date(ex_class, style){
+        let svg = ` <svg class="${ex_class}" style="${CComponent.data_to_style_code(style)}" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <g id="아이콘/날짜/5C5859" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <path id="Combined-Shape" fill="var(--img-main)" d="M8.5,1.5 L8.5,3.5 L15.5,3.5 L15.5,1.5 L17.5,1.5 L17.5,3.5 L21.5,3.5 L21.5,20.5025781 C21.5,21.6057238 20.6090746,22.5 19.5025781,22.5 L4.49742191,22.5 C3.39427625,22.5 2.5,21.6090746 2.5,20.5025781 L2.5,3.5 L6.5,3.5 L6.5,1.5 L8.5,1.5 Z M19.5,5.5 L4.5,5.5 L4.5,20.5 L19.5,20.5 L19.5,5.5 Z M15.5,14.5 C16.6045695,14.5 17.5,15.3954305 17.5,16.5 C17.5,17.6045695 16.6045695,18.5 15.5,18.5 C14.3954305,18.5 13.5,17.6045695 13.5,16.5 C13.5,15.3954305 14.3954305,14.5 15.5,14.5 Z"></path>
+                        </g>
+                    </svg>
+                    `;
+        return svg;
+    }
+
+    static time(ex_class, style){
+        let svg = `<svg class="${ex_class}" style="${CComponent.data_to_style_code(style)}" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <g id="아이콘/시간/5C5859" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <path id="Combined-Shape" fill="var(--img-main)" fill-rule="nonzero" d="M11.99,2 C17.52,2 22,6.48 22,12 C22,17.52 17.52,22 11.99,22 C6.47,22 2,17.52 2,12 C2,6.48 6.47,2 11.99,2 Z M12,4 C7.58,4 4,7.58 4,12 C4,16.42 7.58,20 12,20 C16.42,20 20,16.42 20,12 C20,7.58 16.42,4 12,4 Z M13,6 L13,12 L17.0973939,14.8636309 L15.9654245,16.4802507 L11,13 L11,6 L13,6 Z"></path>
+                        </g>
+                    </svg>
+                    `;
+        return svg;
+    }
+
+    static repeat(ex_class, style){
+        let svg = ` <svg class="${ex_class}" style="${CComponent.data_to_style_code(style)}" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <g id="아이콘/반복/5C5859" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <path id="Combined-Shape" fill="var(--img-main)" d="M11,3 C15.6326577,3 19.4477983,6.50020676 19.9451047,11.0003032 L22.5,11 L19,16 L15.5,11 L17.92911,10.9999918 C17.4438768,7.60770164 14.5264691,5 11,5 C7.13400675,5 4,8.13400675 4,12 C4,15.7854517 7.00478338,18.8690987 10.7593502,18.995941 L11,19 L11,21 C6.02943725,21 2,16.9705627 2,12 C2,7.02943725 6.02943725,3 11,3 Z"></path>
+                        </g>
+                    </svg>
+                    `;
+        return svg;
+    }
+
+    static memo(ex_class, style){
+        let svg = ` <svg class="${ex_class}" style="${CComponent.data_to_style_code(style)}" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <g id="아이콘/메모/5C5859" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <path id="Combined-Shape" fill="var(--img-main)" d="M6,5.5 L6,20.6111111 L18,20.6111111 L18,5.5 L20,5.5 L20,20.5 C20,21.6045695 19.1045695,22.5 18,22.5 L6,22.5 C4.8954305,22.5 4,21.6045695 4,20.5 L4,5.5 L6,5.5 Z M14,15.5 L14,17 L8,17 L8,15.5 L14,15.5 Z M16,12.5 L16,14 L8,14 L8,12.5 L16,12.5 Z M16,9.5 L16,11 L8,11 L8,9.5 L16,9.5 Z M12.0062383,1.5 C13.0592846,1.5 13.9220102,2.3152168 13.9982641,3.35064752 L14.003743,3.5 L15.0014532,3.5 C16.1052201,3.5 17,4.40009892 17,5.50104344 L17,6.5 L7,6.5 L7.00415453,5.50104344 C7.00875069,4.39589766 7.91145251,3.5 9.01102343,3.5 L10.0087336,3.5 C10.0087336,2.4456382 10.8165855,1.58183488 11.8562066,1.50548574 L12.0062383,1.5 Z"></path>
+                        </g>
+                    </svg>
+                    `;
+        return svg;
+    }
 
 
     static data_to_style_code(data){

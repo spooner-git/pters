@@ -169,7 +169,7 @@ class Lecture_add{
         let id = 'input_lecture_name';
         let title = this.data.name == null ? '' : this.data.name;
         let placeholder = '수업명*';
-        let icon = '/static/common/icon/icon_lecture_black.png';
+        let icon = CImg.lecture();
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;

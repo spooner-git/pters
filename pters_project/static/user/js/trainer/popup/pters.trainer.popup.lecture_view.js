@@ -239,7 +239,7 @@ class Lecture_view{
         let id = 'lecture_capacity_view';
         let title = this.data.capacity == null ? '' : this.data.capacity+unit;
         let placeholder = '정원*';
-        let icon = '/static/common/icon/icon_people_black.png';
+        let icon = CImg.member();
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -747,7 +747,7 @@ class Lecture_simple_view{
         <div style="height:48px;line-height:48px;">
             <div style="float:left;width:auto;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
                 <span style="font-size:16px;font-weight:bold;">
-                    <img src="/static/common/icon/icon_lecture_black.png" style="width:20px;vertical-align:middle;margin-right:8px;margin-bottom:3px;">
+                    ${CImg.lecture("", {"width":"20px", "vertical-align":"middle", "margin-right":"8px", "margin-bottom":"3px"})}
                     ${lecture_name}
                 </span>
             </div>
