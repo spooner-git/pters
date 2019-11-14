@@ -101,17 +101,17 @@ class Pters_pass_shop{
     dom_assembly_content(){
         // let html =  '<article class="obj_input_box_full">' +
         //                 '<div class="pters_pass_product_wrapper">' +
-        //                     this.dom_row_pters_pass_standard() + 
+        //                     this.dom_row_pters_pass_standard() +
         //                     this.dom_row_pters_pass_standard_explain() +
         //                 '</div>' +
         //                 '<div class="pters_pass_product_wrapper">' +
-        //                     this.dom_row_pters_pass_light() + 
+        //                     this.dom_row_pters_pass_light() +
         //                     this.dom_row_pters_pass_light_explain() +
         //                 '</div>' +
         //             '</article>';
         let html =  '<article class="obj_input_box_full">' +
                         '<div class="pters_pass_product_wrapper">' +
-                            this.dom_row_pters_pass_standard() + 
+                            this.dom_row_pters_pass_standard() +
                             this.dom_row_pters_pass_standard_explain() +
                         '</div>' +
                     '</article>';
