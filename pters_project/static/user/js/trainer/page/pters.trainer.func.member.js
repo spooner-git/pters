@@ -145,12 +145,32 @@ class Member {
             let end_date = data.end_date;
             let end_date_text = DateRobot.to_text(end_date, '', '', SHORT);
             let remain_date = Math.round((new Date(end_date).getTime() - new Date().getTime()) / (1000*60*60*24));
-            let member_counts_text = list_type == "ing" ? '잔여 '+member_rem+'회 / -'+end_date_text+' 까지 ('+remain_date+'일)' : '종료됨';
+
+            let remain_count_text = '잔여 '+member_rem+'회';
+            end_date_text = '-'+end_date_text+' ('+remain_date+'일)';
+            let member_counts_text;
+
             if(end_date == "9999-12-31"){
-                member_counts_text = list_type == "ing" ? '잔여 '+member_rem+'회 / '+ '소진 시까지' : '종료됨';
+                end_date_text = '소진 시까지';
             }
-            if(remain_date < 0 && list_type == "ing"){
-                member_counts_text = '잔여 '+member_rem+'회 / ' + "<span style='color:#fe4e65;'>"+Math.abs(remain_date) +"일 지남</span>";
+            if(remain_date < 0){
+                end_date_text = Math.abs(remain_date) + '일 지남';
+            }
+
+            if(member_rem <= 3){
+                remain_count_text = `<span style='color:#ff0022;'>${remain_count_text}</span>`;
+            }
+            if(remain_date <= 7){
+                end_date_text = `<span style='color:#ff0022;'>${end_date_text}</span>`;
+            }
+
+            if(list_type=="ing"){
+                member_counts_text = remain_count_text + ' / ' + end_date_text;
+                if(member_rem <= 3 && remain_date <= 7){
+                    member_counts_text = `<span style='color:#ff0022;'>${remain_count_text} / ${end_date_text}</span>`;
+                }
+            }else{
+                member_counts_text = '종료됨'
             }
             
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
