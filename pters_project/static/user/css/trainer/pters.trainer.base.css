@@ -46,14 +46,14 @@
 
 .pters_dark_mode {
     --base-font-color: #ffffff;
-    --root-content-bg-color: #3b3b3b;
+    --root-content-bg-color: #1e1e1e;
     --root_content-font-color: #ffffff;
-    --root-nav-bg-color: #3b3b3b;
+    --root-nav-bg-color: #1e1e1e;
     --root-nav-border: 1px solid #282828;
 
     /* Page 공통 */
-    --page-displaypanel-bg-color: #3b3b3b;
-    --page-contentwrap-bg-color: #3b3b3b;
+    --page-displaypanel-bg-color: #1e1e1e;
+    --page-contentwrap-bg-color: #1e1e1e;
 
     /* img */
     --img-main: #f5f2f3;
@@ -62,7 +62,7 @@
 
     /* Font */
     --font-base: #ffffff;
-    --font-invisible: #3b3b3b;
+    --font-invisible: #1e1e1e;
     --font-highlight: #fe4e65;
     --font-red: #ff0022;
     --font-main: #ffffff;
@@ -73,7 +73,7 @@
     --font-domtag: #f5f2f3;
 
     /* Background */
-    --bg-main: #3b3b3b;
+    --bg-main: #1e1e1e;
     --bg-sub-dark: #999696;
     --bg-sub-normal: #b8b4b4;
     --bg-sub-light: #5c5859;
