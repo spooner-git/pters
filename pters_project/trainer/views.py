@@ -3528,7 +3528,7 @@ def add_program_info_logic(request):
                                                   auth_cd=AUTH_TYPE_VIEW, mod_member_id=request.user.id, use=USE)
                 member_class_info.save()
 
-                one_to_one_lecture_info = LectureTb(class_tb_id=class_info.class_id, name='개인 레슨',
+                one_to_one_lecture_info = LectureTb(class_tb_id=class_info.class_id, name='개인 수업',
                                                     ing_color_cd='#fbf3bd', end_color_cd='#d2d1cf',
                                                     ing_font_color_cd='#282828', end_font_color_cd='#282828',
                                                     state_cd=STATE_CD_IN_PROGRESS,
@@ -3536,7 +3536,7 @@ def add_program_info_logic(request):
                                                     lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, member_num=1, use=USE)
                 one_to_one_lecture_info.save()
 
-                ticket_info = TicketTb(class_tb_id=class_info.class_id, name='개인 레슨',
+                ticket_info = TicketTb(class_tb_id=class_info.class_id, name='개인 수업',
                                        state_cd=STATE_CD_IN_PROGRESS, use=USE)
                 ticket_info.save()
 

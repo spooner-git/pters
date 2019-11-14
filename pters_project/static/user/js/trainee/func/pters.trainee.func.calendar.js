@@ -614,7 +614,7 @@ function pters_month_calendar(calendar_name, calendar_options){
             let schedule_finish = json.scheduleFinishArray[j];
             let schedule_repeat_id = json.class_repeat_schedule_id[j];
             if(schedule_name.length == 0){
-                schedule_name = "개인 레슨";
+                schedule_name = "개인 수업";
             }
             dic[json.classTimeArray_start_date[j].split(' ')[0]].push(schedule_name+' / '+schedule_start_time+' / '+schedule_end_time+' / '+schedule_id+' / '+schedule_finish+' / '+schedule_repeat_id);
         }
