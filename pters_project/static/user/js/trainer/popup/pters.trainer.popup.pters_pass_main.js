@@ -444,11 +444,13 @@ class Pters_pass_func{
             mobile_product_id = product_id;
         }
 
-        if(os == IOS && device == MOBILE && device_info != 'web' && user_username =='guest'){
+        // if(os == IOS && device == MOBILE && device_info != 'web' && user_username =='guest'){
+        if(os == IOS && user_username =='guest'){
             // ios 인앱 결제 호출
             window.webkit.messageHandlers.payment_method.postMessage(mobile_product_id);
         }
-        else if(os == ANDROID && device == MOBILE && device_info != 'web' && user_username =='guest') {
+        // else if(os == ANDROID && device == MOBILE && device_info != 'web' && user_username =='guest') {
+        else if(os == ANDROID && user_username =='guest') {
             // 안드로이드 인앱 결제 호출
             window.android_payment_function.callMethodName(mobile_product_id);
         }

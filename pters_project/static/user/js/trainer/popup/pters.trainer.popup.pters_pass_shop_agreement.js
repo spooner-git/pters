@@ -146,7 +146,8 @@ class Pters_pass_shop_agreement{
         let html_checkbox = CComponent.radio_button (id, checked, style, onclick);
 
         let text = `<span style="font-size:14px;font-weight:bold;line-height:30px;">신용카드</span>`;
-        if(device == MOBILE && device_info != 'web' && user_username =='guest'){
+        // if(device == MOBILE && device_info != 'web' && user_username =='guest'){
+        if(user_username =='guest'){
             text = `<span style="font-size:14px;font-weight:bold;line-height:30px;">인앱결제</span>`;
         }
         let id2 = "pters_pass_pay_method_card";
@@ -199,7 +200,8 @@ class Pters_pass_shop_agreement{
         let product_name = PASS_PRODUCT["standard"].text + ' - 정기 결제 - 1개월';
         let pay_method = CARD;
         let payment_type_cd = PERIOD;
-        if(device == MOBILE && device_info != 'web' && user_username =='guest'){
+        // if(device == MOBILE && device_info != 'web' && user_username =='guest'){
+        if(user_username =='guest'){
             payment_type_cd = SINGLE;
             product_name = PASS_PRODUCT["standard"].text + ' - 30일';
         }
