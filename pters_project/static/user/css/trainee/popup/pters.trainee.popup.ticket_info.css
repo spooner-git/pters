@@ -131,7 +131,7 @@
 	}
 
 	.popup_ticket_info .wrapper_my_history_detail_member_ticket_count{
-		width: 10%;
+		width: 6%;
 	}
 	.popup_ticket_info .wrapper_my_history_detail_member_ticket_start_date{
 		width: 20%;
@@ -140,10 +140,10 @@
 		width: 20%;
 	}
 	.popup_ticket_info .wrapper_my_history_detail_member_ticket_reg_count{
-		width: 10%;
+		width: 12%;
 	}
 	.popup_ticket_info .wrapper_my_history_detail_member_ticket_rem_count{
-		width: 10%;
+		width: 12%;
 	}
 	.popup_ticket_info .wrapper_my_history_detail_member_ticket_price{
 		width: 20%;

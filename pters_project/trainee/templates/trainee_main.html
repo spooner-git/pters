@@ -135,7 +135,7 @@
                 <div class="obj_box_full">
                     <div class="wrapper_sub_title obj_font_size_11_weight_bold obj_font_color_dark_grey">{{ ing_member_ticket_info.member_ticket_tb.ticket_tb.name }} 수강권
                         <span style="float: right;" class="obj_font_size_12_weight_normal obj_font_color_black">
-                            ~{{ ing_member_ticket_info.member_ticket_tb.end_date | date:"Y.m.d (l)"|cut:"요일"  }} <span class="obj_font_size_13_weight_bold">{{ ing_member_ticket_info.member_ticket_tb.member_ticket_rem_count }}</span>/{{ ing_member_ticket_info.member_ticket_tb.member_ticket_reg_count }}
+                            ~{% if ing_member_ticket_info.member_ticket_tb.end_date|date:"Y-m-d"  == "9999-12-31" %}소진시 까지{% else %}{{ ing_member_ticket_info.member_ticket_tb.end_date | date:"Y.m.d (l)"|cut:"요일"  }}{% endif %} <span class="obj_font_size_13_weight_bold">{{ ing_member_ticket_info.member_ticket_tb.member_ticket_rem_count }}</span>/{{ ing_member_ticket_info.member_ticket_tb.member_ticket_reg_count }}
                         </span>
                     </div>
                     

@@ -126,7 +126,8 @@ class Pters_pass_shop{
         let icon_r_visible = SHOW;
         let icon_r_text = "매월 9,900원";
 
-        if(device == MOBILE && device_info != 'web' && user_username =='guest'){
+        // if(device == MOBILE && device_info != 'web' && user_username =='guest'){
+        if(user_username =='guest'){
             icon_r_text = "30일 9,900원";
         }
         let style = {"color":"#fe4e65", "font-weight":"bold", "border-bottom":"1px solid #e8e8e8"};
