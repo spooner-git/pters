@@ -63,12 +63,13 @@ class LogTb(TimeStampedModel):
     from_member_name = models.CharField(db_column='FROM_MEMBER_NAME', max_length=20, blank=True, default='')
     to_member_name = models.CharField(db_column='TO_MEMBER_NAME', max_length=20, blank=True, default='')
     class_tb_id = models.CharField(db_column='CLASS_TB_ID', max_length=20, blank=True, default='')
-    member_ticket_tb_id = models.CharField(db_column='LECTURE_TB_ID', max_length=20, blank=True, default='')
+    member_ticket_tb = models.ForeignKey('trainee.MemberTicketTb', db_column='lecture_tb_id', null=True, default = '')
     log_info = models.CharField(db_column='LOG_INFO', max_length=255, blank=True, default='')
     log_how = models.CharField(db_column='LOG_HOW', max_length=255, blank=True, default='')
     log_detail = models.CharField(db_column='LOG_DETAIL', max_length=255, blank=True, default='')
     ip = models.CharField(db_column='IP', max_length=255, blank=True, default='')
     read = models.IntegerField(db_column='READ', default=0)  # Field name made lowercase.
+    member_read = models.IntegerField(db_column='MEMBER_READ', default=0)
     push_check = models.IntegerField(db_column='PUSH_CHECK', default=0)
     use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
 

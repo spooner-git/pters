@@ -205,6 +205,7 @@ class Plan_view{
 
     render(){
         let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="plan_view_popup.upper_left_menu();" class="obj_icon_prev"></span>`;
+        // let top_left = `<span class="icon_left">${CImg.home("obj_icon_prev")}</span>`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right">
                             <img src="/static/common/icon/icon_delete_black.png" class="obj_icon_24px" onclick="plan_view_popup.upper_right_menu(0);">
@@ -343,7 +344,7 @@ class Plan_view{
             //회원 선택 팝업 열기
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SELECT, 100, popup_style, {'data':null}, ()=>{
-                let appendix =  {lecture_id:this.data.lecture_id, title:"회원", disable_zero_avail_count:ON};
+                let appendix =  {lecture_id:this.data.lecture_id, title:"회원", disable_zero_avail_count:ON, entire_member:SHOW};
                 member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.lecture_max_num, appendix, (set_data)=>{
                     this.member = set_data;
                     let changed = this.func_update_member();
@@ -356,6 +357,14 @@ class Plan_view{
 
                     for(let i=0; i<changed.add.length; i++){
                         Plan_func.create('/schedule/add_member_lecture_schedule/', {"member_id":changed.add[i], "schedule_id": this.schedule_id, "async":false}, ()=>{});
+                    }
+
+                    if(set_data.id_other.length > 0){ //전체 회원에서 추가한 것이 있을 때
+                        for(let i=0; i<set_data.id_other.length; i++){
+                            let member_ticket_id = set_data.ticket_id_other[i];
+                            let member_id = set_data.id_other[i];
+                            Plan_func.create('/schedule/add_other_member_lecture_schedule/', {"member_id":member_id, "member_ticket_id": member_ticket_id, "schedule_id": this.schedule_id, "async":false}, ()=>{}); 
+                        }
                     }
                     
                     this.init();
@@ -554,11 +563,6 @@ class Plan_view{
 
     dom_row_classic_time_selector(){
         let selected_date = DateRobot.to_yyyymmdd(this.selected_date.year, this.selected_date.month, this.selected_date.date);
-        // if(this.user_data.user_selected_date.year != null){
-        //     selected_date = DateRobot.to_yyyymmdd(this.user_data.user_selected_date.year, this.user_data.user_selected_date.month, this.user_data.user_selected_date.date);
-        // }else{
-        //     selected_date = DateRobot.to_yyyymmdd(this.dates.current_year, this.dates.current_month, this.dates.current_date);
-        // }
 
         let root_content_height = $root_content.height();
 
@@ -585,7 +589,11 @@ class Plan_view{
                     this.data.end_time_text = object.text.end + ' 까지 <span style="font-size:11px;">('+ object.text.diff +'분 진행)</span>';
 
                     this.if_user_changed_any_information = true;
-                    this.render_content();
+                    // this.render_content();
+                    this.check_duplicate_plan_exist((data)=>{
+                        this.data.duplicate_plan_when_add = data;
+                        this.render_content();
+                    });
                 }};
                 time_selector = new TwoTimeSelector("#wrapper_popup_time_selector_function", time_data, user_option);
             });
@@ -615,14 +623,23 @@ class Plan_view{
                     this.data.end_time_text = object.text.end + ' 까지 <span style="font-size:11px;">('+ object.text.diff +'분 진행)</span>';
 
                     this.if_user_changed_any_information = true;
-                    this.render_content();
+                    // this.render_content();
+                    this.check_duplicate_plan_exist((data)=>{
+                        this.data.duplicate_plan_when_add = data;
+                        this.render_content();
+                    });
                 }};
                 time_selector = new TwoTimeSelector("#wrapper_popup_time_selector_function", time_data, user_option);
             });
         };
         let html2 = CComponent.create_row(id2, title2, icon2, icon_r_visible2, icon_r_text2, style2, callback2);
 
-        return html + html2;
+        let html_duplication_alert = `<div style="font-size:11px;color:#fe4e65;padding-left:45px;box-sizing:border-box;display:${this.data.duplicate_plan_when_add.length == 0 ? 'none' : 'block'}">
+                                            ${this.data.duplicate_plan_when_add.length}건 겹치는 일정이 존재합니다.<br>
+                                            ${this.data.duplicate_plan_when_add.join('<br/>')}
+                                        </div>`;
+
+        return html + html2 + html_duplication_alert;
     }
 
     dom_row_memo_select (){
@@ -672,7 +689,10 @@ class Plan_view{
             ()=>{
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_ATTEND, 100, popup_style, null, ()=>{
-                    member_attend = new Member_attend('.popup_member_attend', this.schedule_id, (set_data)=>{
+                    member_attend = new Member_attend('.popup_member_attend', this.schedule_id, (data)=>{
+                        console.log("data",data)
+                        let schedule = data.schedule;
+                        let set_data = data.member_schedule;
                         //출석체크 팝업에서 완료버튼을 눌렀을때 할 행동
                         //개인일정 일때
                         if(this.data.schedule_type == 1){
@@ -723,6 +743,11 @@ class Plan_view{
                                 data_to_send.push(send_data);
                             // }
                         }
+                        //일정 껍데기 완료하기
+                        if(schedule != undefined){
+                            data_to_send.push({"schedule_id":String(schedule.schedule_id), "state_cd":schedule.state_cd, "upload_file": null});
+                        }
+                        
                         let length = data_to_send.length;
                         let ajax_send_order = 0;
                         for(let i=0; i<data_to_send.length; i++){
@@ -777,11 +802,23 @@ class Plan_view{
 
     upper_left_menu(){
         if(this.if_user_changed_any_information == true){
-            if(this.send_data() == false){
-                return false;
-            }
+            // if(this.send_data() == false){
+            //     return false;
+            // }
+            let user_option = {
+                confirm:{text:"변경사항 적용", callback:()=>{this.send_data();layer_popup.close_layer_popup();layer_popup.close_layer_popup();this.clear();}},
+                cancel:{text:"아무것도 변경하지 않음", callback:()=>{ layer_popup.close_layer_popup();layer_popup.close_layer_popup();this.clear();}}
+            };
+            let options_padding_top_bottom = 16;
+            let button_height = 8 + 8 + 52;
+            let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
+            let root_content_height = $root_content.height();
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
+                option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+            });
+        }else{
+            layer_popup.close_layer_popup();this.clear();
         }
-        layer_popup.close_layer_popup();this.clear();
     }
 
     send_data (){

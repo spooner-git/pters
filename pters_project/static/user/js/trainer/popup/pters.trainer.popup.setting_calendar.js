@@ -3,6 +3,7 @@ class Setting_calendar{
         this.target = {install: install_target, toolbox:'section_setting_calendar_toolbox', content:'section_setting_calendar_content'};
 
         this.data = {
+            start_day:null,
             calendar_time_input_type: BASIC,
             calendar_basic_select_time:{value:[], text:[]},
         };
@@ -24,6 +25,7 @@ class Setting_calendar{
 
     set_initial_data (){
         Setting_calendar_func.read((data)=>{
+            this.data.start_day = data.setting_week_start_date;
             this.data.calendar_time_input_type = Number(data.setting_calendar_time_selector_type);
             let current_calendar_basic_select_time = Number(data.setting_calendar_basic_select_time);
 
@@ -69,7 +71,10 @@ class Setting_calendar{
     }
     
     dom_assembly_content(){
-        let html =  '<article class="obj_input_box_full" style="padding-top:5px;">' +
+        let html =  '<article class="obj_input_box_full" style="padding:0;">' +
+                        this.dom_row_start_day_setting() + 
+                    '</article>' +
+                    '<article class="obj_input_box_full" style="padding-top:5px;">' +
                         this.dom_row_calendar_basic_select_time() + 
                         "<span style='font-size:12px;color:#3b3b3b;letter-spacing:-0.6px;font-weight:normal'>달력 클릭/OFF 일정 클릭시 선택되는 기본 시간입니다.</span>" +
                     '</article>' +
@@ -78,6 +83,45 @@ class Setting_calendar{
                         this.dom_row_calendar_time_input_type_new() + 
                         this.dom_row_calendar_time_input_type_classic() +
                     '</article>';
+        return html;
+    }
+
+    dom_row_start_day_setting(){
+        let day_name = {"SUN": "일요일", "MON": "월요일"};
+        let id = "start_day_setting";
+        let title = "한 주의 시작요일";
+        let icon = DELETE;
+        let icon_r_visible = SHOW;
+        let icon_r_text = day_name[this.data.start_day] == null ? "" : day_name[this.data.start_day];
+        let style = null;
+        let onclick = ()=>{
+            let user_option = {
+                sunday:{text:"일요일", callback:()=>{
+                    this.data.start_day = "SUN";
+                    layer_popup.close_layer_popup();
+                    this.render_content();
+                }},
+                monday:{text:"월요일", callback:()=>{
+                    this.data.start_day = "MON";
+                    layer_popup.close_layer_popup();
+                    this.render_content();
+                }}
+            };
+            let options_padding_top_bottom = 16;
+            let button_height = 8 + 8 + 52;
+            let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
+            let root_content_height = $root_content.height();
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
+                option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+            });
+        };
+
+        let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
+
+        let html = `<article class="setting_worktime_wrapper obj_input_box_full" style="padding-right:10px;">
+                        ${row}
+                    </article>
+                    `;
         return html;
     }
 
@@ -188,6 +232,7 @@ class Setting_calendar{
 
     send_data(){
         let data = {
+            "setting_week_start_date":this.data.start_day,
             "setting_calendar_time_selector_type":this.data.calendar_time_input_type,
             "setting_calendar_basic_select_time":this.data.calendar_basic_select_time.value[0]
         };

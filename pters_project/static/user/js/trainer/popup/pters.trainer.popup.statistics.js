@@ -260,7 +260,7 @@ class Statistics{
 
     dom_lesson_complete_status_graph(){
         let html = `<section style="width:95%;text-align:center;margin:0 auto;box-sizing:border-box;border-bottom:1px solid #f5f2f3;padding:30px 0">
-                        <div style="font-size:15px;font-weight:500;letter-spacing:-0.7px;color:#5c5859;">월별 레슨 완료 현황</div>
+                        <div style="font-size:15px;font-weight:500;letter-spacing:-0.7px;color:#5c5859;">월별 일정 완료 현황</div>
                         <div style="font-size:11px;font-weight:500;letter-spacing:-0.5px;color:#858282;">(단위 / 건)</div>
                         <div id="lesson_complete_status_graph"></div>
                     </section>`;
@@ -435,7 +435,7 @@ class Statistics{
         let chart_data = statistics_popup.data.chart.member.lesson_complete;
         let data = new google.visualization.arrayToDataTable(chart_data);
 
-        let options = {'title': "월별 레슨 완료 현황",
+        let options = {'title': "월별 일정 완료 현황",
             // 'width':windowWidth,
             'height':250,
             'chartArea':{width:'75%', height:'80%'},
@@ -491,7 +491,7 @@ class Statistics{
                 );
             }
         }else if(type == "lesson_complete"){
-            new_data = [['Month', '레슨 일정 완료']];
+            new_data = [['Month', '일정 완료']];
             let length = this.data.member.month_date.length;
             for(let i=0; i<length; i++){
                 new_data.push(

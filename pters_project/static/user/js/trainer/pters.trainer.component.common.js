@@ -328,7 +328,7 @@ class CComponent{
                                     ${member_name}
                                 </div>
                                 <div class="cell_member_info">
-                                    예약 가능 횟수 - ${member_avail_count}회 / ${member_expiry}까지
+                                    예약가능 ${member_avail_count}회 / ${member_expiry} 까지
                                 </div>
                             </div>
                             <div style="display:table-cell; line-height:35px; float:right;">
@@ -699,6 +699,17 @@ class CComponent{
         return style_code;
     }
 }
+
+class CImg{
+    static home(ex_class){
+        let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="22" viewBox="0 0 20 22" class="${ex_class}">
+                        <path fill="#5C5859" fill-rule="evenodd" d="M2.5 19.5h15v-15h-15v15zm17-17v17.003c0 1.103-.89 1.997-1.997 1.997H2.497A1.995 1.995 0 0 1 .5 19.503V2.5h4v-2h2v2h7v-2h2v2h4z"/>
+                    </svg>
+                    `;
+        return svg;
+    }
+}
+
 
 
 class LimitChar{

@@ -436,17 +436,25 @@ class Pters_pass_func{
         });
     }
 
-    static request_payment(product_name, user_email, user_name, pay_method, payment_type_cd, price, merchant_uid, customer_uid){
+    static request_payment(product_name, user_email, user_name, pay_method, payment_type_cd, price, merchant_uid, customer_uid, product_id){
+        let mobile_product_id = "9";
+        if(product_id == '7' || product_id == 7){
+            mobile_product_id="9";
+        }else{
+            mobile_product_id = product_id;
+        }
 
-        // if(os == IOS && device == MOBILE && device_info != 'web'){
-        //     // ios 인앱 결제 호출
-        //     window.webkit.messageHandlers.payment_method.postMessage("9");
-        // }
-        // else if(os == ANDROID && device == MOBILE && device_info != 'web') {
-        //     // 안드로이드 인앱 결제 호출
-        //     window.android_payment_function.callMethodName("9");
-        // }
-        // else {
+        // if(os == IOS && device == MOBILE && device_info != 'web' && user_username =='guest'){
+        if(os == IOS && user_username =='guest'){
+            // ios 인앱 결제 호출
+            window.webkit.messageHandlers.payment_method.postMessage(mobile_product_id);
+        }
+        // else if(os == ANDROID && device == MOBILE && device_info != 'web' && user_username =='guest') {
+        else if(os == ANDROID && user_username =='guest') {
+            // 안드로이드 인앱 결제 호출
+            window.android_payment_function.callMethodName(mobile_product_id);
+        }
+        else {
             var request_pay_data = {
                 pg: 'danal', // version 1.1.0부터 지원.
                 pay_method: pay_method,
@@ -509,7 +517,7 @@ class Pters_pass_func{
                     // location.href = "/payment/";
                 }
             });
-        // }
+        }
     }
 
     // static check_payment_for_update(name, current_customer_uid, product_id, period_month, merchant_uid, customer_uid, callback){

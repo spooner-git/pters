@@ -218,6 +218,12 @@
 <script type="text/javascript" src="https://apis.google.com/js/platform.js" async defer></script>
 <script type="text/javascript">
 
+    function enter_key() {
+        if (window.event.keyCode == 13) {
+             // 엔터키가 눌렸을 때 실행할 내용
+             document.getElementById('login-form').submit();
+        }
+    }
     /*
     var varUA = navigator.userAgent.toLowerCase();//useAgent값 얻기
     var device_text = '브라우저, iOS, Android 앱으로';

@@ -55,7 +55,7 @@
     <section id="section_center">
         <div id="section_content">
             <div id="shade_for_popup_basic" style="position: absolute;;top:0;left:0;height:100%;width:100%;background-color:#282828;opacity:0.5; display: none;" 
-                onclick="layer_popup.close_layer_popup();"></div>
+            onclick="layer_popup.close_layer_popup();"></div>
             <div id="content_wrapper" style="box-shadow: unset;margin:0 auto;">
                 {% include 'popup/trainer_popup_basic.html' %}
                 {% include 'popup/trainer_popup_pages.html' %}
@@ -136,7 +136,7 @@
     const $root_content = $('#root_content');
     var current_page = "home";
 
-    input_adjust_location_for_android();
+    // input_adjust_location_for_android();
     func_set_webkit_overflow_scrolling('#root_content');
     // $root_content.css('height', `${windowHeight}px`);
     // $root_content.css('height', `100%`);
@@ -178,7 +178,9 @@
     // 범용 셀렉터 인스턴스
 
     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PROGRAM_ADD, 100, POPUP_FROM_BOTTOM, null, ()=>{
-        program_add_popup = new Program_add_new_member('.popup_program_add')});
+        program_add_popup = new Program_add_new_member('.popup_program_add');
+        layer_popup.disable_shade_click_close();
+    });
 
     
 </script>

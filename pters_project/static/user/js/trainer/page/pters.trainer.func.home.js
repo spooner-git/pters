@@ -214,39 +214,33 @@ class Home {
             let member_id = data.current_member_data[i].member_id;
             let end_info;
 
-            if(diff_date <= 7 && rem_count > 3){
-                let date_limit_text = diff_date + ' 일 남음';
-                if(end_date == "9999-12-31"){
-                    date_limit_text = "기간 제한없음";
-                }
-                end_info = rem_count + ' 회' +' / ' + date_limit_text;
-                if(diff_date < 0){
-                    date_limit_text = Math.abs(diff_date) + ' 일 지남';
-                    end_info = rem_count + ' 회' +' / ' + date_limit_text;
-                }
-            }else if(diff_date > 7 && rem_count <= 3){
-                let date_limit_text = diff_date + ' 일 남음';
-                if(end_date == "9999-12-31"){
-                    date_limit_text = "기간 제한없음";
-                }
-                end_info = rem_count + ' 회' + ' / ' + date_limit_text;
-            }else{
-                let date_limit_text = diff_date + ' 일 남음';
-                if(end_date == "9999-12-31"){
-                    date_limit_text = "기간 제한없음";
-                }
-                let date_info =  date_limit_text;
-                if(diff_date < 0){
-                    date_info = Math.abs(diff_date) + ' 일 지남';
-                }
-                end_info = rem_count + '  회 / ' + date_info;
+            let date_limit_text = diff_date + '일 남음';
+            let date_info =  date_limit_text;
+            if(end_date == "9999-12-31"){
+                date_limit_text = "소진시 까지";
+                date_info = date_limit_text;
             }
-            
+            if(diff_date < 0){
+                date_info = Math.abs(diff_date) + ' 일 지남';
+            }
+            let rem_info = `잔여 ${rem_count}회`;
+
+            if(rem_count <= 3){
+                rem_info = `<span style='color:#ff0022;'>${rem_info}</span>`;
+            }
+            if(diff_date <= 7){
+                date_info = `<span style='color:#ff0022;'>${date_info}</span>`;
+            }
+            end_info = rem_info + ' / ' + date_info;
+            if(rem_count <= 3 && diff_date <= 7){
+                end_info = `<span style='color:#ff0022;'>${rem_info} / ${date_info}</span>`;
+            }
+
             let id = `home_end_alert_${member_id}`;
             let title = data.current_member_data[i].member_name;
             let icon = data.current_member_data[i].member_profile_url;
             let icon_r_visible = HIDE;
-            let icon_r_text = `<span style="color:#ff0022;font-size:12px;font-weight:500;letter-spacing:-0.5px;">${end_info}</span>`;
+            let icon_r_text = `<span style="font-size:12px;font-weight:500;letter-spacing:-0.5px;">${end_info}</span>`;
             let style = {"font-size":"14px", "padding":"12px 0"};
             let onclick = ()=>{
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;

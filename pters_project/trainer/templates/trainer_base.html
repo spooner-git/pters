@@ -82,7 +82,8 @@
 <div id="base">
     <section id="section_side">
         <div class="top_logo">
-            <img src="/static/common/icon/logo/PTERS_logo_full.png" alt="" style="width: 64px;" id="top_logo_image">
+            <span style='color:#1F1D1E; width:64px; font-size:20px; font-weight:bold; padding-left:12px;' id="top_logo_image">PTERS</span>
+            <!--<img src="/static/common/icon/logo/PTERS_logo_full.png" alt="" style="width: 64px;" id="top_logo_image">-->
         </div>
         <div class="side_menu">
             <div class="side_menu_item" onclick="sideGoPage('home')" id="side_home">
@@ -257,8 +258,8 @@
 
     var user_email = '{{ request.user.email }}';
     var user_name = '{{ request.user.first_name }}';
-        var session_app_version = `{{ APP_VERSION }}`;
-
+    var session_app_version = `{{ APP_VERSION }}`;
+    var user_username = '{{ request.user.username }}';
     //기기종류 판단
     const varUA = navigator.userAgent.toLowerCase();
     let device = PC;
@@ -528,8 +529,9 @@
                 $sidemenu_text.show();
             }, 150);
             $toplogo.html(
-                `<img src="/static/common/icon/logo/PTERS_logo_full.png" alt="" style="width: 64px;" id="top_logo_image">`
-            )
+                `<span style='color:#1F1D1E; width:64px; font-size:20px; font-weight:bold; padding-left:12px;'>PTERS</span>`
+                //`<img src="/static/common/icon/logo/PTERS_logo_full.png" alt="" style="width: 64px;" id="top_logo_image">`
+            );
             $sidemenu_button.css('transform', 'rotate(90deg)');
         }else{
             $sidemenu.css('flex-basis', '70px');
@@ -537,7 +539,7 @@
             $sidemenu_text.hide();
             $toplogo.html(
                 `<img src="/static/common/icon/logo/PTERS_logo_short.png" alt="" style="width: 32px;vertical-align:middle" id="top_logo_image">`
-            )
+            );
             $sidemenu_button.css('transform', 'rotate(-90deg)');
         }
     }

@@ -114,9 +114,9 @@ def send_push_alarm_logic(request):
         if schedule_info.lecture_tb is None:
 
             func_send_push_trainer(member_ticket_tb_id, push_title,
-                                   ' [개인 레슨] '+push_message)
+                                   ' [개인] 수업 '+push_message)
             func_send_push_trainee(class_tb_id, class_type_name+' - 수업 알림',
-                                   ' [개인 레슨] '+push_message)
+                                   ' [개인] 수업 '+push_message)
 
         else:
             # 그룹 수업 일정

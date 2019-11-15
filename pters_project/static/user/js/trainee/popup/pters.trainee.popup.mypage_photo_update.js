@@ -6,49 +6,49 @@ var mypage_photo_update_popup;
 function update_trainee_profile_photo(){
     let user_option = {
     change:{text:"프로필 사진 변경", callback:()=>{
-            show_error_message("기능을 준비중 입니다.");
-            // layer_popup.close_layer_popup();
-            // layer_popup.open_layer_popup(POPUP_BASIC, 'popup_mypage_photo_update', 100, POPUP_FROM_RIGHT, null, ()=>{
-            //     mypage_photo_update_popup = new Mypage_photo_update('.popup_mypage_photo_update', 'mypage_photo_update_popup'); 
-            // });
+            // show_error_message("기능을 준비중 입니다.");
+            layer_popup.close_layer_popup();
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_mypage_photo_update', 100, POPUP_FROM_RIGHT, null, ()=>{
+                mypage_photo_update_popup = new Mypage_photo_update('.popup_mypage_photo_update', 'mypage_photo_update_popup');
+            });
         }
     },
     delete:{text:"프로필 사진 삭제", callback:()=>{
-                show_error_message("기능을 준비중 입니다.");
-                // $.ajax({
-                //     url: '/delete_profile_img/',
-                //     dataType : 'html',
-                //     type:'POST',
+                // show_error_message("기능을 준비중 입니다.");
+                $.ajax({
+                    url: '/delete_profile_img/',
+                    dataType : 'html',
+                    type:'POST',
 
-                //     beforeSend: function (xhr, settings) {
-                //         if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                //             xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                //         }
-                //         ajax_load_image(SHOW);
-                //     },
+                    beforeSend: function (xhr, settings) {
+                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                        }
+                        ajax_load_image(SHOW);
+                    },
 
-                //     success:function(data){
-                //         let jsondata = $.parseJSON(data);
-                //         if(jsondata.messageArray.length>0){
-                //             show_error_message(jsondata.messageArray);
-                //         }
-                //         try{
-                //             location.reload();
-                //         }catch(e){
-                //             console.log(e);
-                //         }
-                //     },
+                    success:function(data){
+                        let jsondata = $.parseJSON(data);
+                        if(jsondata.messageArray.length>0){
+                            show_error_message(jsondata.messageArray);
+                        }
+                        try{
+                            location.reload();
+                        }catch(e){
+                            console.log(e);
+                        }
+                    },
 
-                //     complete:function(){
-                //         ajax_load_image(HIDE);
-                //     },
+                    complete:function(){
+                        ajax_load_image(HIDE);
+                    },
 
-                //     error:function(){
-                //         //alert('통신이 불안정합니다.');
-                //         show_error_message('통신이 불안정합니다.');
-                //     }
-                // });
-                // layer_popup.close_layer_popup();
+                    error:function(){
+                        //alert('통신이 불안정합니다.');
+                        show_error_message('통신이 불안정합니다.');
+                    }
+                });
+                layer_popup.close_layer_popup();
             }
         }
     };
@@ -71,6 +71,9 @@ class Mypage_photo_update{
             file:null
         };
         this.uploadCrop;
+        this.user_file;
+        
+        this.orientation;
 
         this.set_initial_data();
     }
@@ -136,9 +139,25 @@ class Mypage_photo_update{
     dom_row_croppie(){
         let html = `<div class="upload-result" style="display:none;">result</div>
                     <div style="display:none;"><img id="result"></div>
-                     <div id="upload-croppie"></div>
-                    <input type="file" id="upload" value="Choose a file" accept="image/*" style="visibility:hidden">
+                    <div id="upload-croppie"></div>
+                    <input type="file" id="upload" value="Choose a file" accept="image/*" style="width:0">
+                    <!--<input type="file" id="upload" value="Choose a file" accept="image/*" style="visibility:hidden">-->
+
+                    ${this.dom_row_rotate_button()}
+
                     `;
+        return html;
+    }
+
+    dom_row_rotate_button(){
+        let id = "image_rotate_button";
+        let title = "";
+        let url = '/static/common/icon/icon_repeat_black.png';
+        let style = {"padding":"3px 15px"};
+        let onclick= ()=>{
+            this.event_croppie_rotate();
+        };
+        let html = CComponent.icon_button (id, title, url, style, onclick);
         return html;
     }
 
@@ -147,12 +166,13 @@ class Mypage_photo_update{
         let self = this;
 
         this.uploadCrop = $('#upload-croppie').croppie({
-            viewport: {
-                width: 300,
-                height: 300
-                // type: 'circle'
+			viewport: {
+				width: 300,
+				height: 300
+				// type: 'circle'
             },
-            enableExif: true
+            enableOrientation: true,
+            enableExif: true,
         });
 
         $('#upload').on('change', function(){ self.readFile(this); });
@@ -168,7 +188,24 @@ class Mypage_photo_update{
                 self.send_data();
             });
         });
+    }
 
+    event_croppie_rotate(){
+        // this.uploadCrop.croppie('rotate', 90);
+        if(this.orientation == undefined || this.orientation == 1){
+            this.orientation = 6; //시계방향 90도
+        }else if(this.orientation == 6){
+            this.orientation = 3; // 180도
+        }else if(this.orientation == 3){
+            this.orientation = 8; //반시계 90도
+        }else if(this.orientation == 8){
+            this.orientation = 1; //원래대로
+        }
+
+        this.uploadCrop.croppie('bind', {
+            url:this.user_file,
+            orientation: this.orientation
+        });
     }
 
     readFile(input) {
@@ -176,6 +213,7 @@ class Mypage_photo_update{
            var reader = new FileReader();
            let self = this;
            reader.onload = function (e) {
+               self.user_file = e.target.result;
                $('.upload-croppie').addClass('ready');
                self.uploadCrop.croppie('bind', {
                    url: e.target.result

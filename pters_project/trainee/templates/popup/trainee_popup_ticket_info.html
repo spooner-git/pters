@@ -65,7 +65,13 @@
                 <div class="wrapper_my_history_detail_info obj_table_raw obj_font_size_11_weight_500">
                     <div class="wrapper_my_history_detail_member_ticket_count obj_table_cell_x7">{{ forloop.revcounter }}</div>
                     <div class="wrapper_my_history_detail_member_ticket_start_date obj_table_cell_x7">{{ member_ticket_info.member_ticket_tb.start_date | date:"Y.m.d(l)"|cut:"요일"  }}</div>
-                    <div class="wrapper_my_history_detail_member_ticket_end_date obj_table_cell_x7">{{ member_ticket_info.member_ticket_tb.end_date | date:"Y.m.d(l)"|cut:"요일"  }}</div>
+                    <div class="wrapper_my_history_detail_member_ticket_end_date obj_table_cell_x7">
+                        {% if member_ticket_info.member_ticket_tb.end_date|date:"Y-m-d" == "9999-12-31" %}
+                            소진시 까지
+                        {% else %}
+                            {{ member_ticket_info.member_ticket_tb.end_date | date:"Y.m.d(l)"|cut:"요일"  }}
+                        {% endif %}
+                    </div>
                     <div class="wrapper_my_history_detail_member_ticket_reg_count obj_table_cell_x7">{{ member_ticket_info.member_ticket_tb.member_ticket_reg_count }}</div>
                     <div class="wrapper_my_history_detail_member_ticket_rem_count obj_table_cell_x7">{{ member_ticket_info.member_ticket_tb.member_ticket_rem_count }}</div>
                     <div class="wrapper_my_history_detail_member_ticket_price obj_table_cell_x7">{{ member_ticket_info.member_ticket_tb.price | intcomma }}원</div>

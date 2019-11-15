@@ -59,9 +59,19 @@ function select_contract(contract_type) {
 }
 
 function limit_char_auto_correction(event){
-    let limit_reg_pattern = event.pattern.replace('[', '[^').split('{')[0];
+    let pattern = event.attributes['pattern'].value;
+    let limit_reg_pattern = pattern.replace('[', '[^').split('{')[0];
     let limit = new RegExp(limit_reg_pattern, "gi");
+    let min_length = event.attributes['minlength'].value;
+    let title = event.attributes['title'].value;
     event.value = event.value.replace(limit, "");
+    if(event.value.length < Number(min_length)) {
+        event.attributes['data-error-message'].value = title+' : 입력해주세요.';
+        event.attributes['data-valid'].value = 'false';
+    }else{
+        event.attributes['data-error-message'].value = '';
+        event.attributes['data-valid'].value = 'true';
+    }
 }
 
 function limit_char_check(event){

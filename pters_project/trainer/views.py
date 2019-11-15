@@ -34,13 +34,14 @@ from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO
     STATE_CD_ABSENCE, STATE_CD_FINISH, PERMISSION_STATE_CD_APPROVE, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, AUTH_TYPE_DELETE, \
     LECTURE_TYPE_NORMAL, SHOW, SORT_TICKET_TYPE, SORT_TICKET_NAME, SORT_TICKET_MEMBER_COUNT, SORT_TICKET_CREATE_DATE, \
     SORT_LECTURE_NAME, SORT_LECTURE_MEMBER_COUNT, SORT_LECTURE_CAPACITY_COUNT, SORT_LECTURE_CREATE_DATE, ON_SCHEDULE, \
-    CALENDAR_TIME_SELECTOR_BASIC
+    CALENDAR_TIME_SELECTOR_BASIC, SORT_END_DATE, SORT_MEMBER_TICKET, SORT_SCHEDULE_DT, STATE_CD_REFUND
 from board.models import BoardTb
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 from schedule.functions import func_refresh_member_ticket_count, func_get_trainer_attend_schedule, \
     func_get_lecture_member_ticket_id, func_check_lecture_available_member_before, func_add_schedule, \
     func_check_lecture_available_member_after, func_get_trainer_schedule_all, func_get_trainer_schedule_info, \
-    func_get_member_schedule_all, func_get_lecture_schedule_all
+    func_get_lecture_schedule_all, func_get_member_schedule_all_by_member_ticket, \
+    func_get_member_schedule_all_by_schedule_dt
 from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb
 from stats.functions import get_sales_data
 from trainee.models import MemberTicketTb
@@ -192,6 +193,8 @@ class GetMemberScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
     def get(self, request):
         class_id = self.request.session.get('class_id', '')
         member_id = request.GET.get('member_id', '')
+        sort = request.GET.get('sort_val', SORT_MEMBER_TICKET)
+
         error = None
         ordered_schedule_dict = collections.OrderedDict()
 
@@ -199,7 +202,12 @@ class GetMemberScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
             error = '회원 정보를 불러오지 못했습니다.'
 
         if error is None:
-            ordered_schedule_dict = func_get_member_schedule_all(class_id, member_id)
+            if str(sort) == str(SORT_MEMBER_TICKET):
+                ordered_schedule_dict = func_get_member_schedule_all_by_member_ticket(class_id, member_id)
+            elif str(sort) == str(SORT_SCHEDULE_DT):
+                ordered_schedule_dict = {
+                    'member_schedule': func_get_member_schedule_all_by_schedule_dt(class_id, member_id)
+                }
         else:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
             messages.error(request, error)
@@ -613,6 +621,9 @@ class GetMemberIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         elif sort_info == SORT_REG_COUNT:
             current_member_data = sorted(current_member_data, key=lambda elem: elem['member_ticket_reg_count'],
                                          reverse=int(sort_order_by))
+        elif sort_info == SORT_END_DATE:
+            current_member_data = sorted(current_member_data, key=lambda elem: elem['end_date'],
+                                         reverse=int(sort_order_by))
         # context['total_member_num'] = len(member_data)
         # if page != 0:
         #     paginator = Paginator(member_data, 20)  # Show 20 contacts per page
@@ -653,6 +664,9 @@ class GetMemberEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                         reverse=int(sort_order_by))
         elif sort_info == SORT_REG_COUNT:
             finish_member_data = sorted(finish_member_data, key=lambda elem: elem['member_ticket_reg_count'],
+                                        reverse=int(sort_order_by))
+        elif sort_info == SORT_END_DATE:
+            finish_member_data = sorted(finish_member_data, key=lambda elem: elem['end_date'],
                                         reverse=int(sort_order_by))
 
         # context['total_member_num'] = len(member_data)
@@ -1887,6 +1901,8 @@ def update_member_ticket_info_logic(request):
         member_ticket_info.member_ticket_avail_count = member_ticket_reg_count - reserve_schedule_count
         if member_ticket_info.state_cd == STATE_CD_FINISH:
             member_ticket_info.member_ticket_rem_count = 0
+            member_ticket_info.member_ticket_avail_count = 0
+        if member_ticket_info.state_cd == STATE_CD_REFUND:
             member_ticket_info.member_ticket_avail_count = 0
         member_ticket_info.save()
 
@@ -3512,7 +3528,7 @@ def add_program_info_logic(request):
                                                   auth_cd=AUTH_TYPE_VIEW, mod_member_id=request.user.id, use=USE)
                 member_class_info.save()
 
-                one_to_one_lecture_info = LectureTb(class_tb_id=class_info.class_id, name='개인 레슨',
+                one_to_one_lecture_info = LectureTb(class_tb_id=class_info.class_id, name='개인 수업',
                                                     ing_color_cd='#fbf3bd', end_color_cd='#d2d1cf',
                                                     ing_font_color_cd='#282828', end_font_color_cd='#282828',
                                                     state_cd=STATE_CD_IN_PROGRESS,
@@ -3520,7 +3536,7 @@ def add_program_info_logic(request):
                                                     lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, member_num=1, use=USE)
                 one_to_one_lecture_info.save()
 
-                ticket_info = TicketTb(class_tb_id=class_info.class_id, name='개인 레슨',
+                ticket_info = TicketTb(class_tb_id=class_info.class_id, name='개인 수업',
                                        state_cd=STATE_CD_IN_PROGRESS, use=USE)
                 ticket_info.save()
 
@@ -4010,21 +4026,26 @@ def update_setting_calendar_setting_logic(request):
     # CALENDAR_TIME_SELECTOR_BASIC : 0 (신 PTERS 기본) / CALENDAR_TIME_SELECTOR_ORIGIN : 1 (구 PTERS 기본)
     setting_calendar_time_selector_type = request.POST.get('setting_calendar_time_selector_type',
                                                            CALENDAR_TIME_SELECTOR_BASIC)
+    setting_week_start_date = request.POST.get('setting_week_start_date', 'SUN')
     class_id = request.session.get('class_id', '')
 
     if setting_calendar_basic_select_time is None or setting_calendar_basic_select_time == '':
         setting_calendar_basic_select_time = '60'
     if setting_calendar_time_selector_type is None or setting_calendar_time_selector_type == '':
         setting_calendar_time_selector_type = CALENDAR_TIME_SELECTOR_BASIC
+    if setting_week_start_date is None or setting_week_start_date == '':
+        setting_week_start_date = 'SUN'
 
-    setting_type_cd_data = ['LT_CALENDAR_BASIC_SETTING_TIME', 'LT_CALENDAR_TIME_SELECTOR_TYPE']
-    setting_info_data = [setting_calendar_basic_select_time, setting_calendar_time_selector_type]
+    setting_type_cd_data = ['LT_CALENDAR_BASIC_SETTING_TIME', 'LT_CALENDAR_TIME_SELECTOR_TYPE', 'LT_WEEK_START_DATE']
+    setting_info_data = [setting_calendar_basic_select_time, setting_calendar_time_selector_type,
+                         setting_week_start_date]
 
     error = update_setting_data(class_id, request.user.id, setting_type_cd_data, setting_info_data)
 
     if error is None:
         request.session['setting_calendar_basic_select_time'] = setting_calendar_basic_select_time
         request.session['setting_calendar_time_selector_type'] = setting_calendar_time_selector_type
+        request.session['setting_week_start_date'] = setting_week_start_date
 
     else:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
@@ -4044,8 +4065,6 @@ def update_setting_work_time_logic(request):
     setting_trainer_work_fri_time_avail = request.POST.get('setting_trainer_work_fri_time_avail', '00:00-24:00')
     setting_trainer_work_sat_time_avail = request.POST.get('setting_trainer_work_sat_time_avail', '00:00-24:00')
     setting_holiday_hide = request.POST.get('setting_holiday_hide', SHOW)
-    setting_week_start_date = request.POST.get('setting_week_start_date', 'SUN')
-    setting_calendar_basic_select_time = request.POST.get('setting_calendar_basic_select_time', '60')
     class_id = request.session.get('class_id', '')
 
     if setting_trainer_work_sun_time_avail is None or setting_trainer_work_sun_time_avail == '':
@@ -4064,21 +4083,14 @@ def update_setting_work_time_logic(request):
         setting_trainer_work_sat_time_avail = '00:00-24:00'
     if setting_holiday_hide is None or setting_holiday_hide == '':
         setting_holiday_hide = SHOW
-    if setting_week_start_date is None or setting_week_start_date == '':
-        setting_week_start_date = 'SUN'
-    if setting_calendar_basic_select_time is None or setting_calendar_basic_select_time == '':
-        setting_calendar_basic_select_time = '60'
-
     setting_type_cd_data = ['LT_WORK_SUN_TIME_AVAIL', 'LT_WORK_MON_TIME_AVAIL',
                             'LT_WORK_TUE_TIME_AVAIL', 'LT_WORK_WED_TIME_AVAIL',
                             'LT_WORK_THS_TIME_AVAIL', 'LT_WORK_FRI_TIME_AVAIL',
-                            'LT_WORK_SAT_TIME_AVAIL', 'LT_HOLIDAY_HIDE', 'LT_WEEK_START_DATE',
-                            'LT_CALENDAR_BASIC_SETTING_TIME']
+                            'LT_WORK_SAT_TIME_AVAIL', 'LT_HOLIDAY_HIDE']
     setting_info_data = [setting_trainer_work_sun_time_avail, setting_trainer_work_mon_time_avail,
                          setting_trainer_work_tue_time_avail, setting_trainer_work_wed_time_avail,
                          setting_trainer_work_ths_time_avail, setting_trainer_work_fri_time_avail,
-                         setting_trainer_work_sat_time_avail, setting_holiday_hide, setting_week_start_date,
-                         setting_calendar_basic_select_time]
+                         setting_trainer_work_sat_time_avail, setting_holiday_hide]
 
     error = update_setting_data(class_id, request.user.id, setting_type_cd_data, setting_info_data)
 
@@ -4090,9 +4102,7 @@ def update_setting_work_time_logic(request):
         request.session['setting_trainer_work_ths_time_avail'] = setting_trainer_work_ths_time_avail
         request.session['setting_trainer_work_fri_time_avail'] = setting_trainer_work_fri_time_avail
         request.session['setting_trainer_work_sat_time_avail'] = setting_trainer_work_sat_time_avail
-        request.session['setting_week_start_date'] = setting_week_start_date
         request.session['setting_holiday_hide'] = setting_holiday_hide
-        request.session['setting_calendar_basic_select_time'] = setting_calendar_basic_select_time
 
     else:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
