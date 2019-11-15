@@ -3238,6 +3238,9 @@ class MemberSelector{
             if(lecture_member_list.indexOf(member_id) != -1){
                 continue;
             }
+            if(member_expiry == '9999-12-31'){
+                member_expiry = '소진시';
+            }
 
             // if(this.appendix.disable_zero_avail_count == ON && member_avail_count == 0){
             //     checked = 0;
@@ -3379,7 +3382,9 @@ class MemberSelector{
             let member_fix_state_cd = data.member_fix_state_cd;
             let member_profile_url = data.member_profile_url;
             let checked = this.target_instance.member.id.indexOf(member_id) >= 0 ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
-
+            if(member_expiry == '9999-12-31'){
+                member_expiry = '소진시';
+            }
             // if(this.appendix.disable_zero_avail_count == ON && member_avail_count == 0){
             //     checked = 0;
             // }
