@@ -340,7 +340,7 @@ class Plan_add{
     dom_row_member_select(){
         let id = 'select_member';
         let title = this.data.member_name.length == 0 ? '회원*' : this.data.member_name.join(', ');
-        let icon = CImg.member();
+        let icon = CImg.members();
         let icon_r_visible = SHOW;
         let icon_r_text = "";
         let style = this.data.member_name.length == 0 ? {"color":"#b8b4b4", "height":"auto"} : {"height":"auto"};

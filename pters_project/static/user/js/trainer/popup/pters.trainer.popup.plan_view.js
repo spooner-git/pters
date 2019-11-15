@@ -336,7 +336,7 @@ class Plan_view{
     dom_row_member_select (){
         let id = 'select_member';
         let title = this.data.member_id.length == 0 ? '회원*' : this.data.member_id.length+ '/' + this.data.lecture_max_num +' 명';
-        let icon = CImg.member();
+        let icon = CImg.members();
         let icon_r_visible = SHOW;
         let icon_r_text = "예약 목록";
         let style = null;

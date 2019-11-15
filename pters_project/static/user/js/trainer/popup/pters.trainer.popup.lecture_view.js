@@ -239,7 +239,7 @@ class Lecture_view{
         let id = 'lecture_capacity_view';
         let title = this.data.capacity == null ? '' : this.data.capacity+unit;
         let placeholder = '정원*';
-        let icon = CImg.member();
+        let icon = CImg.members();
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;

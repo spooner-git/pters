@@ -258,7 +258,7 @@ class Member_add{
         let id = 'input_member_name';
         let title = this.data.name == null ? '' : this.data.name;
         let placeholder = '회원명*';
-        let icon = CImg.member();
+        let icon = CImg.members();
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;

@@ -42,6 +42,8 @@
     --border-article-dark: 1px solid #cccccc;
     --box-shadow-article: 0 0 16px 0 #e6e6e6;
     
+    /* fundamental color */
+    --fundamental-white: #ffffff;
 }
 
 .pters_dark_mode {
@@ -85,6 +87,9 @@
     --border-article: 1px solid #5c5859;
     --border-article-dark: 1px solid #f5f2f3;
     --box-shadow-article: 0 0 16px 0 #1e1e1e;
+
+    /* fundamental color */
+    --fundamental-white: #ffffff;
 }
 
 #root_progress{
@@ -298,9 +303,8 @@ html, body{
         margin-right: 18px;
     }
     .side_menu_selected{
-        background-color: #d4233a !important;
+        background-color: #fe4e65 !important;
         color: #ffffff;
-        filter: brightness(2);
     }
     
 @media(max-width:650px){
