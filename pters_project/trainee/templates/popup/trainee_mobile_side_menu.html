@@ -5,9 +5,12 @@
 {% endblock %}
 {% block popup_base_wrapper_top_left %}
 
+    <!--
     <span  class="logo_pters" onclick="location.href='{% url 'trainee:trainee_main' %}'"
            style='color:#fe4e65; width:150px; font-size:25px; font-weight:bold; text-align:center;' alt="피터스 로고" id="logo">PTERS</span>
-    <!--<img src="/static/user/res/PTERS_logo_pure.png" class="logo_pters" onclick="location.href='{% url 'trainee:trainee_main' %}'">-->
+   -->
+    <img src="/static/common/icon/logo/PTERS_logo_short.png" class="logo_pters" style="width:36px;"
+         onclick="location.href='{% url 'trainee:trainee_main' %}'">
 {% endblock %}
 
 {% block popup_base_contents %}
