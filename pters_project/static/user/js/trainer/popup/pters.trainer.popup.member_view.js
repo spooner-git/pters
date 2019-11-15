@@ -801,7 +801,6 @@ class Member_simple_view{
 
     set_initial_data (){
         Member_func.read({"member_id": this.member_id}, (data)=>{
-            console.log(data)
             this.data.user_id = data.member_user_id;
             this.data.name = data.member_name;
             this.data.phone = data.member_phone;
@@ -914,7 +913,7 @@ class Member_simple_view{
         let ticket = this.dom_row_ticket();
 
         let html =  '<div class="obj_box_full">'+id+phone+birth+sex+connection+'</div>' +
-                    '<div class="obj_box_full">'+ticket+ '</div>';
+                    '<div class="obj_box_full" style="border-bottom:0">'+ticket+ '</div>';
 
         // document.getElementById(this.target.content).innerHTML = html;
         return html;
