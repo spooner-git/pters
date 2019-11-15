@@ -136,10 +136,25 @@ class Mypage_photo_update{
     dom_row_croppie(){
         let html = `<div class="upload-result" style="display:none;">result</div>
                     <div style="display:none;"><img id="result"></div>
-                     <div id="upload-croppie"></div>
-                    <input type="file" id="upload" value="Choose a file" accept="image/*">
+                    <div id="upload-croppie"></div>
+                    <input type="file" id="upload" value="Choose a file" accept="image/*" style="width:0">
                     <!--<input type="file" id="upload" value="Choose a file" accept="image/*" style="visibility:hidden">-->
+
+                    ${this.dom_row_rotate_button()}
+
                     `;
+        return html;
+    }
+
+    dom_row_rotate_button(){
+        let id = "image_rotate_button";
+        let title = "";
+        let url = '/static/common/icon/icon_repeat_black.png';
+        let style = {"padding":"3px 15px"};
+        let onclick= ()=>{
+            this.event_croppie_rotate();
+        };
+        let html = CComponent.icon_button (id, title, url, style, onclick);
         return html;
     }
 
@@ -148,12 +163,18 @@ class Mypage_photo_update{
         let self = this;
 
         this.uploadCrop = $('#upload-croppie').croppie({
-            viewport: {
-                width: 300,
-                height: 300
-                // type: 'circle'
+			viewport: {
+				width: 300,
+				height: 300
+				// type: 'circle'
             },
-            enableExif: true
+            enableOrientation: true,
+            enableExif: true,
+            
+        });
+        
+        this.uploadCrop.croppie('bind', {
+            orientation: 4
         });
 
         $('#upload').on('change', function(){ self.readFile(this); });
@@ -169,7 +190,10 @@ class Mypage_photo_update{
                 self.send_data();
             });
         });
+    }
 
+    event_croppie_rotate(){
+        this.uploadCrop.croppie('rotate', 90);
     }
 
     readFile(input) {
