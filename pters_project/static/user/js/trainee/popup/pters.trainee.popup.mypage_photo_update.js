@@ -71,6 +71,9 @@ class Mypage_photo_update{
             file:null
         };
         this.uploadCrop;
+        this.user_file;
+        
+        this.orientation;
 
         this.set_initial_data();
     }
@@ -170,11 +173,6 @@ class Mypage_photo_update{
             },
             enableOrientation: true,
             enableExif: true,
-            
-        });
-        
-        this.uploadCrop.croppie('bind', {
-            orientation: 4
         });
 
         $('#upload').on('change', function(){ self.readFile(this); });
@@ -193,7 +191,21 @@ class Mypage_photo_update{
     }
 
     event_croppie_rotate(){
-        this.uploadCrop.croppie('rotate', 90);
+        // this.uploadCrop.croppie('rotate', 90);
+        if(this.orientation == undefined || this.orientation == 1){
+            this.orientation = 6; //시계방향 90도
+        }else if(this.orientation == 6){
+            this.orientation = 3; // 180도
+        }else if(this.orientation == 3){
+            this.orientation = 8; //반시계 90도
+        }else if(this.orientation == 8){
+            this.orientation = 1; //원래대로
+        }
+
+        this.uploadCrop.croppie('bind', {
+            url:this.user_file,
+            orientation: this.orientation
+        });
     }
 
     readFile(input) {
@@ -201,6 +213,7 @@ class Mypage_photo_update{
            var reader = new FileReader();
            let self = this;
            reader.onload = function (e) {
+               self.user_file = e.target.result;
                $('.upload-croppie').addClass('ready');
                self.uploadCrop.croppie('bind', {
                    url: e.target.result

@@ -122,7 +122,6 @@ class Mypage_photo_update{
             },
             enableOrientation: true,
             enableExif: true,
-            
         });
 
 		$('#upload').on('change', function(){ self.readFile(this); });
@@ -142,7 +141,7 @@ class Mypage_photo_update{
 
     event_croppie_rotate(){
         // this.uploadCrop.croppie('rotate', 90);
-        if(this.orientation == undefined){
+        if(this.orientation == undefined || this.orientation == 1){
             this.orientation = 6; //시계방향 90도
         }else if(this.orientation == 6){
             this.orientation = 3; // 180도
@@ -159,7 +158,6 @@ class Mypage_photo_update{
     }
 
     readFile(input) {
-        let self = this;
         if (input.files && input.files[0]) {
            var reader = new FileReader();
            let self = this;
