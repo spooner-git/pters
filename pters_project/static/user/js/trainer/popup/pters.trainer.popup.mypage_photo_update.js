@@ -9,6 +9,9 @@ class Mypage_photo_update{
             file:null
         };
         this.uploadCrop;
+        this.user_file;
+        
+        this.orientation;
 
         // this.init();
         this.set_initial_data();
@@ -34,7 +37,7 @@ class Mypage_photo_update{
 
     render(){
         let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_x_black.png" onclick="layer_popup.close_layer_popup();mypage_photo_update_popup.clear();" class="obj_icon_prev"></span>`;
-        let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
+        let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">프로필 이미지 선택</span></span>`;
         let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="mypage_photo_update_popup.upper_right_menu()">등록</span></span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
@@ -85,10 +88,25 @@ class Mypage_photo_update{
     dom_row_croppie(){
         let html = `<div class="upload-result" style="display:none;">result</div>
                     <div style="display:none;"><img id="result"></div>
-                     <div id="upload-croppie"></div>
-                    <input type="file" id="upload" value="Choose a file" accept="image/*">
+                    <div id="upload-croppie"></div>
+                    <input type="file" id="upload" value="Choose a file" accept="image/*" style="width:0">
                     <!--<input type="file" id="upload" value="Choose a file" accept="image/*" style="visibility:hidden">-->
+
+                    ${this.dom_row_rotate_button()}
+
                     `;
+        return html;
+    }
+
+    dom_row_rotate_button(){
+        let id = "image_rotate_button";
+        let title = "";
+        let url = '/static/common/icon/icon_repeat_black.png';
+        let style = {"padding":"3px 15px"};
+        let onclick= ()=>{
+            this.event_croppie_rotate();
+        };
+        let html = CComponent.icon_button (id, title, url, style, onclick);
         return html;
     }
 
@@ -101,9 +119,10 @@ class Mypage_photo_update{
 				width: 300,
 				height: 300
 				// type: 'circle'
-			},
-			enableExif: true
-		});
+            },
+            enableOrientation: true,
+            enableExif: true,
+        });
 
 		$('#upload').on('change', function(){ self.readFile(this); });
 		$('.upload-result').on('click', function(){
@@ -118,7 +137,24 @@ class Mypage_photo_update{
                 self.send_data();
 			});
 		});
-        
+    }
+
+    event_croppie_rotate(){
+        // this.uploadCrop.croppie('rotate', 90);
+        if(this.orientation == undefined || this.orientation == 1){
+            this.orientation = 6; //시계방향 90도
+        }else if(this.orientation == 6){
+            this.orientation = 3; // 180도
+        }else if(this.orientation == 3){
+            this.orientation = 8; //반시계 90도
+        }else if(this.orientation == 8){
+            this.orientation = 1; //원래대로
+        }
+
+        this.uploadCrop.croppie('bind', {
+            url:this.user_file,
+            orientation: this.orientation
+        });
     }
 
     readFile(input) {
@@ -126,6 +162,7 @@ class Mypage_photo_update{
            var reader = new FileReader();
            let self = this;
            reader.onload = function (e) {
+               self.user_file = e.target.result;
                $('.upload-croppie').addClass('ready');
                self.uploadCrop.croppie('bind', {
                    url: e.target.result
