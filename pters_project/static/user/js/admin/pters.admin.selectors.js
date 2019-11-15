@@ -2308,6 +2308,9 @@ class MemberSelector{
             if(this.appendix.disable_zero_avail_count == ON && member_avail_count == 0){
                 checked = 0;
             }
+            if(member_expiry == '9999-12-31'){
+                member_expiry = '소진시'
+            }
             let html = CComponent.select_member_row (
                 this.multiple_select, checked, this.unique_instance, member_id, member_name, member_avail_count, member_expiry, member_fix_state_cd, member_profile_url, this.appendix.disable_zero_avail_count, (add_or_substract)=>{
                     if(add_or_substract == "add"){

@@ -327,7 +327,7 @@ class CComponent{
                                     ${member_name}
                                 </div>
                                 <div class="cell_member_info">
-                                    예약 가능 횟수 - ${member_avail_count}회 / ${member_expiry}까지
+                                    예약 가능 횟수 - ${member_avail_count}회 / ${member_expiry} 까지
                                 </div>
                             </div>
                             <div style="display:table-cell; line-height:35px; float:right;">
