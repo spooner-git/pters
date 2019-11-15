@@ -336,7 +336,7 @@ class Plan_view{
     dom_row_member_select (){
         let id = 'select_member';
         let title = this.data.member_id.length == 0 ? '회원*' : this.data.member_id.length+ '/' + this.data.lecture_max_num +' 명';
-        let icon = '/static/common/icon/icon_people_black.png';
+        let icon = CImg.member();
         let icon_r_visible = SHOW;
         let icon_r_text = "예약 목록";
         let style = null;
@@ -447,7 +447,7 @@ class Plan_view{
     dom_row_date_select (){
         let id = 'select_date';
         let title = this.data.date_text == null ? '일자*' : this.data.date_text;
-        let icon = '/static/common/icon/icon_cal_black.png';
+        let icon = CImg.date();
         let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = null;
@@ -475,7 +475,7 @@ class Plan_view{
     dom_row_start_time_select (){
         let id = 'select_start_time';
         let title = this.data.start_time_text == null ? '시작 시각*' : this.data.start_time_text;
-        let icon = '/static/common/icon/icon_clock_black.png';
+        let icon = CImg.blank();
         let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = null;
@@ -519,7 +519,7 @@ class Plan_view{
     dom_row_end_time_select (){
         let id = 'select_end_time';
         let title = this.data.end_time_text == null ? '종료 시각*' : this.data.end_time_text;
-        let icon = '/static/common/icon/icon_clock_white.png';
+        let icon = CImg.blank();
         let icon_r_visible = NONE;
         let icon_r_text = "";
         // let style = null;
@@ -568,7 +568,7 @@ class Plan_view{
 
         let id = 'classic_time_selector';
         let title = this.data.start_time_text == null ? '시작 시각*' : this.data.start_time_text;
-        let icon = '/static/common/icon/icon_clock_white.png';
+        let icon = CImg.blank();
         let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = null;
@@ -602,7 +602,7 @@ class Plan_view{
 
         let id2 = 'classic_time_selector2';
         let title2 = this.data.end_time_text == null ? '종료 시각*' : this.data.end_time_text;
-        let icon2 = '/static/common/icon/icon_clock_white.png';
+        let icon2 = CImg.blank();
         let icon_r_visible2 = NONE;
         let icon_r_text2 = "";
         let style2 = null;
@@ -646,7 +646,7 @@ class Plan_view{
         let id = 'select_memo';
         let title = this.data.memo == null ? '' : this.data.memo;
         let placeholder = '일정 메모';
-        let icon = '/static/common/icon/icon_note_black.png';
+        let icon = CImg.memo();
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;

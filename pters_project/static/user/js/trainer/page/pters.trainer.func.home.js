@@ -238,7 +238,7 @@ class Home {
 
             let id = `home_end_alert_${member_id}`;
             let title = data.current_member_data[i].member_name;
-            let icon = data.current_member_data[i].member_profile_url;
+            let icon = `<img src="${data.current_member_data[i].member_profile_url}">`;
             let icon_r_visible = HIDE;
             let icon_r_text = `<span style="font-size:12px;font-weight:500;letter-spacing:-0.5px;">${end_info}</span>`;
             let style = {"font-size":"14px", "padding":"12px 0"};

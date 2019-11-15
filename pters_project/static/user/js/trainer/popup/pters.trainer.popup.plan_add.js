@@ -292,7 +292,7 @@ class Plan_add{
     dom_row_lecture_select(){
         let id = 'select_lecture';
         let title = this.data.lecture_name.length == 0 ? '수업*' : this.data.lecture_name.join(', ');
-        let icon = '/static/common/icon/icon_lecture_black.png';
+        let icon = CImg.lecture();
         let icon_r_visible = SHOW;
         let icon_r_text = "";
         let style = this.data.lecture_name.length == 0 ? {"color":"#b8b4b4"} : null;
@@ -340,7 +340,7 @@ class Plan_add{
     dom_row_member_select(){
         let id = 'select_member';
         let title = this.data.member_name.length == 0 ? '회원*' : this.data.member_name.join(', ');
-        let icon = '/static/common/icon/icon_people_black.png';
+        let icon = CImg.member();
         let icon_r_visible = SHOW;
         let icon_r_text = "";
         let style = this.data.member_name.length == 0 ? {"color":"#b8b4b4", "height":"auto"} : {"height":"auto"};
@@ -365,7 +365,7 @@ class Plan_add{
         //등록하는 행을 만든다.
         let id = 'select_date';
         let title = this.data.date_text == null ? '일자*' : this.data.date_text;
-        let icon = '/static/common/icon/icon_cal_black.png';
+        let icon = CImg.date();
         let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = this.data.date_text == null ? {"color":"#b8b4b4"} : null;
@@ -399,7 +399,7 @@ class Plan_add{
     dom_row_start_time_select(){
         let id = 'select_start';
         let title = this.data.start_time_text == null ? '시작 시각*' : this.data.start_time_text;
-        let icon = '/static/common/icon/icon_clock_black.png';
+        let icon = CImg.blank();
         let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = this.data.start_time_text == null ? {"color":"#b8b4b4"} : null;
@@ -437,7 +437,7 @@ class Plan_add{
     dom_row_end_time_select(){
         let id = 'select_end';
         let title = this.data.end_time_text == null ? '종료 시각*' : this.data.end_time_text;
-        let icon = '/static/common/icon/icon_clock_white.png';
+        let icon = CImg.blank();
         let icon_r_visible = NONE;
         let icon_r_text = "";
         let style;
@@ -503,7 +503,7 @@ class Plan_add{
 
         let id = 'classic_time_selector';
         let title = this.data.start_time_text == null ? '시작 시각*' : this.data.start_time_text;
-        let icon = '/static/common/icon/icon_clock_white.png';
+        let icon = CImg.blank();
         let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = this.data.start_time_text == null ? {"color":"#b8b4b4"} : null;
@@ -538,7 +538,7 @@ class Plan_add{
 
         let id2 = 'classic_time_selector2';
         let title2 = this.data.end_time_text == null ? '종료 시각*' : this.data.end_time_text;
-        let icon2 = '/static/common/icon/icon_clock_white.png';
+        let icon2 = CImg.blank();
         let icon_r_visible2 = NONE;
         let icon_r_text2 = "";
         let style2 = this.data.end_time_text == null ? {"color":"#b8b4b4"} : null;
@@ -591,7 +591,7 @@ class Plan_add{
             repeat_title = '<span style="float:left">'+ '매일 / ' + '</span>';
         }
         let title = this.data.repeat.power == OFF ? '반복 일정' : repeat_title + repeat_end_date_in_text;
-        let icon = '/static/common/icon/icon_repeat_black.png';
+        let icon = CImg.repeat();
         let icon_r_visible = SHOW;
         let icon_r_text = "";
         let style = this.data.repeat.power == OFF ? {"color":"#b8b4b4", "height":"auto"} : {"height":"auto"};
@@ -612,7 +612,7 @@ class Plan_add{
         let id = 'select_memo';
         let title = this.data.memo == "" ? '' : this.data.memo;
         let placeholder = '일정 메모';
-        let icon = '/static/common/icon/icon_note_black.png';
+        let icon = CImg.memo();
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;

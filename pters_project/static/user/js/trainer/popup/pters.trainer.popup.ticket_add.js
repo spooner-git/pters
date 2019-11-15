@@ -159,7 +159,7 @@ class Ticket_add{
         let id = 'input_ticket_name';
         let title = this.data.name == null ? '' : this.data.name;
         let placeholder = '수강권명*';
-        let icon = '/static/common/icon/icon_ticket_black.png';
+        let icon = CImg.ticket();
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -177,7 +177,7 @@ class Ticket_add{
     dom_row_lecture_select(){
         let id = 'input_lecture_select';
         let title = this.data.lecture_id.length == 0 ? '수업' : this.data.lecture_name.length+'개 선택됨';
-        let icon = '/static/common/icon/icon_lecture_black.png';
+        let icon = CImg.lecture();
         let icon_r_visible = SHOW;
         let icon_r_text = "";
         let style = this.data.lecture_id.length == 0 ? {"color":"#b8b4b4"} : null;
@@ -267,7 +267,7 @@ class Ticket_add{
         let id = 'input_ticket_memo';
         let title = this.data.memo == null ? '' : this.data.memo;
         let placeholder = '설명';
-        let icon = '/static/common/icon/icon_note_black.png';
+        let icon = CImg.memo();
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;

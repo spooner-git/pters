@@ -1,3 +1,92 @@
+.pters_light_mode {
+    --base-font-color: #3b3b3b;
+    --root-content-bg-color: #ffffff;
+    --root_content-font-color: #3b3b3b;
+    --root-nav-bg-color: #fdfdfd;
+    --root-nav-border: 1px solid #cccccc;
+    --pc-side-nav-bg-color: #f5f2f3;
+    --pc-content-wrap-shadow:0 0 24px 0 #e6e6e6;
+
+    /* Page 공통 */
+    --page-displaypanel-bg-color: #ffffff;
+    --page-contentwrap-bg-color: #ffffff;
+
+    /* img */
+    --img-main: #5c5859;
+    --img-sub1: #999696;
+    --img-highlight: #fe4e65;
+
+    /* Font */
+    --font-base: #1e1d1d;
+    --font-invisible: #ffffff;
+    --font-highlight: #fe4e65;
+    --font-red: #ff0022;
+    --font-main: #3b3b3b;
+    --font-sub-dark: #5c5859;
+    --font-sub-normal: #858282;
+    --font-sub-light: #999696;
+    --font-inactive: #b8b4b4;
+    --font-domtag: #d6d2d2;
+
+    /* Background */
+    --bg-main: #ffffff;
+    --bg-sub-dark: #5c5859;
+    --bg-sub-normal: #858282;
+    --bg-sub-light: #999696;
+    --bg-inactive: #b8b4b4;
+    --bg-domtag: #d6d2d2;
+    --bg-light: #f5f2f3;
+
+    /* Element */
+    --border-article: 1px solid #f5f2f3;
+    --border-article-dark: 1px solid #cccccc;
+    --box-shadow-article: 0 0 16px 0 #e6e6e6;
+    
+}
+
+.pters_dark_mode {
+    --base-font-color: #ffffff;
+    --root-content-bg-color: #1e1e1e;
+    --root_content-font-color: #ffffff;
+    --root-nav-bg-color: #1e1e1e;
+    --root-nav-border: 1px solid #282828;
+
+    /* Page 공통 */
+    --page-displaypanel-bg-color: #1e1e1e;
+    --page-contentwrap-bg-color: #1e1e1e;
+
+    /* img */
+    --img-main: #f5f2f3;
+    --img-sub1: #b8b4b4;
+    --img-highlight: #fe4e65;
+
+    /* Font */
+    --font-base: #ffffff;
+    --font-invisible: #1e1e1e;
+    --font-highlight: #fe4e65;
+    --font-red: #ff0022;
+    --font-main: #ffffff;
+    --font-sub-dark: #f5f2f3;
+    --font-sub-normal: #b8b4b4;
+    --font-sub-light: #5c5859;
+    --font-inactive: #999696;
+    --font-domtag: #f5f2f3;
+
+    /* Background */
+    --bg-main: #1e1e1e;
+    --bg-sub-dark: #999696;
+    --bg-sub-normal: #b8b4b4;
+    --bg-sub-light: #5c5859;
+    --bg-inactive: #5c5859;
+    --bg-domtag: #f5f2f3;
+    --bg-light: #282828;
+
+    /* Element */
+    --border-article: 1px solid #5c5859;
+    --border-article-dark: 1px solid #f5f2f3;
+    --box-shadow-article: 0 0 16px 0 #1e1e1e;
+}
+
 #root_progress{
     display: none;
     position: fixed;

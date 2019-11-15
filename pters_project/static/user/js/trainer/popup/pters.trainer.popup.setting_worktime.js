@@ -276,7 +276,7 @@ class Setting_worktime{
     dom_row_start_time_select(day){
         let id = `select_start_${day}`;
         let title = this.data[day].start_time_text == null ? '시작 시각*' : this.data[day].start_time_text;
-        let icon = '/static/common/icon/icon_clock_black.png';
+        let icon = CImg.time();
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
