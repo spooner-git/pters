@@ -42,7 +42,7 @@
                 </div>
                 <div class="wrapper_my_ticket_detail_date_info obj_font_size_14_weight_500">
                     <div class="obj_table_raw">{{ member_ticket_info.start_date | date:"Y.m.d(l)"|cut:"요일" }}</div>
-                    <div class="obj_table_raw">{{ member_ticket_info.end_date | date:"Y.m.d(l)"|cut:"요일" }}</div>
+                    <div class="obj_table_raw">{% if member_ticket_info.end_date|date:"Y-m-d" == '9999-12-31' %}소진시 까지{% else %}{{ member_ticket_info.end_date | date:"Y.m.d(l)"|cut:"요일" }}{% endif %}</div>
                 </div>
             </div>
             <div class="wrapper_my_ticket_detail_count obj_box_full">
