@@ -16,7 +16,7 @@
 {% endblock %}
 {% block content %}
     <!-- Google reCapcha v3 -->
-    <script src="https://www.google.com/recaptcha/api.js?render=6Lednq8UAAAAAPNCsPianArQHAITuhgzf-dkX03-"></script>
+    <!--<script src="https://www.google.com/recaptcha/api.js?render=6Lednq8UAAAAAPNCsPianArQHAITuhgzf-dkX03-"></script>
     <script stype="text/javascript">
         grecaptcha.ready(function() {
             grecaptcha.execute('6Lednq8UAAAAAPNCsPianArQHAITuhgzf-dkX03-', {action: 'homepage'}).then(function(token) {
@@ -24,14 +24,16 @@
                 console.log(token);
             });
         });
-    </script>
+    </script>-->
     <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response">
 
     <div id="root_content">
         <div id="registration_box">
             <!-- 헤더 영역 -->
             <div class="registration_top" style="border-bottom:0px;">
-                <div class="registration_left" onclick="location.href='{% url "login:index" %}'">X</div>
+                <div class="registration_left" onclick="location.href='{% url "index" %}'">
+                    <img src="/static/common/icon/icon_x_black.png" style="width:24px; height:24px;">
+                </div>
                 <div class="registration_title" style="display:none;">회원가입</div>
                 <div class="registration_right"></div>
             </div>
@@ -48,31 +50,31 @@
                     </div>
                     <!-- 아이디 입력 영역 -->
                    <div style="margin-top:8px;">
-                        <input class="pters_login_input" type="text" name="username" id="id_username" placeholder="아이디" minlength="4" maxlength="20" title="아이디"
-                               pattern="[a-zA-Z0-9-._@]{4,20}" onkeyup="limit_char_check(event.target);" data-valid="false">
+                        <input class="pters_login_input" type="text" name="username" id="id_username" placeholder="아이디(영어, 숫자, -_@ 제외 불가)" minlength="4" maxlength="20" title="아이디"
+                               pattern="[a-zA-Z0-9-._@]{4,20}" onkeyup="limit_char_auto_correction(event.target);" data-error-message="아이디 : 필수 입력입니다." data-valid="false">
                         <div class="input_description">
                             <div class="input_description_text" id="id_username_confirm"></div>
-                            <div id="id_username_default_confirm">영어, 숫자, -_@ 제외 불가</div>
+                            <div id="id_username_default_confirm"></div>
                         </div>
                     </div>
 
                     <!-- 비밀번호 입력 영역 -->
                     <div style="margin-top:8px;">
-                        <input class="pters_login_input" type="password" name="password1" id="id_password" placeholder="비밀번호" minlength="8" maxlength="20" title="비밀번호"
+                        <input class="pters_login_input" type="password" name="password1" id="id_password" placeholder="비밀번호 (영문/숫자 혼합)" minlength="8" maxlength="20" title="비밀번호"
                                 pattern="[a-zA-Z0-9\~\!\@\#\$\%\^\&\*\(\)\_\+\/]{8,20}" onkeyup="limit_password_check(event.target);" data-valid="false" autocomplete="new-password">
                         <div class="input_description">
                             <div class="input_description_text" id="id_password_confirm"></div>
-                            <div id="id_password_default_confirm">한글을 제외한 특수문자(공백 제외)/영문/숫자를 혼합</div>
+                            <div id="id_password_default_confirm"></div>
                         </div>
                     </div>
 
                     <!-- 비밀번호 재입력 영역 -->
                    <div style="margin-top:8px;">
-                        <input class="pters_login_input" type="password" name="password2" id="id_password_re" placeholder="비밀번호 확인" minlength="8" maxlength="20" title="비밀번호 확인"
+                        <input class="pters_login_input" type="password" name="password2" id="id_password_re" placeholder="비밀번호 재입력" minlength="8" maxlength="20" title="비밀번호 확인"
                                 onkeyup="password_check(event.target);" data-valid="false">
                         <div class="input_description">
                             <div class="input_description_text" id="id_password_re_confirm"></div>
-                            <div id="id_password_re_default_confirm">동일한 비밀번호 입력</div>
+                            <div id="id_password_re_default_confirm"></div>
                         </div>
                     </div>
 

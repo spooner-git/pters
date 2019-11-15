@@ -337,7 +337,9 @@
 
     <nav class="navbar navbar-fixed-top" id="pcver">
         <div class="centermenu">
-            <img src="/static/user/res/PTERS_logo_pure.png" alt="PTERS" class="centermenu_logo"  onclick="location.href='{% url 'index' %}'" style="cursor: pointer;">
+            <span  alt="PTERS" class="centermenu_logo"  onclick="location.href='{% url 'index' %}'"
+                   style='cursor: pointer; color:#fe4e65; width:150px; font-size:25px; font-weight:bold; text-align:center;'>PTERS</span>
+            <!--<img src="/static/user/res/PTERS_logo_pure.png" alt="PTERS" class="centermenu_logo"  onclick="location.href='{% url 'index' %}'"style="cursor: pointer;">-->
             <div class="centermenu_box">
                 <div class="centermenu_div" style="display: none;">
                     <a href="{% url 'trainer:cal_day' %}" class="centermenu_text __todayplan"></a>

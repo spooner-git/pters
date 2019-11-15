@@ -49,6 +49,10 @@ class Member_attend{
         }
 
         this.data = new_data;
+        this.schedule_state_cd = data.state_cd;
+        if(this.schedule_state_cd == SCHEDULE_FINISH && Object.keys(this.data).length == 0){
+            this.check_entire = true;
+        }
         this.lecture_max_num = data.lecture_max_member_num;
         this.lecture_current_num = data.lecture_current_member_num;
     }
@@ -77,8 +81,8 @@ class Member_attend{
                         정원(${this.lecture_current_num}/${this.lecture_max_num})
                     </div>
                     <div style="display:table-cell;width:auto;font-size:13px;font-weight:500;text-align:right;vertical-align:middle;cursor:pointer; letter-spacing: -0.5px; color: #858282;" id="check_entire_${this.schedule_id}">
-                        <span style="color:#858282">전원 출석</span>
-                        ${this.check_entire == true 
+                        <span style="color:#858282">${Object.keys(this.data).length == 0 ? "일정 완료" : "전원 출석"}</span>
+                        ${this.check_entire == true
                             ? `<div class="pters_checkbox checkbox_selected"><div class="checkbox_selected_inner"></div></div>`
                             : `<div class="pters_checkbox"></div>`
                         }
@@ -92,6 +96,8 @@ class Member_attend{
                 for(let member in this.data){
                     this.data[member].state_cd = SCHEDULE_NOT_FINISH;
                 }
+
+                this.schedule = {schedule_id:this.schedule_id, state_cd: SCHEDULE_NOT_FINISH};
                 this.check_entire = false;
             }else{
                 $(this).find('.pters_checkbox').addClass('checkbox_selected');
@@ -99,6 +105,7 @@ class Member_attend{
                 for(let member in this.data){
                     this.data[member].state_cd = SCHEDULE_FINISH;
                 }
+                this.schedule = {schedule_id:this.schedule_id, state_cd: SCHEDULE_FINISH};
                 this.check_entire = true;
             }
             this.render();
@@ -202,7 +209,7 @@ class Member_attend{
     }
 
     upper_right_menu(){
-        this.callback(this.data);
+        this.callback({member_schedule: this.data, schedule:this.schedule});
         layer_popup.close_layer_popup();
         this.clear();
     }

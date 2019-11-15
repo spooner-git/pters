@@ -136,11 +136,11 @@ class Setting_worktime{
     dom_assembly_content(){
         let general_worktime = this.dom_row_general_worktime();
         // let dayoff_visibility = this.dom_row_dayoff_visibility();
-        let start_day_setting = this.dom_row_start_day_setting();
+        // let start_day_setting = this.dom_row_start_day_setting();
 
         // let main_assembly = start_day_setting + dayoff_visibility + general_worktime;
-
-        let main_assembly = start_day_setting +  general_worktime;
+        // let main_assembly = start_day_setting +  general_worktime;
+        let main_assembly = general_worktime;
         
         let sub_assembly = "";
         if(this.data.GENERAL.detail_switch == ON){
@@ -404,8 +404,8 @@ class Setting_worktime{
             "setting_trainer_work_ths_time_avail":this.data.THS.dayoff == OFF ? this.art_data(this.data.THS.start_time, this.data.THS.end_time) : "00:00-00:00",
             "setting_trainer_work_fri_time_avail":this.data.FRI.dayoff == OFF ? this.art_data(this.data.FRI.start_time, this.data.FRI.end_time) : "00:00-00:00",
             "setting_trainer_work_sat_time_avail":this.data.SAT.dayoff == OFF ? this.art_data(this.data.SAT.start_time, this.data.SAT.end_time) : "00:00-00:00",
-            "setting_holiday_hide":this.data.dayoff_visibility,
-            "setting_week_start_date":this.data.start_day 
+            "setting_holiday_hide":this.data.dayoff_visibility
+            // "setting_week_start_date":this.data.start_day 
         };
         Setting_worktime_func.update(data, ()=>{
             this.set_initial_data();

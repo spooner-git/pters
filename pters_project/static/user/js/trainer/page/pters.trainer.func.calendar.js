@@ -837,10 +837,16 @@ class Calendar {
                 if(week_dates_info == false){
                     continue;
                 }
-
                 let date_to_search = date_format(`${_year[i]}-${_month[i]}-${_date[i]}`)["yyyy-mm-dd"];
                 if(date_to_search in schedule_data){
-                    schedule_num.push(schedule_data[date_to_search].length);
+                    let schedule_number = 0;
+                    schedule_data[date_to_search].forEach((el)=>{
+                        if(el.schedule_type != 0){
+                            schedule_number++;
+                        }
+                    });
+                    schedule_num.push(schedule_number);
+                    // schedule_num.push(schedule_data[date_to_search].length);
                 }else{
                     schedule_num.push(0);
                 }
@@ -856,7 +862,8 @@ class Calendar {
         if(week_dates_info == false){
             dates_to_join.push(
                 `<div class="cal_week_line">
-                    <div style="background-image:url('/static/user/res/PTERS_logo_pure.png');background-position:center;background-repeat:no-repeat;background-size:100px;height:30px;"></div>
+                    <div style="color:#fe4e65; font-size:25px; font-weight:bold; text-align:center; background-size:100px;height:30px;">PTERS</div>
+                    <!--<div style="background-image:url('/static/user/res/PTERS_logo_pure.png');background-position:center;background-repeat:no-repeat;background-size:100px;height:30px;"></div>-->
                 </div>`
             );
         }else{
@@ -1413,6 +1420,7 @@ class Calendar {
             },
             success:function (data){
                 check_app_version(data.app_version);
+                console.log(data);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
                         show_error_message(data.messageArray);

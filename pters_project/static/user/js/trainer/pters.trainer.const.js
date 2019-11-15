@@ -105,6 +105,7 @@ const SORT_MEMBER_NAME = 0;
 const SORT_REMAIN_COUNT = 1;
 const SORT_START_DATE = 2;
 const SORT_REG_COUNT = 3;
+const SORT_END_DATE = 4;
 
 
 const SORT_LECTURE_NAME = 0;
@@ -117,8 +118,12 @@ const SORT_TICKET_NAME = 1;
 const SORT_TICKET_MEMBER_COUNT = 2;
 const SORT_TICKET_CREATE_DATE = 3;
 
+const SORT_MEMBER_TICKET = 0;
+const SORT_SCHEDULE_DT = 1;
+
 const SORT_ORDER_ASC = 0;
 const SORT_ORDER_DESC = 1;
+
 
 /* px */
 const MAX_WIDTH = 800;
@@ -248,7 +253,7 @@ const TICKET_STATUS = {"IP": "진행중", "PE": "종료", "RF": "환불"};
 const TICKET_STATUS_COLOR = {"IP": "green", "PE": "#3b3b3b", "RF": "orange"};
 const PAY_TYPE_NAME = {"SINGLE": "1회 결제", "PERIOD": "정기 결제 / 1 개월", "":"없음", "FREE_EVENT":"무료 이벤트"};
 const PAY_STATUS = {"paid":"결제 완료", "failed":"결제 실패", "cancelled":"결제 취소", "reserve":"결제 예정"};
-const PAY_METHOD = {"card":"카드 결제", "iap": "인앱 결제", "":"-", "event":"이벤트"};
+const PAY_METHOD = {"card":"카드 결제", "iap": "인앱 결제", "":"-", "event":"이벤트", "ios": "ios", "android": "android", "인앱 결제": "인앱 결제"};
 const PAYMENT_ID = "imp53133818";
 const PASS_PRODUCT = {"standard":{id:7, text:"스탠다드", price:9900}, "premium":{id:8, text:"프리미엄", price:15000}};
 

@@ -44,7 +44,30 @@ class Member_ticket_history{
             member_ticket_list.push(this.received_data[ticket]);
         }
         member_ticket_list.sort(function(a, b){
-            return a.member_ticket_start_date < b.member_ticket_start_date ? -1 : a.member_ticket_start_date > b.member_ticket_start_date ? 1 : 0;
+            let return_val = 0;
+            if(a.member_ticket_start_date < b.member_ticket_start_date){
+              return_val = -1;
+            }
+            else if(a.member_ticket_start_date > b.member_ticket_start_date){
+                return_val = 1;
+            }
+            else{
+                if(a.member_ticket_end_date < b.member_ticket_end_date) {
+                    return_val = -1;
+                }
+                else if(a.member_ticket_end_date > b.member_ticket_end_date){
+                    return_val = 1;
+                }
+                else{
+                    if(a.member_ticket_reg_dt < b.member_ticket_reg_dt) {
+                        return_val = -1;
+                    }
+                    else if(a.member_ticket_reg_dt > b.member_ticket_reg_dt) {
+                        return_val = 1;
+                    }
+                }
+            }
+            return return_val;
         });
         for(let i=0; i<member_ticket_list.length; i++){
             numbering++;

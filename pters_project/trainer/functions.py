@@ -458,6 +458,7 @@ def func_get_member_ticket_list(class_id, member_id):
                               'member_ticket_refund_date': str(member_ticket_tb.refund_date),
                               'member_ticket_refund_price': member_ticket_tb.refund_price,
                               'member_ticket_note': str(member_ticket_tb.note),
+                              'member_ticket_reg_dt': str(member_ticket_tb.reg_dt),
                               'ticket_id': ticket_id,
                               'ticket_effective_days': ticket_tb.effective_days,
                               'ticket_state_cd': ticket_tb.state_cd,

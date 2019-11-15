@@ -293,9 +293,11 @@ input:disabled{
 }
 
 .select_member_max_num{
-	margin-left:20px;
+	/* margin-left:20px;
 	margin-top:16px;
-	margin-bottom:16px;
+	margin-bottom:16px; */
+	padding: 16px 20px;
+	padding-right: 10px;
 	font-size:11px;
 	font-weight:bold;
 	letter-spacing: -0.5px;
@@ -422,10 +424,10 @@ input:disabled{
 
 .schedule_history_row .cell_schedule_num{
 	display: table-cell;
-	width: 32px;
+	width: 46px;
 	height: 20px;
 	vertical-align: middle;
-	padding-right: 14px;
+	/* padding-right: 14px; */
 }
 
 .schedule_history_row .cell_schedule_info{

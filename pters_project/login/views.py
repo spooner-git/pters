@@ -126,16 +126,16 @@ def login_trainer(request):
                     else:
                         group_list = user.groups.filter(user=user.id)
                         group_name = 'trainer'
-                        if len(group_list) == 1:
-                            group_name = group_list[0].name
-                        # if group_name == 'trainee' and not user.check_password('0000'):
+                        for group_info in group_list:
+                            if group_info.name == 'trainee':
+                                group_name = 'trainee'
+                                break
+
+                        request.session['member_id'] = user.id
+                        request.session['username'] = user.username
                         if group_name == 'trainee':
-                            login(request, user)
-                            # if auto_login_check == '0':
-                            #     request.session.set_expiry(0)
+                            next_page = '/login/registration_temp/'
                         else:
-                            request.session['member_id'] = user.id
-                            request.session['username'] = user.username
                             next_page = '/login/authenticated_member/'
                 else:
                     error = '이미 탈퇴한 회원입니다.'
@@ -746,6 +746,7 @@ class AddTempMemberInfoView(RegistrationView, View):
                     with transaction.atomic():
                         user.username = form.cleaned_data['username']
                         user.set_password(form.cleaned_data['password1'])
+                        user.is_active = True
                         user.save()
 
                 except ValueError:
@@ -796,6 +797,7 @@ class AuthenticatedMemberView(View):
 
 def authenticated_member_logic(request):
     member_id = request.POST.get('member_id', '')
+    phone = request.POST.get('phone', '')
     error = None
     if member_id is None or member_id == '':
         error = '회원 정보를 불러오지 못했습니다.[1]'
@@ -803,6 +805,9 @@ def authenticated_member_logic(request):
     if error is None:
         try:
             member = MemberTb.objects.get(member_id=member_id)
+            member.phone_is_active = True
+            member.phone = phone
+            member.save()
             member.user.is_active = True
             member.user.save()
         except ObjectDoesNotExist:

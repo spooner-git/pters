@@ -473,7 +473,7 @@ def add_trainee_schedule_logic(request):
                 push_message.append(request.user.first_name + '님이 '
                                     + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                     + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                                    + ' [개인 레슨] 수업을 예약했습니다')
+                                    + ' [개인] 수업을 예약했습니다')
             else:
 
                 push_class_id.append(class_id)
@@ -511,7 +511,7 @@ def delete_trainee_schedule_logic(request):
     # push_class_id = []
     # push_title = []
     # push_message = []
-    lecture_name = '개인 레슨'
+    lecture_name = '개인'
     # context = {'push_class_id': None, 'push_title': None, 'push_message': None}
     context = {}
     member_ticket_id = None
@@ -612,7 +612,7 @@ def delete_trainee_schedule_logic(request):
         push_info_schedule_start_date = str(start_date).split(':')
         push_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
         if lecture_name == '':
-            lecture_name = '개인 레슨'
+            lecture_name = '개인'
         log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
                          from_member_name=request.user.first_name,
                          class_tb_id=class_id, member_ticket_tb_id=member_ticket_info.member_ticket_id,
@@ -1066,23 +1066,18 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             three_days_ago = today - datetime.timedelta(days=7)
             # log_data = LogTb.objects.filter(class_tb_id=self.request.user.id, use=USE).order_by('-reg_dt')
 
-            query_member_auth_cd \
-                = "select `MEMBER_AUTH_CD` from LECTURE_TB as D" \
-                  " where D.ID = `LOG_TB`.`LECTURE_TB_ID` and D.MEMBER_ID = " + str(self.request.user.id)
-
-            log_data = LogTb.objects.filter(
-                class_tb_id=class_id, reg_dt__gte=three_days_ago,
-                use=USE).annotate(member_auth_cd=RawSQL(query_member_auth_cd, [])
-                                  ).filter(Q(member_auth_cd=AUTH_TYPE_VIEW)
-                                           | Q(auth_member_id=self.request.user.id)).order_by('-reg_dt')
+            log_data = LogTb.objects.select_related('member_ticket_tb__member').filter(
+                Q(member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW) | Q(auth_member_id=self.request.user.id),
+                class_tb_id=class_id, member_ticket_tb__member_id=self.request.user.id, reg_dt__gte=three_days_ago,
+                use=USE).order_by('-reg_dt')
 
         if error is None:
             for log_info in log_data:
-                if log_info.read == 0:
+                if log_info.member_read == 0:
                     log_info.log_read = 0
-                    log_info.read = 1
+                    log_info.member_read = 1
                     log_info.save()
-                elif log_info.read == 1:
+                elif log_info.member_read == 1:
                     log_info.log_read = 1
                 else:
                     log_info.log_read = 2
@@ -1151,11 +1146,11 @@ class AlarmViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
         if error is None:
             for log_info in log_data:
-                if log_info.read == 0:
+                if log_info.member_read == 0:
                     log_info.log_read = 0
-                    log_info.read = 1
+                    log_info.member_read = 1
                     log_info.save()
-                elif log_info.read == 1:
+                elif log_info.member_read == 1:
                     log_info.log_read = 1
                 else:
                     log_info.log_read = 2
@@ -1280,7 +1275,7 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
             log_data = LogTb(log_type='LS01', auth_member_id=request.user.id,
                              from_member_name=request.user.first_name,
                              class_tb_id=class_id, member_ticket_tb_id=member_ticket_id,
-                             log_info='개인 레슨 수업', log_how='예약',
+                             log_info='개인 수업', log_how='예약',
                              log_detail=log_info_schedule_start_date[0] + ':' + log_info_schedule_start_date[1]
                                         + '/' + log_info_schedule_end_date[0] + ':' + log_info_schedule_end_date[1],
                              use=USE)
