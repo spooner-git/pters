@@ -281,6 +281,7 @@ def billing_check_logic(request):
     error = None
     access_token = func_get_imp_token()
     today = datetime.date.today()
+    info_message = ''
 
     if access_token['error'] is None:
         payment_info = func_get_payment_info_from_imp(imp_uid, access_token['access_token'])
@@ -333,12 +334,16 @@ def billing_check_logic(request):
                             pre_billing_info.use = USE
                             if len(before_billing_data) > 0:
                                 before_billing_data.update(use=UN_USE)
+                            info_message = '결제 완료'
                         elif payment_info['status'] == 'failed':
                             pre_billing_info.state_cd = 'ERR'
+                            info_message = '결제 실패'
                         elif payment_info['status'] == 'cancelled':  # 결제 취소 상태로 업데이트
                             pre_billing_info.state_cd = 'CANCEL'
+                            info_message = '결제 취소'
                         else:  # 결제 오류 상태로 업데이트
                             pre_billing_info.state_cd = 'ERR'
+                            info_message = '에러 발생'
                         pre_billing_info.card_name = payment_info['card_name']
                         pre_billing_info.save()
 
@@ -367,16 +372,15 @@ def billing_check_logic(request):
 
     if error is None:
         if member_info is not None:
-            logger.info(str(member_info.name) + '님 정기 결제 완료['
+            logger.info(str(member_info.name) + '님 '+info_message+' ['
                         + str(member_info.member_id) + ']' + str(merchant_uid))
 
-            email = EmailMessage('[PTERS 결제]' + member_info.name + '회원 결제 완료',
-                                 '정기 결제 완료 : ' + str(timezone.now()),
+            email = EmailMessage('[PTERS 결제]' + member_info.name + '회원', info_message + ':' + str(timezone.now()),
                                  to=['support@pters.co.kr'])
             email.send()
     else:
         if member_info is not None:
-            logger.error(str(member_info.name) + '님 결제 오류['
+            logger.error(str(member_info.name) + '님 '+info_message+' ['
                          + str(member_info.member_id) + ']' + str(error))
         else:
             logger.error('[결제 오류]:' + str(error))
@@ -859,6 +863,8 @@ def payment_for_iap_logic(request):
     context = {}
     error = None
     today = datetime.date.today()
+    product_info = None
+    product_price_info = None
 
     if error is None:
         try:
@@ -869,6 +875,20 @@ def payment_for_iap_logic(request):
         except ObjectDoesNotExist:
             start_date = today
 
+    if error is None:
+        try:
+            product_info = ProductTb.objects.get(product_id=product_id, use=USE)
+        except ObjectDoesNotExist:
+            error = '인앱 결제 오류 발생'
+
+    if error is None:
+        try:
+            product_price_info = ProductPriceTb.objects.get(product_tb_id=product_info.product_tb_id,
+                                                            payment_type_cd='SINGLE',
+                                                            period_month=1,
+                                                            use=USE)
+        except ObjectDoesNotExist:
+            error = '결제 정보를 불러오지 못했습니다.'
     if error is None:
         date = int(start_date.strftime('%d'))
         end_date = str(func_get_end_date(payment_type_cd, start_date, 1, date)).split(' ')[0]
@@ -883,8 +903,8 @@ def payment_for_iap_logic(request):
                                      start_date=start_date, end_date=end_date,
                                      paid_date=today,
                                      period_month=1,
-                                     price=9900,
-                                     name='스탠다드 - 30일권',
+                                     price=int(product_price_info.sale_price * 1.1),
+                                     name=product_info.name + ' - 30일권',
                                      imp_uid='',
                                      channel='iap',
                                      card_name='인앱 결제',
@@ -903,6 +923,9 @@ def payment_for_iap_logic(request):
     if error is None:
         logger.info(str(request.user.first_name) + '(' + str(request.user.id) + ')님 iap 결제 완료:'
                     + str(product_id) + ':'+' '+str(start_date))
+        email = EmailMessage('[PTERS 결제]' + request.user.first_name + '회원', 'android 인앱 결제 :' + str(timezone.now()),
+                             to=['support@pters.co.kr'])
+        email.send()
     else:
         messages.error(request, error)
         logger.error(str(request.user.first_name) + '(' + str(request.user.id) + ')님 결제 완료 오류:' + str(error))
@@ -920,6 +943,8 @@ def payment_for_ios_logic(request):
     error = None
     today = datetime.date.today()
     pay_info = '인앱 결제'
+    product_info = None
+    product_price_info = None
 
     if error is None:
         try:
@@ -929,6 +954,21 @@ def payment_for_ios_logic(request):
             start_date = payment_info.end_date + datetime.timedelta(days=1)
         except ObjectDoesNotExist:
             start_date = today
+
+    if error is None:
+        try:
+            product_info = ProductTb.objects.get(product_id=product_id, use=USE)
+        except ObjectDoesNotExist:
+            error = '인앱 결제 오류 발생'
+
+    if error is None:
+        try:
+            product_price_info = ProductPriceTb.objects.get(product_tb_id=product_info.product_tb_id,
+                                                            payment_type_cd='SINGLE',
+                                                            period_month=1,
+                                                            use=USE)
+        except ObjectDoesNotExist:
+            error = '결제 정보를 불러오지 못했습니다.'
 
     if error is None:
         date = int(start_date.strftime('%d'))
@@ -943,8 +983,8 @@ def payment_for_ios_logic(request):
                                      start_date=start_date, end_date=end_date,
                                      paid_date=today,
                                      period_month=1,
-                                     price=9900,
-                                     name='스탠다드 - 30일권',
+                                     price=int(product_price_info.sale_price * 1.1),
+                                     name=product_info.name + ' - 30일권',
                                      imp_uid='',
                                      # imp_uid=input_transaction_id,
                                      channel='iap',
@@ -968,13 +1008,16 @@ def payment_for_ios_logic(request):
         ios_receipt_check.save()
 
     if error is None:
-        logger.info(str(request.user.last_name) + str(request.user.first_name)
+        logger.info(str(request.user.first_name)
                     + '(' + str(request.user.id) + ')님 ios 결제 완료:' + str(product_id) + ':' + ' '
                     + str(start_date))
+
+        email = EmailMessage('[PTERS 결제]' + request.user.first_name + '회원', 'ios 인앱 결제 :' + str(timezone.now()),
+                             to=['support@pters.co.kr'])
+        email.send()
     else:
         messages.error(request, error)
-        logger.error(str(request.user.last_name)+str(request.user.first_name)
-                     + '(' + str(request.user.id) + ')님 결제 완료 오류:' + str(error))
+        logger.error(str(request.user.first_name) + '(' + str(request.user.id) + ')님 결제 완료 오류:' + str(error))
 
     return render(request, 'ajax/payment_error_info.html', context)
 
