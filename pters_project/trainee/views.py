@@ -379,7 +379,7 @@ def add_trainee_schedule_logic(request):
                 start_date = schedule_info.start_dt
                 end_date = schedule_info.end_dt
                 if schedule_info.state_cd == STATE_CD_FINISH:
-                    error = '이미 완료된 일정입니다.'
+                    error = '이미 출석 처리된 일정입니다.'
                 elif schedule_info.state_cd == STATE_CD_ABSENCE:
                     error = '이미 결석 처리된 일정입니다.'
 
