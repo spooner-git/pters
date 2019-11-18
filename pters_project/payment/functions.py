@@ -250,6 +250,28 @@ def func_cancel_period_billing_schedule(customer_uid):
     return error
 
 
+def func_cancel_period_billing_schedule_by_merchant_uid(customer_uid, merchant_uid):
+    token_result = func_get_imp_token()
+    access_token = token_result['access_token']
+    error = token_result['error']
+
+    if error is None and access_token is not None:
+        data = {
+            'customer_uid': customer_uid,  # 카드(빌링키)와 1: 1 로 대응하는 값
+            'merchant_uid': merchant_uid
+        }
+
+        body = json.dumps(data)
+        h = httplib2.Http()
+        resp, content = h.request("https://api.iamport.kr/subscribe/payments/unschedule", method="POST", body=body,
+                                  headers={'Content-Type': 'application/json;',
+                                           'Authorization': access_token})
+        if resp['status'] != '200':
+            error = '오류가 발생했습니다.'
+
+    return error
+
+
 # imp_uid 를 통해 결제 정보 가져오기
 def func_get_payment_info_from_imp(imp_uid, access_token):
 

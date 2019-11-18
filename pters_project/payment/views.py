@@ -7,6 +7,8 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import EmailMessage
+from django.db import IntegrityError
+from django.db import InternalError
 from django.db import transaction
 from django.db.models import Q
 from django.shortcuts import render, redirect
@@ -20,7 +22,7 @@ from configs import settings
 from login.models import MemberTb
 from .functions import func_set_billing_schedule, func_get_imp_token, func_resend_payment_info, \
     func_check_payment_price_info, func_get_end_date, func_cancel_period_billing_schedule, \
-    func_set_billing_schedule_now, func_get_payment_info_from_imp
+    func_set_billing_schedule_now, func_get_payment_info_from_imp, func_set_iamport_schedule
 from .models import PaymentInfoTb, BillingInfoTb, ProductTb, BillingCancelInfoTb, ProductPriceTb, \
     ProductFunctionAuthTb, IosReceiptCheckTb
 
@@ -393,7 +395,6 @@ def cancel_period_billing_logic(request):
     customer_uid = request.POST.get('customer_uid', '')
     cancel_type = request.POST.get('cancel_type', '')
     cancel_reason = request.POST.get('cancel_reason', '')
-    next_page = request.POST.get('next_page', '')
     context = {'error': None}
     billing_info = None
     error = None
@@ -631,36 +632,85 @@ def update_period_billing_logic(request):
 
 def update_reserve_product_info_logic(request):
     customer_uid = request.POST.get('customer_uid', '')
-    product_id = request.POST.get('product_id', '')
     change_product_id = request.POST.get('change_product_id', '')
 
     error = None
     context = {'error': None}
-    billing_info = None
+    product_price_info = None
+    next_schedule_timestamp = ''
 
     if customer_uid == '' or customer_uid is None:
         error = '결제 정보를 불러오지 못했습니다.'
 
-    if product_id == '' or product_id is None or change_product_id == '' or change_product_id is None:
+    if change_product_id == '' or change_product_id is None:
         error = '결제 정보를 불러오지 못했습니다.'
 
     if error is None:
-        payment_data = PaymentInfoTb.objects.filter(customer_uid=customer_uid,
-                                                    product_tb_id=product_id,
-                                                    status='reserve',
-                                                    payment_type_cd='PERIOD')
-        if len(payment_data) > 0:
-            payment_data.update(product_tb_id=change_product_id)
+        try:
+            product_price_info = ProductPriceTb.objects.get(product_id=change_product_id, payment_type_cd='PERIOD',
+                                                            period_month=1)
+        except ObjectDoesNotExist:
+            error = '상품 정보를 불러오지 못했습니다.[0]'
 
     if error is None:
         try:
-            billing_info = BillingInfoTb.objects.get(customer_uid=customer_uid, use=USE)
-        except ObjectDoesNotExist:
-            error = '정기 결제 정보를 불러오지 못했습니다.'
+            # 기존 결제 정보 update
+            with transaction.atomic():
+                # 관련 데이터 취소하기
+                error = func_cancel_period_billing_schedule(customer_uid)
 
-    if error is None:
-        billing_info.product_tb_id = change_product_id
-        billing_info.save()
+                if error is None:
+                    # 예약 데이터 삭제하기
+                    payment_data = PaymentInfoTb.objects.filter(customer_uid=customer_uid,
+                                                                status='reserve',
+                                                                payment_type_cd='PERIOD')
+                    payment_data.delete()
+
+                    # 정기결제 결제 정보 업데이트
+                    try:
+                        billing_info = BillingInfoTb.objects.get(customer_uid=customer_uid, use=USE)
+                        billing_info.product_tb_id = change_product_id
+                        billing_info.name = product_price_info.product_tb.name + ' - ' + product_price_info.name
+                        billing_info.price = int(product_price_info.sale_price * 1.1)
+                        billing_info.save()
+                        # 정기 결제 다음 결제일을 자동 결제 예약 시간으로 설정
+                        next_billing_date_time = datetime.datetime.combine(billing_info.next_payment_date,
+                                                                           datetime.datetime.min.time())
+                        next_schedule_timestamp = next_billing_date_time.replace(hour=15, minute=0, second=0,
+                                                                                 microsecond=0).timestamp()
+                    except ObjectDoesNotExist:
+                        error = '정기 결제 정보를 불러오지 못했습니다.'
+
+                if error is None:
+                    # iamport 상의 예약 제거
+                    error = func_cancel_period_billing_schedule(customer_uid)
+
+                if error is None:
+                    token_result = func_get_imp_token()
+                    access_token = token_result['access_token']
+                    error = token_result['error']
+                    if error is None:
+                        # merchant_uid 값 셋팅
+                        merchant_uid = 'm_' + str(request.user.id) + '_' + change_product_id\
+                                       + '_' + str(next_schedule_timestamp).split('.')[0]
+                        # iamport 정기 결제 예약 신청
+                        error = func_set_iamport_schedule(access_token['access_token'],
+                                                          product_price_info.product_tb.name + ' - '
+                                                          + product_price_info.name,
+                                                          int(product_price_info.sale_price * 1.1),
+                                                          customer_uid, merchant_uid, next_schedule_timestamp,
+                                                          request.user.first_name, request.user.email)
+                if error is not None:
+                    raise InternalError
+
+        except TypeError:
+            error = '오류가 발생했습니다.[0]'
+        except ValueError:
+            error = '오류가 발생했습니다.[1]'
+        except IntegrityError:
+            error = '오류가 발생했습니다.[2]'
+        except InternalError:
+            error = error
 
     if error is not None:
         logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
@@ -898,8 +948,10 @@ def payment_for_iap_logic(request):
         payment_info = PaymentInfoTb(member_id=str(request.user.id),
                                      product_tb_id=product_id,
                                      payment_type_cd='SINGLE',
-                                     merchant_uid='m_'+str(request.user.id)+'_'+str(product_id)+'_'+str(timezone.now().timestamp()),
-                                     customer_uid='c_'+str(request.user.id)+'_'+str(product_id)+'_'+str(timezone.now().timestamp()),
+                                     merchant_uid='m_'+str(request.user.id)+'_'+str(product_id)
+                                                  + '_' + str(timezone.now().timestamp()),
+                                     customer_uid='c_'+str(request.user.id)+'_'+str(product_id)
+                                                  + '_' + str(timezone.now().timestamp()),
                                      start_date=start_date, end_date=end_date,
                                      paid_date=today,
                                      period_month=1,
@@ -978,8 +1030,10 @@ def payment_for_ios_logic(request):
         payment_info = PaymentInfoTb(member_id=str(request.user.id),
                                      product_tb_id=product_id,
                                      payment_type_cd='SINGLE',
-                                     merchant_uid='m_'+str(request.user.id)+'_'+str(product_id)+'_'+str(timezone.now().timestamp()),
-                                     customer_uid='c_'+str(request.user.id)+'_'+str(product_id)+'_'+str(timezone.now().timestamp()),
+                                     merchant_uid='m_'+str(request.user.id)+'_'+str(product_id)
+                                                  + '_' + str(timezone.now().timestamp()),
+                                     customer_uid='c_'+str(request.user.id)+'_'+str(product_id)
+                                                  + '_' + str(timezone.now().timestamp()),
                                      start_date=start_date, end_date=end_date,
                                      paid_date=today,
                                      period_month=1,
