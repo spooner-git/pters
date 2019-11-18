@@ -7,7 +7,7 @@ class CComponent{
                         <div class="obj_table_raw" >
                             <div class="cell_title">${title}</div>
                             <div class="cell_value">${value}</div>
-                            <div class="cell_icon"><img src="/static/common/icon/icon_arrow_r_small_black.png" class="obj_icon_basic"></div>
+                            <div class="cell_icon">${CImg.arrow_right()}</div>
                         </div>
                     </li>`;
         
@@ -37,7 +37,7 @@ class CComponent{
                             </div>
                             <div class="cell_icon" ${icon_r_visible == NONE ? "style='display:none'": ''}>
                                 <span class="cell_text" ${icon_r_visible == "" || null ? 'style="display:none"' : ''}>${icon_r_text}</span>
-                                <img src="/static/common/icon/icon_arrow_r_small_black.png" ${icon_r_visible == HIDE ? 'style="display:none"' : ''}>
+                                ${CImg.arrow_right("", icon_r_visible == HIDE ? {"display":"none"} : {"vertical-align":"middle"})}
                             </div>
                         </div>
                     </li>`;
@@ -73,7 +73,7 @@ class CComponent{
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} >
                                 ${icon_r_text}
-                                <img src="/static/common/icon/icon_arrow_r_small_black.png">
+                                ${CImg.arrow_right()}
                             </div>
                         </div>
                     </li>`;
@@ -116,7 +116,7 @@ class CComponent{
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} >
                                 ${icon_r_text}
-                                <img src="/static/common/icon/icon_arrow_r_small_black.png">
+                                ${CImg.arrow_right()}
                             </div>
                         </div>
                     </li>`;
@@ -162,7 +162,7 @@ class CComponent{
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} >
                                 ${icon_r_text}
-                                <img src="/static/common/icon/icon_arrow_r_small_black.png">
+                                ${CImg.arrow_right()}
                             </div>
                         </div>
                     </li>`;
@@ -190,13 +190,13 @@ class CComponent{
         let min_max_length = pattern.split('{')[1].replace('}', '').split(',');
 
         if(icon == NONE){
-            icon = '/static/common/icon/icon_gap_black.png';
+            icon = CImg.blank();
         }
 
         let html = `<li class="create_input_row" id="c_i_p_r_${id}" style="${CComponent.data_to_style_code(style)}">
                         <div class="obj_table_raw">
                             <div class="cell_title" style="display:${icon == DELETE ? 'none' : ''}">
-                                <img src="${icon == DELETE ? '': icon}">
+                                ${icon == DELETE ? '': icon}
                             </div>
                             <div class="cell_content">
                                 <input type="password" class="cell_text" title="${placeholder}" placeholder="${placeholder}" pattern="${pattern}" value="${title}"
@@ -205,7 +205,7 @@ class CComponent{
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} >
                                 ${icon_r_text}
-                                <img src="/static/common/icon/icon_arrow_r_small_black.png">
+                                ${CImg.arrow_right()}
                             </div>
                         </div>
                     </li>`;
@@ -235,8 +235,8 @@ class CComponent{
                                 <div>${ticket_name}</div>
                                 <div style="display:none">가격 - ${ticket_price}원 / 횟수 - ${ticket_reg_count} / 유효기간 - ${ticket_effective_days}일</div>
                             </div>
-                            <div class="cell_ticket_selected">
-                                <img src="/static/common/icon/icon_confirm_black.png" class="obj_icon_basic ${checked == 0 ? 'none' : 'ticket_selected'}">
+                            <div class="cell_ticket_selected ${checked == 0 ? '' : 'ticket_selected'}">
+                                ${CImg.confirm("", checked == 0 ? {"display":"none"} : {"display":"block"})}
                             </div>
                         </div>
                     </li>
@@ -244,15 +244,17 @@ class CComponent{
 
         if(multiple_select > 1){
             $(document).off('click', `#select_ticket_row_${ticket_id}`).on('click', `#select_ticket_row_${ticket_id}`, function(e){
-                if(!$(this).find('.cell_ticket_selected img').hasClass('ticket_selected')){
+                if(!$(this).find('.cell_ticket_selected').hasClass('ticket_selected')){
                     if($(`.str_${location} .ticket_selected`).length >= multiple_select){
                         show_error_message(`${multiple_select} 개까지 선택할 수 있습니다.`);
                         return false;
                     }
-                    $(this).find('.cell_ticket_selected img').addClass('ticket_selected');
+                    $(this).find('.cell_ticket_selected').addClass('ticket_selected');
+                    $(this).find('svg').css('display', 'block');
                     onclick('add');
                 }else{
-                    $(this).find('.cell_ticket_selected img').removeClass('ticket_selected');
+                    $(this).find('.cell_ticket_selected').removeClass('ticket_selected');
+                    $(this).find('svg').css('display', 'none');
                     onclick('substract');
                 }
             });
@@ -280,8 +282,8 @@ class CComponent{
                                 <div class="lecture_additional_info" ${lecture_state_cd == "end" ? "style='display:none'": ""}>정원: ${max_member_num} 명 / 진행중  ${ing_member_num} 명 / 수업시간 ${lecture_time} 분</div>
                                 <div class="lecture_additional_info" ${lecture_state_cd == "ing" ? "style='display:none'": ""}>정원: ${max_member_num} 명 / 수업시간 ${lecture_time} 분</div>
                             </div>
-                            <div class="cell_lecture_selected">
-                                <img src="/static/common/icon/icon_confirm_black.png" class="obj_icon_basic ${checked == 0 ? 'none' : 'lecture_selected'}">
+                            <div class="cell_lecture_selected ${checked == 0 ? 'none' : 'lecture_selected'}">
+                                ${CImg.confirm("", checked == 0 ? {"display":"none"} : {"display":"block"})}
                             </div>
                         </div>
                     </li>
@@ -289,15 +291,19 @@ class CComponent{
 
         if(multiple_select > 1){
             $(document).off('click', `#select_lecture_row_${lecture_id}`).on('click', `#select_lecture_row_${lecture_id}`, function(e){
-                if(!$(this).find('.cell_lecture_selected img').hasClass('lecture_selected')){
+                if(!$(this).find('.cell_lecture_selected').hasClass('lecture_selected')){
                     if($(`.slr_${location} .lecture_selected`).length >= multiple_select){
                         show_error_message(`${multiple_select} 개까지 선택할 수 있습니다.`);
                         return false;
                     }
-                    $(this).find('.cell_lecture_selected img').addClass('lecture_selected');
+                    // $(this).find('.cell_lecture_selected img').addClass('lecture_selected');
+                    $(this).find('.cell_lecture_selected').addClass('lecture_selected');
+                    $(this).find('svg').css('display', 'block');
                     onclick('add');
                 }else{
-                    $(this).find('.cell_lecture_selected img').removeClass('lecture_selected');
+                    // $(this).find('.cell_lecture_selected img').removeClass('lecture_selected');
+                    $(this).find('.cell_lecture_selected').removeClass('lecture_selected');
+                    $(this).find('svg').css('display', 'none');
                     onclick('substract');
                 }
             });
@@ -335,8 +341,8 @@ class CComponent{
                                 <div class="cell_member_fix">
                                     ${fix_member_check}
                                 </div>
-                                <div class="cell_member_selected">
-                                    <img src="/static/common/icon/icon_confirm_black.png" class="obj_icon_basic ${checked == 0 ? '' : 'member_selected'}">
+                                <div class="cell_member_selected ${checked == 0 ? '' : 'member_selected'}">
+                                    ${CImg.confirm("", checked == 0 ? {"display":"none"} : {"display":"block"})}
                                 </div>
                             </div>
                         </div>
@@ -349,17 +355,19 @@ class CComponent{
                     return false;
                 }
                 let member_select_count = $(`.smr_${location} .member_selected`).length;
-                if(!$(this).find('.cell_member_selected img').hasClass('member_selected')){
+                if(!$(this).find('.cell_member_selected').hasClass('member_selected')){
                     if($(`.smr_${location} .member_selected`).length >= multiple_select){
                         show_error_message(`${multiple_select} 명까지 선택할 수 있습니다.`);
                         return false;
                     }
-                    $(this).find('.cell_member_selected img').addClass('member_selected');
+                    $(this).find('.cell_member_selected').addClass('member_selected');
+                    $(this).find('svg').css('display', 'block');
                     onclick('add');
                     member_select_count++;
 
                 }else{
-                    $(this).find('.cell_member_selected img').removeClass('member_selected');
+                    $(this).find('.cell_member_selected').removeClass('member_selected');
+                    $(this).find('svg').css('display', 'none');
                     onclick('substract');
                     member_select_count--;
                 }
@@ -390,8 +398,8 @@ class CComponent{
                             <div class="cell_color_info">
                                 ${color_name}
                             </div>
-                            <div class="cell_color_selected">
-                                <img src="/static/common/icon/icon_confirm_black.png" class="obj_icon_basic ${checked == 0 ? '' : 'color_selected'}">
+                            <div class="cell_color_selected ${checked == 0 ? '' : 'color_selected'}">
+                                ${CImg.confirm("", checked == 0 ? {"display":"none"} : {"display":"block"})}
                             </div>
                         </div>
                     </li>
@@ -399,15 +407,19 @@ class CComponent{
 
         if(multiple_select > 1){
             $(document).off('click', `#select_color_row_${color_bg_code_without_sharp}`).on('click', `#select_color_row_${color_bg_code_without_sharp}`, function(e){
-                if(!$(this).find('.cell_color_selected img').hasClass('color_selected')){
+                if(!$(this).find('.cell_color_selected').hasClass('color_selected')){
                     if($(`.scr_${location} .color_selected`).length >= multiple_select){
                         show_error_message(`${multiple_select} 개까지 선택할 수 있습니다.`);
                         return false;
                     }
-                    $(this).find('.cell_color_selected img').addClass('color_selected');
+                    // $(this).find('.cell_color_selected img').addClass('color_selected');
+                    $(this).find('.cell_color_selected').addClass('color_selected');
+                    $(this).find('svg').css('display', 'block');
                     onclick('add');
                 }else{
-                    $(this).find('.cell_color_selected img').removeClass('color_selected');
+                    // $(this).find('.cell_color_selected img').removeClass('color_selected');
+                    $(this).find('.cell_color_selected').removeClass('color_selected');
+                    $(this).find('svg').css('display', 'none');
                     onclick('substract');
                 }
             });
@@ -424,19 +436,19 @@ class CComponent{
     //일반(이미지 없음) 선택 팝업에 사용되는 행
     static select_row (multiple_select, checked, location, id, title, icon, onclick){
         if(icon == NONE){
-            icon = '/static/common/icon/icon_gap_black.png';
+            icon = CImg.blank();
         }
         let html = `
                     <li class="select_row sr_${location}" id="select_row_${id}">
                         <div class="obj_table_raw">
                             <div class="cell_select_icon" style="display:${icon == DELETE ? 'none' : ''}">
-                               <img src="${icon == DELETE ? '' : icon}" style="height:100%;">
+                                ${icon == DELETE ? '' : icon}
                             </div>
                             <div class="cell_select_title">
                                 ${title}
                             </div>
-                            <div class="cell_select_selected">
-                                <img src="/static/common/icon/icon_confirm_black.png" class="obj_icon_basic ${checked == 0 ? '' : 'option_selected'}">
+                            <div class="cell_select_selected ${checked == 0 ? '' : 'option_selected'}">
+                                ${CImg.confirm("", checked == 0 ? {"display":"none"} : {"display":"block"})}
                             </div>
                         </div>
                     </li>
@@ -444,21 +456,25 @@ class CComponent{
 
         if(multiple_select > 1){
             $(document).off('click', `#select_row_${id}`).on('click', `#select_row_${id}`, function(e){
-                if(!$(this).find('.cell_select_selected img').hasClass('option_selected')){
+                if(!$(this).find('.cell_select_selected').hasClass('option_selected')){
                     if($(`.sr_${location} .option_selected`).length >= multiple_select){
                         show_error_message(`${multiple_select} 개까지 선택할 수 있습니다.`);
                         return false;
                     }
-                    $(this).find('.cell_select_selected img').addClass('option_selected');
+                    // $(this).find('.cell_select_selected img').addClass('option_selected');
+                    $(this).find('.cell_select_selected').addClass('option_selected');
+                    $(this).find('svg').css('display', 'block');
                     onclick('add');
                 }else{
-                    $(this).find('.cell_select_selected img').removeClass('option_selected');
+                    // $(this).find('.cell_select_selected img').removeClass('option_selected');
+                    $(this).find('.cell_select_selected').removeClass('option_selected');
+                    $(this).find('svg').css('display', 'none');
                     onclick('substract');
                 }
             });
         }else if(multiple_select == 1){
             $(document).off('click', `#select_row_${id}`).on('click', `#select_row_${id}`, function(e){
-                if( !$(this).find('.cell_select_selected img').hasClass('option_selected') ){
+                if( !$(this).find('.cell_select_selected').hasClass('option_selected') ){
                     onclick('add_single');
                 }else{
                     return false;
