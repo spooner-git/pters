@@ -213,12 +213,12 @@ input:disabled{
 	width: 30px;
 	vertical-align: middle;
 }
-.select_ticket_row .cell_ticket_selected img{
+/* .select_ticket_row .cell_ticket_selected img{
 	display: none;
 }
 .select_ticket_row .cell_ticket_selected .ticket_selected{
 	display: block !important;
-}
+} */
 
 
 
