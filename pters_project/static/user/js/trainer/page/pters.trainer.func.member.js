@@ -170,7 +170,7 @@ class Member {
                     member_counts_text = `<span style='color:#ff0022;'>${remain_count_text} / ${end_date_text}</span>`;
                 }
             }else{
-                member_counts_text = '종료됨'
+                member_counts_text = '종료됨';
             }
             
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
@@ -349,7 +349,7 @@ class Member {
                                             option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, ${user_option}
                                             );
                                         });">
-                                            ${this.sort_value_text} <img src="/static/common/icon/icon_arrow_expand_light_grey.png" style="width:24px; height:24px; vertical-align: middle;">
+                                            ${this.sort_value_text} ${CImg.arrow_expand(["var(--img-sub1)"], {"vertical-align":"middle", "margin-bottom":"3px", "width":"20px"})}
                                         </div>
                                     </div>
                                     `

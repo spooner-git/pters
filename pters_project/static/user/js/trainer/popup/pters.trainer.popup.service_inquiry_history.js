@@ -60,8 +60,8 @@ class Service_inquiry_history {
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();service_inquiry_history_popup.clear();" class="obj_icon_prev"></span>`;
-        let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();service_inquiry_history_popup.clear();">${CImg.arrow_left()}</span>`;
+        let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;"></span></span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;border-bottom:1px solid #f5f2f3;">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
@@ -145,7 +145,6 @@ class Service_inquiry_history {
         let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_BOTTOM;
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_READER, 100, popup_style, null, ()=>{
             Service_inquiry_func.read_inquiry_answer({qa_id:qa_id}, (answer)=>{
-                console.log(answer)
                 let answer_active = answer.qa_comment_data.length > 0 ? answer.qa_comment_data[0].qa_comment_use : "";
                 let answer_content = answer.qa_comment_data.length > 0 ? answer.qa_comment_data[0].qa_comment_contents : "";
                 let answer_date = answer.qa_comment_data.length > 0 ? answer.qa_comment_data[0].qa_comment_mod_dt : "";

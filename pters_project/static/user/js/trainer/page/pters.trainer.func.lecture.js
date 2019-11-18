@@ -199,7 +199,7 @@ class Lecture {
                             option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, ${user_option}
                             );
                         });">
-                            ${this.sort_value_text} <img src="/static/common/icon/icon_arrow_expand_light_grey.png" style="width:24px; height:24px; vertical-align: middle;">
+                            ${this.sort_value_text} ${CImg.arrow_expand(["var(--img-sub1)"], {"vertical-align":"middle", "margin-bottom":"3px", "width":"20px"})}
                         </div>
                     </div>
                         `;
@@ -227,7 +227,6 @@ class Lecture {
             Array.from(document.getElementsByClassName('lecture_wrapper')).forEach((el)=>{
                 $(el).show();
             });
-            // event.target.src = '/static/common/icon/icon_search_black.png';
             event.target.style.backgroundImage = 'url("/static/common/icon/icon_search_black.png")';
             break;
         case false:
@@ -235,7 +234,6 @@ class Lecture {
             this.render_search_tool('draw');
             document.getElementsByClassName('search_input')[0].value = this.search_value;
             
-            // event.target.src = '/static/common/icon/icon_x_black.png';
             event.target.style.backgroundImage = 'url("/static/common/icon/icon_x_black.png")';
             break;
         }

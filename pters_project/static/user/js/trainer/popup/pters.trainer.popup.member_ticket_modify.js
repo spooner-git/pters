@@ -67,9 +67,9 @@ class Member_ticket_modify{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();member_ticket_modify.clear();" class="obj_icon_prev"></span>`;
-        let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">${this.data.member_name}님의 수강권</span></span>`;
-        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="member_ticket_modify.send_data()">완료</span></span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();member_ticket_modify.clear();">${CImg.arrow_left()}</span>`;
+        let top_center = `<span class="icon_center"><span>${this.data.member_name}님의 수강권</span></span>`;
+        let top_right = `<span class="icon_right" onclick="member_ticket_modify.send_data()"><span style="color:#fe4e65;font-weight: 500;" >완료</span></span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
         
@@ -140,7 +140,7 @@ class Member_ticket_modify{
     dom_row_status_input(){
         let id = 'member_ticket_status_modify';
         let title = this.data.member_ticket_name == null ||this.data.member_ticket_name == 'None' ? '수강권명' : this.data.member_ticket_name;
-        let icon = '/static/common/icon/icon_ticket_black.png';
+        let icon = CImg.ticket();
         let icon_r_visible = SHOW;
         let icon_r_text = `상태 (<span style="color:${TICKET_STATUS_COLOR[this.data.status]}">${TICKET_STATUS[this.data.status]}</span>)`;
         let style = null;

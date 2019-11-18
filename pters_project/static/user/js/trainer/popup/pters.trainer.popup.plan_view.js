@@ -204,12 +204,11 @@ class Plan_view{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="plan_view_popup.upper_left_menu();" class="obj_icon_prev"></span>`;
-        // let top_left = `<span class="icon_left">${CImg.home("obj_icon_prev")}</span>`;
-        let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
+        let top_left = `<span class="icon_left" onclick="plan_view_popup.upper_left_menu();">${CImg.arrow_left()}</span>`;
+        let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
         let top_right = `<span class="icon_right">
-                            <img src="/static/common/icon/icon_delete_black.png" class="obj_icon_24px" onclick="plan_view_popup.upper_right_menu(0);">
-                            <img src="/static/common/icon/icon_attend_check_black.png" class="obj_icon_24px" onclick="plan_view_popup.upper_right_menu(1);" style="display:${this.data.schedule_type == 0 ? 'none': ''};">
+                            ${CImg.delete("", null, `plan_view_popup.upper_right_menu(0)`)}
+                            ${CImg.attend_check("", this.data.schedule_type == 0 ? {"display":"none"} : null, `plan_view_popup.upper_right_menu(1)`)}
                         </span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;background-color:${this.data.lecture_color}">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
@@ -272,7 +271,7 @@ class Plan_view{
         if(this.data.schedule_type == 0){
             lecture_name =`OFF 일정 ${this.data.memo != "" ? '('+this.data.memo+')' : ''}`;
         }else if(this.data.schedule_type == 1){
-            lecture_name = this.data.member_name + '<img src="/static/common/icon/icon_arrow_expand_black.png" style="height:17px;">';
+            lecture_name = this.data.member_name + CImg.arrow_expand("", {"height":"17px", "width":"17px"});
             // lecture_name = this.data.lecture_name;
         }else if(this.data.schedule_type == 2){
             lecture_name = this.data.lecture_name;
@@ -392,9 +391,9 @@ class Plan_view{
             let state = this.data.member_schedule_state[i];
             let state_icon_url;
             if(state == SCHEDULE_ABSENCE){
-                state_icon_url = '/static/common/icon/icon_x_grey.png';
+                state_icon_url = CImg.x(["var(--img-sub1)"], {"vertical-align":"middle", "margin-bottom":"3px"});
             }else if(state == SCHEDULE_FINISH){
-                state_icon_url = '/static/common/icon/icon_confirm_grey.png';
+                state_icon_url = CImg.confirm(["var(--img-sub1)"], {"vertical-align":"middle", "margin-bottom":"3px"});
             }else if(state == SCHEDULE_NOT_FINISH){
                 state_icon_url = DELETE;
             }

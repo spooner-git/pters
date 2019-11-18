@@ -2645,9 +2645,9 @@ class TicketSelector{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();ticket_select.clear();" class="obj_icon_prev"></span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();ticket_select.clear();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span id="">${this.appendix.title == null ? '$nbsp;' :this.appendix.title}</span></span>`;
-        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="ticket_select.upper_right_menu();">완료</span></span>`;
+        let top_right = `<span class="icon_right" onclick="ticket_select.upper_right_menu();"><span style="color:#fe4e65;font-weight: 500;">완료</span></span>`;
         let content =   `<section>${this.dom_list()}</section>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
@@ -2720,7 +2720,7 @@ class TicketSelector{
     dom_add_new_ticket(){
         let id = "add_new_ticket";
         let title = "새로운 수강권 생성";
-        let icon = '/static/common/icon/icon_plus_pink.png';
+        let icon = CImg.plus();
         let icon_r_visible = SHOW;
         let icon_r_text = "";
         let style = {"padding":"15px 16px", "border-bottom":"1px solid #cccccc"};
@@ -2783,9 +2783,9 @@ class LectureSelector{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();lecture_select.clear();" class="obj_icon_prev"></span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();lecture_select.clear();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span id="">${this.appendix.title}</span></span>`;
-        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="lecture_select.upper_right_menu();">완료</span></span>`;
+        let top_right = `<span class="icon_right" onclick="lecture_select.upper_right_menu();"><span style="color:#fe4e65;font-weight: 500;">완료</span></span>`;
         let content =   `<section>${this.dom_list()}</section>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
@@ -2861,7 +2861,7 @@ class LectureSelector{
     dom_add_new_lecture(){
         let id = "add_new_lecture";
         let title = "새로운 수업 생성";
-        let icon = '/static/common/icon/icon_plus_pink.png';
+        let icon = CImg.plus();
         let icon_r_visible = SHOW;
         let icon_r_text = "";
         let style = {"padding":"15px 16px", "border-bottom":"1px solid #cccccc"};
@@ -3185,9 +3185,9 @@ class MemberSelector{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();member_select.clear();" class="obj_icon_prev"></span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();member_select.clear();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span id="">${this.appendix.title}</span></span>`;
-        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="member_select.upper_right_menu();">완료</span></span>`;
+        let top_right = `<span class="icon_right"  onclick="member_select.upper_right_menu();"><span style="color:#fe4e65;font-weight: 500;">완료</span></span>`;
         let content =   `<section>
                             ${this.dom_assembly()}
                         </section>`;
@@ -3487,9 +3487,9 @@ class ColorSelector{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();color_select.clear();" class="obj_icon_prev"></span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();color_select.clear();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span id="">&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="color_select.upper_right_menu();" hidden>완료</span></span>`;
+        let top_right = `<span class="icon_right" onclick="color_select.upper_right_menu();"><span style="color:#fe4e65;font-weight: 500;" hidden>완료</span></span>`;
         let content =   `<section>${this.dom_list()}</section>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
@@ -4133,8 +4133,8 @@ class RepeatSelector{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="repeat_select.upper_right_menu();" class="obj_icon_prev"></span>`;
-        let top_center = `<span class="icon_center"><span id="">반복 일정</span></span>`;
+        let top_left = `<span class="icon_left" onclick="repeat_select.upper_right_menu();">${CImg.arrow_left()}</span>`;
+        let top_center = `<span class="icon_center"><span>반복 일정</span></span>`;
         let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;">&nbsp;</span></span>`;
         let content =   `<section>${this.dom_list()}</section>`;
         
@@ -4261,9 +4261,9 @@ class DaySelector{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="day_select.upper_right_menu();" class="obj_icon_prev"></span>`;
+        let top_left = `<span class="icon_left" onclick="day_select.upper_right_menu();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span id="">&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="day_select.upper_right_menu();">완료</span></span>`;
+        let top_right = `<span class="icon_right" onclick="day_select.upper_right_menu();"><span style="color:#fe4e65;font-weight: 500;">완료</span></span>`;
         let content =   `<section>${this.dom_list()}</section>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
@@ -4359,9 +4359,9 @@ class CategorySelector{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="category_select.upper_left_menu();" class="obj_icon_prev"></span>`;
+        let top_left = `<span class="icon_left" onclick="category_select.upper_left_menu();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span id="">&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="category_select.upper_right_menu();">완료</span></span>`;
+        let top_right = `<span class="icon_right" onclick="category_select.upper_right_menu();"><span style="color:#fe4e65;font-weight: 500;">완료</span></span>`;
         let content =   `<section>${this.dom_list()}</section>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
@@ -4453,7 +4453,7 @@ class CustomSelector{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="custom_selector.upper_right_menu();" class="obj_icon_prev"></span>`;
+        let top_left = `<span class="icon_left" onclick="custom_selector.upper_right_menu();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center">
                             <span id="">${this.title}</span>
                           </span>`;
@@ -4540,12 +4540,12 @@ class PasswordFourDigitInput{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="password_4d_input.upper_right_menu();" class="obj_icon_prev"></span>`;
+        let top_left = `<span class="icon_left" onclick="password_4d_input.upper_right_menu();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center">
                             <span id="">${this.title}</span>
                           </span>`;
-        let top_right = `<span class="icon_right">
-                            <span style="color:#fe4e65;font-weight: 500;" onclick="password_4d_input.upper_right_menu();">완료</span>
+        let top_right = `<span class="icon_right" onclick="password_4d_input.upper_right_menu();">
+                            <span style="color:#fe4e65;font-weight: 500;">완료</span>
                         </span>`;
         let content =   `<section>${this.dom_list()}</section>`;
         
@@ -4633,12 +4633,12 @@ class BoardWriter{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="${this.target.instance}.close();" class="obj_icon_prev"></span>`;
+        let top_left = `<span class="icon_left" onclick="${this.target.instance}.close();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center">
                             <span id="">${this.title}</span>
                           </span>`;
-        let top_right = `<span class="icon_right">
-                            <span style="color:#fe4e65;font-weight: 500;" onclick="${this.target.instance}.upper_right_menu();">저장</span>
+        let top_right = `<span class="icon_right"  onclick="${this.target.instance}.upper_right_menu();">
+                            <span style="color:#fe4e65;font-weight: 500;">저장</span>
                         </span>`;
         let content =   `<section id="${this.target.upper_html}">${this.data.upper_html != null ? this.data.upper_html : ""}</section>`+
                         `<section id="${this.target.category_selector}">${this.dom_assembly_category()}</section>`+
@@ -4950,7 +4950,7 @@ class BoardReader{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="${this.target.instance}.upper_right_menu();" class="obj_icon_prev"></span>`;
+        let top_left = `<span class="icon_left" onclick="${this.target.instance}.upper_right_menu();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center">
                             <span id="">${this.title}</span>
                           </span>`;
@@ -5131,7 +5131,7 @@ class DrawingBoard{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_x_black.png" onclick="${this.instance}.close();" class="obj_icon_prev"></span>`;
+        let top_left = `<span class="icon_left" onclick="${this.instance}.close();">${CImg.x()}/span>`;
         let top_center = `<span class="icon_center">
                             <span id="">${this.data.title}</span>
                           </span>`;

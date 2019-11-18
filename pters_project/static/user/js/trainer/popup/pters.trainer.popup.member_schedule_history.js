@@ -23,7 +23,7 @@ class Member_schedule_history{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();member_schedule_history.clear();" class="obj_icon_prev"></span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();member_schedule_history.clear();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span id="">일정 이력</span></span>`;
         let top_right = `<span class="icon_right"></span>`;
         let content =   `<section style="margin-top:8px;">
@@ -37,7 +37,7 @@ class Member_schedule_history{
     }
 
     dom_arrange_select(){
-        let icon = `<img src="/static/common/icon/icon_arrow_expand_light_grey.png" style="width:24px; height:24px; vertical-align: middle;">`;
+        let icon = CImg.arrow_expand(['var(--img-sub1)'], {"vertical-align":"middle"});
         let id = "list_arrange_select";
         let title = this.sort_val == SORT_MEMBER_TICKET ? "수강권별 정렬"+icon : "시간순 정렬"+icon;
         let style = {"color": "#858282", "font-size":"13px", "font-weight":"500"};

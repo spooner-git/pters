@@ -48,12 +48,12 @@ class Ticket_list {
 
     render(){
 
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();ticket_list_popup.clear();" class="obj_icon_prev"></span>`;
-        let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();ticket_list_popup.clear();">${CImg.arrow_left()}</span>`;
+        let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
         let top_right = `<span class="icon_right">
-                                <img src="/static/common/icon/icon_search_black.png" class="obj_icon_24px" style="padding-right:12px;" onclick="${this.instance}.search_tool_visible(event);">
-                                <img src="/static/common/icon/icon_plus_pink.png" class="obj_icon_24px" onclick="layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_TICKET_ADD}', 100, ${POPUP_FROM_BOTTOM}, {'select_date':null}, ()=>{
-                                    ticket_add_popup = new Ticket_add('.popup_ticket_add');});">
+                                ${CImg.search("", null, `${this.instance}.search_tool_visible(event);`)}
+                                ${CImg.plus("", null, `layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_TICKET_ADD}', 100, ${POPUP_FROM_BOTTOM}, {'select_date':null}, ()=>{
+                                    ticket_add_popup = new Ticket_add('.popup_ticket_add');});`)}
                         </span>`;
         let content =   `<div class="search_bar"></div>
                         <section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;">${this.dom_assembly_toolbox()}</section>
@@ -193,7 +193,7 @@ class Ticket_list {
                                 <option>남은 횟수순</option>
                                 <option>등록 횟수순</option>
                             </select>-->
-                            ${this.sort_value_text} <img src="/static/common/icon/icon_arrow_expand_light_grey.png" style="width:24px; height:24px; vertical-align: middle;">
+                            ${this.sort_value_text} ${CImg.arrow_expand(["var(--img-sub1)"], {"vertical-align":"middle"})}
                         </div>
                     </div> `;
         return html;
@@ -221,7 +221,6 @@ class Ticket_list {
                 $(el).show();
             });
             event.target.src = '/static/common/icon/icon_search_black.png';
-            // event.target.style.backgroundImage = 'url("/static/common/icon/icon_search_black.png")';
             break;
         case false:
             this.search = true;
@@ -229,7 +228,6 @@ class Ticket_list {
             document.getElementsByClassName('search_input')[0].value = this.search_value;
             
             event.target.src = '/static/common/icon/icon_x_black.png';
-            // event.target.style.backgroundImage = 'url("/static/common/icon/icon_x_black.png")';
             break;
         }
     }
