@@ -721,11 +721,11 @@ def func_check_select_date_reserve_setting(class_id, trainer_id, select_date):
     try:
         select_date = datetime.datetime.strptime(select_date + ' 00:00', '%Y-%m-%d %H:%M')
     except ValueError:
-        error = '등록 값에 문제가 있습니다.'
+        error = '오류가 발생했습니다.[0-1]'
     except IntegrityError:
-        error = '등록 값에 문제가 있습니다.'
+        error = '오류가 발생했습니다.[0-2]'
     except TypeError:
-        error = '등록 값의 형태에 문제가 있습니다.'
+        error = '오류가 발생했습니다.[0-3]'
 
     if error is None:
         setting_data = SettingTb.objects.filter(Q(setting_type_cd='LT_RES_01') |
@@ -765,7 +765,7 @@ def func_check_select_date_reserve_setting(class_id, trainer_id, select_date):
         if select_date >= reserve_avail_end_date:
             error = '오늘 기준 최대 +'+str(reserve_avail_date)+'일 까지 예약 등록/취소가 가능합니다.'
         elif select_date < today:
-            error = '과거 일정은 예약 등록/취소가 불가능합니다.'
+            error = '지난 일정은 예약 등록/취소가 불가능합니다.'
 
     # 예약 가능 시간대 확인
     if error is None:
@@ -836,10 +836,10 @@ def func_check_select_time_reserve_setting(class_id, trainer_id, start_date, end
 
         # 근접 예약 등록 가능 시간 구버전 호환 + 시간 -> 분
         if lt_res_enable_time == -1:
-            lt_res_enable_time = lt_res_enable_cancel_time_legacy * 60
+            lt_res_enable_time = int(lt_res_enable_cancel_time_legacy) * 60
         # 근접 예약 취소 가능 시간 구버전 호환 + 시간 -> 분
         if lt_res_cancel_time == -1:
-            lt_res_cancel_time = lt_res_enable_cancel_time_legacy*60
+            lt_res_cancel_time = int(lt_res_enable_cancel_time_legacy) * 60
 
         # 강사 업무 시간 구버전 호환
         if lt_work_time_avail[0] == '':
@@ -870,9 +870,9 @@ def func_check_select_time_reserve_setting(class_id, trainer_id, start_date, end
 
         # 근접 예약 등록 가능 시간 셋팅
         if add_del_type == ADD_SCHEDULE:
-            reserve_prohibition_time = lt_res_enable_time
+            reserve_prohibition_time = int(lt_res_enable_time)
         else:
-            reserve_prohibition_time = lt_res_cancel_time
+            reserve_prohibition_time = int(lt_res_cancel_time)
 
         # 근접 예약 등록 가능 시간이 일 단위를 넘는 경우
         if reserve_prohibition_time >= 24*60:
