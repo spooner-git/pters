@@ -3114,11 +3114,19 @@ class MemberSelector{
             html_to_join = [];
         }
 
+        // html_to_join.unshift(`<div class="select_member_max_num">
+        //                         <span>전체 회원</span><span style="float:right;">${CComponent.text_button("entire_member_toggle", this.hide_entire_member_list == true ? "펼치기" : "접기", null, ()=>{
+        //                             this.hide_entire_member_list = this.hide_entire_member_list == true ? false : true;
+        //                             this.render();
+        //                         })}</span>
+        //                     </div>`);
+        let button_title = `<span>전체 회원</span><span style="float:right;">${this.hide_entire_member_list == true ? "펼치기" : "접기"}</span>`;
         html_to_join.unshift(`<div class="select_member_max_num">
-                                <span>전체 회원</span><span style="float:right;">${CComponent.text_button("entire_member_toggle", this.hide_entire_member_list == true ? "펼치기" : "접기", null, ()=>{
+                                ${CComponent.text_button("entire_member_toggle", button_title, {"display":"block"}, ()=>{
                                     this.hide_entire_member_list = this.hide_entire_member_list == true ? false : true;
                                     this.render();
-                                })}</span>
+                                })}
+                                
                             </div>`);
 
         // document.querySelector(this.targetHTML).innerHTML = html_to_join.join('');
