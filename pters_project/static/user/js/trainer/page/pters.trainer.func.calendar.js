@@ -1304,7 +1304,7 @@ class Calendar {
                 this.long_touch_target = $(this_);
                 this.long_touch_schedule_id = this.long_touch_target.attr("data-scheduleid");
                 $('#debug_toolbar').show().html(`<span style="margin-left:10px;line-height:60px;font-size:14px;">일정 변경을 위해 원하는 곳을 터치해주세요.</span>
-                                                <button style="float:right;width:70px;height:40px;margin:10px;border-radius:4px;background-color:var(--bg-main);border:var(--border-article-dark);" onclick="calendar.mode_to_plan_change(OFF)">취소</button>`)
+                                                <button style="float:right;width:70px;height:40px;margin:10px;border-radius:4px;color:var(--font-main);background-color:var(--bg-main);border:var(--border-article-dark);" onclick="calendar.mode_to_plan_change(OFF)">취소</button>`)
                                           .css({"height":"60px", "line-height":"60px;"});
                 this.render_upper_box(this.cal_type);
                 this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, this.latest_received_data);
