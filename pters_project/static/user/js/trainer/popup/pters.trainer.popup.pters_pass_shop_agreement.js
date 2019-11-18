@@ -1,8 +1,9 @@
 class Pters_pass_shop_agreement{
-    constructor(install_target){
+    constructor(install_target, product_name){
         this.target = {install: install_target, toolbox:'section_pters_pass_shop_agreement_toolbox', content:'section_pters_pass_shop_agreement_content'};
 
         this.data = {
+            product_name: product_name,
             page:1,
             agreement:OFF,
             pay_method:{
@@ -197,16 +198,16 @@ class Pters_pass_shop_agreement{
         let user_id = home.data.user_id;
         let user_name = home.data.user_name;
         let user_email = home.data.user_email;
-        let product_name = PASS_PRODUCT["standard"].text + ' - 정기 결제 - 1개월';
+        let product_name = PASS_PRODUCT[this.data.product_name].text + ' - 정기 결제 - 1개월';
         let pay_method = CARD;
         let payment_type_cd = PERIOD;
         // if(device == MOBILE && device_info != 'web' && user_username =='guest'){
         if(user_username =='guest'){
             payment_type_cd = SINGLE;
-            product_name = PASS_PRODUCT["standard"].text + ' - 30일';
+            product_name = PASS_PRODUCT[this.data.product_name].text + ' - 30일';
         }
-        let product_id = PASS_PRODUCT["standard"].id;
-        let price = PASS_PRODUCT["standard"].price;
+        let product_id = PASS_PRODUCT[this.data.product_name].id;
+        let price = PASS_PRODUCT[this.data.product_name].price;
         let period_month = 1;
         let merchant_uid = `m_${user_id}_${product_id}_${date.getTime()}`;
         let customer_uid = `c_${user_id}_${product_id}_${date.getTime()}`;
