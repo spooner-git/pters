@@ -566,7 +566,7 @@ class CComponent{
                         </div>
                         <div class="obj_table_raw table_memo_info">
                             <div class="cell_ticket_num"></div>
-                            <div class="cell_ticket_info">등록 ${reg_count} 회 / 잔여횟수 ${remain_count} / 예약가능 ${avail_count}</div>
+                            <div class="cell_ticket_info">등록 ${reg_count} 회 / 잔여 ${remain_count} / 예약가능 ${avail_count}</div>
                         </div>
                         <div class="obj_table_raw table_memo_info" style="color:#ff7184;">
                             <div class="cell_ticket_num"></div>

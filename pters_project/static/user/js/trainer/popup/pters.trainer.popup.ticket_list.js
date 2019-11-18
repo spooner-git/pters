@@ -190,7 +190,7 @@ class Ticket_list {
                         });">
                             <!--<select>
                                 <option>이름순</option>
-                                <option>남은 횟수순</option>
+                                <option>잔여 횟수순</option>
                                 <option>등록 횟수순</option>
                             </select>-->
                             ${this.sort_value_text} ${CImg.arrow_expand(["var(--img-sub1)"], {"vertical-align":"middle"})}

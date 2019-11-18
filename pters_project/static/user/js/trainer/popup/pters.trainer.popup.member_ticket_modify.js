@@ -103,9 +103,9 @@ class Member_ticket_modify{
                     `<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>`;
         let start  = CComponent.dom_tag('시작일') + this.dom_row_start_input() +
                     `<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>`;
-        let end    = CComponent.dom_tag('진행 기간') + this.dom_row_end_input() + 
+        let end    = CComponent.dom_tag('종료일') + this.dom_row_end_input() +
                     `<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>`;
-        let count  = CComponent.dom_tag('횟수') + this.dom_row_count_input() +
+        let count  = CComponent.dom_tag('등록 횟수') + this.dom_row_count_input() +
                     `<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>`;
         let price  = CComponent.dom_tag('가격') + this.dom_row_price_input() + 
                     `<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>`;

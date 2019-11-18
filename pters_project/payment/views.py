@@ -350,6 +350,10 @@ def billing_check_logic(request):
                         else:
                             # 결제 오류인 경우 iamport 상의 예약 제거
                             error = func_cancel_period_billing_schedule(pre_payment_info.customer_uid)
+                            reserve_payment_data = PaymentInfoTb.objects.filter(
+                                customer_uid=pre_payment_info.customer_uid, status='reserve')
+                            reserve_payment_data.delete()
+
         except TypeError:
             error = '오류가 발생했습니다.[2]'
         except ValueError:
