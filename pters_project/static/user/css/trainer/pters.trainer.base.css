@@ -30,6 +30,7 @@
 
     /* Background */
     --bg-main: #ffffff;
+    --bg-for-only-shade: #282828;
     --bg-sub-dark: #5c5859;
     --bg-sub-normal: #858282;
     --bg-sub-light: #999696;
@@ -77,6 +78,7 @@
 
     /* Background */
     --bg-main: #1e1e1e;
+    --bg-for-only-shade: #5c5859;
     --bg-sub-dark: #999696;
     --bg-sub-normal: #b8b4b4;
     --bg-sub-light: #5c5859;
@@ -92,6 +94,17 @@
 
     /* fundamental color */
     --fundamental-white: #ffffff;
+}
+
+#shade_for_popup_basic{
+    position: absolute;
+    top:0;
+    left:0;
+    height:100%;
+    width:100%;
+    background-color: var(--bg-for-only-shade);
+    opacity:0.5;
+    display: none;
 }
 
 #root_content{
