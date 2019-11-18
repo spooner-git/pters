@@ -91,8 +91,8 @@ class Statistics{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();statistics_popup.clear();" class="obj_icon_prev"></span>`;
-        let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();statistics_popup.clear();">${CImg.arrow_left()}</span>`;
+        let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"></span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
@@ -189,7 +189,7 @@ class Statistics{
     dom_search_button(){
         //기간별 조회 버튼
         let id = "statistics_search_button";
-        let title = `기간별 조회 <img src="/static/common/icon/icon_arrow_expand_black.png" style="width:24px;vertical-align:middle;">`;
+        let title = `기간별 조회 ${CImg.arrow_expand("", {"vertical-align":"middle"})}`;
         let style = {"float":"right", "font-size":"13px", "font-weight":"500", "letter-spacing":"-0.6px", "opacity":"0.5"};
         let onclick = ()=>{
             this.event_search_data();  
@@ -282,7 +282,7 @@ class Statistics{
             let html = `<div class="sales_list_row">
                             <div class="sales_list_month">${date[0]}년 ${date[1]}월</div>
                             <div class="sales_list_price">${UnitRobot.numberWithCommas(price)} 원</div>
-                            <div class="sales_list_detail" onclick="statistics_popup.event_detail('${full_date}')">상세 정보 <img src="/static/common/icon/icon_arrow_r_small_black.png"></div>
+                            <div class="sales_list_detail" onclick="statistics_popup.event_detail('${full_date}')">상세 정보 ${CImg.arrow_right("", {"vertical-align":"middle"})}</div>
                         </div>`;
             html_to_join.push(html);
         }

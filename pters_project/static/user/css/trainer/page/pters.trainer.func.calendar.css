@@ -118,10 +118,6 @@
 	top: 0;
 	height: 24px;
 	width: 24px;
-	background-image: url('/static/common/icon/icon_zoom_in_black.png');
-	background-repeat: no-repeat;
-	background-size: 24px;
-	background-position: center;
 	z-index: 1;
 	margin-top:16px;
 	margin-bottom:8px;

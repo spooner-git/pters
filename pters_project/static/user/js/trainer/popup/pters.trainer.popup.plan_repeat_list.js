@@ -41,8 +41,8 @@ class Plan_repeat_list{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_x_black.png" onclick="layer_popup.close_layer_popup();plan_repeat_list_popup.clear();" class="obj_icon_prev"></span>`;
-        let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();plan_repeat_list_popup.clear();">${CImg.x()}</span>`;
+        let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"></span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
@@ -193,7 +193,7 @@ class Plan_repeat_list{
                             <div style="font-size:12px;font-weight:500;letter-spacing:-0.5px;color:#858282;">${repeat_day} / ${repeat_time} / ${repeat_period}</div>
                         </div>
                         <div style="flex-basis:30px;">
-                            <img src="/static/common/icon/icon_more_horizontal.png" style="width:24px;vertical-align:top;">
+                            ${CImg.more("", {"vertical-align":"top"})}
                         </div>
                     </div>`;
         $(document).off('click', `#repeat_item_${repeat_id}`).on('click', `#repeat_item_${repeat_id}`, function(e){

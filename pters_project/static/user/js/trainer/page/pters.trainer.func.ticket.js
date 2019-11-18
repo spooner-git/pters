@@ -214,7 +214,7 @@ class Ticket{
                                 <option>잔여 횟수순</option>
                                 <option>등록 횟수순</option>
                             </select>-->
-                            ${this.sort_value_text} <img src="/static/common/icon/icon_arrow_expand_light_grey.png" style="width:24px; height:24px; vertical-align: middle;">
+                            ${this.sort_value_text} ${CImg.arrow_expand(["var(--img-sub1)"], {"vertical-align":"middle", "margin-bottom":"3px", "width":"20px"})}
                         </div>
                     </div> 
                     `;

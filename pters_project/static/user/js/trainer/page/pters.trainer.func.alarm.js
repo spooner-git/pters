@@ -98,7 +98,7 @@ class Alarm {
                 let html = `<article class="alarm_wrapper" data-alarm_id="${alarm_id}" style="background-color:${alarm_highlight}">
                                 <div class="alarm_data_u">
                                     <div>
-                                        <img src="/static/common/icon/icon_gap_black.png" style="float:left;margin-right:16px;">
+                                        ${CImg.blank()}
                                     </div>
                                     <div>
                                         <span>${alarm_how}</span>

@@ -36,7 +36,7 @@ class Mypage_photo_update{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_x_black.png" onclick="layer_popup.close_layer_popup();mypage_photo_update_popup.clear();" class="obj_icon_prev"></span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();mypage_photo_update_popup.clear();">${CImg.x()}</span>`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">프로필 이미지 선택</span></span>`;
         let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="mypage_photo_update_popup.upper_right_menu()">등록</span></span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
@@ -101,7 +101,7 @@ class Mypage_photo_update{
     dom_row_rotate_button(){
         let id = "image_rotate_button";
         let title = "";
-        let url = '/static/common/icon/icon_repeat_black.png';
+        let url = CImg.repeat("", {"vertical-align":"middle"});
         let style = {"padding":"3px 15px"};
         let onclick= ()=>{
             this.event_croppie_rotate();

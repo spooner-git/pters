@@ -183,7 +183,6 @@ class Member_view{
 
 
             Member_func.read_ticket_list({"member_id":this.member_id}, (data)=>{
-                console.log(data)
                 let ticket_list = data;
                 this.data.ticket = [];
                 let member_ticket_list = [];
@@ -275,9 +274,9 @@ class Member_view{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();member_view_popup.clear();" class="obj_icon_prev"></span>`;
-        let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right"><img src="/static/common/icon/icon_more_horizontal.png" class="obj_icon_basic" onclick="member_view_popup.upper_right_menu();"></span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();member_view_popup.clear();">${CImg.arrow_left()}</span>`;
+        let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
+        let top_right = `<span class="icon_right" onclick="member_view_popup.upper_right_menu();">${CImg.more()}</span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
         
@@ -423,7 +422,7 @@ class Member_view{
         // if(this.data.active != 'True'){
         //     title = '(임시 ID) ' + title;
         // }
-        let icon = '/static/common/icon/icon_member_card_black.png';
+        let icon = CImg.member_card();
         let icon_r_visible = SHOW;
         let icon_r_text = '';
         let style = null;
@@ -544,7 +543,7 @@ class Member_view{
         let id = 'member_memo_view';
         let title = this.data.memo == null ? '' : this.data.memo;
         let placeholder = '특이사항';
-        let icon = '/static/common/icon/icon_note_black.png';
+        let icon = CImg.memo();
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -580,7 +579,7 @@ class Member_view{
             //티켓 이름 표기 부분
             let id = `input_ticket_select_${i}`;
             let title = this.data.ticket[i].ticket_id.length == 0 ? '' : ticket_name;
-            let icon = '/static/common/icon/icon_ticket_black.png';
+            let icon = CImg.ticket();
             let icon_r_visible = SHOW;
             let icon_r_text = "";
             let style = null;
@@ -936,7 +935,7 @@ class Member_simple_view{
         <div style="height:48px;line-height:48px;">
             <div style="float:left;width:auto;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
                 <span style="font-size:16px;font-weight:500;">
-                    <img src="/static/common/icon/icon_member_card_black.png" style="width:20px;vertical-align:middle;margin-right:8px;margin-bottom:3px;">
+                    ${CImg.member_card()}
                     ${this.data.name == null ? '' : this.data.name}
                 </span>
             </div>
@@ -951,7 +950,7 @@ class Member_simple_view{
     dom_row_member_name_input(){
         let id = 'member_name_view';
         let title = this.data.name == null ? '회원명*' : this.data.name;
-        let icon = '/static/common/icon/icon_people_black.png';
+        let icon = CImg.members();
         let icon_r_text = "";
         let icon_r_visible = HIDE;
         let style = null;

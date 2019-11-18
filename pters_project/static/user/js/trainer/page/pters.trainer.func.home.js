@@ -112,12 +112,12 @@ class Home {
             let title = programs[i].program_subject_type_name;
             let icon = DELETE;
             let icon_r_visible = HIDE;
-            let icon_r_text = "변경 <img src='/static/common/icon/icon_arrow_r_small_grey.png' style='width: 25px;vertical-align: middle;'>";
+            let icon_r_text = `변경 ${CImg.arrow_right(["var(--img-sub1)"], {"vertical-align":"middle"})}`;
             let style = {"font-size":"15px", "font-weight":"bold"};
             let onclick = ()=>{
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PROGRAM_LIST, 100, popup_style, null, ()=>{
-                    program_list_popup = new Program_list('.popup_program_list')});
+                    program_list_popup = new Program_list('.popup_program_list');});
             };
             let selected_program = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
             let dom = `<article class="program_wrapper">
@@ -286,7 +286,7 @@ class Home {
         let title = "이번달 매출";
         let icon = DELETE;
         let icon_r_visible = HIDE;
-        let icon_r_text = `${UnitRobot.numberWithCommas(Number(data.price[0]) - Number(data.refund_price[0]))} 원 <img src='/static/common/icon/icon_arrow_r_small_grey.png' style='width: 25px;vertical-align: middle;'>`;
+        let icon_r_text = `${UnitRobot.numberWithCommas(Number(data.price[0]) - Number(data.refund_price[0]))} 원 ${CImg.arrow_right(["var(--img-sub1)"], {"vertical-align":"middle"})}`;
         let style = {"font-size":"15px", "font-weight":"bold"};
         let onclick = ()=>{
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
