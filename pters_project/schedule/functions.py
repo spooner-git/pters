@@ -1052,53 +1052,6 @@ def func_get_trainer_attend_schedule(context, class_id, start_date, end_date, no
     return context
 
 
-def func_get_trainer_attend_on_schedule(context, class_id, start_date, end_date, now):
-    # PT 스케쥴 정보 셋팅
-    context['pt_schedule_data'] = ScheduleTb.objects.select_related('member_ticket_tb__member'
-                                                                    ).filter(Q(start_dt__lte=now,
-                                                                               end_dt__gte=now) |
-                                                                             Q(start_dt__gte=now,
-                                                                               start_dt__lte=start_date) |
-                                                                             Q(end_dt__gte=end_date,
-                                                                               end_dt__lte=now),
-                                                                             member_ticket_tb__isnull=False,
-                                                                             member_ticket_tb__use=USE,
-                                                                             class_tb=class_id,
-                                                                             en_dis_type=ON_SCHEDULE_TYPE,
-                                                                             state_cd=STATE_CD_NOT_PROGRESS,
-                                                                             use=USE).order_by('start_dt', 'reg_dt')
-
-
-def func_get_trainer_attend_lecture_schedule(context, class_id, start_date, end_date, now, lecture_id):
-    query = "select count(B.ID) from SCHEDULE_TB as B where B.GROUP_SCHEDULE_ID = `SCHEDULE_TB`.`ID` " \
-            "AND B.STATE_CD != \'PC\' AND B.USE=1"
-    finish_member_query = "select count(B.ID) from SCHEDULE_TB as B where B.GROUP_SCHEDULE_ID = `SCHEDULE_TB`.`ID` " \
-                          "AND B.STATE_CD = \'PE\' AND B.USE=1"
-    lecture_schedule_data = ScheduleTb.objects.select_related('lecture_tb').filter(Q(start_dt__lte=now,
-                                                                                     end_dt__gte=now) |
-                                                                                   Q(start_dt__gte=now,
-                                                                                     start_dt__lte=start_date) |
-                                                                                   Q(end_dt__gte=end_date,
-                                                                                     end_dt__lte=now),
-                                                                                   lecture_tb__isnull=False,
-                                                                                   member_ticket_tb__isnull=True,
-                                                                                   class_tb=class_id,
-                                                                                   en_dis_type=ON_SCHEDULE_TYPE,
-                                                                                   use=USE)
-    if lecture_id is None or lecture_id == '':
-        lecture_schedule_data = lecture_schedule_data.annotate(
-            lecture_current_member_num=RawSQL(query, []),
-            lecture_current_finish_member_num=RawSQL(finish_member_query, [])).order_by('start_dt')
-
-    else:
-        lecture_schedule_data = lecture_schedule_data.filter(
-            lecture_tb_id=lecture_id
-        ).annotate(lecture_current_member_num=RawSQL(query, []),
-                   lecture_current_finish_member_num=RawSQL(finish_member_query, [])).order_by('start_dt')
-
-    context['lecture_schedule_data'] = lecture_schedule_data
-
-
 def func_get_repeat_schedule_date_list(repeat_type, week_type, repeat_schedule_start_date, repeat_schedule_end_date):
     week_info = ['SUN', 'MON', 'TUE', 'WED', 'THS', 'FRI', 'SAT']
     repeat_week_type_data = []
