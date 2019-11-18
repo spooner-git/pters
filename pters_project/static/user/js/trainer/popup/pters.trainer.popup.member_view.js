@@ -935,7 +935,7 @@ class Member_simple_view{
         <div style="height:48px;line-height:48px;">
             <div style="float:left;width:auto;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
                 <span style="font-size:16px;font-weight:500;">
-                    ${CImg.member_card()}
+                    ${CImg.member_card("", {"vertical-align":"middle", "margin-bottom":"3px"})}
                     ${this.data.name == null ? '' : this.data.name}
                 </span>
             </div>

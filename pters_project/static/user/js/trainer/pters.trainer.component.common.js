@@ -597,8 +597,8 @@ class CComponent{
 
     
 
-    static no_data_row(text){
-        let html = `<li class="no_data_row">
+    static no_data_row(text, style){
+        let html = `<li class="no_data_row" style="${CComponent.data_to_style_code(style)}">
                         <div class="obj_table_raw">
                             <div class="cell_no_data_row_text">
                                 
