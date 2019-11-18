@@ -93,7 +93,7 @@ class Alarm {
                 let read_check = data.read_check;
                 let alarm_highlight = "";
                 if(this.new_alarms_id_cache.indexOf(alarm_id) != -1){
-                    alarm_highlight = "#ffe8eb";
+                    alarm_highlight = "var(--bg-for_only-new-notifi)";
                 }
                 let html = `<article class="alarm_wrapper" data-alarm_id="${alarm_id}" style="background-color:${alarm_highlight}">
                                 <div class="alarm_data_u">

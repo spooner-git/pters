@@ -31,6 +31,7 @@
     /* Background */
     --bg-main: #ffffff;
     --bg-for-only-shade: #282828;
+    --bg-for_only-new-notifi: #ffe8eb;
     --bg-sub-dark: #5c5859;
     --bg-sub-normal: #858282;
     --bg-sub-light: #999696;
@@ -79,6 +80,7 @@
     /* Background */
     --bg-main: #1e1e1e;
     --bg-for-only-shade: #5c5859;
+    --bg-for_only-new-notifi: #ae4e65;
     --bg-sub-dark: #999696;
     --bg-sub-normal: #b8b4b4;
     --bg-sub-light: #5c5859;
