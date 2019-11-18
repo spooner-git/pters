@@ -182,6 +182,13 @@ class Plan_add{
         if(end_time_hour >= work_time_end){
             end_time_min = 0;
         }
+        if(end_time_hour < start_time.hour){
+            end_time_hour = work_time_end;
+            end_time_min = 0;
+        }else if(end_time_hour == start_time.hour && end_time_min < start_time.minute){
+            end_time_hour = work_time_end;
+            end_time_min = 0;
+        }
 
         let end_time = TimeRobot.hm_to_hhmm(`${end_time_hour}:${end_time_min}`).complete;
         let end_time_text = TimeRobot.to_text(end_time_hour, end_time_min);
