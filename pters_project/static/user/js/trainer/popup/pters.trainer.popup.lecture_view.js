@@ -179,10 +179,10 @@ class Lecture_view{
         let lecture_lecture_minute = '<div class="obj_input_box_full">' + CComponent.dom_tag('기본 수업 시간') + time + '</div>';
         let color_select_assembly =  '<div class="obj_input_box_full">' + CComponent.dom_tag('색상 태그') + color +  '</div>';
         let ticket_list_assembly = '<div class="obj_input_box_full" style="padding-top:16px;">' + CComponent.dom_tag(`이 수업을 포함하는 수강권 (${this.data.active_ticket_length} 개)`,
-                                    {"font-size":"13px", "font-weight":"bold", "letter-spacing":"-0.6px", "padding":"0","padding-bottom":"8px", "color":"#858282", "height":"20px"})
+                                    {"font-size":"13px", "font-weight":"bold", "letter-spacing":"-0.6px", "padding":"0","padding-bottom":"8px", "color":"var(--font-sub-normal)", "height":"20px"})
                                     + ticket_list + '</div>';
         let member_list_assembly = '<div class="obj_input_box_full" style="padding-top:20px; border:0;">' + CComponent.dom_tag(`진행중 회원 (${this.data.member_number} 명)`,
-        {"font-size":"13px", "font-weight":"bold", "letter-spacing":"-0.6px", "padding":"0","padding-bottom":"8px", "color":"#858282", "height":"20px"})
+        {"font-size":"13px", "font-weight":"bold", "letter-spacing":"-0.6px", "padding":"0","padding-bottom":"8px", "color":"var(--font-sub-normal)", "height":"20px"})
         + member_list + '</div>';
 
         if(this.data.lecture_state == STATE_END_PROGRESS){
@@ -205,7 +205,7 @@ class Lecture_view{
         let title = this.data.name == null ? '' : this.data.name;
         let style = {"font-size":"20px", "font-weight":"bold"};
         if(this.data.lecture_state == STATE_END_PROGRESS){
-            style["color"] = "#888888";
+            style["color"] = "var(--font-sub-normal)";
         }
         let placeholder =  '수업명*';
         let icon = DELETE;
@@ -220,11 +220,11 @@ class Lecture_view{
             this.name = user_input_data;
             this.send_data();
         }, pattern, pattern_message, required);
-        let one_to_one_lesson_description = this.data.capacity == 1 && this.data.lecture_type_cd == LECTURE_TYPE_ONE_TO_ONE ? "<div style='font-size:11px;color:#888888;'>이 수업은 정원 수정, 비활성화 할 수 없습니다.</div>" : "";
+        let one_to_one_lesson_description = this.data.capacity == 1 && this.data.lecture_type_cd == LECTURE_TYPE_ONE_TO_ONE ? "<div style='font-size:11px;color:var(--font-sub-normal);'>이 수업은 정원 수정, 비활성화 할 수 없습니다.</div>" : "";
         let html = `
         <div class="lecture_view_upper_box">
             <div style="display:inline-block;width:100%;">
-                <span style="position:absolute;top:0;font-size: 12px;display:block;color: #7d7d7d;font-weight: 500;">수업</span>
+                <span style="position:absolute;top:0;font-size: 12px;display:block;color: var(--font-sub-normal);font-weight: 500;">수업</span>
                 ${sub_html}
                 ${one_to_one_lesson_description}
             </div>
@@ -390,7 +390,7 @@ class Lecture_view{
             if(ticket_state == STATE_END_PROGRESS){
                 progress_end_ticket++;
                 style["text-decoration"] = "line-through";
-                style["color"] = "#cccccc";
+                style["color"] = "var(--font-inactive)";
                 ticket_name += "(비활성)";
             }
             html_to_join.push(
@@ -446,7 +446,7 @@ class Lecture_view{
             let style = {"font-size":"15px", "font-weight":"500", "padding":"0", "height":"44px", "line-height":"44px","color":"", "letter-spacing":"-0.7px", "display":"table-cell", "width":"auto", "vertical-align":"middle"};
             let member_fix_indicator = "";
             if(member_fix == FIX){
-                member_fix_indicator = '<span style="display:table-cell;width:50px;font-size:11px;font-weight:bold;color:#fe4e65;vertical-align:middle;">고정 회원</span>';
+                member_fix_indicator = '<span style="display:table-cell;width:50px;font-size:11px;font-weight:bold;color:var(--font-highlight);vertical-align:middle;">고정 회원</span>';
             }
             let member_button = CComponent.text_button (member_id, member_name, style);
 
@@ -529,7 +529,7 @@ class Lecture_view{
             deactivate:{text:"비활성화", callback:()=>{
                     show_user_confirm(`"${this.data.name}" <br> 수업을 비활성화 하시겠습니까? <br> 비활성화 탭에서 다시 활성화 할 수 있습니다.<br><br>
                                                             <img src="/static/common/icon/icon_stopmark.png" style="width:25px;"><br>
-                                                            <span style="color:#fe4e65; font-size:12px;">
+                                                            <span style="color:var(--font-highlight); font-size:12px;">
                                                             이 수업으로 일정을 등록 할 수 없게 됩니다.<br>
                                                             과거 일정은 완료 처리, 미래 일정은 삭제됩니다. <br>
                                                             이 수업 하나만 포함하는 수강권은 비활성화 됩니다.`, ()=>{
@@ -551,7 +551,7 @@ class Lecture_view{
             delete:{text:"삭제", callback:()=>{
                     show_user_confirm(`"${this.data.name}" <br> 수업을 영구 삭제 하시겠습니까? <br> 데이터를 복구할 수 없습니다.<br><br>
                                                             <img src="/static/common/icon/icon_stopmark.png" style="width:25px;"><br>
-                                                            <span style="color:#fe4e65; font-size:12px;">이 수업을 포함하는 수강권에서 수업이 삭제됩니다.</span>`, ()=>{
+                                                            <span style="color:var(--font-highlight); font-size:12px;">이 수업을 포함하는 수강권에서 수업이 삭제됩니다.</span>`, ()=>{
                         Lecture_func.delete({"lecture_id":this.lecture_id}, ()=>{
                             try{
                                 current_page.init();
@@ -721,7 +721,7 @@ class Lecture_simple_view{
 
 
     dom_row_toolbox(){
-        let text_button_style = {"color":"#fe4e65", "font-size":"13px", "font-weight":"500", "padding":"10px 0"};
+        let text_button_style = {"color":"var(--font-highlight)", "font-size":"13px", "font-weight":"500", "padding":"10px 0"};
         let text_button = CComponent.text_button ("detail_lecture_info", "더보기", text_button_style, ()=>{
             show_user_confirm(`작업중이던 항목을 모두 닫고 수업 메뉴로 이동합니다.`, ()=>{
                 layer_popup.all_close_layer_popup();
@@ -740,7 +740,7 @@ class Lecture_simple_view{
 
         let lecture_name = this.data.name == null ? '' : this.data.name;
         if(this.data.lecture_state == STATE_END_PROGRESS){
-            lecture_name = `<span style="color:#888888;">${lecture_name}</span>`;
+            lecture_name = `<span style="color:var(--font-sub-normal);">${lecture_name}</span>`;
         }
 
         let html = `
@@ -771,7 +771,7 @@ class Lecture_simple_view{
         });
 
         let html = `<div style="display:flex;">
-                        <div style="flex-basis:68px;font-size:11px;font-weight:500;letter-spacing:-0.5px;color:#b8b4b4;line-height:24px;padding:12px 0;">정원</div>
+                        <div style="flex-basis:68px;font-size:11px;font-weight:500;letter-spacing:-0.5px;color:var(--font-inactive);line-height:24px;padding:12px 0;">정원</div>
                         ${html_data}
                     </div>`;
 
@@ -790,7 +790,7 @@ class Lecture_simple_view{
         });
 
         let html = `<div style="display:flex;">
-                        <div style="flex-basis:68px;font-size:11px;font-weight:500;letter-spacing:-0.5px;color:#b8b4b4;line-height:24px;padding:12px 0;">색상</div>
+                        <div style="flex-basis:68px;font-size:11px;font-weight:500;letter-spacing:-0.5px;color:var(--font-inactive);line-height:24px;padding:12px 0;">색상</div>
                         ${html_data}
                     </div>`;
 
@@ -807,7 +807,7 @@ class Lecture_simple_view{
         let html_data = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{});
 
         let html = `<div style="display:flex;">
-                        <div style="flex-basis:68px;font-size:11px;font-weight:500;letter-spacing:-0.5px;color:#b8b4b4;line-height:24px;padding:12px 0;">회원수</div>
+                        <div style="flex-basis:68px;font-size:11px;font-weight:500;letter-spacing:-0.5px;color:var(--font-inactive);line-height:24px;padding:12px 0;">회원수</div>
                         ${html_data}
                     </div>`;
 

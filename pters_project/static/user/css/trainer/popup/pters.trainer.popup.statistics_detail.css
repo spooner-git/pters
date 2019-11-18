@@ -35,7 +35,7 @@
 }
 .popup_statistics_detail .sales_detail_content > div{
 	font-size: 11px;
-	color: #858282;
+	color: var(--font-sub-normal);
 	letter-spacing: -0.5px;
 }
 

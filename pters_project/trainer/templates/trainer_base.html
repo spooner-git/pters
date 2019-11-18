@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="pters_light_mode">
+<html lang="en" class="pters_dark_mode">
 <head>
 
     <!-- Google Tag Manager -->
@@ -81,7 +81,7 @@
 <div id="base">
     <section id="section_side">
         <div class="top_logo">
-            <span style='color:#1F1D1E; width:64px; font-size:20px; font-weight:bold; padding-left:12px;' id="top_logo_image">PTERS</span>
+            <span style='color:var(--font-base); width:64px; font-size:20px; font-weight:bold; padding-left:12px;' id="top_logo_image">PTERS</span>
             <!--<img src="/static/common/icon/logo/PTERS_logo_full.png" alt="" style="width: 64px;" id="top_logo_image">-->
         </div>
         <div class="side_menu" id="nav_side">
@@ -613,7 +613,7 @@
                 $sidemenu_text.show();
             }, 150);
             $toplogo.html(
-                `<span style='color:#1F1D1E; width:64px; font-size:20px; font-weight:bold; padding-left:12px;'>PTERS</span>`
+                `<span style='color:var(--font-base); width:64px; font-size:20px; font-weight:bold; padding-left:12px;'>PTERS</span>`
                 //`<img src="/static/common/icon/logo/PTERS_logo_full.png" alt="" style="width: 64px;" id="top_logo_image">`
             );
             $sidemenu_button.css('transform', 'rotate(90deg)');

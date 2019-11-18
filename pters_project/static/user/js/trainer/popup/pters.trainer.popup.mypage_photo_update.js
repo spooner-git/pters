@@ -38,7 +38,7 @@ class Mypage_photo_update{
     render(){
         let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();mypage_photo_update_popup.clear();">${CImg.x()}</span>`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">프로필 이미지 선택</span></span>`;
-        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="mypage_photo_update_popup.upper_right_menu()">등록</span></span>`;
+        let top_right = `<span class="icon_right"><span style="color:var(--font-highlight);font-weight: 500;" onclick="mypage_photo_update_popup.upper_right_menu()">등록</span></span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
         

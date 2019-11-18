@@ -211,11 +211,11 @@ class Plan_view{
     }
 
     render(){
-        let top_left = `<span class="icon_left" onclick="plan_view_popup.upper_left_menu();">${CImg.arrow_left()}</span>`;
+        let top_left = `<span class="icon_left" onclick="plan_view_popup.upper_left_menu();">${CImg.arrow_left(["#5c5859"])}</span>`;
         let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
         let top_right = `<span class="icon_right">
-                            ${CImg.delete("", null, `plan_view_popup.upper_right_menu(0)`)}
-                            ${CImg.attend_check("", this.data.schedule_type == 0 ? {"display":"none"} : null, `plan_view_popup.upper_right_menu(1)`)}
+                            ${CImg.delete(["#5c5859"], null, `plan_view_popup.upper_right_menu(0)`)}
+                            ${CImg.attend_check(["#5c5859"], this.data.schedule_type == 0 ? {"display":"none"} : null, `plan_view_popup.upper_right_menu(1)`)}
                         </span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;background-color:${this.data.lecture_color}">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
@@ -278,7 +278,7 @@ class Plan_view{
         if(this.data.schedule_type == 0){
             lecture_name =`OFF 일정 ${this.data.memo != "" ? '('+this.data.memo+')' : ''}`;
         }else if(this.data.schedule_type == 1){
-            lecture_name = this.data.member_name + CImg.arrow_expand("", {"height":"17px", "width":"17px"});
+            lecture_name = this.data.member_name + CImg.arrow_expand(["#5c5859"], {"height":"17px", "width":"17px"});
             // lecture_name = this.data.lecture_name;
         }else if(this.data.schedule_type == 2){
             lecture_name = this.data.lecture_name;
@@ -529,7 +529,7 @@ class Plan_view{
         let icon_r_visible = NONE;
         let icon_r_text = "";
         // let style = null;
-        let style = this.data.start_time == this.data.end_time && this.data.end_time != null ? {"color":"#fe4e65"} : null;
+        let style = this.data.start_time == this.data.end_time && this.data.end_time != null ? {"color":"var(--font-highlight)"} : null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             //행을 클릭했을때 실행할 내용
             let root_content_height = $root_content.height();
@@ -560,7 +560,7 @@ class Plan_view{
                                                                                                 }});
             });
         });
-        let html_duplication_alert = `<div style="font-size:11px;color:#fe4e65;padding-left:45px;box-sizing:border-box;display:${this.data.duplicate_plan_when_add.length == 0 ? 'none' : 'block'}">
+        let html_duplication_alert = `<div style="font-size:11px;color:var(--font-highlight);padding-left:45px;box-sizing:border-box;display:${this.data.duplicate_plan_when_add.length == 0 ? 'none' : 'block'}">
                                             ${this.data.duplicate_plan_when_add.length}건 겹치는 일정이 존재합니다.<br>
                                             ${this.data.duplicate_plan_when_add.join('<br/>')}
                                         </div>`;
@@ -640,7 +640,7 @@ class Plan_view{
         };
         let html2 = CComponent.create_row(id2, title2, icon2, icon_r_visible2, icon_r_text2, style2, callback2);
 
-        let html_duplication_alert = `<div style="font-size:11px;color:#fe4e65;padding-left:45px;box-sizing:border-box;display:${this.data.duplicate_plan_when_add.length == 0 ? 'none' : 'block'}">
+        let html_duplication_alert = `<div style="font-size:11px;color:var(--font-highlight);padding-left:45px;box-sizing:border-box;display:${this.data.duplicate_plan_when_add.length == 0 ? 'none' : 'block'}">
                                             ${this.data.duplicate_plan_when_add.length}건 겹치는 일정이 존재합니다.<br>
                                             ${this.data.duplicate_plan_when_add.join('<br/>')}
                                         </div>`;

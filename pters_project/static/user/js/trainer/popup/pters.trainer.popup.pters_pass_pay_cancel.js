@@ -68,7 +68,7 @@ class Pters_pass_pay_cancel{
         if(this.data.cancel_type == 5){
             cancel_reason = this.dom_row_cancel_reason_textarea();
         }
-        let html =  '<article class="obj_input_box_full" style="border-bottom:1px solid #f5f2f2;">' +
+        let html =  '<article class="obj_input_box_full" style="border-bottom:var(--border-article);">' +
                         this.dom_row_cancel_caution() + 
                     '</article>' +
                     '<article class="obj_input_box_full">' +
@@ -81,7 +81,7 @@ class Pters_pass_pay_cancel{
     }
 
     dom_row_cancel_caution(){
-        let html = `<div style="font-size:13px;color:#3b3d3d;">
+        let html = `<div style="font-size:13px;color:var(--font-main);">
                         <p style="margin:0">해지 신청 시 다음 결제일 부터 미청구 됩니다.<br>즉시 해지를 원하실 경우, 해지 신청을 하신 후 [이용 문의]메뉴 를 통해 문의 주시면 처리를 도와 드리겠습니다.</p>
                     </div>`;
         return html;
@@ -132,7 +132,7 @@ class Pters_pass_pay_cancel{
         let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let style = {"margin-bottom":"20px", "border":"1px solid #cccccc","height":"100px"};
+        let style = {"margin-bottom":"20px", "border":"var(--border-article-dark)", "height":"100px"};
         let onfocusout = (input_data)=>{
             this.data.cancel_reason = input_data;
         };
@@ -148,8 +148,8 @@ class Pters_pass_pay_cancel{
         let id = "pters_pass_cancel_request_button";
         let title = "해지 신청";
         let style = this.data.cancel_type == null 
-            ? {"height":"40px", "line-height":"40px", "padding":"0", "font-size":"14px", "font-weight":"500", "background-color":"#f2f2f2"} 
-            : {"height":"40px", "line-height":"40px", "padding":"0", "font-size":"14px", "font-weight":"500", "background-color":"#fe4e65", "color":"#ffffff"};
+            ? {"height":"40px", "line-height":"40px", "padding":"0", "font-size":"14px", "font-weight":"500", "background-color":"var(--bg-light)"} 
+            : {"height":"40px", "line-height":"40px", "padding":"0", "font-size":"14px", "font-weight":"500", "background-color":"var(--bg-highlight)", "color":"var(--font-invisible)"};
         let onclick = ()=>{
             if(this.data.cancel_type == null){
                 show_error_message("해지 사유를 선택해주세요.");

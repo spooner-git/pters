@@ -80,10 +80,10 @@ class Service_notice {
     dom_row_toolbox(){
         let title = "PTERS 공지사항 ";
         let html = `<div class="notice_upper_box">
-                        <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:#3b3b3b; letter-spacing: -1px; height:28px;">
+                        <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:var(--font-main); letter-spacing: -1px; height:28px;">
                             <span style="display:inline-block;">${title}</span>
                             <span style="display:none;">${title}</span>
-                            <!--<div style="display:inline-block; color:#fe4e65; font-weight:900;">${this.data_length}</div>-->
+                            <!--<div style="display:inline-block; color:var(--font-highlight); font-weight:900;">${this.data_length}</div>-->
                         </div>
                     </div>
                     `;

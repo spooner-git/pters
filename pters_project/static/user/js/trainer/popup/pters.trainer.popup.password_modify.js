@@ -30,7 +30,7 @@ class Password_modify{
     render(){
         let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();password_modify_popup.clear();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right" onclick="password_modify_popup.send_data()"><span style="color:#fe4e65;font-weight: 500;">완료</span></span>`;
+        let top_right = `<span class="icon_right" onclick="password_modify_popup.send_data()"><span style="color:var(--font-highlight);font-weight: 500;">완료</span></span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
         
@@ -58,9 +58,9 @@ class Password_modify{
         let new_password = this.dom_row_new_password();
         let new_password_confirm = this.dom_row_new_password_confirm();
 
-        let tag_password = CComponent.dom_tag("기존 비밀번호", {"color":"#858282", "padding":"8px 0", "font-weight":"bold"});
-        let tag_new_password = CComponent.dom_tag("새로운 비밀번호", {"color":"#858282", "padding":"8px 0", "font-weight":"bold"});
-        let tag_new_password_confirm = CComponent.dom_tag("새로운 비밀번호 확인", {"color":"#858282", "padding":"8px 0", "font-weight":"bold"});
+        let tag_password = CComponent.dom_tag("기존 비밀번호", {"color":"var(--font-sub-normal)", "padding":"8px 0", "font-weight":"bold"});
+        let tag_new_password = CComponent.dom_tag("새로운 비밀번호", {"color":"var(--font-sub-normal)", "padding":"8px 0", "font-weight":"bold"});
+        let tag_new_password_confirm = CComponent.dom_tag("새로운 비밀번호 확인", {"color":"var(--font-sub-normal)", "padding":"8px 0", "font-weight":"bold"});
 
         let html =  '<section id="basic_info_wrap">'+ 
                         tag_password + password + 
@@ -94,7 +94,7 @@ class Password_modify{
         let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let style = {"border":"1px solid #d6d2d2", "border-radius":"4px", "padding":"12px", "margin-bottom":"10px"};
+        let style = {"border":"var(--border-article-dark)", "border-radius":"4px", "padding":"12px", "margin-bottom":"10px"};
         let disabled = false;
         let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+!@#$%^&*()./ 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
         let pattern_message = "";
@@ -116,7 +116,7 @@ class Password_modify{
         let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let style = {"border":"1px solid #d6d2d2", "border-radius":"4px", "padding":"12px", "margin-bottom":"10px"};
+        let style = {"border":"var(--border-article-dark)", "border-radius":"4px", "padding":"12px", "margin-bottom":"10px"};
         let disabled = false;
         let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+!@#$%^&*()./ 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
         let pattern_message = "";
@@ -138,7 +138,7 @@ class Password_modify{
         let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let style = {"border":"1px solid #d6d2d2", "border-radius":"4px", "padding":"12px", "margin-bottom":"10px"};
+        let style = {"border":"var(--border-article-dark)", "border-radius":"4px", "padding":"12px", "margin-bottom":"10px"};
         let disabled = false;
         let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+!@#$%^&*()./ 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
         let pattern_message = "";

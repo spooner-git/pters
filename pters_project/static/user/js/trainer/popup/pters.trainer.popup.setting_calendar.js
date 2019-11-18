@@ -76,7 +76,7 @@ class Setting_calendar{
                     '</article>' +
                     '<article class="obj_input_box_full" style="padding-top:5px;">' +
                         this.dom_row_calendar_basic_select_time() + 
-                        "<span style='font-size:12px;color:#3b3b3b;letter-spacing:-0.6px;font-weight:normal'>달력 클릭/OFF 일정 클릭시 선택되는 기본 시간입니다.</span>" +
+                        "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>달력 클릭/OFF 일정 클릭시 선택되는 기본 시간입니다.</span>" +
                     '</article>' +
                     '<article class="obj_input_box_full">' +
                         this.dom_row_calendar_title() +
@@ -196,7 +196,7 @@ class Setting_calendar{
         let html = `<div class="select_wrap ${selected_or_not}" id="input_method_classic">
                         <div class="select_indicator">
                             ${CComponent.radio_button("time_input_select_classic", this.data.calendar_time_input_type == CLASSIC ? ON : OFF, {"transform":"scale(1.2)", "display":"inline-block", "margin-right":"5px"}, ()=>{})}
-                            <span>클래식</span><span style="color:#fe4e65;font-size:11px;"> (베타)</span>
+                            <span>클래식</span><span style="color:var(--font-highlight);font-size:11px;"> (베타)</span>
                             <p>시작과 종료시각을 한번에 설정 합니다. <br>겹치는 일정은 필터링 할 수 있습니다.</p>
                         </div>
                         <div>

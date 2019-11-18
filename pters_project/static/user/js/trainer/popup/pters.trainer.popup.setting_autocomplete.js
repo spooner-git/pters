@@ -118,7 +118,7 @@ class Setting_autocomplete{
     }
 
     dom_row_plan_autocomplete_type(){
-        let html = `<article class="setting_autocomplete_wrapper obj_input_box_full" style="border-top:1px solid #f2f2f2;border-bottom:1px solid #f2f2f2">`+
+        let html = `<article class="setting_autocomplete_wrapper obj_input_box_full" style="border-top:var(--border-article);border-bottom:var(--border-article)">`+
                     this.dom_row_plan_autocomplete_type_attend() + 
                     this.dom_row_plan_autocomplete_type_absence() + 
                     this.dom_row_plan_autocomplete_type_cancel() +

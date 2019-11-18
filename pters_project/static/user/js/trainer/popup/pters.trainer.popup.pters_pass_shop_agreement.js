@@ -122,8 +122,8 @@ class Pters_pass_shop_agreement{
         let id = "pters_pass_button_go_to_page_2";
         let title = "다음";
         let style = this.data.agreement == OFF 
-            ? {"height":"40px", "line-height":"40px", "padding":"0", "font-size":"14px", "font-weight":"500", "background-color":"#f2f2f2"} 
-            : {"height":"40px", "line-height":"40px", "padding":"0", "font-size":"14px", "font-weight":"500", "background-color":"#fe4e65", "color":"#ffffff"};
+            ? {"height":"40px", "line-height":"40px", "padding":"0", "font-size":"14px", "font-weight":"500", "background-color":"var(--bg-light)"} 
+            : {"height":"40px", "line-height":"40px", "padding":"0", "font-size":"14px", "font-weight":"500", "background-color":"var(--bg-highlight)", "color":"var(--font-invisible)"};
         let onclick = ()=>{
             if(this.data.agreement == OFF){
                 show_error_message("약관 동의 후 결제를 진행 할 수 있습니다.");
@@ -168,8 +168,8 @@ class Pters_pass_shop_agreement{
         let id = "pters_pass_button_go_to_pay";
         let title = "결제";
         let style= this.data.pay_method.card == OFF
-            ? {"height":"40px", "line-height":"40px", "padding":"0", "font-size":"14px", "font-weight":"500", "background-color":"#f2f2f2"} 
-            : {"height":"40px", "line-height":"40px", "padding":"0", "font-size":"14px", "font-weight":"500", "background-color":"#fe4e65", "color":"#ffffff"};
+            ? {"height":"40px", "line-height":"40px", "padding":"0", "font-size":"14px", "font-weight":"500", "background-color":"var(--bg-light)"} 
+            : {"height":"40px", "line-height":"40px", "padding":"0", "font-size":"14px", "font-weight":"500", "background-color":"var(--bg-highlight)", "color":"var(--font-invisible)"};
         let onclick = ()=>{
             if(this.data.pay_method.card == OFF){
                 show_error_message("결제 수단을 선택 해주세요.");

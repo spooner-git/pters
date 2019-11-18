@@ -307,12 +307,12 @@ class Member_view{
         let sex = this.dom_row_member_sex_input();
         let ticket = this.dom_row_ticket();
         // let memo = this.dom_row_member_memo_input();
-        let tag_id = this.data.active == 'True' || this.data.active == null ? '아이디' : '아이디 <span style="color:#fe4e65;margin-left:3px;">(임시)</span>';
+        let tag_id = this.data.active == 'True' || this.data.active == null ? '아이디' : '아이디 <span style="color:var(--font-highlight);margin-left:3px;">(임시)</span>';
         let html =
             '<div class="obj_input_box_full">'
-                + CComponent.dom_tag(tag_id) + user_id + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
-                + CComponent.dom_tag('휴대폰 번호') + phone + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
-                + CComponent.dom_tag('생년월일') + birth + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag(tag_id) + user_id + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag('휴대폰 번호') + phone + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag('생년월일') + birth + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('성별') + sex +
             '</div>' +
             '<div class="obj_input_box_full">'
@@ -332,7 +332,7 @@ class Member_view{
         let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text;
-        let style = {"font-size":"20px", "font-weight":"bold", "letter-spacing":"-1px", "color":"#3d3b3b"};
+        let style = {"font-size":"20px", "font-weight":"bold", "letter-spacing":"-1px", "color":"var(--font-main)"};
         let disabled = false;
         let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+.,@一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{1,20}";
         let pattern_message = ". , + - _ @ 제외 특수문자는 입력 불가";
@@ -472,7 +472,7 @@ class Member_view{
         let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let style = this.data.birth == null || this.data.birth == 'None' ? {"color":"#b8b4b4"} : null;
+        let style = this.data.birth == null || this.data.birth == 'None' ? {"color":"var(--font-inactive)"} : null;
         let disabled = false;
         if(this.data.active == 'True'){
             disabled = true;
@@ -511,7 +511,7 @@ class Member_view{
         let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let style = this.data.sex == null || this.data.sex == 'None' ? {"color":"#b8b4b4"} : null;
+        let style = this.data.sex == null || this.data.sex == 'None' ? {"color":"var(--font-inactive)"} : null;
         let disabled = false;
         if(this.data.active == 'True'){
             disabled = true;
@@ -574,7 +574,7 @@ class Member_view{
             let ticket_refund_date = this.data.ticket[i].ticket_refund_date;
             let ticket_refund_price = this.data.ticket[i].ticket_refund_price;
             if(this.data.ticket[i].ticket_state == STATE_END_PROGRESS){
-                ticket_name = `<span style="color:#888888;">${this.data.ticket[i].ticket_name}</span><span style="font-size:13px;"> (비활성)</span>`;
+                ticket_name = `<span style="color:var(--font-sub-normal);">${this.data.ticket[i].ticket_name}</span><span style="font-size:13px;"> (비활성)</span>`;
             }
             //티켓 이름 표기 부분
             let id = `input_ticket_select_${i}`;
@@ -605,7 +605,7 @@ class Member_view{
                 let lecture_name = this.data.ticket[i].lecture_name[j];
                 let lecture_state_cd = this.data.ticket[i].lecture_state[j];
                 let lecture_color = this.data.ticket[i].lecture_color[j];
-                let text_decoration = (lecture_state_cd == STATE_END_PROGRESS ? 'color:#cccccc; text-decoration:line-through;' : '');
+                let text_decoration = (lecture_state_cd == STATE_END_PROGRESS ? 'color:var(--font-domtag); text-decoration:line-through;' : '');
                 let icon_button_style = {"display":"block", "padding":"4px 0 4px 42px", "font-size":"13px", "height":"24px", "line-height":"24px"};
                 let lecture_name_set = `<div style="display:inline-block;width:4px;height:16px;border-radius: 8px;background-color:${lecture_color};margin-right:10px;margin-top:4px;"></div>
                                         <div style="display:inline-block;vertical-align:top;${text_decoration}">${lecture_name}</div>`;
@@ -620,14 +620,14 @@ class Member_view{
                 html_to_join_lecture_list.push(html_lecture_list_info);
             }
             //티켓내 남은횟수, 남은 기간 표기 부분
-            let icon_button_style_remain_count_info = {"display":"block", "padding":"6px 0 0 38px", "font-size":"11px", "font-weight":"500", "color":"#858282", "height":"16px"};
-            let icon_button_style_remain_data_info = {"display":"block", "padding":"6px 0 12px 38px", "font-size":"11px", "font-weight":"500", "color":"#858282", "height":"16px"};
-            let html_remain_info = CComponent.text_button('reg_count', `등록 <span style="font-size:11px; font-weight:bold; color:#fe4e65; margin-left:8px;">${this.data.ticket[i].ticket_reg_count}회</span>`, icon_button_style_remain_count_info, ()=>{}) +
-                                    CComponent.text_button('rem_count', `잔여 <span style="font-size:11px; font-weight:bold; color:#fe4e65; margin-left:8px;">${this.data.ticket[i].ticket_rem_count}회</span>`, icon_button_style_remain_count_info, ()=>{}) +
-                                    CComponent.text_button('avail_count', `예약가능 <span style="font-size:11px; font-weight:bold; color:#fe4e65; margin-left:8px;">${this.data.ticket[i].ticket_avail_count}회</span>`, icon_button_style_remain_count_info, ()=>{}) +
-                                    CComponent.text_button('start_date', `기간 <span style="font-size:11px; font-weight:bold; color:#fe4e65; margin-left:8px;">${this.data.ticket[i].start_date_text} - ${this.data.ticket[i].end_date_text}</span>`, icon_button_style_remain_count_info, ()=>{}) +
-                                    //CComponent.text_button('rem_date', `남은 기간 <span style="font-size:11px; font-weight:bold; color:#fe4e65; margin-left:8px;">${this.data.ticket[i].end_date_text}</span>`, icon_button_style_remain_count_info, ()=>{}) +
-                                    CComponent.text_button('note', `특이사항 <span style="font-size:11px; font-weight:bold; color:#fe4e65; margin-left:8px;">${ticket_note}</span>`, icon_button_style_remain_data_info, ()=>{});
+            let icon_button_style_remain_count_info = {"display":"block", "padding":"6px 0 0 38px", "font-size":"11px", "font-weight":"500", "color":"var(--font-sub-normal)", "height":"16px"};
+            let icon_button_style_remain_data_info = {"display":"block", "padding":"6px 0 12px 38px", "font-size":"11px", "font-weight":"500", "color":"var(--font-sub-normal)", "height":"16px"};
+            let html_remain_info = CComponent.text_button('reg_count', `등록 <span style="font-size:11px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${this.data.ticket[i].ticket_reg_count}회</span>`, icon_button_style_remain_count_info, ()=>{}) +
+                                    CComponent.text_button('rem_count', `잔여 <span style="font-size:11px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${this.data.ticket[i].ticket_rem_count}회</span>`, icon_button_style_remain_count_info, ()=>{}) +
+                                    CComponent.text_button('avail_count', `예약가능 <span style="font-size:11px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${this.data.ticket[i].ticket_avail_count}회</span>`, icon_button_style_remain_count_info, ()=>{}) +
+                                    CComponent.text_button('start_date', `기간 <span style="font-size:11px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${this.data.ticket[i].start_date_text} - ${this.data.ticket[i].end_date_text}</span>`, icon_button_style_remain_count_info, ()=>{}) +
+                                    //CComponent.text_button('rem_date', `남은 기간 <span style="font-size:11px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${this.data.ticket[i].end_date_text}</span>`, icon_button_style_remain_count_info, ()=>{}) +
+                                    CComponent.text_button('note', `특이사항 <span style="font-size:11px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${ticket_note}</span>`, icon_button_style_remain_data_info, ()=>{});
             let html_ticket_lecture_list = `<div>${html_to_join_lecture_list.join('')}</div>`;
 
             html_to_join.push(html_ticket_name + html_ticket_lecture_list + html_remain_info);
@@ -919,7 +919,7 @@ class Member_simple_view{
     }
 
     dom_row_toolbox(){
-        let text_button_style = {"color":"#fe4e65", "font-size":"13px", "font-weight":"500", "padding":"10px 0"};
+        let text_button_style = {"color":"var(--font-highlight)", "font-size":"13px", "font-weight":"500", "padding":"10px 0"};
         let text_button = CComponent.text_button ("detail_user_info", "더보기", text_button_style, ()=>{
             show_user_confirm(`작업중이던 항목을 모두 닫고 회원 메뉴로 이동합니다.`, ()=>{
                 layer_popup.all_close_layer_popup();
@@ -981,7 +981,7 @@ class Member_simple_view{
         let html_data = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
 
         let html = `<div style="display:flex;">
-                        <div style="flex-basis:68px;font-size:11px;font-weight:500;letter-spacing:-0.5px;color:#b8b4b4;line-height:24px;padding:8px 0;">아이디</div>
+                        <div style="flex-basis:68px;font-size:11px;font-weight:500;letter-spacing:-0.5px;color:var(--font-inactive);line-height:24px;padding:8px 0;">아이디</div>
                         ${html_data}
                     </div>`;
         return html;
@@ -1007,7 +1007,7 @@ class Member_simple_view{
         let html_data = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
 
         let html = `<div style="display:flex;">
-                        <div style="flex-basis:68px;font-size:11px;font-weight:500;letter-spacing:-0.5px;color:#b8b4b4;line-height:24px;padding:8px 0;">연결상태</div>
+                        <div style="flex-basis:68px;font-size:11px;font-weight:500;letter-spacing:-0.5px;color:var(--font-inactive);line-height:24px;padding:8px 0;">연결상태</div>
                         ${html_data}
                     </div>`;
         return html;
@@ -1041,7 +1041,7 @@ class Member_simple_view{
         let html_data = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
 
         let html = `<div style="display:flex;">
-                        <div style="flex-basis:68px;font-size:11px;font-weight:500;letter-spacing:-0.5px;color:#b8b4b4;line-height:24px;padding:8px 0;">휴대폰 번호</div>
+                        <div style="flex-basis:68px;font-size:11px;font-weight:500;letter-spacing:-0.5px;color:var(--font-inactive);line-height:24px;padding:8px 0;">휴대폰 번호</div>
                         ${html_data}
                     </div>`;
 
@@ -1068,7 +1068,7 @@ class Member_simple_view{
         }, pattern, pattern_message, required);
 
         let html = `<div style="display:flex;">
-                        <div style="flex-basis:68px;font-size:11px;font-weight:500;letter-spacing:-0.5px;color:#b8b4b4;line-height:24px;padding:8px 0;">생년월일</div>
+                        <div style="flex-basis:68px;font-size:11px;font-weight:500;letter-spacing:-0.5px;color:var(--font-inactive);line-height:24px;padding:8px 0;">생년월일</div>
                         ${html_data}
                     </div>`;
 
@@ -1087,7 +1087,7 @@ class Member_simple_view{
         });
 
         let html = `<div style="display:flex;">
-                        <div style="flex-basis:68px;font-size:11px;font-weight:500;letter-spacing:-0.5px;color:#b8b4b4;line-height:24px;padding:8px 0;">성별</div>
+                        <div style="flex-basis:68px;font-size:11px;font-weight:500;letter-spacing:-0.5px;color:var(--font-inactive);line-height:24px;padding:8px 0;">성별</div>
                         ${html_data}
                     </div>`;
 
@@ -1112,7 +1112,7 @@ class Member_simple_view{
         }, pattern, pattern_message, required);
 
         let html = `<div style="display:flex;">
-                        <div style="flex-basis:68px;font-size:11px;font-weight:500;letter-spacing:-0.5px;color:#b8b4b4;line-height:24px;padding:8px 0;">특이사항</div>
+                        <div style="flex-basis:68px;font-size:11px;font-weight:500;letter-spacing:-0.5px;color:var(--font-inactive);line-height:24px;padding:8px 0;">특이사항</div>
                         ${html_data}
                     </div>`;
 
@@ -1127,7 +1127,7 @@ class Member_simple_view{
             console.log("1", this.data.ticket[i]);
             let ticket_name = this.data.ticket[i].ticket_name;
             if(this.data.ticket[i].ticket_state == STATE_END_PROGRESS){
-                ticket_name = `<span style="color:#888888;">${this.data.ticket[i].ticket_name}</span><span style="font-size:13px;"> (비활성)</span>`;
+                ticket_name = `<span style="color:var(--font-sub-normal);">${this.data.ticket[i].ticket_name}</span><span style="font-size:13px;"> (비활성)</span>`;
             }
 
             //티켓 이름 표기 부분
@@ -1141,7 +1141,7 @@ class Member_simple_view{
 
             });
 
-            let html_remain_info = `<div style="font-size:11px;font-weight:bold;letter-spacing:-0.5px;color:#fe4e65;margin-bottom:5px">
+            let html_remain_info = `<div style="font-size:11px;font-weight:bold;letter-spacing:-0.5px;color:var(--font-highlight);margin-bottom:5px">
                                         <div style="display:flex;">
                                             <div style="flex-basis:68px"></div><div style="flex:1 1 0;height:20px;">잔여 ${this.data.ticket[i].ticket_rem_count} 회 / 예약가능 ${this.data.ticket[i].ticket_avail_count} 회</div>
                                         </div>
@@ -1151,7 +1151,7 @@ class Member_simple_view{
                                     </div>`;
 
             let html_name = `<div style="display:flex;">
-                            <div style="flex-basis:68px;font-size:11px;font-weight:500;letter-spacing:-0.5px;color:#b8b4b4;line-height:24px;padding-top:8px;padding-bottom:0;">${i==0 ? "수강권" : ""}</div>
+                            <div style="flex-basis:68px;font-size:11px;font-weight:500;letter-spacing:-0.5px;color:var(--font-inactive);line-height:24px;padding-top:8px;padding-bottom:0;">${i==0 ? "수강권" : ""}</div>
                             ${html_ticket_name}
                         </div>`;
 

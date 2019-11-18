@@ -838,8 +838,8 @@ class help_icon{
                     width:90%;height:80%;padding:16px;
                     transform:translate(-50%, -50%);
                     left:50%;top:50%;
-                    background-color:#ffffff;
-                    box-shadow:0 0 24px 0 #cccccc;`;
+                    background-color:var(--bg-main);
+                    box-shadow:0 0 24px 0 var(--bg-inactive);`;
         let html = `
                     <div style="${style}">
                         <div style="width:100%;height:50px;">
