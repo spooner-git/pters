@@ -1030,8 +1030,25 @@ def func_get_lecture_schedule_all(class_id, lecture_id):
 
 
 def func_get_trainer_attend_schedule(context, class_id, start_date, end_date, now):
-    func_get_trainer_attend_on_schedule(context, class_id, start_date, end_date, now)
-    func_get_trainer_attend_lecture_schedule(context, class_id, start_date, end_date, now, '')
+    # func_get_trainer_attend_on_schedule(context, class_id, start_date, end_date, now)
+    # func_get_trainer_attend_lecture_schedule(context, class_id, start_date, end_date, now, '')
+
+    query = "select count(B.ID) from SCHEDULE_TB as B where B.GROUP_SCHEDULE_ID = `SCHEDULE_TB`.`ID` " \
+            "AND B.STATE_CD = \'AP\' AND B.USE=1"
+    finish_member_query = "select count(B.ID) from SCHEDULE_TB as B where B.GROUP_SCHEDULE_ID = `SCHEDULE_TB`.`ID` " \
+                          "AND B.STATE_CD = \'PE\' AND B.USE=1"
+
+    context['attend_schedule_data'] = ScheduleTb.objects.select_related(
+        'member_ticket_tb__member', 'lecture_tb').filter(Q(start_dt__lte=now, end_dt__gte=now)
+                                                         | Q(start_dt__gte=now, start_dt__lte=start_date)
+                                                         | Q(end_dt__gte=end_date, end_dt__lte=now),
+                                                         class_tb=class_id,
+                                                         en_dis_type=ON_SCHEDULE_TYPE,
+                                                         state_cd=STATE_CD_NOT_PROGRESS,
+                                                         use=USE).order_by('start_dt', 'reg_dt').annotate(
+        lecture_current_member_num=RawSQL(query, []),
+        lecture_current_finish_member_num=RawSQL(finish_member_query, []))
+
     return context
 
 
