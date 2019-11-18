@@ -630,6 +630,96 @@ def update_period_billing_logic(request):
     return render(request, 'ajax/payment_error_info.html', context)
 
 
+def update_payment_product_info_logic(request):
+    customer_uid = request.POST.get('customer_uid', '')
+    change_product_id = request.POST.get('change_product_id', '')
+
+    error = None
+    context = {'error': None}
+    product_price_info = None
+    next_schedule_timestamp = ''
+
+    if customer_uid == '' or customer_uid is None:
+        error = '결제 정보를 불러오지 못했습니다.'
+
+    if change_product_id == '' or change_product_id is None:
+        error = '결제 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            product_price_info = ProductPriceTb.objects.get(product_id=change_product_id, payment_type_cd='PERIOD',
+                                                            period_month=1)
+        except ObjectDoesNotExist:
+            error = '상품 정보를 불러오지 못했습니다.[0]'
+
+    if error is None:
+        try:
+            # 기존 결제 정보 update
+            with transaction.atomic():
+                # 관련 데이터 취소하기
+                error = func_cancel_period_billing_schedule(customer_uid)
+
+                if error is None:
+                    # 예약 데이터 삭제하기
+                    payment_data = PaymentInfoTb.objects.filter(customer_uid=customer_uid,
+                                                                status='reserve',
+                                                                payment_type_cd='PERIOD')
+                    payment_data.delete()
+
+                    # 정기결제 결제 정보 업데이트
+                    try:
+                        billing_info = BillingInfoTb.objects.get(customer_uid=customer_uid, use=USE)
+                        billing_info.product_tb_id = change_product_id
+                        billing_info.name = product_price_info.product_tb.name + ' - ' + product_price_info.name
+                        billing_info.price = int(product_price_info.sale_price * 1.1)
+                        billing_info.save()
+                        # 정기 결제 다음 결제일을 자동 결제 예약 시간으로 설정
+                        next_billing_date_time = datetime.datetime.combine(billing_info.next_payment_date,
+                                                                           datetime.datetime.min.time())
+                        next_schedule_timestamp = next_billing_date_time.replace(hour=15, minute=0, second=0,
+                                                                                 microsecond=0).timestamp()
+                    except ObjectDoesNotExist:
+                        error = '정기 결제 정보를 불러오지 못했습니다.'
+
+                if error is None:
+                    # iamport 상의 예약 제거
+                    error = func_cancel_period_billing_schedule(customer_uid)
+
+                if error is None:
+                    token_result = func_get_imp_token()
+                    access_token = token_result['access_token']
+                    error = token_result['error']
+                    if error is None:
+                        # merchant_uid 값 셋팅
+                        merchant_uid = 'm_' + str(request.user.id) + '_' + change_product_id\
+                                       + '_' + str(next_schedule_timestamp).split('.')[0]
+                        # iamport 정기 결제 예약 신청
+                        error = func_set_iamport_schedule(access_token['access_token'],
+                                                          product_price_info.product_tb.name + ' - '
+                                                          + product_price_info.name,
+                                                          int(product_price_info.sale_price * 1.1),
+                                                          customer_uid, merchant_uid, next_schedule_timestamp,
+                                                          request.user.first_name, request.user.email)
+                if error is not None:
+                    raise InternalError
+
+        except TypeError:
+            error = '오류가 발생했습니다.[0]'
+        except ValueError:
+            error = '오류가 발생했습니다.[1]'
+        except IntegrityError:
+            error = '오류가 발생했습니다.[2]'
+        except InternalError:
+            error = error
+
+    if error is not None:
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
+        messages.error(request, error)
+
+    context['error'] = error
+    return render(request, 'ajax/payment_error_info.html', context)
+
+
 def update_reserve_product_info_logic(request):
     customer_uid = request.POST.get('customer_uid', '')
     change_product_id = request.POST.get('change_product_id', '')
