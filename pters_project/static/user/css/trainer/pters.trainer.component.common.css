@@ -678,6 +678,19 @@ input:disabled{
 	background-color: var(--bg-highlight);
 }
 
+.password_4d_input{
+	display: inline-block;
+	-webkit-appearance:none;
+	border:var(--border-article);
+	background-color:unset;
+	width:40px;
+	height: 80px;
+	font-size:40px;
+	font-weight:500;
+	margin: 0 6px;
+	text-align:center;
+	box-sizing:border-box;
+}
 .password_4d_input_bar{
 	display:inline-block;
 	width:40px;

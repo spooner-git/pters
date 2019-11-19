@@ -140,7 +140,7 @@ class Setting_attendmode{
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             let title = "비밀번호 설정";
             let install_target = "#wrapper_box_password_4d_input";
-            let original_data = "0000";
+            let original_data = this.data.password == null ? "0000" : this.data.password;
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PASSWORD_4D_INPUT, 100, popup_style, null, ()=>{
                 password_4d_input = new PasswordFourDigitInput(title, install_target, original_data, (set_data)=>{
