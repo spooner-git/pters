@@ -37,22 +37,25 @@
 	.member_tools_wrap > .search_member{
 		display: table-cell;
 		height: 100%;
-		background-image: url("/static/common/icon/icon_search_black.png");
-		background-repeat: no-repeat;
-		background-position: center;
-		background-size: 23px;
+		text-align: center;
+		vertical-align: middle;
 		cursor: pointer;
+	}
+	.member_tools_wrap > .search_member > svg{
+		vertical-align: middle;
 	}
 
 	.member_tools_wrap > .add_member{
 		display: table-cell;
 		height: 100%;
-		background-image: url("/static/common/icon/icon_plus_pink.png");
-		background-repeat: no-repeat;
-		background-position: center;
-		background-size: 23px;
+		text-align: center;
+		vertical-align: middle;
 		cursor: pointer;
 	}
+	.member_tools_wrap > .add_member > svg{
+		vertical-align: middle;
+	}
+
 	.member_bottom_tools_wrap{
 		background-color: var(--bg-main);
 		font-size: 14px;

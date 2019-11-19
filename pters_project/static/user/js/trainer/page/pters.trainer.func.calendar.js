@@ -1456,7 +1456,7 @@ class Calendar {
                                                 <div onclick="${this.instance}.switch_cal_type()" style="display:inline-block;">
                                                     <span class="display_year">${this.current_year}년</span>
                                                     <span class="display_month">${this.current_month}월</span>
-                                                    <div class="swap_cal"></div>
+                                                    <div class="swap_cal">${CImg.arrow_expand()}</div>
                                                 </div>
                                             </div>
                                             <div class="cal_pc_tools_wrap">
@@ -1464,8 +1464,8 @@ class Calendar {
                                                 ${CComponent.text_button ("calendar_month_next", CImg.arrow_left("", {"width":"28px", "vertical-align":"top", "transform":"rotate(180deg)"}), null, ()=>{this.move_month('next');})}
                                             </div>
                                             <div class="cal_tools_wrap">
-                                                <div class="go_today" onclick="${this.instance}.go_month()"></div>
-                                                <div class="add_plan" onclick="${this.instance}.add_plan_button()"></div>
+                                                <div class="go_today" onclick="${this.instance}.go_month()">${CImg.today()}</div>
+                                                <div class="add_plan" onclick="${this.instance}.add_plan_button()">${CImg.plus()}</div>
                                             </div>
                                         </div>
                                         `
@@ -1479,7 +1479,7 @@ class Calendar {
                                                                             ${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).month[6]: null}월 
                                                                             ${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).date[6]: null}일
                                                     </span>
-                                                    <div class="swap_cal"></div>
+                                                    <div class="swap_cal">${CImg.arrow_expand()}</div>
                                                 </div>
                                             </div>
                                             <div class="cal_pc_tools_wrap">
@@ -1487,8 +1487,8 @@ class Calendar {
                                                 ${CComponent.text_button ("calendar_week_next", CImg.arrow_left("", {"width":"28px", "vertical-align":"top", "transform":"rotate(180deg)"}), null, ()=>{this.move_week('next');})}
                                             </div>
                                             <div class="cal_tools_wrap">
-                                                <div class="go_today" onclick="${this.instance}.go_week()"></div>
-                                                <div class="add_plan" onclick="${this.instance}.add_plan_button()"></div>
+                                                <div class="go_today" onclick="${this.instance}.go_week()">${CImg.today()}</div>
+                                                <div class="add_plan" onclick="${this.instance}.add_plan_button()">${CImg.plus()}</div>
                                             </div>
                                         </div>
                                         `             

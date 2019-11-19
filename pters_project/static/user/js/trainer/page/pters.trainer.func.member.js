@@ -332,9 +332,8 @@ class Member {
                                             <div style="display:inline-block; color:var(--font-highlight); font-weight:900;">${this.list_type == "ing" ? this.member_ing_length : this.member_end_length}</div>
                                         </div>
                                         <div class="member_tools_wrap">
-                                            <div class="search_member" onclick="${this.instance}.search_member_tool_visible(event);">
-                                            </div>
-                                            <div class="add_member" onclick="${this.instance}.event_add_member()"></div>
+                                            <div class="search_member" onclick="${this.instance}.search_member_tool_visible(event);">${CImg.search()}</div>
+                                            <div class="add_member" onclick="${this.instance}.event_add_member()">${CImg.plus()}</div>
                                         </div>
                                     </div>
                                     <div class="member_search_tool"></div>

@@ -20,35 +20,29 @@
 		display: flex;
 	}
 	.cal_tools_wrap{
-		/* display: table; */
-		/* position: absolute; */
-		/* right: 0; */
-		/* top: 0; */
-		/* float: right; */
-		/* width: 100px; */
 		height: 100%;
 		flex-basis: 100px;
 		display: flex;
 	}
 	.cal_tools_wrap > .add_plan{
-		/* display: table-cell; */
 		flex: 1 1 0;
 		height: 28px;
-		background-image: url("/static/common/icon/icon_plus_pink.png");
-		background-repeat: no-repeat;
-		background-position: center;
-		background-size: 24px;
+		text-align: center;
 		cursor: pointer;
 	}
+	.cal_tools_wrap > .add_plan > svg{
+		vertical-align: middle;
+		margin-bottom: 4px;
+	}
 	.cal_tools_wrap > .go_today{
-		/* display: table-cell; */
 		flex: 1 1 0;
 		height: 28px;
-		background-image: url("/static/common/icon/icon_today_black.png");
-		background-repeat: no-repeat;
-		background-position: center;
-		background-size: 24px;
+		text-align: center;
 		cursor: pointer;
+	}
+	.cal_tools_wrap > .go_today > svg{
+		vertical-align: middle;
+		margin-bottom: 4px;
 	}
 	.cal_pc_tools_wrap{
 		/* float: right;
@@ -61,11 +55,7 @@
 		}
 	}
 	.cal_upper_box > .cal_date_display{
-		/* display:inline-block; */
-		/* width:245px; */
-		/* flex-basis: 245px; */
 		flex: 1 1 0;
-		/* font-size:23px; */
 		font-weight:bold;
 		color:var(--font-main);
 		cursor: pointer;
@@ -73,14 +63,10 @@
 
 	.cal_upper_box .swap_cal{
 		display: inline-block;
-		height: 24px;
-		width: 24px;
+		/* height: 24px;
+		width: 24px; */
 		vertical-align: middle;
 		margin-bottom: 4px;
-		background-image: url("/static/common/icon/icon_arrow_expand_black.png");
-		background-repeat: no-repeat;
-		background-position: center;
-		background-size: 24px;
 	}
 	
 	.display_year{
