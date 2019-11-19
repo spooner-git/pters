@@ -106,8 +106,8 @@
             <div class="side_menu_item" onclick="sideGoPage('member')" id="side_member">
                 <!-- <img src={% static_url "common/icon/tab_bar/icon_member_off.png" %} alt=""> -->
                 <svg style="vertical-align:middle;margin-right:15px;" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <g id="cimg_member" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                        <path class="nav_svg" id="Combined-Shape" fill="var(--img-main)" d="M11.9910643,3.00003143 C10.3386013,2.99568275 8.99554913,4.33917449 9.00003342,5.99230661 C9.00451676,7.64508415 10.3549209,8.99561996 12.0073398,8.99996853 C13.6609335,9.00432019 15.00445,7.66089511 14.9999666,6.00809626 C14.9954823,4.35494282 13.6447021,3.00438321 11.9910643,3.00003143 Z M11.9990507,11 C9.2427378,11 7,8.75668107 7,6.00023734 C7,3.24331893 9.2427378,1 11.9990507,1 C14.7567875,1 17,3.24331893 17,6.00023734 C17,8.75668107 14.7567875,11 11.9990507,11 Z M6,23 C6,23 6,23 7.5,17 C8.25,14 10.5,14 10.5,14 L13.5,14 C13.5,14 15.75,14 16.5,17 C18,23 18,23 18,23 L20,23 C20,23 20,23 18.5,17 C17.25,12 13.5,12 13.5,12 L10.5,12 C10.5,12 6.75,12 5.5,17 C4,23 4,23 4,23 L6,23 Z"></path>
+                    <g id="데스크탑/아이콘/그룹/5C5859" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                        <path class="nav_svg" id="Combined-Shape" fill="var(--img-main)" d="M20,2 C21.0543618,2 21.9181651,2.81587779 21.9945143,3.85073766 L22,4 L22,20 C22,21.0543618 21.1841222,21.9181651 20.1492623,21.9945143 L20,22 L4,22 C2.9456382,22 2.08183488,21.1841222 2.00548574,20.1492623 L2,20 L2,4 C2,2.9456382 2.81587779,2.08183488 3.85073766,2.00548574 L4,2 L20,2 Z M20,4 L4,4 L4,20 L20,20 L20,4 Z M14.0184713,15.0003512 C14.2736285,15.0077257 17.0995314,15.1699643 17.9431726,18.7392154 L18,19 L16,19 C15.6137931,17.0689655 14.108918,17.0023781 14.0055927,17.000082 L14,17 L10,17 C10,17 8.50844233,17 8.04554512,18.8001558 L8,19 L6,19 C6.76444444,15.1777778 9.7202963,15.0079012 9.98152867,15.0003512 L14.0184713,15.0003512 Z M12,5 C14.4852814,5 16.5,7.01471863 16.5,9.5 C16.5,11.9852814 14.4852814,14 12,14 C9.51471863,14 7.5,11.9852814 7.5,9.5 C7.5,7.01471863 9.51471863,5 12,5 Z M12,7 C10.6192881,7 9.5,8.11928813 9.5,9.5 C9.5,10.8807119 10.6192881,12 12,12 C13.3807119,12 14.5,10.8807119 14.5,9.5 C14.5,8.11928813 13.3807119,7 12,7 Z"></path>
                     </g>
                 </svg>
                 <span class="sidemenu_text">회원</span>
@@ -163,12 +163,37 @@
     <section id="section_center">
         <div id="section_up_menu">
             <div style="display:inline-block;line-height:60px;cursor: pointer;" onclick="toggle_sidemenu(this)">
-                <img src="/static/common/icon/icon_toggle_sidemenu.png" alt="" style="width:30px;transform:rotate(90deg);vertical-align:middle;padding:15px;transition:0.3s">
+                <!-- <img src="/static/common/icon/icon_toggle_sidemenu.png" alt="" style="width:30px;transform:rotate(90deg);vertical-align:middle;padding:15px;transition:0.3s"> -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="width:30px;transform:rotate(90deg);vertical-align:middle;padding:15px;transition:0.3s">
+                    <path fill="none" d="M0 0h24v24H0V0z"/>
+                    <path fill="var(--img-main)" d="M14.79 13H13V4c0-.55-.45-1-1-1s-1 .45-1 1v9H9.21c-.45 0-.67.54-.35.85l2.79 2.79c.2.2.51.2.71 0l2.79-2.79c.31-.31.09-.85-.36-.85zM4 20c0 .55.45 1 1 1h14c.55 0 1-.45 1-1s-.45-1-1-1H5c-.55 0-1 .45-1 1z"/>
+                </svg>
             </div>
             <div class="up_menu_tool">
                 <div style="flex:1 0 140px" id="up_menu_user_info" onclick="sideGoPopup('mypage')"><img src={% static_url "common/loading.svg" %} alt="" class="up_menu_img"><span>불러오는 중</span></div>
-                <div style="flex:1 0 0;position:relative"><img src="/static/common/icon/tab_bar/icon_alarm_off.png" alt="" class="up_menu_img" onclick="sideGoPage('alarm')"><div class="new_alarm_indicator" style="top:15px;right:5px;"></div></div>
-                <div style="flex:1 0 0"><img src="/static/common/icon/icon_help_black.png" alt="" class="up_menu_img" onclick="sideGoPopup('helper')"></div>
+                <div style="flex:1 0 0;position:relative" onclick="sideGoPage('alarm')">
+                    <!-- <img src="/static/common/icon/tab_bar/icon_alarm_off.png" alt="" class="up_menu_img" onclick="sideGoPage('alarm')"> -->
+                    <svg class="up_menu_img" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <defs>
+                            <path d="M17.7,16.5 L16,13.5 L16,7.5 C16,7.5 16,3.5 13,3.5 L11,3.5 C8,3.5 8,7.5 8,7.5 L8,13.5 L6.3,16.5 L17.7,16.5 Z M18,13.5 L21,18.5 L3,18.5 L6,13.5 L6,7.5 C6,7.5 6,1.5 11,1.5 L13,1.5 C18,1.5 18,7.5 18,7.5 L18,13.5 Z M11,18.5 L11,19.5733333 C11,20.3911111 11.3333333,20.8 12,20.8 C12.6666667,20.8 13,20.3911111 13,19.5733333 L13,18.5 L11,18.5 Z M9,19.2692308 L9,16.5 L15,16.5 L15,19.2692308 C15,21.4230769 14,22.5 12,22.5 C10,22.5 9,21.4230769 9,19.2692308 Z" id="path-1"></path>
+                        </defs>
+                        <g id="탭바/알림/비활성화" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <mask id="mask-2" fill="white">
+                                <use xlink:href="#path-1"></use>
+                            </mask>
+                            <use id="Combined-Shape" fill="var(--img-main)" fill-rule="nonzero" xlink:href="#path-1"></use>
+                        </g>
+                    </svg>
+                    <div class="new_alarm_indicator" style="top:15px;right:5px;"></div>
+                </div>
+                <div style="flex:1 0 0" onclick="sideGoPopup('helper')">
+                    <!-- <img src="/static/common/icon/icon_help_black.png" alt="" class="up_menu_img" onclick="sideGoPopup('helper')"> -->
+                    <svg class="up_menu_img" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <g id="아이콘/도움말/5C5859" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <path id="Combined-Shape" fill="var(--img-main)" d="M12,2 C17.52,2 22,6.48 22,12 C22,17.52 17.52,22 12,22 C6.48,22 2,17.52 2,12 C2,6.48 6.48,2 12,2 Z M12,4 C7.59,4 4,7.59 4,12 C4,16.41 7.59,20 12,20 C16.41,20 20,16.41 20,12 C20,7.59 16.41,4 12,4 Z M12,16 C12.5522847,16 13,16.4477153 13,17 C13,17.5522847 12.5522847,18 12,18 C11.4477153,18 11,17.5522847 11,17 C11,16.4477153 11.4477153,16 12,16 Z M12,6 C14.21,6 16,7.79 16,10 C16,12.5 13,12.75 13,15 L13,15 L11,15 C11,11.75 14,12 14,10 C14,8.9 13.1,8 12,8 C10.9,8 10,8.9 10,10 L10,10 L8,10 C8,7.79 9.79,6 12,6 Z"></path>
+                        </g>
+                    </svg>
+                </div>
             </div>
         </div>
         <div id="section_content">
@@ -599,7 +624,7 @@
     function toggle_sidemenu(context){
         $this = $(context);
         $sidemenu = $('#section_side');
-        $sidemenu_button = $this.find('img');
+        $sidemenu_button = $this.find('svg');
         $sidemenu_text = $('.sidemenu_text');
         $toplogo = $('.top_logo');
 
