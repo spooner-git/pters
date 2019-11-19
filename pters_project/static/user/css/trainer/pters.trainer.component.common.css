@@ -680,12 +680,12 @@ input:disabled{
 
 .password_4d_input{
 	display: inline-block;
-	-webkit-appearance:none;
-	border:var(--border-article);
-	background-color:unset;
+	/* -webkit-appearance:none; */
+	/* border:var(--border-article); */
+	background-color:var(--bg-main);
 	width:40px;
-	height: 80px;
-	font-size:40px;
+	height: 60px;
+	font-size:25px;
 	font-weight:500;
 	margin: 0 6px;
 	text-align:center;
