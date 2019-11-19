@@ -4259,6 +4259,28 @@ def update_setting_language_logic(request):
     return render(request, 'ajax/trainer_error_ajax.html')
 
 
+# 강사 예약허용시간 setting 업데이트 api
+def update_setting_theme_logic(request):
+    setting_theme = request.POST.get('theme', 'light')
+    class_id = request.session.get('class_id', '')
+
+    if setting_theme is None or setting_theme == '':
+        setting_theme = 'light'
+
+    setting_type_cd_data = ['THEME']
+    setting_info_data = [setting_theme]
+    error = update_setting_data(class_id, request.user.id, setting_type_cd_data, setting_info_data)
+
+    if error is None:
+        request.session['setting_theme'] = setting_theme
+
+    else:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
 class GetTrainerSettingDataView(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
