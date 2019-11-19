@@ -3120,7 +3120,10 @@ class MemberSelector{
         //                             this.render();
         //                         })}</span>
         //                     </div>`);
-        let button_title = `<span>전체 회원</span><span style="float:right;">${this.hide_entire_member_list == true ? "펼치기" : "접기"}</span>`;
+        let img_expand = CImg.arrow_expand("", {"width":"18px", "height":"18px", "vertical-align":"middle"});
+        let img_fold = CImg.arrow_expand("", {"width":"18px", "height":"18px", "vertical-align":"middle", "transform":"rotate(180deg)"})
+
+        let button_title = `<span>전체 회원</span><span style="float:right;">${this.hide_entire_member_list == true ? "펼치기 "+img_expand : "접기" + img_fold}</span>`;
         html_to_join.unshift(`<div class="select_member_max_num">
                                 ${CComponent.text_button("entire_member_toggle", button_title, {"display":"block"}, ()=>{
                                     this.hide_entire_member_list = this.hide_entire_member_list == true ? false : true;
