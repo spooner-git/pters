@@ -690,6 +690,7 @@ input:disabled{
 	margin: 0 6px;
 	text-align:center;
 	box-sizing:border-box;
+	color: var(--font-main);
 }
 .password_4d_input_bar{
 	display:inline-block;
