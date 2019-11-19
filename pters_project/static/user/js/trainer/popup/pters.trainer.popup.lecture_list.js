@@ -51,9 +51,13 @@ class Lecture_list {
         let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();lecture_list_popup.clear();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
         let top_right = `<span class="icon_right">
-                                ${CImg.search("", null, `${this.instance}.search_tool_visible(event)`)}
-                                ${CImg.plus("", null, `layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_LECTURE_ADD}', 100, ${POPUP_FROM_BOTTOM}, null, ()=>{
-                                    lecture_add_popup = new Lecture_add('.popup_lecture_add');});`)}
+                                <span class=".search_lecture" onclick="${this.instance}.search_tool_visible(event, this)">
+                                    ${CImg.search("", {"vertical-align":"middle"})}
+                                </span>
+                                <span class=".add_lecture" onclick="layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_LECTURE_ADD}', 100, ${POPUP_FROM_BOTTOM}, null, ()=>{
+                                    lecture_add_popup = new Lecture_add('.popup_lecture_add');});">
+                                    ${CImg.plus("", {"vertical-align":"middle"})}
+                                </span>
                         </span>`;
         let content =   `<div class="search_bar"></div>
                         <section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;">${this.dom_assembly_toolbox()}</section>
@@ -197,7 +201,7 @@ class Lecture_list {
         document.querySelector('.search_bar').innerHTML = html;
     }
 
-    search_tool_visible (event){
+    search_tool_visible (event, self){
         event.stopPropagation();
         event.preventDefault();
         switch(this.search){
@@ -209,16 +213,15 @@ class Lecture_list {
             Array.from(document.getElementsByClassName('lecture_wrapper')).forEach((el)=>{
                 $(el).show();
             });
-            event.target.src = '/static/common/icon/icon_search_black.png';
-            // event.target.style.backgroundImage = 'url("/static/common/icon/icon_search_black.png")';
+
+            $(self).html(CImg.search("", {"vertical-align":"middle"}));
             break;
         case false:
             this.search = true;
             this.render_search_tool('draw');
             document.getElementsByClassName('search_input')[0].value = this.search_value;
-            
-            event.target.src = '/static/common/icon/icon_x_black.png';
-            // event.target.style.backgroundImage = 'url("/static/common/icon/icon_x_black.png")';
+
+            $(self).html(CImg.x("", {"vertical-align":"middle"}));
             break;
         }
     }

@@ -261,7 +261,7 @@ class Member {
         }
     }
 
-    search_member_tool_visible (event){
+    search_member_tool_visible (event, self){
         event.stopPropagation();
         event.preventDefault();
         switch(this.search){
@@ -274,13 +274,14 @@ class Member {
                 $(el).show();
             });
             event.target.style.backgroundImage = 'url("/static/common/icon/icon_search_black.png")';
+            $(self).html(CImg.search());
             break;
         case false:
             this.search = true;
             this.render_search_tool('draw');
             document.getElementsByClassName('search_input')[0].value = this.search_value;
             
-            event.target.style.backgroundImage = 'url("/static/common/icon/icon_x_black.png")';
+            $(self).html(CImg.x());
             break;
         }
     }
@@ -332,8 +333,12 @@ class Member {
                                             <div style="display:inline-block; color:var(--font-highlight); font-weight:900;">${this.list_type == "ing" ? this.member_ing_length : this.member_end_length}</div>
                                         </div>
                                         <div class="member_tools_wrap">
-                                            <div class="search_member" onclick="${this.instance}.search_member_tool_visible(event);">${CImg.search()}</div>
-                                            <div class="add_member" onclick="${this.instance}.event_add_member()">${CImg.plus()}</div>
+                                            <div class="search_member" onclick="${this.instance}.search_member_tool_visible(event, this);">
+                                                ${CImg.search()}
+                                            </div>
+                                            <div class="add_member" onclick="${this.instance}.event_add_member()">
+                                                ${CImg.plus()}
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="member_search_tool"></div>

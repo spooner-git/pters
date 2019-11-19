@@ -128,13 +128,13 @@ class Ticket{
             for(let j=0; j<length_lecture; j++){
                 let html;
                 if(ticket_lectures_state_cd[j] == STATE_END_PROGRESS){
-                    html = `<div style="color:#cccccc;text-decoration:line-through;">
-                                <div class="ticket_lecture_color" style="background-color:${this.list_status_type == "ing" ? ticket_lectures_color[j]: '#a3a0a0'}"></div>
+                    html = `<div style="color:var(--font-inactive);text-decoration:line-through;">
+                                <div class="ticket_lecture_color" style="background-color:${this.list_status_type == "ing" ? ticket_lectures_color[j]: 'var(--font-inactive)'}"></div>
                                 ${ticket_lectures_included_name[j]}
                             </div>`;
                 }else if(ticket_lectures_state_cd[j] == STATE_IN_PROGRESS){
                     html = `<div>
-                                <div class="ticket_lecture_color" style="background-color:${this.list_status_type == "ing" ? ticket_lectures_color[j]: '#a3a0a0'}"></div>
+                                <div class="ticket_lecture_color" style="background-color:${this.list_status_type == "ing" ? ticket_lectures_color[j]: 'var(--font-inactive)'}"></div>
                                 ${ticket_lectures_included_name[j]}
                             </div>`;
                 }
@@ -156,7 +156,7 @@ class Ticket{
                             </div>
                             <div class="ticket_data_b">
                                 <div class="ticket_lectures">
-                                    ${ticket_lectures_included_name_html.length != 0 ? ticket_lectures_included_name_html.join('') : "<span style='color:#fe4e65;text-decoration:underline'>포함된 수업이 없습니다.</span>"}
+                                    ${ticket_lectures_included_name_html.length != 0 ? ticket_lectures_included_name_html.join('') : "<span style='color:var(--font-highlight);text-decoration:underline'>포함된 수업이 없습니다.</span>"}
                                 </div>
                             </div>
                         </article>`;
@@ -187,14 +187,17 @@ class Ticket{
         let root_content_height = $root_content.height();
 
         let html = `<div class="ticket_upper_box">
-                        <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:#3b3b3b; letter-spacing: -1px; height:28px;">
+                        <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:var(--font-main); letter-spacing: -1px; height:28px;">
                             <span style="display:inline-block;">수강권 </span>
-                            <div style="display:inline-block; color:#fe4e65; font-weight:900;">${this.data_length}</div>
+                            <div style="display:inline-block; color:var(--font-highlight); font-weight:900;">${this.data_length}</div>
                         </div>
                         <div class="ticket_tools_wrap">
-                            <div class="search_ticket" onclick="${this.instance}.search_tool_visible(event);">
+                            <div class="search_ticket" onclick="${this.instance}.search_tool_visible(event, this);">
+                                ${CImg.search()}
                             </div>
-                            <div class="add_ticket" onclick="${this.instance}.event_add_ticket()"></div>
+                            <div class="add_ticket" onclick="${this.instance}.event_add_ticket()">
+                                ${CImg.plus()}
+                            </div>
                         </div>
                     </div>
                     <div class="search_bar"></div>
@@ -230,7 +233,7 @@ class Ticket{
         document.querySelector('.search_bar').innerHTML = html;
     }
 
-    search_tool_visible (event){
+    search_tool_visible (event, self){
         event.stopPropagation();
         event.preventDefault();
         switch(this.search){
@@ -242,16 +245,15 @@ class Ticket{
             Array.from(document.getElementsByClassName('ticket_wrapper')).forEach((el)=>{
                 $(el).show();
             });
-            // event.target.src = '/static/common/icon/icon_search_black.png';
-            event.target.style.backgroundImage = 'url("/static/common/icon/icon_search_black.png")';
+            
+            $(self).html(CImg.search());
             break;
         case false:
             this.search = true;
             this.render_search_tool('draw');
             document.getElementsByClassName('search_input')[0].value = this.search_value;
             
-            // event.target.src = '/static/common/icon/icon_x_black.png';
-            event.target.style.backgroundImage = 'url("/static/common/icon/icon_x_black.png")';
+            $(self).html(CImg.x());
             break;
         }
     }
