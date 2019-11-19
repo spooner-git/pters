@@ -128,10 +128,10 @@ class Lecture {
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             let onclick = `layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_LECTURE_VIEW}', 100, ${popup_style}, {'lecture_id':${lecture_id}}, ()=>{
                 lecture_view_popup = new Lecture_view('.popup_lecture_view', ${lecture_id}, 'lecture_view_popup');});`;
-            let html = `<article class="lecture_wrapper" data-text="${lecture_name}" data-lectureid="${lecture_id}" onclick="${onclick}" style="color:${this.list_status_type == "ing" ? "" : '#a3a0a0'}">
+            let html = `<article class="lecture_wrapper" data-text="${lecture_name}" data-lectureid="${lecture_id}" onclick="${onclick}" style="color:${this.list_status_type == "ing" ? "" : 'var(--font-inactive)'}">
                             <div>
                                 <div class="lecture_data_l">
-                                    <div class="lecture_tag" style="background:${this.list_status_type == "ing" ? lecture_ing_bg_color : "#a3a0a0"}"></div>
+                                    <div class="lecture_tag" style="background:${this.list_status_type == "ing" ? lecture_ing_bg_color : "var(--font-inactive)"}"></div>
                                 </div>
                                 <div class="lecture_data_c">
                                     <div class="lecture_name">
@@ -176,15 +176,18 @@ class Lecture {
 
         let title = "수업 ";
         let html = `<div class="lecture_upper_box">
-                        <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:#3b3b3b; letter-spacing: -1px; height:28px;">
+                        <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:var(--font-main); letter-spacing: -1px; height:28px;">
                             <span style="display:inline-block;">${title}</span>
                             <span style="display:none;">${title}</span>
-                            <div style="display:inline-block; color:#fe4e65; font-weight:900;">${this.data_length}</div>
+                            <div style="display:inline-block; color:var(--font-highlight); font-weight:900;">${this.data_length}</div>
                         </div>
                         <div class="lecture_tools_wrap">
-                            <div class="search_lecture" onclick="${this.instance}.search_tool_visible(event);">
+                            <div class="search_lecture" onclick="${this.instance}.search_tool_visible(event, this);">
+                                ${CImg.search()}
                             </div>
-                            <div class="add_lecture" onclick="${this.instance}.event_add_lecture()"></div>
+                            <div class="add_lecture" onclick="${this.instance}.event_add_lecture()">
+                                ${CImg.plus()}
+                            </div>
                         </div>
                     </div>
                     <div class="search_bar"></div>
@@ -215,7 +218,7 @@ class Lecture {
         document.querySelector('.search_bar').innerHTML = html;
     }
 
-    search_tool_visible (event){
+    search_tool_visible (event, self){
         event.stopPropagation();
         event.preventDefault();
         switch(this.search){
@@ -227,14 +230,15 @@ class Lecture {
             Array.from(document.getElementsByClassName('lecture_wrapper')).forEach((el)=>{
                 $(el).show();
             });
-            event.target.style.backgroundImage = 'url("/static/common/icon/icon_search_black.png")';
+
+            $(self).html(CImg.search());
             break;
         case false:
             this.search = true;
             this.render_search_tool('draw');
             document.getElementsByClassName('search_input')[0].value = this.search_value;
             
-            event.target.style.backgroundImage = 'url("/static/common/icon/icon_x_black.png")';
+            $(self).html(CImg.x());
             break;
         }
     }
