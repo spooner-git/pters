@@ -586,7 +586,7 @@ class CComponent{
                         </div>
                         <div class="obj_table_raw table_memo_info" style="color:#ff7184;">
                             <div class="cell_ticket_num"></div>
-                            <div class="cell_ticket_info">${note}</div>
+                            <div class="cell_ticket_info"><span style="white-space:pre-wrap; display:block;">${note}</span></div>
                         </div>
                     </li>`;
         $(document).off('click', `#ticket_history_row_${ticket_id}`).on('click', `#ticket_history_row_${ticket_id}`, function(){
