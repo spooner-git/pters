@@ -999,11 +999,13 @@ function theme_data_to_app(){
     alert(os);
     alert(device);
     if(os == IOS){
+        alert('test1');
         // ios 인앱 결제 호출
         window.webkit.messageHandlers.set_theme.postMessage(setting_theme);
     }
     // else if(os == ANDROID && device == MOBILE && device_info != 'web' && user_username =='guest') {
     else if(os == ANDROID) {
+        alert('test2');
         // 안드로이드 인앱 결제 호출
         window.set_theme.callMethodName(setting_theme);
     }
