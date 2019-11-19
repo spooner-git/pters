@@ -43,6 +43,7 @@
 	}
 	.member_tools_wrap > .search_member > svg{
 		vertical-align: middle;
+		margin-bottom: 4px;
 	}
 
 	.member_tools_wrap > .add_member{
@@ -54,6 +55,7 @@
 	}
 	.member_tools_wrap > .add_member > svg{
 		vertical-align: middle;
+		margin-bottom: 4px;
 	}
 
 	.member_bottom_tools_wrap{
