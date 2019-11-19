@@ -777,6 +777,19 @@ class CImg{
         return svg;
     }
 
+    static members_square(svg_color, style, onclick){
+        if(svg_color == undefined){
+            svg_color = [];
+        }
+        let svg = `<svg style="${CComponent.data_to_style_code(style)}" ${CImg.data_to_onclick_event(onclick)} width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <g id="데스크탑/아이콘/그룹/5C5859" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <path id="Combined-Shape" fill="${CImg.data_to_svg_color(svg_color[0], "var(--img-main)")}" d="M20,2 C21.0543618,2 21.9181651,2.81587779 21.9945143,3.85073766 L22,4 L22,20 C22,21.0543618 21.1841222,21.9181651 20.1492623,21.9945143 L20,22 L4,22 C2.9456382,22 2.08183488,21.1841222 2.00548574,20.1492623 L2,20 L2,4 C2,2.9456382 2.81587779,2.08183488 3.85073766,2.00548574 L4,2 L20,2 Z M20,4 L4,4 L4,20 L20,20 L20,4 Z M14.0184713,15.0003512 C14.2736285,15.0077257 17.0995314,15.1699643 17.9431726,18.7392154 L18,19 L16,19 C15.6137931,17.0689655 14.108918,17.0023781 14.0055927,17.000082 L14,17 L10,17 C10,17 8.50844233,17 8.04554512,18.8001558 L8,19 L6,19 C6.76444444,15.1777778 9.7202963,15.0079012 9.98152867,15.0003512 L14.0184713,15.0003512 Z M12,5 C14.4852814,5 16.5,7.01471863 16.5,9.5 C16.5,11.9852814 14.4852814,14 12,14 C9.51471863,14 7.5,11.9852814 7.5,9.5 C7.5,7.01471863 9.51471863,5 12,5 Z M12,7 C10.6192881,7 9.5,8.11928813 9.5,9.5 C9.5,10.8807119 10.6192881,12 12,12 C13.3807119,12 14.5,10.8807119 14.5,9.5 C14.5,8.11928813 13.3807119,7 12,7 Z"></path>
+                        </g>
+                    </svg>
+                    `;
+        return svg;
+    }
+
     static member_card(svg_color, style, onclick){
         if(svg_color == undefined){
             svg_color = [];
