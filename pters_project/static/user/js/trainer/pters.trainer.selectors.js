@@ -4383,10 +4383,10 @@ class PasswordFourDigitInput{
     }
 
     set_initial_data(){
-        this.data.password_digit_1 = String(this.original_data).substr(0, 1);
-        this.data.password_digit_2 = String(this.original_data).substr(1, 1);
-        this.data.password_digit_3 = String(this.original_data).substr(2, 1);
-        this.data.password_digit_4 = String(this.original_data).substr(3, 1);
+        this.data.password_digit_1 = Number(String(this.original_data).substr(0, 1));
+        this.data.password_digit_2 = Number(String(this.original_data).substr(1, 1));
+        this.data.password_digit_3 = Number(String(this.original_data).substr(2, 1));
+        this.data.password_digit_4 = Number(String(this.original_data).substr(3, 1));
         this.init();
     }
 
@@ -4421,10 +4421,10 @@ class PasswordFourDigitInput{
     dom_row_input(){
         let html = `<div style="margin:40px 0;">
                         <div style="text-align:center;">
-                            <input type="tel" maxlength=1 class="password_4d_input" id="password_4d_input_slot_1" value="${this.data.password_digit_1 == null ? "" : this.data.password_digit_1}">
-                            <input type="tel" maxlength=1 class="password_4d_input" id="password_4d_input_slot_2" value="${this.data.password_digit_2 == null ? "" : this.data.password_digit_2}">
-                            <input type="tel" maxlength=1 class="password_4d_input" id="password_4d_input_slot_3" value="${this.data.password_digit_3 == null ? "" : this.data.password_digit_3}">
-                            <input type="tel" maxlength=1 class="password_4d_input" id="password_4d_input_slot_4" value="${this.data.password_digit_4 == null ? "" : this.data.password_digit_4}">
+                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_1" value="${this.data.password_digit_1 == null ? "" : this.data.password_digit_1}">
+                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_2" value="${this.data.password_digit_2 == null ? "" : this.data.password_digit_2}">
+                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_3" value="${this.data.password_digit_3 == null ? "" : this.data.password_digit_3}">
+                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_4" value="${this.data.password_digit_4 == null ? "" : this.data.password_digit_4}">
                         </div>
                         <div style="height:2px;width:220px;text-align:center;margin:0 auto">
                             <div id="password_digit_1" class="password_4d_input_bar"></div>
@@ -4434,45 +4434,46 @@ class PasswordFourDigitInput{
                         </div>
                     </div>`;
         let self = this;
+
         $(document).off('keyup', '#password_4d_input_slot_1').on('keyup', '#password_4d_input_slot_1', function(e){
-            let user_input_data = String(e.target.value);
+            let user_input_data = e.target.value;
             self.data.password_digit_1 = user_input_data;
             if(e.keyCode == 8){
                 return;
             }else{
                 setTimeout(()=>{
                     if(user_input_data != ""){
-                        $('#password_4d_input_slot_2').focus();
+                        $('#password_4d_input_slot_2').val("").focus();
                     }
                 }, 50);
             }
         });
         $(document).off('keyup', '#password_4d_input_slot_2').on('keyup', '#password_4d_input_slot_2', function(e){
-            let user_input_data = String(e.target.value);
-            self.data.password_digit_2 =user_input_data;
+            let user_input_data = e.target.value;
+            self.data.password_digit_2 = user_input_data;
             if(e.keyCode == 8){
                 let value = $('#password_4d_input_slot_1').val();
                 $('#password_4d_input_slot_1').focus().val('').val(value);
             }else{
                 if(user_input_data != ""){
-                    $('#password_4d_input_slot_3').focus();
+                    $('#password_4d_input_slot_3').val("").focus();
                 }
             }
         });
         $(document).off('keyup', '#password_4d_input_slot_3').on('keyup', '#password_4d_input_slot_3', function(e){
-            let user_input_data = String(e.target.value);
+            let user_input_data = e.target.value;
             self.data.password_digit_3 = user_input_data;
             if(e.keyCode == 8){
                 let value = $('#password_4d_input_slot_2').val();
                 $('#password_4d_input_slot_2').focus().val('').val(value);
             }else{
                 if(user_input_data != ""){
-                    $('#password_4d_input_slot_4').focus();
+                    $('#password_4d_input_slot_4').val("").focus();
                 }
             }
         });
         $(document).off('keyup', '#password_4d_input_slot_4').on('keyup', '#password_4d_input_slot_4', function(e){
-            let user_input_data = String(e.target.value);
+            let user_input_data = e.target.value;
             self.data.password_digit_4 = user_input_data;
             if(e.keyCode == 8){
                 let value = $('#password_4d_input_slot_3').val();
@@ -4492,7 +4493,7 @@ class PasswordFourDigitInput{
     }
 
     upper_right_menu(){
-        let combined_data = {password : this.data.password_digit_1 + this.data.password_digit_2 + this.data.password_digit_3 + this.data.password_digit_4};
+        let combined_data = {password : `${this.data.password_digit_1}${this.data.password_digit_2}${this.data.password_digit_3}${this.data.password_digit_4}`};
         this.callback(combined_data);
         layer_popup.close_layer_popup();
         this.clear();
