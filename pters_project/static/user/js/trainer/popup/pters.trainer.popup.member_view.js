@@ -622,12 +622,13 @@ class Member_view{
             //티켓내 남은횟수, 남은 기간 표기 부분
             let icon_button_style_remain_count_info = {"display":"block", "padding":"6px 0 0 38px", "font-size":"11px", "font-weight":"500", "color":"var(--font-sub-normal)", "height":"16px"};
             let icon_button_style_remain_data_info = {"display":"block", "padding":"6px 0 12px 38px", "font-size":"11px", "font-weight":"500", "color":"var(--font-sub-normal)", "height":"16px"};
+            let icon_button_style_note_info = {"display":"block", "padding":"6px 0 12px 38px", "font-size":"11px", "font-weight":"500", "color":"var(--font-sub-normal)", "height":"auto"};
             let html_remain_info = CComponent.text_button('reg_count', `등록 <span style="font-size:11px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${this.data.ticket[i].ticket_reg_count}회</span>`, icon_button_style_remain_count_info, ()=>{}) +
                                     CComponent.text_button('rem_count', `잔여 <span style="font-size:11px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${this.data.ticket[i].ticket_rem_count}회</span>`, icon_button_style_remain_count_info, ()=>{}) +
                                     CComponent.text_button('avail_count', `예약가능 <span style="font-size:11px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${this.data.ticket[i].ticket_avail_count}회</span>`, icon_button_style_remain_count_info, ()=>{}) +
                                     CComponent.text_button('start_date', `기간 <span style="font-size:11px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${this.data.ticket[i].start_date_text} - ${this.data.ticket[i].end_date_text}</span>`, icon_button_style_remain_count_info, ()=>{}) +
                                     //CComponent.text_button('rem_date', `남은 기간 <span style="font-size:11px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${this.data.ticket[i].end_date_text}</span>`, icon_button_style_remain_count_info, ()=>{}) +
-                                    CComponent.text_button('note', `특이사항 <span style="font-size:11px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${ticket_note}</span>`, icon_button_style_remain_data_info, ()=>{});
+                                    CComponent.text_button('note', `특이사항 <span style="display:block; white-space:pre-wrap; font-size:11px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${ticket_note}</span>`, icon_button_style_note_info, ()=>{});
             let html_ticket_lecture_list = `<div>${html_to_join_lecture_list.join('')}</div>`;
 
             html_to_join.push(html_ticket_name + html_ticket_lecture_list + html_remain_info);
