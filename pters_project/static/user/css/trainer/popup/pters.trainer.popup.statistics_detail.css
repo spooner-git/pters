@@ -21,7 +21,7 @@
 	font-size: 12px;
 	font-weight: 500;
 	letter-spacing: -0.6px;
-	color: #1f1d1e;
+	color: var(--font-base);
 }
 
 .popup_statistics_detail .sales_detail_date{
@@ -35,7 +35,7 @@
 }
 .popup_statistics_detail .sales_detail_content > div{
 	font-size: 11px;
-	color: #858282;
+	color: var(--font-sub-normal);
 	letter-spacing: -0.5px;
 }
 

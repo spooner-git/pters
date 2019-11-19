@@ -29,8 +29,8 @@
 
 .popup_mypage_modify #pass_info_wrap{
 	padding: 8px 20px;
-	border-top: 1px solid #f5f2f3;
-	border-bottom: 1px solid #f5f2f3;
+	border-top: var(--border-article);
+	border-bottom: var(--border-article);
 }
 
 .popup_mypage_modify .photo_wrap{

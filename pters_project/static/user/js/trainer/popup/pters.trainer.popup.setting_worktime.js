@@ -156,7 +156,7 @@ class Setting_worktime{
         let html_to_join = [];
         for(let i=0; i<day_array.length; i++){
             let day = day_array[i];
-            let tag = CComponent.dom_tag(DAYNAME_MATCH[day]+'요일', {"font-size":"16px", "font-weight":"bold", "color":"#5c5859", "padding":"0", "height":"52px", "line-height":"52px"});
+            let tag = CComponent.dom_tag(DAYNAME_MATCH[day]+'요일', {"font-size":"16px", "font-weight":"bold", "color":"var(--font-sub-dark)", "padding":"0", "height":"52px", "line-height":"52px"});
             let start_time_selector = this.dom_row_start_time_select(day);
             let end_time_selector = this.dom_row_end_time_select(day);
             let id = `worktime_${day}`;
@@ -317,7 +317,7 @@ class Setting_worktime{
         let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let style = this.data[day].start_time == this.data[day].end_time && this.data[day].end_time != null ? {"color":"#fe4e65"} : null;
+        let style = this.data[day].start_time == this.data[day].end_time && this.data[day].end_time != null ? {"color":"var(--font-highlight)"} : null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ //data : 직전 셋팅값
             //행을 클릭했을때 실행할 내용
             if(this.data[day].start_time == null){

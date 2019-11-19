@@ -66,7 +66,7 @@ class Plan_repeat_list{
         document.querySelector(this.target.content).innerHTML = 
             `<div style="position:fixed;top:50%;left:50%;transform:translate(-50%, -50%);text-align:center;">
                 <img src="/static/common/loading.svg">
-                <div style="font-size:12px;color:#858282;word-break:keep-all">사용자 데이터를 불러오고 있습니다.</div>
+                <div style="font-size:12px;color:var(--font-sub-normal);word-break:keep-all">사용자 데이터를 불러오고 있습니다.</div>
             </div>`;
     }
 
@@ -164,7 +164,7 @@ class Plan_repeat_list{
         for(let i=0; i<length; i++){
             let data = this.data.off_repeat_schedule_data[i];
             let repeat_id = data.repeat_schedule_id;
-            let color = '#282828';
+            let color = 'var(--font-main)';
             let repeat_name = "OFF";
             let repeat_period = data.start_date + ' - ' + data.end_date;
             let repeat_start_time = TimeRobot.to_hhmm(data.start_time.split(':')[0], data.start_time.split(':')[1]).complete;
@@ -189,8 +189,8 @@ class Plan_repeat_list{
                             <div style="float:left;width:4px;height:32px;background-color:${color}"></div>
                         </div>
                         <div style="flex:1 1 0">
-                            <div style="font-size:16px;font-weight:500;letter-spacing:-0.7px;color:#1f1d1e;">${repeat_name}</div>
-                            <div style="font-size:12px;font-weight:500;letter-spacing:-0.5px;color:#858282;">${repeat_day} / ${repeat_time} / ${repeat_period}</div>
+                            <div style="font-size:16px;font-weight:500;letter-spacing:-0.7px;color:var(--font-base);">${repeat_name}</div>
+                            <div style="font-size:12px;font-weight:500;letter-spacing:-0.5px;color:var(--font-sub-normal);">${repeat_day} / ${repeat_time} / ${repeat_period}</div>
                         </div>
                         <div style="flex-basis:30px;">
                             ${CImg.more("", {"vertical-align":"top"})}
@@ -203,7 +203,7 @@ class Plan_repeat_list{
                     show_user_confirm(`정말 ${repeat_name}의 반복 일정을 취소하시겠습니까? <br><br>
                                         <img src="/static/common/icon/icon_stopmark.png" style="width:25px;"><br>
                                         <div style="text-align:center;margin-top:5px;">
-                                            <span style="color:#fe4e65; font-size:12px;">
+                                            <span style="color:var(--font-highlight); font-size:12px;">
                                         하위에 다른 반복일정이 존재할 경우 함께 취소됩니다. <br>
                                         과거일정은 보존되지만, 등록한 미래일정은 취소됩니다.</div>`, ()=>{
                         layer_popup.close_layer_popup();
@@ -234,7 +234,7 @@ class Plan_repeat_list{
     dom_row_repeat_participants(repeat_id, member_id, member_name, member_photo){
         let html = `<div class="repeat_member_wrapper" id="repeat_item_${repeat_id}">
                         <div style="flex-basis:24px;"><img src="${member_photo}" style="border-radius:50%;width:20px;vertical-align:middle;"></div>
-                        <div style="flex:1 1 0;font-size:14px;font-weight:500;letter-spacing:-0.6px;color:#3d3b3b;line-height:32px;">${member_name}</div>
+                        <div style="flex:1 1 0;font-size:14px;font-weight:500;letter-spacing:-0.6px;color:var(--font-main);line-height:32px;">${member_name}</div>
                     </div>`;
         $(document).off('click', `#repeat_item_${repeat_id}`).on('click', `#repeat_item_${repeat_id}`, function(e){
             let user_option = {

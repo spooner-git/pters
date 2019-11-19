@@ -62,8 +62,8 @@ class Service_inquiry_history {
     render(){
         let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();service_inquiry_history_popup.clear();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;"></span></span>`;
-        let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;border-bottom:1px solid #f5f2f3;">${this.dom_assembly_toolbox()}</section>
+        let top_right = `<span class="icon_right"><span style="color:var(--font-highlight);font-weight: 500;"></span></span>`;
+        let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;border-bottom:var(--border-article);">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
 
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
@@ -77,7 +77,7 @@ class Service_inquiry_history {
         document.querySelector(this.target.install).innerHTML = 
             `<div style="position:fixed;top:50%;left:50%;transform:translate(-50%, -50%);text-align:center;">
                 <img src="/static/common/loading.svg">
-                <div style="font-size:12px;color:#858282;word-break:keep-all">사용자 데이터를 불러오고 있습니다.</div>
+                <div style="font-size:12px;color:var(--font-sub-normal);word-break:keep-all">사용자 데이터를 불러오고 있습니다.</div>
             </div>`;
     }
 
@@ -124,11 +124,11 @@ class Service_inquiry_history {
     dom_row_toolbox(){
         let title = "내 문의 내역 ";
         let html = `<div class="inquiry_history_upper_box">
-                        <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:#3b3b3b; letter-spacing: -1px; height:28px;">
+                        <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:var(--font-main); letter-spacing: -1px; height:28px;">
                             <span style="display:inline-block;">${title}</span>
                             <span style="display:none;">${title}</span>
                         </div>
-                        <div style="font-size:14px;font-weight:500;color:#5c5859;letter-spacing:-0.65px">나의 문의 내역입니다.</div>
+                        <div style="font-size:14px;font-weight:500;color:var(--font-sub-dark);letter-spacing:-0.65px">나의 문의 내역입니다.</div>
                     </div>
                     `;
         return html;

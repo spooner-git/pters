@@ -176,7 +176,7 @@ class Member {
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             let onclick = `layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_MEMBER_VIEW}', 100, ${popup_style}, {'member_id':${member_id}}, ()=>{
                 member_view_popup = new Member_view('.popup_member_view', ${member_id}, 'member_view_popup');});`;
-            let html = `<article class="member_wrapper" data-member_id="${member_id}" data-name="${member_name}" onclick="${onclick}" style="color:${list_type == "ing" ? "" : '#a3a0a0'}">
+            let html = `<article class="member_wrapper" data-member_id="${member_id}" data-name="${member_name}" onclick="${onclick}" style="color:${list_type == "ing" ? "" : 'var(--font-inactive)'}">
                             <div class="member_data_wrapper">
                                 <div class="member_data_l">
                                     <img src="${data.member_profile_url}">
@@ -327,14 +327,13 @@ class Member {
         return(
             {
                 member_upper_box:`   <div class="member_upper_box">
-                                        <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:#3b3b3b; letter-spacing: -1px; height:28px;">
+                                        <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:var(--font-main); letter-spacing: -1px; height:28px;">
                                             <div style="display:inline-block;">회원 </div>
-                                            <div style="display:inline-block; color:#fe4e65; font-weight:900;">${this.list_type == "ing" ? this.member_ing_length : this.member_end_length}</div>
+                                            <div style="display:inline-block; color:var(--font-highlight); font-weight:900;">${this.list_type == "ing" ? this.member_ing_length : this.member_end_length}</div>
                                         </div>
                                         <div class="member_tools_wrap">
-                                            <div class="search_member" onclick="${this.instance}.search_member_tool_visible(event);">
-                                            </div>
-                                            <div class="add_member" onclick="${this.instance}.event_add_member()"></div>
+                                            <div class="search_member" onclick="${this.instance}.search_member_tool_visible(event);">${CImg.search()}</div>
+                                            <div class="add_member" onclick="${this.instance}.event_add_member()">${CImg.plus()}</div>
                                         </div>
                                     </div>
                                     <div class="member_search_tool"></div>

@@ -130,7 +130,7 @@ class Pters_pass_shop{
         if(user_username =='guest'){
             icon_r_text = "30일 9,900원";
         }
-        let style = {"color":"#fe4e65", "font-weight":"bold", "border-bottom":"1px solid #e8e8e8"};
+        let style = {"color":"var(--font-highlight)", "font-weight":"bold", "border-bottom":"var(--border-article)"};
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP_AGREEMENT, 100, POPUP_FROM_BOTTOM, null, ()=>{
                 pters_pass_shop_agreement_popup = new Pters_pass_shop_agreement('.popup_pters_pass_shop_agreement', "standard");});
@@ -183,7 +183,7 @@ class Pters_pass_shop{
         if(user_username =='guest'){
             icon_r_text = "30일 5,900원";
         }
-        let style = {"color":"#22a900", "font-weight":"bold", "border-bottom":"1px solid #e8e8e8"};
+        let style = {"color":"#22a900", "font-weight":"bold", "border-bottom":"var(--border-article)"};
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP_AGREEMENT, 100, POPUP_FROM_BOTTOM, null, ()=>{
                 pters_pass_shop_agreement_popup = new Pters_pass_shop_agreement('.popup_pters_pass_shop_agreement', "basic");});

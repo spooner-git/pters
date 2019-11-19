@@ -111,10 +111,10 @@ class Lecture_list {
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             let onclick = `layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_LECTURE_VIEW}', 100, ${popup_style}, {'lecture_id':${lecture_id}}, ()=>{
                 lecture_view_popup = new Lecture_view('.popup_lecture_view', ${lecture_id}, 'lecture_view_popup');});`;
-            let html = `<article class="lecture_wrapper" data-text="${lecture_name}" data-lectureid="${lecture_id}" onclick="${onclick}" style="color:${this.list_status_type == "ing" ? "" : '#a3a0a0'}">
+            let html = `<article class="lecture_wrapper" data-text="${lecture_name}" data-lectureid="${lecture_id}" onclick="${onclick}" style="color:${this.list_status_type == "ing" ? "" : 'var(--font-inactive)'}">
                             <div>
                                 <div class="lecture_data_l">
-                                    <div class="lecture_tag" style="background:${this.list_status_type == "ing" ? lecture_ing_bg_color : "#a3a0a0"}"></div>
+                                    <div class="lecture_tag" style="background:${this.list_status_type == "ing" ? lecture_ing_bg_color : "var(--font-inactive)"}"></div>
                                 </div>
                                 <div class="lecture_data_c">
                                     <div class="lecture_name">
@@ -159,10 +159,10 @@ class Lecture_list {
 
         let title = "수업 ";
         let html = `<div class="lecture_upper_box">
-                        <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:#3b3b3b; letter-spacing: -1px; height:28px;">
+                        <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:var(--font-main); letter-spacing: -1px; height:28px;">
                             <span style="display:inline-block;">${title}</span>
                             <span style="display:none;">${title}</span>
-                            <div style="display:inline-block; color:#fe4e65; font-weight:900;">${this.data_length}</div>
+                            <div style="display:inline-block; color:var(--font-highlight); font-weight:900;">${this.data_length}</div>
                         </div>
                     </div>
                     <div class="lecture_bottom_tools_wrap">

@@ -11,7 +11,7 @@
 	position: relative;
 	height: 28px;
 	line-height: 28px;
-	background-color: #ffffff;
+	background-color: var(--bg-main);
 	/* border-bottom: 1px solid #cccccc; */
 	/*padding: 14px 20px;*/
 	box-sizing: border-box;
@@ -31,9 +31,9 @@
 	width: 100%;
 	height: 72px;
 	padding: 14px 20px;
-	background-color: #ffffff;
+	background-color: var(--bg-main);
 	margin: 0 auto;
-	border-top: 1px solid #f5f2f3;
+	border-top: var(--border-article);
 	box-sizing: border-box;
 	cursor: pointer;
 }
@@ -42,14 +42,14 @@
 	font-size: 16px;
 	font-weight: 500;
 	letter-spacing: -0.8px;
-	color: #1f1d1e;
+	color: var(--font-base);
 }
 
 .notice_date{
 	font-size: 12px;
 	font-weight: 500;
 	letter-spacing: -0.6px;
-	color: #858282;
+	color: var(--font-sub-normal);
 }
 
 .popup_service_notice .popup_toolbox{

@@ -101,7 +101,7 @@ class Setting_reserve{
         let html = this.dom_row_stop_reserve() + 
                     '<article class="obj_input_box_full" style="padding-top:5px;">' +
                        this.dom_row_start_time_for_private_reserve() +
-                       "<span style='font-size:12px;color:#3b3b3b;letter-spacing:-0.6px;font-weight:normal'>수강 회원님께서 선택 가능한 시작 시각</span>" + 
+                       "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>수강 회원님께서 선택 가능한 시작 시각</span>" + 
                     '</article>' +
                     '<article class="obj_input_box_full">' +
                         this.dom_row_available_reserve_date() + 

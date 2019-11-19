@@ -35,10 +35,10 @@
 	bottom: 0;
 	left: 0;
 	width: 100%;
-	border-top: 1px solid #cccccc;
-	border-bottom: 1px solid #cccccc;
-	box-shadow: 0px 0px 5px 0px #cccccc;
-	background-color: #ffffff;
+	border-top: var(--border-article-dark);
+	border-bottom: var(--border-article-dark);
+	box-shadow: 0px 0px 5px 0px var(--bg-domtag);
+	background-color: var(--bg-main);
     z-index: 10;
     transition: 0.3s;
 }
@@ -57,23 +57,23 @@ textarea{
 }
 
 textarea::-webkit-input-placeholder{
-	color: #b8b4b4;
+	color: var(--font-inactive);
 }
 textarea::-moz-placeholder{
-	color: #b8b4b4;
+	color: var(--font-inactive);
 }
 textarea:-ms-input-placeholder{
-	color: #b8b4b4;
+	color: var(--font-inactive);
 }
 
 input::-webkit-input-placeholder{
-	color: #b8b4b4;
+	color: var(--font-inactive);
 }
 input::-moz-placeholder{
-	color: #b8b4b4;
+	color: var(--font-inactive);
 }
 input:-ms-input-placeholder{
-	color: #b8b4b4;
+	color: var(--font-inactive);
 }
 
 #android_input_shade{

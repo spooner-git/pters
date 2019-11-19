@@ -109,7 +109,7 @@ class Lecture_add{
     render(){
         let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();lecture_add_popup.clear();">${CImg.x()}</span>`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right" onclick="lecture_add_popup.send_data();"><span style="color:#fe4e65;font-weight: 500;">저장</span></span>`;
+        let top_right = `<span class="icon_right" onclick="lecture_add_popup.send_data();"><span style="color:var(--font-highlight);font-weight: 500;">저장</span></span>`;
         let content =   `<form id="${this.form_id}" onSubmit="return false"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
         
@@ -287,7 +287,7 @@ class Lecture_add{
         let icon = NONE;
         let icon_r_visible = SHOW;
         let icon_r_text = '';
-        let style = this.data.color_name.length == 0 ? {"color":"#b8b4b4"} : null;
+        let style = this.data.color_name.length == 0 ? {"color":"var(--font-inactive)"} : null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_COLOR_SELECT, 100, popup_style, null, ()=>{
@@ -306,7 +306,7 @@ class Lecture_add{
         let icon = NONE;
         let icon_r_visible = SHOW;
         let icon_r_text = "";
-        let style = this.data.ticket_id.length == 0 ? {"color":"#b8b4b4"} : null;
+        let style = this.data.ticket_id.length == 0 ? {"color":"var(--font-inactive)"} : null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_SELECT, 100, popup_style, null, ()=>{

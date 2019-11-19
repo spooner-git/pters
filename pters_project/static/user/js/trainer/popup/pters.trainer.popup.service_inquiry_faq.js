@@ -87,30 +87,17 @@ class Service_inquiry_faq {
         return html_temp.join("");
     }
 
-    // dom_row_toolbox(){
-    //     let title = "자주 묻는 질문 & 사용법";
-    //     let html = `<div class="inquiry_faq_upper_box">
-    //                     <div style="display:inline-block;font-size:22px;font-weight:bold;color:#3b3b3b; letter-spacing: -1px; height:28px;">
-    //                         <span style="display:inline-block;">${title}</span>
-    //                         <span style="display:none;">${title}</span>
-    //                         <!--<div style="display:inline-block; color:#fe4e65; font-weight:900;">${this.data_length}</div>-->
-    //                     </div>
-    //                 </div>
-    //                 `;
-    //     return html;
-    // }
-
     dom_row_toolbox(){
         let title = "사용법";
         let title2 = "자주 묻는 질문";
         let html = `
                     <div class="lecture_view_upper_box">
                         <div style="display:inline-block;">
-                            <span class="sales_type_select_text_button" style="color:${this.tab=="manual" ? "#3d3b3b" :"#b8b4b4"}" onclick="service_inquiry_faq_popup.switch('manual')">
+                            <span class="sales_type_select_text_button" style="color:${this.tab=="manual" ? "var(--font-main)" :"var(--font-inactive)"}" onclick="service_inquiry_faq_popup.switch('manual')">
                                 ${title}
                             </span>
-                            <div style="display:inline-block;background-color:#f5f2f3;width:2px;height:16px;margin:0 10px;"></div>
-                            <span class="sales_type_select_text_button" style="color:${this.tab=="faq" ? "#3d3b3b" :"#b8b4b4"}" onclick="service_inquiry_faq_popup.switch('faq')">
+                            <div style="display:inline-block;background-color:var(--bg-light);width:2px;height:16px;margin:0 10px;"></div>
+                            <span class="sales_type_select_text_button" style="color:${this.tab=="faq" ? "var(--font-main)" :"var(--font-inactive)"}" onclick="service_inquiry_faq_popup.switch('faq')">
                                 ${title2}
                             </span>
                             <span style="display:none">${this.tab=="manual"? "사용법" : "자주 묻는 질문"}</span>

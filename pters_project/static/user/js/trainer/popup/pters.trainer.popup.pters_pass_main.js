@@ -132,10 +132,10 @@ class Pters_pass_main{
 
     dom_row_auth_info(title, auth_info){
         let html = `<div style="display:flex;font-size:12px;letter-spacing:-0.5px;height:24px;line-height:24px;margin-bottom:2px;">
-                        <div style="flex-basis:82px;color:#999696">
+                        <div style="flex-basis:82px;color:var(--font-sub-light)">
                             ${title}
                         </div>
-                        <div style="flex:1 1 0;color:#5c5859;">
+                        <div style="flex:1 1 0;color:var(--font-sub-dark);">
                             ${auth_info}
                         </div>
                     </div>`;
@@ -220,8 +220,7 @@ class Pters_pass_main{
 
 
     dom_row_toolbox(){
-        // let title_upper = `<span style=" font-size: 12px;display:block;line-height: 5px;color: #7d7d7d;font-weight: 500;">이용중인 PTERS 패스</span>${this.dom_button_go_to_status()}`;
-        let title_upper = `<span style=" font-size: 12px;display:block;line-height: 5px;color: #7d7d7d;font-weight: 500;">이용중인 PTERS 패스</span>`;
+        let title_upper = `<span style=" font-size: 12px;display:block;line-height: 5px;color: var(--font-sub-normal);font-weight: 500;">이용중인 PTERS 패스</span>`;
         let current_pass_name = this.data.current.name[0] == "" ? "무료 이용자 (11월 이벤트)" : this.data.current.name[0];
         let title = this.data.current.name.length == 0 ? "" :title_upper + current_pass_name;
         
@@ -234,12 +233,12 @@ class Pters_pass_main{
         let next_pay_date = this.data.next.paid_date[0].replace(/-/gi, '.');
         let pay_type = PAY_TYPE_NAME[this.data.next.payment_type_cd[0]];
         let description = `<p style="font-size:13px;letter-spacing:-0.5px;font-weight:500;margin-bottom:0;">
-                                <span style="color:#b8b4b4;margin-right:8px;">유효 기간</span>
-                                <span style="color:#5c5859;">${expire_date}</span>
+                                <span style="color:var(--font-inactive);margin-right:8px;">유효 기간</span>
+                                <span style="color:var(--font-sub-dark);">${expire_date}</span>
                             </p>
                             <p style="font-size:13px;letter-spacing:-0.5px;font-weight:500;margin-top:4px;">
-                                <span style="color:#b8b4b4;margin-right:8px;">결제 예정</span>
-                                <span style="color:#5c5859">${next_pay_date} ${pay_type}</span>
+                                <span style="color:var(--font-inactive);margin-right:8px;">결제 예정</span>
+                                <span style="color:var(--font-sub-dark)">${next_pay_date} ${pay_type}</span>
                             </p>`;
         let html = `
         <div class="pters_pass_main_upper_box" style="">
@@ -620,7 +619,6 @@ class Pters_pass_func{
                             msg += '에러내용 : ' + jsondata.messageArray;
                             show_error_message(msg);
                         }else {
-                            console.log('test########################');
                             $.ajax({
                                 url: "/payment/update_period_billing/", // 서비스 웹서버
                                 method: "POST",

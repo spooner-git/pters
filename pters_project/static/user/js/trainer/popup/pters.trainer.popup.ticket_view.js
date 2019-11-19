@@ -184,8 +184,8 @@ class Ticket_view{
         let lecture_list_assembly = '<div class="obj_input_box_full">'+CComponent.dom_tag('수업 구성')+lecture+lecture_list+'</div>';
         let ticket_memo_assembly = '<div class="obj_input_box_full">'+CComponent.dom_tag('설명')+memo+ '</div>';
         let ticket_member_list_assembly = '<div class="obj_input_box_full" style="padding-top:16px;">'+CComponent.dom_tag(`수강권 보유 회원 (${this.data.member_id.length} 명)`, 
-                                            {"font-size":"13px", "font-weight":"bold", "letter-spacing":"-0.6px", "padding":"0", "padding-bottom":"8px", "color":"#858282", "height":"20px"}) + 
-                                            `${this.data.lecture_id.length == 0 && this.data.name != null ? "<span style='color:#fe4e65;font-size:12px;font-weight:bold;'>포함된 수업이 없어, 수강권 보유 회원들이 일정을 등록할 수 없습니다.</span>" : ""}` +
+                                            {"font-size":"13px", "font-weight":"bold", "letter-spacing":"-0.6px", "padding":"0", "padding-bottom":"8px", "color":"var(--font-sub-normal)", "height":"20px"}) + 
+                                            `${this.data.lecture_id.length == 0 && this.data.name != null ? "<span style='color:var(--font-highlight);font-size:12px;font-weight:bold;'>포함된 수업이 없어, 수강권 보유 회원들이 일정을 등록할 수 없습니다.</span>" : ""}` +
                                             member_list+ '</div>';
 
         if(this.data.ticket_state == STATE_END_PROGRESS){
@@ -204,7 +204,7 @@ class Ticket_view{
         let style = {"font-size":"20px", "font-weight":"bold"};
         let title = this.data.name == null ? '' : this.data.name;
         if(this.data.ticket_state == STATE_END_PROGRESS){
-            style["color"] = "#888888";
+            style["color"] = "var(--font-sub-normal)";
         }
         let placeholder = '수강권명*';
         let icon = DELETE;
@@ -223,7 +223,7 @@ class Ticket_view{
         let html = `
         <div class="member_add_upper_box">
             <div style="display:inline-block;width:100%;">
-                <span style="position:absolute;top:0;font-size: 12px;display:block;color: #7d7d7d;font-weight: 500;">수강권</span>
+                <span style="position:absolute;top:0;font-size: 12px;display:block;color: var(--font-sub-normal);font-weight: 500;">수강권</span>
                 ${sub_html}
             </div>
             <span style="display:none;">${title}</span>
@@ -241,7 +241,7 @@ class Ticket_view{
                 ing_lecture_length++;
             }
         }
-        let title = this.data.lecture_id.length == 0  && this.data.name != null ? '<span style="color:#fe4e65;">포함된 수업이 없습니다.</span>' : ing_lecture_length+'개';
+        let title = this.data.lecture_id.length == 0  && this.data.name != null ? '<span style="color:var(--font-highlight);">포함된 수업이 없습니다.</span>' : ing_lecture_length+'개';
         let icon = CImg.lecture();
         let icon_r_visible = SHOW;
         let icon_r_text = CComponent.text_button ('ticket_lecture_list_view', "수업 목록", null, ()=>{
@@ -269,7 +269,7 @@ class Ticket_view{
             let lecture_name = this.data.lecture_name[i];
             let lecture_state_cd = this.data.lecture_state_cd[i];
             let lecture_color = this.data.lecture_color[i];
-            let text_decoration = (lecture_state_cd == STATE_END_PROGRESS ? 'color:#cccccc; text-decoration:line-through;' : '');
+            let text_decoration = (lecture_state_cd == STATE_END_PROGRESS ? 'color:var(--font-domtag); text-decoration:line-through;' : '');
             let icon_button_style = {"display":"block", "padding":"0", "padding-left":"10px", "font-size":"15px",
                                      "font-weight":"500", "height":"50px", "line-height":"50px", "overflow":"hidden", "text-overflow":"ellipsis", "white-space":"nowrap"};
 
@@ -475,7 +475,7 @@ class Ticket_view{
             deactivate:{text:"비활성화", callback:()=>{
                     show_user_confirm(`"${this.data.name}" <br> 수강권을 비활성화 하시겠습니까?  <br> 비활성화 탭에서 다시 활성화 할 수 있습니다. <br><br>
                                                             <img src="/static/common/icon/icon_stopmark.png" style="width:25px;"><br>
-                                                            <span style="color:#fe4e65; font-size:12px;">이 수강권을 가진 회원들에게서 수강권이 삭제됩니다. <br>
+                                                            <span style="color:var(--font-highlight); font-size:12px;">이 수강권을 가진 회원들에게서 수강권이 삭제됩니다. <br>
                                                             과거 일정은 완료 처리, 미래 일정은 삭제됩니다. <br>
                                                             이 수강권 하나만 가진 회원은 종료탭으로 이동됩니다.</span>`, ()=>{
                         Ticket_func.status({"ticket_id":this.ticket_id, "state_cd":STATE_END_PROGRESS}, ()=>{
@@ -496,7 +496,7 @@ class Ticket_view{
             delete:{text:"삭제", callback:()=>{
                     show_user_confirm(`"${this.data.name}" <br> 수강권을 영구 삭제 하시겠습니까? <br> 데이터를 복구할 수 없습니다. <br><br>
                                                             <img src="/static/common/icon/icon_stopmark.png" style="width:25px;"><br>
-                                                            <span style="color:#fe4e65; font-size:12px;">수강권과 연결된 수업, 회원에게서 <br>이 수강권과 관련된 정보가 모두 삭제됩니다.</span>`, ()=>{
+                                                            <span style="color:var(--font-highlight); font-size:12px;">수강권과 연결된 수업, 회원에게서 <br>이 수강권과 관련된 정보가 모두 삭제됩니다.</span>`, ()=>{
                         Ticket_func.delete({"ticket_id":this.ticket_id}, ()=>{
                             try{
                                 current_page.init();
@@ -667,7 +667,7 @@ class Ticket_simple_view{
     }
 
     dom_row_toolbox(){
-        let text_button_style = {"color":"#fe4e65", "font-size":"13px", "font-weight":"500", "padding":"10px 0"};
+        let text_button_style = {"color":"var(--font-highlight)", "font-size":"13px", "font-weight":"500", "padding":"10px 0"};
         let text_button = CComponent.text_button ("detail_ticket_info", "더보기", text_button_style, ()=>{
             show_user_confirm(`작업중이던 항목을 모두 닫고 수강권 메뉴로 이동합니다.`, ()=>{
                 layer_popup.all_close_layer_popup();
@@ -686,7 +686,7 @@ class Ticket_simple_view{
 
         let ticket_name = this.data.name == null ? '' : this.data.name;
         if(this.data.ticket_state == STATE_END_PROGRESS){
-            ticket_name = `<span style="color:#888888;">${ticket_name}</span>`;
+            ticket_name = `<span style="color:var(--font-sub-normal);">${ticket_name}</span>`;
         }
 
         let html = `
@@ -724,7 +724,7 @@ class Ticket_simple_view{
         });
 
         let html = `<div style="display:flex;">
-                        <div style="flex-basis:68px;font-size:11px;font-weight:500;letter-spacing:-0.5px;color:#b8b4b4;line-height:24px;padding:12px 0;">수업수</div>
+                        <div style="flex-basis:68px;font-size:11px;font-weight:500;letter-spacing:-0.5px;color:var(--font-inactive);line-height:24px;padding:12px 0;">수업수</div>
                         ${html_data}
                     </div>`;
 
@@ -748,7 +748,7 @@ class Ticket_simple_view{
         }, pattern, pattern_message, required);
 
         let html = `<div style="display:flex;">
-                        <div style="flex-basis:68px;font-size:11px;font-weight:500;letter-spacing:-0.5px;color:#b8b4b4;line-height:24px;padding:12px 0;">특이사항</div>
+                        <div style="flex-basis:68px;font-size:11px;font-weight:500;letter-spacing:-0.5px;color:var(--font-inactive);line-height:24px;padding:12px 0;">특이사항</div>
                         ${html_data}
                     </div>`;
 
@@ -766,7 +766,7 @@ class Ticket_simple_view{
         let html_data = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{});
 
         let html = `<div style="display:flex;">
-                        <div style="flex-basis:68px;font-size:11px;font-weight:500;letter-spacing:-0.5px;color:#b8b4b4;line-height:24px;padding:12px 0;">회원수</div>
+                        <div style="flex-basis:68px;font-size:11px;font-weight:500;letter-spacing:-0.5px;color:var(--font-inactive);line-height:24px;padding:12px 0;">회원수</div>
                         ${html_data}
                     </div>`;
 

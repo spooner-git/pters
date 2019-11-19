@@ -171,7 +171,7 @@ class Member_add{
     render(){
         let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();member_add_popup.clear();">${CImg.x()}</span>`;
         let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right" onclick="member_add_popup.send_data()"><span style="color:#fe4e65;font-weight: 500;">등록</span></span>`;
+        let top_right = `<span class="icon_right" onclick="member_add_popup.send_data()"><span style="color:var(--font-highlight);font-weight: 500;">등록</span></span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
         
@@ -208,17 +208,17 @@ class Member_add{
 
         let html =
             '<div class="obj_input_box_full">'
-                + CComponent.dom_tag('회원명') + name + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
-                + CComponent.dom_tag('휴대폰 번호') + phone + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
-                + CComponent.dom_tag('생년월일') + birth + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag('회원명') + name + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag('휴대폰 번호') + phone + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag('생년월일') + birth + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('성별') + sex +
             '</div>' +
             '<div class="obj_input_box_full">'
-                + CComponent.dom_tag('수강권') + ticket + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
-                + CComponent.dom_tag('횟수') + reg_count + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
-                + CComponent.dom_tag('시작일') + start_date + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
-                + CComponent.dom_tag('종료일') + end_date + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
-                + CComponent.dom_tag('가격') + reg_price + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag('수강권') + ticket + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag('횟수') + reg_count + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag('시작일') + start_date + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag('종료일') + end_date + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag('가격') + reg_price + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('특이사항') + memo +
             '</div>';
         
@@ -228,11 +228,11 @@ class Member_add{
                 + CComponent.dom_tag('회원명') + name +
             '</div>' +
             '<div class="obj_input_box_full">'
-                + CComponent.dom_tag('수강권') + ticket + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
-                + CComponent.dom_tag('횟수') + reg_count + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
-                + CComponent.dom_tag('시작일') + start_date + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
-                + CComponent.dom_tag('종료일') + end_date + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
-                + CComponent.dom_tag('가격') + reg_price + '<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag('수강권') + ticket + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag('횟수') + reg_count + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag('시작일') + start_date + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag('종료일') + end_date + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag('가격') + reg_price + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('특이사항') + memo +
             '</div>';
         }
@@ -245,7 +245,7 @@ class Member_add{
         let html = `
         <div class="member_add_upper_box">
             <div style="display:inline-block;width:200px;">
-                <span style="font-size:20px;font-weight:bold; letter-spacing: -0.9px; color: #3d3b3b;">
+                <span style="font-size:20px;font-weight:bold; letter-spacing: -0.9px; color: var(--font-main);">
                     ${title}
                 </span>
             </div>
@@ -301,7 +301,7 @@ class Member_add{
         let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let style = this.data.birth == null ? {"color":"#b8b4b4"} : null;
+        let style = this.data.birth == null ? {"color":"var(--font-inactive)"} : null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             //행을 클릭했을때 실행할 내용
             if(this.data_from_external != null){ //재등록
@@ -343,7 +343,7 @@ class Member_add{
         let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let style = this.data.sex == null ? {"color":"#b8b4b4"} : null;
+        let style = this.data.sex == null ? {"color":"var(--font-inactive)"} : null;
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             if(this.data_from_external != null){
                 show_error_message("재등록 화면에서는 기본정보를 수정할 수 없습니다.");
@@ -391,7 +391,7 @@ class Member_add{
         let icon = CImg.ticket();
         let icon_r_visible = SHOW;
         let icon_r_text = "";
-        let style = this.data.ticket_id.length == 0 ? {"color":"#b8b4b4"} : null;
+        let style = this.data.ticket_id.length == 0 ? {"color":"var(--font-inactive)"} : null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_SELECT, 100, popup_style, null, ()=>{
@@ -411,7 +411,7 @@ class Member_add{
         let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let style = this.data.start_date == null ? {"color":"#b8b4b4"} : null;
+        let style = this.data.start_date == null ? {"color":"var(--font-inactive)"} : null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             //행을 클릭했을때 실행할 내용
             let root_content_height = $root_content.height();
@@ -452,7 +452,7 @@ class Member_add{
         let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let style = this.data.end_date == null ? {"color":"#b8b4b4"} : null;
+        let style = this.data.end_date == null ? {"color":"var(--font-inactive)"} : null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             //행을 클릭했을때 실행할 내용
             let root_content_height = $root_content.height();
@@ -500,7 +500,7 @@ class Member_add{
     }
 
     dom_row_end_date_simple_input_machine(){
-        let button_style = {"flex":"1 1 0", "padding":"10px 8px", "color":"#636363"};
+        let button_style = {"flex":"1 1 0", "padding":"10px 8px", "color":"var(--font-sub-dark)"};
 
         let button_week_2 = CComponent.button ("button_week_2", "+ 7일", button_style, ()=>{
             if(this.data.start_date == null){
@@ -587,7 +587,7 @@ class Member_add{
         });
         
         let wrapper_style = "display:flex;padding:0px 0 0px 20px;font-size:12px;";
-        let divider_style = "flex-basis:1px;height:20px;margin-top:10px;background-color:#f5f2f2;display:none;";
+        let divider_style = "flex-basis:1px;height:20px;margin-top:10px;background-color:var(--bg-light);display:none;";
         let html = `<div style="${wrapper_style}">
                         ${button_week_2} <div style="${divider_style}"></div>
                         ${button_month_1} <div style="${divider_style}"></div>
@@ -647,7 +647,7 @@ class Member_add{
     }
 
     dom_row_price_simple_input_machine(){
-        let button_style = {"flex":"1 1 0", "padding":"10px 8px", "color":"#636363"};
+        let button_style = {"flex":"1 1 0", "padding":"10px 8px", "color":"var(--font-sub-dark)"};
 
         let button_100 = CComponent.button ("button_100", "+ 100만", button_style, ()=>{ this.data.ticket_price =this.data.ticket_price + 1000000;this.render_content(); });
         let button_50 = CComponent.button ("button_50", "+ 50만", button_style, ()=>{ this.data.ticket_price = this.data.ticket_price + 500000;this.render_content(); });
@@ -656,7 +656,7 @@ class Member_add{
         let button_delete = CComponent.button ("button_delete", "지우기", button_style, ()=>{ this.data.ticket_price = null;this.render_content(); });
         
         let wrapper_style = "display:flex;padding:0px 0 0px 20px;font-size:12px;";
-        let divider_style = "flex-basis:1px;height:20px;margin-top:10px;background-color:#f5f2f2;display:none;";
+        let divider_style = "flex-basis:1px;height:20px;margin-top:10px;background-color:var(--bg-light);display:none;";
         let html = `<div style="${wrapper_style}">
                         ${button_100} <div style="${divider_style}"></div>
                         ${button_50} <div style="${divider_style}"></div>

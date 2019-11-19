@@ -68,8 +68,8 @@ class Program_list{
     }
     
     dom_assembly_content(){
-        let html_selected_current_program = [CComponent.dom_tag("선택된 프로그램", {"padding":"5px 20px", "font-weight":"bold", "color":"#fe4e65"})];
-        let html_temp = [CComponent.dom_tag('등록된 프로그램', {"padding":"5px 20px", "font-weight":"bold", "color":"#858282"})];
+        let html_selected_current_program = [CComponent.dom_tag("선택된 프로그램", {"padding":"5px 20px", "font-weight":"bold", "color":"var(--font-highlight)"})];
+        let html_temp = [CComponent.dom_tag('등록된 프로그램', {"padding":"5px 20px", "font-weight":"bold", "color":"var(--font-sub-normal)"})];
         let length = this.data.program_data.length;
         for (let i=0; i<length; i++){
             let data = this.data.program_data[i];

@@ -41,13 +41,13 @@
 .sales_list_month{
 	display: table-cell;
 	width: 100px;
-	color: #5c5859;
+	color: var(--font-sub-dark);
 }
 
 .sales_list_price{
 	display: table-cell;
 	width: auto;
-	color: #5c5859;
+	color: var(--font-sub-dark);
 }
 
 .sales_list_detail{

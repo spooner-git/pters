@@ -58,7 +58,7 @@ class Home {
         document.querySelector("#home_content_wrap").innerHTML = 
             `<div style="position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);text-align:center;">
                 <img src="/static/common/loading.svg">
-                <div style="font-size:12px;color:#858282;word-break:keep-all">사용자 데이터를 불러오고 있습니다.</div>
+                <div style="font-size:12px;color:var(--font-sub-normal);word-break:keep-all">사용자 데이터를 불러오고 있습니다.</div>
             </div>`;
     }
 
@@ -175,7 +175,7 @@ class Home {
 
         let id = "home_today_plan_expand_button";
         let title = "접기/펼치기";
-        let style = {"float":"right", "padding":"0", "font-size":"12px", "font-weight":"500", "color":"#858282"};
+        let style = {"float":"right", "padding":"0", "font-size":"12px", "font-weight":"500", "color":"var(--font-sub-normal)"};
         let onclick = ()=>{
             if(this.view.today_plan == OPEN){
                 this.view.today_plan = CLOSE;
@@ -189,7 +189,7 @@ class Home {
         
 
         let section_title = `<article class="today_plan_wrapper" style="font-weight:bold;font-size:15px;letter-spacing: -0.7px;display:block;">
-                                <span style="margin-right:5px;">오늘의 일정</span> <span style="color:#fe4e65;font-size:17px;"> ${length-off_plan_number}</span>
+                                <span style="margin-right:5px;">오늘의 일정</span> <span style="color:var(--font-highlight);font-size:17px;"> ${length-off_plan_number}</span>
                                 ${length > 0 ? expand_button : ""}
                             </article>`;
      
@@ -257,7 +257,7 @@ class Home {
 
         let id = "home_end_alert_expand_button";
         let title = "접기/펼치기";
-        let style = {"float":"right", "padding":"0", "font-size":"12px", "font-weight":"500", "color":"#858282"};
+        let style = {"float":"right", "padding":"0", "font-size":"12px", "font-weight":"500", "color":"var(--font-sub-normal)"};
         let onclick = ()=>{
             if(this.view.end_alert == OPEN){
                 this.view.end_alert = CLOSE;
@@ -271,7 +271,7 @@ class Home {
 
         let section_title =  `<article class="today_plan_wrapper" style="font-weight:bold;font-size:15px;letter-spacing: -0.7px;display:block;">
                                 <span style="margin-right:5px;">종료 임박 회원</span> 
-                                <span style="color:#fe4e65;font-size:17px;"> ${length-passed_number}</span>
+                                <span style="color:var(--font-highlight);font-size:17px;"> ${length-passed_number}</span>
                                 ${length-passed_number > 0 ? expand_button : ""}
                             </article>`;
         
@@ -363,7 +363,7 @@ class Home {
         return(
             {
                 home_upper_box:`   <div class="home_upper_box">
-                                        <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:#3b3b3b; letter-spacing: -1px; height:28px;">
+                                        <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:var(--font-main); letter-spacing: -1px; height:28px;">
                                             <div style="display:inline-block;">${this.data.user_name} </div>
                                         </div>
                                         <div class="home_right_button" onclick="${this.instance}.go_to_profile()"><img src="${this.data.user_photo}"></div>

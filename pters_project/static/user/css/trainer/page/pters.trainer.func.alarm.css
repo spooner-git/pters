@@ -11,8 +11,7 @@
 		position: relative;
 		height: 68px;
 		line-height: 28px;
-		background-color: #ffffff;
-		/* border-bottom: 1px solid #cccccc; */
+		background-color: var(--bg-main);
 		padding: 20px 16px;
 		box-sizing: border-box;
 	}
@@ -67,7 +66,7 @@
 .alarm_data_b{
 	display: table;
 	width: 100%;
-	color: #3d3b3b;
+	color: var(--font-main);
 }
 	.alarm_data_b > div{
 		display: table-cell;

@@ -60,7 +60,7 @@ class Menu {
             return false;
         }
 
-        let dom_tag_style = {"font-size":"13px", "color":"#858282", "padding-left":"0", "margin-bottom":"8px"};
+        let dom_tag_style = {"font-size":"13px", "color":"var(--font-sub-normal)", "padding-left":"0", "margin-bottom":"8px"};
 
         let assembly = this.dom_who_i_am() + 
                        CComponent.dom_tag('운영', dom_tag_style) + 
@@ -99,7 +99,7 @@ class Menu {
                         </div>                
                         <div class="my_data_c" style="display:table-cell;width:auto;padding-left:8px;vertical-align:middle;">
                             <div class="my_name" style="font-size:17px;font-weight:500;">${member_name}</div>
-                            <div style="font-size:11px;color:#858282">프로필 확인</div>
+                            <div style="font-size:11px;color:var(--font-sub-normal)">프로필 확인</div>
                         </div>
                     </article>`;
         return html;
@@ -365,7 +365,7 @@ class Menu {
             {
                 menu_upper_box:`   <div class="menu_upper_box">
                                         <div style="display:inline-block;width:200px;">
-                                            <span style="font-size:23px;font-weight:bold;color:#3b3b3b">전체</span>
+                                            <span style="font-size:23px;font-weight:bold;color:var(--font-main)">전체</span>
                                         </div>
                                     </div>
                                         `

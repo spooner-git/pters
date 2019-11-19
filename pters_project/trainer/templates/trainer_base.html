@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="pters_light_mode">
+<html lang="en" class="pters_dark_mode">
 <head>
 
     <!-- Google Tag Manager -->
@@ -76,12 +76,12 @@
 
 {% block navbar %}
 {% endblock %}
-<div id="debug_toolbar" style="position: fixed;;top:0;font-size:13px;background:#fe4e65;background-color:#fe4e65ba;color:blue;width:100%;left:0;z-index:1500"></div>
+<div id="debug_toolbar" style="position: fixed;;top:0;font-size:13px;background:#fe4e65;background-color:#fe4e65;color:#ffffff;width:100%;left:0;z-index:1500"></div>
 
 <div id="base">
     <section id="section_side">
         <div class="top_logo">
-            <span style='color:#1F1D1E; width:64px; font-size:20px; font-weight:bold; padding-left:12px;' id="top_logo_image">PTERS</span>
+            <span style='color:var(--font-base); width:64px; font-size:20px; font-weight:bold; padding-left:12px;' id="top_logo_image">PTERS</span>
             <!--<img src="/static/common/icon/logo/PTERS_logo_full.png" alt="" style="width: 64px;" id="top_logo_image">-->
         </div>
         <div class="side_menu" id="nav_side">
@@ -172,8 +172,7 @@
             </div>
         </div>
         <div id="section_content">
-            <div id="shade_for_popup_basic" style="position: absolute;;top:0;left:0;height:100%;width:100%;background-color:#282828;opacity:0.5; display: none;" 
-            onclick="layer_popup.close_layer_popup();"></div>
+            <div id="shade_for_popup_basic" onclick="layer_popup.close_layer_popup();"></div>
             <div id="content_wrapper">
                 {% include 'popup/trainer_popup_basic.html' %}
                 {% include 'popup/trainer_popup_pages.html' %}
@@ -613,7 +612,7 @@
                 $sidemenu_text.show();
             }, 150);
             $toplogo.html(
-                `<span style='color:#1F1D1E; width:64px; font-size:20px; font-weight:bold; padding-left:12px;'>PTERS</span>`
+                `<span style='color:var(--font-base); width:64px; font-size:20px; font-weight:bold; padding-left:12px;'>PTERS</span>`
                 //`<img src="/static/common/icon/logo/PTERS_logo_full.png" alt="" style="width: 64px;" id="top_logo_image">`
             );
             $sidemenu_button.css('transform', 'rotate(90deg)');

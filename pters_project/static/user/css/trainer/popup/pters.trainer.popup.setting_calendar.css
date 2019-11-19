@@ -29,14 +29,14 @@
 
 .popup_setting_calendar .select_wrap{
 	padding: 20px;
-	border: 1px solid #f5f2f2;
+	border: var(--border-article);
 	border-radius: 5px;
 	margin-bottom: 15px;
 	/* cursor: pointer; */
 }
 .popup_setting_calendar .select_wrap img{
 	width: 100%;
-	border: 1px solid #f5f2f2;
+	border: var(--border-article);
 }
 .popup_setting_calendar .select_indicator{
 	margin-bottom: 10px;
@@ -48,5 +48,5 @@
 }
 .popup_setting_calendar .selected{
 	background-color: #fe4e6530;
-	border-color: #fe4e65;
+	border-color: var(--bg-highlight);
 }
