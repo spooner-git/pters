@@ -542,6 +542,7 @@ def func_get_trainee_ticket_list(context, class_id, user_id):
              member_ticket_tb__use=USE, member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW, use=USE
              ).annotate(status=RawSQL(query_status, [])).order_by('member_ticket_tb__state_cd',
                                                                   '-member_ticket_tb__start_date',
+                                                                  '-member_ticket_tb__end_date',
                                                                   '-member_ticket_tb__reg_dt')
     ticket_list = []
     for member_ticket_info in member_ticket_list:

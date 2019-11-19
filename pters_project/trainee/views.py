@@ -72,6 +72,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                     request.session['class_id'] = class_member_ticket_info.class_tb_id
                     request.session['member_ticket_id'] = class_member_ticket_info.member_ticket_tb_id
                     request.session['trainer_id'] = class_member_ticket_info.class_tb.member_id
+                    request.session['trainer_name'] = class_member_ticket_info.class_tb.member.name
                     if class_member_ticket_info.member_ticket_tb.member_auth_cd == AUTH_TYPE_WAIT:
                         # self.url = '/trainee/member_ticket_select/'
                         self.url = '/trainee/trainee_main/'
@@ -114,6 +115,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                 if class_counter > 1:
                     # self.url = '/trainee/member_ticket_select/'
                     request.session['trainer_id'] = class_tb_selected.member_id
+                    request.session['trainer_name'] = class_tb_selected.member.name
                     request.session['class_id'] = class_tb_selected.class_id
                     request.session['member_ticket_id'] = class_member_ticket_id_select
                     request.session['class_hour'] = class_tb_selected.class_hour
@@ -126,6 +128,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                         # self.url = '/trainee/cal_month/'
                         self.url = '/trainee/trainee_main/'
                         request.session['trainer_id'] = class_tb_comp.member_id
+                        request.session['trainer_name'] = class_tb_comp.member.name
                         request.session['class_id'] = class_tb_comp.class_id
                         request.session['member_ticket_id'] = member_ticket_id_select
                         request.session['class_hour'] = class_tb_comp.class_hour
@@ -164,6 +167,7 @@ class TraineeMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             context = func_get_trainee_ing_member_ticket_list(context, class_id, self.request.user.id)
             try:
                 class_info = ClassTb.objects.get(class_id=class_id)
+                self.request.session['trainer_name'] = class_info.member.name
             except ObjectDoesNotExist:
                 class_info = None
 
@@ -1588,7 +1592,8 @@ class PopupTicketInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         ).filter(auth_cd=AUTH_TYPE_VIEW,
                  member_ticket_tb__ticket_tb__ticket_id=ticket_id, member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
                  member_ticket_tb__member_id=self.request.user.id,
-                 use=USE).order_by('-member_ticket_tb__state_cd', '-member_ticket_tb__start_date',
+                 use=USE).order_by('member_ticket_tb__state_cd', '-member_ticket_tb__start_date',
+                                   '-member_ticket_tb__end_date',
                                    '-member_ticket_tb__reg_dt')
 
         for member_ticket_info in member_ticket_list:
