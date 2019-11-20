@@ -898,6 +898,35 @@ function update_push_token(token, device_id) {
     });
 }
 
+function delete_token(device_id){
+    $.ajax({
+        url:'/login/delete_push_token/',
+        type:'POST',
+        data:{"device_id": device_id},
+
+        beforeSend:function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+            //AjaxBeforeSend();
+        },
+
+        //통신성공시 처리
+        success:function(){
+            console.log('토큰 삭제 완료')
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+
+        },
+
+        //통신 실패시 처리
+        error:function(){
+
+        }
+    });
+}
 
 function check_app_version(app_version){
     if(app_version != undefined){
