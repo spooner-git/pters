@@ -69,7 +69,7 @@ class Qna {
         document.getElementById(this.target.content).innerHTML = 
             `<div style="position:fixed;top:50%;left:50%;transform:translate(-50%, -50%);text-align:center;">
                 <img src="/static/common/loading.svg">
-                <div style="font-size:12px;color:#858282">사용자 데이터를 불러오고 있습니다.</div>
+                <div style="font-size:12px;color:var(--font-sub-normal)">사용자 데이터를 불러오고 있습니다.</div>
             </div>`;
     }
 
@@ -83,7 +83,7 @@ class Qna {
 
     dom_assembly_toolbox(){
         let html = `<div class="qna_upper_box">
-                        <div style="display:inline-block;width:auto;font-size:22px;font-weight:bold;color:#3b3b3b; letter-spacing: -1px; height:28px;">
+                        <div style="display:inline-block;width:auto;font-size:22px;font-weight:bold;color:var(--font-main); letter-spacing: -1px; height:28px;">
                             <div style="display:inline-block;">문의(Q&A) 관리</div>
                         </div>
                     </div>`;
@@ -119,7 +119,7 @@ class Qna {
         let qa_reg_date = data.qa_reg_dt;
         let qa_status = data.qa_status_type_cd;
         let alert_style = qa_status == "QA_WAIT" ? "style='background-color:#fe4e6513'" : "";
-        let alert_text_style = qa_status == "QA_WAIT" ? "style='color:#fe4e65;font-weight:bold'" : "";
+        let alert_text_style = qa_status == "QA_WAIT" ? "style='color:var(--font-highlight);font-weight:bold'" : "";
         let html = `<article id="qa_article_${qa_id}" class="qa_article" ${alert_style}>
                         <div class="qa_article_upper">
                             <div class="qa_article_id">${qa_id}</div>
@@ -137,7 +137,7 @@ class Qna {
                                 ${qa_contents}
                             </div>
                             <div>
-                                <div>${CComponent.button ("qa_answer_"+qa_id, "답변", {"border":"1px solid #e8e8e8", "padding":"12px"}, ()=>{
+                                <div>${CComponent.button ("qa_answer_"+qa_id, "답변", {"border":"var(--border-article)", "padding":"12px"}, ()=>{
                                         let data = {id:qa_id, title:qa_title, content:qa_contents, type:qa_type, name: member_name, email: member_email, reg_date: qa_reg_date, status: qa_status};
                                         this.event_open_board_writer(data);
                                     })

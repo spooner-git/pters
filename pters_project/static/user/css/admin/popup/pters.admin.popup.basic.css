@@ -10,10 +10,10 @@
     left: 50%;
     transform:translate(-50%, -50%);
     /*transform:translateX(100%);*/
-    background-color: #ffffff;
+    background-color: var(--bg-main);
 
     width: 300px;
-    border: 1px solid #cccccc;
+    border: var(--border-article-dark);
     border-radius: 5px;
 }
 
@@ -44,7 +44,7 @@
 
 .wrapper_popup_basic_buttons{
     text-align: center;
-    border-top: 1px solid #cccccc;
+    border-top: var(--border-article-dark);
     cursor: pointer;
     height: 65px;
     line-height: 65px;
@@ -71,11 +71,11 @@
         width: 85%;
         height: 40px;
         font-size: 16px;
-        background-color: #ffffff;
+        background-color: var(--bg-main);
         margin: 10px 0;
         border-radius: 0px;
         border: 0;
-        border-bottom: 1px solid #cccccc;
+        border-bottom: var(--border-article-dark);
         box-sizing: border-box;
         text-align: center;
     }
