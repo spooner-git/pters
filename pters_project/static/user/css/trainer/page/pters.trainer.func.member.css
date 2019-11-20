@@ -123,7 +123,7 @@
 	padding-right: 10px;
 	flex-basis: 36px;
 }
-	.member_data_l > img{
+	.member_data_l > img, .member_data_l > svg{
 		width: 36px;
 		vertical-align: middle;
 		border-radius: 50%;

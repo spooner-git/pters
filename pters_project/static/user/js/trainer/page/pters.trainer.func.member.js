@@ -172,14 +172,22 @@ class Member {
             }else{
                 member_counts_text = '종료됨';
             }
+
             
+            let member_profile_photo;
+            if(data.member_profile_url.match('icon_account.png')){
+                member_profile_photo = CImg.account("", {"width":"36px", "height":"36px"});
+            }else{
+                member_profile_photo = `<img src="${data.member_profile_url}">`;
+            }
+
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             let onclick = `layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_MEMBER_VIEW}', 100, ${popup_style}, {'member_id':${member_id}}, ()=>{
                 member_view_popup = new Member_view('.popup_member_view', ${member_id}, 'member_view_popup');});`;
             let html = `<article class="member_wrapper" data-member_id="${member_id}" data-name="${member_name}" onclick="${onclick}" style="color:${list_type == "ing" ? "" : 'var(--font-inactive)'}">
                             <div class="member_data_wrapper">
                                 <div class="member_data_l">
-                                    <img src="${data.member_profile_url}">
+                                    ${member_profile_photo}
                                 </div>                
                                 <div class="member_data_c">
                                     <div class="member_name">${member_name}</div>
