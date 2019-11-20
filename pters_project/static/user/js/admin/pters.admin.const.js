@@ -50,6 +50,8 @@ const POPUP_FROM_RIGHT = 1;
 const POPUP_FROM_BOTTOM = 2;
 const POPUP_FROM_TOP = 3;
 const POPUP_FROM_PAGE = 4;
+const POPUP_FROM_PAGE_70 = 5;
+const POPUP_FROM_PAGE_50 = 6;
 
 const SHORT = 'short';
 const LONG = 'long';
@@ -124,7 +126,8 @@ const MAX_WIDTH = 800;
 const NOTICE = 'NOTICE';
 const NOTICE_FAQ = 'FAQ';
 const NOTICE_USAGE = 'SYS_USAGE';
-const NOTICE_TYPE = {NOTICE:"공지", FAQ:"FAQ", SYS_USAGE:"사용법"};
+const NOTICE_UPDATE_HISTORY = 'UPDATE_HISTORY';
+const NOTICE_TYPE = {NOTICE:"공지", FAQ:"FAQ", SYS_USAGE:"사용법", UPDATE_HISTORY:"업데이트 내역"};
 const NOTICE_USE = {1:{text:"공개", color:"green"}, 0:{text:"비공개", color:"#676767"} };
 const NOTICE_TARGET = {ALL:"전체", trainer:"강사", trainee:"수강회원"};
 

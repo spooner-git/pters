@@ -68,7 +68,7 @@ class Notice {
         document.getElementById(this.target.content).innerHTML = 
             `<div style="position:fixed;top:50%;left:50%;transform:translate(-50%, -50%);text-align:center;">
                 <img src="/static/common/loading.svg">
-                <div style="font-size:12px;color:#858282">사용자 데이터를 불러오고 있습니다.</div>
+                <div style="font-size:12px;color:var(--font-sub-normal)">사용자 데이터를 불러오고 있습니다.</div>
             </div>`;
     }
 
@@ -82,7 +82,7 @@ class Notice {
 
     dom_assembly_toolbox(){
         let html = `<div class="notice_upper_box">
-                        <div style="display:inline-block;width:auto;font-size:22px;font-weight:bold;color:#3b3b3b; letter-spacing: -1px; height:28px;">
+                        <div style="display:inline-block;width:auto;font-size:22px;font-weight:bold;color:var(--font-main); letter-spacing: -1px; height:28px;">
                             <div style="display:inline-block;">
                                 공지사항 관리
                             </div>
@@ -99,7 +99,7 @@ class Notice {
         let numbering = 1;
         for(let item in this.data.all){
             let type = this.data.all[item].notice_type_cd;
-            if(type != NOTICE){
+            if(type != NOTICE && type != NOTICE_UPDATE_HISTORY){
                 continue;
             }
             let article = this.dom_row_notice_article(numbering, this.data.all[item]);
@@ -120,10 +120,7 @@ class Notice {
 
     dom_row_notice_article(numbering, data){
         let type = data.notice_type_cd;
-        // if(type != NOTICE){
-        //     return "";
-        // }
-        
+
         let id = data.notice_id;
         let title = data.notice_title;
         let content = data.notice_contents;
@@ -141,6 +138,7 @@ class Notice {
                             <div class="notice_article_hits">조회수 ${hits}</div>
                         </div>
                         <div class="notice_article_bottom">
+                            <div class="notice_article_type">${NOTICE_TYPE[type]}</div>
                             <div class="notice_article_use" style="color:${NOTICE_USE[use].color}">${NOTICE_USE[use].text}</div>
                             <div class="notice_article_target">${target}</div>
                             <div class="notice_article_reg_date">${mod_dt.split('T')[0]}  ${mod_dt.split('T')[1].split('.')[0]}</div>
@@ -150,13 +148,13 @@ class Notice {
                                 ${content}
                             </div>
                             <div style="text-align:right;margin-top:10px;">
-                                ${CComponent.button ("notice_modify_"+id, "수정", {"border":"1px solid #e8e8e8", "padding":"12px","display":"inline-block", "width":"100px"}, ()=>{
+                                ${CComponent.button ("notice_modify_"+id, "수정", {"border":"var(--border-article)", "padding":"12px","display":"inline-block", "width":"100px"}, ()=>{
 
                                         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_WRITER, 100, POPUP_FROM_PAGE, null, ()=>{
                                             let external_data = {   title:title, content:content, id:id,
                                                                     category:[
                                                                         {id:"open", title:"공개범위", data: {text:["전체", "강사", "회원"], value:["ALL", "trainer", "trainee"]} },
-                                                                        {id:"type", title:"분류", data: {text:["공지", "FAQ", "사용법"], value:[NOTICE, NOTICE_FAQ, NOTICE_USAGE]} },
+                                                                        {id:"type", title:"분류", data: {text:["공지", "업데이트 내역"], value:[NOTICE, NOTICE_UPDATE_HISTORY]} },
                                                                         {id:"use", title:"상태", data: {text:["공개", "비공개"], value:[ON, OFF]} }
                                                                     ],
                                                                     category_selected:{
@@ -178,7 +176,7 @@ class Notice {
                                     })
                                 }
                                 ${
-                                    CComponent.button ("notice_delete_"+id, "삭제", {"border":"1px solid #e8e8e8", "padding":"12px","display":"inline-block", "width":"100px"}, ()=>{
+                                    CComponent.button ("notice_delete_"+id, "삭제", {"border":"var(--border-article)", "padding":"12px", "display":"inline-block", "width":"100px"}, ()=>{
                                         show_user_confirm(`공지 "${numbering}" 번 글을 완전 삭제 하시겠습니까? <br> 다시 복구할 수 없습니다.`, ()=>{
                                             Notice_func.delete({"notice_id":id}, ()=>{
                                                 try{
@@ -209,7 +207,7 @@ class Notice {
             let external_data = {   
                                         category:[
                                             {id:"open", title:"공개범위", data: {text:["전체", "강사", "회원"], value:["ALL", "trainer", "trainee"]} },
-                                            {id:"type", title:"분류", data: {text:["공지", "FAQ", "사용법"], value:[NOTICE, NOTICE_FAQ, NOTICE_USAGE]} },
+                                            {id:"type", title:"분류", data: {text:["공지", "업데이트 내역"], value:[NOTICE, NOTICE_UPDATE_HISTORY]} },
                                             {id:"use", title:"상태", data: {text:["공개", "비공개"], value:[ON, OFF]} }
                                         ],
                                         category_selected:{

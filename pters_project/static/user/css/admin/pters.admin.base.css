@@ -1,3 +1,103 @@
+.pters_light_mode {
+    --base-font-color: #3b3b3b;
+    --root-content-bg-color: #ffffff;
+    --root_content-font-color: #3b3b3b;
+    --root-nav-bg-color: #fdfdfd;
+    --root-nav-border: 1px solid #cccccc;
+    --pc-side-nav-bg-color: #f5f2f3;
+    --pc-content-wrap-shadow:0 0 24px 0 #e6e6e6;
+
+    /* Page 공통 */
+    --page-displaypanel-bg-color: #ffffff;
+    --page-contentwrap-bg-color: #ffffff;
+
+    /* img */
+    --img-main: #5c5859;
+    --img-sub1: #999696;
+    --img-highlight: #fe4e65;
+
+    /* Font */
+    --font-base: #1e1d1d;
+    --font-invisible: #ffffff;
+    --font-highlight: #fe4e65;
+    --font-red: #ff0022;
+    --font-main: #3b3b3b;
+    --font-sub-dark: #5c5859;
+    --font-sub-normal: #858282;
+    --font-sub-light: #999696;
+    --font-inactive: #b8b4b4;
+    --font-domtag: #d6d2d2;
+
+    /* Background */
+    --bg-main: #ffffff;
+    --bg-for-only-shade: #282828;
+    --bg-for-only-new-notifi: #ffe8eb;
+    --bg-sub-dark: #5c5859;
+    --bg-sub-normal: #858282;
+    --bg-sub-light: #999696;
+    --bg-inactive: #b8b4b4;
+    --bg-domtag: #d6d2d2;
+    --bg-light: #f5f2f3;
+    --bg-highlight: #fe4e65;
+
+    /* Element */
+    --border-article: 1px solid #f5f2f3;
+    --border-article-dark: 1px solid #cccccc;
+    --box-shadow-article: 0 0 16px 0 #e6e6e6;
+    
+    /* fundamental color */
+    --fundamental-white: #ffffff;
+}
+
+.pters_dark_mode {
+    --base-font-color: #ffffff;
+    --root-content-bg-color: #1e1e1e;
+    --root_content-font-color: #ffffff;
+    --root-nav-bg-color: #1e1e1e;
+    --root-nav-border: 1px solid #282828;
+
+    /* Page 공통 */
+    --page-displaypanel-bg-color: #1e1e1e;
+    --page-contentwrap-bg-color: #1e1e1e;
+
+    /* img */
+    --img-main: #f5f2f3;
+    --img-sub1: #b8b4b4;
+    --img-highlight: #fe4e65;
+
+    /* Font */
+    --font-base: #ffffff;
+    --font-invisible: #1e1e1e;
+    --font-highlight: #fe4e65;
+    --font-red: #ff0022;
+    --font-main: #ffffff;
+    --font-sub-dark: #f5f2f3;
+    --font-sub-normal: #b8b4b4;
+    --font-sub-light: #5c5859;
+    --font-inactive: #999696;
+    --font-domtag: #f5f2f3;
+
+    /* Background */
+    --bg-main: #1e1e1e;
+    --bg-for-only-shade: #5c5859;
+    --bg-for_only-new-notifi: #ae4e65;
+    --bg-sub-dark: #999696;
+    --bg-sub-normal: #b8b4b4;
+    --bg-sub-light: #5c5859;
+    --bg-inactive: #5c5859;
+    --bg-domtag: #f5f2f3;
+    --bg-light: #282828;
+    --bg-highlight: #fe4e65;
+
+    /* Element */
+    --border-article: 1px solid #5c5859;
+    --border-article-dark: 1px solid #f5f2f3;
+    --box-shadow-article: 0 0 16px 0 #101010;
+
+    /* fundamental color */
+    --fundamental-white: #ffffff;
+}
+
 #root_progress{
     display: none;
     position: fixed;
@@ -7,44 +107,9 @@
     max-width: 800px;
     z-index: 1500;
 }
-progress {
-    display:inline-block;
-    width:100%;
-    height:6px;
-    margin:0;
-    background:none;
-    border: 0;
-    border-radius: 1px;
-    text-align: left;
-    position:relative;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 0.8em;
-    vertical-align: top;
-}
-progress::-webkit-progress-bar {
-    height:3px;
-    width:100%;
-    margin:0 auto;
-    background-color: #FFF;
-    border-radius: 1px;
-    /* box-shadow:0px 0px 6px #777 inset; */
-}
-progress::-webkit-progress-value {
-    /* display:inline-block; */
-    float:left;
-    height:3px;
-    margin:0px -3px 0 0;
-    background: #ff3b44;
-    border-radius: 1px;
-    /* box-shadow:0px 0px 6px #777 inset; */
-}
+
 
 #root_content{
-    /* position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate3D(-50%, -50%, 0); */
-
     position: relative;
     max-width: 1024px;
     width: 100%;
@@ -52,8 +117,8 @@ progress::-webkit-progress-value {
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
     z-index: 0;
-    background-color: #ffffff;
-    color: #3b3b3b;
+    background-color: var(--root-content-bg-color);
+    color: var(--root_content-font-color);
     height: 100%;
     scroll-behavior: smooth;
     margin: 0 auto;
@@ -65,8 +130,8 @@ progress::-webkit-progress-value {
     /* max-width: 800px; */
     max-width: 1024px;
     height: 56px;
-    background-color: #fdfdfd;
-    border-top:  1px solid #cccccc;
+    background-color: var(--root-nav-bg-color);
+    border-top: var(--root-nav-border);
     box-sizing: border-box;
     left: 50%;
     transform: translateX(-50%);
@@ -103,8 +168,8 @@ progress::-webkit-progress-value {
     #root_nav_quick > div {
         width: 40px;
         height: 40px;
-        background-color: #ffffff;
-        border: 1px solid #f5f5f5;
+        background-color: var(--bg-main);
+        border: var(--border-article);
         border-radius: 50%;
     }
     #root_nav_quick > div > img {
@@ -126,7 +191,7 @@ progress::-webkit-progress-value {
 /*PC버전 Wrapper 코드 시작 */
 html, body{
     height: 100%;
-    color: #3b3b3b;
+    color: var(--font-main);
 }
 #base{
     display: flex;
@@ -134,7 +199,7 @@ html, body{
 }
     #section_side{
         flex:0 0 200px;
-        background-color: #f5f2f3;
+        background-color: var(--bg-light);
         transition: 0.2s;
         overflow: hidden;
     }
@@ -151,18 +216,20 @@ html, body{
         padding-top: 76px;
         box-sizing: border-box;
         height: 100%;
+        background-color: var(--bg-main);
     }
         #content_wrapper{
             position: relative;
             max-width: 1024px;
-            box-shadow: 0 0 24px 0 #ebebeb;
+            box-shadow: var(--box-shadow-article);
             height: 100%;
         }
     #section_up_menu{
         position: absolute;
         width: 100%;
         height: 60px;
-        border-bottom: 1px solid #f5f2f3;
+        border-bottom: var(--border-article);
+        background-color: var(--bg-main);
         z-index: 2;
     }
     .top_logo{
@@ -185,7 +252,7 @@ html, body{
         padding: 10px 0 10px 22px;
         box-sizing: border-box;
         cursor: pointer;
-        color: #3d3b3b;
+        color: var(--font-main);
     }
     .side_menu_item:hover{
         background-color: #fe4e6510
@@ -196,9 +263,8 @@ html, body{
         margin-right: 18px;
     }
     .side_menu_selected{
-        background-color: #d4233a !important;
-        color: #ffffff;
-        filter: brightness(2);
+        background-color: var(--bg-highlight) !important;
+        color: var(--bg-main);
     }
     
 @media(max-width:650px){
@@ -246,7 +312,7 @@ html, body{
     display: inline-block;
     width: 6px;
     height: 6px;
-    background-color: #fe4e65;
+    background-color: var(--bg-highlight);
     border-radius: 50%;
     margin-left: 5px;
     vertical-align: middle;
@@ -254,6 +320,6 @@ html, body{
 }
 
 ::-webkit-scrollbar{width: 6px;}
-::-webkit-scrollbar-track {background-color:#ffffff;}
-::-webkit-scrollbar-thumb {background-color:#cccccc;border-radius: 6px;}
-::-webkit-scrollbar-thumb:hover {background: #fe4e65;}
+::-webkit-scrollbar-track {background-color:var(--bg-main);}
+::-webkit-scrollbar-thumb {background-color:var(--bg-inactive);border-radius: 6px;}
+::-webkit-scrollbar-thumb:hover {background: var(--bg-highlight);}
