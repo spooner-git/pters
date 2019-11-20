@@ -273,7 +273,7 @@ class Member {
             Array.from(document.getElementsByClassName('member_wrapper')).forEach((el)=>{
                 $(el).show();
             });
-            event.target.style.backgroundImage = 'url("/static/common/icon/icon_search_black.png")';
+
             $(self).html(CImg.search());
             break;
         case false:
