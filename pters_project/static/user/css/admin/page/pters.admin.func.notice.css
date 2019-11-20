@@ -88,6 +88,9 @@
 #section_admin_notice_content .notice_article_target{
 	flex: 1 0 0;
 }
+#section_admin_notice_content .notice_article_type{
+	flex-basis: 70px;
+}
 
 #section_admin_notice_content .notice_article_reg_date{
 	flex-basis: 150px;

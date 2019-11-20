@@ -151,8 +151,11 @@ class Faq {
                                         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_WRITER, 100, POPUP_FROM_PAGE, null, ()=>{
                                             let external_data = {       title:title, content: content, id:id,
                                                                         category:[
+                                                                            // {id:"open", title:"공개범위", data: {text:["전체", "강사", "회원"], value:["ALL", "trainer", "trainee"]} },
+                                                                            // {id:"type", title:"분류", data: {text:["공지", "FAQ", "사용법"], value:[NOTICE, NOTICE_FAQ, NOTICE_USAGE]} },
+                                                                            // {id:"use", title:"상태", data: {text:["게시중", "게시중지"], value:[ON, OFF]} }
                                                                             {id:"open", title:"공개범위", data: {text:["전체", "강사", "회원"], value:["ALL", "trainer", "trainee"]} },
-                                                                            {id:"type", title:"분류", data: {text:["공지", "FAQ", "사용법"], value:[NOTICE, NOTICE_FAQ, NOTICE_USAGE]} },
+                                                                            {id:"type", title:"분류", data: {text:["FAQ", "사용법"], value:[NOTICE_FAQ, NOTICE_USAGE]} },
                                                                             {id:"use", title:"상태", data: {text:["게시중", "게시중지"], value:[ON, OFF]} }
                                                                         ],
                                                                         category_selected:{
@@ -204,7 +207,7 @@ class Faq {
             let external_data = {   
                                         category:[
                                             {id:"open", title:"공개범위", data: {text:["전체", "강사", "회원"], value:["ALL", "trainer", "trainee"]} },
-                                            {id:"type", title:"분류", data: {text:["공지", "FAQ", "사용법"], value:[NOTICE, NOTICE_FAQ, NOTICE_USAGE]} },
+                                            {id:"type", title:"분류", data: {text:["FAQ", "사용법"], value:[NOTICE_FAQ, NOTICE_USAGE]} },
                                             {id:"use", title:"상태", data: {text:["게시중", "게시중지"], value:[ON, OFF]} }
                                         ],
                                         category_selected:{

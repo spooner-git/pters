@@ -84,6 +84,12 @@ class Service_inquiry_faq {
             html_temp.push(html);
         }
 
+        if(html_temp.length == 0){
+            html_temp.push(`<article class="notice_wrapper">
+                                <div class="notice_subject">등록 된 글이 없습니다.</div>
+                            </article>`);
+        }
+
         return html_temp.join("");
     }
 

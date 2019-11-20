@@ -134,6 +134,7 @@ const MAX_WIDTH = 800;
 const NOTICE = 'NOTICE';
 const NOTICE_FAQ = 'FAQ';
 const NOTICE_USAGE = 'SYS_USAGE';
+const NOTICE_UPDATE_HISTORY = 'UPDATE_HISTORY';
 
 /* 시간 입력기 */
 const BASIC = 0;
