@@ -784,7 +784,12 @@
             location.href = naverLogin.generateAuthorizeUrl();
         }
         if(val=='kakao'){
-            loginWithKakao();
+            if(kakao_login_test){
+                Kakao.init('4533bb10ac61e20907cd273f0941210a');
+                kakao_login_test = false;
+            }
+            location.href = '/login/login_simple_kakao/?access_token='+Kakao.Auth.getAccessToken();
+{#            loginWithKakao();#}
         }
         $.ajax({
             url:'https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id={{ request.session.PTERS_NAVER_ID_LOGIN_CLIENT_ID }}&client_secret={{ request.session.PTERS_NAVER_ID_LOGIN_CLIENT_SECRET }}',
