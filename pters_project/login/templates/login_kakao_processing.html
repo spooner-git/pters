@@ -75,10 +75,8 @@
             alert('test1-2');
 		});
         function call_kakao_api(){
-            alert('{{ access_token }}');
             Kakao.API.request({
                url: '/v1/user/me',
-                header: {"Authorization":"bearer [{{ access_token }}]"},
 
                success: function(res) {
                     alert('test2');
