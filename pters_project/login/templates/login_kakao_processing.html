@@ -75,8 +75,11 @@
             alert('test1-2');
 		});
         function call_kakao_api(){
+            alert('{{ access_token }}');
             Kakao.API.request({
                url: '/v1/user/me',
+                header: {"Authorization":"bearer [{{ access_token }}]"},
+
                success: function(res) {
                     alert('test2');
                      console.log(res);//<---- 콘솔 로그에 id 정보 출력(id는 res안에 있기 때문에  res.id 로 불러온다)
