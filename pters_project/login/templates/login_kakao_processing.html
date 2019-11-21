@@ -71,19 +71,6 @@
 {#                alert('test2');#}
             var test_val = call_kakao_api();
             if(test_val == false){
-                Kakao.Auth.login({
-                    success: function(authObj) {
-                        alert('test3-1');
-                        let test_2 = call_kakao_api();
-                        if(test_2==false){
-                            window.location.replace('/');
-                        }
-                    },
-                    fail: function(err) {
-                        alert('test3-2');
-                        alert(JSON.stringify(err));
-                    }
-                });
             }
             alert('test1-2');
 		});
@@ -137,6 +124,19 @@
                    },
                   fail: function(err){
                    alert('test3');
+                    Kakao.Auth.login({
+                        success: function(authObj) {
+                            alert('test3-1');
+                            let test_2 = call_kakao_api();
+                            if(test_2==false){
+                                window.location.replace('/');
+                            }
+                        },
+                        fail: function(err) {
+                            alert('test3-2');
+                            alert(JSON.stringify(err));
+                        }
+                    });
                     return false;
                   }
              });
