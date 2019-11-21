@@ -14,6 +14,8 @@ class Notice {
             all:null
         };
 
+        this.sort = "all";
+
         this.time_interval;
     }
 
@@ -84,12 +86,31 @@ class Notice {
         let html = `<div class="notice_upper_box">
                         <div style="display:inline-block;width:auto;font-size:22px;font-weight:bold;color:var(--font-main); letter-spacing: -1px; height:28px;">
                             <div style="display:inline-block;">
-                                공지사항 관리
+                                공지 & 업데이트 내역
                             </div>
                         </div>
+                        ${this.button_sort()}
                         <div style="float:right;width:25px;height:25px;background-image:url('/static/common/icon/icon_plus_pink.png');background-size:contain;" onclick="${this.instance}.event_add_new()">
                         </div>
                     </div>`;
+        return html;
+    }
+
+    button_sort(){
+        let id = "button_sort";
+        let title;
+        if(this.sort == "all"){
+            title = "전체" + CImg.arrow_expand("", {"width":"17px", "height":"17px", "vertical-align":"middle"});
+        }else if(this.sort == "notice"){
+            title = "공지만" + CImg.arrow_expand("", {"width":"17px", "height":"17px", "vertical-align":"middle"});
+        }else if(this.sort == "update_history"){
+            title = "업데이트 내역만" + CImg.arrow_expand("", {"width":"17px", "height":"17px", "vertical-align":"middle"});
+        }
+        let style = {"font-size":"13px", "color":"var(--font-sub-normal)", "margin-left":"20px"};
+        let onclick = ()=>{
+            this.event_sort();
+        };
+        let html = CComponent.text_button (id, title, style, onclick);
         return html;
     }
 
@@ -102,6 +123,17 @@ class Notice {
             if(type != NOTICE && type != NOTICE_UPDATE_HISTORY){
                 continue;
             }
+            
+            if(this.sort == "notice"){
+                if(type != NOTICE){
+                    continue;
+                }
+            }else if(this.sort == "update_history"){
+                if(type != NOTICE_UPDATE_HISTORY){
+                    continue;
+                }
+            }
+
             let article = this.dom_row_notice_article(numbering, this.data.all[item]);
             numbering++;
             html_to_join.push(article);
@@ -202,6 +234,33 @@ class Notice {
         return html;
     }
 
+    event_sort(){
+        let user_option = {
+            all:{text:"전체", callback:()=>{
+                this.sort = "all";
+                this.render();
+                layer_popup.close_layer_popup();
+            }},
+            notice:{text:"공지만", callback:()=>{ 
+                this.sort = "notice";
+                this.render();
+                layer_popup.close_layer_popup();
+            }},
+            update_history:{text:"업데이트 내역만", callback:()=>{
+                this.sort = "update_history";
+                this.render();
+                layer_popup.close_layer_popup();
+            }},
+        };
+        let options_padding_top_bottom = 16;
+        let button_height = 8 + 8 + 52;
+        let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
+        let root_content_height = $root_content.height();
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
+            option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+        });
+    }
+
     event_add_new(){
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_WRITER, 100, POPUP_FROM_PAGE, null, ()=>{
             let external_data = {   
@@ -226,6 +285,7 @@ class Notice {
             });
         });
     }
+
 }
 
 
