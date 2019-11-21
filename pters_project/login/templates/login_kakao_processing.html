@@ -66,12 +66,13 @@
 		/* (4) Callback의 처리. 정상적으로 Callback 처리가 완료될 경우 main page로 redirect(또는 Popup close) */
 		window.addEventListener('load', function () {
 		    alert('test');
-            Kakao.Auth.login({
-                success: function(authObj) {
-                alert('test2');
+{#            Kakao.Auth.login({#}
+{#                success: function(authObj) {#}
+{#                alert('test2');#}
                       Kakao.API.request({
                        url: '/v1/user/me',
                        success: function(res) {
+		                    alert('test2');
                              console.log(res);//<---- 콘솔 로그에 id 정보 출력(id는 res안에 있기 때문에  res.id 로 불러온다)
                              console.log(res.id);//<---- 콘솔 로그에 id 정보 출력(id는 res안에 있기 때문에  res.id 로 불러온다)
                              console.log(res.kaccount_email);//<---- 콘솔 로그에 email 정보 출력 (어딨는지 알겠죠?)
@@ -113,15 +114,20 @@
                             }
 
                             check_social_member_info();
-                           }
+                           },
+                          fail: function(err){
+
+		                    alert('test3');
+                          }
 
                      });
-                },
-                fail: function(err) {
-                alert('test3');
-                    alert(JSON.stringify(err));
-                }
-            });
+{#                },#}
+{#                fail: function(err) {#}
+{#                alert('test3');#}
+{#                    alert(JSON.stringify(err));#}
+{#                }#}
+{#            });#}
+            alert('test1-2')
 		});
 
         function check_social_member_info(){
