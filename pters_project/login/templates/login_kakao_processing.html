@@ -69,67 +69,78 @@
 {#            Kakao.Auth.login({#}
 {#                success: function(authObj) {#}
 {#                alert('test2');#}
-                      Kakao.API.request({
-                       url: '/v1/user/me',
-                       success: function(res) {
-		                    alert('test2');
-                             console.log(res);//<---- 콘솔 로그에 id 정보 출력(id는 res안에 있기 때문에  res.id 로 불러온다)
-                             console.log(res.id);//<---- 콘솔 로그에 id 정보 출력(id는 res안에 있기 때문에  res.id 로 불러온다)
-                             console.log(res.kaccount_email);//<---- 콘솔 로그에 email 정보 출력 (어딨는지 알겠죠?)
-                             console.log(res.properties['nickname']);//<---- 콘솔 로그에 닉네임 출력(properties에 있는 nickname 접근
-                            var email = res.kaccount_email;
-                            var name = res.properties['nickname'];
-                            var sns_id = res.id;
-                            var access_token = '{{ access_token }}';
-
-                            if(email==''){
-                                $('#id_username').attr('value', sns_id);
-                                $('#id_sns_username').attr('value', sns_id);
-                                $('#id_sns_username2').attr('value', sns_id);
-                            }else{
-                                $('#id_username').attr('value', email);
-                                $('#id_sns_username').attr('value', email);
-                                $('#id_sns_username2').attr('value', email);
-                            }
-
-                            $('#id_email').attr('value', email);
-                            $('#id_sns_id').attr('value', sns_id);
-
-                            $('#id_sns_email').attr('value', email);
-                            $('#id_sns_name').attr('value', name);
-                            $('#id_new_sns_id').attr('value', sns_id);
-
-                            $('#id_sns_email2').attr('value', email);
-                            $('#id_sns_name2').attr('value', name);
-                            $('#id_new_sns_id2').attr('value', sns_id);
-
-                            $('#id_social_login_id').attr('value', sns_id);
-                            $('#id_accessToken').attr('value', access_token);
-                            $('#id_accessToken1').attr('value', access_token);
-                            $('#id_accessToken2').attr('value', access_token);
-
-                            if( name == undefined || name == null) {
-                                alert("이름은 필수정보입니다. 정보제공을 동의해주세요.");
-                                return;
-                            }
-
-                            check_social_member_info();
-                           },
-                          fail: function(err){
-
-		                    alert('test3');
-                          }
-
-                     });
-{#                },#}
-{#                fail: function(err) {#}
-{#                alert('test3');#}
-{#                    alert(JSON.stringify(err));#}
-{#                }#}
-{#            });#}
-            alert('test1-2')
+            var test_val = call_kakao_api();
+            if(test_val == false){
+                Kakao.Auth.login({
+                    success: function(authObj) {
+                        alert('test3-1');
+                        let test_2 = call_kakao_api();
+                        if(test_2==false){
+                            window.location.replace('/');
+                        }
+                    },
+                    fail: function(err) {
+                        alert('test3-2');
+                        alert(JSON.stringify(err));
+                    }
+                });
+            }
+            alert('test1-2');
 		});
+        function call_kakao_api(){
+            Kakao.API.request({
+               url: '/v1/user/me',
+               success: function(res) {
+                    alert('test2');
+                     console.log(res);//<---- 콘솔 로그에 id 정보 출력(id는 res안에 있기 때문에  res.id 로 불러온다)
+                     console.log(res.id);//<---- 콘솔 로그에 id 정보 출력(id는 res안에 있기 때문에  res.id 로 불러온다)
+                     console.log(res.kaccount_email);//<---- 콘솔 로그에 email 정보 출력 (어딨는지 알겠죠?)
+                     console.log(res.properties['nickname']);//<---- 콘솔 로그에 닉네임 출력(properties에 있는 nickname 접근
+                    var email = res.kaccount_email;
+                    var name = res.properties['nickname'];
+                    var sns_id = res.id;
+                    var access_token = '{{ access_token }}';
 
+                    if(email==''){
+                        $('#id_username').attr('value', sns_id);
+                        $('#id_sns_username').attr('value', sns_id);
+                        $('#id_sns_username2').attr('value', sns_id);
+                    }else{
+                        $('#id_username').attr('value', email);
+                        $('#id_sns_username').attr('value', email);
+                        $('#id_sns_username2').attr('value', email);
+                    }
+
+                    $('#id_email').attr('value', email);
+                    $('#id_sns_id').attr('value', sns_id);
+
+                    $('#id_sns_email').attr('value', email);
+                    $('#id_sns_name').attr('value', name);
+                    $('#id_new_sns_id').attr('value', sns_id);
+
+                    $('#id_sns_email2').attr('value', email);
+                    $('#id_sns_name2').attr('value', name);
+                    $('#id_new_sns_id2').attr('value', sns_id);
+
+                    $('#id_social_login_id').attr('value', sns_id);
+                    $('#id_accessToken').attr('value', access_token);
+                    $('#id_accessToken1').attr('value', access_token);
+                    $('#id_accessToken2').attr('value', access_token);
+
+                    if( name == undefined || name == null) {
+                        alert("이름은 필수정보입니다. 정보제공을 동의해주세요.");
+                        return false;
+                    }
+
+                    check_social_member_info();
+                    return true;
+                   },
+                  fail: function(err){
+                   alert('test3');
+                    return false;
+                  }
+             });
+        }
         function check_social_member_info(){
             var $form = $('#add-member-id-form');
             var serializeArray = $form.serializeArray();
