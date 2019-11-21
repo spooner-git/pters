@@ -167,7 +167,7 @@ class Service_notice {
         $.ajax({
             url:url,
             type:'GET',
-            data: {"notice_type": [NOTICE]},
+            data: {"notice_type": [NOTICE, NOTICE_UPDATE_HISTORY]},
             dataType : 'JSON',
     
             beforeSend:function (){
