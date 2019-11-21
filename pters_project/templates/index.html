@@ -784,10 +784,10 @@
             location.href = naverLogin.generateAuthorizeUrl();
         }
         if(val=='kakao'){
-            if(kakao_login_test){
-                Kakao.init('4533bb10ac61e20907cd273f0941210a');
-                kakao_login_test = false;
-            }
+{#            if(kakao_login_test){#}
+{#                Kakao.init('4533bb10ac61e20907cd273f0941210a');#}
+{#                kakao_login_test = false;#}
+{#            }#}
             location.href = '/login/login_simple_kakao/?access_token='+Kakao.Auth.getAccessToken();
 {#            loginWithKakao();#}
         }
