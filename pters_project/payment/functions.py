@@ -34,7 +34,7 @@ def func_set_billing_schedule(customer_uid, pre_payment_info, paid_date):
         merchant_uid = 'm_' + str(pre_payment_info.member_id) + '_' + pre_payment_info.product_tb_id\
                        + '_' + str(next_schedule_timestamp).split('.')[0]
 
-        price = int(product_price_info.sale_price * 1.1)
+        price = int(product_price_info.sale_price)
         name = product_price_info.product_tb.name + ' - ' + product_price_info.name
         next_start_date = pre_payment_info.end_date
         next_end_date = func_get_end_date(pre_payment_info.payment_type_cd,
@@ -88,7 +88,7 @@ def func_set_billing_schedule_now(customer_uid, pre_payment_info, paid_date):
         merchant_uid = 'm_' + str(pre_payment_info.member_id) + '_' + pre_payment_info.product_tb_id\
                        + '_' + str(next_schedule_timestamp).split('.')[0]
 
-        price = int(product_price_info.sale_price * 1.1)
+        price = int(product_price_info.sale_price)
         name = product_price_info.product_tb.name + ' - ' + product_price_info.name
         next_start_date = today
         next_end_date = func_get_end_date(pre_payment_info.payment_type_cd, next_start_date,
@@ -191,7 +191,7 @@ def func_check_payment_price_info(product_id, payment_type_cd, input_price, peri
             error = '오류가 발생했습니다.'
 
     if error is None:
-        price = int(product_price_info.sale_price * 1.1)
+        price = int(product_price_info.sale_price)
         if price != input_price:
             error = '결제금액 오류가 발생했습니다.'
 

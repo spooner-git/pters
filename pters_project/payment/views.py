@@ -671,7 +671,7 @@ def update_payment_product_info_logic(request):
                         billing_info = BillingInfoTb.objects.get(customer_uid=customer_uid, use=USE)
                         billing_info.product_tb_id = change_product_id
                         billing_info.name = product_price_info.product_tb.name + ' - ' + product_price_info.name
-                        billing_info.price = int(product_price_info.sale_price * 1.1)
+                        billing_info.price = int(product_price_info.sale_price)
                         billing_info.save()
                         # 정기 결제 다음 결제일을 자동 결제 예약 시간으로 설정
                         next_billing_date_time = datetime.datetime.combine(billing_info.next_payment_date,
@@ -697,7 +697,7 @@ def update_payment_product_info_logic(request):
                         error = func_set_iamport_schedule(access_token['access_token'],
                                                           product_price_info.product_tb.name + ' - '
                                                           + product_price_info.name,
-                                                          int(product_price_info.sale_price * 1.1),
+                                                          int(product_price_info.sale_price),
                                                           customer_uid, merchant_uid, next_schedule_timestamp,
                                                           request.user.first_name, request.user.email)
                 if error is not None:
@@ -761,7 +761,7 @@ def update_reserve_product_info_logic(request):
                         billing_info = BillingInfoTb.objects.get(customer_uid=customer_uid, use=USE)
                         billing_info.product_tb_id = change_product_id
                         billing_info.name = product_price_info.product_tb.name + ' - ' + product_price_info.name
-                        billing_info.price = int(product_price_info.sale_price * 1.1)
+                        billing_info.price = int(product_price_info.sale_price)
                         billing_info.save()
                         # 정기 결제 다음 결제일을 자동 결제 예약 시간으로 설정
                         next_billing_date_time = datetime.datetime.combine(billing_info.next_payment_date,
@@ -787,7 +787,7 @@ def update_reserve_product_info_logic(request):
                         error = func_set_iamport_schedule(access_token['access_token'],
                                                           product_price_info.product_tb.name + ' - '
                                                           + product_price_info.name,
-                                                          int(product_price_info.sale_price * 1.1),
+                                                          int(product_price_info.sale_price),
                                                           customer_uid, merchant_uid, next_schedule_timestamp,
                                                           request.user.first_name, request.user.email)
                 if error is not None:
@@ -1045,7 +1045,7 @@ def payment_for_iap_logic(request):
                                      start_date=start_date, end_date=end_date,
                                      paid_date=today,
                                      period_month=1,
-                                     price=int(product_price_info.sale_price * 1.1),
+                                     price=int(product_price_info.sale_price),
                                      name=product_info.name + ' - 30일권',
                                      imp_uid='',
                                      channel='iap',
@@ -1127,7 +1127,7 @@ def payment_for_ios_logic(request):
                                      start_date=start_date, end_date=end_date,
                                      paid_date=today,
                                      period_month=1,
-                                     price=int(product_price_info.sale_price * 1.1),
+                                     price=int(product_price_info.sale_price),
                                      name=product_info.name + ' - 30일권',
                                      imp_uid='',
                                      # imp_uid=input_transaction_id,

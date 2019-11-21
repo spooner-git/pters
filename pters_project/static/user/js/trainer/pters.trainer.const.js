@@ -256,7 +256,7 @@ const PAY_TYPE_NAME = {"SINGLE": "1회 결제", "PERIOD": "정기 결제 / 1 개
 const PAY_STATUS = {"paid":"결제 완료", "failed":"결제 실패", "cancelled":"결제 취소", "reserve":"결제 예정"};
 const PAY_METHOD = {"card":"카드 결제", "iap": "인앱 결제", "":"-", "event":"이벤트", "ios": "ios", "android": "android", "인앱 결제": "인앱 결제"};
 const PAYMENT_ID = "imp53133818";
-const PASS_PRODUCT = {"basic":{id:14, text:"베이직", price:5500},"standard":{id:7, text:"스탠다드", price:9900}, "premium":{id:8, text:"프리미엄", price:15000}};
+const PASS_PRODUCT = {"basic":{id:14, text:"베이직", price:3900},"premium":{id:7, text:"프리미엄", price:9900}, "standard":{id:8, text:"스탠다드", price:6900}};
 
 //  수업 종류 - 개인 레슨 자유형
 const LECTURE_TYPE_ONE_TO_ONE = 'ONE_TO_ONE';
