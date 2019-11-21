@@ -152,7 +152,7 @@ class Mypage_photo_update{
     dom_row_rotate_button(){
         let id = "image_rotate_button";
         let title = "";
-        let url = '/static/common/icon/icon_repeat_black.png';
+        let url = CImg.repeat(["#5c5859"], {"vertical-align":"middle"});
         let style = {"padding":"3px 15px"};
         let onclick= ()=>{
             this.event_croppie_rotate();
