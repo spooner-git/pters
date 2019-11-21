@@ -80,7 +80,7 @@
     /* Background */
     --bg-main: #1e1e1e;
     --bg-for-only-shade: #5c5859;
-    --bg-for_only-new-notifi: #ae4e65;
+    --bg-for-only-new-notifi: #ae4e65;
     --bg-sub-dark: #999696;
     --bg-sub-normal: #b8b4b4;
     --bg-sub-light: #5c5859;
@@ -264,7 +264,7 @@ html, body{
     }
     .side_menu_selected{
         background-color: var(--bg-highlight) !important;
-        color: var(--bg-main);
+        color: var(--font-main);
     }
     
 @media(max-width:650px){

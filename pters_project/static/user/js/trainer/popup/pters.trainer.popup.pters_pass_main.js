@@ -150,9 +150,12 @@ class Pters_pass_main{
         let icon_r_text = "";
         let style = null;
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP, 100, popup_style, null, ()=>{
-                pters_pass_shop_popup = new Pters_pass_shop('.popup_pters_pass_shop');});
+            // let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP, 100, popup_style, null, ()=>{
+            //     pters_pass_shop_popup = new Pters_pass_shop('.popup_pters_pass_shop');
+            // });
+            show_error_message("상품을 준비 중 입니다.");
+                
         });
         let html = row;
         return html;
