@@ -581,7 +581,7 @@
                                         </svg>
                                     </div>
                                     <div style="font-weight: 500;">일정</div>
-                                    <div style="font-weight: bold;">오늘 기준 전/후 30일</div>
+                                    <div style="font-weight: bold;">오늘 기준 전/후 31일</div>
                                 </div>
                                 <div class="price_product_description_row">
                                     <div>
@@ -764,6 +764,12 @@
         $('#IE_block_explain').css('display','block');
     }
     */
+    function enter_key() {
+        if (window.event.keyCode == 13) {
+             // 엔터키가 눌렸을 때 실행할 내용
+             document.getElementById('login-form').submit();
+        }
+    }
     var kakao_login_test = true;
 
     $('#errorMessageBar span:nth-child(2)').click(function(){
