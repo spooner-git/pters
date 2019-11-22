@@ -37,10 +37,6 @@
 	cursor: pointer;
 }
 
-.popup_plan_repeat_list .repeat_wrapper:active{
-	background-color: #e8e8e8;
-}
-
 .popup_plan_repeat_list .repeat_member_wrapper{
 	display:flex;
 	width:100%;
@@ -48,8 +44,4 @@
 	padding:0 36px;
 	box-sizing:border-box;
 	cursor: pointer;
-}
-
-.popup_plan_repeat_list .repeat_member_wrapper:active{
-	background-color: #e8e8e8;
 }

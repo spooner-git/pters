@@ -181,6 +181,13 @@ class Plan_view{
         if(end_time_hour >= work_time_end){
             end_time_min = 0;
         }
+        if(end_time_hour < start_time.hour){
+            end_time_hour = work_time_end;
+            end_time_min = 0;
+        }else if(end_time_hour == start_time.hour && end_time_min < start_time.minute){
+            end_time_hour = work_time_end;
+            end_time_min = 0;
+        }
 
         let end_time = TimeRobot.hm_to_hhmm(`${end_time_hour}:${end_time_min}`).complete;
         let end_time_text = TimeRobot.to_text(end_time_hour, end_time_min);
@@ -204,12 +211,11 @@ class Plan_view{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="plan_view_popup.upper_left_menu();" class="obj_icon_prev"></span>`;
-        // let top_left = `<span class="icon_left">${CImg.home("obj_icon_prev")}</span>`;
-        let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
+        let top_left = `<span class="icon_left" onclick="plan_view_popup.upper_left_menu();">${CImg.arrow_left(["#5c5859"])}</span>`;
+        let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
         let top_right = `<span class="icon_right">
-                            <img src="/static/common/icon/icon_delete_black.png" class="obj_icon_24px" onclick="plan_view_popup.upper_right_menu(0);">
-                            <img src="/static/common/icon/icon_attend_check_black.png" class="obj_icon_24px" onclick="plan_view_popup.upper_right_menu(1);" style="display:${this.data.schedule_type == 0 ? 'none': ''};">
+                            ${CImg.delete(["#5c5859"], null, `plan_view_popup.upper_right_menu(0)`)}
+                            ${CImg.attend_check(["#5c5859"], this.data.schedule_type == 0 ? {"display":"none"} : null, `plan_view_popup.upper_right_menu(1)`)}
                         </span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;background-color:${this.data.lecture_color}">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
@@ -256,12 +262,12 @@ class Plan_view{
             html =  `<div class="obj_input_box_full" style="display:${display}; border:0;">`+ CComponent.dom_tag('회원') + member_select_row + member_list_row+'</div>' +
                         '<div class="obj_input_box_full">' +  CComponent.dom_tag('일자') + date_select_row +
                                                         CComponent.dom_tag('진행시간') + classic_time_selector + '</div>' +
-                        '<div class="obj_input_box_full">'+ CComponent.dom_tag('메모') + memo_select_row + '</div>';
+                        '<div class="obj_input_box_full">'+ CComponent.dom_tag('메모 <span style="color:var(--font-highlight)">(회원님께 공유되는 메모입니다.)</span>') + memo_select_row + '</div>';
         }else{
             html =  `<div class="obj_input_box_full" style="display:${display}; border:0;">`+ CComponent.dom_tag('회원') + member_select_row + member_list_row+'</div>' +
                         '<div class="obj_input_box_full">' +  CComponent.dom_tag('일자') + date_select_row +
                                                         CComponent.dom_tag('진행시간') + start_time_select_row + end_time_select_row + '</div>' +
-                        '<div class="obj_input_box_full">'+ CComponent.dom_tag('메모') + memo_select_row + '</div>';
+                        '<div class="obj_input_box_full">'+ CComponent.dom_tag('메모 <span style="color:var(--font-highlight)">(회원님께 공유되는 메모입니다.)</span>') + memo_select_row + '</div>';
         }
 
         return html;
@@ -272,7 +278,7 @@ class Plan_view{
         if(this.data.schedule_type == 0){
             lecture_name =`OFF 일정 ${this.data.memo != "" ? '('+this.data.memo+')' : ''}`;
         }else if(this.data.schedule_type == 1){
-            lecture_name = this.data.member_name + '<img src="/static/common/icon/icon_arrow_expand_black.png" style="height:17px;">';
+            lecture_name = this.data.member_name + CImg.arrow_expand(["#5c5859"], {"height":"17px", "width":"17px"});
             // lecture_name = this.data.lecture_name;
         }else if(this.data.schedule_type == 2){
             lecture_name = this.data.lecture_name;
@@ -336,7 +342,7 @@ class Plan_view{
     dom_row_member_select (){
         let id = 'select_member';
         let title = this.data.member_id.length == 0 ? '회원*' : this.data.member_id.length+ '/' + this.data.lecture_max_num +' 명';
-        let icon = '/static/common/icon/icon_people_black.png';
+        let icon = CImg.members();
         let icon_r_visible = SHOW;
         let icon_r_text = "예약 목록";
         let style = null;
@@ -392,9 +398,9 @@ class Plan_view{
             let state = this.data.member_schedule_state[i];
             let state_icon_url;
             if(state == SCHEDULE_ABSENCE){
-                state_icon_url = '/static/common/icon/icon_x_grey.png';
+                state_icon_url = CImg.x(["var(--img-sub1)"], {"vertical-align":"middle", "margin-bottom":"3px"});
             }else if(state == SCHEDULE_FINISH){
-                state_icon_url = '/static/common/icon/icon_confirm_grey.png';
+                state_icon_url = CImg.confirm(["var(--img-sub1)"], {"vertical-align":"middle", "margin-bottom":"3px"});
             }else if(state == SCHEDULE_NOT_FINISH){
                 state_icon_url = DELETE;
             }
@@ -447,7 +453,7 @@ class Plan_view{
     dom_row_date_select (){
         let id = 'select_date';
         let title = this.data.date_text == null ? '일자*' : this.data.date_text;
-        let icon = '/static/common/icon/icon_cal_black.png';
+        let icon = CImg.date();
         let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = null;
@@ -475,7 +481,7 @@ class Plan_view{
     dom_row_start_time_select (){
         let id = 'select_start_time';
         let title = this.data.start_time_text == null ? '시작 시각*' : this.data.start_time_text;
-        let icon = '/static/common/icon/icon_clock_black.png';
+        let icon = CImg.blank();
         let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = null;
@@ -519,11 +525,11 @@ class Plan_view{
     dom_row_end_time_select (){
         let id = 'select_end_time';
         let title = this.data.end_time_text == null ? '종료 시각*' : this.data.end_time_text;
-        let icon = '/static/common/icon/icon_clock_white.png';
+        let icon = CImg.blank();
         let icon_r_visible = NONE;
         let icon_r_text = "";
         // let style = null;
-        let style = this.data.start_time == this.data.end_time && this.data.end_time != null ? {"color":"#fe4e65"} : null;
+        let style = this.data.start_time == this.data.end_time && this.data.end_time != null ? {"color":"var(--font-highlight)"} : null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             //행을 클릭했을때 실행할 내용
             let root_content_height = $root_content.height();
@@ -554,7 +560,7 @@ class Plan_view{
                                                                                                 }});
             });
         });
-        let html_duplication_alert = `<div style="font-size:11px;color:#fe4e65;padding-left:45px;box-sizing:border-box;display:${this.data.duplicate_plan_when_add.length == 0 ? 'none' : 'block'}">
+        let html_duplication_alert = `<div style="font-size:11px;color:var(--font-highlight);padding-left:45px;box-sizing:border-box;display:${this.data.duplicate_plan_when_add.length == 0 ? 'none' : 'block'}">
                                             ${this.data.duplicate_plan_when_add.length}건 겹치는 일정이 존재합니다.<br>
                                             ${this.data.duplicate_plan_when_add.join('<br/>')}
                                         </div>`;
@@ -568,7 +574,7 @@ class Plan_view{
 
         let id = 'classic_time_selector';
         let title = this.data.start_time_text == null ? '시작 시각*' : this.data.start_time_text;
-        let icon = '/static/common/icon/icon_clock_white.png';
+        let icon = CImg.blank();
         let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = null;
@@ -602,7 +608,7 @@ class Plan_view{
 
         let id2 = 'classic_time_selector2';
         let title2 = this.data.end_time_text == null ? '종료 시각*' : this.data.end_time_text;
-        let icon2 = '/static/common/icon/icon_clock_white.png';
+        let icon2 = CImg.blank();
         let icon_r_visible2 = NONE;
         let icon_r_text2 = "";
         let style2 = null;
@@ -634,7 +640,7 @@ class Plan_view{
         };
         let html2 = CComponent.create_row(id2, title2, icon2, icon_r_visible2, icon_r_text2, style2, callback2);
 
-        let html_duplication_alert = `<div style="font-size:11px;color:#fe4e65;padding-left:45px;box-sizing:border-box;display:${this.data.duplicate_plan_when_add.length == 0 ? 'none' : 'block'}">
+        let html_duplication_alert = `<div style="font-size:11px;color:var(--font-highlight);padding-left:45px;box-sizing:border-box;display:${this.data.duplicate_plan_when_add.length == 0 ? 'none' : 'block'}">
                                             ${this.data.duplicate_plan_when_add.length}건 겹치는 일정이 존재합니다.<br>
                                             ${this.data.duplicate_plan_when_add.join('<br/>')}
                                         </div>`;
@@ -646,7 +652,7 @@ class Plan_view{
         let id = 'select_memo';
         let title = this.data.memo == null ? '' : this.data.memo;
         let placeholder = '일정 메모';
-        let icon = '/static/common/icon/icon_note_black.png';
+        let icon = CImg.memo();
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;

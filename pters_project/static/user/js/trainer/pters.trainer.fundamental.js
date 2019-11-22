@@ -838,8 +838,8 @@ class help_icon{
                     width:90%;height:80%;padding:16px;
                     transform:translate(-50%, -50%);
                     left:50%;top:50%;
-                    background-color:#ffffff;
-                    box-shadow:0 0 24px 0 #cccccc;`;
+                    background-color:var(--bg-main);
+                    box-shadow:0 0 24px 0 var(--bg-inactive);`;
         let html = `
                     <div style="${style}">
                         <div style="width:100%;height:50px;">
@@ -898,6 +898,35 @@ function update_push_token(token, device_id) {
     });
 }
 
+function delete_token(device_id){
+    $.ajax({
+        url:'/login/delete_push_token/',
+        type:'POST',
+        data:{"device_id": device_id},
+
+        beforeSend:function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+            //AjaxBeforeSend();
+        },
+
+        //통신성공시 처리
+        success:function(){
+            console.log('토큰 삭제 완료')
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+
+        },
+
+        //통신 실패시 처리
+        error:function(){
+
+        }
+    });
+}
 
 function check_app_version(app_version){
     if(app_version != undefined){
@@ -992,4 +1021,16 @@ function payment_for_ios(receipt_data , ios_data, product_id, transaction_id){
             console.log('server error');
         }
     });
+}
+
+function theme_data_to_app(){
+    if(os == IOS){
+        // ios 인앱 결제 호출
+        window.webkit.messageHandlers.set_theme.postMessage(setting_theme);
+    }
+    // else if(os == ANDROID && device == MOBILE && device_info != 'web' && user_username =='guest') {
+    else if(os == ANDROID) {
+        // 안드로이드 인앱 결제 호출
+        window.set_theme.callMethodName(setting_theme);
+    }
 }

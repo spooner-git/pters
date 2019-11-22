@@ -60,7 +60,7 @@
 .program_data_b{
 	display: block;
 	width: 100%;
-	color: #858282;
+	color: var(--font-sub-normal);
 	font-size: 13px;
 	font-weight: 500;
 }

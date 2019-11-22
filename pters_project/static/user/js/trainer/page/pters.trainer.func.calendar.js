@@ -636,7 +636,7 @@ class Calendar {
                                 '<div class="no_border">월</div><div class="no_border">화</div><div class="no_border">수</div><div class="no_border">목</div><div class="no_border">금</div><div class="no_border obj_font_color_saturday_blue">토</div><div class="no_border obj_font_color_sunday_red">일</div>'
                             }
                           </div>
-                          <div style="margin-top:4px; border-bottom:1px solid #f5f2f3;"></div>`];
+                          <div style="margin-top:4px; border-bottom:var(--border-article);"></div>`];
 
         let margin = 34;
         let row_height = (this.window_height - 60 - 31 - 45 - margin)/6;
@@ -709,12 +709,14 @@ class Calendar {
         if(this.week_zoomed.vertical.activate == false){
             this.week_zoomed.vertical.activate = true;
             $('.week_rows article').css('height', '180px');
-            $('#week_zoom_vertical_button').css({'background-image':'url(/static/common/icon/icon_zoom_out_black.png)'});
+            // $('#week_zoom_vertical_button').css({'background-image':'url(/static/common/icon/icon_zoom_out_black.png)'});
+            $('#week_zoom_vertical_button').html(CImg.zoom_out());
             $('.week_rows > .week_row').css({'background-image': 'url(/static/user/res/new/calendar_hour_long2.png?v)', 'background-size': '30px 180px'});
         }else if(this.week_zoomed.vertical.activate == true){
             this.week_zoomed.vertical.activate = false;
             $('.week_rows article').css('height', '60px');
-            $('#week_zoom_vertical_button').css({'background-image':'url(/static/common/icon/icon_zoom_in_black.png)'});
+            // $('#week_zoom_vertical_button').css({'background-image':'url(/static/common/icon/icon_zoom_in_black.png)'});
+            $('#week_zoom_vertical_button').html(CImg.zoom_in());
             $('.week_rows > .week_row').css({'background-image': 'url(/static/user/res/new/calendar_hour_short.png?v2)', 'background-size': '30px 60px'});
         }
         this.relocate_current_time_indicator();
@@ -862,8 +864,7 @@ class Calendar {
         if(week_dates_info == false){
             dates_to_join.push(
                 `<div class="cal_week_line">
-                    <div style="color:#fe4e65; font-size:25px; font-weight:bold; text-align:center; background-size:100px;height:30px;">PTERS</div>
-                    <!--<div style="background-image:url('/static/user/res/PTERS_logo_pure.png');background-position:center;background-repeat:no-repeat;background-size:100px;height:30px;"></div>-->
+                    <div style="color:var(--font-highlight); font-size:25px; font-weight:bold; text-align:center; background-size:100px;height:30px;">PTERS</div>
                 </div>`
             );
         }else{
@@ -904,7 +905,7 @@ class Calendar {
                 
                 if(`${_year[i]}-${_month[i]}-${_date[i]}` == this.today){
                     today_marking = `<div class="today_marking" style="${month_or_week == "week" ? '' : 'top:7%; width:20px; height:20px; border-radius:12px;'}"></div>`;
-                    today_text_style = 'color:#fe4e65;font-weight:bold;';
+                    today_text_style = 'color:var(--font-highlight);font-weight:bold;';
                 }
 
                 let this_date_yyyymmdd = DateRobot.to_yyyymmdd(_year[i], _month[i], _date[i]);
@@ -912,7 +913,7 @@ class Calendar {
                 let holiday_name = "";
                 if(this.holiday != null){
                     if(Object.keys(this.holiday).indexOf(this_date_yyyymmdd) != -1){
-                        holiday_color = "color:#fe4e65;";
+                        holiday_color = "color:var(--font-highlight);";
                         holiday_name = this.holiday[this_date_yyyymmdd].holiday_name;
                     }
                 }
@@ -964,8 +965,8 @@ class Calendar {
                 ? 
                 result_html
                 :
-                `<div class="${month_or_week == "week" ? "week_upper_float_tool" :""}" style="${month_or_week == "month" ? 'border-bottom:1px solid #f5f2f3':''}">
-                    ${month_or_week == "week" ? `<div id="week_zoom_vertical_button" onclick="${this.instance}.zoom_week_cal_vertical()"></div>` : ""}
+                `<div class="${month_or_week == "week" ? "week_upper_float_tool" :""}" style="${month_or_week == "month" ? 'border-bottom:var(--border-article)':''}">
+                    ${month_or_week == "week" ? `<div id="week_zoom_vertical_button" onclick="${this.instance}.zoom_week_cal_vertical()">${CImg.zoom_in()}</div>` : ""}
                     ${month_or_week == "week" ? week_date_name_data : ""}
                     <div class="cal_week_line" style="${month_or_week == "week" ? `height:20px;line-height:20px;font-size:15px;font-weight:500;margin-top:8px;` : ""}">
                         ${month_or_week == "week" ? `<div class="week_cal_time_text"></div>` : ""}
@@ -1030,7 +1031,7 @@ class Calendar {
                             if(plan.schedule_type == 0){
                                 plan_status_color = '#d2d1cf';
                                 plan_name = plan.note != "" ? plan.note : "OFF" ;
-                                plan_font_style = '';
+                                plan_font_style = 'color:#3b3b3b;';
                             }else if(plan.schedule_type == 1){
                                 plan_status_color = plan.lecture_ing_color_cd;
                                 plan_name = plan.member_name;
@@ -1303,7 +1304,7 @@ class Calendar {
                 this.long_touch_target = $(this_);
                 this.long_touch_schedule_id = this.long_touch_target.attr("data-scheduleid");
                 $('#debug_toolbar').show().html(`<span style="margin-left:10px;line-height:60px;font-size:14px;">일정 변경을 위해 원하는 곳을 터치해주세요.</span>
-                                                <button style="float:right;width:70px;height:40px;margin:10px;border-radius:4px;background-color:#ffffff;border:1px solid #cccccc;" onclick="calendar.mode_to_plan_change(OFF)">취소</button>`)
+                                                <button style="float:right;width:70px;height:40px;margin:10px;border-radius:4px;color:var(--font-main);background-color:var(--bg-main);border:var(--border-article-dark);" onclick="calendar.mode_to_plan_change(OFF)">취소</button>`)
                                           .css({"height":"60px", "line-height":"60px;"});
                 this.render_upper_box(this.cal_type);
                 this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, this.latest_received_data);
@@ -1455,16 +1456,16 @@ class Calendar {
                                                 <div onclick="${this.instance}.switch_cal_type()" style="display:inline-block;">
                                                     <span class="display_year">${this.current_year}년</span>
                                                     <span class="display_month">${this.current_month}월</span>
-                                                    <div class="swap_cal"></div>
+                                                    <div class="swap_cal">${CImg.arrow_expand()}</div>
                                                 </div>
                                             </div>
                                             <div class="cal_pc_tools_wrap">
-                                                ${CComponent.text_button ("calendar_month_prev", "<img src='/static/common/icon/icon_arrow_l_black.png' style='width:28px;vertical-align:top'>", null, ()=>{this.move_month('prev');})}
-                                                ${CComponent.text_button ("calendar_month_next", "<img src='/static/common/icon/icon_arrow_l_black.png' style='width:28px;vertical-align:top;transform:rotate(180deg)'>", null, ()=>{this.move_month('next');})}
+                                                ${CComponent.text_button ("calendar_month_prev", CImg.arrow_left("", {"width":"28px", "vertical-align":"top"}), null, ()=>{this.move_month('prev');})}
+                                                ${CComponent.text_button ("calendar_month_next", CImg.arrow_left("", {"width":"28px", "vertical-align":"top", "transform":"rotate(180deg)"}), null, ()=>{this.move_month('next');})}
                                             </div>
                                             <div class="cal_tools_wrap">
-                                                <div class="go_today" onclick="${this.instance}.go_month()"></div>
-                                                <div class="add_plan" onclick="${this.instance}.add_plan_button()"></div>
+                                                <div class="go_today" onclick="${this.instance}.go_month()">${CImg.today()}</div>
+                                                <div class="add_plan" onclick="${this.instance}.add_plan_button()">${CImg.plus()}</div>
                                             </div>
                                         </div>
                                         `
@@ -1478,16 +1479,16 @@ class Calendar {
                                                                             ${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).month[6]: null}월 
                                                                             ${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).date[6]: null}일
                                                     </span>
-                                                    <div class="swap_cal"></div>
+                                                    <div class="swap_cal">${CImg.arrow_expand()}</div>
                                                 </div>
                                             </div>
                                             <div class="cal_pc_tools_wrap">
-                                                ${CComponent.text_button ("calendar_week_prev", "<img src='/static/common/icon/icon_arrow_l_black.png' style='width:28px;vertical-align:top'>", null, ()=>{this.move_week('prev');})}
-                                                ${CComponent.text_button ("calendar_week_next", "<img src='/static/common/icon/icon_arrow_l_black.png' style='width:28px;vertical-align:top;transform:rotate(180deg)'>", null, ()=>{this.move_week('next');})}
+                                                ${CComponent.text_button ("calendar_week_prev", CImg.arrow_left("", {"width":"28px", "vertical-align":"top"}), null, ()=>{this.move_week('prev');})}
+                                                ${CComponent.text_button ("calendar_week_next", CImg.arrow_left("", {"width":"28px", "vertical-align":"top", "transform":"rotate(180deg)"}), null, ()=>{this.move_week('next');})}
                                             </div>
                                             <div class="cal_tools_wrap">
-                                                <div class="go_today" onclick="${this.instance}.go_week()"></div>
-                                                <div class="add_plan" onclick="${this.instance}.add_plan_button()"></div>
+                                                <div class="go_today" onclick="${this.instance}.go_week()">${CImg.today()}</div>
+                                                <div class="add_plan" onclick="${this.instance}.add_plan_button()">${CImg.plus()}</div>
                                             </div>
                                         </div>
                                         `             

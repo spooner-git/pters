@@ -103,9 +103,9 @@ class Ticket_add{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_x_black.png" onclick="layer_popup.close_layer_popup();ticket_add_popup.clear();" class="obj_icon_prev"></span>`;
-        let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="ticket_add_popup.send_data();">등록</span></span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();ticket_add_popup.clear();">${CImg.x()}</span>`;
+        let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
+        let top_right = `<span class="icon_right" onclick="ticket_add_popup.send_data();"><span style="color:var(--font-highlight);font-weight: 500;">등록</span></span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
         
@@ -159,7 +159,7 @@ class Ticket_add{
         let id = 'input_ticket_name';
         let title = this.data.name == null ? '' : this.data.name;
         let placeholder = '수강권명*';
-        let icon = '/static/common/icon/icon_ticket_black.png';
+        let icon = CImg.ticket();
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -177,10 +177,10 @@ class Ticket_add{
     dom_row_lecture_select(){
         let id = 'input_lecture_select';
         let title = this.data.lecture_id.length == 0 ? '수업' : this.data.lecture_name.length+'개 선택됨';
-        let icon = '/static/common/icon/icon_lecture_black.png';
+        let icon = CImg.lecture();
         let icon_r_visible = SHOW;
         let icon_r_text = "";
-        let style = this.data.lecture_id.length == 0 ? {"color":"#b8b4b4"} : null;
+        let style = this.data.lecture_id.length == 0 ? {"color":"var(--font-inactive)"} : null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SELECT, 100, popup_style, null, ()=>{
@@ -267,7 +267,7 @@ class Ticket_add{
         let id = 'input_ticket_memo';
         let title = this.data.memo == null ? '' : this.data.memo;
         let placeholder = '설명';
-        let icon = '/static/common/icon/icon_note_black.png';
+        let icon = CImg.memo();
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;

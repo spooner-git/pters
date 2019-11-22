@@ -608,7 +608,6 @@ def func_get_trainer_setting_list(context, user_id, class_id, class_hour):
     lt_res_05 = '7'
     lt_res_cancel_time = -1
     lt_res_enable_time = -1
-    one_to_one_lecture_time_duration = 60
     lt_res_member_start_time = 'A-0'
     lt_schedule_auto_finish = AUTO_FINISH_OFF
     lt_member_ticket_auto_finish = AUTO_FINISH_OFF
@@ -741,7 +740,6 @@ def func_get_trainer_setting_list(context, user_id, class_id, class_hour):
     context['setting_holiday_hide'] = setting_holiday_hide
     context['setting_calendar_basic_select_time'] = setting_calendar_basic_select_time
     context['setting_calendar_time_selector_type'] = setting_calendar_time_selector_type
-
     return context
 
 

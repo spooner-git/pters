@@ -170,16 +170,24 @@ class Member {
                     member_counts_text = `<span style='color:#ff0022;'>${remain_count_text} / ${end_date_text}</span>`;
                 }
             }else{
-                member_counts_text = '종료됨'
+                member_counts_text = '종료됨';
             }
+
             
+            let member_profile_photo;
+            if(data.member_profile_url.match('icon_account.png')){
+                member_profile_photo = CImg.account("", {"width":"36px", "height":"36px"});
+            }else{
+                member_profile_photo = `<img src="${data.member_profile_url}">`;
+            }
+
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             let onclick = `layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_MEMBER_VIEW}', 100, ${popup_style}, {'member_id':${member_id}}, ()=>{
                 member_view_popup = new Member_view('.popup_member_view', ${member_id}, 'member_view_popup');});`;
-            let html = `<article class="member_wrapper" data-member_id="${member_id}" data-name="${member_name}" onclick="${onclick}" style="color:${list_type == "ing" ? "" : '#a3a0a0'}">
+            let html = `<article class="member_wrapper" data-member_id="${member_id}" data-name="${member_name}" onclick="${onclick}" style="color:${list_type == "ing" ? "" : 'var(--font-inactive)'}">
                             <div class="member_data_wrapper">
                                 <div class="member_data_l">
-                                    <img src="${data.member_profile_url}">
+                                    ${member_profile_photo}
                                 </div>                
                                 <div class="member_data_c">
                                     <div class="member_name">${member_name}</div>
@@ -261,7 +269,7 @@ class Member {
         }
     }
 
-    search_member_tool_visible (event){
+    search_member_tool_visible (event, self){
         event.stopPropagation();
         event.preventDefault();
         switch(this.search){
@@ -273,14 +281,15 @@ class Member {
             Array.from(document.getElementsByClassName('member_wrapper')).forEach((el)=>{
                 $(el).show();
             });
-            event.target.style.backgroundImage = 'url("/static/common/icon/icon_search_black.png")';
+
+            $(self).html(CImg.search());
             break;
         case false:
             this.search = true;
             this.render_search_tool('draw');
             document.getElementsByClassName('search_input')[0].value = this.search_value;
             
-            event.target.style.backgroundImage = 'url("/static/common/icon/icon_x_black.png")';
+            $(self).html(CImg.x());
             break;
         }
     }
@@ -307,8 +316,8 @@ class Member {
         user_options_array.push(`'${SORT_MEMBER_NAME+'_'+SORT_ORDER_ASC}':{text:'회원명 가나다순', callback:()=>{member.sort_val = ${SORT_MEMBER_NAME}; member.sort_order_by= ${SORT_ORDER_ASC}; member.sort_value_text = '회원명 가나다순';member.init();layer_popup.close_layer_popup();}}`);
         user_options_array.push(`'${SORT_REG_COUNT+'_'+SORT_ORDER_ASC}':{text:'등록 횟수 많은 순', callback:()=>{member.sort_val = '${SORT_REG_COUNT}'; member.sort_order_by= ${SORT_ORDER_DESC}; member.sort_value_text = '등록 횟수 많은 순';member.init();layer_popup.close_layer_popup();}}`);
         user_options_array.push(`'${SORT_REG_COUNT+'_'+SORT_ORDER_DESC}':{text:'등록 횟수 적은 순', callback:()=>{member.sort_val = '${SORT_REG_COUNT}'; member.sort_order_by= ${SORT_ORDER_ASC};member.sort_value_text = '등록 횟수 적은 순';member.init();layer_popup.close_layer_popup();}}`);
-        user_options_array.push(`'${SORT_REMAIN_COUNT+'_'+SORT_ORDER_ASC}':{text:'남은 횟수 많은 순', callback:()=>{member.sort_val = '${SORT_REMAIN_COUNT}'; member.sort_order_by= ${SORT_ORDER_DESC};member.sort_value_text = '남은 횟수 많은 순';member.init();layer_popup.close_layer_popup();}}`);
-        user_options_array.push(`'${SORT_REMAIN_COUNT+'_'+SORT_ORDER_DESC}':{text:'남은 횟수 적은 순', callback:()=>{member.sort_val = '${SORT_REMAIN_COUNT}'; member.sort_order_by= ${SORT_ORDER_ASC};member.sort_value_text = '남은 횟수 적은 순';member.init();layer_popup.close_layer_popup();}}`);
+        user_options_array.push(`'${SORT_REMAIN_COUNT+'_'+SORT_ORDER_ASC}':{text:'잔여 횟수 많은 순', callback:()=>{member.sort_val = '${SORT_REMAIN_COUNT}'; member.sort_order_by= ${SORT_ORDER_DESC};member.sort_value_text = '잔여 횟수 많은 순';member.init();layer_popup.close_layer_popup();}}`);
+        user_options_array.push(`'${SORT_REMAIN_COUNT+'_'+SORT_ORDER_DESC}':{text:'잔여 횟수 적은 순', callback:()=>{member.sort_val = '${SORT_REMAIN_COUNT}'; member.sort_order_by= ${SORT_ORDER_ASC};member.sort_value_text = '잔여 횟수 적은 순';member.init();layer_popup.close_layer_popup();}}`);
         user_options_array.push(`'${SORT_START_DATE+'_'+SORT_ORDER_ASC}':{text:'시작 일자 최근 순', callback:()=>{member.sort_val = '${SORT_START_DATE}'; member.sort_order_by= ${SORT_ORDER_DESC};member.sort_value_text = '시작 일자 최근 순';member.init();layer_popup.close_layer_popup();}}`);
         user_options_array.push(`'${SORT_START_DATE+'_'+SORT_ORDER_DESC}':{text:'시작 일자 과거 순', callback:()=>{member.sort_val = '${SORT_START_DATE}'; member.sort_order_by= ${SORT_ORDER_ASC};member.sort_value_text = '시작 일자 과거 순';member.init();layer_popup.close_layer_popup();}}`);
         user_options_array.push(`'${SORT_END_DATE+'_'+SORT_ORDER_ASC}':{text:'남은 일자 많은 순', callback:()=>{member.sort_val = '${SORT_END_DATE}'; member.sort_order_by= ${SORT_ORDER_DESC};member.sort_value_text = '남은 일자 많은 순';member.init();layer_popup.close_layer_popup();}}`);
@@ -327,14 +336,17 @@ class Member {
         return(
             {
                 member_upper_box:`   <div class="member_upper_box">
-                                        <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:#3b3b3b; letter-spacing: -1px; height:28px;">
+                                        <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:var(--font-main); letter-spacing: -1px; height:28px;">
                                             <div style="display:inline-block;">회원 </div>
-                                            <div style="display:inline-block; color:#fe4e65; font-weight:900;">${this.list_type == "ing" ? this.member_ing_length : this.member_end_length}</div>
+                                            <div style="display:inline-block; color:var(--font-highlight); font-weight:900;">${this.list_type == "ing" ? this.member_ing_length : this.member_end_length}</div>
                                         </div>
                                         <div class="member_tools_wrap">
-                                            <div class="search_member" onclick="${this.instance}.search_member_tool_visible(event);">
+                                            <div class="search_member" onclick="${this.instance}.search_member_tool_visible(event, this);">
+                                                ${CImg.search()}
                                             </div>
-                                            <div class="add_member" onclick="${this.instance}.event_add_member()"></div>
+                                            <div class="add_member" onclick="${this.instance}.event_add_member()">
+                                                ${CImg.plus()}
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="member_search_tool"></div>
@@ -349,7 +361,7 @@ class Member {
                                             option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, ${user_option}
                                             );
                                         });">
-                                            ${this.sort_value_text} <img src="/static/common/icon/icon_arrow_expand_light_grey.png" style="width:24px; height:24px; vertical-align: middle;">
+                                            ${this.sort_value_text} ${CImg.arrow_expand(["var(--img-sub1)"], {"vertical-align":"middle", "margin-bottom":"3px", "width":"20px"})}
                                         </div>
                                     </div>
                                     `

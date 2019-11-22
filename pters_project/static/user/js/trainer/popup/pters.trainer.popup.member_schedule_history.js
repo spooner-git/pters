@@ -23,7 +23,7 @@ class Member_schedule_history{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();member_schedule_history.clear();" class="obj_icon_prev"></span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();member_schedule_history.clear();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span id="">일정 이력</span></span>`;
         let top_right = `<span class="icon_right"></span>`;
         let content =   `<section style="margin-top:8px;">
@@ -37,10 +37,10 @@ class Member_schedule_history{
     }
 
     dom_arrange_select(){
-        let icon = `<img src="/static/common/icon/icon_arrow_expand_light_grey.png" style="width:24px; height:24px; vertical-align: middle;">`;
+        let icon = CImg.arrow_expand(['var(--img-sub1)'], {"vertical-align":"middle"});
         let id = "list_arrange_select";
         let title = this.sort_val == SORT_MEMBER_TICKET ? "수강권별 정렬"+icon : "시간순 정렬"+icon;
-        let style = {"color": "#858282", "font-size":"13px", "font-weight":"500"};
+        let style = {"color": "var(--font-sub-normal)", "font-size":"13px", "font-weight":"500"};
         let onclick = ()=>{
             this.switch_type();
         };
@@ -184,18 +184,18 @@ class Member_schedule_history{
                                                     $target.hide();
                                                 }
                                       };
-            expand_button = CComponent.text_button(i+1, '접기/펼치기', {"float":"right", "font-size":"12px", "color":"#858282", "font-weight":"500"}, ()=>{button_onclick();});
+            expand_button = CComponent.text_button(i+1, '접기/펼치기', {"float":"right", "font-size":"12px", "color":"var(--font-sub-normal)", "font-weight":"500"}, ()=>{button_onclick();});
             expand_status = SHOW;
             expand_style = "block";
 
             let html_sub_assembly = ` <div id="member_schedule_history_${i+1}">
-                                        <div id="member_schedule_history_ticket_${i+1}" style="padding:15px 10px;background-color:#f5f2f3;font-size:14px;font-weight:bold;">
+                                        <div id="member_schedule_history_ticket_${i+1}" style="padding:15px 10px;background-color:var(--bg-light);font-size:14px;font-weight:bold;">
                                             <div>${ticket_name} <span style="color:${TICKET_STATUS_COLOR[ticket_status]};font-size:12px;font-weight:500">(${TICKET_STATUS[ticket_status]})</span> <span style="float:right;">${expand_button}</span></div>
-                                            <div style="font-size:12px;color:#3b3b3b;font-weight:500;">
+                                            <div style="font-size:12px;color:var(--font-main);font-weight:500;">
                                                 등록 <span style="font-weight:bold;">${ticket_reg_count}</span>회 / 
                                                 잔여 <span style="font-weight:bold;">${ticket_rem_count}</span>회 / 
                                                 예약가능 <span style="font-weight:bold;">${ticket_avail_count}</span>회</div>
-                                            <div style="font-size:12px;color:#3b3b3b;font-weight:500;">${ticket_start_date} - ${ticket_end_date}</div>
+                                            <div style="font-size:12px;color:var(--font-main);font-weight:500;">${ticket_start_date} - ${ticket_end_date}</div>
                                         </div>
                                         <div id="member_schedule_history_${i+1}_list" data-expand="${expand_status}" style="display:${expand_style};">
                                             ${html_sub_assembly_to_join.join('')}

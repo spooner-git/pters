@@ -9,10 +9,10 @@ class Setting_attendmode{
         };
 
         this.data_for_selector = {
-            display_session_start : 
-                {value:[0, 5, 10, 15, 20, 25, 30], text:["시작 0 분 부터", "시작 5 분 전부터", "시작 10 분 전부터", "시작 15 분 전부터", "시작 20 분 전부터", "시작 25 분 전부터", "시작 30 분 전부터"]},
+            display_session_start :
+                {value:[0, 5, 10, 15, 20, 25, 30], text:["시작 0분 부터", "시작 5분 전부터", "시작 10분 전부터", "시작 15분 전부터", "시작 20분 전부터", "시작 25분 전부터", "시작 30분 전부터"]},
             display_session_end:
-            {value:[0, 5, 10, 15, 20, 25, 30], text:["종료 0 분 후까지", "종료 5 분 후까지", "종료 10 분 후까지", "종료 15 분 후까지", "종료 20 분 후까지", "종료 25 분 후까지", "종료 30 분 후까지"]}
+            {value:[0, 5, 10, 15, 20, 25, 30], text:["종료 0분 후까지", "종료 5분 후까지", "종료 10분 후까지", "종료 15분 후까지", "종료 20분 후까지", "종료 25분 후까지", "종료 30분 후까지"]}
         };
 
         this.init();
@@ -43,9 +43,9 @@ class Setting_attendmode{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();setting_attendmode_popup.clear();" class="obj_icon_prev"></span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();setting_attendmode_popup.clear();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right"><img src="/static/common/icon/icon_confirm_black.png" onclick="setting_attendmode_popup.upper_right_menu();" class="obj_icon_prev"></span>`;
+        let top_right = `<span class="icon_right" onclick="setting_attendmode_popup.upper_right_menu();">${CImg.confirm()}</span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
         
@@ -140,7 +140,7 @@ class Setting_attendmode{
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             let title = "비밀번호 설정";
             let install_target = "#wrapper_box_password_4d_input";
-            let original_data = "0000";
+            let original_data = this.data.password == null ? "0000" : this.data.password;
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PASSWORD_4D_INPUT, 100, popup_style, null, ()=>{
                 password_4d_input = new PasswordFourDigitInput(title, install_target, original_data, (set_data)=>{

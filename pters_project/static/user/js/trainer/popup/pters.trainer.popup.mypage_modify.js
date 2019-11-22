@@ -57,9 +57,9 @@ class Mypage_modify{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();mypage_modify_popup.clear();" class="obj_icon_prev"></span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();mypage_modify_popup.clear();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="mypage_modify_popup.send_data()">등록</span></span>`;
+        let top_right = `<span class="icon_right" onclick="mypage_modify_popup.send_data()"><span style="color:var(--font-highlight);font-weight: 500;">등록</span></span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
         
@@ -122,9 +122,9 @@ class Mypage_modify{
         }
         
 
-        let tag_my_name = CComponent.dom_tag("이름", {"color":"#858282", "padding":"8px 0", "font-weight":"bold"});
-        let tag_my_phone = CComponent.dom_tag("휴대폰 번호", {"color":"#858282", "padding":"8px 0", "font-weight":"bold"});
-        let tag_my_email = CComponent.dom_tag("이메일 주소", {"color":"#858282", "padding":"8px 0", "font-weight":"bold"});
+        let tag_my_name = CComponent.dom_tag("이름", {"color":"var(--font-sub-normal)", "padding":"8px 0", "font-weight":"bold"});
+        let tag_my_phone = CComponent.dom_tag("휴대폰 번호", {"color":"var(--font-sub-normal)", "padding":"8px 0", "font-weight":"bold"});
+        let tag_my_email = CComponent.dom_tag("이메일 주소", {"color":"var(--font-sub-normal)", "padding":"8px 0", "font-weight":"bold"});
 
         let html =  '<section id="basic_info_wrap">'+ 
                         tag_my_name + my_name + 
@@ -157,7 +157,7 @@ class Mypage_modify{
         let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let style = {"border":"1px solid #d6d2d2", "border-radius":"4px", "padding":"12px", "margin-bottom":"10px"};
+        let style = {"border":"var(--border-article-dark)", "border-radius":"4px", "padding":"12px", "margin-bottom":"10px"};
         let disabled = false;
         let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+.,@一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{1,20}";
         let pattern_message = ". , + - _ @ 제외 특수문자는 입력 불가";
@@ -176,7 +176,7 @@ class Mypage_modify{
         let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let style = {"border":"1px solid #d6d2d2", "border-radius":"4px", "padding":"12px", "margin-bottom":"10px", "display":"inline-block", "width":"180px"};
+        let style = {"border":"var(--border-article-dark)", "border-radius":"4px", "padding":"12px", "margin-bottom":"10px", "display":"inline-block", "width":"180px"};
         let input_disabled = this.data_from_external == null ? false : true;
         let pattern = "[0-9]{10,11}";
         let pattern_message = "";
@@ -209,9 +209,9 @@ class Mypage_modify{
             this.auth_phone.number_get = input_data;
             this.render_content();
         }, pattern, pattern_message, required);
-        html = '<div style="border:solid 1px #d6d2d2; display:inline-block; width:200px;position:relative">'
+        html = '<div style="border:var(--border-article-dark); display:inline-block; width:200px;position:relative">'
                     + html
-                    + '<div id="activation_timer" style="position:absolute;top:50%;transform:translateY(-50%);right:0;display: inline-block; margin-right: 12px; text-align:right; width:20%;color:#676767">'+icon_r_text+'</div>' +
+                    + '<div id="activation_timer" style="position:absolute;top:50%;transform:translateY(-50%);right:0;display: inline-block; margin-right: 12px; text-align:right; width:20%;color:var(--font-sub-normal)">'+icon_r_text+'</div>' +
                '</div>';
         return html;
     }
@@ -219,7 +219,7 @@ class Mypage_modify{
     dom_button_auth_request_phone(){
         let id = "auth_request_my_phone";
         let title = "인증";
-        let style = {"float":"right", "border":"1px solid #cccccc", "border-radius":"4px", "font-size":"13px", "height":"50px", "line-height":"50px", "width":"60px", "padding":"0", "box-sizing":"border-box", "vertical-align":"top"};
+        let style = {"float":"right", "border":"var(--border-article-dark)", "border-radius":"4px", "font-size":"13px", "height":"50px", "line-height":"50px", "width":"60px", "padding":"0", "box-sizing":"border-box", "vertical-align":"top"};
         let onclick = ()=>{
             let data = {'token':'', 'phone':this.auth_phone.phone};
             Phone_auth_func.request_auth_number(data, (jsondata)=>{
@@ -252,7 +252,7 @@ class Mypage_modify{
     dom_button_auth_confirm_phone(){
         let id = "auth_confirm_my_phone";
         let title = "확인";
-        let style = {"float":"right", "border":"1px solid #cccccc", "border-radius":"4px", "font-size":"13px", "height":"50px", "line-height":"50px", "width":"60px", "padding":"0", "box-sizing":"border-box", "vertical-align":"top", "color":"#fe4e65"};
+        let style = {"float":"right", "border":"var(--border-article-dark)", "border-radius":"4px", "font-size":"13px", "height":"50px", "line-height":"50px", "width":"60px", "padding":"0", "box-sizing":"border-box", "vertical-align":"top", "color":"var(--font-highlight)"};
         let onclick = ()=>{
             let data = {'user_activation_code': this.auth_phone.number_get, 'phone': this.auth_phone.phone};
             Phone_auth_func.send_auth_number(data, (data)=>{
@@ -276,7 +276,7 @@ class Mypage_modify{
         let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let style = {"border":"1px solid #d6d2d2", "border-radius":"4px", "padding":"12px", "margin-bottom":"10px"};
+        let style = {"border":"var(--border-article-dark)", "border-radius":"4px", "padding":"12px", "margin-bottom":"10px"};
         let disabled = false;
         let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9@.一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
         let pattern_message = "";

@@ -60,7 +60,7 @@ class Menu_settings {
             return false;
         }
 
-        let dom_tag_style = {"font-size":"13px", "color":"#858282", "padding-left":"0", "margin-bottom":"8px"};
+        let dom_tag_style = {"font-size":"13px", "color":"var(--font-sub-normal)", "padding-left":"0", "margin-bottom":"8px"};
 
         let assembly = 
                     //     this.dom_who_i_am() + 
@@ -99,7 +99,7 @@ class Menu_settings {
                         </div>                
                         <div class="my_data_c" style="display:table-cell;width:auto;padding-left:8px;vertical-align:middle;">
                             <div class="my_name" style="font-size:17px;font-weight:500;">${member_name}</div>
-                            <div style="font-size:11px;color:#858282">프로필 확인</div>
+                            <div style="font-size:11px;color:var(--font-sub-normal)">프로필 확인</div>
                         </div>
                     </article>`;
         return html;
@@ -113,7 +113,7 @@ class Menu_settings {
     dom_menu_program(){
         let id = 'menu_program';
         let title = '프로그램';
-        let icon = '/static/common/icon/icon_program_black.png';
+        let icon = CImg.program();
         let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
@@ -126,7 +126,7 @@ class Menu_settings {
     dom_menu_calendar(){
         let id = 'menu_calendar';
         let title = '일정';
-        let icon = '/static/common/icon/tab_bar/icon_calendar_off.png';
+        let icon = CImg.calendar();
         let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
@@ -139,7 +139,7 @@ class Menu_settings {
     dom_menu_member(){
         let id = 'menu_member';
         let title = '회원';
-        let icon = '/static/common/icon/tab_bar/icon_member_off.png';
+        let icon = CImg.member();
         let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
@@ -152,7 +152,7 @@ class Menu_settings {
     dom_menu_lecture(){
         let id = 'menu_lecture';
         let title = '수업';
-        let icon = '/static/common/icon/icon_lecture_black.png';
+        let icon = CImg.lecture();
         let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
@@ -165,7 +165,7 @@ class Menu_settings {
     dom_menu_ticket(){
         let id = 'menu_ticket';
         let title = '수강권';
-        let icon = '/static/common/icon/icon_ticket_black.png';
+        let icon = CImg.ticket();
         let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
@@ -178,7 +178,7 @@ class Menu_settings {
     dom_menu_statistics(){
         let id = 'menu_statistics';
         let title = '통계';
-        let icon = '/static/common/icon/icon_statistics_black.png';
+        let icon = CImg.statistics();
         let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
@@ -191,7 +191,7 @@ class Menu_settings {
     dom_menu_attendmode(){
         let id = 'menu_attendmode';
         let title = '출석 체크 (Beta)';
-        let icon = '/static/common/icon/icon_attend_check_black.png';
+        let icon = CImg.attend_check();
         let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
@@ -204,7 +204,7 @@ class Menu_settings {
     dom_menu_setting_calendar(){
         let id = 'menu_setting_calendar';
         let title = '일정 설정';
-        let icon = '/static/common/icon/icon_setting_worktime2_black.png';
+        let icon = CImg.setting_calendar();
         let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
@@ -217,7 +217,7 @@ class Menu_settings {
     dom_menu_setting_worktime(){
         let id = 'menu_setting_worktime';
         let title = '업무 시간';
-        let icon = '/static/common/icon/icon_setting_worktime_black.png';
+        let icon = CImg.setting_work_time();
         let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
@@ -230,7 +230,7 @@ class Menu_settings {
     dom_menu_setting_autocomplete(){
         let id = 'menu_setting_autocomplete';
         let title = '자동 완료';
-        let icon = '/static/common/icon/icon_setting_autocomplete_black.png';
+        let icon = CImg.setting_autocomplete();
         let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
@@ -243,7 +243,7 @@ class Menu_settings {
     dom_menu_setting_reserve(){
         let id = 'menu_setting_reserve';
         let title = '회원 예약';
-        let icon = '/static/common/icon/icon_setting_reserve_black.png';
+        let icon = CImg.setting_reserve();
         let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
@@ -256,7 +256,7 @@ class Menu_settings {
     dom_menu_setting_alarm(){
         let id = 'menu_setting_alarm';
         let title = '알림';
-        let icon = '/static/common/icon/icon_setting_notification_black.png';
+        let icon = CImg.setting_notification();
         let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
@@ -269,7 +269,7 @@ class Menu_settings {
     dom_menu_setting_attendmode(){
         let id = 'menu_setting_attendmode';
         let title = '출석 체크 모드 설정';
-        let icon = '/static/common/icon/icon_setting_attendmode_black.png';
+        let icon = CImg.setting_attend_check();
         let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
@@ -282,7 +282,7 @@ class Menu_settings {
     dom_menu_pters_pass(){
         let id = 'menu_pters_pass';
         let title = 'PTERS 패스 구매';
-        let icon = '/static/common/icon/icon_ticket_pink.png';
+        let icon = CImg.ticket();
         let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
@@ -295,7 +295,7 @@ class Menu_settings {
     dom_menu_service_notice(){
         let id = 'menu_service_notice';
         let title = '공지사항';
-        let icon = '/static/common/icon/icon_notice_black.png';
+        let icon = CImg.notice();
         let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
@@ -308,7 +308,7 @@ class Menu_settings {
     dom_menu_service_inquiry(){
         let id = 'menu_service_inquiry_menu';
         let title = '이용 문의';
-        let icon = '/static/common/icon/icon_inquiry_black.png';
+        let icon = CImg.inquiry();
         let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
@@ -321,7 +321,7 @@ class Menu_settings {
     dom_menu_service_help(){
         let id = 'menu_service_help';
         let title = '도움말';
-        let icon = '/static/common/icon/icon_help_black.png';
+        let icon = CImg.help();
         let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
@@ -336,7 +336,7 @@ class Menu_settings {
             {
                 menu_upper_box:`   <div class="menu_upper_box">
                                         <div style="display:inline-block;width:200px;">
-                                            <span style="font-size:23px;font-weight:bold;color:#3b3b3b">설정</span>
+                                            <span style="font-size:23px;font-weight:bold;color:var(--font-main)">설정</span>
                                         </div>
                                     </div>
                                         `

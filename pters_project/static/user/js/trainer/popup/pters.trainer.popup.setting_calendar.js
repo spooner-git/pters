@@ -11,7 +11,7 @@ class Setting_calendar{
         this.data_for_selector = {
             calendar_basic_select_time : 
                 // {value:[10, 15, 20, 30, 60, 90, 120], text:["10 분", "15 분", "20 분", "30 분", "1 시간", "1시간 30분", "2 시간"]}
-                {value:[10, 20, 30, 40, 50, 60], text:["10분", "20분", "30 분", "40분", "50분", "1 시간"]}
+                {value:[10, 20, 30, 40, 50, 60], text:["10분", "20분", "30분", "40분", "50분", "1 시간"]}
         };
 
         this.init();
@@ -45,9 +45,9 @@ class Setting_calendar{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();setting_calendar_popup.clear();" class="obj_icon_prev"></span>`;
-        let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right"><img src="/static/common/icon/icon_confirm_black.png" onclick="setting_calendar_popup.upper_right_menu();" class="obj_icon_prev"></span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();setting_calendar_popup.clear();">${CImg.arrow_left()}</span>`;
+        let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
+        let top_right = `<span class="icon_right" onclick="setting_calendar_popup.upper_right_menu();">${CImg.confirm()}</span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
         
@@ -76,7 +76,7 @@ class Setting_calendar{
                     '</article>' +
                     '<article class="obj_input_box_full" style="padding-top:5px;">' +
                         this.dom_row_calendar_basic_select_time() + 
-                        "<span style='font-size:12px;color:#3b3b3b;letter-spacing:-0.6px;font-weight:normal'>달력 클릭/OFF 일정 클릭시 선택되는 기본 시간입니다.</span>" +
+                        "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>달력 클릭/OFF 일정 클릭시 선택되는 기본 시간입니다.</span>" +
                     '</article>' +
                     '<article class="obj_input_box_full">' +
                         this.dom_row_calendar_title() +
@@ -196,7 +196,7 @@ class Setting_calendar{
         let html = `<div class="select_wrap ${selected_or_not}" id="input_method_classic">
                         <div class="select_indicator">
                             ${CComponent.radio_button("time_input_select_classic", this.data.calendar_time_input_type == CLASSIC ? ON : OFF, {"transform":"scale(1.2)", "display":"inline-block", "margin-right":"5px"}, ()=>{})}
-                            <span>클래식</span><span style="color:#fe4e65;font-size:11px;"> (베타)</span>
+                            <span>클래식</span><span style="color:var(--font-highlight);font-size:11px;"> (베타)</span>
                             <p>시작과 종료시각을 한번에 설정 합니다. <br>겹치는 일정은 필터링 할 수 있습니다.</p>
                         </div>
                         <div>

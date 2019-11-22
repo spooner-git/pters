@@ -28,7 +28,7 @@
 }
 
 .popup_pters_pass_shop .pters_pass_product_wrapper{
-	border: 1px solid #cccccc;
+	border: var(--border-article-dark);
 	border-radius: 10px;
 	padding: 0 15px;
 	margin:20px 0;
@@ -37,7 +37,7 @@
 .popup_pters_pass_shop .pters_pass_explain_wrapper{
 	font-size:13px;
 	padding:10px 10px 20px 10px;
-	border-bottom:1px solid #f5f2f2;
+	border-bottom:var(--border-article);
 }
 
 .popup_pters_pass_shop .product_explain_row{
@@ -47,7 +47,7 @@
 
 .popup_pters_pass_shop .product_explain_row_title{
 	flex:0 0 60px;
-	color: #5c5859;
+	color: var(--font-sub-dark);
 }
 
 .popup_pters_pass_shop .product_explain_row_detail{

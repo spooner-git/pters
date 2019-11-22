@@ -42,9 +42,9 @@ class Program_list{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();program_list_popup.clear();" class="obj_icon_prev"></span>`;
-        let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right"><img src="/static/common/icon/icon_plus_pink.png" class="obj_icon_basic" onclick="program_list_popup.upper_right_menu();"></span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();program_list_popup.clear();">${CImg.arrow_left()}</span>`;
+        let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
+        let top_right = `<span class="icon_right" onclick="program_list_popup.upper_right_menu();">${CImg.plus()}</span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
         
@@ -68,8 +68,8 @@ class Program_list{
     }
     
     dom_assembly_content(){
-        let html_selected_current_program = [CComponent.dom_tag("선택된 프로그램", {"padding":"5px 20px", "font-weight":"bold", "color":"#fe4e65"})];
-        let html_temp = [CComponent.dom_tag('등록된 프로그램', {"padding":"5px 20px", "font-weight":"bold", "color":"#858282"})];
+        let html_selected_current_program = [CComponent.dom_tag("선택된 프로그램", {"padding":"5px 20px", "font-weight":"bold", "color":"var(--font-highlight)"})];
+        let html_temp = [CComponent.dom_tag('등록된 프로그램', {"padding":"5px 20px", "font-weight":"bold", "color":"var(--font-sub-normal)"})];
         let length = this.data.program_data.length;
         for (let i=0; i<length; i++){
             let data = this.data.program_data[i];

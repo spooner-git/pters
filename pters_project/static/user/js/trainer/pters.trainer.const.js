@@ -134,6 +134,7 @@ const MAX_WIDTH = 800;
 const NOTICE = 'NOTICE';
 const NOTICE_FAQ = 'FAQ';
 const NOTICE_USAGE = 'SYS_USAGE';
+const NOTICE_UPDATE_HISTORY = 'UPDATE_HISTORY';
 
 /* 시간 입력기 */
 const BASIC = 0;
@@ -250,12 +251,12 @@ const SEX_CODE = {"M": "남성", "W": "여성"};
 const SCHEDULE_STATUS = {"NP" : "진행전", "PC": "결석", "PE": "출석"};
 const SCHEDULE_STATUS_COLOR = {"NP" : "진행전", "PC": "orange", "PE": "green"};
 const TICKET_STATUS = {"IP": "진행중", "PE": "종료", "RF": "환불"};
-const TICKET_STATUS_COLOR = {"IP": "green", "PE": "#3b3b3b", "RF": "orange"};
+const TICKET_STATUS_COLOR = {"IP": "green", "PE": "var(--font-main)", "RF": "orange"};
 const PAY_TYPE_NAME = {"SINGLE": "1회 결제", "PERIOD": "정기 결제 / 1 개월", "":"없음", "FREE_EVENT":"무료 이벤트"};
 const PAY_STATUS = {"paid":"결제 완료", "failed":"결제 실패", "cancelled":"결제 취소", "reserve":"결제 예정"};
 const PAY_METHOD = {"card":"카드 결제", "iap": "인앱 결제", "":"-", "event":"이벤트", "ios": "ios", "android": "android", "인앱 결제": "인앱 결제"};
 const PAYMENT_ID = "imp53133818";
-const PASS_PRODUCT = {"standard":{id:7, text:"스탠다드", price:9900}, "premium":{id:8, text:"프리미엄", price:15000}};
+const PASS_PRODUCT = {"basic":{id:14, text:"베이직", price:3900},"premium":{id:7, text:"프리미엄", price:9900}, "standard":{id:8, text:"스탠다드", price:6900}};
 
 //  수업 종류 - 개인 레슨 자유형
 const LECTURE_TYPE_ONE_TO_ONE = 'ONE_TO_ONE';

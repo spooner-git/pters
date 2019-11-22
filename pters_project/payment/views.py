@@ -7,6 +7,8 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import EmailMessage
+from django.db import IntegrityError
+from django.db import InternalError
 from django.db import transaction
 from django.db.models import Q
 from django.shortcuts import render, redirect
@@ -21,7 +23,7 @@ from login.models import MemberTb
 
 from .functions import func_set_billing_schedule, func_get_imp_token, func_resend_payment_info, \
     func_check_payment_price_info, func_get_end_date, func_cancel_period_billing_schedule, \
-    func_set_billing_schedule_now, func_get_payment_info_from_imp
+    func_set_billing_schedule_now, func_get_payment_info_from_imp, func_set_iamport_schedule
 from .models import PaymentInfoTb, BillingInfoTb, ProductTb, BillingCancelInfoTb, ProductPriceTb, \
     ProductFunctionAuthTb, IosReceiptCheckTb
 
@@ -282,6 +284,7 @@ def billing_check_logic(request):
     error = None
     access_token = func_get_imp_token()
     today = datetime.date.today()
+    info_message = ''
 
     if access_token['error'] is None:
         payment_info = func_get_payment_info_from_imp(imp_uid, access_token['access_token'])
@@ -334,12 +337,16 @@ def billing_check_logic(request):
                             pre_billing_info.use = USE
                             if len(before_billing_data) > 0:
                                 before_billing_data.update(use=UN_USE)
+                            info_message = '결제 완료'
                         elif payment_info['status'] == 'failed':
                             pre_billing_info.state_cd = 'ERR'
+                            info_message = '결제 실패'
                         elif payment_info['status'] == 'cancelled':  # 결제 취소 상태로 업데이트
                             pre_billing_info.state_cd = 'CANCEL'
+                            info_message = '결제 취소'
                         else:  # 결제 오류 상태로 업데이트
                             pre_billing_info.state_cd = 'ERR'
+                            info_message = '에러 발생'
                         pre_billing_info.card_name = payment_info['card_name']
                         pre_billing_info.save()
 
@@ -351,6 +358,10 @@ def billing_check_logic(request):
                         else:
                             # 결제 오류인 경우 iamport 상의 예약 제거
                             error = func_cancel_period_billing_schedule(pre_payment_info.customer_uid)
+                            reserve_payment_data = PaymentInfoTb.objects.filter(
+                                customer_uid=pre_payment_info.customer_uid, status='reserve')
+                            reserve_payment_data.delete()
+
         except TypeError:
             error = '오류가 발생했습니다.[2]'
         except ValueError:
@@ -364,16 +375,15 @@ def billing_check_logic(request):
 
     if error is None:
         if member_info is not None:
-            logger.info(str(member_info.name) + '님 정기 결제 완료['
+            logger.info(str(member_info.name) + '님 '+info_message+' ['
                         + str(member_info.member_id) + ']' + str(merchant_uid))
 
-            email = EmailMessage('[PTERS 결제]' + member_info.name + '회원 결제 완료',
-                                 '정기 결제 완료 : ' + str(timezone.now()),
+            email = EmailMessage('[PTERS 결제]' + member_info.name + '회원', info_message + ':' + str(timezone.now()),
                                  to=['support@pters.co.kr'])
             email.send()
     else:
         if member_info is not None:
-            logger.error(str(member_info.name) + '님 결제 오류['
+            logger.error(str(member_info.name) + '님 '+info_message+' ['
                          + str(member_info.member_id) + ']' + str(error))
         else:
             logger.error('[결제 오류]:' + str(error))
@@ -386,7 +396,6 @@ def cancel_period_billing_logic(request):
     customer_uid = request.POST.get('customer_uid', '')
     cancel_type = request.POST.get('cancel_type', '')
     cancel_reason = request.POST.get('cancel_reason', '')
-    next_page = request.POST.get('next_page', '')
     context = {'error': None}
     billing_info = None
     error = None
@@ -622,38 +631,177 @@ def update_period_billing_logic(request):
     return render(request, 'ajax/payment_error_info.html', context)
 
 
-def update_reserve_product_info_logic(request):
+def update_payment_product_info_logic(request):
     customer_uid = request.POST.get('customer_uid', '')
-    product_id = request.POST.get('product_id', '')
     change_product_id = request.POST.get('change_product_id', '')
 
     error = None
     context = {'error': None}
-    billing_info = None
+    product_price_info = None
+    next_schedule_timestamp = ''
 
     if customer_uid == '' or customer_uid is None:
         error = '결제 정보를 불러오지 못했습니다.'
 
-    if product_id == '' or product_id is None or change_product_id == '' or change_product_id is None:
+    if change_product_id == '' or change_product_id is None:
         error = '결제 정보를 불러오지 못했습니다.'
 
     if error is None:
-        payment_data = PaymentInfoTb.objects.filter(customer_uid=customer_uid,
-                                                    product_tb_id=product_id,
-                                                    status='reserve',
-                                                    payment_type_cd='PERIOD')
-        if len(payment_data) > 0:
-            payment_data.update(product_tb_id=change_product_id)
+        try:
+            product_price_info = ProductPriceTb.objects.get(product_id=change_product_id, payment_type_cd='PERIOD',
+                                                            period_month=1)
+        except ObjectDoesNotExist:
+            error = '상품 정보를 불러오지 못했습니다.[0]'
 
     if error is None:
         try:
-            billing_info = BillingInfoTb.objects.get(customer_uid=customer_uid, use=USE)
-        except ObjectDoesNotExist:
-            error = '정기 결제 정보를 불러오지 못했습니다.'
+            # 기존 결제 정보 update
+            with transaction.atomic():
+                # 관련 데이터 취소하기
+                error = func_cancel_period_billing_schedule(customer_uid)
+
+                if error is None:
+                    # 예약 데이터 삭제하기
+                    payment_data = PaymentInfoTb.objects.filter(customer_uid=customer_uid,
+                                                                status='reserve',
+                                                                payment_type_cd='PERIOD')
+                    payment_data.delete()
+
+                    # 정기결제 결제 정보 업데이트
+                    try:
+                        billing_info = BillingInfoTb.objects.get(customer_uid=customer_uid, use=USE)
+                        billing_info.product_tb_id = change_product_id
+                        billing_info.name = product_price_info.product_tb.name + ' - ' + product_price_info.name
+                        billing_info.price = int(product_price_info.sale_price)
+                        billing_info.save()
+                        # 정기 결제 다음 결제일을 자동 결제 예약 시간으로 설정
+                        next_billing_date_time = datetime.datetime.combine(billing_info.next_payment_date,
+                                                                           datetime.datetime.min.time())
+                        next_schedule_timestamp = next_billing_date_time.replace(hour=15, minute=0, second=0,
+                                                                                 microsecond=0).timestamp()
+                    except ObjectDoesNotExist:
+                        error = '정기 결제 정보를 불러오지 못했습니다.'
+
+                if error is None:
+                    # iamport 상의 예약 제거
+                    error = func_cancel_period_billing_schedule(customer_uid)
+
+                if error is None:
+                    token_result = func_get_imp_token()
+                    access_token = token_result['access_token']
+                    error = token_result['error']
+                    if error is None:
+                        # merchant_uid 값 셋팅
+                        merchant_uid = 'm_' + str(request.user.id) + '_' + change_product_id\
+                                       + '_' + str(next_schedule_timestamp).split('.')[0]
+                        # iamport 정기 결제 예약 신청
+                        error = func_set_iamport_schedule(access_token['access_token'],
+                                                          product_price_info.product_tb.name + ' - '
+                                                          + product_price_info.name,
+                                                          int(product_price_info.sale_price),
+                                                          customer_uid, merchant_uid, next_schedule_timestamp,
+                                                          request.user.first_name, request.user.email)
+                if error is not None:
+                    raise InternalError
+
+        except TypeError:
+            error = '오류가 발생했습니다.[0]'
+        except ValueError:
+            error = '오류가 발생했습니다.[1]'
+        except IntegrityError:
+            error = '오류가 발생했습니다.[2]'
+        except InternalError:
+            error = error
+
+    if error is not None:
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
+        messages.error(request, error)
+
+    context['error'] = error
+    return render(request, 'ajax/payment_error_info.html', context)
+
+
+def update_reserve_product_info_logic(request):
+    customer_uid = request.POST.get('customer_uid', '')
+    change_product_id = request.POST.get('change_product_id', '')
+
+    error = None
+    context = {'error': None}
+    product_price_info = None
+    next_schedule_timestamp = ''
+
+    if customer_uid == '' or customer_uid is None:
+        error = '결제 정보를 불러오지 못했습니다.'
+
+    if change_product_id == '' or change_product_id is None:
+        error = '결제 정보를 불러오지 못했습니다.'
 
     if error is None:
-        billing_info.product_tb_id = change_product_id
-        billing_info.save()
+        try:
+            product_price_info = ProductPriceTb.objects.get(product_id=change_product_id, payment_type_cd='PERIOD',
+                                                            period_month=1)
+        except ObjectDoesNotExist:
+            error = '상품 정보를 불러오지 못했습니다.[0]'
+
+    if error is None:
+        try:
+            # 기존 결제 정보 update
+            with transaction.atomic():
+                # 관련 데이터 취소하기
+                error = func_cancel_period_billing_schedule(customer_uid)
+
+                if error is None:
+                    # 예약 데이터 삭제하기
+                    payment_data = PaymentInfoTb.objects.filter(customer_uid=customer_uid,
+                                                                status='reserve',
+                                                                payment_type_cd='PERIOD')
+                    payment_data.delete()
+
+                    # 정기결제 결제 정보 업데이트
+                    try:
+                        billing_info = BillingInfoTb.objects.get(customer_uid=customer_uid, use=USE)
+                        billing_info.product_tb_id = change_product_id
+                        billing_info.name = product_price_info.product_tb.name + ' - ' + product_price_info.name
+                        billing_info.price = int(product_price_info.sale_price)
+                        billing_info.save()
+                        # 정기 결제 다음 결제일을 자동 결제 예약 시간으로 설정
+                        next_billing_date_time = datetime.datetime.combine(billing_info.next_payment_date,
+                                                                           datetime.datetime.min.time())
+                        next_schedule_timestamp = next_billing_date_time.replace(hour=15, minute=0, second=0,
+                                                                                 microsecond=0).timestamp()
+                    except ObjectDoesNotExist:
+                        error = '정기 결제 정보를 불러오지 못했습니다.'
+
+                if error is None:
+                    # iamport 상의 예약 제거
+                    error = func_cancel_period_billing_schedule(customer_uid)
+
+                if error is None:
+                    token_result = func_get_imp_token()
+                    access_token = token_result['access_token']
+                    error = token_result['error']
+                    if error is None:
+                        # merchant_uid 값 셋팅
+                        merchant_uid = 'm_' + str(request.user.id) + '_' + change_product_id\
+                                       + '_' + str(next_schedule_timestamp).split('.')[0]
+                        # iamport 정기 결제 예약 신청
+                        error = func_set_iamport_schedule(access_token['access_token'],
+                                                          product_price_info.product_tb.name + ' - '
+                                                          + product_price_info.name,
+                                                          int(product_price_info.sale_price),
+                                                          customer_uid, merchant_uid, next_schedule_timestamp,
+                                                          request.user.first_name, request.user.email)
+                if error is not None:
+                    raise InternalError
+
+        except TypeError:
+            error = '오류가 발생했습니다.[0]'
+        except ValueError:
+            error = '오류가 발생했습니다.[1]'
+        except IntegrityError:
+            error = '오류가 발생했습니다.[2]'
+        except InternalError:
+            error = error
 
     if error is not None:
         logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
@@ -856,6 +1004,8 @@ def payment_for_iap_logic(request):
     context = {}
     error = None
     today = datetime.date.today()
+    product_info = None
+    product_price_info = None
 
     if error is None:
         try:
@@ -867,6 +1017,20 @@ def payment_for_iap_logic(request):
             start_date = today
 
     if error is None:
+        try:
+            product_info = ProductTb.objects.get(product_id=product_id, use=USE)
+        except ObjectDoesNotExist:
+            error = '인앱 결제 오류 발생'
+
+    if error is None:
+        try:
+            product_price_info = ProductPriceTb.objects.get(product_tb_id=product_info.product_tb_id,
+                                                            payment_type_cd='SINGLE',
+                                                            period_month=1,
+                                                            use=USE)
+        except ObjectDoesNotExist:
+            error = '결제 정보를 불러오지 못했습니다.'
+    if error is None:
         date = int(start_date.strftime('%d'))
         end_date = str(func_get_end_date(payment_type_cd, start_date, 1, date)).split(' ')[0]
         start_date = str(start_date).split(' ')[0]
@@ -875,13 +1039,15 @@ def payment_for_iap_logic(request):
         payment_info = PaymentInfoTb(member_id=str(request.user.id),
                                      product_tb_id=product_id,
                                      payment_type_cd='SINGLE',
-                                     merchant_uid='m_'+str(request.user.id)+'_'+str(product_id)+'_'+str(timezone.now().timestamp()),
-                                     customer_uid='c_'+str(request.user.id)+'_'+str(product_id)+'_'+str(timezone.now().timestamp()),
+                                     merchant_uid='m_'+str(request.user.id)+'_'+str(product_id)
+                                                  + '_' + str(timezone.now().timestamp()),
+                                     customer_uid='c_'+str(request.user.id)+'_'+str(product_id)
+                                                  + '_' + str(timezone.now().timestamp()),
                                      start_date=start_date, end_date=end_date,
                                      paid_date=today,
                                      period_month=1,
-                                     price=9900,
-                                     name='스탠다드 - 30일권',
+                                     price=int(product_price_info.sale_price),
+                                     name=product_info.name + ' - 30일권',
                                      imp_uid='',
                                      channel='iap',
                                      card_name='인앱 결제',
@@ -900,6 +1066,9 @@ def payment_for_iap_logic(request):
     if error is None:
         logger.info(str(request.user.first_name) + '(' + str(request.user.id) + ')님 iap 결제 완료:'
                     + str(product_id) + ':'+' '+str(start_date))
+        email = EmailMessage('[PTERS 결제]' + request.user.first_name + '회원', 'android 인앱 결제 :' + str(timezone.now()),
+                             to=['support@pters.co.kr'])
+        email.send()
     else:
         messages.error(request, error)
         logger.error(str(request.user.first_name) + '(' + str(request.user.id) + ')님 결제 완료 오류:' + str(error))
@@ -917,6 +1086,8 @@ def payment_for_ios_logic(request):
     error = None
     today = datetime.date.today()
     pay_info = '인앱 결제'
+    product_info = None
+    product_price_info = None
 
     if error is None:
         try:
@@ -928,6 +1099,21 @@ def payment_for_ios_logic(request):
             start_date = today
 
     if error is None:
+        try:
+            product_info = ProductTb.objects.get(product_id=product_id, use=USE)
+        except ObjectDoesNotExist:
+            error = '인앱 결제 오류 발생'
+
+    if error is None:
+        try:
+            product_price_info = ProductPriceTb.objects.get(product_tb_id=product_info.product_tb_id,
+                                                            payment_type_cd='SINGLE',
+                                                            period_month=1,
+                                                            use=USE)
+        except ObjectDoesNotExist:
+            error = '결제 정보를 불러오지 못했습니다.'
+
+    if error is None:
         date = int(start_date.strftime('%d'))
         end_date = str(func_get_end_date(payment_type_cd, start_date, 1, date)).split(' ')[0]
         start_date = str(start_date).split(' ')[0]
@@ -935,13 +1121,15 @@ def payment_for_ios_logic(request):
         payment_info = PaymentInfoTb(member_id=str(request.user.id),
                                      product_tb_id=product_id,
                                      payment_type_cd='SINGLE',
-                                     merchant_uid='m_'+str(request.user.id)+'_'+str(product_id)+'_'+str(timezone.now().timestamp()),
-                                     customer_uid='c_'+str(request.user.id)+'_'+str(product_id)+'_'+str(timezone.now().timestamp()),
+                                     merchant_uid='m_'+str(request.user.id)+'_'+str(product_id)
+                                                  + '_' + str(timezone.now().timestamp()),
+                                     customer_uid='c_'+str(request.user.id)+'_'+str(product_id)
+                                                  + '_' + str(timezone.now().timestamp()),
                                      start_date=start_date, end_date=end_date,
                                      paid_date=today,
                                      period_month=1,
-                                     price=9900,
-                                     name='스탠다드 - 30일권',
+                                     price=int(product_price_info.sale_price),
+                                     name=product_info.name + ' - 30일권',
                                      imp_uid='',
                                      # imp_uid=input_transaction_id,
                                      channel='iap',
@@ -965,13 +1153,16 @@ def payment_for_ios_logic(request):
         ios_receipt_check.save()
 
     if error is None:
-        logger.info(str(request.user.last_name) + str(request.user.first_name)
+        logger.info(str(request.user.first_name)
                     + '(' + str(request.user.id) + ')님 ios 결제 완료:' + str(product_id) + ':' + ' '
                     + str(start_date))
+
+        email = EmailMessage('[PTERS 결제]' + request.user.first_name + '회원', 'ios 인앱 결제 :' + str(timezone.now()),
+                             to=['support@pters.co.kr'])
+        email.send()
     else:
         messages.error(request, error)
-        logger.error(str(request.user.last_name)+str(request.user.first_name)
-                     + '(' + str(request.user.id) + ')님 결제 완료 오류:' + str(error))
+        logger.error(str(request.user.first_name) + '(' + str(request.user.id) + ')님 결제 완료 오류:' + str(error))
 
     return render(request, 'ajax/payment_error_info.html', context)
 

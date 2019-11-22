@@ -2,7 +2,7 @@
 	position: relative;
 	height: 28px;
 	line-height: 28px;
-	background-color: #ffffff;
+	background-color: var(--bg-main);
 	/* border-bottom: 1px solid #cccccc; */
 	/*padding: 14px 20px;*/
 	box-sizing: border-box;
@@ -87,5 +87,5 @@
 }
 
 #section_helper_list_content > div.swiper-pagination.swiper-pagination-bullets > .swiper-pagination-bullet-active{
-	background: #fe4e65;
+	background: var(--bg-highlight);
 }

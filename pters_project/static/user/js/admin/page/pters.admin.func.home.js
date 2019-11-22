@@ -73,7 +73,7 @@ class Home {
 
     dom_assembly_toolbox(){
         let html = `<div class="home_upper_box">
-                        <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:#3b3b3b; letter-spacing: -1px; height:28px;">
+                        <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:var(--font-main); letter-spacing: -1px; height:28px;">
                             <div style="display:inline-block;">관리자 홈</div>
                         </div>
                     </div>`;

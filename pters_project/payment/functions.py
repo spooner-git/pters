@@ -34,7 +34,7 @@ def func_set_billing_schedule(customer_uid, pre_payment_info, paid_date):
         merchant_uid = 'm_' + str(pre_payment_info.member_id) + '_' + pre_payment_info.product_tb_id\
                        + '_' + str(next_schedule_timestamp).split('.')[0]
 
-        price = int(product_price_info.sale_price * 1.1)
+        price = int(product_price_info.sale_price)
         name = product_price_info.product_tb.name + ' - ' + product_price_info.name
         next_start_date = pre_payment_info.end_date
         next_end_date = func_get_end_date(pre_payment_info.payment_type_cd,
@@ -88,7 +88,7 @@ def func_set_billing_schedule_now(customer_uid, pre_payment_info, paid_date):
         merchant_uid = 'm_' + str(pre_payment_info.member_id) + '_' + pre_payment_info.product_tb_id\
                        + '_' + str(next_schedule_timestamp).split('.')[0]
 
-        price = int(product_price_info.sale_price * 1.1)
+        price = int(product_price_info.sale_price)
         name = product_price_info.product_tb.name + ' - ' + product_price_info.name
         next_start_date = today
         next_end_date = func_get_end_date(pre_payment_info.payment_type_cd, next_start_date,
@@ -191,7 +191,7 @@ def func_check_payment_price_info(product_id, payment_type_cd, input_price, peri
             error = '오류가 발생했습니다.'
 
     if error is None:
-        price = int(product_price_info.sale_price * 1.1)
+        price = int(product_price_info.sale_price)
         if price != input_price:
             error = '결제금액 오류가 발생했습니다.'
 
@@ -237,6 +237,28 @@ def func_cancel_period_billing_schedule(customer_uid):
     if error is None and access_token is not None:
         data = {
             'customer_uid': customer_uid,  # 카드(빌링키)와 1: 1 로 대응하는 값
+        }
+
+        body = json.dumps(data)
+        h = httplib2.Http()
+        resp, content = h.request("https://api.iamport.kr/subscribe/payments/unschedule", method="POST", body=body,
+                                  headers={'Content-Type': 'application/json;',
+                                           'Authorization': access_token})
+        if resp['status'] != '200':
+            error = '오류가 발생했습니다.'
+
+    return error
+
+
+def func_cancel_period_billing_schedule_by_merchant_uid(customer_uid, merchant_uid):
+    token_result = func_get_imp_token()
+    access_token = token_result['access_token']
+    error = token_result['error']
+
+    if error is None and access_token is not None:
+        data = {
+            'customer_uid': customer_uid,  # 카드(빌링키)와 1: 1 로 대응하는 값
+            'merchant_uid': merchant_uid
         }
 
         body = json.dumps(data)

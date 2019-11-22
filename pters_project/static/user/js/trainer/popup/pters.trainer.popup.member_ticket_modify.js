@@ -67,9 +67,9 @@ class Member_ticket_modify{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();member_ticket_modify.clear();" class="obj_icon_prev"></span>`;
-        let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">${this.data.member_name}님의 수강권</span></span>`;
-        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="member_ticket_modify.send_data()">완료</span></span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();member_ticket_modify.clear();">${CImg.arrow_left()}</span>`;
+        let top_center = `<span class="icon_center"><span>${this.data.member_name}님의 수강권</span></span>`;
+        let top_right = `<span class="icon_right" onclick="member_ticket_modify.send_data()"><span style="color:var(--font-highlight);font-weight: 500;" >완료</span></span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
         
@@ -96,19 +96,19 @@ class Member_ticket_modify{
     dom_assembly_content(){
 
         let status = CComponent.dom_tag('수강권') + this.dom_row_status_input() + 
-                    `<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>`;
+                    `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>`;
         let refund_date  = CComponent.dom_tag('환불일') + this.dom_row_refund_date_input() +
-                    `<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>`;
+                    `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>`;
         let refund_price  = CComponent.dom_tag('환불 금액') + this.dom_row_refund_price_input() +
-                    `<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>`;
+                    `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>`;
         let start  = CComponent.dom_tag('시작일') + this.dom_row_start_input() +
-                    `<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>`;
-        let end    = CComponent.dom_tag('진행 기간') + this.dom_row_end_input() + 
-                    `<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>`;
-        let count  = CComponent.dom_tag('횟수') + this.dom_row_count_input() +
-                    `<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>`;
+                    `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>`;
+        let end    = CComponent.dom_tag('종료일') + this.dom_row_end_input() +
+                    `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>`;
+        let count  = CComponent.dom_tag('등록 횟수') + this.dom_row_count_input() +
+                    `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>`;
         let price  = CComponent.dom_tag('가격') + this.dom_row_price_input() + 
-                    `<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>`;
+                    `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>`;
         let note = CComponent.dom_tag('특이사항') + this.dom_row_note_input();
 
         // if(this.data.refund_date == null || this.data.refund_price == null){
@@ -140,7 +140,7 @@ class Member_ticket_modify{
     dom_row_status_input(){
         let id = 'member_ticket_status_modify';
         let title = this.data.member_ticket_name == null ||this.data.member_ticket_name == 'None' ? '수강권명' : this.data.member_ticket_name;
-        let icon = '/static/common/icon/icon_ticket_black.png';
+        let icon = CImg.ticket();
         let icon_r_visible = SHOW;
         let icon_r_text = `상태 (<span style="color:${TICKET_STATUS_COLOR[this.data.status]}">${TICKET_STATUS[this.data.status]}</span>)`;
         let style = null;
@@ -290,7 +290,7 @@ class Member_ticket_modify{
     }
 
     dom_row_end_date_simple_input_machine(){
-        let button_style = {"flex":"1 1 0", "padding":"10px 8px", "color":"#636363"};
+        let button_style = {"flex":"1 1 0", "padding":"10px 8px", "color":"var(--font-sub-dark)"};
 
         let button_week_2 = CComponent.button ("button_week_2", "+ 7일", button_style, ()=>{
 
@@ -363,7 +363,7 @@ class Member_ticket_modify{
         });
         
         let wrapper_style = "display:flex;padding:0px 0 0px 20px;font-size:12px;";
-        let divider_style = "flex-basis:1px;height:20px;margin-top:10px;background-color:#f5f2f2;display:none;";
+        let divider_style = "flex-basis:1px;height:20px;margin-top:10px;background-color:var(--bg-light);display:none;";
         let html = `<div style="${wrapper_style}">
                         ${button_week_2} <div style="${divider_style}"></div>
                         ${button_month_1} <div style="${divider_style}"></div>
@@ -484,10 +484,10 @@ class Member_ticket_modify{
         let icon_r_text;
         let style = null;
         let disabled = false;
-        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+.,:()\\[\\]\\s 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{1,20}";
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+.,:()\\[\\]\\s\\n 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,3000}";
         let pattern_message = "+ - _ : ()[] . , 제외 특수문자는 입력 불가";
         let required = "";
-        let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
+        let html = CComponent.create_input_textarea_row(id, title, placeholder, icon, icon_r_visible, icon_r_text, style, (input_data)=>{
             let user_input_data = input_data;
             this.data.note = user_input_data;
             this.render_content();

@@ -65,20 +65,20 @@
         Kakao.init('4533bb10ac61e20907cd273f0941210a');
 		/* (4) Callback의 처리. 정상적으로 Callback 처리가 완료될 경우 main page로 redirect(또는 Popup close) */
 		window.addEventListener('load', function () {
-
-              Kakao.API.request({
+		    Kakao.API.request({
                url: '/v1/user/me',
+
                success: function(res) {
                      console.log(res);//<---- 콘솔 로그에 id 정보 출력(id는 res안에 있기 때문에  res.id 로 불러온다)
                      console.log(res.id);//<---- 콘솔 로그에 id 정보 출력(id는 res안에 있기 때문에  res.id 로 불러온다)
                      console.log(res.kaccount_email);//<---- 콘솔 로그에 email 정보 출력 (어딨는지 알겠죠?)
                      console.log(res.properties['nickname']);//<---- 콘솔 로그에 닉네임 출력(properties에 있는 nickname 접근
                     var email = res.kaccount_email;
-					var name = res.properties['nickname'];
-					var sns_id = res.id;
-					var access_token = '{{ access_token }}';
+                    var name = res.properties['nickname'];
+                    var sns_id = res.id;
+                    var access_token = '{{ access_token }}';
 
-					if(email==''){
+                    if(email==''){
                         $('#id_username').attr('value', sns_id);
                         $('#id_sns_username').attr('value', sns_id);
                         $('#id_sns_username2').attr('value', sns_id);
@@ -104,14 +104,14 @@
                     $('#id_accessToken1').attr('value', access_token);
                     $('#id_accessToken2').attr('value', access_token);
 
-					if( name == undefined || name == null) {
-						alert("이름은 필수정보입니다. 정보제공을 동의해주세요.");
-						return;
-					}
-
+                    if( name == undefined || name == null) {
+                        alert("이름은 필수정보입니다. 정보제공을 동의해주세요.");
+                    }
                     check_social_member_info();
-                   }
-
+                   },
+                  fail: function(err){
+                        alert(JSON.stringify(err));
+                  }
              });
 		});
 

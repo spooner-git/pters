@@ -1,8 +1,9 @@
 class Pters_pass_shop_agreement{
-    constructor(install_target){
+    constructor(install_target, product_name){
         this.target = {install: install_target, toolbox:'section_pters_pass_shop_agreement_toolbox', content:'section_pters_pass_shop_agreement_content'};
 
         this.data = {
+            product_name: product_name,
             page:1,
             agreement:OFF,
             pay_method:{
@@ -38,8 +39,8 @@ class Pters_pass_shop_agreement{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();pters_pass_shop_agreement_popup.clear();" class="obj_icon_prev"></span>`;
-        let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();pters_pass_shop_agreement_popup.clear();">${CImg.arrow_left()}</span>`;
+        let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"></span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
@@ -121,8 +122,8 @@ class Pters_pass_shop_agreement{
         let id = "pters_pass_button_go_to_page_2";
         let title = "다음";
         let style = this.data.agreement == OFF 
-            ? {"height":"40px", "line-height":"40px", "padding":"0", "font-size":"14px", "font-weight":"500", "background-color":"#f2f2f2"} 
-            : {"height":"40px", "line-height":"40px", "padding":"0", "font-size":"14px", "font-weight":"500", "background-color":"#fe4e65", "color":"#ffffff"};
+            ? {"height":"40px", "line-height":"40px", "padding":"0", "font-size":"14px", "font-weight":"500", "background-color":"var(--bg-light)"} 
+            : {"height":"40px", "line-height":"40px", "padding":"0", "font-size":"14px", "font-weight":"500", "background-color":"var(--bg-highlight)", "color":"var(--font-invisible)"};
         let onclick = ()=>{
             if(this.data.agreement == OFF){
                 show_error_message("약관 동의 후 결제를 진행 할 수 있습니다.");
@@ -167,8 +168,8 @@ class Pters_pass_shop_agreement{
         let id = "pters_pass_button_go_to_pay";
         let title = "결제";
         let style= this.data.pay_method.card == OFF
-            ? {"height":"40px", "line-height":"40px", "padding":"0", "font-size":"14px", "font-weight":"500", "background-color":"#f2f2f2"} 
-            : {"height":"40px", "line-height":"40px", "padding":"0", "font-size":"14px", "font-weight":"500", "background-color":"#fe4e65", "color":"#ffffff"};
+            ? {"height":"40px", "line-height":"40px", "padding":"0", "font-size":"14px", "font-weight":"500", "background-color":"var(--bg-light)"} 
+            : {"height":"40px", "line-height":"40px", "padding":"0", "font-size":"14px", "font-weight":"500", "background-color":"var(--bg-highlight)", "color":"var(--font-invisible)"};
         let onclick = ()=>{
             if(this.data.pay_method.card == OFF){
                 show_error_message("결제 수단을 선택 해주세요.");
@@ -197,16 +198,16 @@ class Pters_pass_shop_agreement{
         let user_id = home.data.user_id;
         let user_name = home.data.user_name;
         let user_email = home.data.user_email;
-        let product_name = PASS_PRODUCT["standard"].text + ' - 정기 결제 - 1개월';
+        let product_name = PASS_PRODUCT[this.data.product_name].text + ' - 정기 결제 - 1개월';
         let pay_method = CARD;
         let payment_type_cd = PERIOD;
         // if(device == MOBILE && device_info != 'web' && user_username =='guest'){
         if(user_username =='guest'){
             payment_type_cd = SINGLE;
-            product_name = PASS_PRODUCT["standard"].text + ' - 30일';
+            product_name = PASS_PRODUCT[this.data.product_name].text + ' - 30일';
         }
-        let product_id = PASS_PRODUCT["standard"].id;
-        let price = PASS_PRODUCT["standard"].price;
+        let product_id = PASS_PRODUCT[this.data.product_name].id;
+        let price = PASS_PRODUCT[this.data.product_name].price;
         let period_month = 1;
         let merchant_uid = `m_${user_id}_${product_id}_${date.getTime()}`;
         let customer_uid = `c_${user_id}_${product_id}_${date.getTime()}`;

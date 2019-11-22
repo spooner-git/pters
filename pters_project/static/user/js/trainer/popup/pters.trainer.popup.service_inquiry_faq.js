@@ -34,8 +34,8 @@ class Service_inquiry_faq {
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();service_inquiry_faq_popup.clear();" class="obj_icon_prev"></span>`;
-        let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();service_inquiry_faq_popup.clear();">${CImg.arrow_left()}</span>`;
+        let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"></span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
@@ -84,21 +84,14 @@ class Service_inquiry_faq {
             html_temp.push(html);
         }
 
+        if(html_temp.length == 0){
+            html_temp.push(`<article class="notice_wrapper">
+                                <div class="notice_subject">등록 된 글이 없습니다.</div>
+                            </article>`);
+        }
+
         return html_temp.join("");
     }
-
-    // dom_row_toolbox(){
-    //     let title = "자주 묻는 질문 & 사용법";
-    //     let html = `<div class="inquiry_faq_upper_box">
-    //                     <div style="display:inline-block;font-size:22px;font-weight:bold;color:#3b3b3b; letter-spacing: -1px; height:28px;">
-    //                         <span style="display:inline-block;">${title}</span>
-    //                         <span style="display:none;">${title}</span>
-    //                         <!--<div style="display:inline-block; color:#fe4e65; font-weight:900;">${this.data_length}</div>-->
-    //                     </div>
-    //                 </div>
-    //                 `;
-    //     return html;
-    // }
 
     dom_row_toolbox(){
         let title = "사용법";
@@ -106,11 +99,11 @@ class Service_inquiry_faq {
         let html = `
                     <div class="lecture_view_upper_box">
                         <div style="display:inline-block;">
-                            <span class="sales_type_select_text_button" style="color:${this.tab=="manual" ? "#3d3b3b" :"#b8b4b4"}" onclick="service_inquiry_faq_popup.switch('manual')">
+                            <span class="sales_type_select_text_button" style="color:${this.tab=="manual" ? "var(--font-main)" :"var(--font-inactive)"}" onclick="service_inquiry_faq_popup.switch('manual')">
                                 ${title}
                             </span>
-                            <div style="display:inline-block;background-color:#f5f2f3;width:2px;height:16px;margin:0 10px;"></div>
-                            <span class="sales_type_select_text_button" style="color:${this.tab=="faq" ? "#3d3b3b" :"#b8b4b4"}" onclick="service_inquiry_faq_popup.switch('faq')">
+                            <div style="display:inline-block;background-color:var(--bg-light);width:2px;height:16px;margin:0 10px;"></div>
+                            <span class="sales_type_select_text_button" style="color:${this.tab=="faq" ? "var(--font-main)" :"var(--font-inactive)"}" onclick="service_inquiry_faq_popup.switch('faq')">
                                 ${title2}
                             </span>
                             <span style="display:none">${this.tab=="manual"? "사용법" : "자주 묻는 질문"}</span>

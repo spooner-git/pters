@@ -29,8 +29,8 @@ class Service_helper {
 
     render(){
         let top_left = `<span class="icon_left"></span>`;
-        let top_center = `<span class="icon_center"><span id="ticket_name_in_popup" style="color:#ffffff">튜토리얼</span></span>`;
-        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="service_helper_popup.close();">닫기</span></span>`;
+        let top_center = `<span class="icon_center"><span style="color:var(--font-invisible)">튜토리얼</span></span>`;
+        let top_right = `<span class="icon_right" onclick="service_helper_popup.close();"><span style="color:var(--font-highlight);font-weight: 500;">닫기</span></span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
 
@@ -82,7 +82,7 @@ class Service_helper {
                         <div class="content_text_left_top">
                             <div style="font-size:22px;font-weight:500;letter-spacing:-1.2px;">강사를 위한</div>
                             <div style="font-size:22px;font-weight:bold;letter-spacing:-1.2px;">운영/관리 서비스</div>
-                            <div style="font-size:22px;font-weight:bold;color:#fe4e65;letter-spacing:-1.2px;">피터스</div>
+                            <div style="font-size:22px;font-weight:bold;color:var(--font-highlight);letter-spacing:-1.2px;">피터스</div>
                         </div>
                         <div class="content_text_left_bottom">
                             <div style="font-size:11px;">오른쪽으로 넘겨 사용법을 확인 해보세요.</div>
@@ -95,7 +95,7 @@ class Service_helper {
     dom_content_2(){
         let html = `<div class="content_image_wrapper">
                         <div class="content_text_left_top">
-                            <div style="font-size:13px;font-weight:500;letter-spacing:-1.2px;color:#fe4e65;margin-bottom:10px;">Step 1. 프로그램</div>
+                            <div style="font-size:13px;font-weight:500;letter-spacing:-1.2px;color:var(--font-highlight);margin-bottom:10px;">Step 1. 프로그램</div>
                             <div style="font-size:16px;font-weight:500;letter-spacing:-1.2px;">자신에게 해당되는</div>
                             <div style="font-size:16px;font-weight:bold;letter-spacing:-1.2px;">프로그램 선택</div>
                         </div>
@@ -107,7 +107,7 @@ class Service_helper {
     dom_content_3(){
         let html = `<div class="content_image_wrapper">
                         <div class="content_text_left_top">
-                            <div style="font-size:13px;font-weight:500;letter-spacing:-1.2px;color:#fe4e65;margin-bottom:10px;">Step 2. 수업</div>
+                            <div style="font-size:13px;font-weight:500;letter-spacing:-1.2px;color:var(--font-highlight);margin-bottom:10px;">Step 2. 수업</div>
                             <div style="font-size:16px;font-weight:500;letter-spacing:-1.2px;">자신이 진행하게 될</div>
                             <div style="font-size:16px;font-weight:bold;letter-spacing:-1.2px;">수업의 이름, 유형, 진행 시간 등 설정</div>
                         </div>
@@ -119,7 +119,7 @@ class Service_helper {
     dom_content_4(){
         let html = `<div class="content_image_wrapper">
                         <div class="content_text_left_top">
-                            <div style="font-size:13px;font-weight:500;letter-spacing:-1.2px;color:#fe4e65;margin-bottom:10px;">Step 3. 수강권</div>
+                            <div style="font-size:13px;font-weight:500;letter-spacing:-1.2px;color:var(--font-highlight);margin-bottom:10px;">Step 3. 수강권</div>
                             <div style="font-size:16px;font-weight:500;letter-spacing:-1.2px;">내가 만든 수업들로</div>
                             <div style="font-size:16px;font-weight:bold;letter-spacing:-1.2px;">다양한 수강권을 생성</div>
                         </div>
@@ -131,7 +131,7 @@ class Service_helper {
     dom_content_5(){
         let html = `<div class="content_image_wrapper">
                         <div class="content_text_left_top">
-                            <div style="font-size:13px;font-weight:500;letter-spacing:-1.2px;color:#fe4e65;margin-bottom:10px;">Step 4. 회원</div>
+                            <div style="font-size:13px;font-weight:500;letter-spacing:-1.2px;color:var(--font-highlight);margin-bottom:10px;">Step 4. 회원</div>
                             <div style="font-size:16px;font-weight:500;letter-spacing:-1.2px;">회원 정보를 기입하고</div>
                             <div style="font-size:16px;font-weight:bold;letter-spacing:-1.2px;">등록할 수강권을 선택</div>
                         </div>
@@ -143,7 +143,7 @@ class Service_helper {
     dom_content_6(){
         let html = `<div class="content_image_wrapper">
                         <div class="content_text_left_top">
-                            <div style="font-size:13px;font-weight:500;letter-spacing:-1.2px;color:#fe4e65;margin-bottom:10px;">Step 5. 일정</div>
+                            <div style="font-size:13px;font-weight:500;letter-spacing:-1.2px;color:var(--font-highlight);margin-bottom:10px;">Step 5. 일정</div>
                             <div style="font-size:16px;font-weight:500;letter-spacing:-1.2px;">등록한 수업과 회원을 가지고</div>
                             <div style="font-size:16px;font-weight:bold;letter-spacing:-1.2px;">수업 일정을 등록</div>
                         </div>
@@ -155,10 +155,10 @@ class Service_helper {
     dom_row_toolbox(){
         let title = "PTERS 이용법";
         let html = `<div class="helper_upper_box">
-                        <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:#3b3b3b; letter-spacing: -1px; height:28px;">
+                        <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:var(--font-main); letter-spacing: -1px; height:28px;">
                             <span style="display:inline-block;">${title}</span>
                             <span style="display:none;">${title}</span>
-                            <!--<div style="display:inline-block; color:#fe4e65; font-weight:900;">${this.data_length}</div>-->
+                            <!--<div style="display:inline-block; color:var(--font-highlight); font-weight:900;">${this.data_length}</div>-->
                         </div>
                     </div>
                     `;
@@ -183,7 +183,7 @@ class Service_helper {
     close(){
         let message = `<span style="display:block;font-weight:bold;font-size:15px;margin:0;margin-bottom:8px;">튜토리얼을 종료 하시겠습니까?</span>
                         언제든 다시 볼 수 있습니다.
-                       <span style="display:block;color:#fe4e65;margin:0;">( 전체 메뉴 내 도움말 )</span>`;
+                       <span style="display:block;color:var(--font-highlight);margin:0;">( 전체 메뉴 내 도움말 )</span>`;
         show_user_confirm (message, ()=>{
             layer_popup.close_layer_popup(); //컨펌 팝업 닫기
             layer_popup.close_layer_popup(); //튜토리얼 닫기

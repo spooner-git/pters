@@ -39,9 +39,9 @@ class Member_search {
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_x_black.png" onclick="layer_popup.close_layer_popup();member_search_popup.clear();" class="obj_icon_prev"></span>`;
-        let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;"></span><span style="color:#fe4e65;font-weight: 500;" onclick="member_search_popup.send_data()"></span></span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();member_search_popup.clear();">${CImg.arrow_left()}</span>`;
+        let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
+        let top_right = `<span class="icon_right"><span style="color:var(--font-highlight);font-weight: 500;"></span><span style="color:var(--font-highlight);font-weight: 500;" onclick="member_search_popup.send_data()"></span></span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
 
@@ -56,7 +56,7 @@ class Member_search {
         document.querySelector("#section_member_search_content").innerHTML = 
             `<div style="position:fixed;top:50%;left:50%;transform:translate(-50%, -50%);text-align:center;">
                 <img src="/static/common/loading.svg">
-                <div style="font-size:12px;color:#858282;word-break:keep-all">검색중...</div>
+                <div style="font-size:12px;color:var(--font-sub-normal);word-break:keep-all">검색중...</div>
             </div>`;
     }
 
@@ -95,11 +95,11 @@ class Member_search {
     dom_row_toolbox(){
         let title = "회원 검색";
         let html = `<div class="member_search_upper_box">
-                        <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:#3b3b3b; letter-spacing: -1px; height:28px;">
+                        <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:var(--font-main); letter-spacing: -1px; height:28px;">
                             <span style="display:inline-block;">${title}</span>
                             <span style="display:none;">${title}</span>
                         </div>
-                        <div style="font-size:14px;font-weight:500;color:#5c5859;letter-spacing:-0.65px">회원님의 아이디 또는 휴대폰 번호를 입력해주세요.</div>
+                        <div style="font-size:14px;font-weight:500;color:var(--font-sub-dark);letter-spacing:-0.65px">회원님의 아이디 또는 휴대폰 번호를 입력해주세요.</div>
                     </div>
                     `;
         return html;
@@ -108,9 +108,9 @@ class Member_search {
     dom_row_search_button(){
         let id = "dom_row_search_button";
         let title = "검색";
-        let style = {"background-color":"#fe4e65", "color":"#ffffff", "height":"50px", "line-height":"50px"};
+        let style = {"background-color":"var(--bg-highlight)", "color":"var(--font-invisible)", "height":"50px", "line-height":"50px"};
         if(this.data.search_id == null){
-            style = {"background-color":"#cccccc", "color":"#ffffff", "height":"50px", "line-height":"50px"};
+            style = {"background-color":"var(--bg-sub-dark)", "color":"var(--font-invisible)", "height":"50px", "line-height":"50px"};
         }
         let onclick = ()=>{
             if(this.data.search_id == null){
@@ -132,9 +132,9 @@ class Member_search {
     dom_row_reg_button(){
         let id = "dom_row_reg_button";
         let title = "등록";
-        let style = {"background-color":"#fe4e65", "color":"#ffffff", "height":"50px", "line-height":"50px"};
+        let style = {"background-color":"var(--bg-highlight)", "color":"var(--font-invisible)", "height":"50px", "line-height":"50px"};
         if(this.data.selected_member_id == null){
-            style = {"background-color":"#cccccc", "color":"#ffffff", "height":"50px", "line-height":"50px"};
+            style = {"background-color":"var(--bg-sub-dark)", "color":"var(--font-invisible)", "height":"50px", "line-height":"50px"};
         }
         let onclick = ()=>{
             if(this.data.selected_member_id == null){
@@ -154,7 +154,7 @@ class Member_search {
     dom_row_reset_button(){
         let id = "dom_row_reset_button";
         let title = "재검색";
-        let style = {"background-color":"#ffffff", "height":"48px", "line-height":"48px", "margin-top":"10px", 'border':"1px solid #ebe6e6"};
+        let style = {"background-color":"var(--bg-main)", "height":"48px", "line-height":"48px", "margin-top":"10px", 'border':"var(--border-article)"};
         let onclick = ()=>{
             if(this.data.search_id == null){
                 show_error_message("검색 조건을 입력해주세요.");
@@ -179,7 +179,7 @@ class Member_search {
         let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let style = {"border":"1px solid #ebe6e6"};
+        let style = {"border":"var(--border-article)"};
         let disabled = false;
         let onfocusout = (data)=>{
             this.data.search_id = data;
@@ -208,7 +208,7 @@ class Member_search {
 
             let html = `<article style="display: flex;height: 40px;line-height: 40px;padding: 10px 0;" id="member_searched_${data.member_id}">
                             <div style="flex-basis:70px;background-image:url('${data.member_profile_url}');background-size:contain;background-repeat:no-repeat;"></div>
-                            <div style="flex:1 0 0;">${data.member_name} <span style="font-size:12px;color:#858282">(${data.member_phone})</span></div>
+                            <div style="flex:1 0 0;">${data.member_name} <span style="font-size:12px;color:var(--font-sub-normal)">(${data.member_phone})</span></div>
                             <div style="flex-basis:50px;text-align:right;">${radio_button}</div>
                         </article>`;
             
@@ -222,7 +222,7 @@ class Member_search {
         }
 
         if(html_to_join.length == 0){
-            html_to_join.push('<p style="font-size:14px;font-weight:500;color:#858282;">검색된 결과가 없습니다.</p>');
+            html_to_join.push('<p style="font-size:14px;font-weight:500;color:var(--font-sub-normal);">검색된 결과가 없습니다.</p>');
         }
         
 
@@ -233,7 +233,7 @@ class Member_search {
         let html = 
                     `<div style="position:fixed;top:50%;left:50%;transform:translate(-50%, -50%);text-align:center;">
                         <img src="/static/common/loading.svg">
-                        <div style="font-size:12px;color:#858282;word-break:keep-all">사용자 데이터를 불러오고 있습니다.</div>
+                        <div style="font-size:12px;color:var(--font-sub-normal);word-break:keep-all">사용자 데이터를 불러오고 있습니다.</div>
                     </div>`;
         return html;
     }

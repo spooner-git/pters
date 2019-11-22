@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="pters_light_mode">
 <head>
 
     <!-- Google Tag Manager -->
@@ -69,13 +69,13 @@
 
 {% block navbar %}
 {% endblock %}
-<div id="debug_toolbar" style="position:fixed;top:0;font-size:13px;background-color:#fe4e65ba;color:#ffffff;width:100%;left:0;z-index:1500"></div>
+<div id="debug_toolbar" style="position:fixed;top:0;font-size:13px;background-color:var(--bg-highlight);color:var(--fundamental-white);width:100%;left:0;z-index:1500"></div>
 
 
 <div id="base">
     <section id="section_side">
         <div class="top_logo">
-            <span style='color:#1F1D1E; width:64px; font-size:20px; font-weight:bold; padding-left:12px;' id="top_logo_image">PTERS</span>
+            <span style='color:var(--font-base); width:64px; font-size:20px; font-weight:bold; padding-left:12px;' id="top_logo_image">PTERS</span>
             <!--<img src="/static/common/icon/logo/PTERS_logo_full.png" alt="" style="width: 64px;" id="top_logo_image">-->
         </div>
         <div class="side_menu">
@@ -109,7 +109,7 @@
             </div>
         </div>
         <div id="section_content">
-            <div id="shade_for_popup_basic" style="position: absolute;;top:0;left:0;height:100%;width:100%;background-color:#282828;opacity:0.5; display: none;" 
+            <div id="shade_for_popup_basic" style="position: absolute;;top:0;left:0;height:100%;width:100%;background-color:var(--bg-for-only-shade);opacity:0.5; display: none;" 
             onclick="layer_popup.close_layer_popup();"></div>
             <div id="content_wrapper">
                     
@@ -122,7 +122,7 @@
                 </div>
                 <nav id="root_nav">
                     <div class="obj_table_raw" style="height:100%;position:relative;">
-                        <div id="nav_indicator" style="position:absolute;left:0px;top:0px;height:3px;background-color:#fe4e65;width:20%"></div>
+                        <div id="nav_indicator" style="position:absolute;left:0px;top:0px;height:3px;background-color:var(--bg-highlight);width:20%"></div>
                         <div class="obj_table_cell_x5 nav_item" onclick="sideGoPage('home', this)" id="home">
                             <div class="nav_img"><img src={% static_url "common/icon/tab_bar/icon_home_off.png" %} alt=""></div>
                             <div class="nav_text">홈</div>
@@ -354,7 +354,7 @@
                 $sidemenu_text.show();
             }, 150);
             $toplogo.html(
-                `<span style='color:#1F1D1E; width:64px; font-size:20px; font-weight:bold; padding-left:12px;'>PTERS</span>`
+                `<span style='color:var(--font-base); width:64px; font-size:20px; font-weight:bold; padding-left:12px;'>PTERS</span>`
                 //`<img src="/static/common/icon/logo/PTERS_logo_full.png" alt="" style="width: 64px;" id="top_logo_image">`
             );
             $sidemenu_button.css('transform', 'rotate(90deg)');
@@ -386,9 +386,15 @@
                 $('#side_qna > span').html(
                     `문의(${qna_uncomplete}) <span class="side_unread"></span>`
                 )
+                $('#qna > .nav_img').html(
+                    `<img src="/static/common/icon/tab_bar/icon_member_off.png?v=2019-11-06_11:29" alt=""><span class="side_unread" style="position:absolute;top:10px"></span>`
+                )
             }else{
                 $('#side_qna > span').html(
                     `문의`
+                )
+                $('#qna > .nav_img').html(
+                    `<img src="/static/common/icon/tab_bar/icon_member_off.png?v=2019-11-06_11:29" alt="">`
                 )
             }
         });
