@@ -68,7 +68,7 @@ class Faq {
         document.getElementById(this.target.content).innerHTML = 
             `<div style="position:fixed;top:50%;left:50%;transform:translate(-50%, -50%);text-align:center;">
                 <img src="/static/common/loading.svg">
-                <div style="font-size:12px;color:#858282">사용자 데이터를 불러오고 있습니다.</div>
+                <div style="font-size:12px;color:var(--font-sub-normal)">사용자 데이터를 불러오고 있습니다.</div>
             </div>`;
     }
 
@@ -82,7 +82,7 @@ class Faq {
 
     dom_assembly_toolbox(){
         let html = `<div class="faq_upper_box">
-                        <div style="display:inline-block;width:auto;font-size:22px;font-weight:bold;color:#3b3b3b; letter-spacing: -1px; height:28px;">
+                        <div style="display:inline-block;width:auto;font-size:22px;font-weight:bold;color:var(--font-main); letter-spacing: -1px; height:28px;">
                             <div style="display:inline-block;">자주묻는 질문(FAQ) 관리</div>
                         </div>
                         <div style="float:right;width:25px;height:25px;background-image:url('/static/common/icon/icon_plus_pink.png');background-size:contain;" onclick="${this.instance}.event_add_new()">
@@ -147,12 +147,15 @@ class Faq {
                                 ${content}
                             </div>
                             <div style="text-align:right;margin-top:10px;">
-                                ${CComponent.button ("faq_modify_"+id, "수정", {"border":"1px solid #e8e8e8", "padding":"12px","display":"inline-block", "width":"100px"}, ()=>{
+                                ${CComponent.button ("faq_modify_"+id, "수정", {"border":"var(--border-article)", "padding":"12px","display":"inline-block", "width":"100px"}, ()=>{
                                         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_WRITER, 100, POPUP_FROM_PAGE, null, ()=>{
                                             let external_data = {       title:title, content: content, id:id,
                                                                         category:[
+                                                                            // {id:"open", title:"공개범위", data: {text:["전체", "강사", "회원"], value:["ALL", "trainer", "trainee"]} },
+                                                                            // {id:"type", title:"분류", data: {text:["공지", "FAQ", "사용법"], value:[NOTICE, NOTICE_FAQ, NOTICE_USAGE]} },
+                                                                            // {id:"use", title:"상태", data: {text:["게시중", "게시중지"], value:[ON, OFF]} }
                                                                             {id:"open", title:"공개범위", data: {text:["전체", "강사", "회원"], value:["ALL", "trainer", "trainee"]} },
-                                                                            {id:"type", title:"분류", data: {text:["공지", "FAQ", "사용법"], value:[NOTICE, NOTICE_FAQ, NOTICE_USAGE]} },
+                                                                            {id:"type", title:"분류", data: {text:["FAQ", "사용법"], value:[NOTICE_FAQ, NOTICE_USAGE]} },
                                                                             {id:"use", title:"상태", data: {text:["게시중", "게시중지"], value:[ON, OFF]} }
                                                                         ],
                                                                         category_selected:{
@@ -173,7 +176,7 @@ class Faq {
                                     })
                                 }
                                 ${
-                                    CComponent.button ("faq_delete_"+id, "삭제", {"border":"1px solid #e8e8e8", "padding":"12px","display":"inline-block", "width":"100px"}, ()=>{
+                                    CComponent.button ("faq_delete_"+id, "삭제", {"border":"var(--border-article)", "padding":"12px","display":"inline-block", "width":"100px"}, ()=>{
                                         show_user_confirm(`FAQ "${numbering}" 번 글을 완전 삭제 하시겠습니까? <br> 다시 복구할 수 없습니다.`, ()=>{
                                             Notice_func.delete({"notice_id":id}, ()=>{
                                                 try{
@@ -204,7 +207,7 @@ class Faq {
             let external_data = {   
                                         category:[
                                             {id:"open", title:"공개범위", data: {text:["전체", "강사", "회원"], value:["ALL", "trainer", "trainee"]} },
-                                            {id:"type", title:"분류", data: {text:["공지", "FAQ", "사용법"], value:[NOTICE, NOTICE_FAQ, NOTICE_USAGE]} },
+                                            {id:"type", title:"분류", data: {text:["FAQ", "사용법"], value:[NOTICE_FAQ, NOTICE_USAGE]} },
                                             {id:"use", title:"상태", data: {text:["게시중", "게시중지"], value:[ON, OFF]} }
                                         ],
                                         category_selected:{

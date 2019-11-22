@@ -30,7 +30,7 @@ class Statistics_detail{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();statistics_detail_popup.clear();" class="obj_icon_prev"></span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();statistics_detail_popup.clear();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">${this.target_yyyy_mm}</span></span>`;
         let top_right = `<span class="icon_right"></span>`;
         let content =   `<section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
@@ -54,7 +54,7 @@ class Statistics_detail{
         if(this.data == null){
             let html = `<div style="position:fixed;top:50%;left:50%;transform:translate(-50%, -50%);text-align:center;">
                             <img src="/static/common/loading.svg">
-                            <div style="font-size:12px;color:#858282;word-break:keep-all">사용자 데이터를 불러오고 있습니다.</div>
+                            <div style="font-size:12px;color:var(--font-sub-normal);word-break:keep-all">사용자 데이터를 불러오고 있습니다.</div>
                         </div>`;
             return html;
         }
@@ -77,7 +77,7 @@ class Statistics_detail{
                             <div>${member}</div>
                             <div>${ticket}</div>
                         </div>
-                        <div class="sales_detail_price" ${type_cd == 2 || type_cd == 3 ? "style='color:#fe4e65'" : ""}>
+                        <div class="sales_detail_price" ${type_cd == 2 || type_cd == 3 ? "style='color:var(--font-highlight)'" : ""}>
                             ${type_cd == 2 || type_cd == 3 ? "-" : ""} ${price} 원
                         </div>
                     </div>

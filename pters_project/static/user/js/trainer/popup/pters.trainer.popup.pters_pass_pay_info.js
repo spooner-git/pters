@@ -70,8 +70,8 @@ class Pters_pass_pay_info{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();pters_pass_pay_info_popup.clear();" class="obj_icon_prev"></span>`;
-        let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();pters_pass_pay_info_popup.clear();">${CImg.arrow_left()}</span>`;
+        let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"></span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
@@ -96,7 +96,7 @@ class Pters_pass_pay_info{
     }
     
     dom_assembly_content(){
-        let html =  `<section class="obj_input_box_full" style="border-top:  1px solid #f2f2f2;margin-top: 20px;padding-top: 0;border-bottom: 1px solid #f2f2f2;padding-bottom: 20px;">` +
+        let html =  `<section class="obj_input_box_full" style="border-top: var(--border-article);margin-top: 20px;padding-top: 0;border-bottom:var(--border-article);padding-bottom: 20px;">` +
                         this.dom_row_pay_method() + 
                     '</section>' +
                     `<section class="obj_input_box_full" style="padding-top: 0;padding-bottom: 20px;border:0">` +
@@ -138,9 +138,9 @@ class Pters_pass_pay_info{
             paid_date = '매월 ' + paid_date + ' 일 결제'
         }
         if(this.data.current.payment_type_cd[0] == "PERIOD"){
-            pay_date_info = `<span style="display:block;font-size:12px;color:#5c5859">${paid_date}</span>`;
+            pay_date_info = `<span style="display:block;font-size:12px;color:var(--font-sub-dark)">${paid_date}</span>`;
         }else if(this.data.current.payment_type_cd[0] == "SINGLE"){
-            pay_date_info = `<span style="display:block;font-size:12px;color:#5c5859">1회권 결제</span>`;
+            pay_date_info = `<span style="display:block;font-size:12px;color:var(--font-sub-dark)">1회권 결제</span>`;
         }
         if(this.data.current.pay_method == 'iap'){
             card_name = '인앱결제';
@@ -217,7 +217,7 @@ class Pters_pass_pay_info{
                                     <div>금액</div><div>${UnitRobot.numberWithCommas(pay_price)}원 (부가세 포함)</div>
                                 </div>
                                 <div class="pass_article_detail_row">
-                                    <div>상태</div><div style="color:#fe4e65;font-weight:bold;">${pay_status != "failed" ? PAY_STATUS[pay_status] : PAY_STATUS[pay_status]+' '+ pay_failed_reason}</div>
+                                    <div>상태</div><div style="color:var(--font-highlight);font-weight:bold;">${pay_status != "failed" ? PAY_STATUS[pay_status] : PAY_STATUS[pay_status]+' '+ pay_failed_reason}</div>
                                 </div>
                             </div>
                         </article>`;
@@ -225,7 +225,7 @@ class Pters_pass_pay_info{
         }
 
         html_to_join.unshift(
-            CComponent.dom_tag(`결제 내역 (${length} 건)`, {"color":"#5c5859", "padding-left":"0", "font-size":"11px", "font-weight":"bold", "margin-top":"16px"})
+            CComponent.dom_tag(`결제 내역 (${length} 건)`, {"color":"var(--font-sub-dark)", "padding-left":"0", "font-size":"11px", "font-weight":"bold", "margin-top":"16px"})
         );
 
         html = html_to_join.join("");

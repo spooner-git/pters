@@ -49,11 +49,11 @@
         font-size: 16px;
         font-weight: 500;
         letter-spacing: -0.8px;
-        color: #3d3b3b;
+        color: var(--font-main);
         height: 24px;
         line-height: 24px;
         padding: 16px 20px 12px;
-        border-bottom: 1px solid #f5f2f3;
+        border-bottom: var(--border-article);
     }
 
     .select_wrapper_child{
@@ -81,8 +81,8 @@
         width: 100%;
         height: 40px;
         line-height:40px;
-        border-top: 1px solid #fe4e65;
-        border-bottom: 1px solid #fe4e65;
+        border-top: 1px solid var(--bg-highlight);
+        border-bottom: 1px solid var(--bg-highlight);
     }
 
     .select_wrapper ul{
@@ -92,7 +92,7 @@
         padding: 0;
     }
     .select_wrapper ul > li{
-        color: #1f1d1e;
+        color: var(--font-base);
         background-color: transparent;
         height: 40px;
         line-height: 40px;
@@ -100,38 +100,51 @@
         font-weight: 500;
         letter-spacing: -0.7px;
     }
+
+    .note-popover .note-popover-content, .note-toolbar{
+        background-color: var(--bg-main);
+    }
+
+    .note-editor.note-frame .note-editing-area .note-editable{
+        background-color: var(--bg-main);
+        color: var(--font-main);
+    }
+    .note-editor .note-editing-area p{
+        color: var(--font-main);
+    }
+
 </style>
 
 <div class="popup_mobile popup_full">
-    <div class="popup_basic_time_selector obj_font_size_15_weight_500" style="background-color:#ffffff;border-top-right-radius: 8px;border-top-left-radius: 8px;">
+    <div class="popup_basic_time_selector obj_font_size_15_weight_500" style="background-color:var(--bg-main);border-top-right-radius: 8px;border-top-left-radius: 8px;">
         <div id="wrapper_popup_time_selector_function">
         </div>
     </div>
 </div>
 
 <div class="popup_mobile popup_full">
-    <div class="popup_basic_date_selector obj_font_size_15_weight_500" style="background-color:#ffffff;border-top-right-radius: 8px;border-top-left-radius: 8px;">
+    <div class="popup_basic_date_selector obj_font_size_15_weight_500" style="background-color:var(--bg-main);border-top-right-radius: 8px;border-top-left-radius: 8px;">
         <div id="wrapper_popup_date_selector_function">
         </div>
     </div>
 </div>
 
 <div class="popup_mobile popup_full">
-    <div class="popup_basic_date_picker_selector obj_font_size_15_weight_500" style="background-color:#ffffff;border-top-right-radius: 8px;border-top-left-radius: 8px;">
+    <div class="popup_basic_date_picker_selector obj_font_size_15_weight_500" style="background-color:var(--bg-main);border-top-right-radius: 8px;border-top-left-radius: 8px;">
         <div id="wrapper_popup_date_picker_selector_function">
         </div>
     </div>
 </div>
 
 <div class="popup_mobile popup_full">
-	<div class="popup_basic_spin_selector obj_font_size_15_weight_500" style="background-color:#ffffff;border-top-right-radius: 8px;border-top-left-radius: 8px;">
+	<div class="popup_basic_spin_selector obj_font_size_15_weight_500" style="background-color:var(--bg-main);border-top-right-radius: 8px;border-top-left-radius: 8px;">
         <div id="wrapper_popup_spin_selector_function">
         </div>
     </div>
 </div>
 
 <div class="popup_mobile popup_full">
-	<div class="popup_basic_option_selector obj_font_size_15_weight_500" style="background-color:#ffffff;border-top-right-radius: 8px;border-top-left-radius: 8px;">
+	<div class="popup_basic_option_selector obj_font_size_15_weight_500" style="background-color:var(--bg-main);border-top-right-radius: 8px;border-top-left-radius: 8px;">
         <div id="wrapper_popup_option_selector_function" style="padding:8px 18px;">
         </div>
         <div class="wrapper_popup_basic_buttons obj_table_raw  obj_font_bg_black_white">

@@ -57,7 +57,7 @@ class Alarm {
         node2.setAttribute('id', `alarm_paging_${this.paging + 1}`);
         document.querySelector('#alarm_content_wrap').appendChild(node2);
 
-        let more = `<div style="text-align:center;font-size:12px;font-weight:500;height:30px;line-height:30px;background-color:#f5f5f5;" onclick="alarm.render_more();">더 보기</div>`;
+        let more = `<div style="text-align:center;font-size:12px;font-weight:500;height:30px;line-height:30px;background-color:var(--bg-light);" onclick="alarm.render_more();">더 보기</div>`;
         if(page_data.length < 40){
             more = "";
         }
@@ -93,18 +93,18 @@ class Alarm {
                 let read_check = data.read_check;
                 let alarm_highlight = "";
                 if(this.new_alarms_id_cache.indexOf(alarm_id) != -1){
-                    alarm_highlight = "#ffe8eb";
+                    alarm_highlight = "var(--bg-for-only-new-notifi)";
                 }
                 let html = `<article class="alarm_wrapper" data-alarm_id="${alarm_id}" style="background-color:${alarm_highlight}">
                                 <div class="alarm_data_u">
                                     <div>
-                                        <img src="/static/common/icon/icon_gap_black.png" style="float:left;margin-right:16px;">
+                                        ${CImg.blank()}
                                     </div>
                                     <div>
                                         <span>${alarm_how}</span>
                                     </div>
                                     <div>
-                                        <span style="float:right;color:#b8b4b4;font-size:11px;">${alarm_time_ago}</span>
+                                        <span style="float:right;color:var(--font-inactive);font-size:11px;">${alarm_time_ago}</span>
                                     </div>
                                 </div>                
                                 <div class="alarm_data_b">
@@ -158,7 +158,7 @@ class Alarm {
             {
                 alarm_upper_box:`  <div class="alarm_upper_box">
                                         <div style="display:inline-block;width:200px;">
-                                            <span style="font-size:23px;font-weight:bold;color:#3b3d3d">알림 </span>
+                                            <span style="font-size:23px;font-weight:bold;color:var(--font-main)">알림 </span>
                                         </div>
                                     </div>`
                 ,

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" class="pters_{{request.session.setting_theme}}_mode">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
@@ -283,37 +283,66 @@
 
             <div id="wrapper_lesson_now_info">
             {% now "Y.m.d (l)" as today %}
-                <!-- <p class="fts_22">{{ today |cut:"요일" }} - 현재 진행중인 수업</p> -->
+{#                <p class="title_tag" style="margin-bottom: 10px;">{{ today |cut:"요일" }} - 현재 진행중인 수업</p>#}
                 <p class="title_tag" style="margin-bottom: 10px;">현재 진행중인 수업 </p>
-
-                {% for lecture_schedule_info in lecture_schedule_data %}
-                <div class="wrapper_lesson_now_info_article" data-id="{{ lecture_schedule_info.schedule_id }}" onclick="lesson_select(this)">
-                    <div class="wrapper_lesson_now_color">
-                        <div class="color_tag"></div>
-                    </div>
-                    <div class="wrapper_lesson_now_text">
-                        <p class="lesson_date_row">{{ lecture_schedule_info.start_dt | date:"Y.m.d (l)" |cut:"요일" }} {{ lecture_schedule_info.start_dt | time:'H:i' }} ~ {{ lecture_schedule_info.end_dt | time:'H:i' }}</p>
-                        <p class="lesson_name_row">{{ lecture_schedule_info.lecture_tb.name }}</p>
-                        <p class="lesson_member_row">
-                            <span style="margin-right:10px;">정원 : {{ lecture_schedule_info.lecture_tb.member_num }}</span>
-                            <span style="margin-right:10px;">출석 : {{ lecture_schedule_info.lecture_current_finish_member_num }}</span> 
-                            <span>예약 : {{ lecture_schedule_info.lecture_current_member_num }}</span></p>
-                    </div>
-                </div>
-                {% endfor %}
-
-                {% for pt_schedule_info in pt_schedule_data %}
-                    {% if not pt_schedule_info.lecture_tb %}
-                        <div class="wrapper_lesson_now_info_article" data-id="{{ pt_schedule_info.schedule_id }}" onclick="lesson_select(this)">
+                {% for attend_schedule_info in attend_schedule_data %}
+                    {% if attend_schedule_info.lecture_tb %}
+                        {% if not attend_schedule_info.member_ticket_tb %}
+                        <div class="wrapper_lesson_now_info_article" data-id="{{ attend_schedule_info.schedule_id }}" onclick="lesson_select(this)">
                             <div class="wrapper_lesson_now_color">
-                                <div class="color_tag"></div>
+                                <div class="color_tag" style="background-color:{{ attend_schedule_info.ing_color_cd }};"></div>
                             </div>
                             <div class="wrapper_lesson_now_text">
-                                <p class="lesson_date_row">{{ pt_schedule_info.start_dt | time:'H:i' }} ~ {{ pt_schedule_info.end_dt | time:'H:i' }}</p>
-                                <p class="lesson_name_row">개인 수업 - {{ pt_schedule_info.member_ticket_tb.member.name }} 회원</p>
+                                <p class="lesson_date_row">{{ attend_schedule_info.start_dt | date:"Y.m.d (l)" |cut:"요일" }} {{ attend_schedule_info.start_dt | time:'H:i' }} ~ {{ attend_schedule_info.end_dt | time:'H:i' }}</p>
+                                <p class="lesson_name_row">{{ attend_schedule_info.lecture_tb.name }}</p>
+                                <p class="lesson_member_row">
+                                    <span style="margin-right:10px;">정원 : {{ attend_schedule_info.lecture_tb.member_num }}</span>
+                                    <span style="margin-right:10px;">출석 : {{ attend_schedule_info.lecture_current_finish_member_num }}</span>
+                                    <span>예약 : {{ attend_schedule_info.lecture_current_member_num }}</span></p>
                             </div>
+                        </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="wrapper_lesson_now_info_article" data-id="{{ attend_schedule_info.schedule_id }}" onclick="lesson_select(this)">
+                            <div class="wrapper_lesson_now_color">
+                                <div class="color_tag" style="background-color:{{ attend_schedule_info.ing_color_cd }};"></div>
+                            </div>
+                            <div class="wrapper_lesson_now_text">
+                                <p class="lesson_date_row">{{ attend_schedule_info.start_dt | date:"Y.m.d (l)" |cut:"요일" }} {{ attend_schedule_info.start_dt | time:'H:i' }} ~ {{ attend_schedule_info.end_dt | time:'H:i' }}</p>
+                                <p class="lesson_name_row">개인 수업 - {{ attend_schedule_info.member_ticket_tb.member.name }} 회원</p>
+                            </div>
+                        </div>
                     {% endif %}
                 {% endfor %}
+
+{#                {% for lecture_schedule_info in lecture_schedule_data %}#}
+{#                <div class="wrapper_lesson_now_info_article" data-id="{{ lecture_schedule_info.schedule_id }}" onclick="lesson_select(this)">#}
+{#                    <div class="wrapper_lesson_now_color">#}
+{#                        <div class="color_tag" style="background-color:{{ lecture_schedule_info.ing_color_cd }};"></div>#}
+{#                    </div>#}
+{#                    <div class="wrapper_lesson_now_text">#}
+{#                        <p class="lesson_date_row">{{ lecture_schedule_info.start_dt | date:"Y.m.d (l)" |cut:"요일" }} {{ lecture_schedule_info.start_dt | time:'H:i' }} ~ {{ lecture_schedule_info.end_dt | time:'H:i' }}</p>#}
+{#                        <p class="lesson_name_row">{{ lecture_schedule_info.lecture_tb.name }}</p>#}
+{#                        <p class="lesson_member_row">#}
+{#                            <span style="margin-right:10px;">정원 : {{ lecture_schedule_info.lecture_tb.member_num }}</span>#}
+{#                            <span style="margin-right:10px;">출석 : {{ lecture_schedule_info.lecture_current_finish_member_num }}</span> #}
+{#                            <span>예약 : {{ lecture_schedule_info.lecture_current_member_num }}</span></p>#}
+{#                    </div>#}
+{#                </div>#}
+{#                {% endfor %}#}
+{##}
+{#                {% for pt_schedule_info in pt_schedule_data %}#}
+{#                    {% if not pt_schedule_info.lecture_tb %}#}
+{#                        <div class="wrapper_lesson_now_info_article" data-id="{{ pt_schedule_info.schedule_id }}" onclick="lesson_select(this)">#}
+{#                            <div class="wrapper_lesson_now_color">#}
+{#                                <div class="color_tag" style="background-color:{{ pt_schedule_info.ing_color_cd }};"></div>#}
+{#                            </div>#}
+{#                            <div class="wrapper_lesson_now_text">#}
+{#                                <p class="lesson_date_row">{{ pt_schedule_info.start_dt | time:'H:i' }} ~ {{ pt_schedule_info.end_dt | time:'H:i' }}</p>#}
+{#                                <p class="lesson_name_row">개인 수업 - {{ pt_schedule_info.member_ticket_tb.member.name }} 회원</p>#}
+{#                            </div>#}
+{#                    {% endif %}#}
+{#                {% endfor %}#}
 
             </div>
         </section>

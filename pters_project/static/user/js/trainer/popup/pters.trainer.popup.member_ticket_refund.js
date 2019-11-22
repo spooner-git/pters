@@ -62,9 +62,9 @@ class Member_ticket_refund{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();member_ticket_refund.clear();" class="obj_icon_prev"></span>`;
-        let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="member_ticket_refund.send_data()">완료</span></span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();member_ticket_refund.clear();">${CImg.arrow_left()}</span>`;
+        let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
+        let top_right = `<span class="icon_right" onclick="member_ticket_refund.send_data()"><span style="color:var(--font-highlight);font-weight: 500;">완료</span></span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
         
@@ -97,7 +97,7 @@ class Member_ticket_refund{
         let html =
             '<div class="obj_input_box_full">'
                 + CComponent.dom_tag('환불 날짜') + refund_date + 
-                    `<div class="gap" style="margin-left:42px; border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>`
+                    `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>`
                 + CComponent.dom_tag('환불 금액') + refund_price +
             '</div>'
                 + refund_ticket;
@@ -109,8 +109,8 @@ class Member_ticket_refund{
         let title = "수강권 환불";
         let html = `<div class="">
                         <div style="display:inline-block;padding-left:60px;">
-                            <span style="font-size:20px;font-weight:bold; letter-spacing: -0.9px; color: #3d3b3b;">${title}</span>
-                            <p style="font-size:11px;color:#5c5859;margin:12px 0;">환불금액은 매출통계에 반영 됩니다.</p>
+                            <span style="font-size:20px;font-weight:bold; letter-spacing: -0.9px; color: var(--font-main);">${title}</span>
+                            <p style="font-size:11px;color:var(--font-sub-dark);margin:12px 0;">환불금액은 매출통계에 반영 됩니다.</p>
                             <span style="display:none;">${title}</span>
                         </div>
                     </div>
@@ -170,12 +170,12 @@ class Member_ticket_refund{
 
     dom_row_refund_ticket_input(){
         let html = `<div style="display:table;width:100%;font-size:11px;font-weight:500;padding-left:60px;box-sizing:border-box;">
-                        <div style="display:table-cell;color:#858282;width:56px;">수강권명</div>
-                        <div style="display:table-cell;color:#fe4e65;width:auto;">${this.data.member_ticket_name}</div>
+                        <div style="display:table-cell;color:var(--font-sub-normal);width:56px;">수강권명</div>
+                        <div style="display:table-cell;color:var(--font-highlight);width:auto;">${this.data.member_ticket_name}</div>
                     </div>
                     <div style="display:table;width:100%;font-size:11px;font-weight:500;padding-left:60px;box-sizing:border-box;">
-                        <div style="display:table-cell;color:#858282;width:56px;">등록금</div>
-                        <div style="display:table-cell;color:#fe4e65;width:auto;">${UnitRobot.numberWithCommas(this.data.member_ticket_price)}원</div>
+                        <div style="display:table-cell;color:var(--font-sub-normal);width:56px;">등록금</div>
+                        <div style="display:table-cell;color:var(--font-highlight);width:auto;">${UnitRobot.numberWithCommas(this.data.member_ticket_price)}원</div>
                     </div>`;
         return html;
     }

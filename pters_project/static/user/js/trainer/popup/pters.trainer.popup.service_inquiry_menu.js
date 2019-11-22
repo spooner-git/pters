@@ -41,9 +41,9 @@ class Service_inquiry_menu {
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();service_inquiry_menu_popup.clear();" class="obj_icon_prev"></span>`;
-        let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;"></span></span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();service_inquiry_menu_popup.clear();">${CImg.arrow_left()}</span>`;
+        let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
+        let top_right = `<span class="icon_right"><span style="color:var(--font-highlight);font-weight: 500;"></span></span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
 
@@ -80,12 +80,12 @@ class Service_inquiry_menu {
     dom_row_toolbox(){
         let title = "이용 문의 ";
         let html = `<div class="inquiry_menu_upper_box">
-                        <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:#3b3b3b; letter-spacing: -1px; height:28px;">
+                        <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:var(--font-main); letter-spacing: -1px; height:28px;">
                             <span style="display:inline-block;">${title}</span>
                             <span style="display:none;">${title}</span>
-                            <!--<div style="display:inline-block; color:#fe4e65; font-weight:900;">${this.data_length}</div>-->
+                            <!--<div style="display:inline-block; color:var(--font-highlight); font-weight:900;">${this.data_length}</div>-->
                         </div>
-                        <div style="font-size:14px;font-weight:500;color:#5c5859;letter-spacing:-0.65px"></div>
+                        <div style="font-size:14px;font-weight:500;color:var(--font-sub-dark);letter-spacing:-0.65px"></div>
                     </div>
                     `;
         return html;

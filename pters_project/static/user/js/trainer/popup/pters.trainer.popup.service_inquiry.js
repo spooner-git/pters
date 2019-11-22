@@ -41,9 +41,9 @@ class Service_inquiry {
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();service_inquiry_popup.clear();" class="obj_icon_prev"></span>`;
-        let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;"></span><span style="color:#fe4e65;font-weight: 500;" onclick="service_inquiry_popup.send_data()">보내기</span></span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();service_inquiry_popup.clear();">${CImg.arrow_left()}</span>`;
+        let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
+        let top_right = `<span class="icon_right"><span style="color:var(--font-highlight);font-weight: 500;"></span><span style="color:var(--font-highlight);font-weight: 500;" onclick="service_inquiry_popup.send_data()">보내기</span></span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
 
@@ -81,12 +81,12 @@ class Service_inquiry {
     dom_row_toolbox(){
         let title = "문의 작성";
         let html = `<div class="inquiry_upper_box">
-                        <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:#3b3b3b; letter-spacing: -1px; height:28px;">
+                        <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:var(--font-main); letter-spacing: -1px; height:28px;">
                             <span style="display:inline-block;">${title}</span>
                             <span style="display:none;">${title}</span>
-                            <!--<div style="display:inline-block; color:#fe4e65; font-weight:900;">${this.data_length}</div>-->
+                            <!--<div style="display:inline-block; color:var(--font-highlight); font-weight:900;">${this.data_length}</div>-->
                         </div>
-                        <div style="font-size:14px;font-weight:500;color:#5c5859;letter-spacing:-0.65px">아래 양식을 작성하면 등록하신 이메일로 답변드립니다.</div>
+                        <div style="font-size:14px;font-weight:500;color:var(--font-sub-dark);letter-spacing:-0.65px">아래 양식을 작성하면 등록하신 이메일로 답변드립니다.</div>
                     </div>
                     `;
         return html;
@@ -98,7 +98,7 @@ class Service_inquiry {
         let icon = DELETE;
         let icon_r_visible = SHOW;
         let icon_r_text = '';
-        let style = this.data.inquiry_type.text.length == 0 ? {"color":"#b8b4b4"} : null;
+        let style = this.data.inquiry_type.text.length == 0 ? {"color":"var(--font-inactive)"} : null;
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             let title = "문의 유형";
             let install_target = "#wrapper_box_custom_select";

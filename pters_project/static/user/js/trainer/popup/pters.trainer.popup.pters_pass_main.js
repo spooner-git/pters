@@ -74,8 +74,8 @@ class Pters_pass_main{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();pters_pass_main_popup.clear();" class="obj_icon_prev"></span>`;
-        let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();pters_pass_main_popup.clear();">${CImg.arrow_left()}</span>`;
+        let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"></span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
@@ -132,10 +132,10 @@ class Pters_pass_main{
 
     dom_row_auth_info(title, auth_info){
         let html = `<div style="display:flex;font-size:12px;letter-spacing:-0.5px;height:24px;line-height:24px;margin-bottom:2px;">
-                        <div style="flex-basis:82px;color:#999696">
+                        <div style="flex-basis:82px;color:var(--font-sub-light)">
                             ${title}
                         </div>
-                        <div style="flex:1 1 0;color:#5c5859;">
+                        <div style="flex:1 1 0;color:var(--font-sub-dark);">
                             ${auth_info}
                         </div>
                     </div>`;
@@ -150,9 +150,12 @@ class Pters_pass_main{
         let icon_r_text = "";
         let style = null;
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP, 100, popup_style, null, ()=>{
-                pters_pass_shop_popup = new Pters_pass_shop('.popup_pters_pass_shop');});
+            // let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP, 100, popup_style, null, ()=>{
+            //     pters_pass_shop_popup = new Pters_pass_shop('.popup_pters_pass_shop');
+            // });
+            show_error_message("상품을 준비 중 입니다.");
+                
         });
         let html = row;
         return html;
@@ -220,8 +223,7 @@ class Pters_pass_main{
 
 
     dom_row_toolbox(){
-        // let title_upper = `<span style=" font-size: 12px;display:block;line-height: 5px;color: #7d7d7d;font-weight: 500;">이용중인 PTERS 패스</span>${this.dom_button_go_to_status()}`;
-        let title_upper = `<span style=" font-size: 12px;display:block;line-height: 5px;color: #7d7d7d;font-weight: 500;">이용중인 PTERS 패스</span>`;
+        let title_upper = `<span style=" font-size: 12px;display:block;line-height: 5px;color: var(--font-sub-normal);font-weight: 500;">이용중인 PTERS 패스</span>`;
         let current_pass_name = this.data.current.name[0] == "" ? "무료 이용자 (11월 이벤트)" : this.data.current.name[0];
         let title = this.data.current.name.length == 0 ? "" :title_upper + current_pass_name;
         
@@ -234,12 +236,12 @@ class Pters_pass_main{
         let next_pay_date = this.data.next.paid_date[0].replace(/-/gi, '.');
         let pay_type = PAY_TYPE_NAME[this.data.next.payment_type_cd[0]];
         let description = `<p style="font-size:13px;letter-spacing:-0.5px;font-weight:500;margin-bottom:0;">
-                                <span style="color:#b8b4b4;margin-right:8px;">유효 기간</span>
-                                <span style="color:#5c5859;">${expire_date}</span>
+                                <span style="color:var(--font-inactive);margin-right:8px;">유효 기간</span>
+                                <span style="color:var(--font-sub-dark);">${expire_date}</span>
                             </p>
                             <p style="font-size:13px;letter-spacing:-0.5px;font-weight:500;margin-top:4px;">
-                                <span style="color:#b8b4b4;margin-right:8px;">결제 예정</span>
-                                <span style="color:#5c5859">${next_pay_date} ${pay_type}</span>
+                                <span style="color:var(--font-inactive);margin-right:8px;">결제 예정</span>
+                                <span style="color:var(--font-sub-dark)">${next_pay_date} ${pay_type}</span>
                             </p>`;
         let html = `
         <div class="pters_pass_main_upper_box" style="">
@@ -620,7 +622,6 @@ class Pters_pass_func{
                             msg += '에러내용 : ' + jsondata.messageArray;
                             show_error_message(msg);
                         }else {
-                            console.log('test########################');
                             $.ajax({
                                 url: "/payment/update_period_billing/", // 서비스 웹서버
                                 method: "POST",

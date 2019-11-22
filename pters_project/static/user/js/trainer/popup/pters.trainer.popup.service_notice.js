@@ -7,6 +7,8 @@ class Service_notice {
         this.data = null;
         this.data_length = 0;
 
+        this.tab = 'notice';
+
         this.received_data_cache = null; // 재랜더링시 스크롤 위치를 기억하도록 먼저 이전 데이터를 그려주기 위해
 
         this.init();
@@ -33,8 +35,8 @@ class Service_notice {
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();service_notice_popup.clear();" class="obj_icon_prev"></span>`;
-        let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();service_notice_popup.clear();">${CImg.arrow_left()}</span>`;
+        let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"></span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
@@ -62,6 +64,17 @@ class Service_notice {
         let length = this.data.length;
         let html_temp = [];
         for(let i=0; i <length; i++){
+            let notice_type_cd = this.data[i].notice_type_cd;
+            if(this.tab == "notice"){
+                if(notice_type_cd != NOTICE){
+                    continue;
+                }
+            }else if(this.tab == "update_history"){
+                if(notice_type_cd != NOTICE_UPDATE_HISTORY){
+                    continue;
+                }
+            }
+
             let notice_id = this.data[i].notice_id;
             let notice_title = this.data[i].notice_title;
             let notice_mod_date =  this.data[i].notice_mod_dt.split(' ')[0];
@@ -74,20 +87,53 @@ class Service_notice {
             html_temp.push(html);
         }
 
+        if(html_temp.length == 0){
+            html_temp.push(`<article class="notice_wrapper">
+                                <div class="notice_subject">등록 된 글이 없습니다.</div>
+                            </article>`);
+        }
+
         return html_temp.join("");
     }
 
+
+    // dom_row_toolbox(){
+    //     let title = "PTERS 공지사항 ";
+    //     let html = `<div class="notice_upper_box">
+    //                     <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:var(--font-main); letter-spacing: -1px; height:28px;">
+    //                         <span style="display:inline-block;">${title}</span>
+    //                         <span style="display:none;">${title}</span>
+    //                         <!--<div style="display:inline-block; color:var(--font-highlight); font-weight:900;">${this.data_length}</div>-->
+    //                     </div>
+    //                 </div>
+    //                 `;
+    //     return html;
+    // }
+
     dom_row_toolbox(){
-        let title = "PTERS 공지사항 ";
-        let html = `<div class="notice_upper_box">
-                        <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:#3b3b3b; letter-spacing: -1px; height:28px;">
-                            <span style="display:inline-block;">${title}</span>
-                            <span style="display:none;">${title}</span>
-                            <!--<div style="display:inline-block; color:#fe4e65; font-weight:900;">${this.data_length}</div>-->
+        let title = "PTERS 공지";
+        let title2 = "업데이트 내역";
+        let html = `
+                    <div class="lecture_view_upper_box">
+                        <div style="display:inline-block;">
+                            <span class="sales_type_select_text_button" style="color:${this.tab=="notice" ? "var(--font-main)" :"var(--font-inactive)"}" onclick="service_notice_popup.switch('notice')">
+                                ${title}
+                            </span>
+                            <div style="display:inline-block;background-color:var(--bg-light);width:2px;height:16px;margin:0 10px;"></div>
+                            <span class="sales_type_select_text_button" style="color:${this.tab=="update_history" ? "var(--font-main)" :"var(--font-inactive)"}" onclick="service_notice_popup.switch('update_history')">
+                                ${title2}
+                            </span>
+                            <span style="display:none">${this.tab=="notice"? title : title2}</span>
                         </div>
                     </div>
                     `;
         return html;
+    }
+
+    switch(tab){
+        this.tab = tab;
+        this.render();
+        func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
     }
 
     open_detail(id){
@@ -121,7 +167,7 @@ class Service_notice {
         $.ajax({
             url:url,
             type:'GET',
-            data: {"notice_type": [NOTICE]},
+            data: {"notice_type": [NOTICE, NOTICE_UPDATE_HISTORY]},
             dataType : 'JSON',
     
             beforeSend:function (){

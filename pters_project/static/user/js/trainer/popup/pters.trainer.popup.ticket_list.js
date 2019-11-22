@@ -48,12 +48,16 @@ class Ticket_list {
 
     render(){
 
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();ticket_list_popup.clear();" class="obj_icon_prev"></span>`;
-        let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();ticket_list_popup.clear();">${CImg.arrow_left()}</span>`;
+        let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
         let top_right = `<span class="icon_right">
-                                <img src="/static/common/icon/icon_search_black.png" class="obj_icon_24px" style="padding-right:12px;" onclick="${this.instance}.search_tool_visible(event);">
-                                <img src="/static/common/icon/icon_plus_pink.png" class="obj_icon_24px" onclick="layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_TICKET_ADD}', 100, ${POPUP_FROM_BOTTOM}, {'select_date':null}, ()=>{
+                                <span class=".search_lecture" onclick="${this.instance}.search_tool_visible(event, this)">
+                                    ${CImg.search("", {"vertical-align":"middle"})}
+                                </span>
+                                <span class=".add_lecture" onclick="layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_TICKET_ADD}', 100, ${POPUP_FROM_BOTTOM}, {'select_date':null}, ()=>{
                                     ticket_add_popup = new Ticket_add('.popup_ticket_add');});">
+                                    ${CImg.plus("", {"vertical-align":"middle"})}
+                                </span>
                         </span>`;
         let content =   `<div class="search_bar"></div>
                         <section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;">${this.dom_assembly_toolbox()}</section>
@@ -114,13 +118,13 @@ class Ticket_list {
             for(let j=0; j<length_lecture; j++){
                 let html;
                 if(ticket_lectures_state_cd[j] == STATE_END_PROGRESS){
-                    html = `<div style="color:#cccccc;text-decoration:line-through;">
-                                <div class="ticket_lecture_color" style="background-color:${this.list_status_type == "ing" ? ticket_lectures_color[j]: '#a3a0a0'}"></div>
+                    html = `<div style="color:var(--font-domtag);text-decoration:line-through;">
+                                <div class="ticket_lecture_color" style="background-color:${this.list_status_type == "ing" ? ticket_lectures_color[j]: 'var(--font-inactive)'}"></div>
                                 ${ticket_lectures_included_name[j]}
                             </div>`;
                 }else if(ticket_lectures_state_cd[j] == STATE_IN_PROGRESS){
                     html = `<div>
-                                <div class="ticket_lecture_color" style="background-color:${this.list_status_type == "ing" ? ticket_lectures_color[j]: '#a3a0a0'}"></div>
+                                <div class="ticket_lecture_color" style="background-color:${this.list_status_type == "ing" ? ticket_lectures_color[j]: 'var(--font-inactive)'}"></div>
                                 ${ticket_lectures_included_name[j]}
                             </div>`;
                 }
@@ -141,7 +145,7 @@ class Ticket_list {
                             </div>
                             <div class="ticket_data_b">
                                 <div class="ticket_lectures">
-                                    ${ticket_lectures_included_name_html.length != 0 ? ticket_lectures_included_name_html.join('') : "<span style='color:#fe4e65;text-decoration:underline'>포함된 수업이 없습니다.</span>"}
+                                    ${ticket_lectures_included_name_html.length != 0 ? ticket_lectures_included_name_html.join('') : "<span style='color:var(--font-highlight);text-decoration:underline'>포함된 수업이 없습니다.</span>"}
                                 </div>
                             </div>
                         </article>`;
@@ -172,9 +176,9 @@ class Ticket_list {
         let root_content_height = $root_content.height();
 
         let html = `<div class="ticket_upper_box">
-                        <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:#3b3b3b; letter-spacing: -1px; height:28px;">
+                        <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:var(--font-main); letter-spacing: -1px; height:28px;">
                             <span style="display:inline-block;">수강권 </span>
-                            <div style="display:inline-block; color:#fe4e65; font-weight:900;">${this.data_length}</div>
+                            <div style="display:inline-block; color:var(--font-highlight); font-weight:900;">${this.data_length}</div>
                         </div>
                     </div>
                     <div class="ticket_bottom_tools_wrap">
@@ -190,10 +194,10 @@ class Ticket_list {
                         });">
                             <!--<select>
                                 <option>이름순</option>
-                                <option>남은 횟수순</option>
+                                <option>잔여 횟수순</option>
                                 <option>등록 횟수순</option>
                             </select>-->
-                            ${this.sort_value_text} <img src="/static/common/icon/icon_arrow_expand_light_grey.png" style="width:24px; height:24px; vertical-align: middle;">
+                            ${this.sort_value_text} ${CImg.arrow_expand(["var(--img-sub1)"], {"vertical-align":"middle"})}
                         </div>
                     </div> `;
         return html;
@@ -208,7 +212,7 @@ class Ticket_list {
         document.querySelector('.search_bar').innerHTML = html;
     }
 
-    search_tool_visible (event){
+    search_tool_visible (event, self){
         event.stopPropagation();
         event.preventDefault();
         switch(this.search){
@@ -220,16 +224,15 @@ class Ticket_list {
             Array.from(document.getElementsByClassName('ticket_wrapper')).forEach((el)=>{
                 $(el).show();
             });
-            event.target.src = '/static/common/icon/icon_search_black.png';
-            // event.target.style.backgroundImage = 'url("/static/common/icon/icon_search_black.png")';
+            
+            $(self).html(CImg.search("", {"vertical-align":"middle"}));
             break;
         case false:
             this.search = true;
             this.render_search_tool('draw');
             document.getElementsByClassName('search_input')[0].value = this.search_value;
             
-            event.target.src = '/static/common/icon/icon_x_black.png';
-            // event.target.style.backgroundImage = 'url("/static/common/icon/icon_x_black.png")';
+            $(self).html(CImg.x("", {"vertical-align":"middle"}));
             break;
         }
     }

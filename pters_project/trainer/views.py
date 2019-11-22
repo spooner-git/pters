@@ -967,7 +967,7 @@ class AttendModeDetailView(LoginRequiredMixin, AccessTestMixin, View):
 
                     if error is None:
                         if member_ticket_id is None or member_ticket_id == '':
-                            error = '예약 가능한 횟수가 없습니다.'
+                            error = '예약 가능 횟수가 없습니다.'
                         else:
                             try:
                                 context['member_ticket_info'] =\
@@ -4259,6 +4259,28 @@ def update_setting_language_logic(request):
     return render(request, 'ajax/trainer_error_ajax.html')
 
 
+# 강사 예약허용시간 setting 업데이트 api
+def update_setting_theme_logic(request):
+    setting_theme = request.POST.get('theme', 'light')
+    class_id = request.session.get('class_id', '')
+
+    if setting_theme is None or setting_theme == '':
+        setting_theme = 'light'
+
+    setting_type_cd_data = ['THEME']
+    setting_info_data = [setting_theme]
+    error = update_setting_data(class_id, request.user.id, setting_type_cd_data, setting_info_data)
+
+    if error is None:
+        request.session['setting_theme'] = setting_theme
+
+    else:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
 class GetTrainerSettingDataView(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
@@ -4368,7 +4390,7 @@ def attend_mode_check_logic(request):
 
                     if error is None:
                         if member_ticket_id is None or member_ticket_id == '':
-                            error = '예약 가능한 횟수가 없습니다. 수강권을 확인해주세요.'
+                            error = '예약 가능 횟수가 없습니다. 수강권을 확인해주세요.'
                         else:
                             try:
                                 MemberTicketTb.objects.get(member_ticket_id=member_ticket_id)
@@ -4430,7 +4452,7 @@ def attend_mode_finish_logic(request):
 
                         if error is None:
                             if member_ticket_id is None or member_ticket_id == '':
-                                error = '예약 가능한 횟수가 없습니다.'
+                                error = '예약 가능 횟수가 없습니다.'
                             else:
                                 error = func_check_lecture_available_member_before(class_id,
                                                                                    schedule_info.lecture_tb_id,

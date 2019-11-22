@@ -236,8 +236,8 @@ class TwoTimeSelector{
                     snap = min;
                 }
                 self.hour_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
-                $(`${self.targetHTML} li[data-spos="${Math.abs(self.hour_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
-                $(`${self.targetHTML} li[data-spos="${Math.abs(self.hour_scroll.y)}"]`).css('color', '#1e1e1e');
+                $(`${self.targetHTML} li[data-spos="${Math.abs(self.hour_scroll.y)}"]`).siblings('li').css('color', 'var(--font-inactive)');
+                $(`${self.targetHTML} li[data-spos="${Math.abs(self.hour_scroll.y)}"]`).css('color', 'var(--font-base)');
                 self.hour_scroll_snapped = snap;
 
                 self.data.end = self.refine_end_data(self.get_selected_data().data.start).end_time_list;
@@ -278,8 +278,8 @@ class TwoTimeSelector{
                 //     self.hour2_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
                 // }
                 self.hour2_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
-                $(`${self.targetHTML} li[data-epos="${Math.abs(self.hour2_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
-                $(`${self.targetHTML} li[data-epos="${Math.abs(self.hour2_scroll.y)}"]`).css('color', '#1e1e1e');
+                $(`${self.targetHTML} li[data-epos="${Math.abs(self.hour2_scroll.y)}"]`).siblings('li').css('color', 'var(--font-inactive)');
+                $(`${self.targetHTML} li[data-epos="${Math.abs(self.hour2_scroll.y)}"]`).css('color', 'var(--font-base)');
                 
             }
         });
@@ -304,10 +304,10 @@ class TwoTimeSelector{
         this.hour2_scroll.scrollTo(0, end_pos, 0, IScroll.utils.ease.bounce);
         this.hour_scroll_snapped = initial_pos;
 
-        $(`${this.targetHTML} li[data-spos="${Math.abs(this.hour_scroll.y)}"]`).css('color', '#1e1e1e');
-        $(`${this.targetHTML} li[data-epos="${Math.abs(this.hour2_scroll.y)}"]`).css('color', '#1e1e1e');
-        $(`${this.targetHTML} li[data-spos="${Math.abs(this.hour_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
-        $(`${this.targetHTML} li[data-epos="${Math.abs(this.hour2_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+        $(`${this.targetHTML} li[data-spos="${Math.abs(this.hour_scroll.y)}"]`).css('color', 'var(--font-base)');
+        $(`${this.targetHTML} li[data-epos="${Math.abs(this.hour2_scroll.y)}"]`).css('color', 'var(--font-base)');
+        $(`${this.targetHTML} li[data-spos="${Math.abs(this.hour_scroll.y)}"]`).siblings('li').css('color', 'var(--font-inactive)');
+        $(`${this.targetHTML} li[data-epos="${Math.abs(this.hour2_scroll.y)}"]`).siblings('li').css('color', 'var(--font-inactive)');
     }
 
     get_selected_data(){
@@ -381,11 +381,11 @@ class TwoTimeSelector{
                                         ${CComponent.text_button(this.option.myname+'_cancel_button', '취소', {"padding":"10px 20px"}, ()=>{this.upper_left_button();})}
                                     </div>
                                     <span class="time_selector_title">${this.option.title}</span>
-                                    <div style="float:right;margin-right:5px;color:#fe4e65;">
+                                    <div style="float:right;margin-right:5px;color:var(--font-highlight);">
                                         ${CComponent.text_button(this.option.myname+'_confirm_button', '확인', {"padding":"10px 20px"}, ()=>{this.upper_right_button();})}
                                     </div>
                                 </div>
-                                <div class="time_selector_option_wrap" style="display:flex;height:45px;line-height:45px;border-bottom:1px solid #f2f2f2;box-sizing:border-box;">
+                                <div class="time_selector_option_wrap" style="display:flex;height:45px;line-height:45px;border-bottom:var(--border-article);box-sizing:border-box;">
                                     <div style="flex:1 1 0; display:none;">
                                         ${CComponent.toggle_button ("selector_time_detail_view", this.listing_option.five_minute_detail, {"display":"inline-block", "vertical-align":"middle", "margin-bottom":"4px", "transform":"scale(0.8)"}, ()=>{this.event_five_minute_detail_switch();})}
                                         <span>5분단위 상세 선택</span>
@@ -629,8 +629,8 @@ class DateSelector{
                     snap = min;
                 }
                 self.year_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
-                $(`${self.target.install} li[data-ypos="${Math.abs(self.year_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
-                $(`${self.target.install} li[data-ypos="${Math.abs(self.year_scroll.y)}"]`).css('color', '#1e1e1e');
+                $(`${self.target.install} li[data-ypos="${Math.abs(self.year_scroll.y)}"]`).siblings('li').css('color', 'var(--font-inactive)');
+                $(`${self.target.install} li[data-ypos="${Math.abs(self.year_scroll.y)}"]`).css('color', 'var(--font-base)');
                 self.year_scroll_snapped = snap;
             }
         });
@@ -657,8 +657,8 @@ class DateSelector{
                 
                     
                 self.month_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
-                $(`${self.target.install} li[data-mpos="${Math.abs(self.month_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
-                $(`${self.target.install} li[data-mpos="${Math.abs(self.month_scroll.y)}"]`).css('color', '#1e1e1e');
+                $(`${self.target.install} li[data-mpos="${Math.abs(self.month_scroll.y)}"]`).siblings('li').css('color', 'var(--font-inactive)');
+                $(`${self.target.install} li[data-mpos="${Math.abs(self.month_scroll.y)}"]`).css('color', 'var(--font-base)');
                 
             }
         });
@@ -684,8 +684,8 @@ class DateSelector{
                 
                     
                 self.date_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
-                $(`${self.target.install} li[data-dpos="${Math.abs(self.date_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
-                $(`${self.target.install} li[data-dpos="${Math.abs(self.date_scroll.y)}"]`).css('color', '#1e1e1e');
+                $(`${self.target.install} li[data-dpos="${Math.abs(self.date_scroll.y)}"]`).siblings('li').css('color', 'var(--font-inactive)');
+                $(`${self.target.install} li[data-dpos="${Math.abs(self.date_scroll.y)}"]`).css('color', 'var(--font-base)');
                 
             }
         });
@@ -705,12 +705,12 @@ class DateSelector{
         this.date_scroll.scrollTo(0, initial_pos_date, 0, IScroll.utils.ease.bounce);
         // this.hour_scroll_snapped = initial_pos;
 
-        $(`${this.target.install} li[data-ypos="${Math.abs(this.year_scroll.y)}"]`).css('color', '#1e1e1e');
-        $(`${this.target.install} li[data-mpos="${Math.abs(this.month_scroll.y)}"]`).css('color', '#1e1e1e');
-        $(`${this.target.install} li[data-dpos="${Math.abs(this.date_scroll.y)}"]`).css('color', '#1e1e1e');
-        $(`${this.target.install} li[data-ypos="${Math.abs(this.year_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
-        $(`${this.target.install} li[data-mpos="${Math.abs(this.month_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
-        $(`${this.target.install} li[data-dpos="${Math.abs(this.date_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+        $(`${this.target.install} li[data-ypos="${Math.abs(this.year_scroll.y)}"]`).css('color', 'var(--font-base)');
+        $(`${this.target.install} li[data-mpos="${Math.abs(this.month_scroll.y)}"]`).css('color', 'var(--font-base)');
+        $(`${this.target.install} li[data-dpos="${Math.abs(this.date_scroll.y)}"]`).css('color', 'var(--font-base)');
+        $(`${this.target.install} li[data-ypos="${Math.abs(this.year_scroll.y)}"]`).siblings('li').css('color', 'var(--font-inactive)');
+        $(`${this.target.install} li[data-mpos="${Math.abs(this.month_scroll.y)}"]`).siblings('li').css('color', 'var(--font-inactive)');
+        $(`${this.target.install} li[data-dpos="${Math.abs(this.date_scroll.y)}"]`).siblings('li').css('color', 'var(--font-inactive)');
     }
 
     show_selected_date (){
@@ -765,7 +765,7 @@ class DateSelector{
                                         ${CComponent.text_button(this.option.myname+'_cancel_button', '취소', {"padding":"10px 20px"}, ()=>{layer_popup.close_layer_popup();})}
                                     </div>
                                     <span class="date_selector_title">${this.option.title}</span>
-                                    <div style="float:right;margin-right:5px;color:#fe4e65;">
+                                    <div style="float:right;margin-right:5px;color:var(--font-highlight);">
                                         ${CComponent.text_button(this.option.myname+'_confirm_button', '확인', {"padding":"10px 20px"}, ()=>{ this.store = this.get_selected_data();
                                                                                                                     this.option.callback_when_set(this.store); 
                                                                                                                     layer_popup.close_layer_popup();
@@ -1050,8 +1050,8 @@ class TwoDateSelector{
                     snap = min;
                 }
                 self.year_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
-                $(`${self.target.install} li[data-ypos="${Math.abs(self.year_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
-                $(`${self.target.install} li[data-ypos="${Math.abs(self.year_scroll.y)}"]`).css('color', '#1e1e1e');
+                $(`${self.target.install} li[data-ypos="${Math.abs(self.year_scroll.y)}"]`).siblings('li').css('color', 'var(--font-inactive)');
+                $(`${self.target.install} li[data-ypos="${Math.abs(self.year_scroll.y)}"]`).css('color', 'var(--font-base)');
                 self.year_scroll_snapped = snap;
             }
         });
@@ -1078,8 +1078,8 @@ class TwoDateSelector{
                 
                     
                 self.month_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
-                $(`${self.target.install} li[data-mpos="${Math.abs(self.month_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
-                $(`${self.target.install} li[data-mpos="${Math.abs(self.month_scroll.y)}"]`).css('color', '#1e1e1e');
+                $(`${self.target.install} li[data-mpos="${Math.abs(self.month_scroll.y)}"]`).siblings('li').css('color', 'var(--font-inactive)');
+                $(`${self.target.install} li[data-mpos="${Math.abs(self.month_scroll.y)}"]`).css('color', 'var(--font-base)');
                 
             }
         });
@@ -1104,8 +1104,8 @@ class TwoDateSelector{
                     snap = min;
                 }
                 self.year_scroll2.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
-                $(`${self.target.install} li[data-ypos2="${Math.abs(self.year_scroll2.y)}"]`).siblings('li').css('color', '#cccccc');
-                $(`${self.target.install} li[data-ypos2="${Math.abs(self.year_scroll2.y)}"]`).css('color', '#1e1e1e');
+                $(`${self.target.install} li[data-ypos2="${Math.abs(self.year_scroll2.y)}"]`).siblings('li').css('color', 'var(--font-inactive)');
+                $(`${self.target.install} li[data-ypos2="${Math.abs(self.year_scroll2.y)}"]`).css('color', 'var(--font-base)');
                 self.year_scroll_snapped = snap;
             }
         });
@@ -1132,8 +1132,8 @@ class TwoDateSelector{
                 
                     
                 self.month_scroll2.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
-                $(`${self.target.install} li[data-mpos2="${Math.abs(self.month_scroll2.y)}"]`).siblings('li').css('color', '#cccccc');
-                $(`${self.target.install} li[data-mpos2="${Math.abs(self.month_scroll2.y)}"]`).css('color', '#1e1e1e');
+                $(`${self.target.install} li[data-mpos2="${Math.abs(self.month_scroll2.y)}"]`).siblings('li').css('color', 'var(--font-inactive)');
+                $(`${self.target.install} li[data-mpos2="${Math.abs(self.month_scroll2.y)}"]`).css('color', 'var(--font-base)');
                 
             }
         });
@@ -1151,10 +1151,10 @@ class TwoDateSelector{
         this.year_scroll.scrollTo(0, initial_pos_year, 0, IScroll.utils.ease.bounce);
         this.month_scroll.scrollTo(0, initial_pos_month, 0, IScroll.utils.ease.bounce);
 
-        $(`${this.target.install} li[data-ypos="${Math.abs(this.year_scroll.y)}"]`).css('color', '#1e1e1e');
-        $(`${this.target.install} li[data-mpos="${Math.abs(this.month_scroll.y)}"]`).css('color', '#1e1e1e');
-        $(`${this.target.install} li[data-ypos="${Math.abs(this.year_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
-        $(`${this.target.install} li[data-mpos="${Math.abs(this.month_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+        $(`${this.target.install} li[data-ypos="${Math.abs(this.year_scroll.y)}"]`).css('color', 'var(--font-base)');
+        $(`${this.target.install} li[data-mpos="${Math.abs(this.month_scroll.y)}"]`).css('color', 'var(--font-base)');
+        $(`${this.target.install} li[data-ypos="${Math.abs(this.year_scroll.y)}"]`).siblings('li').css('color', 'var(--font-inactive)');
+        $(`${this.target.install} li[data-mpos="${Math.abs(this.month_scroll.y)}"]`).siblings('li').css('color', 'var(--font-inactive)');
 
         let initial_pos_year2 = (this.option.range1.start-year)*40;
         let initial_pos_month2 = (1-month)*40;
@@ -1162,10 +1162,10 @@ class TwoDateSelector{
         this.year_scroll2.scrollTo(0, initial_pos_year2, 0, IScroll.utils.ease.bounce);
         this.month_scroll2.scrollTo(0, initial_pos_month2, 0, IScroll.utils.ease.bounce);
 
-        $(`${this.target.install} li[data-ypos2="${Math.abs(this.year_scroll2.y)}"]`).css('color', '#1e1e1e');
-        $(`${this.target.install} li[data-mpos2="${Math.abs(this.month_scroll2.y)}"]`).css('color', '#1e1e1e');
-        $(`${this.target.install} li[data-ypos2="${Math.abs(this.year_scroll2.y)}"]`).siblings('li').css('color', '#cccccc');
-        $(`${this.target.install} li[data-mpos2="${Math.abs(this.month_scroll2.y)}"]`).siblings('li').css('color', '#cccccc');
+        $(`${this.target.install} li[data-ypos2="${Math.abs(this.year_scroll2.y)}"]`).css('color', 'var(--font-base)');
+        $(`${this.target.install} li[data-mpos2="${Math.abs(this.month_scroll2.y)}"]`).css('color', 'var(--font-base)');
+        $(`${this.target.install} li[data-ypos2="${Math.abs(this.year_scroll2.y)}"]`).siblings('li').css('color', 'var(--font-inactive)');
+        $(`${this.target.install} li[data-mpos2="${Math.abs(this.month_scroll2.y)}"]`).siblings('li').css('color', 'var(--font-inactive)');
         
     }
 
@@ -1230,7 +1230,7 @@ class TwoDateSelector{
                                         ${CComponent.text_button(this.option.myname+'_cancel_button', '취소', {"padding":"10px 20px"}, ()=>{layer_popup.close_layer_popup();})}
                                     </div>
                                     <span class="date_selector_title">${this.option.title}</span>
-                                    <div style="float:right;margin-right:5px;color:#fe4e65;">
+                                    <div style="float:right;margin-right:5px;color:var(--font-highlight);">
                                         ${CComponent.text_button(this.option.myname+'_confirm_button', '확인', {"padding":"10px 20px"}, ()=>{ this.store = this.get_selected_data();
                                                                                                                     this.option.callback_when_set(this.store); 
                                                                                                                     // layer_popup.close_layer_popup();
@@ -1450,8 +1450,8 @@ class TimeSelector{
                     snap = min;
                 }
                 self.zone_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
-                $(`${self.target.install} li[data-zpos="${Math.abs(self.zone_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
-                $(`${self.target.install} li[data-zpos="${Math.abs(self.zone_scroll.y)}"]`).css('color', '#1e1e1e');
+                $(`${self.target.install} li[data-zpos="${Math.abs(self.zone_scroll.y)}"]`).siblings('li').css('color', 'var(--font-inactive)');
+                $(`${self.target.install} li[data-zpos="${Math.abs(self.zone_scroll.y)}"]`).css('color', 'var(--font-base)');
                 if(self.check_minimum_time() == false){
                     document.querySelector('.selector_indicator').style.backgroundColor = '#fe4e6547';
                 }else{
@@ -1482,8 +1482,8 @@ class TimeSelector{
                 
                     
                 self.hour_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
-                $(`${self.target.install} li[data-hpos="${Math.abs(self.hour_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
-                $(`${self.target.install} li[data-hpos="${Math.abs(self.hour_scroll.y)}"]`).css('color', '#1e1e1e');
+                $(`${self.target.install} li[data-hpos="${Math.abs(self.hour_scroll.y)}"]`).siblings('li').css('color', 'var(--font-inactive)');
+                $(`${self.target.install} li[data-hpos="${Math.abs(self.hour_scroll.y)}"]`).css('color', 'var(--font-base)');
 
                 if(self.check_minimum_time() == false){
                     document.querySelector('.selector_indicator').style.backgroundColor = '#fe4e6547';
@@ -1514,8 +1514,8 @@ class TimeSelector{
                 
                     
                 self.minute_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
-                $(`${self.target.install} li[data-mpos="${Math.abs(self.minute_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
-                $(`${self.target.install} li[data-mpos="${Math.abs(self.minute_scroll.y)}"]`).css('color', '#1e1e1e');
+                $(`${self.target.install} li[data-mpos="${Math.abs(self.minute_scroll.y)}"]`).siblings('li').css('color', 'var(--font-inactive)');
+                $(`${self.target.install} li[data-mpos="${Math.abs(self.minute_scroll.y)}"]`).css('color', 'var(--font-base)');
                 
                 if(self.check_minimum_time() == false){
                     document.querySelector('.selector_indicator').style.backgroundColor = '#fe4e6547';
@@ -1539,12 +1539,12 @@ class TimeSelector{
         this.hour_scroll.scrollTo(0, initial_pos_hour, 0, IScroll.utils.ease.bounce);
         this.minute_scroll.scrollTo(0, initial_pos_minute, 0, IScroll.utils.ease.bounce);
 
-        $(`${this.target.install} li[data-zpos="${Math.abs(this.zone_scroll.y)}"]`).css('color', '#1e1e1e');
-        $(`${this.target.install} li[data-hpos="${Math.abs(this.hour_scroll.y)}"]`).css('color', '#1e1e1e');
-        $(`${this.target.install} li[data-mpos="${Math.abs(this.minute_scroll.y)}"]`).css('color', '#1e1e1e');
-        $(`${this.target.install} li[data-zpos="${Math.abs(this.zone_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
-        $(`${this.target.install} li[data-hpos="${Math.abs(this.hour_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
-        $(`${this.target.install} li[data-mpos="${Math.abs(this.minute_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+        $(`${this.target.install} li[data-zpos="${Math.abs(this.zone_scroll.y)}"]`).css('color', 'var(--font-base)');
+        $(`${this.target.install} li[data-hpos="${Math.abs(this.hour_scroll.y)}"]`).css('color', 'var(--font-base)');
+        $(`${this.target.install} li[data-mpos="${Math.abs(this.minute_scroll.y)}"]`).css('color', 'var(--font-base)');
+        $(`${this.target.install} li[data-zpos="${Math.abs(this.zone_scroll.y)}"]`).siblings('li').css('color', 'var(--font-inactive)');
+        $(`${this.target.install} li[data-hpos="${Math.abs(this.hour_scroll.y)}"]`).siblings('li').css('color', 'var(--font-inactive)');
+        $(`${this.target.install} li[data-mpos="${Math.abs(this.minute_scroll.y)}"]`).siblings('li').css('color', 'var(--font-inactive)');
     }
 
     get_selected_data (){
@@ -1580,7 +1580,7 @@ class TimeSelector{
                                         ${CComponent.text_button(this.option.myname+'_cancel_button', '취소', {"padding":"10px 20px"}, ()=>{layer_popup.close_layer_popup();})}
                                     </div>
                                     <span class="time_selector_title">${this.option.title}</span>
-                                    <div style="float:right;margin-right:5px;color:#fe4e65;">
+                                    <div style="float:right;margin-right:5px;color:var(--font-highlight);">
                                         ${CComponent.text_button(this.option.myname+'_confirm_button', '확인', {"padding":"10px 20px"}, ()=>{this.upper_right_button();})}
                                     </div>
                                 </div>
@@ -1837,8 +1837,8 @@ class TimeSelector2{
                 }
                 
                 self.hour_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
-                $(`${self.target.install} li[data-hpos="${Math.abs(self.hour_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
-                $(`${self.target.install} li[data-hpos="${Math.abs(self.hour_scroll.y)}"]`).css('color', '#1e1e1e');
+                $(`${self.target.install} li[data-hpos="${Math.abs(self.hour_scroll.y)}"]`).siblings('li').css('color', 'var(--font-inactive)');
+                $(`${self.target.install} li[data-hpos="${Math.abs(self.hour_scroll.y)}"]`).css('color', 'var(--font-base)');
 
                 let hour = self.get_selected_data().data.hour;
                 if(hour >= self.option.range.end){
@@ -1883,8 +1883,8 @@ class TimeSelector2{
                 
                     
                 self.minute_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
-                $(`${self.target.install} li[data-mpos="${Math.abs(self.minute_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
-                $(`${self.target.install} li[data-mpos="${Math.abs(self.minute_scroll.y)}"]`).css('color', '#1e1e1e');
+                $(`${self.target.install} li[data-mpos="${Math.abs(self.minute_scroll.y)}"]`).siblings('li').css('color', 'var(--font-inactive)');
+                $(`${self.target.install} li[data-mpos="${Math.abs(self.minute_scroll.y)}"]`).css('color', 'var(--font-base)');
                 
                 let data_check = self.check_minimum_time();
                 if(data_check != true){
@@ -1907,10 +1907,10 @@ class TimeSelector2{
         this.hour_scroll.scrollTo(0, initial_pos_hour, 0, IScroll.utils.ease.bounce);
         this.minute_scroll.scrollTo(0, initial_pos_minute, 0, IScroll.utils.ease.bounce);
 
-        $(`${this.target.install} li[data-hpos="${Math.abs(this.hour_scroll.y)}"]`).css('color', '#1e1e1e');
-        $(`${this.target.install} li[data-mpos="${Math.abs(this.minute_scroll.y)}"]`).css('color', '#1e1e1e');
-        $(`${this.target.install} li[data-hpos="${Math.abs(this.hour_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
-        $(`${this.target.install} li[data-mpos="${Math.abs(this.minute_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+        $(`${this.target.install} li[data-hpos="${Math.abs(this.hour_scroll.y)}"]`).css('color', 'var(--font-base)');
+        $(`${this.target.install} li[data-mpos="${Math.abs(this.minute_scroll.y)}"]`).css('color', 'var(--font-base)');
+        $(`${this.target.install} li[data-hpos="${Math.abs(this.hour_scroll.y)}"]`).siblings('li').css('color', 'var(--font-inactive)');
+        $(`${this.target.install} li[data-mpos="${Math.abs(this.minute_scroll.y)}"]`).siblings('li').css('color', 'var(--font-inactive)');
     }
 
     get_selected_data (){
@@ -1947,7 +1947,7 @@ class TimeSelector2{
                                         ${CComponent.text_button(this.option.myname+'_cancel_button', '취소', {"padding":"10px 20px"}, ()=>{this.upper_left_button();})}
                                     </div>
                                     <span class="time_selector_title">${this.option.title}</span>
-                                    <div style="float:right;margin-right:5px;color:#fe4e65;">
+                                    <div style="float:right;margin-right:5px;color:var(--font-highlight);">
                                         ${CComponent.text_button(this.option.myname+'_confirm_button', '확인', {"padding":"10px 20px"}, ()=>{this.upper_right_button();})}
                                     </div>
                                 </div>
@@ -2220,8 +2220,8 @@ class TimeSelector3{
                 }
                 
                 self.hour_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
-                $(`${self.target.install} li[data-hpos="${Math.abs(self.hour_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
-                $(`${self.target.install} li[data-hpos="${Math.abs(self.hour_scroll.y)}"]`).css('color', '#1e1e1e');
+                $(`${self.target.install} li[data-hpos="${Math.abs(self.hour_scroll.y)}"]`).siblings('li').css('color', 'var(--font-inactive)');
+                $(`${self.target.install} li[data-hpos="${Math.abs(self.hour_scroll.y)}"]`).css('color', 'var(--font-base)');
 
                 let hour = self.get_selected_data().data.hour_data;
                 if(hour >= self.option.range.end){
@@ -2266,8 +2266,8 @@ class TimeSelector3{
                 
                     
                 self.minute_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
-                $(`${self.target.install} li[data-mpos="${Math.abs(self.minute_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
-                $(`${self.target.install} li[data-mpos="${Math.abs(self.minute_scroll.y)}"]`).css('color', '#1e1e1e');
+                $(`${self.target.install} li[data-mpos="${Math.abs(self.minute_scroll.y)}"]`).siblings('li').css('color', 'var(--font-inactive)');
+                $(`${self.target.install} li[data-mpos="${Math.abs(self.minute_scroll.y)}"]`).css('color', 'var(--font-base)');
                 
                 let data_check = self.check_minimum_time();
                 if(data_check != true){
@@ -2290,10 +2290,10 @@ class TimeSelector3{
         this.hour_scroll.scrollTo(0, initial_pos_hour, 0, IScroll.utils.ease.bounce);
         this.minute_scroll.scrollTo(0, initial_pos_minute, 0, IScroll.utils.ease.bounce);
 
-        $(`${this.target.install} li[data-hpos="${Math.abs(this.hour_scroll.y)}"]`).css('color', '#1e1e1e');
-        $(`${this.target.install} li[data-mpos="${Math.abs(this.minute_scroll.y)}"]`).css('color', '#1e1e1e');
-        $(`${this.target.install} li[data-hpos="${Math.abs(this.hour_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
-        $(`${this.target.install} li[data-mpos="${Math.abs(this.minute_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+        $(`${this.target.install} li[data-hpos="${Math.abs(this.hour_scroll.y)}"]`).css('color', 'var(--font-base)');
+        $(`${this.target.install} li[data-mpos="${Math.abs(this.minute_scroll.y)}"]`).css('color', 'var(--font-base)');
+        $(`${this.target.install} li[data-hpos="${Math.abs(this.hour_scroll.y)}"]`).siblings('li').css('color', 'var(--font-inactive)');
+        $(`${this.target.install} li[data-mpos="${Math.abs(this.minute_scroll.y)}"]`).siblings('li').css('color', 'var(--font-inactive)');
     }
 
     get_selected_data (){
@@ -2328,7 +2328,7 @@ class TimeSelector3{
                                         ${CComponent.text_button(this.option.myname+'_cancel_button', '취소', {"padding":"10px 20px"}, ()=>{layer_popup.close_layer_popup();})}
                                     </div>
                                     <span class="time_selector_title">${this.option.title}</span>
-                                    <div style="float:right;margin-right:5px;color:#fe4e65;">
+                                    <div style="float:right;margin-right:5px;color:var(--font-highlight);">
                                         ${CComponent.text_button(this.option.myname+'_confirm_button', '확인', {"padding":"10px 20px"}, ()=>{this.upper_right_button();})}
                                     </div>
                                 </div>
@@ -2510,8 +2510,8 @@ class SpinSelector{
                 }
                 self.page_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
                 let $selected = $(`${self.target.install} li[data-pos="${Math.abs(self.page_scroll.y)}"]`);
-                $selected.siblings('li').css('color', '#cccccc');
-                $selected.css('color', '#1e1e1e');
+                $selected.siblings('li').css('color', 'var(--font-inactive)');
+                $selected.css('color', 'var(--font-base)');
             }
         });
 
@@ -2523,8 +2523,8 @@ class SpinSelector{
     go_snap (page){
         let initial_pos_page = (-page)*40;
         this.page_scroll.scrollTo(0, initial_pos_page, 0, IScroll.utils.ease.bounce);
-        $(`${this.target.install} li[data-pos="${Math.abs(this.page_scroll.y)}"]`).css('color', '#1e1e1e');
-        $(`${this.target.install} li[data-pos="${Math.abs(this.page_scroll.y)}"]`).siblings('li').css('color', '#cccccc');
+        $(`${this.target.install} li[data-pos="${Math.abs(this.page_scroll.y)}"]`).css('color', 'var(--font-base)');
+        $(`${this.target.install} li[data-pos="${Math.abs(this.page_scroll.y)}"]`).siblings('li').css('color', 'var(--font-inactive)');
     }
 
     get_selected_data (){
@@ -2544,7 +2544,7 @@ class SpinSelector{
                                         ${CComponent.text_button(this.option.myname+'_cancel_button', '취소', {"padding":"10px 20px"}, ()=>{layer_popup.close_layer_popup();})}
                                     </div>
                                     <span class="span_selector_title">${this.option.title}</span>
-                                    <div style="float:right;margin-right:5px;color:#fe4e65;">
+                                    <div style="float:right;margin-right:5px;color:var(--font-highlight);">
                                         ${CComponent.text_button(this.option.myname+'_confirm_button', '확인', {"padding":"10px 20px"}, ()=>{this.option.callback_when_set();})}
                                     </div>
                                 </div>
@@ -2645,9 +2645,9 @@ class TicketSelector{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();ticket_select.clear();" class="obj_icon_prev"></span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();ticket_select.clear();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span id="">${this.appendix.title == null ? '$nbsp;' :this.appendix.title}</span></span>`;
-        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="ticket_select.upper_right_menu();">완료</span></span>`;
+        let top_right = `<span class="icon_right" onclick="ticket_select.upper_right_menu();"><span style="color:var(--font-highlight);font-weight: 500;">완료</span></span>`;
         let content =   `<section>${this.dom_list()}</section>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
@@ -2720,10 +2720,10 @@ class TicketSelector{
     dom_add_new_ticket(){
         let id = "add_new_ticket";
         let title = "새로운 수강권 생성";
-        let icon = '/static/common/icon/icon_plus_pink.png';
+        let icon = CImg.plus();
         let icon_r_visible = SHOW;
         let icon_r_text = "";
-        let style = {"padding":"15px 16px", "border-bottom":"1px solid #cccccc"};
+        let style = {"padding":"15px 16px", "border-bottom":"var(--border-article-dark)"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_ADD, 100, POPUP_FROM_BOTTOM, null, ()=>{
                 ticket_add_popup = new Ticket_add('.popup_ticket_add', ()=>{
@@ -2783,9 +2783,9 @@ class LectureSelector{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();lecture_select.clear();" class="obj_icon_prev"></span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();lecture_select.clear();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span id="">${this.appendix.title}</span></span>`;
-        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="lecture_select.upper_right_menu();">완료</span></span>`;
+        let top_right = `<span class="icon_right" onclick="lecture_select.upper_right_menu();"><span style="color:var(--font-highlight);font-weight: 500;">완료</span></span>`;
         let content =   `<section>${this.dom_list()}</section>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
@@ -2861,10 +2861,10 @@ class LectureSelector{
     dom_add_new_lecture(){
         let id = "add_new_lecture";
         let title = "새로운 수업 생성";
-        let icon = '/static/common/icon/icon_plus_pink.png';
+        let icon = CImg.plus();
         let icon_r_visible = SHOW;
         let icon_r_text = "";
-        let style = {"padding":"15px 16px", "border-bottom":"1px solid #cccccc"};
+        let style = {"padding":"15px 16px", "border-bottom":"var(--border-article-dark)"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_ADD, 100, POPUP_FROM_BOTTOM, null, ()=>{
                 lecture_add_popup = new Lecture_add('.popup_lecture_add', ()=>{
@@ -2900,254 +2900,6 @@ class LectureSelector{
     }
 }
 
-// class MemberSelector{
-//     constructor(install_target, target_instance, multiple_select, appendix, callback){
-//         this.target = {install:install_target};
-//         this.target_instance = target_instance;
-//         this.unique_instance = install_target.replace(/#./gi, "");
-//         this.received_data;
-//         this.received_data_lecture_member;
-//         this.callback = callback;
-//         this.appendix = appendix;
-//         this.multiple_select = multiple_select;
-//         this.data = {
-//             id: [],
-//             name: [],
-//             id_other:[],
-//             name_other:[],
-//             ticket_id_other:[]
-//         };
-//         this.data.id = this.target_instance.member.id;
-//         this.data.name = this.target_instance.member.name;
-
-//         this.list_sort = "lecture";
-
-//         this.init();
-//     }
-
-//     init(){
-//         this.request_list(()=>{
-//             this.render();
-//             func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
-//         });
-//     }
-
-//     clear(){
-//         setTimeout(()=>{
-//             document.querySelector(this.target.install).innerHTML = "";
-//         }, 300);
-//     }
-
-//     render(){
-//         let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();member_select.clear();" class="obj_icon_prev"></span>`;
-//         let top_center = `<span class="icon_center"><span id="">${this.appendix.title}</span></span>`;
-//         let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="member_select.upper_right_menu();">완료</span></span>`;
-//         let content =   `<section>${this.dom_list()}</section>`;
-        
-//         let html = PopupBase.base(top_left, top_center, top_right, content, "");
-
-//         document.querySelector(this.target.install).innerHTML = html;
-//     }
-
-//     dom_list (){
-//         let html_to_join = [];
-//         let length = this.received_data.length;
-//         let select_member_num = 0;
-//         if(length == 0){
-//             html_to_join.push(CComponent.no_data_row('목록이 비어있습니다.'));
-//         }
-//         for(let i=0; i<length; i++){
-//             let data = this.received_data[i];
-//             let member_id = data.member_id;
-//             let member_name = data.member_name;
-//             // let member_rem_count = data.member_ticket_rem_count;
-//             let member_avail_count = data.member_ticket_avail_count;
-//             let member_expiry = data.end_date;
-//             let member_fix_state_cd = data.member_fix_state_cd;
-//             let member_profile_url = data.member_profile_url;
-//             let checked = this.target_instance.member.id.indexOf(member_id) >= 0 ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
-
-//             // if(this.appendix.disable_zero_avail_count == ON && member_avail_count == 0){
-//             //     checked = 0;
-//             // }
-//             let html = CComponent.select_member_row (
-//                 this.multiple_select, checked, this.unique_instance, member_id, member_name, member_avail_count, member_expiry, member_fix_state_cd, member_profile_url, this.appendix.disable_zero_avail_count, (add_or_substract)=>{
-//                     if(this.appendix.lecture_id != null){
-//                         let member_id_list = this.received_data_lecture_member.map((el)=>{return el.member_id;});
-//                         if(member_id_list.indexOf(member_id) == -1){ // 선택한 회원이 수업 리스트의 회원이 아니라면 (전체회원에서 선택했다면)
-//                             Member_func.read_ticket_list({"member_id":member_id}, (ticket_data)=>{ // 그 회원의 수강권 리스트를 불러온다.
-//                                 let available_ticket = [];
-//                                 for(let ticket in ticket_data){
-//                                     let avail_count = ticket_data[ticket].member_ticket_avail_count;
-//                                     if(avail_count > 0){
-//                                         available_ticket.push({"ticket_name":ticket_data[ticket].member_ticket_name,
-//                                                                 "ticket_id":ticket_data[ticket].member_ticket_id,
-//                                                                 "ticket_avail_count":avail_count
-//                                                                 });
-//                                     }
-//                                 }
-
-//                                 if(add_or_substract == "add"){
-//                                     let user_option = {};
-//                                     for(let i=0; i<available_ticket.length; i++){
-//                                         let ticket_id = available_ticket[i].ticket_id;
-//                                         let ticket_name = available_ticket[i].ticket_name;
-//                                         let ticket_avail_count = available_ticket[i].ticket_avail_count;
-//                                         user_option[ticket_id] = {text: ticket_name + `<span style="font-size:11px;font-weight:500;color:#858282"> (예약 가능: ${ticket_avail_count}회)</span>`, callback:()=>{
-//                                             if(add_or_substract == "add"){
-//                                                 this.data.id_other.push(member_id);
-//                                                 this.data.name_other.push(member_name);
-//                                                 this.data.ticket_id_other.push(ticket_id);
-//                                             }
-//                                             layer_popup.close_layer_popup();
-//                                             layer_popup.enable_shade_click_close();
-//                                         }};
-//                                     }
-//                                     user_option[0] = {text:"<span style='color:#fe4e65;'>차감 할 수강권을 선택 해주세요.</span>", callback:()=>{}};
-//                                     user_option["close"] = {text:"취소", callback:()=>{
-//                                         this.render();
-//                                         layer_popup.close_layer_popup();
-//                                     }};
-                                    
-//                                     let options_padding_top_bottom = 16;
-//                                     let button_height = 8 + 8 + 52;
-//                                     // let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
-//                                     let layer_popup_height = options_padding_top_bottom + 52*Object.keys(user_option).length;
-//                                     let root_content_height = $root_content.height();
-//                                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
-//                                         option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
-//                                         layer_popup.disable_shade_click_close();
-//                                     });
-//                                 }else if(add_or_substract == "substract"){
-//                                     this.data.id_other.splice(this.data.id_other.indexOf(member_id), 1);
-//                                     this.data.name_other.splice(this.data.id_other.indexOf(member_id), 1);
-//                                     this.data.ticket_id_other.splice(this.data.id_other.indexOf(member_id), 1);
-//                                     this.data.id.splice(this.data.id.indexOf(member_id), 1);
-//                                     this.data.name.splice(this.data.id.indexOf(member_id), 1);
-//                                 }else if(add_or_substract == "add_single"){
-//                                     this.data.id_other = [];
-//                                     this.data.name_other = [];
-//                                     this.data.ticket_id_other = [];
-//                                     this.data.id_other.push(member_id);
-//                                     this.data.name_other.push(member_name);
-//                                     this.data.ticket_id_other.push(ticket_id);
-//                                 }
-//                             });
-//                         }else{
-//                             if(add_or_substract == "add"){
-//                                 this.data.id.push(member_id);
-//                                 this.data.name.push(member_name);
-//                             }else if(add_or_substract == "substract"){
-//                                 this.data.id.splice(this.data.id.indexOf(member_id), 1);
-//                                 this.data.name.splice(this.data.id.indexOf(member_id), 1);
-//                             }else if(add_or_substract == "add_single"){
-//                                 this.data.id = [];
-//                                 this.data.name = [];
-//                                 this.data.id.push(member_id);
-//                                 this.data.name.push(member_name);
-//                             }
-//                             if(this.multiple_select == 1){
-//                                 this.upper_right_menu();
-//                             }
-//                         }
-//                     }else{
-//                         if(add_or_substract == "add"){
-//                             this.data.id.push(member_id);
-//                             this.data.name.push(member_name);
-//                         }else if(add_or_substract == "substract"){
-//                             this.data.id.splice(this.data.id.indexOf(member_id), 1);
-//                             this.data.name.splice(this.data.id.indexOf(member_id), 1);
-//                         }else if(add_or_substract == "add_single"){
-//                             this.data.id = [];
-//                             this.data.name = [];
-//                             this.data.id.push(member_id);
-//                             this.data.name.push(member_name);
-//                         }
-//                         if(this.multiple_select == 1){
-//                             this.upper_right_menu();
-//                         }
-//                     }
-                    
-                        
-//                 }  
-//             );
-//             if(checked!=0){
-//                 select_member_num++;
-//             }
-//             if(checked > 0){
-//                 html_to_join.unshift(html);
-//             }else{
-//                 html_to_join.push(html);
-//             }
-//         }
-
-
-//         let icon = `<img src="/static/common/icon/icon_arrow_expand_light_grey.png" style="width:24px; height:24px; vertical-align: middle;">`;
-//         let id = "list_type_select";
-//         let title = this.list_sort == "lecture" ? "회원 리스트 전환"+icon : "회원 리스트 전환"+icon;
-//         let style = {"color": "#858282", "font-size":"13px", "font-weight":"500"};
-//         let onclick = ()=>{
-//             this.switch_type();
-//         };
-//         let sort_button = CComponent.text_button (id, title, style, onclick);
-
-
-
-//         html_to_join.unshift(`<div class="select_member_max_num" >
-//                                 <span>정원 (<span id="select_member_max_num">${select_member_num}</span>/${this.multiple_select}명)</span>
-//                                 <span style="float:right;">${this.appendix.lecture_id == null || this.appendix.list_switch == NONE ? "" : sort_button}</span>
-//                             </div>`);
-
-//         // document.querySelector(this.targetHTML).innerHTML = html_to_join.join('');
-//         return html_to_join.join('');
-//     }
-
-//     request_list (callback){
-//         //Lecture_id를 클래스가 전달받은 경우, 해당 lecture에 속한 회원 리스트를 받아온다.
-//         //Lecture_id를 클래스가 받지 못한 경우, 모든 진행 회원 리스트를 받아온다.
-//         if(this.list_sort == "lecture"){
-//             if(this.appendix.lecture_id == null){
-//                 member.request_member_list("ing", (data)=>{
-//                     this.received_data = data.current_member_data;
-//                     callback();
-//                 });
-//             }else{
-//                 let data = {"lecture_id": this.appendix.lecture_id};
-//                 Lecture_func.read_lecture_members(data, (data)=>{
-//                     this.received_data = data.lecture_ing_member_list;
-//                     this.received_data_lecture_member = data.lecture_ing_member_list;
-//                     callback();
-//                 });
-//             }
-//         }else{
-//             member.request_member_list("ing", (data)=>{
-//                 this.received_data = data.current_member_data;
-//                 callback();
-//             });
-//         }
-//     }
-
-//     switch_type(){
-//         let user_option = {
-//             by_entire:{text:"전체 회원 목록", callback:()=>{this.list_sort = "entire";this.init();layer_popup.close_layer_popup();}},
-//             by_lecture:{text:"이 수업 등록 회원", callback:()=>{this.list_sort = "lecture";this.data.id_other = [];this.data.name_other = [];this.data.ticket_id_other = [];this.init();layer_popup.close_layer_popup();}}
-//         };
-//         let options_padding_top_bottom = 16;
-//         let button_height = 8 + 8 + 52;
-//         let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
-//         let root_content_height = $root_content.height();
-//         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
-//             option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
-//         });
-//     }
-
-//     upper_right_menu(){
-//         this.callback(this.data);
-//         layer_popup.close_layer_popup();
-//         this.clear();
-//     }
-// }
-
 class MemberSelector{
     constructor(install_target, target_instance, multiple_select, appendix, callback){
         this.target = {install:install_target};
@@ -3168,6 +2920,8 @@ class MemberSelector{
         this.data.id = this.target_instance.member.id;
         this.data.name = this.target_instance.member.name;
 
+        this.hide_entire_member_list = true;
+
         this.init();
     }
 
@@ -3185,9 +2939,9 @@ class MemberSelector{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();member_select.clear();" class="obj_icon_prev"></span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();member_select.clear();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span id="">${this.appendix.title}</span></span>`;
-        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="member_select.upper_right_menu();">완료</span></span>`;
+        let top_right = `<span class="icon_right"  onclick="member_select.upper_right_menu();"><span style="color:var(--font-highlight);font-weight: 500;">완료</span></span>`;
         let content =   `<section>
                             ${this.dom_assembly()}
                         </section>`;
@@ -3221,7 +2975,7 @@ class MemberSelector{
         let length = this.received_data.length;
         let select_member_num = 0;
         if(length == 0){
-            html_to_join.push(CComponent.no_data_row('목록이 비어있습니다.'));
+            html_to_join.push(CComponent.no_data_row('목록이 비어있습니다.', {"border-bottom":0}));
         }
         for(let i=0; i<length; i++){
             let data = this.received_data[i];
@@ -3268,7 +3022,7 @@ class MemberSelector{
                                         let ticket_id = available_ticket[i].ticket_id;
                                         let ticket_name = available_ticket[i].ticket_name;
                                         let ticket_avail_count = available_ticket[i].ticket_avail_count;
-                                        user_option[ticket_id] = {text: ticket_name + `<span style="font-size:11px;font-weight:500;color:#858282"> (예약 가능: ${ticket_avail_count}회)</span>`, callback:()=>{
+                                        user_option[ticket_id] = {text: ticket_name + `<span style="font-size:11px;font-weight:500;color:var(--font-sub-normal)"> (예약 가능: ${ticket_avail_count}회)</span>`, callback:()=>{
                                             if(add_or_substract == "add"){
                                                 this.data.id_other.push(member_id);
                                                 this.data.name_other.push(member_name);
@@ -3278,7 +3032,7 @@ class MemberSelector{
                                             layer_popup.enable_shade_click_close();
                                         }};
                                     }
-                                    user_option[0] = {text:"<span style='color:#fe4e65;'>차감 할 수강권을 선택 해주세요.</span>", callback:()=>{}};
+                                    user_option[0] = {text:"<span style='color:var(--font-highlight);'>차감 할 수강권을 선택 해주세요.</span>", callback:()=>{}};
                                     user_option["close"] = {text:"취소", callback:()=>{
                                         this.render();
                                         layer_popup.close_layer_popup();
@@ -3356,9 +3110,26 @@ class MemberSelector{
             }
         }
 
+        if(this.hide_entire_member_list == true){
+            html_to_join = [];
+        }
 
-        html_to_join.unshift(`<div class="select_member_max_num" >
-                                <span>전체 회원</span>
+        // html_to_join.unshift(`<div class="select_member_max_num">
+        //                         <span>전체 회원</span><span style="float:right;">${CComponent.text_button("entire_member_toggle", this.hide_entire_member_list == true ? "펼치기" : "접기", null, ()=>{
+        //                             this.hide_entire_member_list = this.hide_entire_member_list == true ? false : true;
+        //                             this.render();
+        //                         })}</span>
+        //                     </div>`);
+        let img_expand = CImg.arrow_expand("", {"width":"18px", "height":"18px", "vertical-align":"middle"});
+        let img_fold = CImg.arrow_expand("", {"width":"18px", "height":"18px", "vertical-align":"middle", "transform":"rotate(180deg)"})
+
+        let button_title = `<span>전체 회원</span><span style="float:right;">${this.hide_entire_member_list == true ? "펼치기 "+img_expand : "접기" + img_fold}</span>`;
+        html_to_join.unshift(`<div class="select_member_max_num">
+                                ${CComponent.text_button("entire_member_toggle", button_title, {"display":"block"}, ()=>{
+                                    this.hide_entire_member_list = this.hide_entire_member_list == true ? false : true;
+                                    this.render();
+                                })}
+                                
                             </div>`);
 
         // document.querySelector(this.targetHTML).innerHTML = html_to_join.join('');
@@ -3370,7 +3141,7 @@ class MemberSelector{
         let length = this.received_data_lecture_member.length;
         let select_member_num = 0;
         if(length == 0){
-            html_to_join.push(CComponent.no_data_row('목록이 비어있습니다.'));
+            html_to_join.push(CComponent.no_data_row('목록이 비어있습니다.', {"border-bottom":0}));
         }
         for(let i=0; i<length; i++){
             let data = this.received_data_lecture_member[i];
@@ -3487,9 +3258,9 @@ class ColorSelector{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();color_select.clear();" class="obj_icon_prev"></span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();color_select.clear();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span id="">&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="color_select.upper_right_menu();" hidden>완료</span></span>`;
+        let top_right = `<span class="icon_right" onclick="color_select.upper_right_menu();"><span style="color:var(--font-highlight);font-weight: 500;" hidden>완료</span></span>`;
         let content =   `<section>${this.dom_list()}</section>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
@@ -3719,21 +3490,21 @@ class DatePickerSelector_backup{
                 }else if(j == 6){
                     font_color = 'color:#3392ff;';
                 }else{
-                    font_color = 'color:#5c5859;';
+                    font_color = 'color:var(--font-sub-dark);';
                 }
                 if(date_compare == true){
-                    font_color = 'color:#cccccc;';
+                    font_color = 'color:var(--font-inactive);';
                 }
 
                 //오늘 날짜 표기
                 if(this.date.current_year == reference_date_year && this.date.current_month == reference_date_month && this.date.current_date == date_cache){
-                    date = `<div style="display:inline-block;height:25px;width:25px;line-height:26px;border-radius:50%;background-color:#fe4e65;">${date_cache}</div>
-                            <div style="position: absolute;top: -15px;left: 50%;color: #fe4e65;font-size: 10px;transform: translateX(-50%);">Today</div>`;
-                    today_style = 'color:#ffffff;position:relative';
+                    date = `<div style="display:inline-block;height:25px;width:25px;line-height:26px;border-radius:50%;background-color:var(--bg-highlight);">${date_cache}</div>
+                            <div style="position: absolute;top: -15px;left: 50%;color: var(--font-highlight);font-size: 10px;transform: translateX(-50%);">Today</div>`;
+                    today_style = 'color:var(--fundamental-white);position:relative';
                 }else if(reference_date_year == this.option.data.year && reference_date_month == this.option.data.month && date_cache == this.option.data.date){
                     date = `<div style="display:inline-block;height:25px;width:25px;line-height:26px;border-radius:50%;background-color:#4747ff;">${date_cache}</div>
                             <div style="position: absolute;top: -15px;left: 50%;color: #4747ff;font-size: 10px;transform: translateX(-50%);">선택</div>`;
-                    today_style = 'color:#ffffff;position:relative';
+                    today_style = 'color:var(--fundamental-white);position:relative';
                 }
 
                 if(i==0 && j<current_month_first_date_day){ //첫번째 주일때 처리
@@ -3979,7 +3750,7 @@ class DatePickerSelector{
                     }else if(j == 6){
                         font_color = 'color:#3392ff;';
                     }else{
-                        font_color = 'color:#5c5859;';
+                        font_color = 'color:var(--font-sub-dark);';
                     }
                 }else if(this.option.start_day == 1){
                     if(j == 5){
@@ -3987,23 +3758,23 @@ class DatePickerSelector{
                     }else if(j == 6){
                         font_color = 'color:#ff3333;';
                     }else{
-                        font_color = 'color:#5c5859;';
+                        font_color = 'color:var(--font-sub-dark);';
                     }
                 }
 
                 if(date_compare == true){
-                    font_color = 'color:#cccccc;';
+                    font_color = 'color:var(--font-inactive);';
                 }
 
                 //오늘 날짜 표기
                 if(this.date.current_year == reference_date_year && this.date.current_month == reference_date_month && this.date.current_date == date_cache){
-                    date = `<div style="display:inline-block;height:25px;width:25px;line-height:26px;border-radius:50%;background-color:#fe4e65;">${date_cache}</div>
-                            <div style="position: absolute;top: -15px;left: 50%;color: #fe4e65;font-size: 10px;transform: translateX(-50%);">Today</div>`;
-                    today_style = 'color:#ffffff;position:relative';
+                    date = `<div style="display:inline-block;height:25px;width:25px;line-height:26px;border-radius:50%;background-color:var(--bg-highlight);">${date_cache}</div>
+                            <div style="position: absolute;top: -15px;left: 50%;color: var(--font-highlight);font-size: 10px;transform: translateX(-50%);">Today</div>`;
+                    today_style = 'color:var(--fundamental-white);position:relative';
                 }else if(reference_date_year == this.option.data.year && reference_date_month == this.option.data.month && date_cache == this.option.data.date){
                     date = `<div style="display:inline-block;height:25px;width:25px;line-height:26px;border-radius:50%;background-color:#4747ff;">${date_cache}</div>
                             <div style="position: absolute;top: -15px;left: 50%;color: #4747ff;font-size: 10px;transform: translateX(-50%);">선택</div>`;
-                    today_style = 'color:#ffffff;position:relative';
+                    today_style = 'color:var(--fundamental-white);position:relative';
                 }
 
                 if(i==0 && j<current_month_first_date_day){ //첫번째 주일때 처리
@@ -4015,7 +3786,7 @@ class DatePickerSelector{
                     let holiday_name = "";
                     if(this.holiday != null){
                         if(Object.keys(this.holiday).indexOf(data_date) != -1){
-                            holiday_color = "color:#fe4e65;";
+                            holiday_color = "color:var(--font-highlight);";
                             holiday_name = this.holiday[data_date].holiday_name;
                         }
                     }
@@ -4133,9 +3904,9 @@ class RepeatSelector{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="repeat_select.upper_right_menu();" class="obj_icon_prev"></span>`;
-        let top_center = `<span class="icon_center"><span id="">반복 일정</span></span>`;
-        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;">&nbsp;</span></span>`;
+        let top_left = `<span class="icon_left" onclick="repeat_select.upper_right_menu();">${CImg.arrow_left()}</span>`;
+        let top_center = `<span class="icon_center"><span>반복 일정</span></span>`;
+        let top_right = `<span class="icon_right"><span style="color:var(--font-highlight);font-weight: 500;">&nbsp;</span></span>`;
         let content =   `<section>${this.dom_list()}</section>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
@@ -4148,7 +3919,7 @@ class RepeatSelector{
         let end = this.dom_row_end_date_select_button();
         let power = this.dom_row_repeat_power();
 
-        let html = day + end + '<div class="gap" style="border-top:1px solid #f5f2f3; margin-top:4px; margin-bottom:4px;"></div>' + power;
+        let html = day + end + '<div class="gap" style="border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>' + power;
         return html;
     }
 
@@ -4261,9 +4032,9 @@ class DaySelector{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="day_select.upper_right_menu();" class="obj_icon_prev"></span>`;
+        let top_left = `<span class="icon_left" onclick="day_select.upper_right_menu();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span id="">&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="day_select.upper_right_menu();">완료</span></span>`;
+        let top_right = `<span class="icon_right" onclick="day_select.upper_right_menu();"><span style="color:var(--font-highlight);font-weight: 500;">완료</span></span>`;
         let content =   `<section>${this.dom_list()}</section>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
@@ -4359,9 +4130,9 @@ class CategorySelector{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="category_select.upper_left_menu();" class="obj_icon_prev"></span>`;
+        let top_left = `<span class="icon_left" onclick="category_select.upper_left_menu();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span id="">&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="category_select.upper_right_menu();">완료</span></span>`;
+        let top_right = `<span class="icon_right" onclick="category_select.upper_right_menu();"><span style="color:var(--font-highlight);font-weight: 500;">완료</span></span>`;
         let content =   `<section>${this.dom_list()}</section>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
@@ -4453,12 +4224,12 @@ class CustomSelector{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="custom_selector.upper_right_menu();" class="obj_icon_prev"></span>`;
+        let top_left = `<span class="icon_left" onclick="custom_selector.upper_right_menu();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center">
                             <span id="">${this.title}</span>
                           </span>`;
         let top_right = `<span class="icon_right">
-                            <span style="color:#fe4e65;font-weight: 500;" onclick="custom_selector.upper_right_menu();">${this.multiple_select == 1 ? '' : '완료'}</span>
+                            <span style="color:var(--font-highlight);font-weight: 500;" onclick="custom_selector.upper_right_menu();">${this.multiple_select == 1 ? '' : '완료'}</span>
                         </span>`;
         let content =   `<section>${this.dom_list()}</section>`;
         
@@ -4510,6 +4281,89 @@ class CustomSelector{
     }
 }
 
+// class PasswordFourDigitInput{
+//     constructor(title, install_target, original_data, callback){
+//         this.title = title;
+//         this.target = {install:install_target};
+//         this.unique_instance = install_target.replace(/#./gi, "");
+//         this.callback = callback;
+//         this.original_data = original_data;
+//         this.data = {
+//             password:null
+//         };
+//         this.init();
+//         this.set_initial_data();
+//     }
+
+//     init(){
+//         this.render();
+//     }
+
+//     set_initial_data(){
+//         this.data.password = this.original_data;
+//         this.init();
+//     }
+
+//     clear(){
+//         setTimeout(()=>{
+//             document.querySelector(this.target.install).innerHTML = "";
+//         }, 300);
+//     }
+
+//     render(){
+//         let top_left = `<span class="icon_left" onclick="password_4d_input.upper_right_menu();">${CImg.arrow_left()}</span>`;
+//         let top_center = `<span class="icon_center">
+//                             <span id="">${this.title}</span>
+//                           </span>`;
+//         let top_right = `<span class="icon_right" onclick="password_4d_input.upper_right_menu();">
+//                             <span style="color:var(--font-highlight);font-weight: 500;">완료</span>
+//                         </span>`;
+//         let content =   `<section>${this.dom_list()}</section>`;
+        
+//         let html = PopupBase.base(top_left, top_center, top_right, content, "");
+
+//         document.querySelector(this.target.install).innerHTML = html;
+//     }
+
+//     dom_list (){
+//         let html = this.dom_row_input() + 
+//                     `<div style="font-size:12px;color:var(--font-sub-dark);text-align:center;">초기 비밀번호는 0000입니다.<br>암호화 되어 저장되지 않으므로 일상적인 번호로 하세요.</div>`;
+
+//         return html;
+//     }
+
+//     dom_row_input(){
+//         let html = `<div style="margin:40px 0;">
+//                         <div style="text-align:center;">
+//                             <input id="password_4d_input_field" type="tel" maxlength=4 style="-webkit-appearance:none;border:0;background-color:unset;width:260px;letter-spacing:33px;font-size:40px;font-weight:500;text-align:left;margin:0 auto;padding-left:37px;box-sizing:border-box" value="${this.data.password}">
+//                         </div>
+//                         <div style="height:2px;width:220px;text-align:center;margin:0 auto">
+//                             <div id="password_digit_1" class="password_4d_input_bar"></div>
+//                             <div id="password_digit_2" class="password_4d_input_bar"></div>
+//                             <div id="password_digit_3" class="password_4d_input_bar"></div>
+//                             <div id="password_digit_4" class="password_4d_input_bar"></div>
+//                         </div>
+//                     </div>`;
+//         let self = this;
+//         $(document).off('focusout', '#password_4d_input_field').on('focusout', '#password_4d_input_field', function(e){
+//             let user_input_data = e.target.value;
+//             self.data.password = user_input_data;
+//         });
+//         return html;
+//     }
+
+//     request_list (callback){
+//         // this.received_data = color_data;
+//         // callback();
+//     }
+
+//     upper_right_menu(){
+//         this.callback(this.data);
+//         layer_popup.close_layer_popup();
+//         this.clear();
+//     }
+// }
+
 class PasswordFourDigitInput{
     constructor(title, install_target, original_data, callback){
         this.title = title;
@@ -4518,7 +4372,10 @@ class PasswordFourDigitInput{
         this.callback = callback;
         this.original_data = original_data;
         this.data = {
-            password:null
+            password_digit_1:null,
+            password_digit_2:null,
+            password_digit_3:null,
+            password_digit_4:null
         };
         this.init();
         this.set_initial_data();
@@ -4529,7 +4386,10 @@ class PasswordFourDigitInput{
     }
 
     set_initial_data(){
-        this.data.password = this.original_data;
+        this.data.password_digit_1 = Number(String(this.original_data).substr(0, 1));
+        this.data.password_digit_2 = Number(String(this.original_data).substr(1, 1));
+        this.data.password_digit_3 = Number(String(this.original_data).substr(2, 1));
+        this.data.password_digit_4 = Number(String(this.original_data).substr(3, 1));
         this.init();
     }
 
@@ -4540,12 +4400,12 @@ class PasswordFourDigitInput{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="password_4d_input.upper_right_menu();" class="obj_icon_prev"></span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center">
                             <span id="">${this.title}</span>
                           </span>`;
-        let top_right = `<span class="icon_right">
-                            <span style="color:#fe4e65;font-weight: 500;" onclick="password_4d_input.upper_right_menu();">완료</span>
+        let top_right = `<span class="icon_right" onclick="password_4d_input.upper_right_menu();">
+                            <span style="color:var(--font-highlight);font-weight: 500;">완료</span>
                         </span>`;
         let content =   `<section>${this.dom_list()}</section>`;
         
@@ -4556,7 +4416,7 @@ class PasswordFourDigitInput{
 
     dom_list (){
         let html = this.dom_row_input() + 
-                    `<div style="font-size:12px;color:#5c5859;text-align:center;">초기 비밀번호는 0000입니다.<br>암호화 되어 저장되지 않으므로 일상적인 번호로 하세요.</div>`;
+                    `<div style="font-size:12px;color:var(--font-sub-dark);text-align:center;">초기 비밀번호는 0000입니다.<br>암호화 되어 저장되지 않으므로 일상적인 번호로 하세요.</div>`;
 
         return html;
     }
@@ -4564,7 +4424,10 @@ class PasswordFourDigitInput{
     dom_row_input(){
         let html = `<div style="margin:40px 0;">
                         <div style="text-align:center;">
-                            <input id="password_4d_input_field" type="tel" maxlength=4 style="-webkit-appearance:none;border:0;background-color:unset;width:260px;letter-spacing:33px;font-size:40px;font-weight:500;text-align:left;margin:0 auto;padding-left:37px;box-sizing:border-box" value="${this.data.password}">
+                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_1" value="${this.data.password_digit_1 == null ? "" : this.data.password_digit_1}">
+                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_2" value="${this.data.password_digit_2 == null ? "" : this.data.password_digit_2}">
+                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_3" value="${this.data.password_digit_3 == null ? "" : this.data.password_digit_3}">
+                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_4" value="${this.data.password_digit_4 == null ? "" : this.data.password_digit_4}">
                         </div>
                         <div style="height:2px;width:220px;text-align:center;margin:0 auto">
                             <div id="password_digit_1" class="password_4d_input_bar"></div>
@@ -4574,9 +4437,55 @@ class PasswordFourDigitInput{
                         </div>
                     </div>`;
         let self = this;
-        $(document).off('focusout', '#password_4d_input_field').on('focusout', '#password_4d_input_field', function(e){
+
+        $(document).off('keyup', '#password_4d_input_slot_1').on('keyup', '#password_4d_input_slot_1', function(e){
             let user_input_data = e.target.value;
-            self.data.password = user_input_data;
+            self.data.password_digit_1 = user_input_data;
+            if(e.keyCode == 8){
+                return;
+            }else{
+                setTimeout(()=>{
+                    if(user_input_data != ""){
+                        $('#password_4d_input_slot_2').val("").focus();
+                    }
+                }, 50);
+            }
+        });
+        $(document).off('keyup', '#password_4d_input_slot_2').on('keyup', '#password_4d_input_slot_2', function(e){
+            let user_input_data = e.target.value;
+            self.data.password_digit_2 = user_input_data;
+            if(e.keyCode == 8){
+                let value = $('#password_4d_input_slot_1').val();
+                $('#password_4d_input_slot_1').focus().val('').val(value);
+            }else{
+                if(user_input_data != ""){
+                    $('#password_4d_input_slot_3').val("").focus();
+                }
+            }
+        });
+        $(document).off('keyup', '#password_4d_input_slot_3').on('keyup', '#password_4d_input_slot_3', function(e){
+            let user_input_data = e.target.value;
+            self.data.password_digit_3 = user_input_data;
+            if(e.keyCode == 8){
+                let value = $('#password_4d_input_slot_2').val();
+                $('#password_4d_input_slot_2').focus().val('').val(value);
+            }else{
+                if(user_input_data != ""){
+                    $('#password_4d_input_slot_4').val("").focus();
+                }
+            }
+        });
+        $(document).off('keyup', '#password_4d_input_slot_4').on('keyup', '#password_4d_input_slot_4', function(e){
+            let user_input_data = e.target.value;
+            self.data.password_digit_4 = user_input_data;
+            if(e.keyCode == 8){
+                let value = $('#password_4d_input_slot_3').val();
+                $('#password_4d_input_slot_3').focus().val('').val(value);
+            }else{
+                if(user_input_data != ""){
+                    $('input').blur();
+                }
+            }
         });
         return html;
     }
@@ -4587,7 +4496,8 @@ class PasswordFourDigitInput{
     }
 
     upper_right_menu(){
-        this.callback(this.data);
+        let combined_data = {password : `${this.data.password_digit_1}${this.data.password_digit_2}${this.data.password_digit_3}${this.data.password_digit_4}`};
+        this.callback(combined_data);
         layer_popup.close_layer_popup();
         this.clear();
     }
@@ -4633,12 +4543,12 @@ class BoardWriter{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="${this.target.instance}.close();" class="obj_icon_prev"></span>`;
+        let top_left = `<span class="icon_left" onclick="${this.target.instance}.close();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center">
                             <span id="">${this.title}</span>
                           </span>`;
-        let top_right = `<span class="icon_right">
-                            <span style="color:#fe4e65;font-weight: 500;" onclick="${this.target.instance}.upper_right_menu();">저장</span>
+        let top_right = `<span class="icon_right"  onclick="${this.target.instance}.upper_right_menu();">
+                            <span style="color:var(--font-highlight);font-weight: 500;">저장</span>
                         </span>`;
         let content =   `<section id="${this.target.upper_html}">${this.data.upper_html != null ? this.data.upper_html : ""}</section>`+
                         `<section id="${this.target.category_selector}">${this.dom_assembly_category()}</section>`+
@@ -4950,7 +4860,7 @@ class BoardReader{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="${this.target.instance}.upper_right_menu();" class="obj_icon_prev"></span>`;
+        let top_left = `<span class="icon_left" onclick="${this.target.instance}.upper_right_menu();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center">
                             <span id="">${this.title}</span>
                           </span>`;
@@ -4989,17 +4899,17 @@ class BoardReader{
             date = date_text + '  ' + time_text;
         }
 
-        let html = `<div style="font-size:20px;font-weight:bold;color:#3d3b3b;letter-spacing:-0.9px;">
+        let html = `<div style="font-size:20px;font-weight:bold;color:var(--font-main);letter-spacing:-0.9px;">
                         <span>${this.data.type == null ? "" : '['+this.data.type+']'}</span> 
                         ${this.data.title == null ? "" : this.data.title} 
                         <span style="float:right;font-size:13px;letter-spacing:-0.6px">${this.data.status == null ? "" : this.data.status}</span>
-                        <div style="font-size:12px;font-weight:500;letter-spacing:-0.6px;color:#858282;">${date}</div>
+                        <div style="font-size:12px;font-weight:500;letter-spacing:-0.6px;color:var(--font-sub-normal);">${date}</div>
                     </div>`;
         return html;
     }
 
     dom_row_content(){
-        let html = `<div style="font-size:15px;font-weight:500;letter-spacing:-0.6px;color:#5c5859;" id="board_reader_content">
+        let html = `<div style="font-size:15px;font-weight:500;letter-spacing:-0.6px;color:var(--font-sub-dark);" id="board_reader_content">
                         ${this.data.content == null ? "" : this.data.content}
                     </div>`;
         $(document).off('click', '#board_reader_content img').on('click', '#board_reader_content img', function(){
@@ -5037,15 +4947,15 @@ class BoardReader{
             date = date_text + '  ' + time_text;
         }
 
-        let html = `<div style="font-size:16px;font-weight:bold;color:#3d3b3b;letter-spacing:-0.9px;margin-bottom:40px;">
+        let html = `<div style="font-size:16px;font-weight:bold;color:var(--font-main);letter-spacing:-0.9px;margin-bottom:40px;">
                         답글 : ${this.data.answer_title == null ? "" : this.data.answer_title}
-                        <div style="font-size:12px;font-weight:500;letter-spacing:#858282;color:#858282;">${date}</div>
+                        <div style="font-size:12px;font-weight:500;letter-spacing:-0.5px;color:var(--font-sub-normal);">${date}</div>
                     </div>`;
         return html;
     }
 
     dom_row_answer_content(){
-        let html = `<div style="font-size:15px;font-weight:500;letter-spacing:-0.6px;color:#5c5859;">
+        let html = `<div style="font-size:15px;font-weight:500;letter-spacing:-0.6px;color:var(--font-sub-dark);">
                         ${this.data.answer_content == null ? "" : this.data.answer_content}
                     </div>`;
         return html;
@@ -5131,12 +5041,12 @@ class DrawingBoard{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_x_black.png" onclick="${this.instance}.close();" class="obj_icon_prev"></span>`;
+        let top_left = `<span class="icon_left" onclick="${this.instance}.close();">${CImg.x()}</span>`;
         let top_center = `<span class="icon_center">
                             <span id="">${this.data.title}</span>
                           </span>`;
         let top_right = `<span class="icon_right">
-                            <span style="color:#fe4e65;font-weight: 500;" onclick="${this.instance}.upper_right_menu();">완료</span>
+                            <span style="color:var(--font-highlight);font-weight: 500;" onclick="${this.instance}.upper_right_menu();">완료</span>
                         </span>`;
         let content =   `<section>${this.dom_assembly()}</section>`;
         
@@ -5155,14 +5065,14 @@ class DrawingBoard{
     }
 
     dom_row_title(){
-        let html = `<div style="font-size:20px;font-weight:bold;color:#3d3b3b;letter-spacing:-0.9px;">
+        let html = `<div style="font-size:20px;font-weight:bold;color:var(--font-main);letter-spacing:-0.9px;">
                         ${this.data.title}
                     </div>`;
         return html;
     }
 
     dom_row_content(){
-        let html = `<div style="position:relative;margin:0 auto;width:${this.data.width}px;height:${this.data.height}px;border:1px solid ${this.user_input_status == ON ? '#fe4e65' : '#cccccc'}">
+        let html = `<div style="position:relative;margin:0 auto;width:${this.data.width}px;height:${this.data.height}px;border:1px solid ${this.user_input_status == ON ? 'var(--bg-highlight)' : 'var(--bg-inactive)'}">
                         <div style="position:absolute;width:100%;top:0;left:0;text-align:center;font-size:13px;font-weight:normal;letter-spacing:-0.6px;opacity:0.8;color:${this.data.color.pencil};">${this.data.description}</div>
                         <canvas id="canvas" width="${this.data.width}" height="${this.data.height}" style="border:${this.data.border};background-color:${this.data.color.paper}">
                         </canvas>

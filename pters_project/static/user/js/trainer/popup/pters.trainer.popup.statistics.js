@@ -91,8 +91,8 @@ class Statistics{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();statistics_popup.clear();" class="obj_icon_prev"></span>`;
-        let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();statistics_popup.clear();">${CImg.arrow_left()}</span>`;
+        let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"></span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
@@ -109,7 +109,7 @@ class Statistics{
         document.querySelector(this.target.install).innerHTML = 
             `<div style="position:fixed;top:50%;left:50%;transform:translate(-50%, -50%);text-align:center;">
                 <img src="/static/common/loading.svg">
-                <div style="font-size:12px;color:#858282;word-break:keep-all">사용자 데이터를 불러오고 있습니다.</div>
+                <div style="font-size:12px;color:var(--font-sub-normal);word-break:keep-all">사용자 데이터를 불러오고 있습니다.</div>
             </div>`;
     }
 
@@ -142,11 +142,11 @@ class Statistics{
         let html = `
                     <div class="lecture_view_upper_box">
                         <div style="display:inline-block;">
-                            <span class="sales_type_select_text_button" style="color:${this.tab=="sales" ? "#3d3b3b" :"#b8b4b4"}" onclick="statistics_popup.switch('sales')">
+                            <span class="sales_type_select_text_button" style="color:${this.tab=="sales" ? "var(--font-main)" :"var(--font-inactive)"}" onclick="statistics_popup.switch('sales')">
                                 ${title}
                             </span>
-                            <div style="display:inline-block;background-color:#f5f2f3;width:2px;height:16px;margin:0 10px;"></div>
-                            <span class="sales_type_select_text_button" style="color:${this.tab=="member" ? "#3d3b3b" :"#b8b4b4"}" onclick="statistics_popup.switch('member')">
+                            <div style="display:inline-block;background-color:var(--bg-light);width:2px;height:16px;margin:0 10px;"></div>
+                            <span class="sales_type_select_text_button" style="color:${this.tab=="member" ? "var(--font-main)" :"var(--font-inactive)"}" onclick="statistics_popup.switch('member')">
                                 ${title2}
                             </span>
                             <span style="display:none">${this.tab=="sales"? "매출 통계" : "회원 통계"}</span>
@@ -175,12 +175,12 @@ class Statistics{
         let search_button = this.dom_search_button();
 
         let html = `
-                    <div style="padding:0 20px 16px 20px;border-bottom:1px solid #f5f2f3;margin-bottom:20px;">
-                        <div style="line-height:24px;font-size:15px;font-weight:500;letter-spacing:-0.7px;color:#5c5859;">
+                    <div style="padding:0 20px 16px 20px;border-bottom:var(--border-article);margin-bottom:20px;">
+                        <div style="line-height:24px;font-size:15px;font-weight:500;letter-spacing:-0.7px;color:var(--font-sub-dark);">
                             <span>${start_month_date} - ${end_month_date}</span>
                             ${search_button}
                         </div>
-                        <div style="line-height:16px;font-size:16px;font-weight:bold;letter-spacing:-0.7px;color:#fe4e65;">${total_sales} 원</div>
+                        <div style="line-height:16px;font-size:16px;font-weight:bold;letter-spacing:-0.7px;color:var(--font-highlight);">${total_sales} 원</div>
                     </div>
                     `;
         return html;
@@ -189,7 +189,7 @@ class Statistics{
     dom_search_button(){
         //기간별 조회 버튼
         let id = "statistics_search_button";
-        let title = `기간별 조회 <img src="/static/common/icon/icon_arrow_expand_black.png" style="width:24px;vertical-align:middle;">`;
+        let title = `기간별 조회 ${CImg.arrow_expand("", {"vertical-align":"middle"})}`;
         let style = {"float":"right", "font-size":"13px", "font-weight":"500", "letter-spacing":"-0.6px", "opacity":"0.5"};
         let onclick = ()=>{
             this.event_search_data();  
@@ -212,8 +212,8 @@ class Statistics{
         let search_button = this.dom_search_button();
 
         let html = `
-                    <div style="padding:0 20px 16px 20px;border-bottom:1px solid #f5f2f3;margin-bottom:20px;">
-                        <div style="line-height:24px;font-size:15px;font-weight:500;letter-spacing:-0.7px;color:#5c5859;">
+                    <div style="padding:0 20px 16px 20px;border-bottom:var(--border-article);margin-bottom:20px;">
+                        <div style="line-height:24px;font-size:15px;font-weight:500;letter-spacing:-0.7px;color:var(--font-sub-dark);">
                             <span>${start_month_date} - ${end_month_date}</span>
                             ${search_button}
                         </div>
@@ -224,44 +224,44 @@ class Statistics{
 
     dom_row_sales_graph(){
         let html = `<section style="width:95%;text-align:center;margin:0 auto;box-sizing:border-box">
-                        <div style="font-size:15px;font-weight:500;letter-spacing:-0.7px;color:#5c5859;">월별 현황</div>
-                        <div style="font-size:11px;font-weight:500;letter-spacing:-0.5px;color:#858282;">(단위 / 10,000원)</div>
+                        <div style="font-size:15px;font-weight:500;letter-spacing:-0.7px;color:var(--font-sub-dark);">월별 현황</div>
+                        <div style="font-size:11px;font-weight:500;letter-spacing:-0.5px;color:var(--font-sub-normal);">(단위 / 10,000원)</div>
                         <div id="sales_graph"></div>
                     </section>`;
         return html;
     }
 
     dom_reg_status_graph(){
-        let html = `<section style="width:95%;text-align:left;margin:0 auto;box-sizing:border-box;border-bottom:1px solid #f5f2f3;padding:30px 0">
-                        <div style="font-size:15px;font-weight:500;letter-spacing:-0.7px;color:#5c5859;padding:0 16px;">등록 회원 현황</div>
-                        <div style="font-size:11px;font-weight:500;letter-spacing:-0.5px;color:#858282;padding:0 16px;">(단위 / 건)</div>
+        let html = `<section style="width:95%;text-align:left;margin:0 auto;box-sizing:border-box;border-bottom:var(--border-article);padding:30px 0">
+                        <div style="font-size:15px;font-weight:500;letter-spacing:-0.7px;color:var(--font-sub-dark);padding:0 16px;">등록 회원 현황</div>
+                        <div style="font-size:11px;font-weight:500;letter-spacing:-0.5px;color:var(--font-sub-normal);padding:0 16px;">(단위 / 건)</div>
                         <div id="member_reg_graph"></div>
                     </section>`;
         return html;
     }
 
     dom_refund_status_graph(){
-        let html = `<section style="width:95%;text-align:left;margin:0 auto;box-sizing:border-box;border-bottom:1px solid #f5f2f3;padding:30px 0">
-                        <div style="font-size:15px;font-weight:500;letter-spacing:-0.7px;color:#5c5859;padding:0 16px;">환불 회원 현황</div>
-                        <div style="font-size:11px;font-weight:500;letter-spacing:-0.5px;color:#858282;padding:0 16px;">(단위 / 건)</div>
+        let html = `<section style="width:95%;text-align:left;margin:0 auto;box-sizing:border-box;border-bottom:var(--border-article);padding:30px 0">
+                        <div style="font-size:15px;font-weight:500;letter-spacing:-0.7px;color:var(--font-sub-dark);padding:0 16px;">환불 회원 현황</div>
+                        <div style="font-size:11px;font-weight:500;letter-spacing:-0.5px;color:var(--font-sub-normal);padding:0 16px;">(단위 / 건)</div>
                         <div id="member_refund_graph"></div>
                     </section>`;
         return html;
     }
 
     dom_contract_status_graph(){
-        let html = `<section style="width:95%;text-align:center;margin:0 auto;box-sizing:border-box;border-bottom:1px solid #f5f2f3;padding:30px 0">
-                        <div style="font-size:15px;font-weight:500;letter-spacing:-0.7px;color:#5c5859;">월별 계약 현황</div>
-                        <div style="font-size:11px;font-weight:500;letter-spacing:-0.5px;color:#858282;">(단위 / 건)</div>
+        let html = `<section style="width:95%;text-align:center;margin:0 auto;box-sizing:border-box;border-bottom:var(--border-article);padding:30px 0">
+                        <div style="font-size:15px;font-weight:500;letter-spacing:-0.7px;color:var(--font-sub-dark);">월별 계약 현황</div>
+                        <div style="font-size:11px;font-weight:500;letter-spacing:-0.5px;color:var(--font-sub-normal);">(단위 / 건)</div>
                         <div id="contract_status_graph"></div>
                     </section>`;
         return html;
     }
 
     dom_lesson_complete_status_graph(){
-        let html = `<section style="width:95%;text-align:center;margin:0 auto;box-sizing:border-box;border-bottom:1px solid #f5f2f3;padding:30px 0">
-                        <div style="font-size:15px;font-weight:500;letter-spacing:-0.7px;color:#5c5859;">월별 일정 완료 현황</div>
-                        <div style="font-size:11px;font-weight:500;letter-spacing:-0.5px;color:#858282;">(단위 / 건)</div>
+        let html = `<section style="width:95%;text-align:center;margin:0 auto;box-sizing:border-box;border-bottom:var(--border-article);padding:30px 0">
+                        <div style="font-size:15px;font-weight:500;letter-spacing:-0.7px;color:var(--font-sub-dark);">월별 일정 완료 현황</div>
+                        <div style="font-size:11px;font-weight:500;letter-spacing:-0.5px;color:var(--font-sub-normal);">(단위 / 건)</div>
                         <div id="lesson_complete_status_graph"></div>
                     </section>`;
         return html;
@@ -271,8 +271,8 @@ class Statistics{
         let length = this.data.sales.month_date.length;
         let html_to_join = [];
         html_to_join.push(`<div class="sales_list_row" style="font-size:11px;">
-                                <div class="sales_list_month" style="color:#999696;">기간</div>
-                                <div class="sales_list_price" style="color:#999696;">매출액 (환불 포함)</div>
+                                <div class="sales_list_month" style="color:var(--font-sub-light);">기간</div>
+                                <div class="sales_list_price" style="color:var(--font-sub-light);">매출액 (환불 포함)</div>
                                 <div class="sales_list_detail"></div>
                             </div>`);
         for(let i=length-1; i>=0; i--){
@@ -282,11 +282,11 @@ class Statistics{
             let html = `<div class="sales_list_row">
                             <div class="sales_list_month">${date[0]}년 ${date[1]}월</div>
                             <div class="sales_list_price">${UnitRobot.numberWithCommas(price)} 원</div>
-                            <div class="sales_list_detail" onclick="statistics_popup.event_detail('${full_date}')">상세 정보 <img src="/static/common/icon/icon_arrow_r_small_black.png"></div>
+                            <div class="sales_list_detail" onclick="statistics_popup.event_detail('${full_date}')">상세 정보 ${CImg.arrow_right("", {"vertical-align":"middle"})}</div>
                         </div>`;
             html_to_join.push(html);
         }
-        return '<section style="border-top:1px solid #f5f2f3;margin-top:20px;">'+html_to_join.join('')+'</section>';
+        return '<section style="border-top:var(--border-article);margin-top:20px;">'+html_to_join.join('')+'</section>';
     }
 
     draw_sales_graph() {
@@ -339,7 +339,7 @@ class Statistics{
         if(chart_data[1][1] == 0 && chart_data[2][1] == 0){
             document.getElementById('member_reg_graph').innerHTML = 
             `<div>
-                <div style="font-size:13px;font-weight:500;letter-spacing:-0.7px;color:#5c5859;padding:40px;">
+                <div style="font-size:13px;font-weight:500;letter-spacing:-0.7px;color:var(--font-sub-dark);padding:40px;">
                     데이터가 없습니다.
                 </div>
             </div>`;
@@ -368,7 +368,7 @@ class Statistics{
         if(chart_data[1][1] == 0 && chart_data[2][1] == 0){
             document.getElementById('member_refund_graph').innerHTML = 
             `<div>
-                <div style="font-size:13px;font-weight:500;letter-spacing:-0.7px;color:#5c5859;padding:40px;">
+                <div style="font-size:13px;font-weight:500;letter-spacing:-0.7px;color:var(--font-sub-dark);padding:40px;">
                     데이터가 없습니다.
                 </div>
             </div>`;

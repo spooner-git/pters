@@ -265,16 +265,20 @@ def func_setting_data_update(request, group):
         request.session['setting_calendar_basic_select_time'] = context['setting_calendar_basic_select_time']
         request.session['setting_calendar_time_selector_type'] = context['setting_calendar_time_selector_type']
         request.session['one_to_one_lecture_time_duration'] = context['one_to_one_lecture_time_duration']
-
         if group == 'trainee':
             try:
                 setting_data = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_LAN_01')
-                lt_lan_01 = setting_data.setting_info
+                context['setting_language'] = setting_data.setting_info
             except ObjectDoesNotExist:
-                lt_lan_01 = 'KOR'
-
-            context['setting_language'] = lt_lan_01
+                context['setting_language'] = 'KOR'
             # request.session['setting_language'] = context['lt_lan_01']
+
+        try:
+            setting_info = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='THEME')
+            context['setting_theme'] = setting_info.setting_info
+        except ObjectDoesNotExist:
+            context['setting_theme'] = 'light'
+        request.session['setting_theme'] = context['setting_theme']
 
         request.session['setting_data'] = context
 

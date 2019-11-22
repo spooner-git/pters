@@ -60,11 +60,11 @@
         font-size: 16px;
         font-weight: 500;
         letter-spacing: -0.8px;
-        color: #3d3b3b;
+        color: var(--font-main);
         height: 24px;
         line-height: 24px;
         padding: 16px 0px 12px;
-        border-bottom: 1px solid #f5f2f3;
+        border-bottom: var(--border-article);
     }
 
     .select_wrapper_child{
@@ -73,7 +73,6 @@
         width: 100%;
         height: 200px;
         z-index: 1;
-        /* background-image: linear-gradient(#8e8e8e, transparent 35%, transparent 65%, #8e8e8e); */
     }
     
     .selector_unit{
@@ -92,19 +91,18 @@
         width: 100%;
         height: 40px;
         line-height:40px;
-        border-top: 1px solid #fe4e65;
-        border-bottom: 1px solid #fe4e65;
+        border-top: 1px solid var(--bg-highlight);
+        border-bottom: 1px solid var(--bg-highlight);
     }
 
     .select_wrapper ul{
-        /* color: #1e1e1e; */
         list-style: none;
         margin: 0;
         padding: 0;
         -ms-touch-action: none;
     }
     .select_wrapper ul > li{
-        color: #1f1d1e;
+        color: var(--font-base);
         background-color: transparent;
         height: 40px;
         line-height: 40px;
@@ -150,38 +148,38 @@
 </div>  -->
 
 <div class="popup_mobile popup_full">
-    <div class="popup_basic_time_selector obj_font_size_15_weight_500" style="background-color:#ffffff;border-top-right-radius: 8px;border-top-left-radius: 8px;">
+    <div class="popup_basic_time_selector obj_font_size_15_weight_500" style="background-color:var(--bg-main);border-top-right-radius: 8px;border-top-left-radius: 8px;">
         <div id="wrapper_popup_time_selector_function">
         </div>
     </div>
 </div>
 
 <div class="popup_mobile popup_full">
-    <div class="popup_basic_date_selector obj_font_size_15_weight_500" style="background-color:#ffffff;border-top-right-radius: 8px;border-top-left-radius: 8px;">
+    <div class="popup_basic_date_selector obj_font_size_15_weight_500" style="background-color:var(--bg-main);border-top-right-radius: 8px;border-top-left-radius: 8px;">
         <div id="wrapper_popup_date_selector_function">
         </div>
     </div>
 </div>
 
 <div class="popup_mobile popup_full">
-    <div class="popup_basic_date_picker_selector obj_font_size_15_weight_500" style="background-color:#ffffff;border-top-right-radius: 8px;border-top-left-radius: 8px;">
+    <div class="popup_basic_date_picker_selector obj_font_size_15_weight_500" style="background-color:var(--bg-main);border-top-right-radius: 8px;border-top-left-radius: 8px;">
         <div id="wrapper_popup_date_picker_selector_function">
         </div>
     </div>
 </div>
 
 <div class="popup_mobile popup_full">
-	<div class="popup_basic_spin_selector obj_font_size_15_weight_500" style="background-color:#ffffff;border-top-right-radius: 8px;border-top-left-radius: 8px;">
+	<div class="popup_basic_spin_selector obj_font_size_15_weight_500" style="background-color:var(--bg-main);border-top-right-radius: 8px;border-top-left-radius: 8px;">
         <div id="wrapper_popup_spin_selector_function">
         </div>
     </div>
 </div>
 
 <div class="popup_mobile popup_full">
-	<div class="popup_basic_option_selector obj_font_size_15_weight_500" style="background-color:#ffffff;border-top-right-radius: 8px;border-top-left-radius: 8px;">
+	<div class="popup_basic_option_selector obj_font_size_15_weight_500" style="background-color:var(--bg-main);border-top-right-radius: 8px;border-top-left-radius: 8px;">
         <div id="wrapper_popup_option_selector_function" style="padding:8px 18px;">
         </div>
-        <div class="wrapper_popup_basic_buttons obj_table_raw  obj_font_bg_black_white">
+        <div class="wrapper_popup_basic_buttons obj_table_raw" style="background-color: var(--bg-main);color:var(--font-main)">
             <div class="popup_basic_cancel obj_table_cell_x2" onclick="layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)">닫기</div>
         </div>
     </div>

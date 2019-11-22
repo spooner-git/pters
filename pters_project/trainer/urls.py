@@ -199,6 +199,9 @@ urlpatterns = [
     # 언어 Setting 정보 수정
     url(r'^update_setting_language/$', views.update_setting_language_logic, name='update_setting_language'),
 
+    # 사용자 앱 view 관련 Setting 수정
+    url(r'^update_setting_theme/$', views.update_setting_theme_logic, name='update_setting_theme'),
+
     # Setting 정보 가져오기
     url(r'^get_trainer_setting_data/$', views.GetTrainerSettingDataView.as_view(), name='get_trainer_setting_data'),
     url(r'^get_trainer_auth_data/$', views.GetTrainerAuthDataView.as_view(), name='get_trainer_auth_data'),
@@ -251,6 +254,7 @@ urlpatterns = [
     url(r'^reserve_setting/$', views.ReserveSettingView.as_view(), name='reserve_setting'),
     # 예약 관련 Setting 페이지
     url(r'^basic_setting/$', views.BasicSettingView.as_view(), name='basic_setting'),
+
     # 매출 관리 페이지
     url(r'^work_manage/$', views.ManageWorkView.as_view(), name='work_manage'),
     # 알람 조회 페이지

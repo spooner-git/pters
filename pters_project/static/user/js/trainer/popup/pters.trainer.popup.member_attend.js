@@ -64,9 +64,9 @@ class Member_attend{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();member_attend.clear();" class="obj_icon_prev"></span>`;
-        let top_center = `<span class="icon_center"><span id="">출석 체크</span></span>`;
-        let top_right = `<span class="icon_right"><span style="color:#fe4e65;font-weight: 500;" onclick="member_attend.upper_right_menu();">저장</span></span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();member_attend.clear();">${CImg.arrow_left()}</span>`;
+        let top_center = `<span class="icon_center"><span>출석 체크</span></span>`;
+        let top_right = `<span class="icon_right" onclick="member_attend.upper_right_menu();"><span style="color:var(--font-highlight);font-weight: 500;">저장</span></span>`;
         let content =   `<section>${this.dom_row_check_entire()}</section><section>${this.dom_list()}</section>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
@@ -77,11 +77,11 @@ class Member_attend{
     dom_row_check_entire(){
         let html;
         html = `<div class="obj_table_raw" style="height:52px;padding:0px 20px;box-sizing:border-box;">
-                    <div style="display:table-cell;width:150px; height:20px; font-size:11px; font-weight:bold; letter-spacing: -0.5px; color:#858282; vertical-align: middle;">
+                    <div style="display:table-cell;width:150px; height:20px; font-size:11px; font-weight:bold; letter-spacing: -0.5px; color:var(--font-sub-normal); vertical-align: middle;">
                         정원(${this.lecture_current_num}/${this.lecture_max_num})
                     </div>
-                    <div style="display:table-cell;width:auto;font-size:13px;font-weight:500;text-align:right;vertical-align:middle;cursor:pointer; letter-spacing: -0.5px; color: #858282;" id="check_entire_${this.schedule_id}">
-                        <span style="color:#858282">${Object.keys(this.data).length == 0 ? "일정 완료" : "전원 출석"}</span>
+                    <div style="display:table-cell;width:auto;font-size:13px;font-weight:500;text-align:right;vertical-align:middle;cursor:pointer; letter-spacing: -0.5px; color: var(--font-sub-normal);" id="check_entire_${this.schedule_id}">
+                        <span style="color:var(--font-sub-normal)">${Object.keys(this.data).length == 0 ? "일정 완료" : "전원 출석"}</span>
                         ${this.check_entire == true
                             ? `<div class="pters_checkbox checkbox_selected"><div class="checkbox_selected_inner"></div></div>`
                             : `<div class="pters_checkbox"></div>`
@@ -127,7 +127,7 @@ class Member_attend{
             // if(image != null && this.check_image_link(image) != false && data.state_cd == SCHEDULE_FINISH){
             if(image != null && data.state_cd == SCHEDULE_FINISH){
                 tag = '<div style="position:absolute">' + 
-                        '<div style="float:left;background-color:#fe4e65;border:1px solid #fe4e65;border-radius:5px;color:#ffffff;width:20px;height:13px;line-height:13px;font-size:9px;font-weight:normal;margin-right:3px;">서명</div>'+
+                        '<div style="float:left;background-color:var(--bg-highlight);border:1px solid var(--bg-highlight);border-radius:5px;color:var(--bg-main);width:20px;height:13px;line-height:13px;font-size:9px;font-weight:normal;margin-right:3px;">서명</div>'+
                         `<img src="${image}" onerror="this.onerror=null;this.src=member_attend.image_error(${item})" style="display:none;">` +
                     '</div>';
             }

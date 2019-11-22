@@ -2,7 +2,7 @@
 	position: relative;
 	height: auto;
 	line-height: 28px;
-	background-color: #ffffff;
+	background-color: var(--bg-main);
 	/* border-bottom: 1px solid #cccccc; */
 	/*padding: 14px 20px;*/
 	box-sizing: border-box;
@@ -32,12 +32,12 @@
 
 .popup_service_about_us .about_us_tag{
 	font-size: 12px;
-	color: #858282;
+	color: var(--font-sub-normal);
 	margin-right: 5px;
 }
 
 .popup_service_about_us .about_us_name{
 	font-size: 12px;
-	color: #3b3b3b;
+	color: var(--font-main);
 	margin-right: 10px;
 }

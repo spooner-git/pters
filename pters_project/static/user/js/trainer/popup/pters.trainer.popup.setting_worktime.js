@@ -108,9 +108,9 @@ class Setting_worktime{
     }
 
     render(){
-        let top_left = `<span class="icon_left"><img src="/static/common/icon/icon_arrow_l_black.png" onclick="layer_popup.close_layer_popup();setting_worktime_popup.clear();" class="obj_icon_prev"></span>`;
-        let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right"><img src="/static/common/icon/icon_confirm_black.png" onclick="setting_worktime_popup.upper_right_menu();" class="obj_icon_prev"></span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();setting_worktime_popup.clear();">${CImg.arrow_left()}</span>`;
+        let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
+        let top_right = `<span class="icon_right" onclick="setting_worktime_popup.upper_right_menu();">${CImg.confirm()}</span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
         
@@ -156,7 +156,7 @@ class Setting_worktime{
         let html_to_join = [];
         for(let i=0; i<day_array.length; i++){
             let day = day_array[i];
-            let tag = CComponent.dom_tag(DAYNAME_MATCH[day]+'요일', {"font-size":"16px", "font-weight":"bold", "color":"#5c5859", "padding":"0", "height":"52px", "line-height":"52px"});
+            let tag = CComponent.dom_tag(DAYNAME_MATCH[day]+'요일', {"font-size":"16px", "font-weight":"bold", "color":"var(--font-sub-dark)", "padding":"0", "height":"52px", "line-height":"52px"});
             let start_time_selector = this.dom_row_start_time_select(day);
             let end_time_selector = this.dom_row_end_time_select(day);
             let id = `worktime_${day}`;
@@ -276,7 +276,7 @@ class Setting_worktime{
     dom_row_start_time_select(day){
         let id = `select_start_${day}`;
         let title = this.data[day].start_time_text == null ? '시작 시각*' : this.data[day].start_time_text;
-        let icon = '/static/common/icon/icon_clock_black.png';
+        let icon = CImg.time();
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -317,7 +317,7 @@ class Setting_worktime{
         let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let style = this.data[day].start_time == this.data[day].end_time && this.data[day].end_time != null ? {"color":"#fe4e65"} : null;
+        let style = this.data[day].start_time == this.data[day].end_time && this.data[day].end_time != null ? {"color":"var(--font-highlight)"} : null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ //data : 직전 셋팅값
             //행을 클릭했을때 실행할 내용
             if(this.data[day].start_time == null){
