@@ -219,7 +219,7 @@ class Mypage{
         let icon = DELETE;
         let icon_r_visible = SHOW;
         let icon_r_text = "";
-        let style = {"font-size":"13px"};
+        let style = null;
         let onclick = ()=>{
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LEAVE_PTERS, 100, popup_style, null, ()=>{
