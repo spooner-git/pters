@@ -196,6 +196,7 @@ const POPUP_ADDRESS_MYPAGE = 'popup_mypage';
 const POPUP_ADDRESS_MYPAGE_MODIFY = 'popup_mypage_modify';
 const POPUP_ADDRESS_MYPAGE_PHOTO_UPDATE = 'popup_mypage_photo_update';
 const POPUP_ADDRESS_PASSWORD_MODIFY = 'popup_password_modify';
+const POPUP_ADDRESS_LEAVE_PTERS = 'popup_leave_pters';
 // 풀페이지 팝업
 
 // User Input 팝업
