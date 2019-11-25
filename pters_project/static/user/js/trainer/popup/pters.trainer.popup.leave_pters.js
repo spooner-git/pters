@@ -3,7 +3,6 @@ class Leave_pters{
         this.target = {install: install_target, toolbox:'section_leave_pters_toolbox', content:'section_leave_pters_content'};
 
         this.data = {
-            customer_uid:null,
             cancel_type:null,
             cancel_reason:""
         };
@@ -84,7 +83,7 @@ class Leave_pters{
 
     dom_row_cancel_caution(){
         let html = `<div style="font-size:13px;color:var(--font-main);">
-                        <p style="margin:0">회원 탈퇴 시 사용한 모든 데이터가 삭제되며, 복구가 불가능합니다. <br>신청 후 3일이내 탈퇴처리가 완료됩니다.</p>
+                        <p style="margin:0">탈퇴 시 사용한 모든 데이터가 삭제되며, 복구가 불가능합니다.</p>
                     </div>`;
         return html;
     }
@@ -156,7 +155,6 @@ class Leave_pters{
             if(this.data.cancel_type == null){
                 show_error_message("사유를 선택해주세요.");
             }else{
-                // alert("해지 신청 실행");
                 this.event_excute();
             }
         };
@@ -165,24 +163,13 @@ class Leave_pters{
     }
 
     event_excute(){
-        Pters_pass_func.read('Current_period', (data)=>{
-            let customer_uid = data.customer_uid[0];
-            let cancel_type = this.survey_checkbox_data[this.data.cancel_type];
-            let cancel_reason = this.data.cancel_reason;
-            let callback = ()=>{
-                layer_popup.close_layer_popup();
-                show_error_message("신청 다음 달 부터 정기 결제가 종료됩니다.");
-                pters_pass_main_popup.init();
-            };
-            Pters_pass_func.request_payment_close(customer_uid, cancel_type, cancel_reason, callback);
-            
-        });
+        this.send_data();
     }
 
 
 
     dom_row_toolbox(){
-        let title = `회원 탈퇴 신청`;
+        let title = `회원 탈퇴`;
         let description = ``;
         let html = `
         <div class="leave_pters_upper_box" style="">
@@ -198,13 +185,61 @@ class Leave_pters{
         return html;
     }
 
-
     send_data(){
-      
+        let data = {"out_type":this.survey_checkbox_data[this.data.cancel_type], "out_reason":this.data.cancel_reason};
+        Leave_pters_func.update(data, ()=>{
+            location.href = '/login/logout/';
+        });
     }
 
     upper_right_menu(){
         this.send_data();
     }
 }
+
+
+class Leave_pters_func{
+    static update(data, callback){
+        $.ajax({
+            url:"/login/out_member/",
+            type:'POST',
+            data: data,
+            dataType : 'html',
+    
+            beforeSend:function(xhr, settings){
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+    
+            //통신성공시 처리
+            success:function (data_){
+                let data = JSON.parse(data_);
+                check_app_version(data.app_version);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message(data.messageArray[0]);
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(data); 
+                }
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function (){
+
+            },
+    
+            //통신 실패시 처리
+            error:function (){
+                console.log('server error');
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+            }
+        });
+    }
+}
+
+
 
