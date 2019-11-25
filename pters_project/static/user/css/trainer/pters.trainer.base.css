@@ -92,7 +92,7 @@
     /* Element */
     --border-article: 1px solid #1f1d1e;
     --border-article-dark: 1px solid #5c5859;
-    --box-shadow-article: 0 0 24px 0 #000000;
+    --box-shadow-article: 0 0 24px 0 rgba(0, 0, 0, 0.4);
 
     /* fundamental color */
     --fundamental-white: #ffffff;
