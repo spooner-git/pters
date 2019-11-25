@@ -60,10 +60,10 @@ class Pters_pass_shop{
             Pters_pass_func.read('Next', (data)=>{
                 this.data.next = data;
                 this.render();
+                func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
             });
             
         });
-        func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
     }
 
     clear(){
@@ -100,41 +100,37 @@ class Pters_pass_shop{
     
     dom_assembly_content(){
         let html =  '<article class="obj_input_box_full">' +
-                        '<div class="pters_pass_product_wrapper">' +
-                            this.dom_row_pters_pass_standard() +
-                            this.dom_row_pters_pass_standard_explain() +
-                        '</div>' +
-                        '<div class="pters_pass_product_wrapper">' +
-                            this.dom_row_pters_pass_premium() +
-                            this.dom_row_pters_pass_premium_explain() +
-                        '</div>' +
-                        '<div class="pters_pass_product_wrapper">' +
+                        '<div class="pters_pass_product_wrapper" style="background-color:#ff8595;">' +
                             this.dom_row_pters_pass_basic() +
                             this.dom_row_pters_pass_basic_explain() +
                         '</div>' +
+                        '<div class="pters_pass_product_wrapper" style="background-color:#fe4e65;">' +
+                            this.dom_row_pters_pass_standard() +
+                            this.dom_row_pters_pass_standard_explain() +
+                        '</div>' +
+                        '<div class="pters_pass_product_wrapper" style="background-color:#000000;">' +
+                            this.dom_row_pters_pass_premium() +
+                            this.dom_row_pters_pass_premium_explain() +
+                        '</div>' +
                     '</article>';
-        // let html =  '<article class="obj_input_box_full">' +
-        //                 '<div class="pters_pass_product_wrapper">' +
-        //                     this.dom_row_pters_pass_standard() +
-        //                     this.dom_row_pters_pass_standard_explain() +
-        //                 '</div>' +
-        //             '</article>';
-
         return html;
     }
 
     dom_row_pters_pass_premium(){
+        let unit = ' / 매월';
+        if(user_username =='guest'){
+            unit = "/ 30일";
+        }
         let id = "pters_pass_premium_ticket";
-        let title = "프리미엄 이용권";
+        let title = `<span style='font-size:12px;font-weight:500'>프리미엄</span><br>
+                    <span style="font-size:32px;font-weight:900">&#8361; 9,900</span><span style="font-size:13px">${unit}</span>`;
         let icon = DELETE;
-        let icon_r_visible = SHOW;
-        let icon_r_text = "매월 9,900원";
+        let icon_r_visible = HIDE;
+        let icon_r_text = '<span style="color:var(--fundamental-white)">구매</span> ' + CImg.arrow_right(["var(--fundamental-white)"], {"vertical-align":"middle"});
 
         // if(device == MOBILE && device_info != 'web' && user_username =='guest'){
-        if(user_username =='guest'){
-            icon_r_text = "30일 9,900원";
-        }
-        let style = {"color":"var(--font-highlight)", "font-weight":"bold", "border-bottom":"var(--border-article)"};
+        
+        let style = {"color":"var(--fundamental-white)", "font-weight":"bold", "height":"auto"};
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP_AGREEMENT, 100, POPUP_FROM_BOTTOM, null, ()=>{
                 pters_pass_shop_agreement_popup = new Pters_pass_shop_agreement('.popup_pters_pass_shop_agreement', "premium");});
@@ -147,23 +143,23 @@ class Pters_pass_shop{
     dom_row_pters_pass_premium_explain(){
         let html = `<article class="pters_pass_explain_wrapper">
                         <div class="product_explain_row">
-                            <div class="product_explain_row_title">일정</div>
+                            <div class="product_explain_row_title">${CImg.confirm(["var(--fundamental-white)"], {"vertical-align":"middle", "width":"17px", "margin-right":"5px"})} 일정</div>
                             <div class="product_explain_row_detail">매일 오늘 기준 전후 1년 등록, 취소</div>
                         </div>
                         <div class="product_explain_row">
-                            <div class="product_explain_row_title">회원</div>
+                            <div class="product_explain_row_title">${CImg.confirm(["var(--fundamental-white)"], {"vertical-align":"middle", "width":"17px", "margin-right":"5px"})} 회원</div>
                             <div class="product_explain_row_detail">500명</div>
                         </div>
                         <div class="product_explain_row">
-                            <div class="product_explain_row_title">통계</div>
+                            <div class="product_explain_row_title">${CImg.confirm(["var(--fundamental-white)"], {"vertical-align":"middle", "width":"17px", "margin-right":"5px"})} 통계</div>
                             <div class="product_explain_row_detail">1년 단위 조회 가능</div>
                         </div>
                         <div class="product_explain_row">
-                            <div class="product_explain_row_title">프로그램</div>
+                            <div class="product_explain_row_title">${CImg.confirm(["var(--fundamental-white)"], {"vertical-align":"middle", "width":"17px", "margin-right":"5px"})} 프로그램</div>
                             <div class="product_explain_row_detail">10개</div>
                         </div>
                         <div class="product_explain_row">
-                            <div class="product_explain_row_title">설정</div>
+                            <div class="product_explain_row_title">${CImg.confirm(["var(--fundamental-white)"], {"vertical-align":"middle", "width":"17px", "margin-right":"5px"})} 설정</div>
                             <div class="product_explain_row_detail">제한 없음</div>
                         </div>
                     </article>`;
@@ -171,17 +167,20 @@ class Pters_pass_shop{
     }
 
     dom_row_pters_pass_standard(){
+        let unit = ' / 매월';
+        if(user_username =='guest'){
+            unit = "/ 30일";
+        }
         let id = "pters_pass_standard_ticket";
-        let title = "스탠다드 이용권";
+        let title = `<span style='font-size:12px;font-weight:500'>스탠다드</span><br>
+                    <span style="font-size:32px;font-weight:900">&#8361; 6,900</span><span style="font-size:13px">${unit}</span>`;
         let icon = DELETE;
-        let icon_r_visible = SHOW;
-        let icon_r_text = "매월 6,900원";
+        let icon_r_visible = HIDE;
+        let icon_r_text = '<span style="color:var(--fundamental-white)">구매</span> ' + CImg.arrow_right(["var(--fundamental-white)"], {"vertical-align":"middle"});
 
         // if(device == MOBILE && device_info != 'web' && user_username =='guest'){
-        if(user_username =='guest'){
-            icon_r_text = "30일 6,900원";
-        }
-        let style = {"color":"var(--font-highlight)", "font-weight":"bold", "border-bottom":"var(--border-article)"};
+        
+        let style = {"color":"var(--fundamental-white)", "font-weight":"bold", "height":"auto"};
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP_AGREEMENT, 100, POPUP_FROM_BOTTOM, null, ()=>{
                 pters_pass_shop_agreement_popup = new Pters_pass_shop_agreement('.popup_pters_pass_shop_agreement', "standard");});
@@ -194,23 +193,23 @@ class Pters_pass_shop{
     dom_row_pters_pass_standard_explain(){
         let html = `<article class="pters_pass_explain_wrapper">
                         <div class="product_explain_row">
-                            <div class="product_explain_row_title">일정</div>
+                            <div class="product_explain_row_title">${CImg.confirm(["var(--fundamental-white)"], {"vertical-align":"middle", "width":"17px", "margin-right":"5px"})} 일정</div>
                             <div class="product_explain_row_detail">매일 오늘 기준 전후 1년 등록, 취소</div>
                         </div>
                         <div class="product_explain_row">
-                            <div class="product_explain_row_title">회원</div>
+                            <div class="product_explain_row_title">${CImg.confirm(["var(--fundamental-white)"], {"vertical-align":"middle", "width":"17px", "margin-right":"5px"})} 회원</div>
                             <div class="product_explain_row_detail">100명</div>
                         </div>
                         <div class="product_explain_row">
-                            <div class="product_explain_row_title">통계</div>
+                            <div class="product_explain_row_title">${CImg.confirm(["var(--fundamental-white)"], {"vertical-align":"middle", "width":"17px", "margin-right":"5px"})} 통계</div>
                             <div class="product_explain_row_detail">1년 단위 조회 가능</div>
                         </div>
                         <div class="product_explain_row">
-                            <div class="product_explain_row_title">프로그램</div>
+                            <div class="product_explain_row_title">${CImg.confirm(["var(--fundamental-white)"], {"vertical-align":"middle", "width":"17px", "margin-right":"5px"})} 프로그램</div>
                             <div class="product_explain_row_detail">5개</div>
                         </div>
                         <div class="product_explain_row">
-                            <div class="product_explain_row_title">설정</div>
+                            <div class="product_explain_row_title">${CImg.confirm(["var(--fundamental-white)"], {"vertical-align":"middle", "width":"17px", "margin-right":"5px"})} 설정</div>
                             <div class="product_explain_row_detail">제한 없음</div>
                         </div>
                     </article>`;
@@ -218,15 +217,18 @@ class Pters_pass_shop{
     }
 
     dom_row_pters_pass_basic(){
-        let id = "pters_pass_basic_ticket";
-        let title = "베이직 이용권";
-        let icon = DELETE;
-        let icon_r_visible = SHOW;
-        let icon_r_text = "매월 3,900원";
+        let unit = ' / 매월';
         if(user_username =='guest'){
-            icon_r_text = "30일 3,900원";
+            unit = "/ 30일";
         }
-        let style = {"color":"#22a900", "font-weight":"bold", "border-bottom":"var(--border-article)"};
+        let id = "pters_pass_basic_ticket";
+        let title = `<span style='font-size:12px;font-weight:500'>베이직</span><br>
+                    <span style="font-size:32px;font-weight:900">&#8361; 3,900</span><span style="font-size:13px">${unit}</span>`;
+        let icon = DELETE;
+        let icon_r_visible = HIDE;
+        let icon_r_text = '<span style="color:var(--fundamental-white)">구매</span> ' + CImg.arrow_right(["var(--fundamental-white)"], {"vertical-align":"middle"});
+        
+        let style = {"color":"var(--fundamental-white)", "font-weight":"bold", "height":"auto"};
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP_AGREEMENT, 100, POPUP_FROM_BOTTOM, null, ()=>{
                 pters_pass_shop_agreement_popup = new Pters_pass_shop_agreement('.popup_pters_pass_shop_agreement', "basic");});
@@ -239,23 +241,23 @@ class Pters_pass_shop{
     dom_row_pters_pass_basic_explain(){
         let html = `<article class="pters_pass_explain_wrapper">
                         <div class="product_explain_row">
-                            <div class="product_explain_row_title">일정</div>
+                            <div class="product_explain_row_title">${CImg.confirm(["var(--fundamental-white)"], {"vertical-align":"middle", "width":"17px", "margin-right":"5px"})} 일정</div>
                             <div class="product_explain_row_detail">매일 오늘 기준 전후 31일 등록, 취소</div>
                         </div>
                         <div class="product_explain_row">
-                            <div class="product_explain_row_title">회원</div>
+                            <div class="product_explain_row_title">${CImg.confirm(["var(--fundamental-white)"], {"vertical-align":"middle", "width":"17px", "margin-right":"5px"})} 회원</div>
                             <div class="product_explain_row_detail">30명</div>
                         </div>
                         <div class="product_explain_row">
-                            <div class="product_explain_row_title">통계</div>
+                            <div class="product_explain_row_title">${CImg.confirm(["var(--fundamental-white)"], {"vertical-align":"middle", "width":"17px", "margin-right":"5px"})} 통계</div>
                             <div class="product_explain_row_detail">3개월 단위 조회 가능</div>
                         </div>
                         <div class="product_explain_row">
-                            <div class="product_explain_row_title">프로그램</div>
+                            <div class="product_explain_row_title">${CImg.confirm(["var(--fundamental-white)"], {"vertical-align":"middle", "width":"17px", "margin-right":"5px"})} 프로그램</div>
                             <div class="product_explain_row_detail">2개</div>
                         </div>
                         <div class="product_explain_row">
-                            <div class="product_explain_row_title">설정</div>
+                            <div class="product_explain_row_title">${CImg.confirm(["var(--fundamental-white)"], {"vertical-align":"middle", "width":"17px", "margin-right":"5px"})} 설정</div>
                             <div class="product_explain_row_detail">제한 없음</div>
                         </div>
                     </article>`;
@@ -264,7 +266,7 @@ class Pters_pass_shop{
 
 
     dom_row_toolbox(){
-        let title = "PTERS 패스 상품";
+        let title = "PTERS 패스 구독";
         
         let description = ``;
         let html = `

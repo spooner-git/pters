@@ -28,16 +28,16 @@
 }
 
 .popup_pters_pass_shop .pters_pass_product_wrapper{
-	border: var(--border-article-dark);
-	border-radius: 10px;
+	border: var(--border-article);
+	border-radius: 8px;
 	padding: 0 15px;
 	margin:20px 0;
+	box-shadow: var(--box-shadow-article);
 }
 
 .popup_pters_pass_shop .pters_pass_explain_wrapper{
 	font-size:13px;
-	padding:10px 10px 20px 10px;
-	border-bottom:var(--border-article);
+	padding:10px 0;
 }
 
 .popup_pters_pass_shop .product_explain_row{
@@ -46,13 +46,14 @@
 }
 
 .popup_pters_pass_shop .product_explain_row_title{
-	flex:0 0 60px;
-	color: var(--font-sub-dark);
+	flex:0 0 85px;
+	color: var(--fundamental-white);
 }
 
 .popup_pters_pass_shop .product_explain_row_detail{
 	flex:1 0 0;
 	font-weight: bold;
+	color: var(--fundamental-white);
 }
 
 
