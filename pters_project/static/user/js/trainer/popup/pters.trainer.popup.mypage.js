@@ -223,7 +223,8 @@ class Mypage{
         let onclick = ()=>{
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LEAVE_PTERS, 100, popup_style, null, ()=>{
-                leave_pters_popup = new Leave_pters('.popup_leave_pters', 'leave_pters_popup');});
+                leave_pters_popup = new Leave_pters('.popup_leave_pters', 'leave_pters_popup');
+            });
         };
 
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);

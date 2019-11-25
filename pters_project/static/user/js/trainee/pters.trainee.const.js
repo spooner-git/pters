@@ -18,6 +18,9 @@ const POPUP_BASIC = 2;
 const ANIMATION_OFF = 0;
 const ANIMATION_ON = 1;
 
+const ON = 1;
+const OFF = 0;
+
 const POPUP_SIZE_WINDOW = 0;
 
 const SHOW = 'show';
