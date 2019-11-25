@@ -78,6 +78,7 @@ class Menu {
                         this.dom_menu_setting_reserve() + 
                         this.dom_menu_setting_alarm() + 
                         this.dom_menu_setting_attendmode() + 
+                        this.dom_menu_theme() + 
                        CComponent.dom_tag('서비스', dom_tag_style) + 
                         this.dom_menu_pters_pass() + 
                         this.dom_menu_service_notice() + 
@@ -276,6 +277,19 @@ class Menu {
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             sideGoPopup("setting_attendmode");
+        });
+        return html;
+    }
+
+    dom_menu_theme(){
+        let id = 'menu_setting_theme';
+        let title = '테마';
+        let icon = CImg.arrow_expand();
+        let icon_r_visible = NONE;
+        let icon_r_text = "";
+        let style = {"font-size":"17px", "padding":"13px 0"};
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            sideGoPopup("setting_theme");
         });
         return html;
     }

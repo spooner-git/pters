@@ -184,6 +184,8 @@ const POPUP_ADDRESS_SETTING_AUTOCOMPLETE = 'popup_setting_autocomplete';
 const POPUP_ADDRESS_SETTING_RESERVE = 'popup_setting_reserve';
 const POPUP_ADDRESS_SETTING_ALARM = 'popup_setting_alarm';
 const POPUP_ADDRESS_SETTING_ATTENDMODE = 'popup_setting_attendmode';
+const POPUP_ADDRESS_SETTING_THEME = 'popup_setting_theme';
+
 const POPUP_ADDRESS_SERVICE_NOTICE = 'popup_service_notice';
 const POPUP_ADDRESS_SERVICE_INQUIRY_MENU = 'popup_service_inquiry_menu';
 const POPUP_ADDRESS_SERVICE_INQUIRY = 'popup_service_inquiry';

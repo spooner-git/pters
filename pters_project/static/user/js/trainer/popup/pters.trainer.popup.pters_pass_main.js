@@ -144,7 +144,7 @@ class Pters_pass_main{
 
     dom_row_pters_pass_purchase(){
         let id = "pters_pass_purchase";
-        let title = "PTERS 패스";
+        let title = "PTERS 패스 상품";
         let icon = DELETE;
         let icon_r_visible = SHOW;
         let icon_r_text = "";
