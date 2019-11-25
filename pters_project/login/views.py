@@ -50,7 +50,7 @@ from trainee.models import MemberTicketTb
 from trainer.models import LectureMemberTb, ClassTb, SettingTb, LectureTb
 from trainer.models import LectureMemberTicketTb
 from .forms import MyPasswordResetForm, MyPasswordChangeForm, MyRegistrationForm
-from .models import MemberTb, PushInfoTb, SnsInfoTb
+from .models import MemberTb, PushInfoTb, SnsInfoTb, MemberOutInfoTb
 
 logger = logging.getLogger(__name__)
 
@@ -823,9 +823,10 @@ def authenticated_member_logic(request):
 # 회워탈퇴 api
 def out_member_logic(request):
     # next_page = request.POST.get('next_page')
-    next_page = '/login/logout/'
+    # next_page = '/login/logout/'
     error = None
-
+    out_type = request.POST.get('out_type', '')
+    out_reason = request.POST.get('out_reason', '')
     member_id = request.user.id
     user = None
     member = None
@@ -864,10 +865,6 @@ def out_member_logic(request):
                                                                               member_auth_cd=AUTH_TYPE_VIEW, use=USE)
                     if len(member_member_ticket_data) > 0:
                         member_member_ticket_data.update(member_auth_cd=AUTH_TYPE_WAIT)
-                # elif group_name == 'trainer':
-                #     member_class_data = MemberClassTb.objects.filter(member_id=member_id, auth_cd=AUTH_TYPE_VIEW, use=USE)
-                #     if len(member_class_data) > 0:
-                #         member_class_data.update(auth_cd='DELETE')
 
                 if error is None:
                     member.contents = str(user.username) + ':' + str(user.id)
@@ -877,9 +874,10 @@ def out_member_logic(request):
                     user.set_password('0000')
                     user.save()
                     member.save()
-
+                    MemberOutInfoTb(member_id=request.user.id, out_type=out_type, out_reason=out_reason, use=1).save()
                 if len(sns_data) > 0:
                     sns_data.update(use=UN_USE)
+
         except ValueError:
             error = '등록 값에 문제가 있습니다.'
         except IntegrityError:
@@ -917,7 +915,7 @@ def out_member_logic(request):
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
 
-    return redirect(next_page)
+    return render(request, 'ajax/registration_error_ajax.html')
 
 
 class AddPushTokenView(View):

@@ -39,6 +39,21 @@ class MemberTb(TimeStampedModel):
         return self.name
 
 
+class MemberOutInfoTb(TimeStampedModel):
+    member_out_info_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    member = models.ForeignKey(MemberTb, on_delete=models.CASCADE)  # Field name made lowercase.
+    out_type = models.CharField(db_column='OUT_TYPE', max_length=45, blank=True, default='')  # Field name made lowercase.
+    out_reason = models.CharField(db_column='OUT_REASON', max_length=3000, blank=True, default='')  # Field name made lowercase.
+    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'MEMBER_OUT_INFO_TB'
+
+    def __str__(self):
+        return self.name
+
+
 class CommonCdTb(models.Model):
     common_cd_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     group_cd = models.CharField(db_column='GROUP_CD', max_length=45, blank=True, default='')
