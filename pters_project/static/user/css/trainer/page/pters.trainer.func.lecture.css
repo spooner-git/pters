@@ -11,7 +11,8 @@
 		position: relative;
 		height: 60px;
 		line-height: 28px;
-		background-color: var(--bg-main);
+		/* background-color: var(--bg-main); */
+		background-color: var(--root-content-bg-color);
 		/* border-bottom: 1px solid #cccccc; */
 		padding: 20px 16px 12px;
 		box-sizing: border-box;

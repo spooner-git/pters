@@ -51,6 +51,55 @@
 
 .pters_dark_mode {
     --base-font-color: #ffffff;
+    --root-content-bg-color: #141414;
+    --root_content-font-color: #ffffff;
+    --root-nav-bg-color: #000000;
+    --root-nav-border: 1px solid #282828;
+
+    /* Page 공통 */
+    --page-displaypanel-bg-color: #1e1e1e;
+    --page-contentwrap-bg-color: #1e1e1e;
+
+    /* img */
+    --img-main: #858282;
+    --img-sub1: #d6d2d2;
+    --img-highlight: #fe4e65;
+
+    /* Font */
+    --font-base: #ffffff;
+    --font-invisible: #1e1e1e;
+    --font-highlight: #fe4e65;
+    --font-red: #ff0022;
+    --font-main: #ffffff;
+    --font-sub-dark: #f5f2f3;
+    --font-sub-normal: #b8b4b4;
+    --font-sub-light: #5c5859;
+    --font-inactive: #999696;
+    --font-domtag: #f5f2f3;
+
+    /* Background */
+    --bg-main: #1e1c1c;
+    --bg-for-only-shade: #5c5859;
+    --bg-for-only-new-notifi: #ae4e65;
+    --bg-sub-dark: #999696;
+    --bg-sub-normal: #b8b4b4;
+    --bg-sub-light: #5c5859;
+    --bg-inactive: #5c5859;
+    --bg-domtag: #f5f2f3;
+    --bg-light: #282828;
+    --bg-highlight: #fe4e65;
+
+    /* Element */
+    --border-article: 1px solid #1f1d1e;
+    --border-article-dark: 1px solid #5c5859;
+    --box-shadow-article: 0 0 24px 0 #000000;
+
+    /* fundamental color */
+    --fundamental-white: #ffffff;
+}
+
+.pters_dark_mode_backup {
+    --base-font-color: #ffffff;
     --root-content-bg-color: #1e1e1e;
     --root_content-font-color: #ffffff;
     --root-nav-bg-color: #1e1e1e;
