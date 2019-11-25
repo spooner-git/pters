@@ -191,7 +191,7 @@ class Menu {
 
     dom_menu_attendmode(){
         let id = 'menu_attendmode';
-        let title = '출석 체크 (Beta)';
+        let title = '출석 체크';
         let icon = CImg.attend_check();
         let icon_r_visible = NONE;
         let icon_r_text = "";
