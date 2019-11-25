@@ -81,6 +81,10 @@ const IAP = "iap";
 const PERIOD = "PERIOD";
 const SINGLE = "SINGLE";
 
+// 테마
+const LIGHT = "light";
+const DARK = "dark";
+
 // const SCHEDULE_NOT_FINISH = 0;
 // const SCHEDULE_FINISH = 1;
 // const SCHEDULE_ABSENCE = 2;

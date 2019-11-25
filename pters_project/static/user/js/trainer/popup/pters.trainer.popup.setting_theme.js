@@ -3,7 +3,7 @@ class Setting_theme{
         this.target = {install: install_target, toolbox:'section_setting_theme_toolbox', content:'section_setting_theme_content'};
 
         this.data = {
-            theme: NORMAL
+            theme: LIGHT
         };
 
         this.init();
@@ -17,7 +17,7 @@ class Setting_theme{
 
     set_initial_data (){
         Setting_theme_func.read((data)=>{
-            this.data.theme = Number(data.setting_theme_time_selector_type);
+            this.data.theme = Number(data.setting_theme);
             
             this.render_content();
         });
@@ -59,8 +59,8 @@ class Setting_theme{
     dom_assembly_content(){
         let html =  
                     '<article class="obj_input_box_full">' +
-                        this.dom_row_theme_title() +
-                        this.dom_row_theme_normal() + 
+                        // this.dom_row_theme_title() +
+                        this.dom_row_theme_light() + 
                         this.dom_row_theme_dark() +
                     '</article>';
         return html;
@@ -84,11 +84,11 @@ class Setting_theme{
         return html;
     }
 
-    dom_row_theme_normal(){
-        let selected_or_not = this.data.theme == NORMAL ? "selected" : "";
+    dom_row_theme_light(){
+        let selected_or_not = this.data.theme == LIGHT ? "selected" : "";
         let html = `<div class="select_wrap ${selected_or_not}" id="input_method_new">
                         <div class="select_indicator">
-                            ${CComponent.radio_button("time_input_select_new", this.data.theme == NORMAL ? ON : OFF, {"transform":"scale(1.2)", "display":"inline-block", "margin-right":"5px"}, ()=>{})}
+                            ${CComponent.radio_button("time_input_select_new", this.data.theme == LIGHT ? ON : OFF, {"transform":"scale(1.2)", "display":"inline-block", "margin-right":"5px"}, ()=>{})}
                             <span>밝은 테마</span>
                         </div>
                         <div>
@@ -97,7 +97,7 @@ class Setting_theme{
                     </div>`;
         $(document).off('click', '#input_method_new').on('click', '#input_method_new', (e)=>{
             e.stopPropagation();
-            this.data.theme = BASIC; 
+            this.data.theme = LIGHT; 
             this.render_content();
         });
         return html;
@@ -116,7 +116,7 @@ class Setting_theme{
                     </div>`;
         $(document).off('click', '#input_method_classic').on('click', '#input_method_classic', (e)=>{
             e.stopPropagation();
-            this.data.theme = CLASSIC; 
+            this.data.theme = DARK; 
             this.render_content();
         });
         return html;
@@ -143,11 +143,12 @@ class Setting_theme{
 
     send_data(){
         let data = {
-            "setting_theme_time_selector_type":this.data.theme
+            "setting_theme":this.data.theme
         };
         Setting_theme_func.update(data, ()=>{
-            this.set_initial_data();
-            show_error_message('변경 내용이 저장되었습니다.');
+            // this.set_initial_data();
+            // show_error_message('변경 내용이 저장되었습니다.');
+            location.href = '/';
         });
     }
 
@@ -159,7 +160,7 @@ class Setting_theme{
 class Setting_theme_func{
     static update(data, callback){
         $.ajax({
-            url:"/trainer/update_setting_theme_setting/",
+            url:"/trainer/update_setting_theme/",
             type:'POST',
             data: data,
             dataType : 'html',

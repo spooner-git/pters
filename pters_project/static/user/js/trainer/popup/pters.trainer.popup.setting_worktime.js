@@ -404,7 +404,7 @@ class Setting_worktime{
             "setting_trainer_work_ths_time_avail":this.data.THS.dayoff == OFF ? this.art_data(this.data.THS.start_time, this.data.THS.end_time) : "00:00-00:00",
             "setting_trainer_work_fri_time_avail":this.data.FRI.dayoff == OFF ? this.art_data(this.data.FRI.start_time, this.data.FRI.end_time) : "00:00-00:00",
             "setting_trainer_work_sat_time_avail":this.data.SAT.dayoff == OFF ? this.art_data(this.data.SAT.start_time, this.data.SAT.end_time) : "00:00-00:00",
-            "setting_holiday_hide":this.data.dayoff_visibility
+            // "setting_holiday_hide":this.data.dayoff_visibility
             // "setting_week_start_date":this.data.start_day 
         };
         Setting_worktime_func.update(data, ()=>{

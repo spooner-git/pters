@@ -90,9 +90,9 @@
     --bg-highlight: #fe4e65;
 
     /* Element */
-    --border-article: 1px solid #5c5859;
-    --border-article-dark: 1px solid #f5f2f3;
-    --box-shadow-article: 0 0 16px 0 #101010;
+    --border-article: 1px solid #282828;
+    --border-article-dark: 1px solid #5c5859;
+    --box-shadow-article: 0 0 16px 0 black;
 
     /* fundamental color */
     --fundamental-white: #ffffff;

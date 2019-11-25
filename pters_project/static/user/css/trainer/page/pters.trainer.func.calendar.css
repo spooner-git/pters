@@ -256,7 +256,8 @@
 	position:absolute;
 	opacity: 0.3;
 	z-index: -1;
-	background-color: #cecece;
+	/* background-color: #cecece; */
+	background-color: var(--bg-inactive);
 	background-image: repeating-linear-gradient(45deg, transparent, transparent 1px, rgba(255,255,255,.5) 3px, rgba(255,255,255,.5) 7px) !important;
 }
 .calendar_schedule_display_month{
