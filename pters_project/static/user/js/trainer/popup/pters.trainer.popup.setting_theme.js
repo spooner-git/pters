@@ -17,7 +17,7 @@ class Setting_theme{
 
     set_initial_data (){
         Setting_theme_func.read((data)=>{
-            this.data.theme = Number(data.setting_theme);
+            this.data.theme = data.setting_theme;
             
             this.render_content();
         });
@@ -143,11 +143,11 @@ class Setting_theme{
 
     send_data(){
         let data = {
-            "setting_theme":this.data.theme
+            "theme":this.data.theme
         };
         Setting_theme_func.update(data, ()=>{
             // this.set_initial_data();
-            // show_error_message('변경 내용이 저장되었습니다.');
+            show_error_message('테마를 변경하여 재실행 됩니다.');
             location.href = '/';
         });
     }
