@@ -132,7 +132,7 @@ class Pters_pass_main{
 
     dom_row_auth_info(title, auth_info){
         let html = `<div style="display:flex;font-size:12px;letter-spacing:-0.5px;height:24px;line-height:24px;margin-bottom:2px;">
-                        <div style="flex-basis:82px;color:var(--font-sub-light)">
+                        <div style="flex-basis:82px;color:var(--font-inactive)">
                             ${title}
                         </div>
                         <div style="flex:1 1 0;color:var(--font-sub-dark);">
