@@ -867,7 +867,10 @@ def out_member_logic(request):
                         member_member_ticket_data.update(member_auth_cd=AUTH_TYPE_WAIT)
 
                 if error is None:
-                    member.contents = str(user.username) + ':' + str(user.id)
+                    member.contents = str(user.username) + ':' + str(member.phone) + ':' + str(member.phone_is_active)\
+                                      + ':' + str(user.id)
+                    # member.phone = ''
+                    member.phone_is_active = 0
                     user.username = str(user.username) + ':' + str(user.id)
                     user.email = ''
                     user.is_active = 0
