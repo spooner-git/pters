@@ -89,6 +89,10 @@
 	cursor: pointer;
 }
 @media(min-width:651px){
+	#ticket_content_wrap{
+		display: flex;
+		flex-flow: row wrap;
+	}
     .ticket_wrapper{
 		display: inline-block;
 		vertical-align: top;
