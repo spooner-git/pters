@@ -80,7 +80,7 @@
 .ticket_wrapper{
 	width: calc(100% - 32px);
 	padding: 16px 20px;
-	background-color: var(--bg-main);
+	background-color: var(--bg-article);
 	border: var(--border-article);
 	border-radius: 8px;
 	box-shadow: var(--box-shadow-article);
@@ -96,6 +96,7 @@
 		margin: 1%;
 		padding: 10px;
 		box-shadow:var(--box-shadow-article);
+		background-color: var(--bg-article);
 	}
 	.ticket_wrapper:hover{
 		box-shadow:0 0 16px 0 #28282850;

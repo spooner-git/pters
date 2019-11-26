@@ -44,7 +44,7 @@
 	border-radius: 4px;
 	box-shadow: var(--box-shadow-article);
 	border: var(--border-article);
-	background-color: var(--bg-main);
+	background-color: var(--bg-article);
 	margin-bottom: 12px;
 	padding: 4px 0;
 }
