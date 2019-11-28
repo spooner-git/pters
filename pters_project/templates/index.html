@@ -798,6 +798,11 @@
             {% endif %}
         {% endfor %}
         kakao_login_test = true;
+
+
+        if(device == MOBILE && device_info != 'web'){
+            $('.pters_download').css('display', 'none');
+        }
         var val = location.href.substr(
             location.href.lastIndexOf('=') + 1
         );
