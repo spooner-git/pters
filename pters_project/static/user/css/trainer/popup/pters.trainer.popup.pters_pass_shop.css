@@ -33,6 +33,7 @@
 	padding: 0 15px;
 	margin:20px 0;
 	box-shadow: var(--box-shadow-article);
+	cursor: pointer;
 }
 
 .popup_pters_pass_shop .pters_pass_explain_wrapper{
