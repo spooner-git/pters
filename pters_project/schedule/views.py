@@ -811,6 +811,7 @@ def add_repeat_schedule_logic(request):
         # 반복일정 데이터 등록
         for repeat_schedule_date_info in repeat_schedule_date_list:
             error_date = None
+            schedule_check = 0
             temp_error_date = str(repeat_schedule_date_info).split(' ')[0]\
                               + week_info[int(repeat_schedule_date_info.strftime('%w'))]
             # 데이터 넣을 날짜,시간 setting
