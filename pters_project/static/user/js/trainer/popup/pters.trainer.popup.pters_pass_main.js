@@ -125,7 +125,8 @@ class Pters_pass_main{
         let program =  this.dom_row_auth_info("프로그램", `${data["auth_program_create"].limit_num} 개`);
         
         let html = `<div>` +
-                        schedule + member + lecture + ticket + statistics + program +
+                        // schedule + member + lecture + ticket + statistics + program +
+                        schedule + member + statistics + program +
                     `</div>`;
         return html;
     }
