@@ -117,6 +117,22 @@ class Pters_pass_shop{
                             this.dom_row_pters_pass_premium_explain() +
                         '</div>' +
                     '</article>';
+        if(os == IOS && user_username =='guest'){
+            html =  '<article class="obj_input_box_full">' +
+                        `<div class="pters_pass_product_wrapper" style="${premium_color}" onclick="pters_pass_shop_popup.event_buy('premium')">` +
+                            this.dom_row_pters_pass_premium() +
+                            this.dom_row_pters_pass_premium_explain() +
+                        '</div>' +
+                    '</article>';
+        }
+        else if(os == ANDROID && user_username =='guest') {
+            html =  '<article class="obj_input_box_full">' +
+                        `<div class="pters_pass_product_wrapper" style="${premium_color}" onclick="pters_pass_shop_popup.event_buy('premium')">` +
+                            this.dom_row_pters_pass_premium() +
+                            this.dom_row_pters_pass_premium_explain() +
+                        '</div>' +
+                    '</article>';
+        }
         return html;
     }
 
