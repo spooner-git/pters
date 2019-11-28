@@ -87,12 +87,11 @@ class Setting_theme{
     dom_row_theme_light(){
         let selected_or_not = this.data.theme == LIGHT ? "selected" : "";
         let html = `<div class="select_wrap ${selected_or_not}" id="input_method_new">
-                        <div class="select_indicator">
-                            ${CComponent.radio_button("time_input_select_new", this.data.theme == LIGHT ? ON : OFF, {"transform":"scale(1.2)", "display":"inline-block", "margin-right":"5px"}, ()=>{})}
-                            <span>밝은 테마</span>
-                        </div>
                         <div>
                             <img src="/static/common/img/theme/theme_normal.png">
+                        </div>
+                        <div class="select_indicator">
+                            ${CComponent.check_button("time_input_select_new", this.data.theme == LIGHT ? ON : OFF, {"transform":"scale(1.3)", "display":"inline-block", "margin-right":"5px"}, ()=>{})}
                         </div>
                     </div>`;
         $(document).off('click', '#input_method_new').on('click', '#input_method_new', (e)=>{
@@ -106,12 +105,11 @@ class Setting_theme{
     dom_row_theme_dark(){
         let selected_or_not = this.data.theme == DARK ? "selected" : "";
         let html = `<div class="select_wrap ${selected_or_not}" id="input_method_classic">
-                        <div class="select_indicator">
-                            ${CComponent.radio_button("time_input_select_classic", this.data.theme == DARK ? ON : OFF, {"transform":"scale(1.2)", "display":"inline-block", "margin-right":"5px"}, ()=>{})}
-                            <span>어두운 테마</span>
-                        </div>
                         <div>
                             <img src="/static/common/img/theme/theme_dark.png">
+                        </div>
+                        <div class="select_indicator">
+                            ${CComponent.check_button("time_input_select_classic", this.data.theme == DARK ? ON : OFF, {"transform":"scale(1.3)", "display":"inline-block", "margin-right":"5px"}, ()=>{})}
                         </div>
                     </div>`;
         $(document).off('click', '#input_method_classic').on('click', '#input_method_classic', (e)=>{
@@ -126,7 +124,7 @@ class Setting_theme{
 
     dom_row_toolbox(){
         let title = "테마 설정";
-        let description = "<p style='font-size:14px;font-weight:500;'>화면 색상 조합과 관련된 설정입니다.</p>";
+        let description = "<p style='font-size:12px;font-weight:500;margin-top:5px;color:var(--font-sub-normal)'>화면 색상 조합과 관련된 설정입니다.</p>";
         let html = `
         <div class="setting_reserve_upper_box" style="">
             <div style="display:inline-block;">

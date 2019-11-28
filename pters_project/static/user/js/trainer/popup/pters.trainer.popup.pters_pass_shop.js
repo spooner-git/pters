@@ -99,16 +99,20 @@ class Pters_pass_shop{
     }
     
     dom_assembly_content(){
+        let premium_color = `background-color:#362e2e;`;
+        let standard_color = `background-color:#d6424e;`;
+        let basic_color = `background-color:#fe4e65;`;
+
         let html =  '<article class="obj_input_box_full">' +
-                        '<div class="pters_pass_product_wrapper" style="background-color:#ff8595;">' +
+                        `<div class="pters_pass_product_wrapper" style="${basic_color}" onclick="pters_pass_shop_popup.event_buy('basic')">` +
                             this.dom_row_pters_pass_basic() +
                             this.dom_row_pters_pass_basic_explain() +
                         '</div>' +
-                        '<div class="pters_pass_product_wrapper" style="background-color:#fe4e65;">' +
+                        `<div class="pters_pass_product_wrapper" style="${standard_color}" onclick="pters_pass_shop_popup.event_buy('standard')">` +
                             this.dom_row_pters_pass_standard() +
                             this.dom_row_pters_pass_standard_explain() +
                         '</div>' +
-                        '<div class="pters_pass_product_wrapper" style="background-color:#000000;">' +
+                        `<div class="pters_pass_product_wrapper" style="${premium_color}" onclick="pters_pass_shop_popup.event_buy('premium')">` +
                             this.dom_row_pters_pass_premium() +
                             this.dom_row_pters_pass_premium_explain() +
                         '</div>' +
@@ -122,18 +126,18 @@ class Pters_pass_shop{
             unit = "/ 30일";
         }
         let id = "pters_pass_premium_ticket";
-        let title = `<span style='font-size:12px;font-weight:500'>프리미엄</span><br>
-                    <span style="font-size:32px;font-weight:900">&#8361; 9,900</span><span style="font-size:13px">${unit}</span>`;
+        let title = `<div style='font-size:12px;font-weight:500;margin-bottom:10px'>프리미엄</div>
+                    <span style="font-size:32px;font-weight:900">&#8361; 9,900</span><span style="font-size:13px">${unit}</span>
+                    `;
         let icon = DELETE;
-        let icon_r_visible = HIDE;
-        let icon_r_text = '<span style="color:var(--fundamental-white)">구매</span> ' + CImg.arrow_right(["var(--fundamental-white)"], {"vertical-align":"middle"});
+        let icon_r_visible = NONE;
+        let icon_r_text = "";
 
         // if(device == MOBILE && device_info != 'web' && user_username =='guest'){
         
-        let style = {"color":"var(--fundamental-white)", "font-weight":"bold", "height":"auto"};
+        let style = {"color":"var(--fundamental-white)", "font-weight":"bold", "height":"auto", "cursor":"unset"};
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP_AGREEMENT, 100, POPUP_FROM_BOTTOM, null, ()=>{
-                pters_pass_shop_agreement_popup = new Pters_pass_shop_agreement('.popup_pters_pass_shop_agreement', "premium");});
+            // this.event_buy("premium");
         });
 
         let html = row;
@@ -172,18 +176,18 @@ class Pters_pass_shop{
             unit = "/ 30일";
         }
         let id = "pters_pass_standard_ticket";
-        let title = `<span style='font-size:12px;font-weight:500'>스탠다드</span><br>
-                    <span style="font-size:32px;font-weight:900">&#8361; 6,900</span><span style="font-size:13px">${unit}</span>`;
+        let title = `<div style='font-size:12px;font-weight:500;margin-bottom:10px'>스탠다드 <div style="float:right;display:inline-block;text-align:center;box-sizing:border-box;width:40px;height:20px;line-height:20px;font-size:11px;border-radius: 12px;font-weight:bold;border:1px solid #ffffff;">추천</div></div>
+                    <span style="font-size:32px;font-weight:900">&#8361; 6,900</span><span style="font-size:13px">${unit}</span>
+                    `;
         let icon = DELETE;
-        let icon_r_visible = HIDE;
-        let icon_r_text = '<span style="color:var(--fundamental-white)">구매</span> ' + CImg.arrow_right(["var(--fundamental-white)"], {"vertical-align":"middle"});
+        let icon_r_visible = NONE;
+        let icon_r_text = "";
 
         // if(device == MOBILE && device_info != 'web' && user_username =='guest'){
         
-        let style = {"color":"var(--fundamental-white)", "font-weight":"bold", "height":"auto"};
+        let style = {"color":"var(--fundamental-white)", "font-weight":"bold", "height":"auto", "cursor":"unset"};
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP_AGREEMENT, 100, POPUP_FROM_BOTTOM, null, ()=>{
-                pters_pass_shop_agreement_popup = new Pters_pass_shop_agreement('.popup_pters_pass_shop_agreement', "standard");});
+            // this.event_buy("standard");
         });
 
         let html = row;
@@ -222,16 +226,16 @@ class Pters_pass_shop{
             unit = "/ 30일";
         }
         let id = "pters_pass_basic_ticket";
-        let title = `<span style='font-size:12px;font-weight:500'>베이직</span><br>
-                    <span style="font-size:32px;font-weight:900">&#8361; 3,900</span><span style="font-size:13px">${unit}</span>`;
+        let title = `<div style='font-size:12px;font-weight:500;margin-bottom:10px'>베이직</div>
+                    <span style="font-size:32px;font-weight:900">&#8361; 3,900</span><span style="font-size:13px">${unit}</span>
+                    `;
         let icon = DELETE;
-        let icon_r_visible = HIDE;
-        let icon_r_text = '<span style="color:var(--fundamental-white)">구매</span> ' + CImg.arrow_right(["var(--fundamental-white)"], {"vertical-align":"middle"});
+        let icon_r_visible = NONE;
+        let icon_r_text = "";
         
-        let style = {"color":"var(--fundamental-white)", "font-weight":"bold", "height":"auto"};
+        let style = {"color":"var(--fundamental-white)", "font-weight":"bold", "height":"auto", "cursor":"unset"};
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP_AGREEMENT, 100, POPUP_FROM_BOTTOM, null, ()=>{
-                pters_pass_shop_agreement_popup = new Pters_pass_shop_agreement('.popup_pters_pass_shop_agreement', "basic");});
+            // this.event_buy("basic");
         });
 
         let html = row;
@@ -262,6 +266,26 @@ class Pters_pass_shop{
                         </div>
                     </article>`;
         return html;
+    }
+
+    event_buy(product){
+        switch(product){
+            case "basic":
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP_AGREEMENT, 100, POPUP_FROM_BOTTOM, null, ()=>{
+                        pters_pass_shop_agreement_popup = new Pters_pass_shop_agreement('.popup_pters_pass_shop_agreement', "basic");
+                    });
+                break;
+            case "standard":
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP_AGREEMENT, 100, POPUP_FROM_BOTTOM, null, ()=>{
+                        pters_pass_shop_agreement_popup = new Pters_pass_shop_agreement('.popup_pters_pass_shop_agreement', "standard");
+                    });
+                break;
+            case "premium":
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP_AGREEMENT, 100, POPUP_FROM_BOTTOM, null, ()=>{
+                        pters_pass_shop_agreement_popup = new Pters_pass_shop_agreement('.popup_pters_pass_shop_agreement', "premium");
+                    });
+                break;
+        }
     }
 
 

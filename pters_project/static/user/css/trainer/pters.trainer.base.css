@@ -52,10 +52,10 @@
 
 .pters_dark_mode {
     --base-font-color: #ffffff;
-    --root-content-bg-color: #141414;
+    --root-content-bg-color: #1e1e1e;
     --root_content-font-color: #ffffff;
-    --root-nav-bg-color: #000000;
-    --root-nav-border: 1px solid #282828;
+    --root-nav-bg-color: #1e1e1e;
+    --root-nav-border: 1px solid #3d3b3b;
 
     /* Page 공통 */
     --page-displaypanel-bg-color: #1e1e1e;
@@ -79,8 +79,8 @@
     --font-domtag: #f5f2f3;
 
     /* Background */
-    --bg-main: #141414;
-    --bg-article: #1e1c1c;
+    --bg-main: #1e1e1e;
+    --bg-article: #0a0a0a;
     --bg-for-only-shade: #5c5859;
     --bg-for-only-new-notifi: #ae4e65;
     --bg-sub-dark: #999696;
@@ -92,9 +92,9 @@
     --bg-highlight: #fe4e65;
 
     /* Element */
-    --border-article: 1px solid #1f1d1e;
+    --border-article: 1px solid #292727;
     --border-article-dark: 1px solid #5c5859;
-    --box-shadow-article: 0 0 24px 0 rgba(0, 0, 0, 0.4);
+    --box-shadow-article: 0 0 24px 0 rgba(10, 10, 10, 0.24);
 
     /* fundamental color */
     --fundamental-white: #ffffff;
