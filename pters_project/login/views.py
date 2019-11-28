@@ -974,6 +974,9 @@ class DeletePushTokenView(View):
             token_data = PushInfoTb.objects.filter(device_id=device_id, use=USE)
             if len(token_data) > 0:
                 token_data.delete()
+            request.session['device_info'] = 'app'
+        else:
+            request.session['device_info'] = 'web'
 
         return render(request, self.template_name, {'token_check': True})
 
