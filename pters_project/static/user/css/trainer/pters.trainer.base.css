@@ -335,7 +335,7 @@ html, body{
     }
     .side_menu_selected{
         background-color: var(--bg-highlight) !important;
-        color: var(--font-main);
+        color: var(--fundamental-white);
     }
     
 @media(max-width:650px){
