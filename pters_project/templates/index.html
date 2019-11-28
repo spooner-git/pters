@@ -800,8 +800,15 @@
         {% endfor %}
         kakao_login_test = true;
 
+        $('#download_img_ios, #download_img_android').show();
         if(device == MOBILE && device_info != 'web'){
             $('#download_img_ios, #download_img_android').hide();
+        }else{
+            if(os == IOS){
+                $('#download_img_android').hide();
+            }else{
+                $('#download_img_ios').hide();
+            }
         }
         var val = location.href.substr(
             location.href.lastIndexOf('=') + 1
