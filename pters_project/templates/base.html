@@ -66,6 +66,7 @@ onclick="layer_popup.close_layer_popup();"></div>
         let os = IOS;
         let browser = CHROME;
         let device_info = '{{ request.session.device_info }}';
+        var setting_theme = '{{ request.session.setting_theme }}';
         if (varUA.match(/android/) != null) {
             device = MOBILE;
             os = ANDROID;
@@ -89,7 +90,18 @@ onclick="layer_popup.close_layer_popup();"></div>
         }else if (varUA.match(/edge/) != null) {
             browser = EDGE;
         }
-        
+
+        function theme_data_to_app(){
+            if(os == IOS){
+                // ios 인앱 결제 호출
+                window.webkit.messageHandlers.set_theme.postMessage(setting_theme);
+            }
+            // else if(os == ANDROID && device == MOBILE && device_info != 'web' && user_username =='guest') {
+            else if(os == ANDROID) {
+                // 안드로이드 인앱 결제 호출
+                window.set_theme.callMethodName(setting_theme);
+            }
+        }
     </script>
 {% block local_js_footer %}
 {% endblock %}
