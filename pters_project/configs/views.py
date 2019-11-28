@@ -37,7 +37,7 @@ def index(request):
     request.session['domain'] = current_site.domain
     request.session['PTERS_NAVER_ID_LOGIN_CLIENT_ID'] = settings.PTERS_NAVER_ID_LOGIN_CLIENT_ID
     request.session['PTERS_NAVER_ID_LOGIN_CLIENT_SECRET'] = settings.PTERS_NAVER_ID_LOGIN_CLIENT_SECRET
-    request.session['device_info'] = 'web'
+    # request.session['device_info'] = 'web'
     request.session['setting_theme'] = 'light'
     if request.user.is_authenticated():
         next_page = '/check/'
