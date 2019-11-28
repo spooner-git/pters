@@ -92,6 +92,7 @@ onclick="layer_popup.close_layer_popup();"></div>
         }
 
         function theme_data_to_app(){
+            alert('setting_theme::'+setting_theme);
             if(os == IOS){
                 // ios 인앱 결제 호출
                 window.webkit.messageHandlers.set_theme.postMessage(setting_theme);
