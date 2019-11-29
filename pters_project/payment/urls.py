@@ -52,7 +52,7 @@ urlpatterns = [
 
 
     # 개발 중 ################################################################################
-    # 정기 결제 이용권 변경 예약
+    # 정기 결제 이용권 변경
     url(r'^update_payment_product_info/$', views.update_payment_product_info_logic, name='update_payment_product_info'),
     # 정기 결제 이용권 변경 예약
     url(r'^update_reserve_product_info/$', views.update_reserve_product_info_logic, name='update_reserve_product_info'),

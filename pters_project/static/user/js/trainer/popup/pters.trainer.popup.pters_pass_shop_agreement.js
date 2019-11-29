@@ -1,5 +1,5 @@
 class Pters_pass_shop_agreement{
-    constructor(install_target, product_name){
+    constructor(install_target, product_name, pass_purchase_change){
         this.target = {install: install_target, toolbox:'section_pters_pass_shop_agreement_toolbox', content:'section_pters_pass_shop_agreement_content'};
 
         this.data = {
@@ -8,7 +8,9 @@ class Pters_pass_shop_agreement{
             agreement:OFF,
             pay_method:{
                 card:OFF
-            }
+            },
+            pass_purchase_change: pass_purchase_change
+
         };
 
         this.init();
@@ -237,6 +239,7 @@ class Pters_pass_shop_agreement{
 
         Pters_pass_func.ready_payment();
         Pters_pass_func.check_payment(product_name, pay_method, payment_type_cd, product_id, price, period_month, merchant_uid, customer_uid, callback);
+
     }
 
 

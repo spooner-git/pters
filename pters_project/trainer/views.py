@@ -27,7 +27,7 @@ from openpyxl.writer.excel import save_virtual_workbook
 
 from admin_spooner.functions import func_upload_board_content_image_logic
 from configs import settings
-from configs.views import AccessTestMixin
+from configs.views import AccessTestMixin, get_function_auth_type_cd, func_setting_data_update
 from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO_FINISH_OFF, \
     MEMBER_RESERVE_PROHIBITION_ON, SORT_MEMBER_NAME, SORT_REMAIN_COUNT, SORT_START_DATE, SORT_ASC, SORT_REG_COUNT, \
     GROUP_SCHEDULE, SCHEDULE_DUPLICATION_ENABLE, LECTURE_TYPE_ONE_TO_ONE, STATE_CD_IN_PROGRESS, STATE_CD_NOT_PROGRESS, \
@@ -4284,12 +4284,14 @@ def update_setting_theme_logic(request):
 class GetTrainerSettingDataView(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
+        func_setting_data_update(request, 'trainer')
         return JsonResponse(request.session['setting_data'], json_dumps_params={'ensure_ascii': True})
 
 
 class GetTrainerAuthDataView(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
+        get_function_auth_type_cd(request)
         return JsonResponse(request.session['auth_info'], json_dumps_params={'ensure_ascii': True})
 
 
