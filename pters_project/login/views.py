@@ -299,14 +299,6 @@ def logout_trainer(request):
 
     logout(request)
 
-    if device_id == 'pc':
-        request.session['device_info'] = 'web'
-    else:
-        if device_id != '':
-            request.session['device_info'] = 'app'
-        else:
-            request.session['device_info'] = 'web'
-
     logger.info('device_id::'+str(device_id))
     logger.info('device_info::'+str(request.session['device_info']))
     if error is not None:
