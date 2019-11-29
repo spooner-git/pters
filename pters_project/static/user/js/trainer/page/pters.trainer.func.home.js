@@ -72,6 +72,7 @@ class Home {
         let plan_dom;
         let end_alert_dom;
         let sales_summary_dom;
+        let google_adsense = this.dom_row_google_adsense();
 
         Program_func.read((data)=>{
             this.received_data.program = data;
@@ -96,7 +97,7 @@ class Home {
                         let sales_summary = this.dom_row_sales_this_month(data);
                         sales_summary_dom = '<div class="contents">' + sales_summary + '</div>';
                         
-                        let html = program_dom + plan_dom + end_alert_dom + sales_summary_dom;
+                        let html = program_dom + plan_dom + end_alert_dom + sales_summary_dom + google_adsense;
                         document.querySelector('#home_content_wrap').innerHTML = html;
                         // $('#root_content').scrollTop(0);
                     });
@@ -340,6 +341,20 @@ class Home {
         html_to_join.push(dom);
         
         let html = html_to_join.join("");
+        return html;
+    }
+
+    dom_row_google_adsense(){
+        let html = `<!-- 상단 수평 광고 -->
+                    <ins class="adsbygoogle"
+                        style="display:block"
+                        data-ad-client="ca-pub-4554121851965192"
+                        data-ad-slot="5448054991"
+                        data-ad-format="auto"
+                        data-full-width-responsive="true"></ins>
+                    <script>
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>`;
         return html;
     }
 
