@@ -97,11 +97,11 @@ class Home {
                         let sales_summary = this.dom_row_sales_this_month(data);
                         sales_summary_dom = '<div class="contents">' + sales_summary + '</div>';
 
-                        google_adsense_dom  = pass_inspector.data.auth_ads.active == 1 ? this.dom_row_google_adsense() : "";
+                        google_adsense_dom  = this.dom_row_google_adsense();
 
                         let html = program_dom + plan_dom + end_alert_dom + sales_summary_dom + google_adsense_dom;
                         document.querySelector('#home_content_wrap').innerHTML = html;
-                        this.activate_google_adsense();
+                        Ads.active();
                         // $('#root_content').scrollTop(0);
                     });
                 }, OFF);
@@ -132,11 +132,11 @@ class Home {
         let sales_summary = this.dom_row_sales_this_month(data.statistics);
         sales_summary_dom = '<div class="contents">' + sales_summary + '</div>';
 
-        google_adsense_dom  = pass_inspector.data.auth_ads.active == 1 ? this.dom_row_google_adsense() : "";
+        google_adsense_dom  = this.dom_row_google_adsense();
                         
         let html = program_dom + plan_dom + end_alert_dom + sales_summary_dom + google_adsense_dom;
         document.querySelector('#home_content_wrap').innerHTML = html;
-        this.activate_google_adsense();
+        Ads.active();
     }
 
     dom_row_program(data){
@@ -352,23 +352,15 @@ class Home {
     }
 
     dom_row_google_adsense(){
-        let dom = `<ins class="adsbygoogle"
-                        style="display:block"
-                        data-ad-format="fluid"
-                        data-ad-layout-key="-g8+4o-17-4f+cc"
-                        data-ad-client="ca-pub-4554121851965192"
-                        data-ad-slot="4186944219"></ins>`;
+        let dom = Ads.row();
 
         let html = `<div class="contents">
                         <article class="sales_wrapper" style="padding:0">
                             ${dom}
                         </article>
                     </div>`;
-        return html;
-    }
-
-    activate_google_adsense(){
-        (adsbygoogle = window.adsbygoogle || []).push({});
+        
+        return pass_inspector.data.auth_ads.active == 1 ? html : "";
     }
 
 

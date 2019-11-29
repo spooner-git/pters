@@ -1327,6 +1327,22 @@ class CImg{
     }
 }
 
+class Ads{
+    static row(){
+        let html = `<ins class="adsbygoogle"
+                        style="display:block"
+                        data-ad-format="fluid"
+                        data-ad-layout-key="-g8+4o-17-4f+cc"
+                        data-ad-client="ca-pub-4554121851965192"
+                        data-ad-slot="4186944219"></ins>`;
+        return html;
+    }
+
+    static active(){
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    }
+}
+
 
 
 class LimitChar{

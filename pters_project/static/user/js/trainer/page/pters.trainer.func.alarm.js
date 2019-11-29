@@ -27,6 +27,7 @@ class Alarm {
             this.render_upper_box();
             $root_content.scrollTop(1);
             this.new_alarms_id_cache = [];
+            Ads.active();
         });
     }
 
@@ -128,7 +129,19 @@ class Alarm {
                             </article>`);
         }
 
+        html_temp.push(this.dom_row_google_adsense());
+
         return html_temp;
+    }
+
+    dom_row_google_adsense(){
+        let dom = Ads.row();
+
+        let html = `<article class="alarm_wrapper">   
+                            ${dom}
+                    </article>`;
+
+        return pass_inspector.data.auth_ads.active == 1 ? html : "";
     }
 
     are_there_new_alarm(callback){
