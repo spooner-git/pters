@@ -72,7 +72,7 @@ class Home {
         let plan_dom;
         let end_alert_dom;
         let sales_summary_dom;
-        let google_adsense = this.dom_row_google_adsense();
+        let google_adsense_dom = '<div class="contents">' + this.dom_row_google_adsense(); + '</div>';
 
         Program_func.read((data)=>{
             this.received_data.program = data;
@@ -96,9 +96,10 @@ class Home {
                         }
                         let sales_summary = this.dom_row_sales_this_month(data);
                         sales_summary_dom = '<div class="contents">' + sales_summary + '</div>';
-                        
-                        let html = program_dom + plan_dom + end_alert_dom + sales_summary_dom + google_adsense;
+
+                        let html = program_dom + plan_dom + end_alert_dom + sales_summary_dom + google_adsense_dom;
                         document.querySelector('#home_content_wrap').innerHTML = html;
+                        this.activate_google_adsense();
                         // $('#root_content').scrollTop(0);
                     });
                 }, OFF);
@@ -345,17 +346,22 @@ class Home {
     }
 
     dom_row_google_adsense(){
-        let html = `<!-- 상단 수평 광고 -->
-                    <ins class="adsbygoogle"
+        let dom = `<ins class="adsbygoogle"
                         style="display:block"
+                        data-ad-format="fluid"
+                        data-ad-layout-key="-fb+5w+4e-db+86"
                         data-ad-client="ca-pub-4554121851965192"
-                        data-ad-slot="5448054991"
-                        data-ad-format="auto"
-                        data-full-width-responsive="true"></ins>
-                    <script>
-                        (adsbygoogle = window.adsbygoogle || []).push({});
-                    </script>`;
+                        data-ad-slot="4186944219">
+                        </ins>`;
+
+        let html = `<article class="sales_wrapper" style="padding:0">
+                        ${dom}
+                    </article>`;
         return html;
+    }
+
+    activate_google_adsense(){
+        (adsbygoogle = window.adsbygoogle || []).push({});
     }
 
 
