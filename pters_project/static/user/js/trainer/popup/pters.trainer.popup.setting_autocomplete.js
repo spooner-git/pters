@@ -1,6 +1,7 @@
 class Setting_autocomplete{
     constructor(install_target){
         this.target = {install: install_target, toolbox:'section_setting_autocomplete_toolbox', content:'section_setting_autocomplete_content'};
+        this.data_sending_now = false;
 
         this.data = {
                 plan:{
@@ -231,12 +232,19 @@ class Setting_autocomplete{
     }
 
     send_data(){
+        if(this.data_sending_now == true){
+            return false;
+        }else if(this.data_sending_now == false){
+            this.data_sending_now = true;
+        }
+
         let data = {
             "setting_schedule_auto_finish": this.data.plan.switch == OFF ? OFF : this.data.plan.complete_type,
             "setting_member_ticket_auto_finish":this.data.member.switch
         };
 
         Setting_autocomplete_func.update(data, ()=>{
+            this.data_sending_now = false;
             this.set_initial_data();
             show_error_message('변경 내용이 저장되었습니다.');
             // this.render_content();

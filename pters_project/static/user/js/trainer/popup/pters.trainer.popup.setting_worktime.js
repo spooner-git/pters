@@ -1,6 +1,7 @@
 class Setting_worktime{
     constructor(install_target){
         this.target = {install: install_target, toolbox:'section_setting_worktime_toolbox', content:'section_setting_worktime_content'};
+        this.data_sending_now = false;
 
         this.data = {
             start_day: null,
@@ -392,6 +393,12 @@ class Setting_worktime{
     }
 
     send_data(){
+        if(this.data_sending_now == true){
+            return false;
+        }else if(this.data_sending_now == false){
+            this.data_sending_now = true;
+        }
+
         if(this.check_before_send() == false){
             return false;
         }
@@ -408,6 +415,7 @@ class Setting_worktime{
             // "setting_week_start_date":this.data.start_day 
         };
         Setting_worktime_func.update(data, ()=>{
+            this.data_sending_now = false;
             this.set_initial_data();
             show_error_message('변경 내용이 저장되었습니다.');
         });
