@@ -1,6 +1,7 @@
 class Ticket_add{
     constructor(install_target, callback){
         this.target = {install: install_target, toolbox:'section_ticket_add_toolbox', content:'section_ticket_add_content'};
+        this.data_sending_now = false;
         this.callback = callback;
         this.form_id = 'id_ticket_add_form';
 
@@ -282,7 +283,13 @@ class Ticket_add{
         return html;
     }
 
-    send_data(external_data){
+    send_data(){
+        if(this.data_sending_now == true){
+            return false;
+        }else if(this.data_sending_now == false){
+            this.data_sending_now = true;
+        }
+
         let inspect = pass_inspector.ticket();
         if(inspect.barrier == BLOCKED){
             show_error_message(`[${inspect.limit_type}] 이용자께서는 수강권을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다.`);
@@ -292,6 +299,7 @@ class Ticket_add{
         if(this.check_before_send() == false){
             return false;
         }
+
         let data = {
                     "ticket_name":this.data.name,
                     "lecture_id_list[]":this.data.lecture_id,
@@ -304,6 +312,7 @@ class Ticket_add{
         };
         
         Ticket_func.create(data, ()=>{
+            this.data_sending_now = false;
             // layer_popup.close_layer_popup();
             if(this.callback != undefined){
                 this.callback();

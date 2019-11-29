@@ -1,6 +1,7 @@
 class Lecture_add{
     constructor(install_target, callback){
         this.target = {install: install_target, toolbox:'section_lecture_add_toolbox', content:'section_lecture_add_content'};
+        this.data_sending_now = false;
         this.callback = callback;
         this.form_id = 'id_lecture_add_form';
 
@@ -356,6 +357,12 @@ class Lecture_add{
     }
 
     send_data(){
+        if(this.data_sending_now == true){
+            return false;
+        }else if(this.data_sending_now == false){
+            this.data_sending_now = true;
+        }
+        
         let inspect = pass_inspector.lecture();
         if(inspect.barrier == BLOCKED){
             show_error_message(`[${inspect.limit_type}] 이용자께서는 수업을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다.`);
@@ -365,6 +372,7 @@ class Lecture_add{
         if(this.check_before_send() == false){
             return false;
         }
+
         let data = {
             "name":this.data.name,
             "member_num":this.data.capacity,
@@ -376,6 +384,7 @@ class Lecture_add{
         };
 
         Lecture_func.create(data, (received)=>{
+            this.data_sending_now = false;
             //수업추가시 수강권에 바로 집어넣기 - Lecture_func.create에서 서버에서 lecture_id를 반환해줘야함
             for(let i=0; i<this.ticket.id.length; i++){
                 let data_to_send = {"ticket_id":this.ticket.id[i], "lecture_id":received.lecture_id};
