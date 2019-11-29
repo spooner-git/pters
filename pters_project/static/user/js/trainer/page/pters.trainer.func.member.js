@@ -226,7 +226,7 @@ class Member {
                             ${dom}
                     </article>`;
 
-        return pass_inspector.data.auth_ads.active == 1 ? html : "";
+        return pass_inspector.data.auth_ads.limit_num != 0 ? html : "";
     }
 
     render_search_tool(type){

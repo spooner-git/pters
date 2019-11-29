@@ -141,7 +141,7 @@ class Alarm {
                             ${dom}
                     </article>`;
 
-        return pass_inspector.data.auth_ads.active == 1 ? html : "";
+        return pass_inspector.data.auth_ads.limit_num != 0 ? html : "";
     }
 
     are_there_new_alarm(callback){
