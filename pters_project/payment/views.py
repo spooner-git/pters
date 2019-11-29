@@ -645,6 +645,7 @@ def update_payment_product_info_logic(request):
     payment_info = None
     current_payment_info = None
     today = datetime.date.today()
+
     payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id,
                                                 payment_type_cd='PERIOD',
                                                 status='reserve',
@@ -655,9 +656,11 @@ def update_payment_product_info_logic(request):
         error = '오류가 발생했습니다.[-1]'
     current_payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id,
                                                         payment_type_cd='PERIOD',
-                                                        status='paid', use=USE).order_by('-end_date')
+                                                        status='paid', use=USE).order_by('-payment_info_id')
     if len(current_payment_data) > 0:
         current_payment_info = current_payment_data[0]
+        if current_payment_info.merchant_uid == '':
+            error = '다음 결제일까지 변경이 불가합니다.'
     else:
         error = '오류가 발생했습니다.[0]'
 

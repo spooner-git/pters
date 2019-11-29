@@ -22,7 +22,8 @@ class Pters_pass_shop{
                 receipt_url:[""],
                 start_date:[""],
                 status:[""],
-                product_id:[""]
+                product_id:[""],
+                merchant_uid:[""]
             },
             next:{
                 messageArray:[""],
@@ -44,7 +45,8 @@ class Pters_pass_shop{
                 start_date:[""],
                 status:[""],
                 paid_date:[""],
-                product_id:[""]
+                product_id:[""],
+                merchant_uid:[""]
             },
             pass_purchase_change: pass_purchase_change
         };
@@ -352,7 +354,11 @@ class Pters_pass_shop{
         let pass_purchase_change = this.data.pass_purchase_change;
 
         if(pass_purchase_change == PASS_CHANGE){
-            show_user_confirm ('PTERS 패스 상품을 즉시 변경하시겠습니까?', ()=>{
+            if(this.data.current.merchant_uid[0] == ""){
+                show_error_message('다음 결제일까지 변경이 불가능합니다.');
+                return false;
+            }
+            show_user_confirm ('PTERS 패스 상품을 즉시 변경하시겠습니까? <br/> 변경하시면 다음 결제일까지 변경이 불가능합니다.', ()=>{
                 // 정기 결제 + 미래 예약 대기인 경우
                 let date = new Date();
                 let user_id = home.data.user_id;
@@ -483,7 +489,7 @@ class Pters_pass_shop{
                 }
                 show_error_message(msg);
                 layer_popup.close_layer_popup();
-                window.location.reload(true);
+                // window.location.reload(true);
             },
 
             complete:function(){
