@@ -72,6 +72,7 @@ class Home {
         let plan_dom;
         let end_alert_dom;
         let sales_summary_dom;
+        let google_adsense_dom;
 
         Program_func.read((data)=>{
             this.received_data.program = data;
@@ -95,8 +96,8 @@ class Home {
                         }
                         let sales_summary = this.dom_row_sales_this_month(data);
                         sales_summary_dom = '<div class="contents">' + sales_summary + '</div>';
-                        
-                        let html = program_dom + plan_dom + end_alert_dom + sales_summary_dom;
+
+                        let html = program_dom + plan_dom + end_alert_dom + sales_summary_dom ;
                         document.querySelector('#home_content_wrap').innerHTML = html;
                         // $('#root_content').scrollTop(0);
                     });
@@ -341,6 +342,18 @@ class Home {
         
         let html = html_to_join.join("");
         return html;
+    }
+
+    dom_row_google_adsense(){
+        let dom = Ads.row();
+
+        let html = `<div class="contents">
+                        <article class="sales_wrapper" style="padding:0">
+                            ${dom}
+                        </article>
+                    </div>`;
+        
+        return pass_inspector.data.auth_ads.limit_num != 0 ? html : "";
     }
 
 
