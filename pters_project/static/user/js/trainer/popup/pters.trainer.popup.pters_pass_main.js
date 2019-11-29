@@ -236,13 +236,14 @@ class Pters_pass_main{
         }
         let next_pay_date = this.data.next.paid_date[0].replace(/-/gi, '.');
         let pay_type = PAY_TYPE_NAME[this.data.next.payment_type_cd[0]];
+        let next_pay_name = this.data.next.name[0];
         let description = `<p style="font-size:13px;letter-spacing:-0.5px;font-weight:500;margin-bottom:0;">
                                 <span style="color:var(--font-inactive);margin-right:8px;">유효 기간</span>
                                 <span style="color:var(--font-sub-dark);">${expire_date}</span>
                             </p>
                             <p style="font-size:13px;letter-spacing:-0.5px;font-weight:500;margin-top:4px;">
                                 <span style="color:var(--font-inactive);margin-right:8px;">결제 예정</span>
-                                <span style="color:var(--font-sub-dark)">${next_pay_date} ${pay_type}</span>
+                                <span style="color:var(--font-sub-dark)">${next_pay_date} / ${next_pay_name}</span>
                             </p>`;
         let html = `
         <div class="pters_pass_main_upper_box" style="">
