@@ -42,7 +42,6 @@ class Member {
             this.received_data_cache = jsondata;
             this.render_member_list(jsondata, list_type);
             this.render_upper_box();
-            Ads.active();
         });
     }
 
@@ -209,8 +208,6 @@ class Member {
                         </article>`;
             html_temp.push(html);
         }
-
-        html_temp.push(this.dom_row_google_adsense());
 
         if(html_temp.length == 0){
             html_temp.push(`<div style="font-size:14px;padding:16px;">등록된 회원이 없습니다.</div>`);

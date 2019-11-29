@@ -27,7 +27,6 @@ class Alarm {
             this.render_upper_box();
             $root_content.scrollTop(1);
             this.new_alarms_id_cache = [];
-            Ads.active();
         });
     }
 
@@ -128,8 +127,6 @@ class Alarm {
                                 </div>
                             </article>`);
         }
-
-        html_temp.push(this.dom_row_google_adsense());
 
         return html_temp;
     }
