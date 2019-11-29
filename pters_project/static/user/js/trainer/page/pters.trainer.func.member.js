@@ -42,6 +42,7 @@ class Member {
             this.received_data_cache = jsondata;
             this.render_member_list(jsondata, list_type);
             this.render_upper_box();
+            Ads.active();
         });
     }
 
@@ -209,11 +210,23 @@ class Member {
             html_temp.push(html);
         }
 
+        html_temp.push(this.dom_row_google_adsense());
+
         if(html_temp.length == 0){
             html_temp.push(`<div style="font-size:14px;padding:16px;">등록된 회원이 없습니다.</div>`);
         }
 
         document.querySelector('#member_content_wrap').innerHTML = html_temp.join("");
+    }
+
+    dom_row_google_adsense(){
+        let dom = Ads.row();
+
+        let html = `<article class="member_wrapper">   
+                            ${dom}
+                    </article>`;
+
+        return pass_inspector.data.auth_ads.active == 1 ? html : "";
     }
 
     render_search_tool(type){
