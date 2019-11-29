@@ -846,6 +846,7 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         # context = super(TrainerMainView, self).get_context_data(**kwargs)
         # class_id = self.request.session.get('class_id', '')
         error = None
+        func_setting_data_update(self.request, 'trainer')
         if error is not None:
             logger.error(self.request.user.first_name + str(self.request.user.id) + ']' + error)
             messages.error(request, error)
