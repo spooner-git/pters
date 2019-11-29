@@ -359,9 +359,11 @@ class Home {
                         data-ad-client="ca-pub-4554121851965192"
                         data-ad-slot="4186944219"></ins>`;
 
-        let html = `<article class="sales_wrapper" style="padding:0">
-                        ${dom}
-                    </article>`;
+        let html = `<div class="contents">
+                        <article class="sales_wrapper" style="padding:0">
+                            ${dom}
+                        </article>
+                    </div>`;
         return html;
     }
 
