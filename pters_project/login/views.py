@@ -296,6 +296,12 @@ def logout_trainer(request):
     if device_id == 'pc':
         token_data = PushInfoTb.objects.filter(member_id=request.user.id, device_id=device_id)
         token_data.delete()
+        request.session['device_info'] = 'web'
+    else:
+        if device_id != '':
+            request.session['device_info'] = 'app'
+        else:
+            request.session['device_info'] = 'web'
 
     logout(request)
     if error is not None:
