@@ -72,7 +72,7 @@ class Home {
         let plan_dom;
         let end_alert_dom;
         let sales_summary_dom;
-        let google_adsense_dom = pass_inspector.data.auth_ads.active == 1 ? this.dom_row_google_adsense() : "";
+        let google_adsense_dom;
 
         Program_func.read((data)=>{
             this.received_data.program = data;
@@ -97,6 +97,8 @@ class Home {
                         let sales_summary = this.dom_row_sales_this_month(data);
                         sales_summary_dom = '<div class="contents">' + sales_summary + '</div>';
 
+                        google_adsense_dom  = pass_inspector.data.auth_ads.active == 1 ? this.dom_row_google_adsense() : "";
+
                         let html = program_dom + plan_dom + end_alert_dom + sales_summary_dom + google_adsense_dom;
                         document.querySelector('#home_content_wrap').innerHTML = html;
                         this.activate_google_adsense();
@@ -114,6 +116,7 @@ class Home {
         let plan_dom;
         let end_alert_dom;
         let sales_summary_dom;
+        let google_adsense_dom;
 
         let data = this.received_data;
 
@@ -128,8 +131,10 @@ class Home {
 
         let sales_summary = this.dom_row_sales_this_month(data.statistics);
         sales_summary_dom = '<div class="contents">' + sales_summary + '</div>';
+
+        google_adsense_dom  = pass_inspector.data.auth_ads.active == 1 ? this.dom_row_google_adsense() : "";
                         
-        let html = program_dom + plan_dom + end_alert_dom + sales_summary_dom;
+        let html = program_dom + plan_dom + end_alert_dom + sales_summary_dom + google_adsense_dom;
         document.querySelector('#home_content_wrap').innerHTML = html;
     }
 
