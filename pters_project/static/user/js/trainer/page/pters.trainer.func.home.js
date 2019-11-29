@@ -355,10 +355,9 @@ class Home {
         let dom = `<ins class="adsbygoogle"
                         style="display:block"
                         data-ad-format="fluid"
-                        data-ad-layout-key="-fb+5w+4e-db+86"
+                        data-ad-layout-key="-g8+4o-17-4f+cc"
                         data-ad-client="ca-pub-4554121851965192"
-                        data-ad-slot="4186944219">
-                        </ins>`;
+                        data-ad-slot="4186944219"></ins>`;
 
         let html = `<article class="sales_wrapper" style="padding:0">
                         ${dom}
