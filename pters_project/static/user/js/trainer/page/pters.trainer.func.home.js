@@ -72,7 +72,7 @@ class Home {
         let plan_dom;
         let end_alert_dom;
         let sales_summary_dom;
-        let google_adsense_dom = '<div class="contents">' + this.dom_row_google_adsense(); + '</div>';
+        let google_adsense_dom = pass_inspector.data.auth_ads.active == 1 ? this.dom_row_google_adsense() : "";
 
         Program_func.read((data)=>{
             this.received_data.program = data;
