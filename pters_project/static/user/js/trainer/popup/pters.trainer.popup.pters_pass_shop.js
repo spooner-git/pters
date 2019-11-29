@@ -1,5 +1,5 @@
 class Pters_pass_shop{
-    constructor(install_target){
+    constructor(install_target, pass_purchase_change){
         this.target = {install: install_target, toolbox:'section_pters_pass_shop_toolbox', content:'section_pters_pass_shop_content'};
 
         this.data = {
@@ -21,7 +21,8 @@ class Pters_pass_shop{
                 price:[""],
                 receipt_url:[""],
                 start_date:[""],
-                status:[""]
+                status:[""],
+                product_id:[""]
             },
             next:{
                 messageArray:[""],
@@ -41,8 +42,11 @@ class Pters_pass_shop{
                 price:[""],
                 receipt_url:[""],
                 start_date:[""],
-                status:[""]
-            }
+                status:[""],
+                paid_date:[""],
+                product_id:[""]
+            },
+            pass_purchase_change: pass_purchase_change
         };
 
         this.init();
@@ -102,7 +106,6 @@ class Pters_pass_shop{
         let premium_color = `background-color:#362e2e;`;
         let standard_color = `background-color:#d6424e;`;
         let basic_color = `background-color:#fe4e65;`;
-
         let html =  '<article class="obj_input_box_full">' +
                         `<div class="pters_pass_product_wrapper" style="${basic_color}" onclick="pters_pass_shop_popup.event_buy('basic')">` +
                             this.dom_row_pters_pass_basic() +
@@ -133,6 +136,34 @@ class Pters_pass_shop{
                         '</div>' +
                     '</article>';
         }
+        if(this.data.pass_purchase_change == PASS_CHANGE){
+            if(this.data.next.name[0] != ""){
+                html =  '<article class="obj_input_box_full">';
+                if(this.data.next.product_id[0] != PASS_PRODUCT.basic.id){
+                    html +=
+                        `<div class="pters_pass_product_wrapper" style="${basic_color}" onclick="pters_pass_shop_popup.event_buy('basic')">` +
+                            this.dom_row_pters_pass_basic() +
+                            this.dom_row_pters_pass_basic_explain() +
+                        '</div>';
+                }
+                if(this.data.next.product_id[0] != PASS_PRODUCT.standard.id){
+                    html +=
+                        `<div class="pters_pass_product_wrapper" style="${standard_color}" onclick="pters_pass_shop_popup.event_buy('standard')">` +
+                            this.dom_row_pters_pass_standard() +
+                            this.dom_row_pters_pass_standard_explain() +
+                        '</div>';
+                }
+                if(this.data.next.product_id[0] != PASS_PRODUCT.premium.id){
+                    html +=
+                        `<div class="pters_pass_product_wrapper" style="${premium_color}" onclick="pters_pass_shop_popup.event_buy('premium')">` +
+                            this.dom_row_pters_pass_premium() +
+                            this.dom_row_pters_pass_premium_explain() +
+                        '</div>';
+                }
+
+                html += '</article>';
+            }
+        }
         return html;
     }
 
@@ -148,7 +179,18 @@ class Pters_pass_shop{
         let icon = DELETE;
         let icon_r_visible = NONE;
         let icon_r_text = "";
-
+        if(this.data.pass_purchase_change == PASS_CHANGE) {
+            if (this.data.next.name[0] != "") {
+                title = `<div style='font-size:12px;font-weight:500;margin-bottom:10px'>프리미엄</div>
+                    <div>
+                    <span style="font-size:32px;font-weight:900">&#8361; 9,900</span><span style="font-size:13px"> ${unit}</span>
+                    </div>
+                    <div>
+                        <span style="font-size:15px;font-weight:900">-> ${this.check_pass_next_paid_date(9900)} 일부터 결제가 진행됩니다.</span>
+                    </div>
+                    `;
+            }
+        }
         // if(device == MOBILE && device_info != 'web' && user_username =='guest'){
         
         let style = {"color":"var(--fundamental-white)", "font-weight":"bold", "height":"auto", "cursor":"unset"};
@@ -198,7 +240,18 @@ class Pters_pass_shop{
         let icon = DELETE;
         let icon_r_visible = NONE;
         let icon_r_text = "";
-
+        if(this.data.pass_purchase_change == PASS_CHANGE) {
+            if (this.data.next.name[0] != "") {
+            title = `<div style='font-size:12px;font-weight:500;margin-bottom:10px'>스탠다드 <div style="float:right;display:inline-block;text-align:center;box-sizing:border-box;width:40px;height:20px;line-height:20px;font-size:11px;border-radius: 12px;font-weight:bold;border:1px solid #ffffff;">추천</div></div>
+                    <div>
+                    <span style="font-size:32px;font-weight:900">&#8361; 6,900</span><span style="font-size:13px"> ${unit}</span>
+                    </div>
+                    <div>
+                        <span style="font-size:15px;font-weight:900">-> ${this.check_pass_next_paid_date(6900)} 일부터 결제가 진행됩니다.</span>
+                    </div>
+                    `;
+            }
+        }
         // if(device == MOBILE && device_info != 'web' && user_username =='guest'){
         
         let style = {"color":"var(--fundamental-white)", "font-weight":"bold", "height":"auto", "cursor":"unset"};
@@ -248,7 +301,18 @@ class Pters_pass_shop{
         let icon = DELETE;
         let icon_r_visible = NONE;
         let icon_r_text = "";
-        
+        if(this.data.pass_purchase_change == PASS_CHANGE) {
+            if (this.data.next.name[0] != "") {
+                title = `<div style='font-size:12px;font-weight:500;margin-bottom:10px'>베이직</div>
+                        <div>
+                        <span style="font-size:32px;font-weight:900">&#8361; 3,900</span><span style="font-size:13px"> ${unit}</span>
+                        </div>
+                        <div>
+                            <span style="font-size:15px;font-weight:900">-> ${this.check_pass_next_paid_date(3900)} 일부터 결제가 시작됩니다.</span>
+                        </div>
+                    `;
+            }
+        }
         let style = {"color":"var(--fundamental-white)", "font-weight":"bold", "height":"auto", "cursor":"unset"};
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             // this.event_buy("basic");
@@ -285,29 +349,45 @@ class Pters_pass_shop{
     }
 
     event_buy(product){
-        switch(product){
-            case "basic":
-                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP_AGREEMENT, 100, POPUP_FROM_BOTTOM, null, ()=>{
-                        pters_pass_shop_agreement_popup = new Pters_pass_shop_agreement('.popup_pters_pass_shop_agreement', "basic");
-                    });
-                break;
-            case "standard":
-                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP_AGREEMENT, 100, POPUP_FROM_BOTTOM, null, ()=>{
-                        pters_pass_shop_agreement_popup = new Pters_pass_shop_agreement('.popup_pters_pass_shop_agreement', "standard");
-                    });
-                break;
-            case "premium":
-                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP_AGREEMENT, 100, POPUP_FROM_BOTTOM, null, ()=>{
-                        pters_pass_shop_agreement_popup = new Pters_pass_shop_agreement('.popup_pters_pass_shop_agreement', "premium");
-                    });
-                break;
+        let pass_purchase_change = this.data.pass_purchase_change;
+
+        if(pass_purchase_change == PASS_CHANGE){
+            show_user_confirm ('PTERS 패스 상품을 즉시 변경하시겠습니까?', ()=>{
+                // 정기 결제 + 미래 예약 대기인 경우
+                let date = new Date();
+                let user_id = home.data.user_id;
+                let product_name = PASS_PRODUCT[product].text + ' - 정기 결제 - 1개월';
+                let merchant_uid = `m_${user_id}_${PASS_PRODUCT[product].id}_${date.getTime()}`;
+                this.request_payment_change(product, product_name, merchant_uid);
+            });
+        }
+        if(pass_purchase_change == PASS_PURCHASE){
+            switch(product){
+                case "basic":
+                        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP_AGREEMENT, 100, POPUP_FROM_BOTTOM, null, ()=>{
+                            pters_pass_shop_agreement_popup = new Pters_pass_shop_agreement('.popup_pters_pass_shop_agreement', "basic", pass_purchase_change);
+                        });
+                    break;
+                case "standard":
+                        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP_AGREEMENT, 100, POPUP_FROM_BOTTOM, null, ()=>{
+                            pters_pass_shop_agreement_popup = new Pters_pass_shop_agreement('.popup_pters_pass_shop_agreement', "standard", pass_purchase_change);
+                        });
+                    break;
+                case "premium":
+                        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP_AGREEMENT, 100, POPUP_FROM_BOTTOM, null, ()=>{
+                            pters_pass_shop_agreement_popup = new Pters_pass_shop_agreement('.popup_pters_pass_shop_agreement', "premium", pass_purchase_change);
+                        });
+                    break;
+            }
         }
     }
 
 
     dom_row_toolbox(){
         let title = "PTERS 패스 구독";
-        
+        if(this.data.pass_purchase_change == PASS_CHANGE){
+            title = "PTERS 패스 변경";
+        }
         let description = ``;
         let html = `
         <div class="pters_pass_shop_upper_box" style="">
@@ -346,6 +426,73 @@ class Pters_pass_shop{
 
     upper_right_menu(){
         this.send_data();
+    }
+
+    check_pass_next_paid_date(next_price){
+        let d = new Date();
+        let today = `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
+        let diff_date = Math.abs(DateRobot.diff_date(today, this.data.next.paid_date[0]));
+        let product_price = 3900;
+        if(PASS_PRODUCT.basic.id==this.data.current.product_id[0]){
+            product_price = PASS_PRODUCT.basic.price;
+        }
+        if(PASS_PRODUCT.standard.id==this.data.current.product_id[0]){
+            product_price = PASS_PRODUCT.standard.price;
+        }
+        if(PASS_PRODUCT.premium.id==this.data.current.product_id[0]){
+            product_price = PASS_PRODUCT.premium.price;
+        }
+        let one_day_current_price = parseInt(product_price/31);
+        let one_day_next_price = parseInt(next_price/31);
+        let next_paid_date = parseInt(one_day_current_price * diff_date / one_day_next_price);
+
+        return DateRobot.add_date(today, next_paid_date);
+    }
+    request_payment_change(update_product_name, update_product_full_name, update_merchant_uid){
+
+        let product_id = PASS_PRODUCT[update_product_name].id;
+        let price = PASS_PRODUCT[update_product_name].price;
+
+        $.ajax({
+            url: "/payment/update_payment_product_info/", // 서비스 웹서버
+            method: "POST",
+            data: {
+                "update_product_id" : product_id,
+                "update_product_name" : update_product_full_name,
+                "update_product_price" :  price,
+                "update_merchant_uid" : update_merchant_uid,
+                "update_date" : this.check_pass_next_paid_date(price)},
+            dataType: "html",
+
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+
+            success:function(data){
+                var jsondata = JSON.parse(data);
+                let msg;
+                check_app_version(jsondata.app_version);
+
+                if(jsondata.messageArray.length>0){
+                    msg = '결제 정보 변경에 실패했습니다.';
+                    msg += '에러내용 : ' + jsondata.messageArray;
+                }else {
+                    msg = '결제 정보 변경이 완료되었습니다.';
+                }
+                show_error_message(msg);
+                layer_popup.close_layer_popup();
+                window.location.reload(true);
+            },
+
+            complete:function(){
+            },
+
+            error:function(){
+                console.log('server error');
+            }
+        });
     }
 }
 

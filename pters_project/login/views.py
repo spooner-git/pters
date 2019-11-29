@@ -298,6 +298,15 @@ def logout_trainer(request):
         token_data.delete()
 
     logout(request)
+
+    if device_id == 'pc':
+        request.session['device_info'] = 'web'
+    else:
+        if device_id != '':
+            request.session['device_info'] = 'app'
+        else:
+            request.session['device_info'] = 'web'
+
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
     return redirect('/')
