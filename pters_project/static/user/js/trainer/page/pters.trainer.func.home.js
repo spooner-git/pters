@@ -136,6 +136,7 @@ class Home {
                         
         let html = program_dom + plan_dom + end_alert_dom + sales_summary_dom + google_adsense_dom;
         document.querySelector('#home_content_wrap').innerHTML = html;
+        this.activate_google_adsense();
     }
 
     dom_row_program(data){
