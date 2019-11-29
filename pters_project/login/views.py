@@ -307,6 +307,7 @@ def logout_trainer(request):
         else:
             request.session['device_info'] = 'web'
 
+    logger.error('device_info::'+str(request.session['device_info']))
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
     return redirect('/')
