@@ -1,6 +1,7 @@
 class Setting_alarm{
     constructor(install_target){
         this.target = {install: install_target, toolbox:'section_setting_alarm_toolbox', content:'section_setting_alarm_content'};
+        this.data_sending_now = false;
 
         this.data = {
             push_to_member: OFF,
@@ -137,12 +138,19 @@ class Setting_alarm{
     }
 
     send_data(){
+        if(this.data_sending_now == true){
+            return false;
+        }else if(this.data_sending_now == false){
+            this.data_sending_now = true;
+        }
+
         let data = {
             "setting_to_trainee_lesson_alarm":this.data.push_to_member,
             "setting_from_trainee_lesson_alarm":this.data.push_to_me
         };
         
         Setting_alarm_func.update(data, ()=>{
+            this.data_sending_now = false;
             this.set_initial_data();
             show_error_message('변경 내용이 저장되었습니다.');
             // this.render_content();

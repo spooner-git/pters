@@ -1,6 +1,7 @@
 class Setting_theme{
     constructor(install_target){
         this.target = {install: install_target, toolbox:'section_setting_theme_toolbox', content:'section_setting_theme_content'};
+        this.data_sending_now = false;
 
         this.data = {
             theme: LIGHT
@@ -140,11 +141,18 @@ class Setting_theme{
     }
 
     send_data(){
+        if(this.data_sending_now == true){
+            return false;
+        }else if(this.data_sending_now == false){
+            this.data_sending_now = true;
+        }
+
         let data = {
             "theme":this.data.theme
         };
         Setting_theme_func.update(data, ()=>{
             // this.set_initial_data();
+            this.data_sending_now = false;
             show_error_message('테마를 변경하여 재실행 됩니다.');
             location.href = '/';
         });

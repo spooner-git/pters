@@ -1,6 +1,7 @@
 class Setting_attendmode{
     constructor(install_target){
         this.target = {install: install_target, toolbox:'section_setting_attendmode_toolbox', content:'section_setting_attendmode_content'};
+        this.data_sending_now = false;
 
         this.data = {
                 display_session_start:{text:[], value:[]},
@@ -191,6 +192,12 @@ class Setting_attendmode{
     }
 
     send_data(){
+        if(this.data_sending_now == true){
+            return false;
+        }else if(this.data_sending_now == false){
+            this.data_sending_now = true;
+        }
+
         let data = {
             "setting_admin_password":this.data.password,
             "setting_attend_class_prev_display_time":this.data.display_session_start.value[0],
@@ -198,6 +205,7 @@ class Setting_attendmode{
         };
         
         Setting_attendmode_func.update(data, ()=>{
+            this.data_sending_now = false;
             this.set_initial_data();
             show_error_message('변경 내용이 저장되었습니다.');
             // this.render_content();
