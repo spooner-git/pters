@@ -489,7 +489,10 @@ class Pters_pass_shop{
                 }
                 show_error_message(msg);
                 layer_popup.close_layer_popup();
-                // window.location.reload(true);
+                setTimeout(()=>{
+                    window.location.reload(true);
+                }, 1000);
+                //
             },
 
             complete:function(){
