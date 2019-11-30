@@ -58,11 +58,7 @@
 
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.const.js" %}></script>
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.fundamental.js" %}></script>
-    <style>
-        
-        
-    </style>
-    <!-- <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.dark_mode.css" %}> -->
+
     {% block local_css %}
     {% endblock %}
 </head>
@@ -71,6 +67,7 @@
 <noscript><iframe async src="https://www.googletagmanager.com/ns.html?id=GTM-WG2KK6D"
                   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
+
 
 <img src={% static_url "common/loading.svg" %} alt="" class="ajax_loading_image">
 
@@ -334,6 +331,7 @@
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_reserve.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_alarm.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_attendmode.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_theme.js" %}></script>
 
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.service_notice.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.service_inquiry.js" %}></script>
@@ -344,6 +342,7 @@
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.mypage_modify.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.mypage_photo_update.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.password_modify.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.leave_pters.js" %}></script>
 
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.pters_pass_main.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.pters_pass_pay_info.js" %}></script>
@@ -490,6 +489,7 @@
     var mypage_modify_popup;
     var mypage_photo_update_popup;
     var password_modify_popup;
+    var leave_pters_popup;
 
     var program_list_popup;
     var program_add_popup;
@@ -501,6 +501,8 @@
     var setting_reserve_popup;
     var setting_alarm_popup;
     var setting_attendmode_popup;
+    var setting_theme_popup;
+    
     var service_notice_popup;
     var service_inquiry_menu_popup;
     var service_inquiry_popup;
@@ -543,6 +545,7 @@
 
     function sideGoPage(page){
         are_there_new_alarm();
+        pass_inspector.init();
         // current_page = page;
         current_page_text = page;
         $('#debug_toolbar').hide();
@@ -696,6 +699,10 @@
             case 'setting_attendmode':
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_ATTENDMODE, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     setting_attendmode_popup = new Setting_attendmode('.popup_setting_attendmode')});
+            break;
+            case 'setting_theme':
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_THEME, 100, POPUP_FROM_RIGHT, null, ()=>{
+                                                    setting_theme_popup = new Setting_theme('.popup_setting_theme')});
             break;
             case 'service_notice':
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SERVICE_NOTICE, 100, POPUP_FROM_RIGHT, null, ()=>{

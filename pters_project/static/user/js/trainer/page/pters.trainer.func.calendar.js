@@ -864,7 +864,7 @@ class Calendar {
         if(week_dates_info == false){
             dates_to_join.push(
                 `<div class="cal_week_line">
-                    <div style="color:var(--font-highlight); font-size:25px; font-weight:bold; text-align:center; background-size:100px;height:30px;">PTERS</div>
+                    <div style="color:var(--font-highlight); font-size:25px; font-weight:bold; text-align:center; background-size:100px;height:30px;"></div>
                 </div>`
             );
         }else{

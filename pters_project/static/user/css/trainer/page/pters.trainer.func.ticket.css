@@ -13,9 +13,8 @@
 		position: relative;
 		height: 28px;
 		line-height: 28px;
-		background-color: var(--bg-main);
-		/* border-bottom: 1px solid #cccccc; */
-		/*padding: 14px 20px;*/
+		/* background-color: var(--bg-main); */
+		background-color: var(--root-content-bg-color);
 		box-sizing: border-box;
 	}
 	#ticket_display_panel .ticket_upper_box{

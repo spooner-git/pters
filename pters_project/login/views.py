@@ -22,6 +22,7 @@ from django.core import signing
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.core.mail import EmailMultiAlternatives
 from django.db import IntegrityError, InternalError, transaction
+from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render, resolve_url
 from django.template import loader
@@ -41,16 +42,17 @@ from registration import signals
 from registration.backends.hmac.views import RegistrationView, REGISTRATION_SALT
 from registration.forms import RegistrationForm
 
-from configs.const import USE, UN_USE, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, ACTIVATE, ON_SCHEDULE_TYPE
+from configs.const import USE, UN_USE, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, ACTIVATE, ON_SCHEDULE_TYPE, STATE_CD_FINISH, \
+    STATE_CD_ABSENCE
 from configs import settings
 from payment.functions import func_cancel_period_billing_schedule
 from payment.models import PaymentInfoTb, BillingInfoTb, BillingCancelInfoTb
-from schedule.models import ScheduleTb
+from schedule.models import ScheduleTb, RepeatScheduleTb
 from trainee.models import MemberTicketTb
-from trainer.models import LectureMemberTb, ClassTb, SettingTb, LectureTb
+from trainer.models import LectureMemberTb, ClassTb, SettingTb, LectureTb, MemberClassTb, ClassMemberTicketTb
 from trainer.models import LectureMemberTicketTb
 from .forms import MyPasswordResetForm, MyPasswordChangeForm, MyRegistrationForm
-from .models import MemberTb, PushInfoTb, SnsInfoTb
+from .models import MemberTb, PushInfoTb, SnsInfoTb, MemberOutInfoTb
 
 logger = logging.getLogger(__name__)
 
@@ -296,6 +298,9 @@ def logout_trainer(request):
         token_data.delete()
 
     logout(request)
+
+    logger.info('device_id::'+str(device_id))
+    # logger.info('device_info::'+str(request.session['device_info']))
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
     return redirect('/')
@@ -823,9 +828,10 @@ def authenticated_member_logic(request):
 # 회워탈퇴 api
 def out_member_logic(request):
     # next_page = request.POST.get('next_page')
-    next_page = '/login/logout/'
+    # next_page = '/login/logout/'
     error = None
-
+    out_type = request.POST.get('out_type', '')
+    out_reason = request.POST.get('out_reason', '')
     member_id = request.user.id
     user = None
     member = None
@@ -859,27 +865,68 @@ def out_member_logic(request):
     if error is None:
         try:
             with transaction.atomic():
-                if group_name == 'trainee':
-                    member_member_ticket_data = MemberTicketTb.objects.filter(member_id=member_id,
-                                                                              member_auth_cd=AUTH_TYPE_VIEW, use=USE)
-                    if len(member_member_ticket_data) > 0:
-                        member_member_ticket_data.update(member_auth_cd=AUTH_TYPE_WAIT)
-                # elif group_name == 'trainer':
-                #     member_class_data = MemberClassTb.objects.filter(member_id=member_id, auth_cd=AUTH_TYPE_VIEW, use=USE)
-                #     if len(member_class_data) > 0:
-                #         member_class_data.update(auth_cd='DELETE')
+                # if group_name == 'trainee':
+                    # member_member_ticket_data = MemberTicketTb.objects.filter(member_id=member_id,
+                    #                                                           member_auth_cd=AUTH_TYPE_VIEW, use=USE)
+                    # if len(member_member_ticket_data) > 0:
+                    #     member_member_ticket_data.update(member_auth_cd=AUTH_TYPE_WAIT)
 
                 if error is None:
-                    member.contents = str(user.username) + ':' + str(user.id)
-                    user.username = str(user.username) + ':' + str(user.id)
+                    if group_name == 'trainer':
+                        member_class_data = MemberClassTb.objects.filter(member_id=member_id, auth_cd=AUTH_TYPE_VIEW)
+                        for member_class_info in member_class_data:
+                            class_id = member_class_info.class_tb_id
+                            now = timezone.now()
+                            class_member_ticket_data = MemberTicketTb.objects.select_related(
+                                'ticket_tb').filter(ticket_tb__class_tb_id=class_id)
+
+                            schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
+                                                                      end_dt__lte=now,
+                                                                      use=USE).exclude(Q(state_cd=STATE_CD_FINISH)
+                                                                                       | Q(state_cd=STATE_CD_ABSENCE))
+                            schedule_data_delete = ScheduleTb.objects.filter(class_tb_id=class_id,
+                                                                             end_dt__gt=now,
+                                                                             use=USE).exclude(Q(state_cd=STATE_CD_FINISH)
+                                                                                              | Q(state_cd=STATE_CD_ABSENCE))
+                            repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id)
+
+                            if len(schedule_data) > 0:
+                                schedule_data.update(state_cd=STATE_CD_FINISH)
+                            if len(schedule_data_delete) > 0:
+                                schedule_data_delete.delete()
+                            if len(repeat_schedule_data) > 0:
+                                repeat_schedule_data.delete()
+
+                            class_member_ticket_data.update(member_ticket_avail_count=0, member_ticket_rem_count=0,
+                                                            state_cd=STATE_CD_FINISH)
+
+                    member.contents = str(user.username) + ':' + str(member.phone) + ':' + str(member.phone_is_active)\
+                                      + ':' + str(user.id)
+                    # member.phone = ''
+                    member.phone_is_active = 0
+
+                    count = MemberTb.objects.filter(name=member.name).count()
+                    max_range = (100 * (10 ** len(str(count)))) - 1
+
+                    # while test:
+                    for i in range(0, 100):
+                        username = member.name + str(random.randrange(0, max_range)).zfill(len(str(max_range)))
+                        try:
+                            User.objects.get(username=username)
+                        except ObjectDoesNotExist:
+                            user.username = str(user.username) + ':' + str(user.id)
+                            break
+
+                    user.username = str(username)
                     user.email = ''
                     user.is_active = 0
                     user.set_password('0000')
                     user.save()
                     member.save()
-
+                    MemberOutInfoTb(member_id=request.user.id, out_type=out_type, out_reason=out_reason, use=1).save()
                 if len(sns_data) > 0:
                     sns_data.update(use=UN_USE)
+
         except ValueError:
             error = '등록 값에 문제가 있습니다.'
         except IntegrityError:
@@ -917,7 +964,7 @@ def out_member_logic(request):
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
 
-    return redirect(next_page)
+    return render(request, 'ajax/registration_error_ajax.html')
 
 
 class AddPushTokenView(View):
@@ -969,10 +1016,14 @@ class DeletePushTokenView(View):
 
     def post(self, request):
         device_id = request.POST.get('device_id', '')
+        # logger.info('device_id::' + device_id)
         if device_id != '':
             token_data = PushInfoTb.objects.filter(device_id=device_id, use=USE)
             if len(token_data) > 0:
                 token_data.delete()
+            request.session['device_info'] = 'app'
+        else:
+            request.session['device_info'] = 'web'
 
         return render(request, self.template_name, {'token_check': True})
 

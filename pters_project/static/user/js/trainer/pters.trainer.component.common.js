@@ -701,6 +701,22 @@ class CComponent{
         return html;
     }
 
+    static check_button (id, checked, style, onclick){
+        let html = `<div id="check_button_${id}" style="${CComponent.data_to_style_code(style)}" class="check_button ${checked == ON ? 'check_button_active': ''}">
+                        ${checked == ON ? CImg.confirm(["#fe4e65"], {"width":"100%", "height":"100%", "vertical-align":"top"}) : ""}
+                    </div>`;
+        
+        $(document).off('click', `#check_button_${id}`).on('click', `#check_button_${id}`, function(e){
+            let $this = $(`#check_button_${id}`);
+            if($this.hasClass('check_button_active')){
+                onclick(OFF);
+            }else{
+                onclick(ON);
+            }
+        });
+        return html;
+    }
+
     //스타일 코드를 인라인스타일 스타일 코드로 변환시켜주는 함수
     static data_to_style_code(data){
         if(data == null || data == undefined){
@@ -1308,6 +1324,22 @@ class CImg{
 
         let style_code = style_to_join.join(';');
         return style_code;
+    }
+}
+
+class Ads{
+    static row(){
+        let html = `<ins class="adsbygoogle"
+                        style="display:block"
+                        data-ad-format="fluid"
+                        data-ad-layout-key="-g8+4o-17-4f+cc"
+                        data-ad-client="ca-pub-4554121851965192"
+                        data-ad-slot="4186944219"></ins>`;
+        return html;
+    }
+
+    static active(){
+        (adsbygoogle = window.adsbygoogle || []).push({});
     }
 }
 

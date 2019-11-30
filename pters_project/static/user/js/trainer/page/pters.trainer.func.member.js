@@ -216,6 +216,16 @@ class Member {
         document.querySelector('#member_content_wrap').innerHTML = html_temp.join("");
     }
 
+    dom_row_google_adsense(){
+        let dom = Ads.row();
+
+        let html = `<article class="member_wrapper">   
+                            ${dom}
+                    </article>`;
+
+        return pass_inspector.data.auth_ads.limit_num != 0 ? html : "";
+    }
+
     render_search_tool(type){
         let html = `<input type="text" class="search_input" placeholder="검색" onclick="event.stopPropagation();" onkeyup="${this.instance}.search_member_by_typing(event)">`;
         if(type == "clear"){

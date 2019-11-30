@@ -131,6 +131,16 @@ class Alarm {
         return html_temp;
     }
 
+    dom_row_google_adsense(){
+        let dom = Ads.row();
+
+        let html = `<article class="alarm_wrapper">   
+                            ${dom}
+                    </article>`;
+
+        return pass_inspector.data.auth_ads.limit_num != 0 ? html : "";
+    }
+
     are_there_new_alarm(callback){
         let READ = 1;
         let UNREAD = 0;

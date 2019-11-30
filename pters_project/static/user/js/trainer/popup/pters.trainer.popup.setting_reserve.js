@@ -1,6 +1,7 @@
 class Setting_reserve{
     constructor(install_target){
         this.target = {install: install_target, toolbox:'section_setting_reserve_toolbox', content:'section_setting_reserve_content'};
+        this.data_sending_now = false;
 
         this.data = {
                 stop_reserve:OFF,
@@ -276,6 +277,11 @@ class Setting_reserve{
 
 
     send_data(){
+        if(this.data_sending_now == true){
+            return false;
+        }else if(this.data_sending_now == false){
+            this.data_sending_now = true;
+        }
         let data = {
             "setting_member_reserve_time_available":'00:00-23:59', //예약 가능 시간대
             "setting_member_reserve_prohibition":this.data.stop_reserve, // 예약 일시 정지
@@ -289,6 +295,7 @@ class Setting_reserve{
         };
         
         Setting_reserve_func.update(data, ()=>{
+            this.data_sending_now = false;
             this.set_initial_data();
             show_error_message('변경 내용이 저장되었습니다.');
             // this.render_content();

@@ -24,7 +24,9 @@ class Home {
             end_alert: OPEN
         };
 
-        this.received_data_cache = null; // 재랜더링시 스크롤 위치를 기억하도록 먼저 이전 데이터를 그려주기 위해
+        this.received_data = {
+            program:null, schedule:null, member:null, statistics:null
+        };
     }
 
     init (){
@@ -70,33 +72,64 @@ class Home {
         let plan_dom;
         let end_alert_dom;
         let sales_summary_dom;
+        let google_adsense_dom;
 
         Program_func.read((data)=>{
+            this.received_data.program = data;
             let program = this.dom_row_program(data);
             program_dom = '<div class="contents">' + program + '</div>';
 
             calendar.request_schedule_data (this.today, 1, (data)=>{
+                this.received_data.schedule = data;
                 let today_plan = this.dom_row_today_plan(data);
                 plan_dom = '<div class="contents">' + today_plan + '</div>';
 
                 member.request_member_list("ing", (data)=>{
+                    this.received_data.member = data;
                     let end_alert = this.dom_row_end_alert(data);
                     end_alert_dom = '<div class="contents">' + end_alert + '</div>';
 
                     Statistics_func.read("sales", {"start_date":this.today, "end_date":this.today}, (data)=>{
+                        this.received_data.statistics = data;
                         if(current_page_text != this.page_name){
                             return false;
                         }
                         let sales_summary = this.dom_row_sales_this_month(data);
                         sales_summary_dom = '<div class="contents">' + sales_summary + '</div>';
-                        
-                        let html = program_dom + plan_dom + end_alert_dom + sales_summary_dom;
+
+                        let html = program_dom + plan_dom + end_alert_dom + sales_summary_dom ;
                         document.querySelector('#home_content_wrap').innerHTML = html;
                         // $('#root_content').scrollTop(0);
                     });
                 }, OFF);
             }, OFF);
         });
+    }
+
+    render_content_offline (){
+        // let today_plan;
+
+        let program_dom;
+        let plan_dom;
+        let end_alert_dom;
+        let sales_summary_dom;
+
+        let data = this.received_data;
+
+        let program = this.dom_row_program(data.program);
+        program_dom = '<div class="contents">' + program + '</div>';
+
+        let today_plan = this.dom_row_today_plan(data.schedule);
+        plan_dom = '<div class="contents">' + today_plan + '</div>';
+
+        let end_alert = this.dom_row_end_alert(data.member);
+        end_alert_dom = '<div class="contents">' + end_alert + '</div>';
+
+        let sales_summary = this.dom_row_sales_this_month(data.statistics);
+        sales_summary_dom = '<div class="contents">' + sales_summary + '</div>';
+                        
+        let html = program_dom + plan_dom + end_alert_dom + sales_summary_dom;
+        document.querySelector('#home_content_wrap').innerHTML = html;
     }
 
     dom_row_program(data){
@@ -174,15 +207,19 @@ class Home {
         }
 
         let id = "home_today_plan_expand_button";
-        let title = "접기/펼치기";
+        let title = this.view.today_plan == OPEN 
+            ? '접기 '+ CImg.arrow_expand(["var(--img-sub1)"], {"transform":"rotate(180deg)", "width":"17px", "vertical-align":"middle", "margin-bottom":"2px"}) 
+            : '펼치기 ' + CImg.arrow_expand(["var(--img-sub1)"], {"width":"17px", "vertical-align":"middle", "margin-bottom":"2px"});
         let style = {"float":"right", "padding":"0", "font-size":"12px", "font-weight":"500", "color":"var(--font-sub-normal)"};
         let onclick = ()=>{
             if(this.view.today_plan == OPEN){
                 this.view.today_plan = CLOSE;
-                $(`#${id}_target`).hide();
+                this.render_content_offline();
+                // $(`#${id}_target`).hide();
             }else{
                 this.view.today_plan = OPEN;
-                $(`#${id}_target`).show();
+                this.render_content_offline();
+                // $(`#${id}_target`).show();
             }
         };
         let expand_button = CComponent.text_button (id, title, style, onclick);
@@ -256,15 +293,19 @@ class Home {
         }
 
         let id = "home_end_alert_expand_button";
-        let title = "접기/펼치기";
+        let title = this.view.end_alert == OPEN 
+            ? '접기 ' +  CImg.arrow_expand(["var(--img-sub1)"], {"transform":"rotate(180deg)", "width":"17px", "vertical-align":"middle", "margin-bottom":"2px"}) 
+            : '펼치기 ' + CImg.arrow_expand(["var(--img-sub1)"], {"width":"17px", "vertical-align":"middle", "margin-bottom":"2px"});
         let style = {"float":"right", "padding":"0", "font-size":"12px", "font-weight":"500", "color":"var(--font-sub-normal)"};
         let onclick = ()=>{
             if(this.view.end_alert == OPEN){
                 this.view.end_alert = CLOSE;
-                $(`#${id}_target`).hide();
+                this.render_content_offline();
+                // $(`#${id}_target`).hide();
             }else{
                 this.view.end_alert = OPEN;
-                $(`#${id}_target`).show();
+                this.render_content_offline();
+                // $(`#${id}_target`).show();
             }
         };
         let expand_button = CComponent.text_button (id, title, style, onclick);
@@ -301,6 +342,18 @@ class Home {
         
         let html = html_to_join.join("");
         return html;
+    }
+
+    dom_row_google_adsense(){
+        let dom = Ads.row();
+
+        let html = `<div class="contents">
+                        <article class="sales_wrapper" style="padding:0">
+                            ${dom}
+                        </article>
+                    </div>`;
+        
+        return pass_inspector.data.auth_ads.limit_num != 0 ? html : "";
     }
 
 

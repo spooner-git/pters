@@ -101,6 +101,7 @@
 		margin: 1%;
 		padding: 10px;
 		box-shadow:var(--box-shadow-article);
+		background-color: var(--bg-article);
 	}
 	.lecture_wrapper:hover{
 		box-shadow:0 0 16px 0 #28282850;
