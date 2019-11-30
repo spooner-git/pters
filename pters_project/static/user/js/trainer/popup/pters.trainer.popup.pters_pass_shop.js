@@ -188,7 +188,7 @@ class Pters_pass_shop{
                     <span style="font-size:32px;font-weight:900">&#8361; 9,900</span><span style="font-size:13px"> ${unit}</span>
                     </div>
                     <div>
-                        <span style="font-size:15px;font-weight:900">-> ${this.check_pass_next_paid_date(9900)} 일부터 결제가 진행됩니다.</span>
+                        <span style="font-size:15px;font-weight:900">${this.check_pass_next_paid_date(9900)} 일부터 결제가 진행됩니다.</span>
                     </div>
                     `;
             }

@@ -706,7 +706,7 @@ def update_payment_product_info_logic(request):
             current_payment_info.end_date = str(today)
             change_payment_info = PaymentInfoTb(member_id=request.user.id,
                                                 product_tb_id=update_product_id,
-                                                payment_type_cd='PERIOD',
+                                                payment_type_cd='CHANGE',
                                                 merchant_uid='',
                                                 customer_uid=current_payment_info.customer_uid,
                                                 start_date=str(today),
@@ -714,11 +714,11 @@ def update_payment_product_info_logic(request):
                                                 paid_date=str(today),
                                                 period_month=1,
                                                 price=0,
-                                                name=product_price_info.product_tb.name + ' - 결제 변경',
+                                                name=product_price_info.product_tb.name + ' - 상품 변경',
                                                 buyer_email=request.user.email,
                                                 status='paid',
                                                 pay_method='card',
-                                                card_name='결제 변경',
+                                                card_name='상품 변경',
                                                 buyer_name=request.user.first_name,
                                                 use=USE)
             change_payment_info.save()
