@@ -437,7 +437,7 @@ class Pters_pass_shop{
     check_pass_next_paid_date(next_price){
         let d = new Date();
         let today = `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
-        let diff_date = Math.abs(DateRobot.diff_date(today, this.data.next.paid_date[0]));
+        let diff_date = Math.abs(DateRobot.diff_date(today, this.data.current.end_date[0]));
         let product_price = 3900;
         if(PASS_PRODUCT.basic.id==this.data.current.product_id[0]){
             product_price = PASS_PRODUCT.basic.price;
