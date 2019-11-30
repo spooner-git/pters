@@ -199,11 +199,13 @@ class Program_add{
         
         let inspect = pass_inspector.program();
         if(inspect.barrier == BLOCKED){
+            this.data_sending_now = false;
             show_error_message(`[${inspect.limit_type}] 이용자께서는 프로그램을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다.`);
             return false;
         }
 
         if(this.check_before_send() == false){
+            this.data_sending_now = false;
             return false;
         }
         let data = {

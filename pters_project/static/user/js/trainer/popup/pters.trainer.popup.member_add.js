@@ -691,11 +691,13 @@ class Member_add{
         let recontract = this.data_from_external == null ? OFF : ON;
         let inspect = pass_inspector.member(recontract);
         if(inspect.barrier == BLOCKED){
+            this.data_sending_now = false;
             show_error_message(`[${inspect.limit_type}] 이용자께서는 회원을 최대 ${inspect.limit_num}명까지 등록하실 수 있습니다.`);
             return false;
         }
 
         if(this.check_before_send() == false){
+            this.data_sending_now = false;
             return false;
         }
 

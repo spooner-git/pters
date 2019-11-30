@@ -110,7 +110,7 @@ class Lecture_add{
     render(){
         let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();lecture_add_popup.clear();">${CImg.x()}</span>`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right" onclick="lecture_add_popup.send_data();"><span style="color:var(--font-highlight);font-weight: 500;">저장</span></span>`;
+        let top_right = `<span class="icon_right" onclick="lecture_add_popup.send_data();"><span style="color:var(--font-highlight);font-weight: 500;">등록</span></span>`;
         let content =   `<form id="${this.form_id}" onSubmit="return false"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
         
@@ -366,10 +366,12 @@ class Lecture_add{
         let inspect = pass_inspector.lecture();
         if(inspect.barrier == BLOCKED){
             show_error_message(`[${inspect.limit_type}] 이용자께서는 수업을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다.`);
+            this.data_sending_now = false;
             return false;
         }
 
         if(this.check_before_send() == false){
+            this.data_sending_now = false;
             return false;
         }
 

@@ -393,16 +393,15 @@ class Setting_worktime{
     }
 
     send_data(){
+
+        if(this.check_before_send() == false){
+            return false;
+        }
         if(this.data_sending_now == true){
             return false;
         }else if(this.data_sending_now == false){
             this.data_sending_now = true;
         }
-
-        if(this.check_before_send() == false){
-            return false;
-        }
-
         let data = {
             "setting_trainer_work_sun_time_avail":this.data.SUN.dayoff == OFF ? this.art_data(this.data.SUN.start_time, this.data.SUN.end_time) : "00:00-00:00",
             "setting_trainer_work_mon_time_avail":this.data.MON.dayoff == OFF ? this.art_data(this.data.MON.start_time, this.data.MON.end_time) : "00:00-00:00",
