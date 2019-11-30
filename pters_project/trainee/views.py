@@ -14,7 +14,7 @@ from django.views import View
 from django.views.generic import TemplateView, RedirectView
 
 from configs import settings
-from configs.views import AccessTestMixin
+from configs.views import AccessTestMixin, func_setting_data_update
 from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, DEL_SCHEDULE, USE, UN_USE, FROM_TRAINEE_LESSON_ALARM_ON, \
     SCHEDULE_DUPLICATION_DISABLE, PROGRAM_SELECT, PROGRAM_LECTURE_CONNECT_DELETE, PROGRAM_LECTURE_CONNECT_ACCEPT, \
     SCHEDULE_DUPLICATION_ENABLE, LECTURE_TYPE_ONE_TO_ONE, STATE_CD_IN_PROGRESS, STATE_CD_FINISH, STATE_CD_ABSENCE, \
@@ -172,6 +172,7 @@ class TraineeMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                 class_info = None
 
             if class_info is not None:
+                func_setting_data_update(self.request, 'trainee')
                 context = func_get_trainer_setting_list(context, class_info.member_id, class_id, class_info.class_hour)
                 cancel_prohibition_time = context['setting_member_reserve_cancel_time']
                 # 근접 취소 시간 확인
@@ -228,6 +229,7 @@ class TraineeCalendarView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         start_date = today - datetime.timedelta(days=int(day))
         end_date = today + datetime.timedelta(days=int(day))
 
+        func_setting_data_update(self.request, 'trainee')
         # context = func_get_class_member_ticket_count(context, class_id, self.request.user.id)
 
         context['holiday'] = func_get_holiday_schedule(start_date, end_date)
@@ -290,6 +292,7 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
                                                                  change_password_check=1, use=USE).count()
             if sns_password_change_check == 0:
                 context['check_password_changed'] = 0
+        func_setting_data_update(self.request, 'trainee')
         return render(request, self.template_name, context)
 
 

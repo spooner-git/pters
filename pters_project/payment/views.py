@@ -109,7 +109,7 @@ def check_before_billing_logic(request):
                                                                   use=USE).count()
             # 현재 진행중인 정기 결제 기능이 있는 경우 오류 발
             if period_payment_counter > 0:
-                error = '이미 정기 결제중인 동일한 기능의 이용권이 있어 결제할수 없습니다.'
+                error = '이용권을 변경하시려는 경우 이용권 변경 메뉴를 이용해주세요.'
 
     if error is None:
         # 현재 결제가된 이용권이 있는 경우 마지막 일자 + 1일 후부터 사용가능한 일자로 설정
@@ -631,86 +631,138 @@ def update_period_billing_logic(request):
 
 
 def update_payment_product_info_logic(request):
-    customer_uid = request.POST.get('customer_uid', '')
-    change_product_id = request.POST.get('change_product_id', '')
+    update_product_id = request.POST.get('update_product_id', '')
+    update_product_name = request.POST.get('update_product_name', '')
+    update_product_price = request.POST.get('update_product_price', '')
+    update_merchant_uid = request.POST.get('update_merchant_uid', '')
+    remain_product_price = request.POST.get('remain_product_price', '')
+    update_date = request.POST.get('update_date', '')
 
     error = None
     context = {'error': None}
     product_price_info = None
     next_schedule_timestamp = ''
+    payment_info = None
+    current_payment_info = None
+    today = datetime.date.today()
 
-    if customer_uid == '' or customer_uid is None:
-        error = '결제 정보를 불러오지 못했습니다.'
+    payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id,
+                                                payment_type_cd='PERIOD',
+                                                status='reserve',
+                                                use=UN_USE).order_by('-end_date')
+    if len(payment_data) > 0:
+        payment_info = payment_data[0]
+    else:
+        error = '오류가 발생했습니다.[-1]'
+    current_payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id,
+                                                        payment_type_cd='PERIOD',
+                                                        status='paid', use=USE).order_by('-payment_info_id')
+    if len(current_payment_data) > 0:
+        current_payment_info = current_payment_data[0]
+        if current_payment_info.merchant_uid == '':
+            error = '다음 결제일까지 변경이 불가합니다.'
+    else:
+        error = '오류가 발생했습니다.[0]'
 
-    if change_product_id == '' or change_product_id is None:
-        error = '결제 정보를 불러오지 못했습니다.'
+    if update_product_id == '' or update_product_id is None:
+        error = '오류가 발생했습니다.[1]'
+    if update_product_name == '' or update_product_name is None:
+        error = '오류가 발생했습니다.[2]'
+    if update_product_name == '' or update_product_price is None:
+        error = '오류가 발생했습니다.[3]'
+    if update_merchant_uid == '' or update_merchant_uid is None:
+        error = '오류가 발생했습니다.[4]'
+    if update_date == '' or update_date is None:
+        error = '오류가 발생했습니다.[5]'
 
     if error is None:
         try:
-            product_price_info = ProductPriceTb.objects.get(product_id=change_product_id, payment_type_cd='PERIOD',
+            product_price_info = ProductPriceTb.objects.get(product_tb_id=update_product_id, payment_type_cd='PERIOD',
                                                             period_month=1)
+            if str(product_price_info.sale_price) != str(update_product_price):
+                error = '결제 금액에 오류가 발생했습니다.'
         except ObjectDoesNotExist:
             error = '상품 정보를 불러오지 못했습니다.[0]'
 
     if error is None:
-        try:
-            # 기존 결제 정보 update
-            with transaction.atomic():
-                # 관련 데이터 취소하기
-                error = func_cancel_period_billing_schedule(customer_uid)
+        # try:
+        #     # 기존 결제 정보 update
+        #     with transaction.atomic():
+        # 관련 데이터 취소하기
+        error = func_cancel_period_billing_schedule(payment_info.customer_uid)
 
-                if error is None:
-                    # 예약 데이터 삭제하기
-                    payment_data = PaymentInfoTb.objects.filter(customer_uid=customer_uid,
-                                                                status='reserve',
-                                                                payment_type_cd='PERIOD')
-                    payment_data.delete()
+        if error is None:
+            # 예약 데이터 업데이트
+            payment_info.name = update_product_name
+            payment_info.product_tb_id = update_product_id
+            payment_info.merchant_uid = update_merchant_uid
+            payment_info.paid_date = str(update_date)
+            payment_info.start_date = str(update_date)
+            payment_info.end_date = func_get_end_date(payment_info.payment_type_cd,
+                                                      datetime.datetime.strptime(str(update_date), '%Y-%m-%d'),
+                                                      int(payment_info.period_month),
+                                                      int(str(update_date).split('-')[2]))
+            payment_info.save()
+            current_payment_info.end_date = str(today)
+            change_payment_info = PaymentInfoTb(member_id=request.user.id,
+                                                product_tb_id=update_product_id,
+                                                payment_type_cd='PERIOD',
+                                                merchant_uid='',
+                                                customer_uid=current_payment_info.customer_uid,
+                                                start_date=str(today),
+                                                end_date=str(update_date),
+                                                paid_date=str(today),
+                                                period_month=1,
+                                                price=0,
+                                                name=product_price_info.product_tb.name + ' - 결제 변경',
+                                                buyer_email=request.user.email,
+                                                status='paid',
+                                                pay_method='card',
+                                                card_name='결제 변경',
+                                                buyer_name=request.user.first_name,
+                                                use=USE)
+            change_payment_info.save()
 
-                    # 정기결제 결제 정보 업데이트
-                    try:
-                        billing_info = BillingInfoTb.objects.get(customer_uid=customer_uid, use=USE)
-                        billing_info.product_tb_id = change_product_id
-                        billing_info.name = product_price_info.product_tb.name + ' - ' + product_price_info.name
-                        billing_info.price = int(product_price_info.sale_price)
-                        billing_info.save()
-                        # 정기 결제 다음 결제일을 자동 결제 예약 시간으로 설정
-                        next_billing_date_time = datetime.datetime.combine(billing_info.next_payment_date,
-                                                                           datetime.datetime.min.time())
-                        next_schedule_timestamp = next_billing_date_time.replace(hour=15, minute=0, second=0,
-                                                                                 microsecond=0).timestamp()
-                    except ObjectDoesNotExist:
-                        error = '정기 결제 정보를 불러오지 못했습니다.'
+            # 정기결제 결제 정보 업데이트
+            try:
+                billing_info = BillingInfoTb.objects.get(customer_uid=payment_info.customer_uid, use=USE)
+                billing_info.product_tb_id = update_product_id
+                billing_info.name = product_price_info.product_tb.name + ' - ' + product_price_info.name
+                billing_info.price = int(update_product_price)
+                billing_info.next_payment_date = str(update_date)
+                billing_info.payed_date = str(update_date).split('-')[2]
+                billing_info.save()
+                # 정기 결제 다음 결제일을 자동 결제 예약 시간으로 설정
+                next_billing_date_time = datetime.datetime.combine(
+                    datetime.datetime.strptime(str(update_date), '%Y-%m-%d'),
+                    datetime.datetime.min.time())
+                next_schedule_timestamp = next_billing_date_time.replace(hour=15, minute=0, second=0,
+                                                                         microsecond=0).timestamp()
+            except ObjectDoesNotExist:
+                error = '정기 결제 정보를 불러오지 못했습니다.'
 
-                if error is None:
-                    # iamport 상의 예약 제거
-                    error = func_cancel_period_billing_schedule(customer_uid)
-
-                if error is None:
-                    token_result = func_get_imp_token()
-                    access_token = token_result['access_token']
-                    error = token_result['error']
-                    if error is None:
-                        # merchant_uid 값 셋팅
-                        merchant_uid = 'm_' + str(request.user.id) + '_' + change_product_id\
-                                       + '_' + str(next_schedule_timestamp).split('.')[0]
-                        # iamport 정기 결제 예약 신청
-                        error = func_set_iamport_schedule(access_token['access_token'],
-                                                          product_price_info.product_tb.name + ' - '
-                                                          + product_price_info.name,
-                                                          int(product_price_info.sale_price),
-                                                          customer_uid, merchant_uid, next_schedule_timestamp,
-                                                          request.user.first_name, request.user.email)
-                if error is not None:
-                    raise InternalError
-
-        except TypeError:
-            error = '오류가 발생했습니다.[0]'
-        except ValueError:
-            error = '오류가 발생했습니다.[1]'
-        except IntegrityError:
-            error = '오류가 발생했습니다.[2]'
-        except InternalError:
-            error = error
+        if error is None:
+            token_result = func_get_imp_token()
+            access_token = token_result['access_token']
+            error = token_result['error']
+            if error is None:
+                # iamport 정기 결제 예약 신청
+                error = func_set_iamport_schedule(access_token, update_product_name,
+                                                  int(product_price_info.sale_price),
+                                                  payment_info.customer_uid, update_merchant_uid,
+                                                  next_schedule_timestamp,
+                                                  request.user.first_name, request.user.email)
+        #         if error is not None:
+        #             raise InternalError
+        #
+        # except TypeError:
+        #     error = '오류가 발생했습니다.[0]'
+        # except ValueError:
+        #     error = '오류가 발생했습니다.[1]'
+        # except IntegrityError:
+        #     error = '오류가 발생했습니다.[2]'
+        # except InternalError:
+        #     error = error
 
     if error is not None:
         logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
@@ -895,7 +947,7 @@ class GetPaymentScheduleInfoView(LoginRequiredMixin, View):
         payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id,
                                                     payment_type_cd='PERIOD',
                                                     status='reserve',
-                                                    use=UN_USE).order_by('-end_date')
+                                                    use=UN_USE).order_by('-payment_info_id')
         if len(payment_data) > 0:
             payment_info = payment_data[0]
         context['payment_info'] = payment_info
@@ -914,7 +966,7 @@ class GetPaymentInfoView(LoginRequiredMixin, View):
         payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id,
                                                     status='paid',
                                                     start_date__lte=today, end_date__gte=today,
-                                                    use=USE).order_by('-end_date')
+                                                    use=USE).order_by('-payment_info_id')
         if len(payment_data) > 0:
             payment_info = payment_data[0]
             payment_info.start_date = str(payment_info.start_date)

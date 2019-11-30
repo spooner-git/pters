@@ -42,7 +42,8 @@ class Pters_pass_main{
                 receipt_url:[""],
                 start_date:[""],
                 status:[""],
-                paid_date:[""]
+                paid_date:[""],
+                product_id:[""]
             }
         };
 
@@ -110,7 +111,20 @@ class Pters_pass_main{
                         this.dom_row_payment_info() + 
                         this.dom_row_cancel_pass() + 
                     '</article>';
+        console.log(this.data.next.name[0]);
 
+        if(this.data.next.name[0]!=""){
+            html =  '<article class="obj_input_box_full">' +
+                        this.dom_row_my_pters_pass() +
+                    '</article>' +
+                    '<article class="obj_input_box_full">' +
+                        this.dom_row_pters_pass_change() +
+                    '</article>' +
+                    '<article class="obj_input_box_full">' +
+                        this.dom_row_payment_info() +
+                        this.dom_row_cancel_pass() +
+                    '</article>';
+        }
         return html;
     }
 
@@ -119,20 +133,21 @@ class Pters_pass_main{
         
         let schedule =  this.dom_row_auth_info("일정", `매일 오늘 기준 전/후 ${data["auth_plan_create"].limit_num}일 등록, 취소`);
         let member =  this.dom_row_auth_info("회원", `${data["auth_member_create"].limit_num} 명 (진행중)`);
-        let lecture =  this.dom_row_auth_info("수업", `${data["auth_group_create"].limit_num} 개 (진행중)`);
-        let ticket =  this.dom_row_auth_info("수강권", `${data["auth_package_create"].limit_num} 개 (진행중)`);
+        // let lecture =  this.dom_row_auth_info("수업", `${data["auth_group_create"].limit_num} 개 (진행중)`);
+        // let ticket =  this.dom_row_auth_info("수강권", `${data["auth_package_create"].limit_num} 개 (진행중)`);
         let statistics =  this.dom_row_auth_info("통계", `${data["auth_analytics_read"].limit_num} 개월씩 조회 가능`);
         let program =  this.dom_row_auth_info("프로그램", `${data["auth_program_create"].limit_num} 개`);
         
         let html = `<div>` +
-                        schedule + member + lecture + ticket + statistics + program +
+                        // schedule + member + lecture + ticket + statistics + program +
+                        schedule + member + statistics + program +
                     `</div>`;
         return html;
     }
 
     dom_row_auth_info(title, auth_info){
         let html = `<div style="display:flex;font-size:12px;letter-spacing:-0.5px;height:24px;line-height:24px;margin-bottom:2px;">
-                        <div style="flex-basis:82px;color:var(--font-sub-light)">
+                        <div style="flex-basis:82px;color:var(--font-inactive)">
                             ${title}
                         </div>
                         <div style="flex:1 1 0;color:var(--font-sub-dark);">
@@ -144,18 +159,37 @@ class Pters_pass_main{
 
     dom_row_pters_pass_purchase(){
         let id = "pters_pass_purchase";
-        let title = "PTERS 패스";
+        let title = "PTERS 패스 상품 구매";
         let icon = DELETE;
         let icon_r_visible = SHOW;
         let icon_r_text = "";
         let style = null;
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            // let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
-            // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP, 100, popup_style, null, ()=>{
-            //     pters_pass_shop_popup = new Pters_pass_shop('.popup_pters_pass_shop');
-            // });
-            show_error_message("상품을 준비 중 입니다.");
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP, 100, popup_style, null, ()=>{
+                pters_pass_shop_popup = new Pters_pass_shop('.popup_pters_pass_shop', PASS_PURCHASE);
+            });
+            // show_error_message("상품을 준비 중 입니다.");
                 
+        });
+        let html = row;
+        return html;
+    }
+
+    dom_row_pters_pass_change(){
+        let id = "pters_pass_purchase";
+        let title = "PTERS 패스 상품 변경";
+        let icon = DELETE;
+        let icon_r_visible = SHOW;
+        let icon_r_text = "";
+        let style = null;
+        let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP, 100, popup_style, null, ()=>{
+                pters_pass_shop_popup = new Pters_pass_shop('.popup_pters_pass_shop', PASS_CHANGE);
+            });
+            // show_error_message("상품을 준비 중 입니다.");
+
         });
         let html = row;
         return html;
@@ -235,13 +269,14 @@ class Pters_pass_main{
         }
         let next_pay_date = this.data.next.paid_date[0].replace(/-/gi, '.');
         let pay_type = PAY_TYPE_NAME[this.data.next.payment_type_cd[0]];
+        let next_pay_name = this.data.next.name[0];
         let description = `<p style="font-size:13px;letter-spacing:-0.5px;font-weight:500;margin-bottom:0;">
                                 <span style="color:var(--font-inactive);margin-right:8px;">유효 기간</span>
                                 <span style="color:var(--font-sub-dark);">${expire_date}</span>
                             </p>
                             <p style="font-size:13px;letter-spacing:-0.5px;font-weight:500;margin-top:4px;">
                                 <span style="color:var(--font-inactive);margin-right:8px;">결제 예정</span>
-                                <span style="color:var(--font-sub-dark)">${next_pay_date} ${pay_type}</span>
+                                <span style="color:var(--font-sub-dark)">${next_pay_date} / ${next_pay_name}</span>
                             </p>`;
         let html = `
         <div class="pters_pass_main_upper_box" style="">
@@ -252,6 +287,9 @@ class Pters_pass_main{
                 </span>
                 <span style="display:none">${title}</span>
             </div>
+            <!--<div style="display:inline-block;width:25%; color:#ff001f; text-align:right; font-size:15px; font-weight:bold;">-->
+                    <!--PTERS 패스 변경-->
+            <!--</div>-->
         </div>
         `;
         return html;
@@ -599,49 +637,49 @@ class Pters_pass_func{
 
         IMP.request_pay(request_pay_period_data, function(rsp) {
             var msg;
-            if ( rsp.success ) {
+            if (rsp.success) {
 
                 $.ajax({
                     url: "/payment/check_finish_billing/", // 서비스 웹서버
                     type: "POST",
-                    data: {"imp_uid" : rsp.imp_uid, "merchant_uid": rsp.merchant_uid},
+                    data: {"imp_uid": rsp.imp_uid, "merchant_uid": rsp.merchant_uid},
                     dataType: "html",
 
-                    beforeSend:function(xhr, settings) {
+                    beforeSend: function (xhr, settings) {
                         if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
                             xhr.setRequestHeader("X-CSRFToken", csrftoken);
                         }
                     },
 
-                    success:function(data){
+                    success: function (data) {
                         var jsondata = JSON.parse(data);
                         check_app_version(jsondata.app_version);
 
-                        if(jsondata.messageArray.length>0){
+                        if (jsondata.messageArray.length > 0) {
                             msg = '결제 정보 변경에 실패했습니다.';
                             msg += '에러내용 : ' + jsondata.messageArray;
                             show_error_message(msg);
-                        }else {
+                        } else {
                             $.ajax({
                                 url: "/payment/update_period_billing/", // 서비스 웹서버
                                 method: "POST",
-                                data: {"customer_uid" : before_customer_uid},
+                                data: {"customer_uid": before_customer_uid},
                                 dataType: "html",
 
-                                beforeSend:function(xhr, settings) {
+                                beforeSend: function (xhr, settings) {
                                     if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
                                         xhr.setRequestHeader("X-CSRFToken", csrftoken);
                                     }
                                 },
 
-                                success:function(data){
+                                success: function (data) {
                                     var jsondata = JSON.parse(data);
                                     check_app_version(jsondata.app_version);
 
-                                    if(jsondata.messageArray.length>0){
+                                    if (jsondata.messageArray.length > 0) {
                                         msg = '결제 정보 변경에 실패했습니다.';
                                         msg += '에러내용 : ' + jsondata.messageArray;
-                                    }else {
+                                    } else {
                                         msg = '결제 정보 변경이 완료되었습니다.';
                                     }
                                     show_error_message(msg);
@@ -649,29 +687,16 @@ class Pters_pass_func{
                                     window.location.reload(true);
                                 },
 
-                                complete:function(){
+                                complete: function () {
                                 },
 
-                                error:function(){
+                                error: function () {
                                     console.log('server error');
                                 }
                             });
                         }
-
-                    },
-
-                    complete:function(){
-                    },
-
-                    error:function(){
-                        console.log('server error');
                     }
                 });
-
-            } else {
-                msg = '결제 정보 변경에 실패했습니다.';
-                msg += '에러내용 : ' + rsp.error_msg;
-                show_error_message(msg);
             }
         });
     }

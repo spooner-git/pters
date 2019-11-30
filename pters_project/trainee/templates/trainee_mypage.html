@@ -13,7 +13,9 @@
 
         <div class="wrapper_box_basic_info">
             <div class="obj_box_full">
-                <div class="wrapper_sub_title obj_font_size_11_weight_bold obj_font_color_dark_grey">내 정보</div>
+                <div class="wrapper_sub_title obj_font_size_11_weight_bold obj_font_color_dark_grey">내 정보
+                    <span style="float:right" onclick="leave_pters()">탈퇴</span>
+                </div>
                     <section id="section_mypage_toolbox" class="obj_box_full" onclick="update_trainee_profile_photo();" style="text-align: center; border:0;">
                         <img src="{{ member_info.profile_url }}" style="width:100px; height:100px; border-radius:50%">
                     </section>
@@ -53,6 +55,7 @@
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.component.common.js" %}></script>
     <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.base.js" %}></script>
     <script type="text/javascript" src={% static_url "user/js/trainee/popup/pters.trainee.popup.mypage_photo_update.js" %}></script>
+    <script type="text/javascript" src={% static_url "user/js/trainee/popup/pters.trainee.popup.leave_pters.js" %}></script>
     <script type="text/javascript">
     	//Nav바에 현재 페이지에 밑줄 표기
 
@@ -63,6 +66,14 @@
             {% endif %}
         {% endfor %}
         });
+
+        function leave_pters(){
+            // let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            let popup_style = POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_leave_pters', 100, popup_style, null, ()=>{
+                leave_pters_popup = new Leave_pters('.popup_leave_pters', 'leave_pters_popup');
+            });
+        }
 
     </script>
 

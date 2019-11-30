@@ -77,12 +77,13 @@ class Mypage{
         let my_pass = this.dom_row_my_pass();
         let profile_change = this.dom_row_profile_change();
         let password_change = this.dom_row_password_change();
+        let leave_pters = this.dom_row_leave_pters();
         let logout = this.dom_row_logout();
 
 
         let html =  '<section id="basic_info_wrap">'+ my_id + my_name + my_phone + my_email + '</section>' + 
                     '<section id="pass_info_wrap">'+ my_pass + '</section>' + 
-                    '<section id="edit_info_wrap">'+ profile_change + password_change + logout + '</section>';
+                    '<section id="edit_info_wrap">'+ profile_change + password_change + leave_pters + logout + '</section>';
 
 
         return html;
@@ -211,6 +212,25 @@ class Mypage{
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
         return html;
     }
+
+    dom_row_leave_pters(){
+        let id = "leave_pters";
+        let title = "회원 탈퇴";
+        let icon = DELETE;
+        let icon_r_visible = SHOW;
+        let icon_r_text = "";
+        let style = null;
+        let onclick = ()=>{
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LEAVE_PTERS, 100, popup_style, null, ()=>{
+                leave_pters_popup = new Leave_pters('.popup_leave_pters', 'leave_pters_popup');
+            });
+        };
+
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
+        return html;
+    }
+
 
     dom_row_logout(){
         let id = "logout";

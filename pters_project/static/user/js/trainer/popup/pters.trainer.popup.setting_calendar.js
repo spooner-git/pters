@@ -1,6 +1,7 @@
 class Setting_calendar{
     constructor(install_target){
         this.target = {install: install_target, toolbox:'section_setting_calendar_toolbox', content:'section_setting_calendar_content'};
+        this.data_sending_now = false;
 
         this.data = {
             start_day:null,
@@ -231,12 +232,18 @@ class Setting_calendar{
     }
 
     send_data(){
+        if(this.data_sending_now == true){
+            return false;
+        }else if(this.data_sending_now == false){
+            this.data_sending_now = true;
+        }
         let data = {
             "setting_week_start_date":this.data.start_day,
             "setting_calendar_time_selector_type":this.data.calendar_time_input_type,
             "setting_calendar_basic_select_time":this.data.calendar_basic_select_time.value[0]
         };
         Setting_calendar_func.update(data, ()=>{
+            this.data_sending_now = false;
             this.set_initial_data();
             show_error_message('변경 내용이 저장되었습니다.');
         });

@@ -151,6 +151,16 @@ body{
     letter-spacing: -1px;
 }
 
+.pters_download{
+    position: absolute;
+    bottom: 0;
+}
+.pters_download img{
+    display: none;
+    vertical-align: bottom;
+}
+
+
 #registration_box{
     height: 100%;
     width: 100%;

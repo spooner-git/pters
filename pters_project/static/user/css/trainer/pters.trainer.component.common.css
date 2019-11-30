@@ -645,8 +645,10 @@ input:disabled{
 	width: 24px;
 	height: 24px;
 	border-radius: 14px;
-	box-shadow: 0 1px 4px 0 rgba(112, 112, 112, 0.5);
-	background-color: var(--bg-main);
+	/* box-shadow: 0 1px 4px 0 rgba(112, 112, 112, 0.5); */
+	box-shadow: 0 1px 4px 0 var(--bg-sub-normal);
+	/* background-color: var(--bg-main); */
+	background-color: var(--bg-article);
 }
 .toggle_button_active{
 	background-color: var(--bg-highlight);
@@ -678,6 +680,19 @@ input:disabled{
 }
 .radio_button_ball_active{
 	background-color: var(--bg-highlight);
+}
+
+.check_button{
+	position: relative;
+	width: 16px;
+	height: 16px;
+	border: 2px solid var(--bg-domtag);
+	border-radius: 2px;
+	background-color: var(--bg-main);
+	box-sizing: border-box;
+}
+.check_button_active{
+	border-color: var(--bg-highlight);
 }
 
 .password_4d_input{

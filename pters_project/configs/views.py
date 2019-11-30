@@ -37,6 +37,8 @@ def index(request):
     request.session['domain'] = current_site.domain
     request.session['PTERS_NAVER_ID_LOGIN_CLIENT_ID'] = settings.PTERS_NAVER_ID_LOGIN_CLIENT_ID
     request.session['PTERS_NAVER_ID_LOGIN_CLIENT_SECRET'] = settings.PTERS_NAVER_ID_LOGIN_CLIENT_SECRET
+    # request.session['device_info'] = 'web'
+    request.session['setting_theme'] = 'light'
     if request.user.is_authenticated():
         next_page = '/check/'
     else:
@@ -124,14 +126,14 @@ class AccessTestMixin(UserPassesTestMixin):
         if error is None:
             if url[1] == 'trainee':
                 if group_name == 'trainee':
-                    func_setting_data_update(self.request, group_name)
-                    get_function_auth_type_cd(self.request)
+                    # func_setting_data_update(self.request, group_name)
+                    # get_function_auth_type_cd(self.request)
                     update_finish_schedule_data(self.request)
                     test_result = True
             if url[1] == 'trainer':
                 if group_name == 'trainer':
-                    func_setting_data_update(self.request, group_name)
-                    get_function_auth_type_cd(self.request)
+                    # func_setting_data_update(self.request, group_name)
+                    # get_function_auth_type_cd(self.request)
                     update_finish_schedule_data(self.request)
                     test_result = True
             if url[1] == 'center':
@@ -299,7 +301,7 @@ def get_function_auth_type_cd(request):
     if trainer_id != '' and trainer_id is not None:
         payment_data = PaymentInfoTb.objects.filter(member_id=trainer_id, status='paid',
                                                     start_date__lte=today, end_date__gte=today,
-                                                    use=USE).order_by('product_tb_id', '-end_date')
+                                                    use=USE).order_by('payment_info_id', '-mod_dt')
         if len(payment_data) == 0:
             payment_data = PaymentInfoTb.objects.filter(member_id=trainer_id, status='reserve',
                                                         start_date__lte=today, end_date__gte=today,

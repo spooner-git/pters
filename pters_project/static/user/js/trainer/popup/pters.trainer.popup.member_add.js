@@ -1,6 +1,7 @@
 class Member_add{
     constructor(install_target, data_from_external, instance){
         this.target = {install: install_target, toolbox:'section_member_add_toolbox', content:'section_member_add_content'};
+        this.data_sending_now = false;
         this.instance = instance;
         this.data_from_external = data_from_external;
         this.form_id = 'id_member_add_form';
@@ -681,14 +682,22 @@ class Member_add{
     }
 
     send_data(){
+        if(this.data_sending_now == true){
+            return false;
+        }else if(this.data_sending_now == false){
+            this.data_sending_now = true;
+        }
+
         let recontract = this.data_from_external == null ? OFF : ON;
         let inspect = pass_inspector.member(recontract);
         if(inspect.barrier == BLOCKED){
+            this.data_sending_now = false;
             show_error_message(`[${inspect.limit_type}] 이용자께서는 회원을 최대 ${inspect.limit_num}명까지 등록하실 수 있습니다.`);
             return false;
         }
 
         if(this.check_before_send() == false){
+            this.data_sending_now = false;
             return false;
         }
 
@@ -709,11 +718,6 @@ class Member_add{
 
         let data_for_re = {
             "member_id":this.data.member_id,
-            // "first_name": this.data.name,
-            // "name":this.data.name,
-            // "phone":this.data.phone,
-            // "birthday": `${this.data.birth != null ? this.data.birth.year+'-'+this.data.birth.month+'-'+this.data.birth.date : ''}`,
-            // "sex":this.data.sex,
             "contents":this.data.memo,
             "ticket_id":this.data.ticket_id[0],
             "start_date": DateRobot.to_yyyymmdd(this.data.start_date.year, this.data.start_date.month, this.data.start_date.date),
@@ -726,6 +730,7 @@ class Member_add{
             Member_func.create_pre(data_for_new, (received)=>{
                 data_for_new.member_id = received.user_db_id[0];
                 Member_func.create(data_for_new, ()=>{
+                    this.data_sending_now = false;
                     try{
                         current_page.init();
                     }catch(e){}
@@ -734,6 +739,7 @@ class Member_add{
         }else{ // 재등록
             Member_func.create_ticket_re(data_for_re, ()=>{
                 // member_ticket_history.init();
+                this.data_sending_now = false;
                 try{
                     member_view_popup.set_initial_data();
                 }catch(e){

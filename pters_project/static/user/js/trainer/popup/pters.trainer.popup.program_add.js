@@ -2,6 +2,7 @@ class Program_add{
     constructor(install_target){
         this.target = {install: install_target, toolbox:'section_program_add_toolbox', content:'section_program_add_content'};
         this.form_id = 'id_program_add_form';
+        this.data_sending_now = false;
 
         let d = new Date();
         this.dates = {
@@ -190,13 +191,21 @@ class Program_add{
     }
 
     send_data(){
+        if(this.data_sending_now == true){
+            return false;
+        }else if(this.data_sending_now == false){
+            this.data_sending_now = true;
+        }
+        
         let inspect = pass_inspector.program();
         if(inspect.barrier == BLOCKED){
+            this.data_sending_now = false;
             show_error_message(`[${inspect.limit_type}] 이용자께서는 프로그램을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다.`);
             return false;
         }
 
         if(this.check_before_send() == false){
+            this.data_sending_now = false;
             return false;
         }
         let data = {
@@ -207,10 +216,12 @@ class Program_add{
                     "class_hour":60, "start_hour_unit":1, "class_member_num":1
         };
 
+        layer_popup.close_layer_popup();
         Program_func.create(data, ()=>{
+            this.data_sending_now = false;
             program_list_popup.init();
             this.clear();
-            layer_popup.close_layer_popup();
+            
         });
     }
 

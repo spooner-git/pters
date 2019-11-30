@@ -1,0 +1,53 @@
+
+.popup_setting_theme{
+	/* -webkit-overflow-scrolling: touch; */
+}
+
+.popup_setting_theme .obj_box_full{
+	padding: 15px 20px;
+	border: 0;
+}
+
+.popup_setting_theme .obj_input_box_full{
+	padding: 15px 20px;
+	display: flex;
+	/* border: 0; */
+}
+
+.popup_setting_theme .popup_toolbox{
+	/* position: sticky;
+	position: -webkit-sticky; */
+	position: relative;
+	top: 0;
+	padding: 8px 16px 4px 20px;
+	/* border-bottom: 1px solid #f5f5f5; */
+	z-index: 1;
+}
+
+.popup_setting_theme .popup_content{
+	/* padding-top: 20px; */
+}
+
+.popup_setting_theme .select_wrap{
+	/* padding: 20px; */
+	/* border: var(--border-article); */
+	/* border-radius: 5px; */
+	/* margin-bottom: 15px; */
+	/* cursor: pointer; */
+}
+.popup_setting_theme .select_wrap img{
+	width: 100%;
+}
+.popup_setting_theme .select_indicator{
+	margin-bottom: 10px;
+	text-align: center;
+}
+/* .popup_setting_theme .select_indicator > p{
+	padding-left: 25px;
+	font-size: 12px;
+	margin-top: 0;
+} */
+.popup_setting_theme .selected{
+	/* background-color: #fe4e6530; */
+	/* border-color: var(--bg-highlight); */
+}

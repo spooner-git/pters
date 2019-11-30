@@ -11,9 +11,8 @@
 		position: relative;
 		height: 68px;
 		line-height: 28px;
-		background-color: var(--bg-main);
-		/* border-bottom: 1px solid #cccccc; */
-		/* background-image: linear-gradient(180deg, #ffffff, transparent); */
+		/* background-color: var(--bg-main); */
+		background-color: var(--root-content-bg-color);
 		padding: 20px 16px;
 		box-sizing: border-box;
 	}
@@ -45,7 +44,7 @@
 	border-radius: 4px;
 	box-shadow: var(--box-shadow-article);
 	border: var(--border-article);
-	background-color: var(--bg-main);
+	background-color: var(--bg-article);
 	margin-bottom: 12px;
 	padding: 4px 0;
 }

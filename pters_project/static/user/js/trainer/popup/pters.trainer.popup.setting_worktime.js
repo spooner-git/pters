@@ -1,6 +1,7 @@
 class Setting_worktime{
     constructor(install_target){
         this.target = {install: install_target, toolbox:'section_setting_worktime_toolbox', content:'section_setting_worktime_content'};
+        this.data_sending_now = false;
 
         this.data = {
             start_day: null,
@@ -392,10 +393,15 @@ class Setting_worktime{
     }
 
     send_data(){
+
         if(this.check_before_send() == false){
             return false;
         }
-
+        if(this.data_sending_now == true){
+            return false;
+        }else if(this.data_sending_now == false){
+            this.data_sending_now = true;
+        }
         let data = {
             "setting_trainer_work_sun_time_avail":this.data.SUN.dayoff == OFF ? this.art_data(this.data.SUN.start_time, this.data.SUN.end_time) : "00:00-00:00",
             "setting_trainer_work_mon_time_avail":this.data.MON.dayoff == OFF ? this.art_data(this.data.MON.start_time, this.data.MON.end_time) : "00:00-00:00",
@@ -404,10 +410,11 @@ class Setting_worktime{
             "setting_trainer_work_ths_time_avail":this.data.THS.dayoff == OFF ? this.art_data(this.data.THS.start_time, this.data.THS.end_time) : "00:00-00:00",
             "setting_trainer_work_fri_time_avail":this.data.FRI.dayoff == OFF ? this.art_data(this.data.FRI.start_time, this.data.FRI.end_time) : "00:00-00:00",
             "setting_trainer_work_sat_time_avail":this.data.SAT.dayoff == OFF ? this.art_data(this.data.SAT.start_time, this.data.SAT.end_time) : "00:00-00:00",
-            "setting_holiday_hide":this.data.dayoff_visibility
+            // "setting_holiday_hide":this.data.dayoff_visibility
             // "setting_week_start_date":this.data.start_day 
         };
         Setting_worktime_func.update(data, ()=>{
+            this.data_sending_now = false;
             this.set_initial_data();
             show_error_message('변경 내용이 저장되었습니다.');
         });

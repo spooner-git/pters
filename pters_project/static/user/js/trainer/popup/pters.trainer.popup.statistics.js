@@ -28,6 +28,12 @@ class Statistics{
                 }
         };
 
+        this.chart_color = {
+            axis_text: $('html').hasClass("pters_light_mode") ? "#282828" : "#f5f2f3",
+            highlight:"#fe4e65",
+            background:"transparent"
+        };
+
         this.target_date_start = DateRobot.add_month(`${this.dates.current_year}-${this.dates.current_month}-1`, -2);
         this.target_date_end = DateRobot.to_yyyymmdd(this.dates.current_year, this.dates.current_month, this.dates.current_last_date);
         let inspect = pass_inspector.statistics(this.target_date_start, this.target_date_end);
@@ -37,6 +43,7 @@ class Statistics{
 
         this.init();
         // this.set_initial_data();
+
     }
 
  
@@ -271,8 +278,8 @@ class Statistics{
         let length = this.data.sales.month_date.length;
         let html_to_join = [];
         html_to_join.push(`<div class="sales_list_row" style="font-size:11px;">
-                                <div class="sales_list_month" style="color:var(--font-sub-light);">기간</div>
-                                <div class="sales_list_price" style="color:var(--font-sub-light);">매출액 (환불 포함)</div>
+                                <div class="sales_list_month" style="color:var(--font-inactive);">기간</div>
+                                <div class="sales_list_price" style="color:var(--font-inactive);">매출액 (환불 포함)</div>
                                 <div class="sales_list_detail"></div>
                             </div>`);
         for(let i=length-1; i>=0; i--){
@@ -302,15 +309,18 @@ class Statistics{
              titlePosition:'none',
              colors:['#fe4e65', '#5d91f7'],
              isStacked: true,
+             backgroundColor:statistics_popup.chart_color.background,
              hAxis: {
-                        // viewWindow: {
-                        //     min: [7, 30, 0],
-                        //     max: [19, 30, 0]
-                        // }
+                        textStyle:{
+                            color:statistics_popup.chart_color.axis_text
+                        },
                         showTextEvery:1
                     },
             vAxis: {
-                        
+                        baselineColor:statistics_popup.chart_color.highlight,
+                        textStyle:{
+                            color:statistics_popup.chart_color.axis_text
+                        },
                         // title: 'Rating (scale of 1-12)'
                     },
             trendlines:{0:{
@@ -324,7 +334,8 @@ class Statistics{
                             visibleInLegend:false
                             }
                          }
-            }
+            
+        };
         
   
             let chart = new google.visualization.ColumnChart(document.getElementById('sales_graph'));
@@ -352,8 +363,9 @@ class Statistics{
                         // 'height':height,
                         colors:['#fe4e65', '#5d91f7'],
                         titlePosition:'none',
-                        'chartArea':{width:'85%',height:'85%'},
-                        'legend':{position:'right', 'alignment':'center'},
+                        chartArea:{width:'85%', height:'85%'},
+                        legend:{position:'right', 'alignment':'center', textStyle:{color:statistics_popup.chart_color.axis_text}},
+                        backgroundColor:"transparent",
                         sliceVisibilityThreshold:0,
                         pieSliceText:'value' };
 
@@ -381,8 +393,9 @@ class Statistics{
                         // 'height':height,
                         colors:['#fe4e65', '#5d91f7'],
                         titlePosition:'none',
-                        'chartArea':{width:'85%', height:'85%'},
-                        'legend':{position:'right', 'alignment':'center'},
+                        chartArea:{width:'85%', height:'85%'},
+                        legend:{position:'right', 'alignment':'center', textStyle:{color:statistics_popup.chart_color.axis_text}},
+                        backgroundColor:"transparent",
                         sliceVisibilityThreshold:0,
                         pieSliceText:'value' };
 
@@ -402,14 +415,18 @@ class Statistics{
              titlePosition:'none',
              colors:['#fe4e65', '#5d91f7'],
              isStacked: true,
+             backgroundColor: "transparent",
              hAxis: {
-                        // viewWindow: {
-                        //     min: [7, 30, 0],
-                        //     max: [19, 30, 0]
-                        // }
+                        textStyle:{
+                            color:statistics_popup.chart_color.axis_text
+                        },
                         showTextEvery:1
                     },
             vAxis: {
+                        baselineColor:statistics_popup.chart_color.highlight,
+                        textStyle:{
+                            color:statistics_popup.chart_color.axis_text
+                        }
                         // title: 'Rating (scale of 1-12)'
                     },
             trendlines:{0:{
@@ -443,14 +460,18 @@ class Statistics{
              titlePosition:'none',
              colors:['#fe4e65', '#5d91f7'],
              isStacked: true,
+             backgroundColor: "transparent",
              hAxis: {   
-                        // viewWindow: {
-                        //     min: [7, 30, 0],
-                        //     max: [19, 30, 0]
-                        // }
+                        textStyle:{
+                            color:statistics_popup.chart_color.axis_text
+                        },
                         showTextEvery:1
                     },
             vAxis: {
+                        baselineColor:statistics_popup.chart_color.highlight,
+                        textStyle:{
+                            color:statistics_popup.chart_color.axis_text
+                        }
                         // title: 'Rating (scale of 1-12)'
                     },
             trendlines:{0:{

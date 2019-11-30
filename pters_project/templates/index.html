@@ -16,7 +16,7 @@
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
-
+            position: relative;
             margin: 0;
             padding: 20px 20px 40px;
             margin-bottom: 20px;
@@ -146,6 +146,12 @@
             width: 24px;
             vertical-align: middle;
             animation: blinker 1s linear infinite;
+        }
+
+        #IE_block_explain{
+            display: none;
+            width: 100%;
+            min-height: 200px;
         }
 
         @keyframes blinker {
@@ -326,7 +332,12 @@
                     <div class="pters_description">
                         <span style="font-weight:normal;">프로 강사를 위한</span> <br/>
                         <span style="font-weight:normal;">운영/관리 서비스</span> <br>
-                        <span style="font-weight:900;font-size:22px">피터스 PTERS</span></div>
+                        <span style="font-weight:900;font-size:22px">피터스 PTERS</span>
+                    </div>
+                    <div class="pters_download">
+                        <a href="https://itunes.apple.com/kr/app/apple-store/id1373054819"><img id="download_img_ios" src="/static/common/img/front_page/ios.svg" alt=""></a>
+                        <a href="https://play.google.com/store/apps/details?id=kr.co.spooner.pters"><img id="download_img_android" src="/static/common/img/front_page/android.svg" alt=""></a>
+                    </div>
                 </div>
                 <div class="login_foot">
                     <form action="{% url 'login:login' %}" id="login-form" method="post">
@@ -378,6 +389,12 @@
                             <div class="general_text" style="color:#858282;" onclick="location.href='{% url 'login:reset_password' %}'">비밀번호 초기화</div>
                         </div>
                     </form>
+                </div>
+                <div id="IE_block_explain">
+                    <p>죄송합니다!</p>
+                    <p>PTERS는 구형 explorer를 지원하지 않습니다.</p>
+                    <p>크롬, 파이어폭스, MS엣지 브라우저로 이용하실 수 있습니다.</p>
+                    <p>iOS, 안드로이드 앱을 통해서 접속이 가능합니다.</p>
                 </div>
             </div>
         </section>
@@ -555,7 +572,7 @@
                                 
                             </div>
 
-                            <div class="price_product_wrap" style="border-radius: 8px;box-shadow: 0 0 16px 0 #e0e0e0;background-color: #ff8595;">
+                            <div class="price_product_wrap" style="border-radius: 8px;box-shadow: 0 0 16px 0 #e0e0e0;background-color: #fe4e65;">
                                 <div style="font-size:12px;font-weight:900;color:#ffffff">베이직</div>
                                 <div style="margin-bottom:25px">
                                     <span style="font-size:32px;font-weight:900;color:#ffffff">&#8361; 3,900</span>
@@ -607,8 +624,8 @@
                                 </div>
                             </div>
 
-                            <div class="price_product_wrap" style="border-radius: 8px;box-shadow: 0 0 16px 0 #e0e0e0;background-color: #fe4e65;">
-                                <div style="font-size:12px;font-weight:900;color:#ffffff">스탠다드</div>
+                            <div class="price_product_wrap" style="border-radius: 8px;box-shadow: 0 0 16px 0 #e0e0e0;background-color: #d6424e;">
+                                <div style="font-size:12px;font-weight:900;color:#ffffff">스탠다드 <div style="float:right;display:inline-block;text-align:center;box-sizing:border-box;width:40px;height:20px;line-height:20px;font-size:11px;border-radius: 12px;font-weight:bold;border:1px solid #ffffff;">추천</div></div>
                                 <div style="margin-bottom:25px">
                                     <span style="font-size:32px;font-weight:900;color:#ffffff">&#8361; 6,900</span>
                                     <span style="font-size:11px;font-weight:500;color:#ffffff">/ 월*</span>
@@ -658,7 +675,7 @@
                                     <div style="font-weight: bold;">5 개</div>
                                 </div>
                             </div>
-                            <div class="price_product_wrap" style="border-radius: 8px;box-shadow: 0 0 16px 0 #e0e0e0;background-color: #000000;">
+                            <div class="price_product_wrap" style="border-radius: 8px;box-shadow: 0 0 16px 0 #e0e0e0;background-color: #362e2e;">
                                 <div style="font-size:12px;font-weight:900;color:#ffffff">프리미엄</div>
                                 <div style="margin-bottom:25px">
                                     <span style="font-size:32px;font-weight:900;color:#ffffff">&#8361; 9,900</span>
@@ -744,26 +761,25 @@
 <script type="text/javascript" src="https://apis.google.com/js/platform.js" async defer></script>
 <script type="text/javascript">
 
+    
+    // var varUA = navigator.userAgent.toLowerCase();//useAgent값 얻기
     /*
-    var varUA = navigator.userAgent.toLowerCase();//useAgent값 얻기
-    var device_text = '브라우저, iOS, Android 앱으로';
-    var method_text = 'PC웹(크롬, 파이어폭스, 엣지, 사파리)과 스마트폰, 태블릿 등';
     if(varUA.match('android') != null){
-        device_text = '브라우저, Android 앱으로';
-        method_text = 'PC, 스마트폰, 태블릿 등';
+        $('#download_img_android').show();
     }else if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
-        device_text = '브라우저, iOS 앱으로';
-        method_text = 'PC, 스마트폰, 태블릿 등';
+        $('#download_img_ios').show();
+    }else{
+        $('#download_img_ios, #download_img_android').show();
     }
-
-    $('#connectedMethod').html(method_text);
-    $('#connectedDevice').html(device_text);
+  */
 
     if(varUA.match('MSIE') != null || varUA.match('msie') != null || varUA.match('rv:11.0')){
-        $('#album_wrap, .upperbar a, .pagination, .paginationMobile').css('display','none');
+        $('#root_nav, .login_foot, #description_wrapper').css('display','none');
         $('#IE_block_explain').css('display','block');
     }
-    */
+    
+
+
     function enter_key() {
         if (window.event.keyCode == 13) {
              // 엔터키가 눌렸을 때 실행할 내용
@@ -783,6 +799,20 @@
             {% endif %}
         {% endfor %}
         kakao_login_test = true;
+
+        $('#download_img_ios, #download_img_android').show();
+        if(device == MOBILE){
+            if(device_info == 'app'){
+                $('#download_img_ios, #download_img_android').hide();
+            }
+            else{
+                if(os == IOS){
+                    $('#download_img_android').hide();
+                }else if(os == ANDROID){
+                    $('#download_img_ios').hide();
+                }
+            }
+        }
         var val = location.href.substr(
             location.href.lastIndexOf('=') + 1
         );

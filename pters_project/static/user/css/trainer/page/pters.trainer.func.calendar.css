@@ -6,14 +6,16 @@
 	width: 100%;
 	padding-top: 20px;
 	padding-bottom: 12px;
-	background-color: var(--bg-main);
+	/* background-color: var(--bg-main); */
+	background-color: var(--root-content-bg-color);
 	/* text-align: center; */
 }
 	.cal_upper_box{
 		position: relative;
 		height: 28px;
 		line-height: 28px;
-		background-color: var(--bg-main);
+		/* background-color: var(--bg-main); */
+		background-color: var(--root-content-bg-color);
 		padding: 0 16px;
 		padding-right: 0;
 		box-sizing: border-box;
@@ -93,7 +95,8 @@
 	position: -webkit-sticky;
 	box-shadow: var(--box-shadow-article);
 	top: 0;
-	background-color: var(--bg-main);
+	/* background-color: var(--bg-main); */
+	background-color: var(--root-content-bg-color);
 	z-index: 10;
 	padding-top:4px;
 	padding-bottom:8px;
@@ -144,7 +147,8 @@
 	height: 16px;
 	line-height: 16px;
 	border-bottom: var(--border-article);
-	background-color: var(--bg-main);
+	/* background-color: var(--bg-main); */
+	background-color: var(--root-content-bg-color);
 	border-collapse: collapse;
 	table-layout: fixed;
 	font-size: 11px;
@@ -256,7 +260,8 @@
 	position:absolute;
 	opacity: 0.3;
 	z-index: -1;
-	background-color: #cecece;
+	/* background-color: #cecece; */
+	background-color: var(--bg-inactive);
 	background-image: repeating-linear-gradient(45deg, transparent, transparent 1px, rgba(255,255,255,.5) 3px, rgba(255,255,255,.5) 7px) !important;
 }
 .calendar_schedule_display_month{

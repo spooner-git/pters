@@ -8,6 +8,7 @@ class Member_schedule_history{
         this.sort_val = SORT_MEMBER_TICKET;
         this.init();
 
+        this.expand = null;
     }
 
     init(){
@@ -89,7 +90,14 @@ class Member_schedule_history{
             }
             return return_val;
         });
-        console.log(member_ticket_list);
+
+        if(this.expand == null){
+            this.expand = {};
+            for(let i=member_ticket_list.length-1; i>=0; i--){
+                this.expand[i+1] = SHOW;
+            }
+        }
+
         for(let i=member_ticket_list.length-1; i>=0; i--){
             let length = member_ticket_list[i].schedule_data.length;
             let html_sub_assembly_to_join = [];
@@ -175,18 +183,21 @@ class Member_schedule_history{
                 });
                 html_sub_assembly_to_join.push(html);
             }
-            let button_onclick = ()=>{      let $target = $(`#member_schedule_history_${i+1}_list`);
-                                                if($target.attr('data-expand') == HIDE){
-                                                    $target.attr('data-expand', SHOW);
-                                                    $target.show();
-                                                }else{
-                                                    $target.attr('data-expand', HIDE);
-                                                    $target.hide();
-                                                }
+
+            let button_onclick = ()=>{   
+                                        if(this.expand[i+1] == SHOW){
+                                            this.expand[i+1] = HIDE;
+                                            this.render();
+                                        }else if(this.expand[i+1] == HIDE){
+                                            this.expand[i+1] = SHOW;
+                                            this.render();
+                                        }
                                       };
-            expand_button = CComponent.text_button(i+1, '접기/펼치기', {"float":"right", "font-size":"12px", "color":"var(--font-sub-normal)", "font-weight":"500"}, ()=>{button_onclick();});
-            expand_status = SHOW;
-            expand_style = "block";
+            let button_title = this.expand[i+1] == SHOW
+                ? "접기" + CImg.arrow_expand(["var(--img-sub1)"], {"transform":"rotate(180deg)", "width":"17px", "vertical-align":"middle", "margin-bottom":"2px"}) 
+                : "펼치기" + CImg.arrow_expand(["var(--img-sub1)"], {"width":"17px", "vertical-align":"middle", "margin-bottom":"2px"});
+            expand_button = CComponent.text_button(i+1, button_title, {"float":"right", "font-size":"12px", "color":"var(--font-sub-normal)", "font-weight":"500"}, ()=>{button_onclick();});
+            expand_style = this.expand[i+1] == SHOW ? "block" : "none";
 
             let html_sub_assembly = ` <div id="member_schedule_history_${i+1}">
                                         <div id="member_schedule_history_ticket_${i+1}" style="padding:15px 10px;background-color:var(--bg-light);font-size:14px;font-weight:bold;">

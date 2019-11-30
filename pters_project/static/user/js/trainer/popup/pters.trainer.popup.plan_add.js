@@ -1,6 +1,7 @@
 class Plan_add{
     constructor(install_target, data_from_external, instance){
         this.target = {install: install_target, toolbox:'section_plan_add_toolbox', content:'section_plan_add_content'};
+        this.data_sending_now = false;
         this.instance = instance;
         this.form_id = 'id_plan_add_form';
         this.data_from_external = data_from_external;
@@ -660,6 +661,12 @@ class Plan_add{
             return false;
         }
 
+        if(this.data_sending_now == true){
+            return false;
+        }else if(this.data_sending_now == false){
+            this.data_sending_now = true;
+        }
+
         let start_dt = DateRobot.to_yyyymmdd(this.data.date.year, this.data.date.month, this.data.date.date)+ ' ' + this.data.start_time;
         let end_dt = DateRobot.to_yyyymmdd(this.data.date.year, this.data.date.month, this.data.date.date) + ' ' + this.data.end_time;
         let repeat_start_date = DateRobot.to_yyyymmdd(this.data.date.year, this.data.date.month, this.data.date.date);
@@ -688,9 +695,10 @@ class Plan_add{
             }
 
             let url ='/schedule/add_schedule/';
+            layer_popup.close_layer_popup();
             Plan_func.create(url, data, ()=>{
-                layer_popup.close_layer_popup();
-                // calendar.init_no_new();
+                this.data_sending_now = false;
+                // layer_popup.close_layer_popup();
                 try{
                     current_page.init();
                 }catch(e){}
@@ -706,13 +714,14 @@ class Plan_add{
             let url = '/schedule/add_repeat_schedule/';
             let confirm_url = '/schedule/add_repeat_schedule_confirm/';
             
+            layer_popup.close_layer_popup();
             Plan_func.create(url, data, (received)=>{
                 let repeat_schedule_id = received.repeat_schedule_id;
                 let repeat_confirm = 1;
                 let confirm_data = {"repeat_schedule_id":repeat_schedule_id, "repeat_confirm":repeat_confirm, "member_ids":this.data.member_id};
                 Plan_func.create(confirm_url, confirm_data, ()=>{
-                    layer_popup.close_layer_popup();
-                    // calendar.init_no_new();
+                    this.data_sending_now = false;
+                    // layer_popup.close_layer_popup();
                     try{
                         current_page.init();
                     }catch(e){}
