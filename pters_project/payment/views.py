@@ -704,6 +704,7 @@ def update_payment_product_info_logic(request):
                                                       int(str(update_date).split('-')[2]))
             payment_info.save()
             current_payment_info.end_date = str(today)
+            current_payment_info.save()
             change_payment_info = PaymentInfoTb(member_id=request.user.id,
                                                 product_tb_id=update_product_id,
                                                 payment_type_cd='CHANGE',
