@@ -702,7 +702,7 @@ def update_payment_product_info_logic(request):
                                                       datetime.datetime.strptime(str(update_date), '%Y-%m-%d'),
                                                       int(payment_info.period_month),
                                                       int(str(update_date).split('-')[2]))
-            payment_info.price = update_product_price
+            payment_info.price = int(update_product_price)
             payment_info.save()
             current_payment_info.end_date = str(today)
             current_payment_info.save()
