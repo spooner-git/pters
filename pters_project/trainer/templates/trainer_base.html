@@ -36,6 +36,7 @@
     <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.component.common.css" %}>
     <link rel="stylesheet" href={% static_url "common/css/swiper.min.css" %}>
     <link rel="stylesheet" href={% static_url "common/css/croppie.css" %}>
+    <link rel="stylesheet" href={% static_url "common/css/summernote-lite.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainer/popup/pters.trainer.popup.base.css" %}>
 
     <!-- 페이지 CSS 로드 -->
@@ -54,6 +55,8 @@
     <script type="text/javascript" src={% static_url "common/js/iscroll/iscroll-probe.js" %}></script>
     <script type="text/javascript" src={% static_url "common/js/croppie.min.js" %}></script>
     <script type="text/javascript" src={% static_url "common/js/swiper.min.js" %}></script>
+    <script type="text/javascript" src={% static_url "common/js/summernote/summernote-lite-pters-custom.min.js" %}></script>
+    <script type="text/javascript" src={% static_url "common/js/summernote/summernote-ko-KR.js" %}></script>
     <script type="text/javascript" src="https://service.iamport.kr/js/iamport.payment-1.1.5.js"></script>
 
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.const.js" %}></script>
@@ -322,6 +325,7 @@
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.member_ticket_modify.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.member_ticket_refund.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.member_attend.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.plan_daily_record.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.statistics.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.statistics_detail.js" %}></script>
 
@@ -483,6 +487,7 @@
     var member_ticket_modify;
     var member_ticket_refund;
     var member_attend;
+    var plan_daily_record_popup;
     var statistics_popup;
     var statistics_detail_popup;
     var mypage_popup;

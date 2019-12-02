@@ -175,6 +175,7 @@ const POPUP_MEMBER_TICKET_MODIFY = 'popup_member_ticket_modify';
 const POPUP_MEMBER_TICKET_REFUND = 'popup_member_ticket_refund';
 
 const POPUP_ADDRESS_MEMBER_ATTEND = 'popup_member_attend';
+const POPUP_ADDRESS_PLAN_DAILY_RECORD = 'popup_plan_daily_record';
 const POPUP_ADDRESS_STATISTICS = 'popup_statistics';
 const POPUP_ADDRESS_STATISTICS_DETAIL = 'popup_statistics_detail';
 

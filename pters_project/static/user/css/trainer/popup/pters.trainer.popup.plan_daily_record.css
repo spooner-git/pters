@@ -1,0 +1,52 @@
+
+.popup_plan_daily_record{
+	/* -webkit-overflow-scrolling: touch; */
+}
+
+.popup_plan_daily_record .obj_box_full{
+	padding: 15px 20px;
+	border: 0;
+}
+
+.popup_plan_daily_record .obj_input_box_full{
+	padding: 10px 20px;
+	border: 0;
+}
+
+.popup_plan_daily_record .popup_toolbox{
+	/* position: sticky;
+	position: -webkit-sticky; */
+	position: relative;
+	top: 0;
+	padding: 8px 16px 4px 20px;
+	/* border-bottom: 1px solid #f5f5f5; */
+	z-index: 1;
+}
+
+.popup_plan_daily_record .popup_content{
+	/* padding-top: 20px; */
+}
+
+.plan_daily_record_li{
+	list-style: none;
+	line-height: 52px;
+	height: 52px;
+	font-size: 15px;
+	font-weight: 500;
+	letter-spacing: -0.5px;
+	padding: 0 20px;
+}
+.popup_plan_daily_record .plan_daily_record_member_row{
+	display: flex;
+}
+.popup_plan_daily_record .plan_daily_record_member_row_name{
+	flex: 1 1 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.popup_plan_daily_record .plan_daily_record_member_row_tools{
+	flex: 1 1 0;
+	min-width: 150px;
+	text-align: right;
+}

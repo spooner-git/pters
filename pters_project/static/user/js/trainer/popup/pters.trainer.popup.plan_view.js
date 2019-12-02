@@ -213,9 +213,10 @@ class Plan_view{
     render(){
         let top_left = `<span class="icon_left" onclick="plan_view_popup.upper_left_menu();">${CImg.arrow_left(["#5c5859"])}</span>`;
         let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right">
-                            ${CImg.delete(["#5c5859"], null, `plan_view_popup.upper_right_menu(0)`)}
+        let top_right = `<span class="icon_right">    
+                            ${CImg.memo(["#5c5859"], this.data.schedule_type == 0 ? {"display":"none"} : null, `plan_view_popup.upper_right_menu(2)`)}
                             ${CImg.attend_check(["#5c5859"], this.data.schedule_type == 0 ? {"display":"none"} : null, `plan_view_popup.upper_right_menu(1)`)}
+                            ${CImg.delete(["#5c5859"], null, `plan_view_popup.upper_right_menu(0)`)}
                         </span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;background-color:${this.data.lecture_color}">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
@@ -696,7 +697,6 @@ class Plan_view{
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_ATTEND, 100, popup_style, null, ()=>{
                     member_attend = new Member_attend('.popup_member_attend', this.schedule_id, (data)=>{
-                        console.log("data",data)
                         let schedule = data.schedule;
                         let set_data = data.member_schedule;
                         //출석체크 팝업에서 완료버튼을 눌렀을때 할 행동
@@ -800,7 +800,13 @@ class Plan_view{
                         }
                     });
                 });
-            }   
+            },
+            ()=>{
+                let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PLAN_DAILY_RECORD, 100, popup_style, null, ()=>{
+                    plan_daily_record_popup = new Plan_daily_record('.popup_plan_daily_record', this.schedule_id, ()=>{});
+                });
+            }  
         ];
 
         user_option[number]();
