@@ -1,0 +1,41 @@
+{% extends "popup/trainee_base_popup.html" %}
+{% load static_url %}
+{% load background_trainee_data %}
+
+{% block popup_base_css %}
+    <!-- pters.trainee.popup.plan_daily_record.css -->
+    <link rel="stylesheet" href={% static_url "user/css/trainee/popup/pters.trainee.popup.plan_daily_record.css" %}>
+{% endblock %}
+{% block popup_base_contents %}
+    <div class="popup_plan_daily_record">
+        <div class="wrapper_plan_daily_record_title">
+            <div class="wrapper_popup_title_text obj_font_size_18_weight_900">{{ date_format | date:'Y.m.d (l)'|cut:"요일" }} </div>
+            <div class="wrapper_popup_title_date obj_font_size_13_weight_500"><span class="obj_font_color_pters_red">{{ schedule_data | length }}개</span>의 수업이 있습니다.</div>
+        </div>
+
+
+        <div class="wrapper_plan_daily_record_content">
+            <div class="obj_box_full">
+                일지 내용
+            </div>
+            <div class="obj_table_raw wrapper_my_ticket_detail_teacher obj_box_full">
+                <div class="obj_table_cell_x3" style="width:30px;">
+                    <img src="{{ member_ticket_info.class_tb.member.profile_url }}" class="obj_box_photo">
+                </div>
+                <div class="obj_table_cell_x3 wrapper_teacher_name">
+                    <div class="obj_font_size_12_weight_500">{{ member_ticket_info.class_tb.member.name }}</div>
+                    <div class="obj_font_size_11_weight_normal obj_font_color_light_grey">강사</div>
+                </div>
+                <div class="obj_table_cell_x3 text_button_phone obj_font_size_13_weight_500">{{ member_ticket_info.class_tb.member.phone }}</div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block popoup_base_wrapper_bottom_inside %}
+        <div class="obj_button_big obj_font_bg_pink_white" onclick="layer_popup.all_close_layer_popup()">확인</div>
+{% endblock %}
+
+{% block popup_base_js %}
+{% endblock %}

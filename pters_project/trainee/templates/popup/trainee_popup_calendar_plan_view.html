@@ -60,6 +60,9 @@
                                     예약 취소가 불가능한 수업입니다.
                                 {% endif %}
                             </span>
+                            <div class="obj_button_gen obj_font_bg_trans_pink obj_font_size_11_weight_500" style="float:right;width:80px;" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_plan_daily_record', 90, POPUP_FROM_BOTTOM, {'select_date':'{{ date_format| date:'Y-m-d' }}'})">
+                                일지 확인
+                            </div>
                         </div>
                     {% else %}
                         <div class="obj_table_cell_x2 obj_font_size_11_weight_normal obj_font_color_light_black">

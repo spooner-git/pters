@@ -69,10 +69,17 @@ class Plan_daily_record{
         for(let i=0; i<length; i++){
             let schedule_name = this.data[i].schedule_name;
             let schedule_id = this.data[i].schedule_id;
+            let state_cd = this.data[i].state_cd;
+            let attend_icon = "";
+            if(state_cd == SCHEDULE_FINISH){
+                attend_icon = CImg.confirm(["green"], {"vertical-align":"middle", "margin-bottom":"3px"});
+            }else if(state_cd == SCHEDULE_ABSENCE){
+                attend_icon = CImg.x(["#ff0022"], {"vertical-align":"middle", "margin-bottom":"3px"});
+            }
 
             let html = `<li class="plan_daily_record_li">
                             <div class="plan_daily_record_member_row">
-                                <div class="plan_daily_record_member_row_name">${schedule_name}</div>
+                                <div class="plan_daily_record_member_row_name">${schedule_name} ${attend_icon}</div>
                                 <div class="plan_daily_record_member_row_tools">
                                     ${CComponent.button(`daily_record_write_${schedule_id}`, "작성", button_style, ()=>{this.event_write(schedule_id, schedule_name);})}
                                     ${CComponent.button(`daily_record_edit_${schedule_id}`, "편집", button_style, ()=>{this.event_edit(schedule_id, schedule_name);})}

@@ -399,9 +399,11 @@ class Plan_view{
             let state = this.data.member_schedule_state[i];
             let state_icon_url;
             if(state == SCHEDULE_ABSENCE){
-                state_icon_url = CImg.x(["var(--img-sub1)"], {"vertical-align":"middle", "margin-bottom":"3px"});
+                // state_icon_url = CImg.x(["var(--img-sub1)"], {"vertical-align":"middle", "margin-bottom":"3px"});
+                state_icon_url = CImg.x(["#ff0022"], {"vertical-align":"middle", "margin-bottom":"3px"});
             }else if(state == SCHEDULE_FINISH){
-                state_icon_url = CImg.confirm(["var(--img-sub1)"], {"vertical-align":"middle", "margin-bottom":"3px"});
+                // state_icon_url = CImg.confirm(["var(--img-sub1)"], {"vertical-align":"middle", "margin-bottom":"3px"});
+                state_icon_url = CImg.confirm(["green"], {"vertical-align":"middle", "margin-bottom":"3px"});
             }else if(state == SCHEDULE_NOT_FINISH){
                 state_icon_url = DELETE;
             }

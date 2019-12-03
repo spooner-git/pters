@@ -1726,6 +1726,14 @@ class TraineeInquiryView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         return context
 
 
+class PopupPlanDailyRecordView(TemplateView):
+    template_name = 'popup/trainee_popup_plan_daily_record.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PopupPlanDailyRecordView, self).get_context_data(**kwargs)
+        return context
+
+
 # skkim Test페이지, 테스트 완료후 지울것 190316
 class TestPageView(TemplateView):
     template_name = 'test_page.html'

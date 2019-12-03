@@ -1,0 +1,35 @@
+	#popup_plan_daily_record .popup_mobile .wrapper_top{
+		height: 50px;
+		margin-bottom: 10px;
+	}
+
+	.popup_plan_daily_record{
+		/*min-height: 100%;*/
+	}	
+
+		.popup_plan_daily_record .wrapper_plan_daily_record_title{
+				padding: 0 20px;
+			}
+			.popup_plan_daily_record .wrapper_popup_title_text{
+				position: absolute;
+				top: 20px;
+				height: 35px;
+				line-height: 35px;
+			}
+			.popup_plan_daily_record .obj_font_size_14_weight_500{
+
+				
+				height: 20px;
+				line-height: 20px;
+			}
+			.popup_plan_daily_record .wrapper_plan_daily_record_title .wrapper_popup_title_date{
+				position: absolute;
+				top: 55px;
+
+			}
+
+
+		.popup_plan_daily_record > .obj_box_full{
+			margin-top: 30px;
+			margin-bottom: 30px;
+		}
