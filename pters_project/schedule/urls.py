@@ -34,7 +34,10 @@ urlpatterns = [
     # 일정 메모 수정
     url(r'^update_memo_schedule/$', views.update_memo_schedule_logic, name='update_memo_schedule'),
 
+    url(r'^get_daily_record_info/$', views.GetDailyRecordInfoView.as_view(), name='get_daily_record_info'),
     url(r'^add_daily_record_info/$', views.add_daily_record_info_logic, name='add_daily_record_info'),
+    url(r'^update_daily_record_info/$', views.update_daily_record_info_logic, name='update_daily_record_info'),
+    url(r'^delete_daily_record_info/$', views.delete_daily_record_info_logic, name='delete_daily_record_info'),
 
     # 일지 에디터 사진 업로드
     url(r'^update_daily_record_content_img', views.update_daily_record_content_img_logic,

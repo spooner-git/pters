@@ -25,6 +25,7 @@ from configs.const import ON_SCHEDULE_TYPE, USE, AUTO_FINISH_OFF, AUTO_FINISH_ON
     LECTURE_TYPE_ONE_TO_ONE, STATE_CD_NOT_PROGRESS, PERMISSION_STATE_CD_APPROVE, STATE_CD_FINISH, STATE_CD_ABSENCE, \
     OFF_SCHEDULE_TYPE
 from configs import settings
+from configs.views import AccessTestMixin
 from login.models import LogTb, MemberTb
 from schedule.forms import AddScheduleTbForm
 from schedule.functions import func_send_push_trainee, func_send_push_trainer, func_get_holiday_schedule, \
@@ -2204,6 +2205,36 @@ def send_push_to_trainee_logic(request):
         context['messageArray'] = error
     return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
     # return render(request, 'ajax/schedule_error_info.html')
+
+
+class GetDailyRecordInfoView(LoginRequiredMixin, View):
+
+    def get(self, request):
+        daily_record_id = request.GET.get('daily_record_id', '')
+        error = None
+        daily_record_result = {}
+        if daily_record_id is None or daily_record_id == '':
+            error = '일지 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            try:
+                daily_record_info = DailyRecordTb.objects.get(daily_record_id=daily_record_id)
+                daily_record_result = {
+                    'daily_record_id': daily_record_info.daily_record_id,
+                    'daily_record_class_id': daily_record_info.class_tb_id,
+                    'daily_record_schedule_id': daily_record_info.schedule_tb_id,
+                    'daily_record_title': daily_record_info.title,
+                    'daily_record_contents': daily_record_info.contents,
+                    'daily_record_is_member_view': daily_record_info.is_member_view
+                }
+            except ObjectDoesNotExist:
+                error = '일지 정보를 불러오지 못했습니다.'
+
+        if error is not None:
+            logger.error(self.request.user.first_name + ' ' + '[' + str(self.request.user.id) + ']' + error)
+            messages.error(self.request, error)
+
+        return JsonResponse(daily_record_result, json_dumps_params={'ensure_ascii': True})
 
 
 def add_daily_record_info_logic(request):
