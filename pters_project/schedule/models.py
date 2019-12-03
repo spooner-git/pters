@@ -178,3 +178,17 @@ class HolidayTb(models.Model):
         managed = False
         db_table = 'HOLIDAY_TB'
 
+
+class DailyRecordTb(TimeStampedModel):
+    daily_record_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    schedule_tb = models.ForeignKey(ScheduleTb, on_delete=models.CASCADE, null=True)
+    title = models.CharField(db_column='TITLE', max_length=500, blank=True, default='')
+    contents = models.CharField(db_column='CONTENTS', max_length=3000, blank=True, default='')
+    reg_member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    is_member_view = models.IntegerField(db_column='IS_MEMBER_VIEW', default=0)  # Field name made lowercase.
+    use = models.IntegerField(db_column='USE', default=USE)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'DAILY_RECORD_TB'

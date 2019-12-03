@@ -14,9 +14,12 @@ from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.utils import timezone
+from django.utils.datastructures import MultiValueDictKeyError
 from django.views import View
 from django.views.generic import TemplateView
 
+from admin_spooner.functions import func_delete_board_content_image_logic
+from admin_spooner.functions import func_upload_board_content_image_logic
 from configs.const import ON_SCHEDULE_TYPE, USE, AUTO_FINISH_OFF, AUTO_FINISH_ON, TO_TRAINEE_LESSON_ALARM_ON, \
     TO_TRAINEE_LESSON_ALARM_OFF, SCHEDULE_DUPLICATION_DISABLE, AUTO_ABSENCE_ON, SCHEDULE_DUPLICATION_ENABLE, \
     LECTURE_TYPE_ONE_TO_ONE, STATE_CD_NOT_PROGRESS, PERMISSION_STATE_CD_APPROVE, STATE_CD_FINISH, STATE_CD_ABSENCE, \
@@ -24,7 +27,8 @@ from configs.const import ON_SCHEDULE_TYPE, USE, AUTO_FINISH_OFF, AUTO_FINISH_ON
 from configs import settings
 from login.models import LogTb, MemberTb
 from schedule.forms import AddScheduleTbForm
-from schedule.functions import func_send_push_trainee, func_send_push_trainer, func_get_holiday_schedule
+from schedule.functions import func_send_push_trainee, func_send_push_trainer, func_get_holiday_schedule, \
+    func_upload_daily_record_content_image_logic, func_delete_daily_record_content_image_logic
 from trainee.models import MemberTicketTb
 from trainer.models import LectureTb, ClassTb
 from .functions import func_get_member_ticket_id, func_add_schedule, func_refresh_member_ticket_count, func_date_check,\
@@ -32,7 +36,7 @@ from .functions import func_get_member_ticket_id, func_add_schedule, func_refres
     func_check_lecture_available_member_after, func_delete_schedule, \
     func_delete_repeat_schedule, func_get_repeat_schedule_date_list, func_add_repeat_schedule, \
     func_refresh_lecture_status
-from .models import ScheduleTb, RepeatScheduleTb
+from .models import ScheduleTb, RepeatScheduleTb, DailyRecordTb
 
 logger = logging.getLogger(__name__)
 
@@ -2200,3 +2204,136 @@ def send_push_to_trainee_logic(request):
         context['messageArray'] = error
     return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
     # return render(request, 'ajax/schedule_error_info.html')
+
+
+def add_daily_record_info_logic(request):
+    schedule_id = request.POST.get('schedule_id')
+    title = request.POST.get('title', '')
+    contents = request.POST.get('contents', '')
+    is_member_view = request.POST.get('is_member_view', 1)
+    class_id = request.session.get('class_id')
+
+    context = {}
+    error = None
+
+    if schedule_id is None or schedule_id == '':
+        error = '일지를 작성할 일정을 선택해주세요.'
+
+    if error is None:
+
+        daily_record_info = DailyRecordTb(class_tb_id=class_id, schedule_tb_id=schedule_id, reg_member_id=request.user.id,
+                                          title=title, contents=contents, is_member_view=int(is_member_view), use=USE)
+        daily_record_info.save()
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        context['messageArray'] = error
+
+    return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+
+
+def update_daily_record_info_logic(request):
+    daily_record_id = request.POST.get('daily_record_id')
+    title = request.POST.get('title', '')
+    contents = request.POST.get('contents', '')
+    is_member_view = request.POST.get('is_member_view', 1)
+
+    context = {}
+    error = None
+
+    if daily_record_id is None or daily_record_id == '':
+        error = '일지 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            daily_record_info = DailyRecordTb.objects.get(daily_record_id=daily_record_id)
+            daily_record_info.title = title
+            daily_record_info.contents = contents
+            daily_record_info.is_member_view = int(is_member_view)
+            daily_record_info.reg_member_id = request.user.id
+            daily_record_info.save()
+
+        except ObjectDoesNotExist:
+            error = '일지 정보를 불러오지 못했습니다.'
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        context['messageArray'] = error
+
+    return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+
+
+# 이미지 삭제 필요
+def delete_daily_record_info_logic(request):
+    daily_record_id = request.POST.get('daily_record_id')
+
+    context = {}
+    error = None
+
+    if daily_record_id is None or daily_record_id == '':
+        error = '일지 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            daily_record_info = DailyRecordTb.objects.get(daily_record_id=daily_record_id)
+            daily_record_info.delete()
+
+        except ObjectDoesNotExist:
+            error = '일지 정보를 불러오지 못했습니다.'
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        context['messageArray'] = error
+
+    return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+
+
+def update_daily_record_content_img_logic(request):
+    error_message = None
+    img_url = None
+    context = {}
+    if request.method == 'POST':
+        # 대표 이미지 설정
+        try:
+            img_url = func_upload_daily_record_content_image_logic(request.FILES['content_img_file'],
+                                                                   request.POST.get('content_img_file_name'),
+                                                                   request.user.id,
+                                                                   request.session.get('class_id'),
+                                                                   request.POST.get('schedule_id'))
+        except MultiValueDictKeyError:
+            img_url = None
+    else:
+        error_message = '잘못된 요청입니다.'
+
+    if img_url is None:
+        error_message = '이미지 업로드중 오류가 발생했습니다.'
+
+    if error_message is not None:
+        messages.error(request, error_message)
+        context['messageArray'] = error_message
+    else:
+        context['img_url'] = img_url
+    return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+
+
+def delete_daily_record_content_img_logic(request):
+    error_message = None
+    img_url = None
+    context = {}
+    if request.method == 'POST':
+        # 대표 이미지 설정
+        try:
+            img_url = func_delete_daily_record_content_image_logic(request.POST.get('content_img_file_name'))
+        except MultiValueDictKeyError:
+            img_url = None
+    else:
+        error_message = '잘못된 요청입니다.'
+
+    if img_url is None:
+        error_message = '이미지 삭 오류가 발생했습니다.'
+
+    if error_message is not None:
+        messages.error(request, error_message)
+        context['messageArray'] = error_message
+    else:
+        context['img_url'] = img_url
+    return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
