@@ -844,9 +844,19 @@ class Plan_add{
     }
 
     pass_inspect(selected_date){
+        let id = "go_to_shop";
+        let title = "패스 구매";
+        let style = {"display":"inline-block", "background-color":"var(--bg-highlight)", "border-radius":"2px", "margin-top":"15px"};
+        let onclick = ()=>{
+            layer_popup.all_close_layer_popup();
+            sideGoPopup("pters_pass_main");
+        };
+        let go_to_shop_button = `<div>${CComponent.button (id, title, style, onclick)}</div>`;
+
+
         let inspect = pass_inspector.schedule(selected_date);
         if(inspect.barrier == BLOCKED){
-            show_error_message(`[${inspect.limit_type}] 이용자께서는 오늘 기준 전/후 ${inspect.limit_num}일간 일정 관리 하실 수 있습니다.`);
+            show_error_message(`[${inspect.limit_type}] 이용자께서는 오늘 기준 전/후 ${inspect.limit_num}일간 일정 관리 하실 수 있습니다.${go_to_shop_button}`);
             return false;
         }
     }
