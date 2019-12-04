@@ -72,7 +72,6 @@ class Home {
         let plan_dom;
         let end_alert_dom;
         let sales_summary_dom;
-        let google_adsense_dom;
 
         Program_func.read((data)=>{
             this.received_data.program = data;
@@ -330,9 +329,10 @@ class Home {
         let icon_r_text = `${UnitRobot.numberWithCommas(Number(data.price[0]) - Number(data.refund_price[0]))} 원 ${CImg.arrow_right(["var(--img-sub1)"], {"vertical-align":"middle"})}`;
         let style = {"font-size":"15px", "font-weight":"bold"};
         let onclick = ()=>{
-            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_STATISTICS, 100, popup_style, null, ()=>{
-                statistics_popup = new Statistics('.popup_statistics')});
+            Setting_menu_access.locked_menu(()=>{
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_STATISTICS, 100, POPUP_FROM_RIGHT, null, ()=>{
+                                                statistics_popup = new Statistics('.popup_statistics')});
+            });
         };
         let sales_data = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
         let dom = `<article class="sales_wrapper">

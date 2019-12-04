@@ -4281,89 +4281,6 @@ class CustomSelector{
     }
 }
 
-// class PasswordFourDigitInput{
-//     constructor(title, install_target, original_data, callback){
-//         this.title = title;
-//         this.target = {install:install_target};
-//         this.unique_instance = install_target.replace(/#./gi, "");
-//         this.callback = callback;
-//         this.original_data = original_data;
-//         this.data = {
-//             password:null
-//         };
-//         this.init();
-//         this.set_initial_data();
-//     }
-
-//     init(){
-//         this.render();
-//     }
-
-//     set_initial_data(){
-//         this.data.password = this.original_data;
-//         this.init();
-//     }
-
-//     clear(){
-//         setTimeout(()=>{
-//             document.querySelector(this.target.install).innerHTML = "";
-//         }, 300);
-//     }
-
-//     render(){
-//         let top_left = `<span class="icon_left" onclick="password_4d_input.upper_right_menu();">${CImg.arrow_left()}</span>`;
-//         let top_center = `<span class="icon_center">
-//                             <span id="">${this.title}</span>
-//                           </span>`;
-//         let top_right = `<span class="icon_right" onclick="password_4d_input.upper_right_menu();">
-//                             <span style="color:var(--font-highlight);font-weight: 500;">완료</span>
-//                         </span>`;
-//         let content =   `<section>${this.dom_list()}</section>`;
-        
-//         let html = PopupBase.base(top_left, top_center, top_right, content, "");
-
-//         document.querySelector(this.target.install).innerHTML = html;
-//     }
-
-//     dom_list (){
-//         let html = this.dom_row_input() + 
-//                     `<div style="font-size:12px;color:var(--font-sub-dark);text-align:center;">초기 비밀번호는 0000입니다.<br>암호화 되어 저장되지 않으므로 일상적인 번호로 하세요.</div>`;
-
-//         return html;
-//     }
-
-//     dom_row_input(){
-//         let html = `<div style="margin:40px 0;">
-//                         <div style="text-align:center;">
-//                             <input id="password_4d_input_field" type="tel" maxlength=4 style="-webkit-appearance:none;border:0;background-color:unset;width:260px;letter-spacing:33px;font-size:40px;font-weight:500;text-align:left;margin:0 auto;padding-left:37px;box-sizing:border-box" value="${this.data.password}">
-//                         </div>
-//                         <div style="height:2px;width:220px;text-align:center;margin:0 auto">
-//                             <div id="password_digit_1" class="password_4d_input_bar"></div>
-//                             <div id="password_digit_2" class="password_4d_input_bar"></div>
-//                             <div id="password_digit_3" class="password_4d_input_bar"></div>
-//                             <div id="password_digit_4" class="password_4d_input_bar"></div>
-//                         </div>
-//                     </div>`;
-//         let self = this;
-//         $(document).off('focusout', '#password_4d_input_field').on('focusout', '#password_4d_input_field', function(e){
-//             let user_input_data = e.target.value;
-//             self.data.password = user_input_data;
-//         });
-//         return html;
-//     }
-
-//     request_list (callback){
-//         // this.received_data = color_data;
-//         // callback();
-//     }
-
-//     upper_right_menu(){
-//         this.callback(this.data);
-//         layer_popup.close_layer_popup();
-//         this.clear();
-//     }
-// }
-
 class PasswordFourDigitInput{
     constructor(title, install_target, original_data, callback){
         this.title = title;
@@ -4422,12 +4339,26 @@ class PasswordFourDigitInput{
     }
 
     dom_row_input(){
+        // let html = `<div style="margin:40px 0;">
+        //                 <div style="text-align:center;">
+        //                     <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_1" value="${this.data.password_digit_1 == null ? "" : this.data.password_digit_1}">
+        //                     <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_2" value="${this.data.password_digit_2 == null ? "" : this.data.password_digit_2}">
+        //                     <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_3" value="${this.data.password_digit_3 == null ? "" : this.data.password_digit_3}">
+        //                     <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_4" value="${this.data.password_digit_4 == null ? "" : this.data.password_digit_4}">
+        //                 </div>
+        //                 <div style="height:2px;width:220px;text-align:center;margin:0 auto">
+        //                     <div id="password_digit_1" class="password_4d_input_bar"></div>
+        //                     <div id="password_digit_2" class="password_4d_input_bar"></div>
+        //                     <div id="password_digit_3" class="password_4d_input_bar"></div>
+        //                     <div id="password_digit_4" class="password_4d_input_bar"></div>
+        //                 </div>
+        //             </div>`;
         let html = `<div style="margin:40px 0;">
                         <div style="text-align:center;">
-                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_1" value="${this.data.password_digit_1 == null ? "" : this.data.password_digit_1}">
-                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_2" value="${this.data.password_digit_2 == null ? "" : this.data.password_digit_2}">
-                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_3" value="${this.data.password_digit_3 == null ? "" : this.data.password_digit_3}">
-                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_4" value="${this.data.password_digit_4 == null ? "" : this.data.password_digit_4}">
+                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_1" value="">
+                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_2" value="">
+                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_3" value="">
+                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_4" value="">
                         </div>
                         <div style="height:2px;width:220px;text-align:center;margin:0 auto">
                             <div id="password_digit_1" class="password_4d_input_bar"></div>
@@ -4498,6 +4429,153 @@ class PasswordFourDigitInput{
     upper_right_menu(){
         let combined_data = {password : `${this.data.password_digit_1}${this.data.password_digit_2}${this.data.password_digit_3}${this.data.password_digit_4}`};
         this.callback(combined_data);
+        layer_popup.close_layer_popup();
+        this.clear();
+    }
+}
+
+class PasswordInput{
+    constructor(title, install_target, original_data, callback){
+        this.title = title;
+        this.target = {install:install_target};
+        this.unique_instance = install_target.replace(/#./gi, "");
+        this.callback = callback;
+        this.original_data = original_data;
+        this.data = {
+            password_digit_1:null,
+            password_digit_2:null,
+            password_digit_3:null,
+            password_digit_4:null
+        };
+        this.init();
+        this.set_initial_data();
+    }
+
+    init(){
+        this.render();
+    }
+
+    set_initial_data(){
+        this.data.password_digit_1 = Number(String(this.original_data).substr(0, 1));
+        this.data.password_digit_2 = Number(String(this.original_data).substr(1, 1));
+        this.data.password_digit_3 = Number(String(this.original_data).substr(2, 1));
+        this.data.password_digit_4 = Number(String(this.original_data).substr(3, 1));
+        this.init();
+    }
+
+    clear(){
+        setTimeout(()=>{
+            document.querySelector(this.target.install).innerHTML = "";
+        }, 300);
+    }
+
+    render(){
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();">
+                            <span style="color:var(--font-main);font-weight: 500;">닫기</span>
+                        </span>`;
+        let top_center = `<span class="icon_center">
+                            <span id="">${this.title}</span>
+                          </span>`;
+        let top_right = `<span class="icon_right" onclick="password_input.upper_right_menu();">
+                            <span style="color:var(--font-highlight);font-weight: 500;">확인</span>
+                        </span>`;
+        let content =   `<section>${this.dom_list()}</section>`;
+        
+        let html = PopupBase.base(top_left, top_center, top_right, content, "");
+
+        // let html = content;
+
+        document.querySelector(this.target.install).innerHTML = html;
+    }
+
+    dom_list (){
+        let html = this.dom_row_input() + 
+                    `<div style="font-size:12px;color:var(--font-sub-dark);text-align:center;">계정 소유자에 의해 잠겨있는 항목입니다.<br>비밀번호를 입력 해주세요.</div>`;
+
+        return html;
+    }
+
+    dom_row_input(){
+        let html = `<div style="margin:20px 0 10px 0;">
+                        <div style="text-align:center;">
+                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_1" value="">
+                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_2" value="">
+                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_3" value="">
+                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_4" value="">
+                        </div>
+                        <div style="height:2px;width:220px;text-align:center;margin:0 auto">
+                            <div id="password_digit_1" class="password_4d_input_bar"></div>
+                            <div id="password_digit_2" class="password_4d_input_bar"></div>
+                            <div id="password_digit_3" class="password_4d_input_bar"></div>
+                            <div id="password_digit_4" class="password_4d_input_bar"></div>
+                        </div>
+                    </div>`;
+        let self = this;
+
+        $(document).off('keyup', '#password_4d_input_slot_1').on('keyup', '#password_4d_input_slot_1', function(e){
+            let user_input_data = e.target.value;
+            self.data.password_digit_1 = user_input_data;
+            if(e.keyCode == 8){
+                return;
+            }else{
+                setTimeout(()=>{
+                    if(user_input_data != ""){
+                        $('#password_4d_input_slot_2').val("").focus();
+                    }
+                }, 50);
+            }
+        });
+        $(document).off('keyup', '#password_4d_input_slot_2').on('keyup', '#password_4d_input_slot_2', function(e){
+            let user_input_data = e.target.value;
+            self.data.password_digit_2 = user_input_data;
+            if(e.keyCode == 8){
+                let value = $('#password_4d_input_slot_1').val();
+                $('#password_4d_input_slot_1').focus().val('').val(value);
+            }else{
+                if(user_input_data != ""){
+                    $('#password_4d_input_slot_3').val("").focus();
+                }
+            }
+        });
+        $(document).off('keyup', '#password_4d_input_slot_3').on('keyup', '#password_4d_input_slot_3', function(e){
+            let user_input_data = e.target.value;
+            self.data.password_digit_3 = user_input_data;
+            if(e.keyCode == 8){
+                let value = $('#password_4d_input_slot_2').val();
+                $('#password_4d_input_slot_2').focus().val('').val(value);
+            }else{
+                if(user_input_data != ""){
+                    $('#password_4d_input_slot_4').val("").focus();
+                }
+            }
+        });
+        $(document).off('keyup', '#password_4d_input_slot_4').on('keyup', '#password_4d_input_slot_4', function(e){
+            let user_input_data = e.target.value;
+            self.data.password_digit_4 = user_input_data;
+            if(e.keyCode == 8){
+                let value = $('#password_4d_input_slot_3').val();
+                $('#password_4d_input_slot_3').focus().val('').val(value);
+            }else{
+                if(user_input_data != ""){
+                    $('input').blur();
+                }
+            }
+        });
+        return html;
+    }
+
+    request_list (callback){
+        // this.received_data = color_data;
+        // callback();
+    }
+
+    upper_right_menu(){
+        let combined_data = {password : `${this.data.password_digit_1}${this.data.password_digit_2}${this.data.password_digit_3}${this.data.password_digit_4}`};
+        if(combined_data.password != this.original_data){
+            show_error_message("비밀번호가 맞지 않습니다.")
+            return;
+        }
+        this.callback();
         layer_popup.close_layer_popup();
         this.clear();
     }

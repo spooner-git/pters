@@ -63,15 +63,6 @@ class Menu_settings {
         let dom_tag_style = {"font-size":"13px", "color":"var(--font-sub-normal)", "padding-left":"0", "margin-bottom":"8px"};
 
         let assembly = 
-                    //     this.dom_who_i_am() + 
-                    //    CComponent.dom_tag('운영', dom_tag_style) + 
-                    //     this.dom_menu_program() + 
-                    //     this.dom_menu_calendar() + 
-                    //     this.dom_menu_member() + 
-                    //     this.dom_menu_lecture() +
-                    //     this.dom_menu_ticket() + 
-                    //     this.dom_menu_statistics() + 
-                    //     this.dom_menu_attendmode() + 
                        CComponent.dom_tag('설정', dom_tag_style) + 
                         this.dom_menu_setting_calendar() + 
                         this.dom_menu_setting_worktime() + 
@@ -80,13 +71,8 @@ class Menu_settings {
                         this.dom_menu_setting_alarm() + 
                         this.dom_menu_attendmode() + 
                         this.dom_menu_setting_attendmode() + 
-                        this.dom_menu_theme();
-                    //    CComponent.dom_tag('서비스', dom_tag_style) + 
-                    //     this.dom_menu_pters_pass() + 
-                    //     this.dom_menu_service_notice() + 
-                    //     this.dom_menu_service_inquiry() + 
-                    //     this.dom_menu_service_help();
-          
+                        this.dom_menu_theme() + 
+                        this.dom_menu_setting_menu_access();
         return assembly;
     }
 
@@ -289,6 +275,19 @@ class Menu_settings {
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             sideGoPopup("setting_theme");
+        });
+        return html;
+    }
+
+    dom_menu_setting_menu_access(){
+        let id = 'menu_setting_menu_access';
+        let title = '권한 관리';
+        let icon = CImg.lock();
+        let icon_r_visible = NONE;
+        let icon_r_text = "";
+        let style = {"font-size":"17px", "padding":"13px 0"};
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            sideGoPopup("setting_menu_access");
         });
         return html;
     }

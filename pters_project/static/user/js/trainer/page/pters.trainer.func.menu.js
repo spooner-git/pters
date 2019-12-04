@@ -79,6 +79,7 @@ class Menu {
                         this.dom_menu_setting_alarm() + 
                         this.dom_menu_setting_attendmode() + 
                         this.dom_menu_theme() + 
+                        this.dom_menu_setting_menu_access() + 
                        CComponent.dom_tag('서비스', dom_tag_style) + 
                         this.dom_menu_pters_pass() + 
                         this.dom_menu_service_notice() + 
@@ -290,6 +291,19 @@ class Menu {
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             sideGoPopup("setting_theme");
+        });
+        return html;
+    }
+
+    dom_menu_setting_menu_access(){
+        let id = 'menu_setting_menu_access';
+        let title = '권한 관리';
+        let icon = CImg.lock();
+        let icon_r_visible = NONE;
+        let icon_r_text = "";
+        let style = {"font-size":"17px", "padding":"13px 0"};
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            sideGoPopup("setting_menu_access");
         });
         return html;
     }

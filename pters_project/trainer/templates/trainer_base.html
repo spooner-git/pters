@@ -336,6 +336,7 @@
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_alarm.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_attendmode.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_theme.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_menu_access.js" %}></script>
 
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.service_notice.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.service_inquiry.js" %}></script>
@@ -535,6 +536,7 @@
     var color_select;
     var custom_selector;
     var password_4d_input;
+    var password_input;
     var board_writer;
     var board_reader;
     var drawing_board;
@@ -709,6 +711,10 @@
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_THEME, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     setting_theme_popup = new Setting_theme('.popup_setting_theme')});
             break;
+            case 'setting_menu_access':
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_MENU_ACCESS, 100, POPUP_FROM_RIGHT, null, ()=>{
+                                                    setting_menu_access_popup = new Setting_menu_access('.popup_setting_menu_access')});
+            break;
             case 'service_notice':
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SERVICE_NOTICE, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     service_notice_popup = new Service_notice('.popup_service_notice')});
@@ -718,8 +724,10 @@
                                                     service_inquiry_menu_popup = new Service_inquiry_menu('.popup_service_inquiry_menu')});
             break;
             case 'statistics':
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_STATISTICS, 100, POPUP_FROM_RIGHT, null, ()=>{
+                Setting_menu_access.locked_menu(()=>{
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_STATISTICS, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     statistics_popup = new Statistics('.popup_statistics')});
+                });
             break;
             case 'mypage':
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_TOP : POPUP_FROM_RIGHT;
@@ -740,8 +748,7 @@
             break;
         }
     }
-    //페이지에 들어오면 홈화면을 띄우기
-    $('#home').trigger('click');
+    
 
     //튜토리얼을 본적이 없으면 튜토리얼을 띄우기
     // let tutorial_view = localStorage.getItem("tutorial_view");
@@ -771,6 +778,9 @@
             target.innerHTML = `<img src="${user_photo}" alt="" class="up_menu_img" style="border-radius:50%"><span>${user_name}</span>`;
         });
     }
+
+    //페이지에 들어오면 홈화면을 띄우기
+    $('#home').trigger('click');
 
     pc_top_toolbar_user_info_update();
     are_there_new_alarm();

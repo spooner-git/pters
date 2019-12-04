@@ -1,0 +1,33 @@
+
+.popup_setting_menu_access{
+	/* -webkit-overflow-scrolling: touch; */
+}
+
+.popup_setting_menu_access .obj_box_full{
+	padding: 15px 20px;
+	border: 0;
+}
+
+.popup_setting_menu_access .obj_input_box_full{
+	padding: 15px 20px;
+	/* border: 0; */
+}
+
+.popup_setting_menu_access .popup_toolbox{
+	/* position: sticky;
+	position: -webkit-sticky; */
+	position: relative;
+	top: 0;
+	padding: 8px 16px 24px 20px;
+	/* border-bottom: 1px solid #f5f5f5; */
+	z-index: 1;
+}
+
+.popup_setting_menu_access .popup_content{
+	/* padding-top: 20px; */
+}
+
+.popup_setting_menu_access .setting_menu_lock_wrapper{
+	padding: 10px 20px;
+	border: 0;
+}
