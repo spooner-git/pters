@@ -4894,6 +4894,324 @@ class BoardWriter{
     }
 }
 
+class BoardWriter_for_daily_record{
+    constructor(title, install_target, instance, data, callback){
+        this.title = title;
+        this.target = {install:install_target, instance:instance, upper_html:"section_board_writer_upper_html", category_selector:"section_board_writer_category_selector", content_writer:"section_board_writer_content_writer"};
+        this.callback = callback;
+        this.external_data = data;
+        this.data = {
+            title:null,
+            content:null,
+            category:[
+                
+            ],
+            category_selected:{
+                
+            },
+            schedule_id:null,
+            is_member_view:false,
+            images: {}
+        };
+        // this.init();
+        this.set_initial_data();
+        this.init();
+    }
+
+    init(){
+        this.render();
+    }
+
+    set_initial_data(){
+        for(let item in this.external_data){
+            if(this.external_data[item] != undefined){
+                this.data[item] = this.external_data[item];
+            }
+        }
+    }
+
+    clear(){
+        setTimeout(()=>{
+            document.querySelector(this.target.install).innerHTML = "";
+        }, 300);
+    }
+
+    render(){
+        let top_left = `<span class="icon_left" onclick="${this.target.instance}.close();">${CImg.arrow_left()}</span>`;
+        let top_center = `<span class="icon_center">
+                            <span id="">${this.title}</span>
+                          </span>`;
+        let top_right = `<span class="icon_right"  onclick="${this.target.instance}.upper_right_menu();">
+                            <span style="color:var(--font-highlight);font-weight: 500;">저장</span>
+                        </span>`;
+        let content =   `<section id="${this.target.upper_html}">${this.data.upper_html != null ? this.data.upper_html : ""}</section>`+
+                        `<section id="${this.target.category_selector}">${this.dom_assembly_category()}</section>`+
+                        `<section id="${this.target.content_writer}">${this.dom_content_assembly()}</section>`;
+        
+        let html = PopupBase.base(top_left, top_center, top_right, content, "");
+
+        document.querySelector(this.target.install).innerHTML = html;
+        this.init_summernote();
+    }
+
+    render_upper_html(){
+        let html = this.data.upper_html != null ? this.data.upper_html : ""
+        document.getElementById(this.target.upper_html).innerHTML = html;
+    }
+
+    render_category_selector(){
+        let html = this.dom_assembly_category();
+        document.getElementById(this.target.category_selector).innerHTML = html;
+    }
+
+    render_content_writer(){
+        let html = this.dom_content_assembly();
+        document.getElementById(this.target.content_writer).innerHTML = html;
+    }
+
+    dom_content_assembly (){
+        // let upper_html = this.data.upper_html != null ? this.data.upper_html : "";
+        let title_input = `<div class="obj_input_box_full" style="padding:8px 16px;">`+ this.dom_row_subject_input() + `</div>`;
+        let content_input = `<div class="obj_input_box_full">` + this.dom_row_content_input() + `</div>`;
+        // let category = this.dom_assembly_category();
+        let bottom_html = this.data.bottom_html != null ? this.data.bottom_html : "";
+
+        if(this.data.visibility.title == HIDE){
+            title_input = "";
+        }
+        if(this.data.visibility.content == HIDE){
+            content_input = "";
+        }
+
+        let html =  
+                    title_input + 
+                    content_input +
+                    bottom_html;
+
+        return html;
+    }
+
+    dom_assembly_category(){
+        let length = this.data.category.length;
+        let html_to_join = [];
+        for(let i=0; i<length; i++){
+            let html = this.dom_row_category(this.data.category[i]);
+            html_to_join.push(html);
+        }
+        return html_to_join.join("");
+    }
+
+    dom_row_subject_input(){
+        let id = "dom_row_subject_input";
+        let title = this.data.title != null ? this.data.title : "";
+        let placeholder = "제목";
+        let icon = DELETE;
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
+        let style = null;
+        let disabled = false;
+        let onfocusout = (data)=>{
+            this.data.title = data;
+            // this.render_content();
+        };
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+.,\\s 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
+        let pattern_message = "+ - _ ., 제외 특수문자는 입력 불가";
+        let required = "";
+        let row = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, onfocusout, pattern, pattern_message, required);
+        let html = row;
+        return html;
+    }
+
+    dom_row_content_input(){
+        let row = `<div id="board_writer_content_input"></div>`;
+        let html = row;
+        return html;
+    }
+
+    dom_row_category(data){
+        let category_id = data.id;
+        let category_title = data.title;
+        let category_data = data.data;
+
+        let id = `dom_row_category_${category_id}`;
+        let title = category_title;
+        let icon = DELETE;
+        let icon_r_visible = SHOW;
+        let icon_r_text = this.data.category_selected[category_id].text.length == 0 ? '' : this.data.category_selected[category_id].text;
+        // let style = {"display":"inline-block", 'padding':"16px", "padding-right":"0", "width":"43%", "min-width":"170px", "max-width":"208px", "font-size":"14px"};
+        let style = {"display":"inline-block", 'padding':"16px", "padding-right":"0", "width":"43%", "min-width":"300px", "max-width":"320px", "font-size":"14px"};
+        let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            let title = category_title;
+            let install_target = "#wrapper_box_custom_select";
+            let multiple_select = 1;
+            let data = category_data;
+            let selected_data = this.data.category_selected[category_id];
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, popup_style, null, ()=>{
+                custom_selector = new CustomSelector(title, install_target, multiple_select, data, selected_data, (set_data)=>{
+                    this.data.category_selected[category_id] = set_data;
+                    this.render_category_selector();
+                });
+            });
+        });
+        let html = row;
+        return html;
+    }
+
+    init_summernote(){
+        let popup_width = $root_content.width();
+        let category_width = 320;
+        let category_row_number = this.data.category.length / Math.floor(popup_width/category_width);
+
+        let wrapper_top_height = 60;
+        let category_height = 61 * category_row_number;
+        let title_input_height = 65;
+        let summer_note_toolbar_height = 42;
+        let summer_note_textarea_padding = 32;
+        let wrapper_bottom_padding_height = 60;
+
+        let summer_note_textarea_height = $root_content.height() - wrapper_top_height - category_height - title_input_height - summer_note_toolbar_height -summer_note_textarea_padding - wrapper_bottom_padding_height;
+
+        let summernote_attachment = {"name":[], "size":[]};
+        $(`#board_writer_content_input`).summernote({
+            minHeight: 150,
+            maxHeight:summer_note_textarea_height,
+            fontSizes:['12', '14', '16'],
+            placeholder: "내용을 입력해주세요.",
+            tabsize: 2,
+            lang: 'ko-KR',
+            toolbar: [
+                ['style', ['bold', 'italic', 'underline', 'clear']],
+                // ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['insert', ['picture', 'video']],
+                ['para', ['paragraph']],
+                ['table', ['table']],
+            ],
+            focus: false,
+            // fontSize: 14,
+            maximumImageFileSize: 10485760,
+            callbacks:{
+                onImageUpload: function(files) {
+                    // if(board_writer.data.category_selected['type'].text.length == 0){
+                    //     show_error_message('게시글 분류부터 선택해주세요.');
+                    //     return false;
+                    // }
+                    // upload image to server and create imgNode...
+                    let img_error_flag = false;
+                    for (let i = files.length - 1; i >= 0; i--) {
+                        if(files[i].size > 10485760){
+                            show_error_message('이미지는 최대 10mb까지 업로드 가능합니다.');
+                            img_error_flag = true;
+                            break;
+                        }
+                    }
+                    if(!img_error_flag){
+                        for (let i = files.length - 1; i >= 0; i--) {
+                            summernote_attachment["name"].push(files[i].name);
+                            summernote_attachment["size"].push(files[i].size/1024000);
+                            board_writer.update_content_img(files[i]);
+                        }
+                    }
+                }
+            },
+        });
+        if(this.data.content == "" || this.data.content == null){
+            this.data.content = " "
+        }
+
+        $(`#board_writer_content_input`).summernote('code', this.data.content);
+        $('.note-editable').blur();
+    }
+
+    update_content_img(file){
+        let date = new Date();
+        let content_img_file_name = file.name+'_'+file.lastModified+'_'+date.getTime();
+        let form_data = new FormData();
+        form_data.append('content_img_file', file);
+        form_data.append('content_img_file_name', file.lastModified+'_'+file.name);
+        // form_data.append('board_type_cd', this.data.category_selected['type'].value);
+        let self = this;
+        $.ajax({
+            url: '/schedule/update_daily_record_content_img/',
+            data: form_data,
+            dataType : 'JSON',
+            type:'POST',
+            processData: false,
+            contentType: false,
+            enctype:'multipart/form-data',
+
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+                ajax_load_image(SHOW);
+            },
+
+            success:function(data){
+                check_app_version(data.app_version);
+                if(data.messageArray != undefined) {
+                    if (data.messageArray.length > 0) {
+                        show_error_message(data.messageArray);
+                        return false;
+                    }
+                }
+                $('#board_writer_content_input').summernote('insertImage', data.img_url);
+                self.data.images[`${data.img_url}`] = null;
+            },
+
+            complete:function(){
+                ajax_load_image(HIDE);
+            },
+
+            error:function(){
+                //alert('통신이 불안정합니다.');
+                show_error_message('통신이 불안정합니다.');
+            }
+        });
+    }
+
+    request_list (callback){
+        // this.received_data = color_data;
+        // callback();
+    }
+
+    close(){
+        this.clear();
+        layer_popup.close_layer_popup();
+    }
+
+    upper_right_menu(){
+        let content_value = $('#board_writer_content_input').summernote('code');
+        this.data.content = content_value;
+
+        if(this.data.title == null){
+            show_error_message("제목을 입력해주세요.");
+            return false;
+        }
+        if(this.data.content.length <= 1 && this.data.visibility.content != HIDE){
+            show_error_message("내용을 입력해주세요.");
+            return false;
+        }
+        if(this.data.category.length > 0){
+            let selected_value_ok = true;
+            for(let item in this.data.category_selected){
+                if(this.data.category_selected[item].value.length == 0){
+                    selected_value_ok = false;
+                }
+            }
+            if(selected_value_ok == false){
+                show_error_message("카테고리를 선택해주세요.");
+                return false;
+            }
+        }
+        
+        this.callback(this.data);
+        layer_popup.close_layer_popup();
+        this.clear();
+    }
+}
+
 class BoardReader{
     constructor(title, install_target, instance, data){
         this.title = title;
@@ -4968,7 +5286,7 @@ class BoardReader{
 
     dom_row_title(){
         let date = this.data.date == null ? "" : this.data.date;
-        if(date != null){
+        if(this.data.date != null){
             let date_info_split = date.split(' ')[0];
             let date_info = date_info_split.split('-');
             let date_text = DateRobot.to_text(date_info[0], date_info[1], date_info[2]);

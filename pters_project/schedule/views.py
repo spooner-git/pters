@@ -2370,7 +2370,7 @@ def delete_daily_record_content_img_logic(request):
         error_message = '잘못된 요청입니다.'
 
     if img_url is None:
-        error_message = '이미지 삭 오류가 발생했습니다.'
+        error_message = '이미지 삭제 오류가 발생했습니다.'
 
     if error_message is not None:
         messages.error(request, error_message)

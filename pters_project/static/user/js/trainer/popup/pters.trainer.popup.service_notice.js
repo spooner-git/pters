@@ -156,7 +156,8 @@ class Service_notice {
             let data = {
                 title:title, content:content, date:date
             };
-            board_reader = new BoardReader("공지", '.popup_board_reader', "board_reader", data);});
+            board_reader = new BoardReader("공지", '.popup_board_reader', "board_reader", data);
+        });
     }
 
 

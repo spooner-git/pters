@@ -11,7 +11,7 @@ class Setting_menu_access{
                 member:OFF,
                 lecture:OFF,
                 ticket:OFF,
-                statistics:OFF,
+                statistics:OFF
             }
         };
 
