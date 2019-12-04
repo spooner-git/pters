@@ -103,10 +103,11 @@ class Plan_daily_record{
         let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_WRITER, 100, popup_style, null, ()=>{
             Plan_daily_record_func.read({"schedule_id":schedule_id}, (data)=>{
+                console.log(data)
                 let content = Object.keys(data).length == 0 ? "" : data.daily_record_contents;
-                let title = Object.keys(data).length == 0 ? "" : data.daily_record_title;
+                let img_list = Object.keys(data).length == 0 ? "" : data.daily_record_img_list;
                 let external_data = {   
-                                    title:title,
+                                    title:"",
                                     content:content,
                                     schedule_id:schedule_id,
                                     is_member_view: 1,
@@ -116,7 +117,7 @@ class Plan_daily_record{
 
                 board_writer = new BoardWriter_for_daily_record(`${schedule_name} 일지 작성`, '.popup_board_writer', 'board_writer', external_data, (data_written)=>{
                     //작성 중 첨부해서 서버에 업로드된 전체 이미지 목록 + 과거 올렸던 이미지 목록
-                    let images_uploaded = title == "" ? data_written.images  : {...data_written.images, ...JSON.parse(title)};
+                    let images_uploaded = img_list == "" ? data_written.images  : {...data_written.images, ...JSON.parse(img_list)};
                     
                     //업로드 된 이미지 중 작성 중 삭제한 이미지를 서버에서 지운다.
                     for(let image in images_uploaded){
