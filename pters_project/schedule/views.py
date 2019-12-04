@@ -2219,6 +2219,7 @@ class GetDailyRecordInfoView(LoginRequiredMixin, View):
         if error is None:
             try:
                 daily_record_info = DailyRecordTb.objects.get(schedule_tb_id=schedule_id)
+                print(daily_record_info.img_list)
                 daily_record_result = {
                     'daily_record_id': daily_record_info.daily_record_id,
                     'daily_record_class_id': daily_record_info.class_tb_id,
