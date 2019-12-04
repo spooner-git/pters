@@ -2357,24 +2357,24 @@ def update_daily_record_content_img_logic(request):
 
 
 def delete_daily_record_content_img_logic(request):
-    error_message = None
-    img_url = None
+    # error_message = None
+    # img_url = None
     context = {}
     if request.method == 'POST':
         # 대표 이미지 설정
         try:
-            img_url = func_delete_daily_record_content_image_logic(request.POST.get('content_img_file_name'))
+            error_message = func_delete_daily_record_content_image_logic(request.POST.get('content_img_file_name'))
         except MultiValueDictKeyError:
-            img_url = None
+            error_message = '이미지 삭제중 오류가 발생했습니다.'
     else:
         error_message = '잘못된 요청입니다.'
 
-    if img_url is None:
+    if error_message is not None:
         error_message = '이미지 삭제 오류가 발생했습니다.'
 
     if error_message is not None:
         messages.error(request, error_message)
         context['messageArray'] = error_message
-    else:
-        context['img_url'] = img_url
+    # else:
+    #     context['img_url'] = img_url
     return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
