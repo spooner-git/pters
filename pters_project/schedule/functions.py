@@ -1146,7 +1146,7 @@ def func_delete_daily_record_content_image_logic(file_name):
     # project_id = request.POST.get('project_id', '')
     # image = request.POST.get('upload_file', '')
     # context = {'error': None}
-    print(str(file_name))
+    # print(str(file_name))
     bucket_name = getattr(settings, "PTERS_AWS_S3_BUCKET_NAME", '')
     s3 = boto3.resource('s3', aws_access_key_id=getattr(settings, "PTERS_AWS_ACCESS_KEY_ID", ''),
                         aws_secret_access_key=getattr(settings, "PTERS_AWS_SECRET_ACCESS_KEY", ''))

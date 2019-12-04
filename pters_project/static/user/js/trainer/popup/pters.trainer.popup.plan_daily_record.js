@@ -130,7 +130,7 @@ class Plan_daily_record{
                     }
 
                     //작성한 글을 서버 저장한다.
-                    let data = {"schedule_id":data_written.schedule_id, "title":JSON.stringify(images_uploaded),
+                    let data = {"schedule_id":data_written.schedule_id, "img_list":JSON.stringify(images_uploaded), "title":"",
                                 "contents":data_written.content, "is_member_view":data_written.is_member_view};
                     Plan_daily_record_func.create(data, ()=>{
                         this.init();

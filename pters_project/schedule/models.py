@@ -187,6 +187,7 @@ class DailyRecordTb(TimeStampedModel):
     contents = models.CharField(db_column='CONTENTS', max_length=3000, blank=True, default='')
     reg_member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
     is_member_view = models.IntegerField(db_column='IS_MEMBER_VIEW', default=0)  # Field name made lowercase.
+    img_list = models.IntegerField(db_column='IMG_LIST', default=0)  # Field name made lowercase.
     use = models.IntegerField(db_column='USE', default=USE)  # Field name made lowercase.
 
     class Meta:

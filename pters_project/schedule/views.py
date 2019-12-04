@@ -2242,6 +2242,7 @@ def add_daily_record_info_logic(request):
     title = request.POST.get('title', '')
     contents = request.POST.get('contents', '')
     is_member_view = request.POST.get('is_member_view', 1)
+    img_list = request.POST.get('img_list', '')
     class_id = request.session.get('class_id')
 
     context = {}
@@ -2257,12 +2258,13 @@ def add_daily_record_info_logic(request):
             daily_record_info.contents = contents
             daily_record_info.is_member_view = int(is_member_view)
             daily_record_info.reg_member_id = request.user.id
+            daily_record_info.img_list = str(img_list)
             daily_record_info.save()
 
         except ObjectDoesNotExist:
             daily_record_info = DailyRecordTb(class_tb_id=class_id, schedule_tb_id=schedule_id,
                                               reg_member_id=request.user.id, title=title, contents=contents,
-                                              is_member_view=int(is_member_view), use=USE)
+                                              img_list=str(img_list), is_member_view=int(is_member_view), use=USE)
             daily_record_info.save()
 
     if error is not None:
