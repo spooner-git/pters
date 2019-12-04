@@ -70,7 +70,7 @@ class Setting_menu_access{
                         this.dom_row_set_password() + 
                     '</article>' +
                     '<article class="obj_input_box_full">' +
-                        // this.dom_row_menu_lock_title() + 
+                        this.dom_row_menu_lock_title() + 
                         // this.dom_row_menu_lock_program() +    
                         // this.dom_row_menu_lock_schedule() + 
                         // this.dom_row_menu_lock_member() + 
