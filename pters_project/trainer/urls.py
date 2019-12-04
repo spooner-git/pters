@@ -49,7 +49,6 @@ urlpatterns = [
         name='get_member_repeat_schedule'),
 
 
-
     # 회원 기능 #####################################################################################################
     # 회원 정보 조회 - refactoring
     url(r'^get_member_info/$', views.GetMemberInfoView.as_view(), name='get_member_info'),
