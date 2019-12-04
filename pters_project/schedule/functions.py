@@ -1170,14 +1170,27 @@ def func_delete_daily_record_content_image_logic(file_name):
         file_name_split = file_name.split('https://s3.ap-northeast-2.amazonaws.com/pters-image-master/')
         if len(file_name_split) >= 2:
             s3_img_url = file_name.split('https://s3.ap-northeast-2.amazonaws.com/pters-image-master/')[1]
-            objects_to_delete = [{'Key': s3_img_url}]
-            try:
-                bucket.delete_objects(
-                    Delete={
-                        'Objects': objects_to_delete
-                    })
-            except ClientError:
-                error_code = '이미지 삭제중 오류가 발생했습니다.'
+            bucket.objects.filter(Prefix=s3_img_url).delete()
+
+            # if s3_img_url in '.jpg' or s3_img_url in '.png':
+            #     objects_to_delete = [{'Key': s3_img_url}]
+            #     try:
+            #         bucket.delete_objects(
+            #             Delete={
+            #                 'Objects': objects_to_delete
+            #             })
+            #     except ClientError:
+            #         error_code = '이미지 삭제중 오류가 발생했습니다.'
+            # else:
+            #     for key in bucket.list(prefix=s3_img_url):
+            #         objects_to_delete = [{'Key': key}]
+            #         try:
+            #             bucket.delete_objects(
+            #                 Delete={
+            #                     'Objects': objects_to_delete
+            #                 })
+            #         except ClientError:
+            #             error_code = '이미지 삭제중 오류가 발생했습니다.'
         else:
             error_code = None
     return error_code

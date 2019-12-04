@@ -2271,7 +2271,7 @@ def add_daily_record_info_logic(request):
 
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
-        context['messageArray'] = error
+        context['messageArray'] = [error]
 
     return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
 
@@ -2302,7 +2302,7 @@ def update_daily_record_info_logic(request):
 
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
-        context['messageArray'] = error
+        context['messageArray'] = [error]
 
     return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
 
@@ -2331,7 +2331,7 @@ def delete_daily_record_info_logic(request):
 
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
-        context['messageArray'] = error
+        context['messageArray'] = [error]
 
     return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
 
@@ -2358,7 +2358,7 @@ def update_daily_record_content_img_logic(request):
 
     if error_message is not None:
         messages.error(request, error_message)
-        context['messageArray'] = error_message
+        context['messageArray'] = [error_message]
     else:
         context['img_url'] = img_url
     return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
@@ -2382,7 +2382,7 @@ def delete_daily_record_content_img_logic(request):
 
     if error_message is not None:
         messages.error(request, error_message)
-        context['messageArray'] = error_message
+        context['messageArray'] = [error_message]
     # else:
     #     context['img_url'] = img_url
     return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
