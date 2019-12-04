@@ -162,15 +162,19 @@ class Plan_daily_record{
     event_delete(schedule_id, schedule_name){
         show_user_confirm(`정말 [${schedule_name}] 일지를 삭제 하시겠습니까?`, ()=>{
             layer_popup.close_layer_popup();
-            Plan_daily_record_func.read({"schedule_id":schedule_id}, (data)=>{
-                let daily_record_id = Object.keys(data).length == 0 ? null : data.daily_record_id;
-                if(daily_record_id == null){
-                    show_error_message("정상적으로 일지가 삭제 되었습니다.");
-                    return;
-                }
-                Plan_daily_record_func.delete({"daily_record_id":daily_record_id}, ()=>{
-                    show_error_message("정상적으로 일지가 삭제 되었습니다.");
-                });
+            // Plan_daily_record_func.read({"schedule_id":schedule_id}, (data)=>{
+            //     let daily_record_id = Object.keys(data).length == 0 ? null : data.daily_record_id;
+            //     if(daily_record_id == null){
+            //         show_error_message("정상적으로 일지가 삭제 되었습니다.");
+            //         return;
+            //     }
+            //     Plan_daily_record_func.delete({"daily_record_id":daily_record_id}, ()=>{
+            //         show_error_message("정상적으로 일지가 삭제 되었습니다.");
+            //     });
+            // });
+
+            Plan_daily_record_func.delete({"schedule_id":schedule_id}, ()=>{
+                show_error_message("정상적으로 일지가 삭제 되었습니다.");
             });
         });
     }
