@@ -5130,6 +5130,7 @@ class BoardWriter_for_daily_record{
         let form_data = new FormData();
         form_data.append('content_img_file', file);
         form_data.append('content_img_file_name', file.lastModified+'_'+file.name);
+        form_data.append('schedule_id', this.data.schedule_id);
         // form_data.append('board_type_cd', this.data.category_selected['type'].value);
         let self = this;
         $.ajax({
