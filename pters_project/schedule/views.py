@@ -2210,15 +2210,15 @@ def send_push_to_trainee_logic(request):
 class GetDailyRecordInfoView(LoginRequiredMixin, View):
 
     def get(self, request):
-        daily_record_id = request.GET.get('daily_record_id', '')
+        schedule_id = request.GET.get('schedule_id', '')
         error = None
         daily_record_result = {}
-        if daily_record_id is None or daily_record_id == '':
+        if schedule_id is None or schedule_id == '':
             error = '일지 정보를 불러오지 못했습니다.'
 
         if error is None:
             try:
-                daily_record_info = DailyRecordTb.objects.get(daily_record_id=daily_record_id)
+                daily_record_info = DailyRecordTb.objects.get(schedule_tb_id=schedule_id)
                 daily_record_result = {
                     'daily_record_id': daily_record_info.daily_record_id,
                     'daily_record_class_id': daily_record_info.class_tb_id,
@@ -2232,7 +2232,7 @@ class GetDailyRecordInfoView(LoginRequiredMixin, View):
 
         if error is not None:
             logger.error(self.request.user.first_name + ' ' + '[' + str(self.request.user.id) + ']' + error)
-            messages.error(self.request, error)
+            messages.error(request, error)
 
         return JsonResponse(daily_record_result, json_dumps_params={'ensure_ascii': True})
 
@@ -2251,10 +2251,20 @@ def add_daily_record_info_logic(request):
         error = '일지를 작성할 일정을 선택해주세요.'
 
     if error is None:
+        try:
+            daily_record_info = DailyRecordTb.objects.get(schedule_tb_id=schedule_id)
+            daily_record_info.title = title
+            daily_record_info.contents = contents
+            daily_record_info.is_member_view = int(is_member_view)
+            daily_record_info.reg_member_id = request.user.id
+            daily_record_info.save()
 
-        daily_record_info = DailyRecordTb(class_tb_id=class_id, schedule_tb_id=schedule_id, reg_member_id=request.user.id,
-                                          title=title, contents=contents, is_member_view=int(is_member_view), use=USE)
-        daily_record_info.save()
+        except ObjectDoesNotExist:
+            daily_record_info = DailyRecordTb(class_tb_id=class_id, schedule_tb_id=schedule_id,
+                                              reg_member_id=request.user.id, title=title, contents=contents,
+                                              is_member_view=int(is_member_view), use=USE)
+            daily_record_info.save()
+
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         context['messageArray'] = error
