@@ -2219,7 +2219,6 @@ class GetDailyRecordInfoView(LoginRequiredMixin, View):
         if error is None:
             try:
                 daily_record_info = DailyRecordTb.objects.get(schedule_tb_id=schedule_id)
-                print(daily_record_info.img_list)
                 daily_record_result = {
                     'daily_record_id': daily_record_info.daily_record_id,
                     'daily_record_class_id': daily_record_info.class_tb_id,
@@ -2310,18 +2309,22 @@ def update_daily_record_info_logic(request):
 
 # 이미지 삭제 필요
 def delete_daily_record_info_logic(request):
-    daily_record_id = request.POST.get('daily_record_id')
+    schedule_id = request.POST.get('schedule_id')
+    class_id = request.session.get('class_id')
 
     context = {}
     error = None
 
-    if daily_record_id is None or daily_record_id == '':
+    if schedule_id is None or schedule_id == '':
         error = '일지 정보를 불러오지 못했습니다.'
 
     if error is None:
         try:
-            daily_record_info = DailyRecordTb.objects.get(daily_record_id=daily_record_id)
+            daily_record_info = DailyRecordTb.objects.get(schedule_tb_id=schedule_id)
             daily_record_info.delete()
+            func_delete_daily_record_content_image_logic(
+                'https://s3.ap-northeast-2.amazonaws.com/pters-image-master/daily-record/'
+                + str(request.user.id) + '_' + str(class_id) + '/' + str(schedule_id)+'/')
 
         except ObjectDoesNotExist:
             error = '일지 정보를 불러오지 못했습니다.'
