@@ -2225,7 +2225,9 @@ class GetDailyRecordInfoView(LoginRequiredMixin, View):
                     'daily_record_schedule_id': daily_record_info.schedule_tb_id,
                     'daily_record_title': daily_record_info.title,
                     'daily_record_contents': daily_record_info.contents,
-                    'daily_record_is_member_view': daily_record_info.is_member_view
+                    'daily_record_is_member_view': daily_record_info.is_member_view,
+                    'daily_record_img_list': daily_record_info.img_list
+
                 }
             except ObjectDoesNotExist:
                 error = '일지 정보를 불러오지 못했습니다.'
