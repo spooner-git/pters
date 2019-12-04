@@ -27,6 +27,7 @@ class Setting_menu_access{
     set_initial_data (){
         Setting_menu_access_func.read((data)=>{
             this.data.password = data.setting_admin_password;
+            this.data.menu_lock.statistics = data.setting_trainer_statistics_lock;
             this.render_content();
         });
         func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
@@ -70,7 +71,7 @@ class Setting_menu_access{
                         this.dom_row_set_password() + 
                     '</article>' +
                     '<article class="obj_input_box_full">' +
-                        this.dom_row_menu_lock_title() + 
+                        // this.dom_row_menu_lock_title() +
                         // this.dom_row_menu_lock_program() +    
                         // this.dom_row_menu_lock_schedule() + 
                         // this.dom_row_menu_lock_member() + 
@@ -228,7 +229,7 @@ class Setting_menu_access{
                                 this.render_content();
                             });
         let icon = power == ON ? CImg.lock("", {"vertical-align":"middle", "margin-bottom":"3px", "width":"20px"}) : CImg.unlock("", {"vertical-align":"middle", "margin-bottom":"3px", "width":"20px"});
-        let title = `${icon} 통계`;
+        let title = `${icon} 통계 관련 정보 잠금`;
         let title_row = CComponent.text_button ("statistics_lock_toggle", title, {"font-size":"14px", "font-weight":"500", "letter-spacing":"-0.8px"}, ()=>{});
         let html = `<article class="setting_menu_lock_wrapper obj_input_box_full">
                         <div style="display:table;width:100%;">
@@ -241,7 +242,7 @@ class Setting_menu_access{
 
     dom_row_set_password(){
         let id = "set_password";
-        let title_description = `<p style="font-size:12px;font-weight:500;margin:0;color:var(--font-sub-normal)">메뉴 잠금과 출석 체크 모드에서 사용</p>`;
+        let title_description = `<p style="font-size:12px;font-weight:500;margin:0;color:var(--font-sub-normal)">통계 잠금과 출석 체크 모드에서 사용</p>`;
         let title = `관리자 비밀번호 설정 ${title_description}`;
         let icon = DELETE;
         let icon_r_visible = SHOW;
@@ -266,7 +267,7 @@ class Setting_menu_access{
 
 
     dom_row_toolbox(){
-        let title = "권한 관리";
+        let title = "통계 잠금";
         let description = "";
         let html = `
         <div class="setting_reserve_upper_box" style="">
@@ -310,8 +311,7 @@ class Setting_menu_access{
 
         let data = {
             "setting_admin_password":this.data.password,
-            "setting_attend_class_prev_display_time":this.data.display_session_start.value[0],
-            "setting_attend_class_after_display_time":this.data.display_session_end.value[0],
+            "setting_trainer_statistics_lock":this.data.menu_lock.statistics
         };
         
         Setting_menu_access_func.update(data, ()=>{
@@ -346,7 +346,7 @@ class Setting_menu_access_func{
     static update(data, callback){
         //업무 시간 설정
         $.ajax({
-            url:"/trainer/update_attend_mode_setting/",
+            url:"/trainer/update_setting_statistics_lock/",
             type:'POST',
             data: data,
             dataType : 'html',

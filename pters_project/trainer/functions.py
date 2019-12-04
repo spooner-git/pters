@@ -623,6 +623,7 @@ def func_get_trainer_setting_list(context, user_id, class_id, class_hour):
     setting_data = SettingTb.objects.filter(member_id=user_id, class_tb_id=class_id, use=USE)
     setting_calendar_basic_select_time = 60
     setting_calendar_time_selector_type = CALENDAR_TIME_SELECTOR_BASIC
+    setting_trainer_statistics_lock = UN_USE
 
     for setting_info in setting_data:
         if setting_info.setting_type_cd == 'LT_RES_01':
@@ -679,6 +680,8 @@ def func_get_trainer_setting_list(context, user_id, class_id, class_hour):
             setting_calendar_basic_select_time = setting_info.setting_info
         if setting_info.setting_type_cd == 'LT_CALENDAR_TIME_SELECTOR_TYPE':
             setting_calendar_time_selector_type = setting_info.setting_info
+        if setting_info.setting_type_cd == 'STATISTICS_LOCK':
+            setting_trainer_statistics_lock = setting_info.setting_info
     try:
         lecture_info = LectureTb.objects.get(class_tb_id=class_id, lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, use=USE)
         one_to_one_lecture_time_duration = lecture_info.lecture_minute
@@ -740,6 +743,7 @@ def func_get_trainer_setting_list(context, user_id, class_id, class_hour):
     context['setting_holiday_hide'] = setting_holiday_hide
     context['setting_calendar_basic_select_time'] = setting_calendar_basic_select_time
     context['setting_calendar_time_selector_type'] = setting_calendar_time_selector_type
+    context['setting_trainer_statistics_lock'] = setting_trainer_statistics_lock
     return context
 
 

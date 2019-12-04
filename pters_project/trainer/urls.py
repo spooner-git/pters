@@ -201,6 +201,10 @@ urlpatterns = [
     # 사용자 앱 view 관련 Setting 수정
     url(r'^update_setting_theme/$', views.update_setting_theme_logic, name='update_setting_theme'),
 
+    # 사용자 앱 view 관련 Setting 수정
+    url(r'^update_setting_statistics_lock/$', views.update_setting_statistics_lock_logic,
+        name='update_setting_statistics_lock'),
+
     # Setting 정보 가져오기
     url(r'^get_trainer_setting_data/$', views.GetTrainerSettingDataView.as_view(), name='get_trainer_setting_data'),
     url(r'^get_trainer_auth_data/$', views.GetTrainerAuthDataView.as_view(), name='get_trainer_auth_data'),

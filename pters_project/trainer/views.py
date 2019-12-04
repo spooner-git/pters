@@ -4282,6 +4282,31 @@ def update_setting_theme_logic(request):
     return render(request, 'ajax/trainer_error_ajax.html')
 
 
+# 강사 통계 잠금 설정 업데이트 api
+def update_setting_statistics_lock_logic(request):
+    setting_admin_password = request.POST.get('setting_admin_password', '0000')
+    setting_trainer_statistics_lock = request.POST.get('setting_trainer_statistics_lock', str(UN_USE))
+    class_id = request.session.get('class_id', '')
+
+    if setting_admin_password is None or setting_admin_password == '':
+        setting_admin_password = '0000'
+    if setting_trainer_statistics_lock is None or setting_trainer_statistics_lock == '':
+        setting_trainer_statistics_lock = UN_USE
+
+    setting_type_cd_data = ['LT_ADMIN_PASSWORD', 'STATISTICS_LOCK']
+    setting_info_data = [setting_admin_password, setting_trainer_statistics_lock]
+    error = update_setting_data(class_id, request.user.id, setting_type_cd_data, setting_info_data)
+
+    if error is None:
+        request.session['setting_trainer_statistics_lock'] = setting_trainer_statistics_lock
+
+    else:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
 class GetTrainerSettingDataView(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):

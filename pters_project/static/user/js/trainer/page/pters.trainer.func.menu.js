@@ -77,9 +77,9 @@ class Menu {
                         this.dom_menu_setting_autocomplete() +
                         this.dom_menu_setting_reserve() + 
                         this.dom_menu_setting_alarm() + 
-                        this.dom_menu_setting_attendmode() + 
-                        this.dom_menu_theme() + 
-                        this.dom_menu_setting_menu_access() + 
+                        this.dom_menu_setting_attendmode() +
+                        this.dom_menu_setting_menu_access() +
+                        this.dom_menu_theme() +
                        CComponent.dom_tag('서비스', dom_tag_style) + 
                         this.dom_menu_pters_pass() + 
                         this.dom_menu_service_notice() + 
@@ -297,7 +297,7 @@ class Menu {
 
     dom_menu_setting_menu_access(){
         let id = 'menu_setting_menu_access';
-        let title = '권한 관리';
+        let title = '통계 잠금';
         let icon = CImg.lock();
         let icon_r_visible = NONE;
         let icon_r_text = "";
