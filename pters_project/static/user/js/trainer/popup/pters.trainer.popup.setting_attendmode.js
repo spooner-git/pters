@@ -74,10 +74,10 @@ class Setting_attendmode{
                     '<article class="obj_input_box_full">' +
                        this.dom_row_display_session_start() + 
                        this.dom_row_display_session_end() +
-                    '</article>' +
-                    '<article class="obj_input_box_full">' +
-                        this.dom_row_set_password() + 
                     '</article>';
+                    // '<article class="obj_input_box_full">' +
+                    //     this.dom_row_set_password() +
+                    // '</article>';
         return html;
     }
 
