@@ -70,14 +70,14 @@ class Setting_menu_access{
                         this.dom_row_set_password() + 
                     '</article>' +
                     '<article class="obj_input_box_full">' +
-                        this.dom_row_menu_lock_title() + 
-                        this.dom_row_menu_lock_program() +    
-                        this.dom_row_menu_lock_schedule() + 
-                        this.dom_row_menu_lock_member() + 
-                        this.dom_row_menu_lock_lecture() + 
-                        this.dom_row_menu_lock_ticket() + 
+                        // this.dom_row_menu_lock_title() + 
+                        // this.dom_row_menu_lock_program() +    
+                        // this.dom_row_menu_lock_schedule() + 
+                        // this.dom_row_menu_lock_member() + 
+                        // this.dom_row_menu_lock_lecture() + 
+                        // this.dom_row_menu_lock_ticket() + 
                         this.dom_row_menu_lock_statistics() +
-                        this.dom_test_button() + 
+                        // this.dom_test_button() + 
                     '</article>';
         return html;
     }
