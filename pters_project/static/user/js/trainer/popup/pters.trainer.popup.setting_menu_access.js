@@ -12,7 +12,7 @@ class Setting_menu_access{
                 lecture:OFF,
                 ticket:OFF,
                 statistics:OFF,
-                attendmode:OFF
+                attend_mode_out:OFF
             }
         };
 
@@ -28,6 +28,7 @@ class Setting_menu_access{
     set_initial_data (){
         Setting_menu_access_func.read((data)=>{
             this.data.password = data.setting_admin_password;
+            this.data.menu_lock.attend_mode_out = data.setting_trainer_attend_mode_out_lock;
             this.data.menu_lock.statistics = data.setting_trainer_statistics_lock;
             this.render_content();
         });
@@ -79,7 +80,7 @@ class Setting_menu_access{
                         // this.dom_row_menu_lock_lecture() +
                         // this.dom_row_menu_lock_ticket() +
                         this.dom_row_menu_lock_statistics() +
-                        this.dom_row_menu_lock_attendmode() +
+                        this.dom_row_menu_lock_attend_mode_out() +
                         // this.dom_test_button() + 
                     '</article>';
         return html;
@@ -87,8 +88,8 @@ class Setting_menu_access{
 
     dom_row_menu_lock_title(){
         let id = "menu_lock_title";
-        let title_description = `<p style="font-size:12px;font-weight:500;margin:0;color:var(--font-sub-normal)">메뉴 접근 시 2차 비밀번호를 입력 해야합니다.</p>`;
-        let title = `기능 잠금 ${title_description}`;
+        let title_description = `<p style="font-size:12px;font-weight:500;margin:0;color:var(--font-sub-normal)">잠긴 메뉴 접근 시 비밀번호를 입력 해야합니다.</p>`;
+        let title = `메뉴 잠금 ${title_description}`;
         let icon = DELETE;
         let icon_r_visible = NONE;
         let icon_r_text = "";
@@ -219,6 +220,25 @@ class Setting_menu_access{
                     </article>`;
         return html;
     }
+    dom_row_menu_lock_attend_mode_out(){
+        let id = `menu_lock_attend_mode_out`;
+        let power = this.data.menu_lock.attend_mode_out;
+        let style = null;
+        let menu_lock_goggle = CComponent.toggle_button (id, power, style, (data)=>{
+                                this.data.menu_lock.attend_mode_out = data; // ON or OFF
+                                this.render_content();
+                            });
+        let icon = power == ON ? CImg.lock("", {"vertical-align":"middle", "margin-bottom":"3px", "width":"20px"}) : CImg.unlock("", {"vertical-align":"middle", "margin-bottom":"3px", "width":"20px"});
+        let title = `${icon} 출석체크 모드 종료 시 비밀번호 입력`;
+        let title_row = CComponent.text_button ("statistics_lock_toggle", title, {"font-size":"14px", "font-weight":"500", "letter-spacing":"-0.8px"}, ()=>{});
+        let html = `<article class="setting_menu_lock_wrapper obj_input_box_full">
+                        <div style="display:table;width:100%;">
+                            <div style="display:table-cell;width:auto;vertical-align:middle">${title_row}</div>
+                            <div style="display:table-cell;width:50px;vertical-align:middle">${menu_lock_goggle}</div>
+                        </div>
+                    </article>`;
+        return html;
+    }
 
     dom_row_menu_lock_attendmode(){
         let id = `menu_lock_attendmode`;
@@ -243,14 +263,14 @@ class Setting_menu_access{
     dom_row_set_password(){
         let id = "set_password";
         let title_description = `<p style="font-size:12px;font-weight:500;margin:0;color:var(--font-sub-normal)">잠긴 메뉴 접근 시 사용</p>`;
-        let title = `2차 비밀번호 설정 ${title_description}`;
+        let title = `메뉴 잠금 비밀번호 설정 ${title_description}`;
         let icon = DELETE;
         let icon_r_visible = SHOW;
         // let icon_r_text = this.data.password == null ? '설정되지 않음' : "";
         let icon_r_text = "";
         let style = {"height":"auto", "padding-bottom": "0"};
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            let title = "2차 비밀번호 설정";
+            let title = "메뉴 잠금 비밀번호 설정";
             let install_target = "#wrapper_box_password_4d_input";
             let original_data = this.data.password == null ? "0000" : this.data.password;
             // let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
@@ -312,7 +332,8 @@ class Setting_menu_access{
 
         let data = {
             "setting_admin_password":this.data.password,
-            "setting_trainer_statistics_lock":this.data.menu_lock.statistics
+            "setting_trainer_statistics_lock":this.data.menu_lock.statistics,
+            "setting_trainer_attend_mode_out_lock":this.data.menu_lock.attend_mode_out
         };
         
         Setting_menu_access_func.update(data, ()=>{
@@ -334,7 +355,7 @@ class Setting_menu_access_func{
     static update(data, callback){
         //업무 시간 설정
         $.ajax({
-            url:"/trainer/update_setting_statistics_lock/",
+            url:"/trainer/update_setting_access_lock/",
             type:'POST',
             data: data,
             dataType : 'html',

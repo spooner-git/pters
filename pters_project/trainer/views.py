@@ -4283,21 +4283,30 @@ def update_setting_theme_logic(request):
 
 
 # 강사 통계 잠금 설정 업데이트 api
-def update_setting_statistics_lock_logic(request):
+def update_setting_access_lock_logic(request):
     setting_admin_password = request.POST.get('setting_admin_password', '0000')
+    setting_trainer_attend_mode_out_lock = request.POST.get('setting_trainer_attend_mode_out_lock', str(UN_USE))
     setting_trainer_statistics_lock = request.POST.get('setting_trainer_statistics_lock', str(UN_USE))
     class_id = request.session.get('class_id', '')
-
+    error = None
     if setting_admin_password is None or setting_admin_password == '':
         setting_admin_password = '0000'
-    if setting_trainer_statistics_lock is None or setting_trainer_statistics_lock == '':
-        setting_trainer_statistics_lock = UN_USE
+    if len(setting_admin_password) != 4:
+        error = '잠금 해제 비밀번호는 4자리만 가능합니다.'
 
-    setting_type_cd_data = ['LT_ADMIN_PASSWORD', 'STATISTICS_LOCK']
-    setting_info_data = [setting_admin_password, setting_trainer_statistics_lock]
-    error = update_setting_data(class_id, request.user.id, setting_type_cd_data, setting_info_data)
+    if setting_trainer_attend_mode_out_lock is None or setting_trainer_attend_mode_out_lock == '':
+        setting_trainer_attend_mode_out_lock = str(UN_USE)
+    if setting_trainer_statistics_lock is None or setting_trainer_statistics_lock == '':
+        setting_trainer_statistics_lock = str(UN_USE)
 
     if error is None:
+        setting_type_cd_data = ['LT_ADMIN_PASSWORD', 'ATTEND_MODE_OUT_LOCK', 'STATISTICS_LOCK']
+        setting_info_data = [setting_admin_password, setting_trainer_attend_mode_out_lock, setting_trainer_statistics_lock]
+        error = update_setting_data(class_id, request.user.id, setting_type_cd_data, setting_info_data)
+
+    if error is None:
+        request.session['setting_admin_password'] = setting_trainer_statistics_lock
+        request.session['setting_trainer_attend_mode_out_lock'] = setting_trainer_attend_mode_out_lock
         request.session['setting_trainer_statistics_lock'] = setting_trainer_statistics_lock
 
     else:
@@ -4575,7 +4584,7 @@ def check_admin_password_logic(request):
         admin_password = '0000'
 
     if admin_password != setting_admin_password:
-        error = '관리자 비밀번호가 일치하지 않습니다.'
+        error = '잠금 해제 비밀번호가 일치하지 않습니다.'
 
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)

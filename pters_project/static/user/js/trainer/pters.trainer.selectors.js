@@ -4294,7 +4294,7 @@ class PasswordFourDigitInput{
             password_digit_3:null,
             password_digit_4:null
         };
-        this.init();
+        // this.init();
         this.set_initial_data();
     }
 
@@ -4303,10 +4303,14 @@ class PasswordFourDigitInput{
     }
 
     set_initial_data(){
-        this.data.password_digit_1 = Number(String(this.original_data).substr(0, 1));
-        this.data.password_digit_2 = Number(String(this.original_data).substr(1, 1));
-        this.data.password_digit_3 = Number(String(this.original_data).substr(2, 1));
-        this.data.password_digit_4 = Number(String(this.original_data).substr(3, 1));
+        // this.data.password_digit_1 = Number(String(this.original_data).substr(0, 1));
+        // this.data.password_digit_2 = Number(String(this.original_data).substr(1, 1));
+        // this.data.password_digit_3 = Number(String(this.original_data).substr(2, 1));
+        // this.data.password_digit_4 = Number(String(this.original_data).substr(3, 1));
+        this.data.password_digit_1 = '';
+        this.data.password_digit_2 = '';
+        this.data.password_digit_3 = '';
+        this.data.password_digit_4 = '';
         this.init();
     }
 
