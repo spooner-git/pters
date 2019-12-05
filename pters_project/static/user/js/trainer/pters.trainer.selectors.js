@@ -4359,10 +4359,10 @@ class PasswordFourDigitInput{
         //             </div>`;
         let html = `<div style="margin:40px 0;">
                         <div style="text-align:center;">
-                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_1" value="">
-                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_2" value="">
-                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_3" value="">
-                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_4" value="">
+                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_1" value="" autocomplete="off">
+                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_2" value="" autocomplete="off">
+                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_3" value="" autocomplete="off">
+                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_4" value="" autocomplete="off">
                         </div>
                         <div style="height:2px;width:220px;text-align:center;margin:0 auto">
                             <div id="password_digit_1" class="password_4d_input_bar"></div>
@@ -4505,10 +4505,10 @@ class PasswordInput{
     dom_row_input(){
         let html = `<div style="margin:20px 0 10px 0;">
                         <div style="text-align:center;">
-                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_1" value="">
-                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_2" value="">
-                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_3" value="">
-                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_4" value="">
+                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_1" value="" autocomplete="off">
+                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_2" value="" autocomplete="off">
+                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_3" value="" autocomplete="off">
+                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_4" value="" autocomplete="off">
                         </div>
                         <div style="height:2px;width:220px;text-align:center;margin:0 auto">
                             <div id="password_digit_1" class="password_4d_input_bar"></div>

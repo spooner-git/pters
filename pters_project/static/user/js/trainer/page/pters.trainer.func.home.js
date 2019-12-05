@@ -27,6 +27,8 @@ class Home {
         this.received_data = {
             program:null, schedule:null, member:null, statistics:null
         };
+
+        this.setting_data_cache = null;
     }
 
     init (){
@@ -72,36 +74,41 @@ class Home {
         let plan_dom;
         let end_alert_dom;
         let sales_summary_dom;
+        Setting_menu_access_func.read((data)=>{
+            this.setting_data_cache = data;
+            let menu_lock_statistics = data.setting_trainer_statistics_lock;
+        
+            Program_func.read((data)=>{
+                this.received_data.program = data;
+                let program = this.dom_row_program(data);
+                program_dom = '<div class="contents">' + program + '</div>';
 
-        Program_func.read((data)=>{
-            this.received_data.program = data;
-            let program = this.dom_row_program(data);
-            program_dom = '<div class="contents">' + program + '</div>';
+                calendar.request_schedule_data (this.today, 1, (data)=>{
+                    this.received_data.schedule = data;
+                    let today_plan = this.dom_row_today_plan(data);
+                    plan_dom = '<div class="contents">' + today_plan + '</div>';
 
-            calendar.request_schedule_data (this.today, 1, (data)=>{
-                this.received_data.schedule = data;
-                let today_plan = this.dom_row_today_plan(data);
-                plan_dom = '<div class="contents">' + today_plan + '</div>';
+                    member.request_member_list("ing", (data)=>{
+                        this.received_data.member = data;
+                        let end_alert = this.dom_row_end_alert(data);
+                        end_alert_dom = '<div class="contents">' + end_alert + '</div>';
 
-                member.request_member_list("ing", (data)=>{
-                    this.received_data.member = data;
-                    let end_alert = this.dom_row_end_alert(data);
-                    end_alert_dom = '<div class="contents">' + end_alert + '</div>';
+                        Statistics_func.read("sales", {"start_date":this.today, "end_date":this.today}, (data)=>{
+                            this.received_data.statistics = data;
+                            if(current_page_text != this.page_name){
+                                return false;
+                            }
+                            let locked = menu_lock_statistics;
+                            let sales_summary = this.dom_row_sales_this_month(data, locked);
+                            sales_summary_dom = '<div class="contents">' + sales_summary + '</div>';
 
-                    Statistics_func.read("sales", {"start_date":this.today, "end_date":this.today}, (data)=>{
-                        this.received_data.statistics = data;
-                        if(current_page_text != this.page_name){
-                            return false;
-                        }
-                        let sales_summary = this.dom_row_sales_this_month(data);
-                        sales_summary_dom = '<div class="contents">' + sales_summary + '</div>';
-
-                        let html = program_dom + plan_dom + end_alert_dom + sales_summary_dom ;
-                        document.querySelector('#home_content_wrap').innerHTML = html;
-                        // $('#root_content').scrollTop(0);
-                    });
+                            let html = program_dom + plan_dom + end_alert_dom + sales_summary_dom ;
+                            document.querySelector('#home_content_wrap').innerHTML = html;
+                            // $('#root_content').scrollTop(0);
+                        });
+                    }, OFF);
                 }, OFF);
-            }, OFF);
+            });
         });
     }
 
@@ -124,7 +131,7 @@ class Home {
         let end_alert = this.dom_row_end_alert(data.member);
         end_alert_dom = '<div class="contents">' + end_alert + '</div>';
 
-        let sales_summary = this.dom_row_sales_this_month(data.statistics);
+        let sales_summary = this.dom_row_sales_this_month(data.statistics, this.setting_data_cache.setting_trainer_statistics_lock);
         sales_summary_dom = '<div class="contents">' + sales_summary + '</div>';
                         
         let html = program_dom + plan_dom + end_alert_dom + sales_summary_dom;
@@ -319,7 +326,7 @@ class Home {
         return html;
     }
 
-    dom_row_sales_this_month(data){
+    dom_row_sales_this_month(data, data_lock){
         let html_to_join = [];
 
         let id = "home_sales_summary";
@@ -327,12 +334,20 @@ class Home {
         let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text = `${UnitRobot.numberWithCommas(Number(data.price[0]) - Number(data.refund_price[0]))} 원 ${CImg.arrow_right(["var(--img-sub1)"], {"vertical-align":"middle"})}`;
+        if(data_lock == ON){
+            icon_r_text = `${CImg.lock(["var(--img-sub1)"], {"vertical-align":"middle"})} ${CImg.arrow_right(["var(--img-sub1)"], {"vertical-align":"middle"})}`;
+        }
         let style = {"font-size":"15px", "font-weight":"bold"};
         let onclick = ()=>{
-            Setting_menu_access.locked_menu(()=>{
+            if(data_lock == ON){
+                Setting_menu_access.locked_menu(()=>{
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_STATISTICS, 100, POPUP_FROM_RIGHT, null, ()=>{
+                                                    statistics_popup = new Statistics('.popup_statistics');});
+                });
+            }else{
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_STATISTICS, 100, POPUP_FROM_RIGHT, null, ()=>{
-                                                statistics_popup = new Statistics('.popup_statistics')});
-            });
+                    statistics_popup = new Statistics('.popup_statistics');});
+            }
         };
         let sales_data = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
         let dom = `<article class="sales_wrapper">
