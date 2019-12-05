@@ -4432,6 +4432,9 @@ class PasswordFourDigitInput{
 
     upper_right_menu(){
         let combined_data = {password : `${this.data.password_digit_1}${this.data.password_digit_2}${this.data.password_digit_3}${this.data.password_digit_4}`};
+        if(combined_data.password == ''){
+            combined_data.password = this.original_data;
+        }
         this.callback(combined_data);
         layer_popup.close_layer_popup();
         this.clear();

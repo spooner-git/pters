@@ -88,8 +88,8 @@ class Setting_menu_access{
 
     dom_row_menu_lock_title(){
         let id = "menu_lock_title";
-        let title_description = `<p style="font-size:12px;font-weight:500;margin:0;color:var(--font-sub-normal)">잠긴 메뉴 접근 시 비밀번호를 입력 해야합니다.</p>`;
-        let title = `메뉴 잠금 ${title_description}`;
+        let title_description = `<p style="font-size:12px;font-weight:500;margin:0;color:var(--font-sub-normal)">접근 시 잠금 해제 비밀번호를 입력 해야합니다.</p>`;
+        let title = `잠금 ${title_description}`;
         let icon = DELETE;
         let icon_r_visible = NONE;
         let icon_r_text = "";
@@ -262,15 +262,15 @@ class Setting_menu_access{
 
     dom_row_set_password(){
         let id = "set_password";
-        let title_description = `<p style="font-size:12px;font-weight:500;margin:0;color:var(--font-sub-normal)">잠긴 메뉴 접근 시 사용</p>`;
-        let title = `메뉴 잠금 비밀번호 설정 ${title_description}`;
+        let title_description = `<p style="font-size:12px;font-weight:500;margin:0;color:var(--font-sub-normal)">잠금 해제시 사용</p>`;
+        let title = `잠금 해제 비밀번호 설정 ${title_description}`;
         let icon = DELETE;
         let icon_r_visible = SHOW;
         // let icon_r_text = this.data.password == null ? '설정되지 않음' : "";
         let icon_r_text = "";
         let style = {"height":"auto", "padding-bottom": "0"};
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            let title = "메뉴 잠금 비밀번호 설정";
+            let title = "잠금 해제 비밀번호 설정";
             let install_target = "#wrapper_box_password_4d_input";
             let original_data = this.data.password == null ? "0000" : this.data.password;
             // let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
