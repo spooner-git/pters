@@ -281,7 +281,7 @@ class Menu_settings {
 
     dom_menu_setting_menu_access(){
         let id = 'menu_setting_menu_access';
-        let title = '통계 잠금';
+        let title = '정보 보호';
         let icon = CImg.lock();
         let icon_r_visible = NONE;
         let icon_r_text = "";

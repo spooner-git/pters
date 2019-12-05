@@ -11,7 +11,8 @@ class Setting_menu_access{
                 member:OFF,
                 lecture:OFF,
                 ticket:OFF,
-                statistics:OFF
+                statistics:OFF,
+                attendmode:OFF
             }
         };
 
@@ -71,44 +72,23 @@ class Setting_menu_access{
                         this.dom_row_set_password() + 
                     '</article>' +
                     '<article class="obj_input_box_full">' +
-                        // this.dom_row_menu_lock_title() +
-                        // this.dom_row_menu_lock_program() +    
+                        this.dom_row_menu_lock_title() +
+                        // this.dom_row_menu_lock_program() +
                         // this.dom_row_menu_lock_schedule() + 
-                        // this.dom_row_menu_lock_member() + 
-                        // this.dom_row_menu_lock_lecture() + 
-                        // this.dom_row_menu_lock_ticket() + 
+                        // this.dom_row_menu_lock_member() +
+                        // this.dom_row_menu_lock_lecture() +
+                        // this.dom_row_menu_lock_ticket() +
                         this.dom_row_menu_lock_statistics() +
+                        this.dom_row_menu_lock_attendmode() +
                         // this.dom_test_button() + 
                     '</article>';
         return html;
     }
 
-    dom_test_button(){
-        let id = "testttt";
-        let title = "테스트";
-        let style = null;
-        let onclick = ()=>{
-            let root_content_height = $root_content.height();
-            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_password_4d_input', 100*300/root_content_height, POPUP_FROM_TOP, null, ()=>{
-                Setting_menu_access_func.read((data)=>{
-                    let password = data.setting_admin_password;
-                    let title = "비밀번호 입력";
-                    let install_target = "#wrapper_box_password_4d_input";
-                    let original_data = password == null || password == undefined || password == "" ? "0000" : password;
-                    password_input = new PasswordInput(title, install_target, original_data, ()=>{
-                        //To-do
-                    });
-                });
-            });
-        };
-        let html = CComponent.button(id, title, style, onclick);
-        return html;
-    }
-
     dom_row_menu_lock_title(){
         let id = "menu_lock_title";
-        let title_description = `<p style="font-size:12px;font-weight:500;margin:0;color:var(--font-sub-normal)">잠긴 메뉴 접근 시 관리자 비밀번호를 입력 해야합니다.</p>`;
-        let title = `메뉴 잠금 ${title_description}`;
+        let title_description = `<p style="font-size:12px;font-weight:500;margin:0;color:var(--font-sub-normal)">메뉴 접근 시 2차 비밀번호를 입력 해야합니다.</p>`;
+        let title = `기능 잠금 ${title_description}`;
         let icon = DELETE;
         let icon_r_visible = NONE;
         let icon_r_text = "";
@@ -229,8 +209,28 @@ class Setting_menu_access{
                                 this.render_content();
                             });
         let icon = power == ON ? CImg.lock("", {"vertical-align":"middle", "margin-bottom":"3px", "width":"20px"}) : CImg.unlock("", {"vertical-align":"middle", "margin-bottom":"3px", "width":"20px"});
-        let title = `${icon} 통계 관련 정보 잠금`;
+        let title = `${icon} 통계 정보 조회`;
         let title_row = CComponent.text_button ("statistics_lock_toggle", title, {"font-size":"14px", "font-weight":"500", "letter-spacing":"-0.8px"}, ()=>{});
+        let html = `<article class="setting_menu_lock_wrapper obj_input_box_full">
+                        <div style="display:table;width:100%;">
+                            <div style="display:table-cell;width:auto;vertical-align:middle">${title_row}</div>
+                            <div style="display:table-cell;width:50px;vertical-align:middle">${menu_lock_goggle}</div>
+                        </div>
+                    </article>`;
+        return html;
+    }
+
+    dom_row_menu_lock_attendmode(){
+        let id = `menu_lock_attendmode`;
+        let power = this.data.menu_lock.attendmode;
+        let style = null;
+        let menu_lock_goggle = CComponent.toggle_button (id, power, style, (data)=>{
+                                this.data.menu_lock.attendmode = data; // ON or OFF
+                                this.render_content();
+                            });
+        let icon = power == ON ? CImg.lock("", {"vertical-align":"middle", "margin-bottom":"3px", "width":"20px"}) : CImg.unlock("", {"vertical-align":"middle", "margin-bottom":"3px", "width":"20px"});
+        let title = `${icon} 출석 체크 모드 나가기`;
+        let title_row = CComponent.text_button ("attendmode_lock_toggle", title, {"font-size":"14px", "font-weight":"500", "letter-spacing":"-0.8px"}, ()=>{});
         let html = `<article class="setting_menu_lock_wrapper obj_input_box_full">
                         <div style="display:table;width:100%;">
                             <div style="display:table-cell;width:auto;vertical-align:middle">${title_row}</div>
@@ -242,18 +242,19 @@ class Setting_menu_access{
 
     dom_row_set_password(){
         let id = "set_password";
-        let title_description = `<p style="font-size:12px;font-weight:500;margin:0;color:var(--font-sub-normal)">통계 잠금 해제시 사용</p>`;
-        let title = `잠금 비밀번호 설정 ${title_description}`;
+        let title_description = `<p style="font-size:12px;font-weight:500;margin:0;color:var(--font-sub-normal)">잠긴 메뉴 접근 시 사용</p>`;
+        let title = `2차 비밀번호 설정 ${title_description}`;
         let icon = DELETE;
         let icon_r_visible = SHOW;
         // let icon_r_text = this.data.password == null ? '설정되지 않음' : "";
         let icon_r_text = "";
         let style = {"height":"auto", "padding-bottom": "0"};
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            let title = "잠금 비밀번호 설정";
+            let title = "2차 비밀번호 설정";
             let install_target = "#wrapper_box_password_4d_input";
             let original_data = this.data.password == null ? "0000" : this.data.password;
-            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            // let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            let popup_style = POPUP_FROM_TOP;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PASSWORD_4D_INPUT, 100, popup_style, null, ()=>{
                 password_4d_input = new PasswordFourDigitInput(title, install_target, original_data, (set_data)=>{
                     this.data.password = set_data.password;
@@ -267,7 +268,7 @@ class Setting_menu_access{
 
 
     dom_row_toolbox(){
-        let title = "통계 잠금";
+        let title = "정보 보호";
         let description = "";
         let html = `
         <div class="setting_reserve_upper_box" style="">
@@ -326,20 +327,7 @@ class Setting_menu_access{
         this.send_data();
     }
 
-    static locked_menu(callback){
-        let root_content_height = $root_content.height();
-        layer_popup.open_layer_popup(POPUP_BASIC, 'popup_password_4d_input', 100*300/root_content_height, POPUP_FROM_TOP, null, ()=>{
-            Setting_menu_access_func.read((data)=>{
-                let password = data.setting_admin_password;
-                let title = "비밀번호 입력";
-                let install_target = "#wrapper_box_password_4d_input";
-                let original_data = password == null || password == undefined || password == "" ? "0000" : password;
-                password_input = new PasswordInput(title, install_target, original_data, ()=>{
-                    callback();
-                });
-            });
-        });
-    }
+   
 }
 
 class Setting_menu_access_func{
@@ -421,6 +409,21 @@ class Setting_menu_access_func{
                 console.log('server error');
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
             }
+        });
+    }
+
+    static locked_menu(callback){
+        let root_content_height = $root_content.height();
+        layer_popup.open_layer_popup(POPUP_BASIC, 'popup_password_4d_input', 100*300/root_content_height, POPUP_FROM_TOP, null, ()=>{
+            Setting_menu_access_func.read((data)=>{
+                let password = data.setting_admin_password;
+                let title = "비밀번호 입력";
+                let install_target = "#wrapper_box_password_4d_input";
+                let original_data = password == null || password == undefined || password == "" ? "0000" : password;
+                password_input = new PasswordInput(title, install_target, original_data, ()=>{
+                    callback();
+                });
+            });
         });
     }
 }
