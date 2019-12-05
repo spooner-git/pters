@@ -230,8 +230,7 @@ class Program_add{
             this.data_sending_now = false;
             program_list_popup.init();
             this.clear();
-            
-        });
+        }, ()=>{this.data_sending_now = false;});
     }
 
     check_before_send(){

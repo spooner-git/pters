@@ -743,8 +743,8 @@ class Member_add{
                     try{
                         current_page.init();
                     }catch(e){}
-                });
-            });
+                }, ()=>{this.data_sending_now = false;});
+            }, ()=>{this.data_sending_now = false;});
         }else{ // 재등록
             Member_func.create_ticket_re(data_for_re, ()=>{
                 // member_ticket_history.init();
@@ -759,7 +759,7 @@ class Member_add{
                 }catch(e){
                     console.log(e);
                 }
-            });
+            }, ()=>{this.data_sending_now = false;});
         }
 
         

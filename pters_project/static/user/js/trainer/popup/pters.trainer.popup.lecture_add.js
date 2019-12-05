@@ -421,7 +421,7 @@ class Lecture_add{
             try{
                 lecture_list_popup.init();
             }catch(e){}
-        });
+        }, ()=>{this.data_sending_now = false;});
         layer_popup.close_layer_popup();
         lecture_add_popup.clear();
     }

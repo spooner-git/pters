@@ -155,7 +155,7 @@ class Setting_theme{
             this.data_sending_now = false;
             show_error_message('테마를 변경하여 재실행 됩니다.');
             location.href = '/';
-        });
+        }, ()=>{this.data_sending_now = false;});
     }
 
     upper_right_menu(){

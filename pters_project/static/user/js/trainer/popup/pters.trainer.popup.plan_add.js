@@ -703,7 +703,7 @@ class Plan_add{
                 try{
                     current_page.init();
                 }catch(e){}
-            });
+            }, ()=>{this.data_sending_now = false;});
             
         }else if(this.data.repeat.power == ON){
             let inspect_date = DateRobot.to_yyyymmdd(this.data.repeat.repeat_end.year, this.data.repeat.repeat_end.month, this.data.repeat.repeat_end.date);
@@ -727,8 +727,8 @@ class Plan_add{
                     try{
                         current_page.init();
                     }catch(e){}
-                });
-            });
+                }, ()=>{this.data_sending_now = false;});
+            }, ()=>{this.data_sending_now = false;});
         }   
     }
 

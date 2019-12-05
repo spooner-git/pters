@@ -334,7 +334,7 @@ class Ticket_add{
             try{
                 ticket_list_popup.init();
             }catch(e){}
-        });
+        }, ()=>{this.data_sending_now = false;});
         layer_popup.close_layer_popup();
         ticket_add_popup.clear();
     }
