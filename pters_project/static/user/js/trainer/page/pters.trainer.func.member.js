@@ -386,7 +386,7 @@ class Member {
 }
 
 class Member_func{
-    static create(data, callback){
+    static create(data, callback, error_callback){
         $.ajax({
             url:'/trainer/add_member_ticket_info/',
             type:'POST',
@@ -421,13 +421,16 @@ class Member_func{
     
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 location.reload();
             }
         });
     }
 
-    static create_pre(data, callback){
+    static create_pre(data, callback, error_callback){
         $.ajax({
             url:'/login/add_member_info_no_email/',
             type:'POST',
@@ -459,13 +462,16 @@ class Member_func{
     
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 location.reload();
             }
         });
     }
     
-    static create_ticket_re(data, callback){
+    static create_ticket_re(data, callback, error_callback){
         $.ajax({
             url:'/trainer/add_member_ticket_info/',
             type:'POST',
@@ -497,13 +503,16 @@ class Member_func{
     
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 location.reload();
             }
         });
     }
 
-    static read(data, callback){
+    static read(data, callback, error_callback){
         //데이터 형태 {"member_id":""};
         $.ajax({
             url:'/trainer/get_member_info/',
@@ -538,13 +547,16 @@ class Member_func{
     
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 location.reload();
             }
         });
     }
 
-    static read_ticket_list(data, callback){
+    static read_ticket_list(data, callback, error_callback){
         //데이터 형태 {"member_id":""};
         $.ajax({
             url:'/trainer/get_member_ticket_list/',
@@ -579,13 +591,16 @@ class Member_func{
     
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 location.reload();
             }
         });
     }
 
-    static read_schedule_list_by_ticket(data, callback){
+    static read_schedule_list_by_ticket(data, callback, error_callback){
         //데이터 형태 {"member_id":""};
         $.ajax({
             url:'/trainer/get_member_schedule_all/',
@@ -622,13 +637,16 @@ class Member_func{
     
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 location.reload();
             }
         });
     }
 
-    static delete(data, callback){
+    static delete(data, callback, error_callback){
         //데이터 형태 {"member_id":""};
         $.ajax({
             url:'/trainer/delete_member_info/',
@@ -664,13 +682,16 @@ class Member_func{
     
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 location.reload();
             }
         });
     }
 
-    static update(data, callback){
+    static update(data, callback, error_callback){
         //데이터 형태 {"member_id":"", "first_name":"", "phone":"", "sex":"", "birthday":""};
         $.ajax({
             url:'/trainer/update_member_info/',
@@ -706,13 +727,16 @@ class Member_func{
     
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 location.reload();
             }
         });
     }
 
-    static status(data, callback){
+    static status(data, callback, error_callback){
         //데이터 형태 {"ticket_id":"", "state_cd":""};
         $.ajax({
             url:'/trainer/update_member_status_info/',
@@ -748,13 +772,16 @@ class Member_func{
     
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 location.reload();
             }
         });
     }
 
-    static connection(data, callback){
+    static connection(data, callback, error_callback){
         // {"member_id":"", "member_auth_cd":""}
         $.ajax({
             url:'/trainer/update_member_connection_info/',
@@ -790,13 +817,16 @@ class Member_func{
     
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 // location.reload();
             }
         });
     }
 
-    static ticket_status(data, callback){
+    static ticket_status(data, callback, error_callback){
         // {"member_ticket_id":"", "state_cd":"", "refund_price":"", "refund_date":""}
         $.ajax({
             url:'/trainer/update_member_ticket_status_info/',
@@ -832,13 +862,16 @@ class Member_func{
 
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 // location.reload();
             }
         });
     }
 
-    static ticket_update(data, callback){
+    static ticket_update(data, callback, error_callback){
     // {"member_ticket_id":"", "note":"", "start_date":"", "end_date":"", "price":"", "refund_price":"", "refund_date":"", "member_ticket_reg_count":""}
         $.ajax({
             url:'/trainer/update_member_ticket_info/',
@@ -874,13 +907,16 @@ class Member_func{
 
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 // location.reload();
             }
         });
     }
 
-    static ticket_delete(data, callback){
+    static ticket_delete(data, callback, error_callback){
         $.ajax({
             url:'/trainer/delete_member_ticket_info/',
             type:'POST',
@@ -915,13 +951,16 @@ class Member_func{
 
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 // location.reload();
             }
         });
     }
 
-    static search(data, callback){
+    static search(data, callback, error_callback){
         $.ajax({
             url:'/trainer/search_member_info/',
             type:'GET',
@@ -956,6 +995,9 @@ class Member_func{
 
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 // location.reload();
             }

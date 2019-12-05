@@ -352,7 +352,7 @@ class Setting_menu_access{
 }
 
 class Setting_menu_access_func{
-    static update(data, callback){
+    static update(data, callback, error_callback){
         //업무 시간 설정
         $.ajax({
             url:"/trainer/update_setting_access_lock/",
@@ -388,13 +388,16 @@ class Setting_menu_access_func{
     
             //통신 실패시 처리
             error:function (){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 console.log('server error');
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
             }
         });
     }
 
-    static read(callback){
+    static read(callback, error_callback){
         $.ajax({
             url:"/trainer/get_trainer_setting_data/",
             type:'GET',
@@ -427,6 +430,9 @@ class Setting_menu_access_func{
     
             //통신 실패시 처리
             error:function (){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 console.log('server error');
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
             }

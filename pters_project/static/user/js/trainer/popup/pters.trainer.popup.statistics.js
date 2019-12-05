@@ -648,7 +648,7 @@ class Statistics{
 }
 
 class Statistics_func{
-    static read(list, data, callback, async){
+    static read(list, data, callback, async, error_callback){
         let url;
         switch(list){
             case "sales":
@@ -701,12 +701,15 @@ class Statistics_func{
     
             //통신 실패시 처리
             error:function (){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 console.log('server error');
             }
         });
     }
 
-    static update(data, callback){
+    static update(data, callback, error_callback){
         //프로그램 추가
         $.ajax({
             url:"/trainer/update_statistics_info/",
@@ -742,13 +745,16 @@ class Statistics_func{
     
             //통신 실패시 처리
             error:function (){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 console.log('server error');
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
             }
         });
     }
 
-    static delete(data, callback){
+    static delete(data, callback, error_callback){
         //프로그램 추가
         $.ajax({
             url:"/trainer/delete_statistics_info/",
@@ -784,6 +790,9 @@ class Statistics_func{
     
             //통신 실패시 처리
             error:function (){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 console.log('server error');
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
             }

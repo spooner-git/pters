@@ -238,7 +238,7 @@ class Password_modify{
 }
 
 class Password_modify_func{
-    static update(data, callback){
+    static update(data, callback, error_callback){
         $.ajax({
             url:'/login/password_change/',
             type:'POST',
@@ -273,6 +273,9 @@ class Password_modify_func{
     
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 // location.reload();
             }

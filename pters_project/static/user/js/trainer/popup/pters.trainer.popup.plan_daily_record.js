@@ -201,7 +201,7 @@ class Plan_daily_record{
 }
 
 class Plan_daily_record_func{
-    static create(data, callback){
+    static create(data, callback, error_callback){
         // {"schedule_id":"", "title":"", "contents":"", "is_member_view":""}
         $.ajax({
             url:"/schedule/add_daily_record_info/",
@@ -236,13 +236,16 @@ class Plan_daily_record_func{
     
             //통신 실패시 처리
             error:function (){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 console.log('server error');
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
             }
         });
     }
 
-    static read(data, callback){
+    static read(data, callback, error_callback){
         // {"schedule_id":""}
         $.ajax({
             url:"/schedule/get_daily_record_info/",
@@ -277,13 +280,16 @@ class Plan_daily_record_func{
     
             //통신 실패시 처리
             error:function (){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 console.log('server error');
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
             }
         });
     }
 
-    static update(data, callback){
+    static update(data, callback, error_callback){
         // {"schedule_id":"", "title":"", "contents":"", "is_member_view":""}
         $.ajax({
             url:"/schedule/update_daily_record_info/",
@@ -318,13 +324,16 @@ class Plan_daily_record_func{
     
             //통신 실패시 처리
             error:function (){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 console.log('server error');
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
             }
         });
     }
 
-    static delete(data, callback){
+    static delete(data, callback, error_callback){
         // {"daily_record_id":""}
         $.ajax({
             url:"/schedule/delete_daily_record_info/",
@@ -359,13 +368,16 @@ class Plan_daily_record_func{
     
             //통신 실패시 처리
             error:function (){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 console.log('server error');
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
             }
         });
     }
 
-    static upload_image_to_server(data, callback){
+    static upload_image_to_server(data, callback, error_callback){
         // {"content_img_file":"", "content_img_file_name":"", "schedule_id":""}
         $.ajax({
             url:"/schedule/update_daily_record_content_img/",
@@ -400,13 +412,16 @@ class Plan_daily_record_func{
     
             //통신 실패시 처리
             error:function (){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 console.log('server error');
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
             }
         });
     }
 
-    static delete_image_from_server(data, callback){
+    static delete_image_from_server(data, callback, error_callback){
         // {"content_img_file_name":""}
         $.ajax({
             url:"/schedule/delete_daily_record_content_img/",
@@ -442,6 +457,9 @@ class Plan_daily_record_func{
     
             //통신 실패시 처리
             error:function (){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 console.log('server error');
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
             }

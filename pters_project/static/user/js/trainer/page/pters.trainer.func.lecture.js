@@ -342,7 +342,7 @@ class Lecture {
 
 
 class Lecture_func{
-    static create(data, callback){
+    static create(data, callback, error_callback){
         //데이터 형태 {"member_num":"", "name":"", "note":"", "ing_color_cd":"", "end_color_cd":"", "ing_font_color_cd":"", "end_font_color_cd":""};
 
         $.ajax({
@@ -378,13 +378,16 @@ class Lecture_func{
     
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 location.reload();
             }
         });
     }
 
-    static read(data, callback){
+    static read(data, callback, error_callback){
         //데이터 형태 {"lecture_id":""};
         $.ajax({
             url:'/trainer/get_lecture_info/',
@@ -421,13 +424,16 @@ class Lecture_func{
     
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 location.reload();
             }
         });
     }
 
-    static delete(data, callback){
+    static delete(data, callback, error_callback){
         //데이터 형태 {"lecture_id":""};
         $.ajax({
             url:'/trainer/delete_lecture_info/',
@@ -463,16 +469,17 @@ class Lecture_func{
     
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 location.reload();
             }
         });
     }
 
-    static update(data, callback){
+    static update(data, callback, error_callback){
         //데이터 형태 {"lecture_id":"", "member_num":"", "name":"", "note":"", "ing_color_cd":"", "end_color_cd":"", "ing_font_color_cd":"", "end_font_color_cd":""};
-
-
         $.ajax({
             url:'/trainer/update_lecture_info/',
             type:'POST',
@@ -507,13 +514,16 @@ class Lecture_func{
     
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 location.reload();
             }
         });
     }
 
-    static status(data, callback){
+    static status(data, callback, error_callback){
         //데이터 형태 {"lecture_id":"", "state_cd":""};
         $.ajax({
             url:'/trainer/update_lecture_status_info/',
@@ -550,13 +560,16 @@ class Lecture_func{
     
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 location.reload();
             }
         });
     }
 
-    static read_lecture_members(data, callback){
+    static read_lecture_members(data, callback, error_callback){
         //데이터 형태 {"lecture_id":""};
         $.ajax({
             url:'/trainer/get_lecture_ing_member_list/',
@@ -593,13 +606,16 @@ class Lecture_func{
     
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 location.reload();
             }
         });
     }
 
-    static update_fixed_member(data, callback){
+    static update_fixed_member(data, callback, error_callback){
         // lecture_id, member_id
         $.ajax({
             url:'/trainer/update_fix_lecture_member/',
@@ -636,6 +652,9 @@ class Lecture_func{
     
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 location.reload();
             }

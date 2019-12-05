@@ -191,7 +191,7 @@ let layer_popup = (function (){
 }());
 
 //Ajax로 팝업 html을 통째로 들고온다.
-function func_get_popup_ajax (popup_name, data, callback){
+function func_get_popup_ajax (popup_name, data, callback, error_callback){
     // ajax_load_image(SHOW);
     // setTimeout(function() {
         $.ajax({
@@ -216,6 +216,9 @@ function func_get_popup_ajax (popup_name, data, callback){
             },
 
             error: function () {
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 console.log('server error');
             }
         });

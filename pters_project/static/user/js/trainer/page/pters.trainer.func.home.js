@@ -340,7 +340,7 @@ class Home {
         let style = {"font-size":"15px", "font-weight":"bold"};
         let onclick = ()=>{
             if(data_lock == ON){
-                Setting_menu_access.locked_menu(()=>{
+                Setting_menu_access_func.locked_menu(()=>{
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_STATISTICS, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     statistics_popup = new Statistics('.popup_statistics');});
                 });
@@ -369,49 +369,6 @@ class Home {
                     </div>`;
         
         return pass_inspector.data.auth_ads.limit_num != 0 ? html : "";
-    }
-
-
-    //회원 리스트 서버에서 불러오기
-    request_home (callback, async){
-        var url;
-        if(async == undefined){
-            async = true;
-        }
-        $.ajax({
-            url:url,
-            dataType : 'JSON',
-            async:async,
-    
-            beforeSend:function (){
-                // ajax_load_image(SHOW);
-            },
-    
-            //통신성공시 처리
-            success:function (data){
-                check_app_version(data.app_version);
-                if(data.messageArray != undefined){
-                    if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
-                        return false;
-                    }
-                }
-                if(callback != undefined){
-                    callback(data);
-                }
-                return data;
-            },
-
-            //보내기후 팝업창 닫기
-            complete:function (){
-                // ajax_load_image(HIDE);
-            },
-    
-            //통신 실패시 처리
-            error:function (){
-                console.log('server error');
-            }
-        });
     }
 
     popup_plan_view(schedule_id){
@@ -448,7 +405,7 @@ class Home {
 }
 
 class Home_func{
-    static read(data, callback){
+    static read(data, callback, error_callback){
         //데이터 형태 {"home_id":""};
         $.ajax({
             url:'/trainer/get_home_info/',
@@ -484,6 +441,9 @@ class Home_func{
     
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 location.reload();
             }

@@ -182,7 +182,7 @@ class Alarm {
 }
 
 class Alarm_func{
-    static read(callback){
+    static read(callback, error_callback){
         //알림 리스트 서버에서 불러오기
         $.ajax({
             url:"/trainer/alarm/",
@@ -212,6 +212,9 @@ class Alarm_func{
     
             //통신 실패시 처리
             error:function (){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 console.log('server error');
             }
         });

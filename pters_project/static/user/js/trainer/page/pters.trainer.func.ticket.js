@@ -357,7 +357,7 @@ class Ticket{
 }
 
 class Ticket_func{
-    static create(data, callback){
+    static create(data, callback, error_callback){
         $.ajax({
             url:'/trainer/add_ticket_info/',
             type:'POST',
@@ -392,13 +392,16 @@ class Ticket_func{
     
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 location.reload();
             }
         });
     }
 
-    static read(data, callback){
+    static read(data, callback, error_callback){
         //데이터 형태 {"ticket_id":""};
         $.ajax({
             url:'/trainer/get_ticket_info/',
@@ -434,13 +437,16 @@ class Ticket_func{
     
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 location.reload();
             }
         });
     }
 
-    static delete(data, callback){
+    static delete(data, callback, error_callback){
         //데이터 형태 {"ticket_id":""};
         $.ajax({
             url:'/trainer/delete_ticket_info/',
@@ -476,13 +482,16 @@ class Ticket_func{
     
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 location.reload();
             }
         });
     }
 
-    static update(data, callback){
+    static update(data, callback, error_callback){
         //데이터 형태 {"ticket_id":"", "ticket_name":"", "ticket_note":""};
         $.ajax({
             url:'/trainer/update_ticket_info/',
@@ -518,13 +527,16 @@ class Ticket_func{
     
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 location.reload();
             }
         });
     }
 
-    static status(data, callback){
+    static status(data, callback, error_callback){
         //데이터 형태 {"ticket_id":"", "state_cd":""};
         $.ajax({
             url:'/trainer/update_ticket_status_info/',
@@ -560,13 +572,16 @@ class Ticket_func{
     
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 location.reload();
             }
         });
     }
 
-    static read_member_list(data, callback){
+    static read_member_list(data, callback, error_callback){
         $.ajax({
             url:'/trainer/get_ticket_ing_member_list/',
             type:'GET',
@@ -601,13 +616,16 @@ class Ticket_func{
     
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 location.reload();
             }
         });
     }
 
-    static update_lecture(type, data, callback){
+    static update_lecture(type, data, callback, error_callback){
         let url;
         if(type == ADD){
             url = '/trainer/add_ticket_lecture_info/';
@@ -649,6 +667,9 @@ class Ticket_func{
     
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 location.reload();
             }

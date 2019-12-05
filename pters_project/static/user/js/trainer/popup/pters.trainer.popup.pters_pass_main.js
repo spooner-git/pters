@@ -322,7 +322,7 @@ class Pters_pass_main{
 }
 
 class Pters_pass_func{
-    static update(data, callback){
+    static update(data, callback, error_callback){
         $.ajax({
             url: "/payment/update_period_billing/", // 서비스 웹서버
             method: "POST",
@@ -356,13 +356,16 @@ class Pters_pass_func{
             },
 
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 console.log('server error');
             }
         });
     }
     
 
-    static read(what, callback){
+    static read(what, callback, error_callback){
         let url;
         switch(what){
             case "Current":
@@ -419,6 +422,9 @@ class Pters_pass_func{
     
             //통신 실패시 처리
             error:function (){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 console.log('server error');
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
             }
@@ -431,7 +437,7 @@ class Pters_pass_func{
         IMP.init(payment_id); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
     }
 
-    static check_payment(name, pay_method, payment_type_cd, product_id, price, period_month, merchant_uid, customer_uid, callback){
+    static check_payment(name, pay_method, payment_type_cd, product_id, price, period_month, merchant_uid, customer_uid, callback, error_callback){
         let data = {
             "payment_type_cd":payment_type_cd, "product_id":product_id,
             "price":price, "period_month":period_month, "pay_method":pay_method,
@@ -470,6 +476,9 @@ class Pters_pass_func{
             },
 
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 console.log('server error');
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
             }
@@ -561,7 +570,7 @@ class Pters_pass_func{
     }
 
     // static check_payment_for_update(name, current_customer_uid, product_id, period_month, merchant_uid, customer_uid, callback){
-    static check_payment_for_update(current_customer_uid, product_id, new_merchant_uid, new_customer_uid, callback){
+    static check_payment_for_update(current_customer_uid, product_id, new_merchant_uid, new_customer_uid, callback, error_callback){
         // let error_check = true;
         // let date = new Date();
         // let new_merchant_uid = 'm_{{request.user.id}}_'+product_id+'_' + date.getTime();
@@ -598,6 +607,9 @@ class Pters_pass_func{
             },
 
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 console.log('server error');
             }
         });
@@ -701,7 +713,7 @@ class Pters_pass_func{
         });
     }
 
-    static request_payment_close(customer_uid, cancel_type, cancel_reason, callback){
+    static request_payment_close(customer_uid, cancel_type, cancel_reason, callback, error_callback){
         let data = {"customer_uid":customer_uid, "cancel_type":cancel_type, "cancel_reason":cancel_reason, "next_page":""};
         console.log(data);
         $.ajax({
@@ -736,6 +748,9 @@ class Pters_pass_func{
             },
 
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 console.log('server error');
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
             }

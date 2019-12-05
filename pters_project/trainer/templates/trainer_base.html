@@ -670,17 +670,6 @@
 
         let open;
 
-        Setting_menu_access_func.read((data)=>{
-            let menu_lock_status = data[`setting_trainer_${page}_lock`];
-            if(menu_lock_status == 1){
-                Setting_menu_access_func.locked_menu(()=>{
-                    open();
-                });
-            }else{
-                open();
-            }
-        });
-
         switch(page){
             case 'ticket':
                 open = ()=>{
@@ -794,6 +783,17 @@
                     }
             break;
         }
+    
+        Setting_menu_access_func.read((data)=>{
+            let menu_lock_status = data[`setting_trainer_${page}_lock`];
+            if(menu_lock_status == 1){
+                Setting_menu_access_func.locked_menu(()=>{
+                    open();
+                });
+            }else{
+                open();
+            }
+        });
     }
     
 
