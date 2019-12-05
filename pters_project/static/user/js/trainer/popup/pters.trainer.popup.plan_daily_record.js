@@ -78,13 +78,21 @@ class Plan_daily_record{
                 attend_icon = CImg.x(["#ff0022"], {"vertical-align":"middle", "margin-bottom":"3px"});
             }
 
+            // let html = `<li class="plan_daily_record_li">
+            //                 <div class="plan_daily_record_member_row">
+            //                     <div class="plan_daily_record_member_row_name">${schedule_name} ${attend_icon}</div>
+            //                     <div class="plan_daily_record_member_row_tools">
+            //                         ${CComponent.button(`daily_record_write_${schedule_id}`, "작성", button_style, ()=>{this.event_write(schedule_id, schedule_name);})}
+            //                         ${CComponent.button(`daily_record_read_${schedule_id}`, "보기", button_style, ()=>{this.event_read(schedule_id, schedule_name);})}
+            //                         ${CComponent.button(`daily_record_delete_${schedule_id}`, "삭제", button_style, ()=>{this.event_delete(schedule_id, schedule_name);})}
+            //                     </div>
+            //                 </div>
+            //             </li>`;  
             let html = `<li class="plan_daily_record_li">
                             <div class="plan_daily_record_member_row">
                                 <div class="plan_daily_record_member_row_name">${schedule_name} ${attend_icon}</div>
                                 <div class="plan_daily_record_member_row_tools">
-                                    ${CComponent.button(`daily_record_write_${schedule_id}`, "작성", button_style, ()=>{this.event_write(schedule_id, schedule_name);})}
-                                    ${CComponent.button(`daily_record_read_${schedule_id}`, "보기", button_style, ()=>{this.event_read(schedule_id, schedule_name);})}
-                                    ${CComponent.button(`daily_record_delete_${schedule_id}`, "삭제", button_style, ()=>{this.event_delete(schedule_id, schedule_name);})}
+                                    ${CComponent.button(`daily_record_write_${schedule_id}`, CImg.pencil("", {"vertical-align":"middle", "margin-bottom":"3px;"}), button_style, ()=>{this.event_write(schedule_id, schedule_name);})}
                                 </div>
                             </div>
                         </li>`;   
@@ -92,92 +100,41 @@ class Plan_daily_record{
 
             html_to_join.push(html);
         }
+
         if(html_to_join.length == 0){
             html_to_join.push(CComponent.no_data_row('작성할 일지가 없습니다.'));
+        }else{
+            let schedule_id_array = this.data.map((el)=>{return el.schedule_id});
+            let schedule_name_array = this.data.map((el)=>{return el.schedule_name});
+            html_to_join.unshift(`<li class="plan_daily_record_li">
+                                    <div class="plan_daily_record_member_row">
+                                        <div class="plan_daily_record_member_row_name">일괄 작성</div>
+                                        <div class="plan_daily_record_member_row_tools">
+                                            ${CComponent.button(`daily_record_write_all`, CImg.pencil("", {"vertical-align":"middle", "margin-bottom":"3px;"}), button_style, ()=>{this.event_write_all(schedule_id_array, schedule_name_array);})}
+                                        </div>
+                                    </div>
+                                </li>`)
         }
 
         return html_to_join.join('');
     }
 
+    event_write_all(schedule_id_array, schedule_name_array){
+        Plan_daily_record_func.write_article_all(schedule_id_array, schedule_name_array)
+    }
+
     event_write(schedule_id, schedule_name){
-        let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
-        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_WRITER, 100, popup_style, null, ()=>{
-            Plan_daily_record_func.read({"schedule_id":schedule_id}, (data)=>{
-                let content = Object.keys(data).length == 0 ? "" : data.daily_record_contents;
-                let img_list = Object.keys(data).length == 0 ? null : data.daily_record_img_list;
-                let external_data = {   
-                                    title:"",
-                                    content:content,
-                                    schedule_id:schedule_id,
-                                    is_member_view: 1,
-                                    visibility:{title:HIDE},
-                                    upper_html:this.upper_html_caution()
-                };
-
-                board_writer = new BoardWriter_for_daily_record(`${schedule_name} 일지 작성`, '.popup_board_writer', 'board_writer', external_data, (data_written)=>{
-                    //작성 중 첨부해서 서버에 업로드된 전체 이미지 목록 + 과거 올렸던 이미지 목록
-                    let img_aleady_uploaded_before = img_list == null ? "" : JSON.parse(img_list);
-                    let images_uploaded = img_list == null ? data_written.images  : {...data_written.images, ...img_aleady_uploaded_before};
-                    
-                    //업로드 된 이미지 중 작성 중 삭제한 이미지를 서버에서 지운다.
-                    for(let image in images_uploaded){
-                        if(data_written.content.match(image) != null){
-                            continue;
-                        }
-                        //작성한 글 내용에 upload된 이미지가 없다면, 서버에서도 지운다.
-                        let data = {"content_img_file_name":image};
-                        Plan_daily_record_func.delete_image_from_server(data, ()=>{console.log("서버에서 지우자", image);});
-                        delete images_uploaded[image];
-                    }
-
-                    //작성한 글을 서버 저장한다.
-                    let data = {"schedule_id":data_written.schedule_id, "img_list":JSON.stringify(images_uploaded), "title":"",
-                                "contents":data_written.content, "is_member_view":data_written.is_member_view};
-                    Plan_daily_record_func.create(data, ()=>{
-                        this.init();
-                    });
-                });
-            });
+        Plan_daily_record_func.write_artice(schedule_id, schedule_name, ()=>{
+            this.init();
         });
     }
 
     event_read(schedule_id, schedule_name){
-        Plan_daily_record_func.read({"schedule_id":schedule_id}, (data)=>{
-            let daily_record_id = Object.keys(data).length == 0 ? null : data.daily_record_id;
-            let daily_record_title = Object.keys(data).length == 0 ? null : data.daily_record_title;
-            let daily_record_content = Object.keys(data).length == 0 ? null : data.daily_record_contents;
-            let daily_record_is_member_view = Object.keys(data).length == 0 ? null : data.daily_record_is_member_view;
-
-
-            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_BOTTOM;
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_READER, 100, popup_style, null, ()=>{
-                let data = {
-                    title:daily_record_title, content:daily_record_content, date:null
-                };
-                board_reader = new BoardReader(`${schedule_name} 일지`, '.popup_board_reader', "board_reader", data);
-            });
-            
-        });
+        Plan_daily_record_func.read_article(schedule_id, schedule_name);
     }
 
-    event_delete(schedule_id, schedule_name){
-        show_user_confirm(`정말 [${schedule_name}] 일지를 삭제 하시겠습니까?`, ()=>{
-            layer_popup.close_layer_popup();
-            // Plan_daily_record_func.read({"schedule_id":schedule_id}, (data)=>{
-            //     let daily_record_id = Object.keys(data).length == 0 ? null : data.daily_record_id;
-            //     if(daily_record_id == null){
-            //         show_error_message("정상적으로 일지가 삭제 되었습니다.");
-            //         return;
-            //     }
-            //     Plan_daily_record_func.delete({"daily_record_id":daily_record_id}, ()=>{
-            //         show_error_message("정상적으로 일지가 삭제 되었습니다.");
-            //     });
-            // });
-
-            Plan_daily_record_func.delete({"schedule_id":schedule_id}, ()=>{
-                show_error_message("정상적으로 일지가 삭제 되었습니다.");
-            });
-        });
+    event_delete(schedule_id, schedule_name, callback){
+        Plan_daily_record_func.delete_article(schedule_id, schedule_name);
     }
 
     upper_html_caution(){
@@ -200,7 +157,143 @@ class Plan_daily_record{
     }
 }
 
+
 class Plan_daily_record_func{
+    static write_article_all(schedule_id_array, schedule_name_array){
+        let upperhtml = `<div style="padding:20px 10px;font-size:13px;color:var(--font-highlight)">
+                            <div style="color:var(--font-main)">일지 작성 대상: ${schedule_name_array.join(", ")}</div>
+                            ※ 일지는 해당 회원님께서 확인하실 수 있습니다.
+                        </div>`;
+        let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_WRITER, 100, popup_style, null, ()=>{
+                let external_data = {   
+                                    title:"",
+                                    content:"",
+                                    schedule_id:null,
+                                    is_member_view: 1,
+                                    visibility:{title:HIDE},
+                                    upper_html:upperhtml
+                };
+
+                board_writer = new BoardWriter_for_daily_record(`일괄 일지 작성`, '.popup_board_writer', 'board_writer', external_data, (data_written)=>{
+                    //작성 중 첨부해서 서버에 업로드된 전체 이미지 목록 + 과거 올렸던 이미지 목록
+                    let images_uploaded = data_written.images
+                    
+                    //업로드 된 이미지 중 작성 중 삭제한 이미지를 서버에서 지운다.
+                    for(let image in images_uploaded){
+                        if(data_written.content.match(image) != null){
+                            continue;
+                        }
+                        //작성한 글 내용에 upload된 이미지가 없다면, 서버에서도 지운다.
+                        let data = {"content_img_file_name":image};
+                        Plan_daily_record_func.delete_image_from_server(data, ()=>{console.log("서버에서 지우자", image);});
+                        delete images_uploaded[image];
+                    }
+
+                    //작성한 글을 서버 저장한다.
+                    for(let i=0; i<schedule_id_array.length; i++){
+                        //원래 작성되었던 글을 지운다. (이미지를 서버에서 날리기 위해)
+                        Plan_daily_record_func.delete({"schedule_id":schedule_id_array[i]}, ()=>{
+                            let data = {"schedule_id":schedule_id_array[i], "img_list":JSON.stringify(images_uploaded), "title":"",
+                                    "contents":data_written.content, "is_member_view":data_written.is_member_view};
+                            Plan_daily_record_func.create(data, ()=>{
+                                if(i == schedule_id_array - 1){
+                                    show_error_message("일괄 일지 등록이 정상적으로 완료 되었습니다.")
+                                }
+                            });
+                        });
+                    }
+                });
+        });
+    }
+
+
+    static write_artice(schedule_id, schedule_name, callback, error_callback){
+        let upperhtml = `<div style="padding:20px 10px;font-size:13px;color:var(--font-highlight)">
+                        ※ 일지는 해당 회원님께서 확인하실 수 있습니다.
+                    </div>`;
+        let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_WRITER, 100, popup_style, null, ()=>{
+            Plan_daily_record_func.read({"schedule_id":schedule_id}, (data)=>{
+                let content = Object.keys(data).length == 0 ? "" : data.daily_record_contents;
+                let img_list = Object.keys(data).length == 0 ? null : data.daily_record_img_list;
+                let external_data = {   
+                                    title:"",
+                                    content:content,
+                                    schedule_id:schedule_id,
+                                    is_member_view: 1,
+                                    visibility:{title:HIDE},
+                                    upper_html:upperhtml
+                };
+
+                board_writer = new BoardWriter_for_daily_record(`${schedule_name} 일지 작성`, '.popup_board_writer', 'board_writer', external_data, (data_written)=>{
+                    //작성 중 첨부해서 서버에 업로드된 전체 이미지 목록 + 과거 올렸던 이미지 목록
+                    let img_aleady_uploaded_before = img_list == null ? "" : JSON.parse(img_list);
+                    let images_uploaded = img_list == null ? data_written.images  : {...data_written.images, ...img_aleady_uploaded_before};
+                    
+                    //업로드 된 이미지 중 작성 중 삭제한 이미지를 서버에서 지운다.
+                    for(let image in images_uploaded){
+                        if(data_written.content.match(image) != null){
+                            continue;
+                        }
+                        //작성한 글 내용에 upload된 이미지가 없다면, 서버에서도 지운다.
+                        let data = {"content_img_file_name":image};
+                        Plan_daily_record_func.delete_image_from_server(data, ()=>{console.log("서버에서 지우자", image);});
+                        delete images_uploaded[image];
+                    }
+
+                    //작성한 글을 서버 저장한다.
+                    let data = {"schedule_id":data_written.schedule_id, "img_list":JSON.stringify(images_uploaded), "title":"",
+                                "contents":data_written.content, "is_member_view":data_written.is_member_view};
+                    Plan_daily_record_func.create(data, ()=>{
+                        // this.init();
+                        if(callback != undefined){
+                            callback(); 
+                        } 
+                    }, ()=>{
+                        if(error_callback != undefined){
+                            error_callback(); 
+                        } 
+                    });
+                });
+            });
+        });
+    }
+
+    static read_article(schedule_id, schedule_name){
+        Plan_daily_record_func.read({"schedule_id":schedule_id}, (data)=>{
+            let daily_record_id = Object.keys(data).length == 0 ? null : data.daily_record_id;
+            let daily_record_title = Object.keys(data).length == 0 ? null : data.daily_record_title;
+            let daily_record_content = Object.keys(data).length == 0 ? null : data.daily_record_contents;
+            let daily_record_is_member_view = Object.keys(data).length == 0 ? null : data.daily_record_is_member_view;
+
+
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_BOTTOM;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_READER, 100, popup_style, null, ()=>{
+                let data = {
+                    title:daily_record_title, content:daily_record_content, date:null
+                };
+                board_reader = new BoardReader(`${schedule_name} 일지`, '.popup_board_reader', "board_reader", data);
+            });
+        });
+    }
+
+    static delete_article(schedule_id, schedule_name, callback, error_callback){
+        show_user_confirm(`정말 [${schedule_name}] 일지를 삭제 하시겠습니까?`, ()=>{
+            layer_popup.close_layer_popup();
+            Plan_daily_record_func.delete({"schedule_id":schedule_id}, ()=>{
+                show_error_message("정상적으로 일지가 삭제 되었습니다.");
+                if(callback != undefined){
+                    callback();
+                }
+            }, ()=>{
+                if(error_callback != undefined){
+                    error_callback(); 
+                }
+            });
+        });
+    }
+
     static create(data, callback, error_callback){
         // {"schedule_id":"", "title":"", "contents":"", "is_member_view":""}
         $.ajax({

@@ -301,11 +301,12 @@ class Plan_view{
                         //회원 간단 정보 팝업 열기
                     });
                 }},
-                schedule_history:{text:"회원 일정 이력", callback:()=>{
+                daily_record:{text:"일지", callback:()=>{
                     layer_popup.close_layer_popup();
-                    let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
-                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_SCHEDULE_HISTORY, 100, popup_style, null, ()=>{
-                        member_schedule_history = new Member_schedule_history('.popup_member_schedule_history', this.data.member_id[0], null);
+                    Plan_daily_record_func.write_artice(this.data.member_schedule_id[0], this.data.member_name[0], ()=>{
+                        show_error_message(`[${this.data.member_name[0]}] 일지 변경사항이 저장 되었습니다.`);
+                    }, ()=>{
+                        show_error_message(`<span style="color:var(--font-highlight)">일지 변경사항 저장에 실패 하였습니다.</span>`);
                     });
                 }},
                 sign_image:{text:"출석 서명 확인", callback:()=>{
@@ -313,6 +314,13 @@ class Plan_view{
                     show_error_message(
                         `<img src="https://s3.ap-northeast-2.amazonaws.com/pters-image-master/${this.data.member_schedule_id[0]}.png" style="width:100%;filter:invert(1);" onerror="this.onerror=null;this.src='/static/common/icon/icon_no_signature.png'">`
                     );
+                }},
+                schedule_history:{text:"회원 일정 이력", callback:()=>{
+                    layer_popup.close_layer_popup();
+                    let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_SCHEDULE_HISTORY, 100, popup_style, null, ()=>{
+                        member_schedule_history = new Member_schedule_history('.popup_member_schedule_history', this.data.member_id[0], null);
+                    });
                 }}
             };
 
@@ -420,18 +428,26 @@ class Plan_view{
                                 //회원 간단 정보 팝업 열기
                             });
                         }},
-                        schedule_history:{text:"회원 일정 이력", callback:()=>{
+                        daily_record:{text:"일지", callback:()=>{
                             layer_popup.close_layer_popup();
-                            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
-                            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_SCHEDULE_HISTORY, 100, popup_style, null, ()=>{
-                                member_schedule_history = new Member_schedule_history('.popup_member_schedule_history', member_id, null);
-                            });
+                            Plan_daily_record_func.write_artice(member_schedule_id, member_name, ()=>{
+                                show_error_message(`[${member_name}] 일지 변경사항이 저장 되었습니다.`);
+                            }, ()=>{
+                                show_error_message(`<span style="color:var(--font-highlight)">일지 변경사항 저장에 실패 하였습니다.</span>`);
+                            }); 
                         }},
                         sign_image:{text:"출석 서명 확인", callback:()=>{
                             layer_popup.close_layer_popup();
                             show_error_message(
                                 `<img src="https://s3.ap-northeast-2.amazonaws.com/pters-image-master/${member_schedule_id}.png" style="width:100%;filter:invert(1);" onerror="this.onerror=null;this.src='/static/common/icon/icon_no_signature.png'">`
                             );
+                        }},
+                        schedule_history:{text:"일정 이력", callback:()=>{
+                            layer_popup.close_layer_popup();
+                            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_SCHEDULE_HISTORY, 100, popup_style, null, ()=>{
+                                member_schedule_history = new Member_schedule_history('.popup_member_schedule_history', member_id, null);
+                            });
                         }}
                     };
                     if(state != SCHEDULE_FINISH){
