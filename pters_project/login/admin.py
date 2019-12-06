@@ -7,7 +7,7 @@ from .models import CommonCdTb, PushInfoTb, LogTb, MemberTb, SnsInfoTb
 @admin.register(MemberTb)
 class MemberTbAdmin(admin.ModelAdmin):
     list_display = ('member_id', 'get_user_group', 'user', 'name', 'phone', 'age', 'sex', 'birthday_dt',
-                    'address', 'job', 'contents', 'profile_url', 'phone_is_active', 'reg_info',
+                    'address', 'job', 'contents', 'phone_is_active', 'reg_info',
                     'reg_dt', 'mod_dt', 'use')
     search_fields = ['name']
 

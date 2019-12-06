@@ -2282,12 +2282,12 @@ def add_daily_record_info_logic(request):
                                                       img_list=str(img_list), is_member_view=int(is_member_view),
                                                       use=USE)
                     daily_record_info.save()
-                    try:
-                        schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id)
-                        schedule_info.daily_record_tb_id = daily_record_info.daily_record_id
-                        schedule_info.save()
-                    except ObjectDoesNotExist:
-                        error = '일지 저장중 오류가 발생했습니다.[1]'
+                try:
+                    schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id)
+                    schedule_info.daily_record_tb_id = daily_record_info.daily_record_id
+                    schedule_info.save()
+                except ObjectDoesNotExist:
+                    error = '일지 저장중 오류가 발생했습니다.[1]'
 
                 if error is not None:
                     raise InternalError()
