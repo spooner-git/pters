@@ -137,8 +137,11 @@ class Home {
 
         let sales_summary = this.dom_row_sales_this_month(data.statistics, this.setting_data_cache.setting_trainer_statistics_lock);
         sales_summary_dom = '<div class="contents">' + sales_summary + '</div>';
+
+        let my_pters_pass_dom;
+        my_pters_pass_dom = '<div class="contents">' + this.dom_row_my_pters_pass() + '</div>';
                         
-        let html = program_dom + plan_dom + end_alert_dom + sales_summary_dom;
+        let html = program_dom + plan_dom + end_alert_dom + sales_summary_dom + my_pters_pass_dom;
         document.querySelector('#home_content_wrap').innerHTML = html;
     }
 
