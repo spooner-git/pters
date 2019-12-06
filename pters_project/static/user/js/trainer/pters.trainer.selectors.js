@@ -5100,6 +5100,10 @@ class BoardWriter_for_daily_record{
             maximumImageFileSize: 10485760,
             callbacks:{
                 onImageUpload: function(files) {
+                    if(pass_inspector.data.auth_ads.limit_type == "무료"){
+                        show_error_message("피터스 패스 이용 고객께서만 이미지를 첨부 하실 수 있습니다.");
+                        return false;
+                    }
                     // if(board_writer.data.category_selected['type'].text.length == 0){
                     //     show_error_message('게시글 분류부터 선택해주세요.');
                     //     return false;
@@ -5232,7 +5236,6 @@ class BoardWriter_for_daily_record{
         reader.readAsDataURL(file);
     }
         
-
     dataURItoBlob(dataURI) {
         // convert base64/URLEncoded data component to raw binary data held in a string
         var byteString;
@@ -5259,6 +5262,11 @@ class BoardWriter_for_daily_record{
     }
 
     close(){
+        //업로드 된 이미지를 모두 지운다.
+        for(let image in this.data.images){
+            let data = {"content_img_file_name":image};
+            Plan_daily_record_func.delete_image_from_server(data, ()=>{console.log("서버에서 지우자", image);});
+        }
         this.clear();
         layer_popup.close_layer_popup();
     }
@@ -5284,13 +5292,6 @@ class BoardWriter_for_daily_record{
             }
             if(selected_value_ok == false){
                 show_error_message("카테고리를 선택해주세요.");
-                return false;
-            }
-        }
-
-        if(pass_inspector.data.auth_ads.limit_type == "무료"){
-            if(this.data.content.match(/<img/g) != null){
-                show_error_message("피터스 패스 이용 고객께서만 이미지를 첨부 하실 수 있습니다.");
                 return false;
             }
         }
