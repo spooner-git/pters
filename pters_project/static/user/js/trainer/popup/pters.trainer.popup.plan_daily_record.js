@@ -165,7 +165,7 @@ class Plan_daily_record_func{
                             <div style="color:var(--font-highlight)">일지는 해당 회원님께서 확인하실 수 있습니다.</div>
                             <div>이미지는 자동 리사이즈 되어 업로드 되며, 최대 2장까지 첨부 가능합니다.</div>
                             <div style="font-size:11px;">${pass_inspector.data.auth_ads.limit_type == "무료"
-                                ? "(무료 고객께서는 이미지를 첨부할 수 없습니다.)" 
+                                ? "(피터스 패스 이용 고객께서만 이미지를 첨부 하실 수 있습니다.)" 
                                 : "" }
                             </div>
                         </div>`;
@@ -218,7 +218,7 @@ class Plan_daily_record_func{
                             <div style="color:var(--font-highlight)">일지는 해당 회원님께서 확인하실 수 있습니다.</div>
                             <div>이미지는 자동 리사이즈 되어 업로드 되며, 최대 2장까지 첨부 가능합니다.</div>
                             <div style="font-size:11px;">${pass_inspector.data.auth_ads.limit_type == "무료"
-                                ? "(무료 고객께서는 이미지를 첨부할 수 없습니다.)" 
+                                ? "(피터스 패스 이용 고객께서만 이미지를 첨부 하실 수 있습니다.)" 
                                 : "" }
                             </div>
                         </div>`;
