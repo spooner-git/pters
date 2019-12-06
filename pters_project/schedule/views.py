@@ -2360,7 +2360,7 @@ def delete_daily_record_info_logic(request):
                         + str(request.user.id) + '_' + str(class_id) + '/' + str(schedule_id)+'/')
 
                 except ObjectDoesNotExist:
-                    error = '일지 삭제중 오류가 발생했습니다.[0]'
+                    error = None
 
                 if error is None:
                     try:
