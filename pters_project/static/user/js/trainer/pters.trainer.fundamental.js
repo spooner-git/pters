@@ -698,7 +698,7 @@ class PassInspector{
         let data;
         Program_func.read((d1)=>{
             data = d1;
-        }, async);
+        }, ()=>{}, async);
         let current_program_number = data.program_data.length;
         let limit_number = this.data.auth_program_create.limit_num;
         let limit_type = this.data.auth_program_create.limit_type;
