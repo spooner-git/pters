@@ -505,18 +505,29 @@ class Lecture_view{
                     show_user_confirm(`"${this.data.name}" <br> 수업을 활성화 하시겠습니까? <br> 활성화 탭에서 다시 확인할 수 있습니다.`, ()=>{
                         let inspect = pass_inspector.lecture();
                         if(inspect.barrier == BLOCKED){
-                            let id = "go_to_shop";
-                            let title = "패스 구매";
-                            let style = {"display":"inline-block", "background-color":"var(--bg-highlight)", "border-radius":"2px", "margin-top":"15px"};
-                            let onclick = ()=>{
-                                layer_popup.all_close_layer_popup();
-                                sideGoPopup("pters_pass_main");
-                            };
-                            let go_to_shop_button = `<div>${CComponent.button (id, title, style, onclick)}</div>`;
+                            // let id = "go_to_shop";
+                            // let title = "패스 구매";
+                            // let style = {"display":"inline-block", "background-color":"var(--bg-highlight)", "border-radius":"2px", "margin-top":"15px"};
+                            // let onclick = ()=>{
+                            //     layer_popup.all_close_layer_popup();
+                            //     sideGoPopup("pters_pass_main");
+                            // };
+                            // let go_to_shop_button = `<div>${CComponent.button (id, title, style, onclick)}</div>`;
+
+                            // layer_popup.close_layer_popup(); //confirm팝업 닫기
+                            // show_error_message(`[${inspect.limit_type}] 이용자께서는 진행중 수업을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다. 
+                            //                     <br> 수업 활성화에 실패했습니다.${go_to_shop_button}`);
 
                             layer_popup.close_layer_popup(); //confirm팝업 닫기
-                            show_error_message(`[${inspect.limit_type}] 이용자께서는 진행중 수업을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다. 
-                                                <br> 수업 활성화에 실패했습니다.${go_to_shop_button}`);
+                            let message = `[${inspect.limit_type}] 이용자께서는 진행중 수업을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다. 
+                                            <br> 수업 활성화에 실패했습니다.
+                                            <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까??</p>`;
+                            show_user_confirm (message, ()=>{
+                                layer_popup.all_close_layer_popup();
+                                sideGoPopup("pters_pass_main");
+                            });
+                                                
+                            
                             return false;
                         }
                         
