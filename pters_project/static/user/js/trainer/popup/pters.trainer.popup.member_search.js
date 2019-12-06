@@ -41,7 +41,7 @@ class Member_search {
     render(){
         let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();member_search_popup.clear();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right"><span style="color:var(--font-highlight);font-weight: 500;"></span><span style="color:var(--font-highlight);font-weight: 500;" onclick="member_search_popup.send_data()"></span></span>`;
+        let top_right = `<span class="icon_right"><span style="color:var(--font-highlight);font-weight: 500;"></span><span style="color:var(--font-highlight);font-weight: 500;"></span></span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
 
@@ -240,20 +240,7 @@ class Member_search {
 
 
     send_data(){
-        let data = {
-            "inquire_type":this.data.member_search_type.value[0],
-            "inquire_subject":this.data.member_search_subject,
-            "inquire_body":this.data.member_search_content,
-            "next_page":""
-        };
-
-        member_search_func.create(data, ()=>{
-            show_error_message("문의를 접수했습니다.");
-            member_search.render_content();
-            member_search_func.read((data)=>{
-                console.log(data);
-            });
-        });
+        
     }
 
     go_to_member_search_history(){
@@ -262,116 +249,6 @@ class Member_search {
             member_search_history_popup = new member_search_history('.popup_member_search_history');});
     }
 
-}
-
-class member_search_func {
-    static create (data, callback){
-        $.ajax({
-            url : "/board/add_qa_info/",
-            type:'POST',
-            data: data,
-            dataType : 'JSON',
-    
-            beforeSend:function(xhr, settings) {
-                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                }
-            },
-    
-            //보내기후 팝업창 닫기
-            complete:function(){
-                
-            },
-    
-            //통신성공시 처리
-            success:function(data){
-                check_app_version(data.app_version);
-                if(data.messageArray != undefined){
-                    if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray);
-                        return false;
-                    }
-                }
-                if(callback != undefined){
-                    callback(data);
-                }
-            },
-    
-            //통신 실패시 처리
-            error:function(data){
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
-                // location.reload();
-            }
-        });
-    }
-
-    static read (callback){
-        $.ajax({
-            url: '/board/get_qa_list/',
-            type: 'GET',
-            dataType : 'html',
-
-            beforeSend:function(){
-                
-            },
-
-            success:function(data_){
-                let data = JSON.parse(data_);
-                check_app_version(data.app_version);
-                if(data.messageArray != undefined){
-                    if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
-                        return false;
-                    }
-                }
-                if(callback != undefined){
-                    callback(data); 
-                }
-            },
-
-            complete:function(){
-               
-            },
-
-            error:function(){
-                console.log('server error');
-            }
-        });
-    }
-
-    static read_check (callback){
-        $.ajax({
-            url: '/board/clear_qa_list/',
-            type: 'GET',
-            dataType : 'html',
-
-            beforeSend:function(){
-                
-            },
-
-            success:function(data_){
-                let data = JSON.parse(data_);
-                check_app_version(data.app_version);
-                if(data.messageArray != undefined){
-                    if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
-                        return false;
-                    }
-                }
-                if(callback != undefined){
-                    callback(data); 
-                }
-            },
-
-            complete:function(){
-               
-            },
-
-            error:function(){
-                console.log('server error');
-            }
-        });
-    }
 }
 
 /* global $, 

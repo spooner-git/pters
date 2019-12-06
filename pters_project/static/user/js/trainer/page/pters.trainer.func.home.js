@@ -74,6 +74,8 @@ class Home {
         let plan_dom;
         let end_alert_dom;
         let sales_summary_dom;
+        let my_pters_pass_dom;
+
         Setting_menu_access_func.read((data)=>{
             this.setting_data_cache = data;
             let menu_lock_statistics = data.setting_trainer_statistics_lock;
@@ -102,7 +104,9 @@ class Home {
                             let sales_summary = this.dom_row_sales_this_month(data, locked);
                             sales_summary_dom = '<div class="contents">' + sales_summary + '</div>';
 
-                            let html = program_dom + plan_dom + end_alert_dom + sales_summary_dom ;
+                            my_pters_pass_dom = '<div class="contents">' + this.dom_row_my_pters_pass() + '</div>';
+
+                            let html = program_dom + plan_dom + end_alert_dom + sales_summary_dom + my_pters_pass_dom;
                             document.querySelector('#home_content_wrap').innerHTML = html;
                             // $('#root_content').scrollTop(0);
                         });
@@ -133,8 +137,11 @@ class Home {
 
         let sales_summary = this.dom_row_sales_this_month(data.statistics, this.setting_data_cache.setting_trainer_statistics_lock);
         sales_summary_dom = '<div class="contents">' + sales_summary + '</div>';
+
+        let my_pters_pass_dom;
+        my_pters_pass_dom = '<div class="contents">' + this.dom_row_my_pters_pass() + '</div>';
                         
-        let html = program_dom + plan_dom + end_alert_dom + sales_summary_dom;
+        let html = program_dom + plan_dom + end_alert_dom + sales_summary_dom + my_pters_pass_dom;
         document.querySelector('#home_content_wrap').innerHTML = html;
     }
 
@@ -164,6 +171,31 @@ class Home {
                         </article>`;
             html_to_join.push(dom);
         }
+
+
+        let html = html_to_join.join("");
+        return html;
+    }
+
+    dom_row_my_pters_pass(){
+        let html_to_join = [];
+
+
+        let id = "home_my_pters_pass";
+        let title = "이용 중인 PTERS 패스";
+        let icon = DELETE;
+        let icon_r_visible = HIDE;
+        let icon_r_text = `${pass_inspector.data.auth_member_create.limit_type} ${CImg.arrow_right(["var(--img-sub1)"], {"vertical-align":"middle"})}`;
+        let style = {"font-size":"13px", "font-weight":"bold"};
+        let onclick = ()=>{
+            sideGoPopup("pters_pass_main");
+        };
+        let my_pters_pass = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
+        let dom = `<article class="my_pters_pass_wrapper">
+                        ${my_pters_pass}
+                    </article>`;
+        html_to_join.push(dom);
+        
 
 
         let html = html_to_join.join("");
@@ -340,7 +372,7 @@ class Home {
         let style = {"font-size":"15px", "font-weight":"bold"};
         let onclick = ()=>{
             if(data_lock == ON){
-                Setting_menu_access.locked_menu(()=>{
+                Setting_menu_access_func.locked_menu(()=>{
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_STATISTICS, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     statistics_popup = new Statistics('.popup_statistics');});
                 });
@@ -369,49 +401,6 @@ class Home {
                     </div>`;
         
         return pass_inspector.data.auth_ads.limit_num != 0 ? html : "";
-    }
-
-
-    //회원 리스트 서버에서 불러오기
-    request_home (callback, async){
-        var url;
-        if(async == undefined){
-            async = true;
-        }
-        $.ajax({
-            url:url,
-            dataType : 'JSON',
-            async:async,
-    
-            beforeSend:function (){
-                // ajax_load_image(SHOW);
-            },
-    
-            //통신성공시 처리
-            success:function (data){
-                check_app_version(data.app_version);
-                if(data.messageArray != undefined){
-                    if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
-                        return false;
-                    }
-                }
-                if(callback != undefined){
-                    callback(data);
-                }
-                return data;
-            },
-
-            //보내기후 팝업창 닫기
-            complete:function (){
-                // ajax_load_image(HIDE);
-            },
-    
-            //통신 실패시 처리
-            error:function (){
-                console.log('server error');
-            }
-        });
     }
 
     popup_plan_view(schedule_id){
@@ -448,7 +437,7 @@ class Home {
 }
 
 class Home_func{
-    static read(data, callback){
+    static read(data, callback, error_callback){
         //데이터 형태 {"home_id":""};
         $.ajax({
             url:'/trainer/get_home_info/',
@@ -484,6 +473,9 @@ class Home_func{
     
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 location.reload();
             }

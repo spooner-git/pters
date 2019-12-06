@@ -187,7 +187,7 @@ class Service_inquiry {
 }
 
 class Service_inquiry_func {
-    static create (data, callback){
+    static create (data, callback, error_callback){
         $.ajax({
             url : "/board/add_qa_info/",
             type:'POST',
@@ -220,14 +220,17 @@ class Service_inquiry_func {
             },
     
             //통신 실패시 처리
-            error:function(data){
+            error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 // location.reload();
             }
         });
     }
 
-    static read (callback){
+    static read (callback, error_callback){
         $.ajax({
             url: '/board/get_qa_list/',
             type: 'GET',
@@ -256,12 +259,15 @@ class Service_inquiry_func {
             },
 
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 console.log('server error');
             }
         });
     }
 
-    static read_check (callback){
+    static read_check (callback, error_callback){
         $.ajax({
             url: '/board/clear_qa_list/',
             type: 'GET',
@@ -290,12 +296,15 @@ class Service_inquiry_func {
             },
 
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 console.log('server error');
             }
         });
     }
 
-    static read_inquiry_answer(data, callback){
+    static read_inquiry_answer(data, callback, error_callback){
         $.ajax({
             url:'/board/get_qa_comment_list/',
             data:data,
@@ -327,6 +336,9 @@ class Service_inquiry_func {
     
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
             }
         });

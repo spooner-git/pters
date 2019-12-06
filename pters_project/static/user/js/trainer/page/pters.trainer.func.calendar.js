@@ -1643,7 +1643,7 @@ class Calendar {
 
 
 class Plan_func{
-    static create(url, data, callback){
+    static create(url, data, callback, error_callback){
         //데이터 형태 {"member_id":"", "contents":"", "counts":"", "price":"", "start_date":"", "end_date":"", "class_id":"", "package_id":""};
         let async = true;
         if(data.async != undefined){
@@ -1684,14 +1684,17 @@ class Plan_func{
             },
     
             //통신 실패시 처리
-            error:function(data){
+            error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 // location.reload();
             }
         });
     }
 
-    static read(date, days, callback){
+    static read(date, days, callback, error_callback){
         let date_ = date;
         let days_ = days;
         if(date_ == undefined){date_ = `${this.current_year}-${this.current_month}-01`;}
@@ -1725,13 +1728,16 @@ class Plan_func{
             },
 
             error:function (){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 // location.reload();
             }
         });
     }
 
-    static read_plan(schedule_id, callback){
+    static read_plan(schedule_id, callback, error_callback){
         
         $.ajax({
             url: '/trainer/get_trainer_schedule_info/',
@@ -1761,13 +1767,16 @@ class Plan_func{
             },
 
             error:function (){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 // location.reload();
             }
         });
     }
 
-    static read_holiday(date, days, callback){
+    static read_holiday(date, days, callback, error_callback){
         let date_ = date;
         let days_ = days;
         if(date_ == undefined){date_ = `${this.current_year}-${this.current_month}-01`;}
@@ -1801,13 +1810,16 @@ class Plan_func{
             },
 
             error:function (){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 // location.reload();
             }
         });
     }
 
-    static delete(data, callback){
+    static delete(data, callback, error_callback){
         //데이터 형태 {"schedule_id":""};
         let async = true;
         if(data.async != undefined){
@@ -1848,13 +1860,16 @@ class Plan_func{
     
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 // location.reload();
             }
         });
     }
 
-    static update(url, data, callback){
+    static update(url, data, callback, error_callback){
         let async = true;
         if(data.async != undefined){
             async = data.async;
@@ -1893,13 +1908,16 @@ class Plan_func{
     
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 // location.reload();
             }
         });
     }
 
-    static status(data, callback){
+    static status(data, callback, error_callback){
         //데이터 형태 {"schedule_id":"", "state_cd":""};
         let async = true;
         if(data.async != undefined){
@@ -1940,13 +1958,16 @@ class Plan_func{
     
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 // location.reload();
             }
         });
     }
 
-    static read_plan_repeat(callback){
+    static read_plan_repeat(callback, error_callback){
         $.ajax({
             url: '/trainer/get_repeat_schedule_all/',
             type : 'GET',
@@ -1974,13 +1995,16 @@ class Plan_func{
             },
 
             error:function (){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 // location.reload();
             }
         });
     }
 
-    static delete_plan_repeat(data, callback){
+    static delete_plan_repeat(data, callback, error_callback){
         $.ajax({
             url:'/schedule/delete_repeat_schedule/',
             type:'POST',
@@ -2015,13 +2039,16 @@ class Plan_func{
     
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 // location.reload();
             }
         });
     }
 
-    static upload_sign(data, callback){
+    static upload_sign(data, callback, error_callback){
         // let data = {"schedule_id":"", "upload_file":""}
         $.ajax({
             url:'/schedule/upload_sign_image/',
@@ -2056,6 +2083,9 @@ class Plan_func{
     
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 // location.reload();
             }

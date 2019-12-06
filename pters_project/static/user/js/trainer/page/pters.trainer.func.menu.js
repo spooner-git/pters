@@ -406,7 +406,7 @@ class Menu {
 
 
 class Setting_func{
-    static read(callback){
+    static read(callback, error_callback){
         $.ajax({
             url:"/trainer/get_trainer_setting_data/",
             type:'GET',
@@ -439,6 +439,9 @@ class Setting_func{
     
             //통신 실패시 처리
             error:function (){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 console.log('server error');
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
             }

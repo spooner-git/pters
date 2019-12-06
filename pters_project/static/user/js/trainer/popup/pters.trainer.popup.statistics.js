@@ -632,23 +632,31 @@ class Statistics{
     pass_inspect(date1, date2){
         let inspect = pass_inspector.statistics(date1, date2);
         if(inspect.barrier == BLOCKED){
-            let id = "go_to_shop";
-            let title = "패스 구매";
-            let style = {"display":"inline-block", "background-color":"var(--bg-highlight)", "border-radius":"2px", "margin-top":"15px"};
-            let onclick = ()=>{
+            // let id = "go_to_shop";
+            // let title = "패스 구매";
+            // let style = {"display":"inline-block", "background-color":"var(--bg-highlight)", "border-radius":"2px", "margin-top":"15px"};
+            // let onclick = ()=>{
+            //     layer_popup.all_close_layer_popup();
+            //     sideGoPopup("pters_pass_main");
+            // };
+            // let go_to_shop_button = `<div>${CComponent.button (id, title, style, onclick)}</div>`;
+
+            // show_error_message(`[${inspect.limit_type}] 이용자께서는 최대 ${inspect.limit_num}개월 단위로 조회 하실 수 있습니다.${go_to_shop_button}`);
+
+            let message = `[${inspect.limit_type}] 이용자께서는 최대 ${inspect.limit_num}개월 단위로 조회 하실 수 있습니다.
+                            <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까??</p>`;
+            show_user_confirm (message, ()=>{
                 layer_popup.all_close_layer_popup();
                 sideGoPopup("pters_pass_main");
-            };
-            let go_to_shop_button = `<div>${CComponent.button (id, title, style, onclick)}</div>`;
+            });
 
-            show_error_message(`[${inspect.limit_type}] 이용자께서는 최대 ${inspect.limit_num}개월 단위로 조회 하실 수 있습니다.${go_to_shop_button}`);
             return false;
         }
     }
 }
 
 class Statistics_func{
-    static read(list, data, callback, async){
+    static read(list, data, callback, async, error_callback){
         let url;
         switch(list){
             case "sales":
@@ -701,12 +709,15 @@ class Statistics_func{
     
             //통신 실패시 처리
             error:function (){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 console.log('server error');
             }
         });
     }
 
-    static update(data, callback){
+    static update(data, callback, error_callback){
         //프로그램 추가
         $.ajax({
             url:"/trainer/update_statistics_info/",
@@ -742,13 +753,16 @@ class Statistics_func{
     
             //통신 실패시 처리
             error:function (){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 console.log('server error');
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
             }
         });
     }
 
-    static delete(data, callback){
+    static delete(data, callback, error_callback){
         //프로그램 추가
         $.ajax({
             url:"/trainer/delete_statistics_info/",
@@ -784,6 +798,9 @@ class Statistics_func{
     
             //통신 실패시 처리
             error:function (){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 console.log('server error');
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
             }

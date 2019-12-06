@@ -155,7 +155,7 @@ class Setting_theme{
             this.data_sending_now = false;
             show_error_message('테마를 변경하여 재실행 됩니다.');
             location.href = '/';
-        });
+        }, ()=>{this.data_sending_now = false;});
     }
 
     upper_right_menu(){
@@ -164,7 +164,7 @@ class Setting_theme{
 }
 
 class Setting_theme_func{
-    static update(data, callback){
+    static update(data, callback, error_callback){
         $.ajax({
             url:"/trainer/update_setting_theme/",
             type:'POST',
@@ -199,13 +199,16 @@ class Setting_theme_func{
     
             //통신 실패시 처리
             error:function (){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 console.log('server error');
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
             }
         });
     }
 
-    static read(callback){
+    static read(callback, error_callback){
         $.ajax({
             url:"/trainer/get_trainer_setting_data/",
             type:'GET',
@@ -238,6 +241,9 @@ class Setting_theme_func{
     
             //통신 실패시 처리
             error:function (){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 console.log('server error');
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
             }

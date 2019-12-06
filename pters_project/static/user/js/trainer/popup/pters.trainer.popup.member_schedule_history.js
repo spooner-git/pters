@@ -132,6 +132,14 @@ class Member_schedule_history{
                 let memo = data.note;
                 html = CComponent.schedule_history_row (numbering, schedule_id, date, schedule_name, attend_status, memo, ()=>{
                     let user_option = {
+                        daily_record:{text:"일지", callback:()=>{
+                                                                layer_popup.close_layer_popup();
+                                                                Plan_daily_record_func.write_artice(schedule_id, schedule_name, ()=>{
+                                                                    show_error_message(`[${schedule_name}] 일지 변경사항이 저장 되었습니다.`);
+                                                                }, ()=>{
+                                                                    show_error_message(`<span style="color:var(--font-highlight)">일지 변경사항 저장에 실패 하였습니다.</span>`);
+                                                                });
+                        }},
                         absence:{text:"결석", callback:()=>{Plan_func.status({"schedule_id":schedule_id, "state_cd":SCHEDULE_ABSENCE}, ()=>{
                                                                 this.init();
                                                                 try{
