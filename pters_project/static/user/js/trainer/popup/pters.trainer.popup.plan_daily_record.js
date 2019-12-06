@@ -114,14 +114,14 @@ class Plan_daily_record{
         }else{
             let schedule_id_array = this.data.map((el)=>{return el.schedule_id});
             let schedule_name_array = this.data.map((el)=>{return el.schedule_name});
-            html_to_join.unshift(`<li class="plan_daily_record_li">
+            html_to_join.unshift(`<li class="plan_daily_record_li" style="box-shadow:var(--box-shadow-article);border:var(--border-article)">
                                     <div class="plan_daily_record_member_row">
-                                        <div class="plan_daily_record_member_row_name">일괄</div>
+                                        <div class="plan_daily_record_member_row_name">전체</div>
                                         <div class="plan_daily_record_member_row_tools">
-                                            ${CComponent.button(`daily_record_write_all`, CImg.pencil("", {"vertical-align":"middle", "margin-bottom":"3px;"}), button_style, ()=>{this.event_write_all(schedule_id_array, schedule_name_array);})}
+                                            ${CComponent.button(`daily_record_write_all`, "작성", button_style, ()=>{this.event_write_all(schedule_id_array, schedule_name_array);})}
                                         </div>
                                     </div>
-                                </li>`)
+                                </li>`);
         }
 
         return html_to_join.join('');
