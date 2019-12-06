@@ -86,7 +86,7 @@ class Service_inquiry {
                             <span style="display:none;">${title}</span>
                             <!--<div style="display:inline-block; color:var(--font-highlight); font-weight:900;">${this.data_length}</div>-->
                         </div>
-                        <div style="font-size:14px;font-weight:500;color:var(--font-sub-dark);letter-spacing:-0.65px">아래 양식을 작성하면 등록하신 이메일로 답변드립니다.</div>
+                        <div style="font-size:14px;font-weight:500;color:var(--font-sub-dark);letter-spacing:-0.65px">아래 양식을 작성해주세요.</div>
                     </div>
                     `;
         return html;
