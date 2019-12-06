@@ -49,6 +49,11 @@
 	padding: 4px 0;
 }
 
+#home_content_wrap .my_pters_pass_wrapper{
+	padding: 0 0 0 20px;
+	box-sizing: border-box;
+}
+
 #home_content_wrap .program_wrapper{
 	padding: 0 0 0 20px;
 	box-sizing: border-box;

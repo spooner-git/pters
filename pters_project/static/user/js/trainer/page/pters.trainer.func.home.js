@@ -74,6 +74,8 @@ class Home {
         let plan_dom;
         let end_alert_dom;
         let sales_summary_dom;
+        let my_pters_pass_dom;
+
         Setting_menu_access_func.read((data)=>{
             this.setting_data_cache = data;
             let menu_lock_statistics = data.setting_trainer_statistics_lock;
@@ -102,7 +104,9 @@ class Home {
                             let sales_summary = this.dom_row_sales_this_month(data, locked);
                             sales_summary_dom = '<div class="contents">' + sales_summary + '</div>';
 
-                            let html = program_dom + plan_dom + end_alert_dom + sales_summary_dom ;
+                            my_pters_pass_dom = '<div class="contents">' + this.dom_row_my_pters_pass() + '</div>';
+
+                            let html = program_dom + plan_dom + end_alert_dom + sales_summary_dom + my_pters_pass_dom;
                             document.querySelector('#home_content_wrap').innerHTML = html;
                             // $('#root_content').scrollTop(0);
                         });
@@ -164,6 +168,31 @@ class Home {
                         </article>`;
             html_to_join.push(dom);
         }
+
+
+        let html = html_to_join.join("");
+        return html;
+    }
+
+    dom_row_my_pters_pass(){
+        let html_to_join = [];
+
+
+        let id = "home_my_pters_pass";
+        let title = "이용 중인 PTERS 패스";
+        let icon = DELETE;
+        let icon_r_visible = HIDE;
+        let icon_r_text = `${pass_inspector.data.auth_member_create.limit_type} ${CImg.arrow_right(["var(--img-sub1)"], {"vertical-align":"middle"})}`;
+        let style = {"font-size":"15px", "font-weight":"bold"};
+        let onclick = ()=>{
+            sideGoPopup("pters_pass_main");
+        };
+        let my_pters_pass = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
+        let dom = `<article class="my_pters_pass_wrapper">
+                        ${my_pters_pass}
+                    </article>`;
+        html_to_join.push(dom);
+        
 
 
         let html = html_to_join.join("");
