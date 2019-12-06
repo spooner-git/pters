@@ -10,22 +10,19 @@
     <div class="popup_plan_daily_record">
         {% if daily_record_info %}
             <div class="wrapper_plan_daily_record_title">
-                <div class="wrapper_popup_title_text obj_font_size_18_weight_900">{{ daily_record_info.schedule_tb.start_date | date:'Y.m.d (l)'|cut:"요일" }} </div>
+                <div class="wrapper_popup_title_text obj_font_size_18_weight_900">
+                    {{ daily_record_info.schedule_tb.start_dt | date:'Y.m.d (l)'|cut:"요일" }} - {% if daily_record_info.schedule_info.lecture_tb %}(그룹) {{ next_schedule_info.lecture_tb.name }}{% else %}(개인) 개인 수업{% endif %}
+                    / {{ daily_record_info.class_tb.member.name }} 강사 <img src="{{ daily_record_info.class_tb.member.profile_url }}" class="obj_box_photo">
+                </div>
             </div>
             <div class="wrapper_plan_daily_record_content">
                 <div class="obj_box_full">
                     일지 내용
                 </div>
                 <div class="obj_table_raw wrapper_my_ticket_detail_teacher obj_box_full">
-                    <div class="obj_table_cell_x3" style="width:30px;">
-                        <img src="{{ daily_record_info.class_tb.member.profile_url }}" class="obj_box_photo">
-                    </div>
-                    <div class="obj_table_cell_x3 wrapper_teacher_name">
-                        <div class="obj_font_size_12_weight_500">{{ daily_record_info.class_tb.member.name }}</div>
-                        <div class="obj_font_size_11_weight_normal obj_font_color_light_grey">강사</div>
-                    </div>
-                    <div class="obj_table_cell_x3 text_button_phone obj_font_size_13_weight_500">{{ daily_record_info.class_tb.member.phone }}</div>
+                    {% autoescape off %}
                         {{ daily_record_info.contents }}
+                    {% endautoescape %}
                 </div>
             </div>
 

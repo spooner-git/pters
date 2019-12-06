@@ -70,9 +70,11 @@
                                     <span class="obj_font_size_11_weight_500 obj_font_color_coral"> 예약 취소가 불가능한 시간입니다. </span>
                                 </div>
 
-                                <div class="obj_button_gen obj_font_bg_trans_pink obj_font_size_11_weight_500" style="float:right;width:80px;" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_plan_daily_record', 90, POPUP_FROM_BOTTOM, {'schedule_id':'{{ next_schedule_info.schedule_id }}'})">
-                                    일지 확인
-                                </div>
+                                {% if next_schedule_info.daily_record_tb_id %}
+                                    <div class="obj_button_gen obj_font_bg_trans_pink obj_font_size_11_weight_500" style="float:right;width:80px;" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_plan_daily_record', 90, POPUP_FROM_BOTTOM, {'schedule_id':'{{ next_schedule_info.schedule_id }}'})">
+                                        일지 확인
+                                    </div>
+                                {% endif %}
                             {% else %}
                                 <div class="obj_table_cell_x2 obj_font_size_11_weight_normal obj_font_color_light_black">
                                     {% if next_schedule_info.state_cd == 'PE' %}
@@ -91,14 +93,16 @@
 
                                 </div>
 
-                                <div class="obj_button_gen obj_font_bg_trans_pink obj_font_size_11_weight_500" style="float:right;width:80px;" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_plan_daily_record', 90, POPUP_FROM_BOTTOM, {'schedule_id':'{{ next_schedule_info.schedule_id }}'})">
-                                    일지 확인
-                                </div>
                                 {% if next_schedule_info.state_cd != 'PE' and next_schedule_info.state_cd != 'PC' %}
                                     <div class="obj_table_cell_x2 obj_button_gen obj_font_bg_coral_trans"
                                          onclick="show_user_confirm(`정말 취소하시겠습니까?`, ()=>{
                                             func_schedule({'schedule_id':'{{ next_schedule_info.schedule_id }}'}, `${CALL_AJAX}`, `${DELETE}`);
                                             });">취소하기</div>
+                                {% endif %}
+                                {% if next_schedule_info.daily_record_tb_id %}
+                                    <div class="obj_button_gen obj_font_bg_trans_pink obj_font_size_11_weight_500" style="width:80px; margin-right:5px;" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_plan_daily_record', 90, POPUP_FROM_BOTTOM, {'schedule_id':'{{ next_schedule_info.schedule_id }}'})">
+                                        일지 확인
+                                    </div>
                                 {% endif %}
                             {% endif %}
                         </div>

@@ -1738,8 +1738,11 @@ class PopupPlanDailyRecordView(TemplateView):
             error = '일지 정보를 불러오지 못했습니다.'
         try:
             daily_record_info = DailyRecordTb.objects.get(schedule_tb_id=schedule_id)
+            if daily_record_info.class_tb.member.profile_url is None or daily_record_info.class_tb.member.profile_url == '':
+                daily_record_info.class_tb.member.profile_url = '/static/common/icon/icon_account.png'
         except ObjectDoesNotExist:
             error = '일지 정보를 불러오지 못했습니다.'
+
         if error is None:
             context['daily_record_info'] = daily_record_info
         return context
