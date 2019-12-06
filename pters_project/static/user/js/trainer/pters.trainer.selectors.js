@@ -5288,6 +5288,11 @@ class BoardWriter_for_daily_record{
             }
         }
 
+        if(pass_inspector.data.auth_ads.limit_type == "무료"){
+            show_error_message("피터스 패스 이용 고객께서만 이미지를 첨부 하실 수 있습니다.");
+            return false;
+        }
+
         if(this.data.content.match(/<img/g) != null){
             if(this.data.content.match(/img/g).length > 2){
                 show_error_message("이미지는 2장만 첨부 가능합니다.");

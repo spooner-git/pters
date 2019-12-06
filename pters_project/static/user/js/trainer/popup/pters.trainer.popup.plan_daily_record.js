@@ -160,9 +160,14 @@ class Plan_daily_record{
 
 class Plan_daily_record_func{
     static write_article_all(schedule_id_array, schedule_name_array){
-        let upperhtml = `<div style="padding:20px 10px;font-size:13px;color:var(--font-highlight)">
-                            <div style="color:var(--font-main)">일지 작성 대상: ${schedule_name_array.join(", ")}</div>
-                            ※ 일지는 해당 회원님께서 확인하실 수 있습니다.
+        let upperhtml = `<div style="padding:20px 10px;font-size:13px;">
+                            <div style="color:var(--font-main);font-size:15px;">일지 작성 대상: ${schedule_name_array.join(", ")}</div>
+                            <div style="color:var(--font-highlight)">일지는 해당 회원님께서 확인하실 수 있습니다.</div>
+                            <div>이미지는 자동 리사이즈 되어 업로드 되며, 최대 2장까지 첨부 가능합니다.</div>
+                            <div style="font-size:11px;">${pass_inspector.data.auth_ads.limit_type == "무료"
+                                ? "(무료 고객께서는 이미지를 첨부할 수 없습니다.)" 
+                                : "" }
+                            </div>
                         </div>`;
         let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_WRITER, 100, popup_style, null, ()=>{
@@ -209,9 +214,14 @@ class Plan_daily_record_func{
 
 
     static write_artice(schedule_id, schedule_name, callback, error_callback){
-        let upperhtml = `<div style="padding:20px 10px;font-size:13px;color:var(--font-highlight)">
-                        ※ 일지는 해당 회원님께서 확인하실 수 있습니다.
-                    </div>`;
+        let upperhtml = `<div style="padding:20px 10px;font-size:13px;">
+                            <div style="color:var(--font-highlight)">일지는 해당 회원님께서 확인하실 수 있습니다.</div>
+                            <div>이미지는 자동 리사이즈 되어 업로드 되며, 최대 2장까지 첨부 가능합니다.</div>
+                            <div style="font-size:11px;">${pass_inspector.data.auth_ads.limit_type == "무료"
+                                ? "(무료 고객께서는 이미지를 첨부할 수 없습니다.)" 
+                                : "" }
+                            </div>
+                        </div>`;
         let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_WRITER, 100, popup_style, null, ()=>{
             Plan_daily_record_func.read({"schedule_id":schedule_id}, (data)=>{
