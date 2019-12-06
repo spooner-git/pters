@@ -10,19 +10,37 @@
     <div class="popup_plan_daily_record">
         {% if daily_record_info %}
             <div class="wrapper_plan_daily_record_title">
-                <div class="wrapper_popup_title_text obj_font_size_18_weight_900">
-                    {{ daily_record_info.schedule_tb.start_dt | date:'Y.m.d (l)'|cut:"요일" }} - {% if daily_record_info.schedule_info.lecture_tb %}(그룹) {{ next_schedule_info.lecture_tb.name }}{% else %}(개인) 개인 수업{% endif %}
-                    / {{ daily_record_info.class_tb.member.name }} 강사 <img src="{{ daily_record_info.class_tb.member.profile_url }}" class="obj_box_photo">
-                </div>
+                    <div class="wrapper_popup_title_text obj_font_size_18_weight_900">
+                        {{ daily_record_info.schedule_tb.start_dt | date:'Y.m.d (l)'|cut:"요일" }}
+                    </div>
+                    <div class="wrapper_popup_title_date obj_font_size_13_weight_500">
+                        {{ daily_record_info.schedule_tb.start_dt | time:'H:i' }} - {{ daily_record_info.schedule_tb.end_dt | time:'H:i' }}
+                    </div>
             </div>
-            <div class="wrapper_plan_daily_record_content">
+            <div class="wrapper_plan_daily_record_content obj_font_size_14_weight_500">
                 <div class="obj_box_full">
-                    일지 내용
+                    
+                        <div class="obj_table_cell_x2" style="width:auto;">
+                            {% if daily_record_info.schedule_info.lecture_tb %}(그룹) {{ next_schedule_info.lecture_tb.name }}{% else %}(개인) 개인 수업{% endif %}
+                        </div>
                 </div>
-                <div class="obj_table_raw wrapper_my_ticket_detail_teacher obj_box_full">
-                    {% autoescape off %}
-                        {{ daily_record_info.contents }}
-                    {% endautoescape %}
+                <div class="obj_table_raw obj_box_full">
+
+                        <div class="obj_table_cell_x2" style="width:auto;" id="daily_record_content_wrap">
+                            {% autoescape off %}
+                                {{ daily_record_info.contents }}
+                            {% endautoescape %}
+                        </div>
+                </div>
+                <div class="obj_box_full">
+                    <div class="obj_table_raw">
+                        <div class="obj_table_cell_x2" style="width:60px;">
+                            <img src="{{ daily_record_info.class_tb.member.profile_url }}" class="obj_box_photo">
+                        </div>
+                        <div class="obj_table_cell_x2" style="width:auto;">
+                            <div class="obj_font_size_12_weight_500">{{ daily_record_info.class_tb.member.name }}</div>
+                        </div>
+                    </div>
                 </div>
             </div>
 

@@ -7,6 +7,15 @@
 		/*min-height: 100%;*/
 	}	
 
+	.popup_plan_daily_record .obj_box_full{
+		padding: 10px 20px;
+		margin-bottom: 5px;
+		box-sizing: border-box;
+	}
+	#daily_record_content_wrap img, #daily_record_content_wrap iframe{
+		width: 100% !important;
+	}
+
 		.popup_plan_daily_record .wrapper_plan_daily_record_title{
 				padding: 0 20px;
 			}
