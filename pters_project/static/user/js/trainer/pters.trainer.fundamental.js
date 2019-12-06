@@ -694,17 +694,19 @@ class PassInspector{
     }
 
     program(){
-        Program_func.read((data)=>{
-            let current_program_number = data.program_data.length;
-            let limit_number = this.data.auth_program_create.limit_num;
-            let limit_type = this.data.auth_program_create.limit_type;
+        let async = false;
+        let data;
+        Program_func.read((d1)=>{
+            data = d1;
+        }, async);
+        let current_program_number = data.program_data.length;
+        let limit_number = this.data.auth_program_create.limit_num;
+        let limit_type = this.data.auth_program_create.limit_type;
 
-            if(current_program_number >= limit_number){
-                return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
-            }
-            return {barrier:PASSED};
-        });
-        
+        if(current_program_number >= limit_number){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
     }
 
     settings(){
