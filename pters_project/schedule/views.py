@@ -1249,12 +1249,23 @@ def delete_repeat_schedule_logic(request):
                 schedule_data = ScheduleTb.objects.select_related('member_ticket_tb__member').filter(
                     repeat_schedule_tb_id=repeat_schedule_info.repeat_schedule_id, start_dt__gt=timezone.now())
                 if repeat_schedule_info.member_ticket_tb is None or repeat_schedule_info.member_ticket_tb == '':
-                    schedule_data.delete()
+                    for schedule_info in schedule_data:
+                        func_delete_daily_record_content_image_logic(
+                            'https://s3.ap-northeast-2.amazonaws.com/pters-image-master/daily-record/'
+                            + str(request.user.id) + '_' + str(class_id) + '/' + str(schedule_info.schedule_id) + '/')
+                        schedule_info.delete()
                 else:
                     delete_member_ticket_id_data = {}
                     for schedule_info in schedule_data:
                         member_ticket_id = schedule_info.member_ticket_tb_id
                         delete_member_ticket_id_data[member_ticket_id] = member_ticket_id
+
+                        daily_record_info = DailyRecordTb.objects.filter(schedule_tb_id=schedule_info.schedule_id)
+                        daily_record_info.delete()
+                        func_delete_daily_record_content_image_logic(
+                            'https://s3.ap-northeast-2.amazonaws.com/pters-image-master/daily-record/'
+                            + str(request.user.id) + '_' + str(class_id) + '/' + str(schedule_info.schedule_id) + '/')
+
                         schedule_info.delete()
 
                     for delete_member_ticket_id_info in delete_member_ticket_id_data:
@@ -2254,20 +2265,41 @@ def add_daily_record_info_logic(request):
         error = '일지를 작성할 일정을 선택해주세요.'
 
     if error is None:
-        try:
-            daily_record_info = DailyRecordTb.objects.get(schedule_tb_id=schedule_id)
-            daily_record_info.title = title
-            daily_record_info.contents = contents
-            daily_record_info.is_member_view = int(is_member_view)
-            daily_record_info.reg_member_id = request.user.id
-            daily_record_info.img_list = str(img_list)
-            daily_record_info.save()
 
-        except ObjectDoesNotExist:
-            daily_record_info = DailyRecordTb(class_tb_id=class_id, schedule_tb_id=schedule_id,
-                                              reg_member_id=request.user.id, title=title, contents=contents,
-                                              img_list=str(img_list), is_member_view=int(is_member_view), use=USE)
-            daily_record_info.save()
+        try:
+            with transaction.atomic():
+                try:
+                    daily_record_info = DailyRecordTb.objects.get(schedule_tb_id=schedule_id)
+                    daily_record_info.title = title
+                    daily_record_info.contents = contents
+                    daily_record_info.is_member_view = int(is_member_view)
+                    daily_record_info.reg_member_id = request.user.id
+                    daily_record_info.img_list = str(img_list)
+                    daily_record_info.save()
+                except ObjectDoesNotExist:
+                    daily_record_info = DailyRecordTb(class_tb_id=class_id, schedule_tb_id=schedule_id,
+                                                      reg_member_id=request.user.id, title=title, contents=contents,
+                                                      img_list=str(img_list), is_member_view=int(is_member_view),
+                                                      use=USE)
+                    daily_record_info.save()
+                    try:
+                        schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id)
+                        schedule_info.daily_record_tb_id = daily_record_info.daily_record_id
+                        schedule_info.save()
+                    except ObjectDoesNotExist:
+                        error = '일지 저장중 오류가 발생했습니다.[1]'
+
+                if error is not None:
+                    raise InternalError()
+
+        except TypeError:
+            error = error
+        except ValueError:
+            error = error
+        except IntegrityError:
+            error = error
+        except InternalError:
+            error = error
 
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
@@ -2317,17 +2349,38 @@ def delete_daily_record_info_logic(request):
 
     if schedule_id is None or schedule_id == '':
         error = '일지 정보를 불러오지 못했습니다.'
-
     if error is None:
         try:
-            daily_record_info = DailyRecordTb.objects.get(schedule_tb_id=schedule_id)
-            daily_record_info.delete()
-            func_delete_daily_record_content_image_logic(
-                'https://s3.ap-northeast-2.amazonaws.com/pters-image-master/daily-record/'
-                + str(request.user.id) + '_' + str(class_id) + '/' + str(schedule_id)+'/')
+            with transaction.atomic():
+                try:
+                    daily_record_info = DailyRecordTb.objects.get(schedule_tb_id=schedule_id)
+                    daily_record_info.delete()
+                    func_delete_daily_record_content_image_logic(
+                        'https://s3.ap-northeast-2.amazonaws.com/pters-image-master/daily-record/'
+                        + str(request.user.id) + '_' + str(class_id) + '/' + str(schedule_id)+'/')
 
-        except ObjectDoesNotExist:
-            error = '일지 정보를 불러오지 못했습니다.'
+                except ObjectDoesNotExist:
+                    error = '일지 삭제중 오류가 발생했습니다.[0]'
+
+                if error is None:
+                    try:
+                        schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id)
+                        schedule_info.daily_record_tb = None
+                        schedule_info.save()
+                    except ObjectDoesNotExist:
+                        error = '일지 삭제중 오류가 발생했습니다.[1]'
+
+                if error is not None:
+                    raise InternalError()
+
+        except TypeError:
+            error = error
+        except ValueError:
+            error = error
+        except IntegrityError:
+            error = error
+        except InternalError:
+            error = error
 
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)

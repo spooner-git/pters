@@ -60,9 +60,10 @@
                                     예약 취소가 불가능한 수업입니다.
                                 {% endif %}
                             </span>
-                            <div class="obj_button_gen obj_font_bg_trans_pink obj_font_size_11_weight_500" style="float:right;width:80px;" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_plan_daily_record', 90, POPUP_FROM_BOTTOM, {'select_date':'{{ date_format| date:'Y-m-d' }}'})">
-                                일지 확인
-                            </div>
+                        </div>
+
+                        <div class="obj_button_gen obj_font_bg_trans_pink obj_font_size_11_weight_500" style="float:right;width:80px;" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_plan_daily_record', 90, POPUP_FROM_BOTTOM, {'schedule_id':'{{ schedule_info.schedule_id }}'})">
+                            일지 확인
                         </div>
                     {% else %}
                         <div class="obj_table_cell_x2 obj_font_size_11_weight_normal obj_font_color_light_black">
@@ -79,6 +80,10 @@
                                 <span class="obj_font_size_11_weight_500 obj_font_color_coral"> {{ schedule_info.start_dt | date:'Y-m-d H:i' | timeuntil_formatting:request.session.setting_member_reserve_cancel_time }} </span>
                             남았습니다.
                         {% endif %}
+                        </div>
+
+                        <div class="obj_button_gen obj_font_bg_trans_pink obj_font_size_11_weight_500" style="float:right;width:80px;" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_plan_daily_record', 90, POPUP_FROM_BOTTOM, {'schedule_id':'{{ schedule_info.schedule_id }}'})">
+                            일지 확인
                         </div>
                         {% if schedule_info.state_cd != 'PE' and schedule_info.state_cd != 'PC' %}
                             <div class="obj_table_cell_x2 obj_button_gen obj_font_bg_coral_trans"

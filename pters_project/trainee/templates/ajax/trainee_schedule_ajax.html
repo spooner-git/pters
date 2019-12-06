@@ -15,6 +15,9 @@
       [{% for schedule_info in schedule_data %}"{{ schedule_info.member_ticket_tb.member.name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "scheduleNoteArray":
       [{% for schedule_info in schedule_data %}"{{ schedule_info.note | linebreaks }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "daily_record_id":
+      [{% for schedule_info in schedule_data %}"{{ schedule_info.daily_record_tb_id | linebreaks }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
       "scheduleIdxArray":
       [{% for schedule_info in schedule_data %}"{{ schedule_info.idx }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "schedule_lecture_name":

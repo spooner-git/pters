@@ -165,7 +165,8 @@ class GetLectureMemberScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, 
                                  'start_dt': str(lecture_schedule_info.start_dt),
                                  'end_dt': str(lecture_schedule_info.end_dt),
                                  'state_cd': lecture_schedule_info.state_cd,
-                                 'note': lecture_schedule_info.note
+                                 'note': lecture_schedule_info.note,
+                                 'daily_record_id': lecture_schedule_info.daily_record_tb_id
                                  }
 
                 lecture_schedule_list.append(schedule_info)
