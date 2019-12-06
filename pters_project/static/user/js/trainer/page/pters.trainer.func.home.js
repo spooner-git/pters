@@ -183,7 +183,7 @@ class Home {
         let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text = `${pass_inspector.data.auth_member_create.limit_type} ${CImg.arrow_right(["var(--img-sub1)"], {"vertical-align":"middle"})}`;
-        let style = {"font-size":"15px", "font-weight":"bold"};
+        let style = {"font-size":"13px", "font-weight":"bold"};
         let onclick = ()=>{
             sideGoPopup("pters_pass_main");
         };
