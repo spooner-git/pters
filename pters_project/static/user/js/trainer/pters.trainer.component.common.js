@@ -532,11 +532,12 @@ class CComponent{
     }
 
     //회원의 일정 이력에 사용되는 행
-    static schedule_history_row (numbering, schedule_id, date, schedule_name, attend_status, memo, callback){
+    static schedule_history_row (numbering, schedule_id, date, schedule_name, attend_status, memo, daily_record_id, callback){
+        let tag_daily_record = daily_record_id == null ? "" : "<div style='display:inline-block;font-size:10px;padding:0 2px;border:1px solid var(--font-main);border-radius:5px;margin-left:3px;'>일지</div>";
         let html = `<li class="schedule_history_row" id="schedule_history_row_${schedule_id}">`;
         let raw_1 = `<div class="obj_table_raw">
                             <div class="cell_schedule_num">${numbering}</div>
-                            <div class="cell_schedule_info">${schedule_name}</div>
+                            <div class="cell_schedule_info">${schedule_name} ${tag_daily_record}</div>
                             <div class="cell_schedule_attend" style="color:${SCHEDULE_STATUS_COLOR[attend_status]}">${SCHEDULE_STATUS[attend_status]}</div>
                         </div>`;
         let raw_2 = `<div class="obj_table_raw table_date_info">

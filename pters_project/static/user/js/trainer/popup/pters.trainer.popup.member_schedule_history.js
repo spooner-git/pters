@@ -130,12 +130,14 @@ class Member_schedule_history{
                 let schedule_name = data.lecture_name;
                 let attend_status = data.state_cd;
                 let memo = data.note;
-                html = CComponent.schedule_history_row (numbering, schedule_id, date, schedule_name, attend_status, memo, ()=>{
+                let daily_record_id = data.daily_record_id;
+                html = CComponent.schedule_history_row (numbering, schedule_id, date, schedule_name, attend_status, memo, daily_record_id, ()=>{
                     let user_option = {
                         daily_record:{text:"일지", callback:()=>{
                                                                 layer_popup.close_layer_popup();
                                                                 Plan_daily_record_func.write_artice(schedule_id, schedule_name, ()=>{
-                                                                    show_error_message(`[${schedule_name}] 일지 변경사항이 저장 되었습니다.`);
+                                                                    this.init();
+                                                                    // show_error_message(`[${schedule_name}] 일지 변경사항이 저장 되었습니다.`);
                                                                 }, ()=>{
                                                                     show_error_message(`<span style="color:var(--font-highlight)">일지 변경사항 저장에 실패 하였습니다.</span>`);
                                                                 });
@@ -242,8 +244,18 @@ class Member_schedule_history{
             let schedule_name = data.lecture_name;
             let attend_status = data.state_cd;
             let memo = data.note;
+            let daily_record_id = data.daily_record_id;
             let onclick = ()=>{
                 let user_option = {
+                    daily_record:{text:"일지", callback:()=>{
+                                            layer_popup.close_layer_popup();
+                                            Plan_daily_record_func.write_artice(schedule_id, schedule_name, ()=>{
+                                                this.init();
+                                                // show_error_message(`[${schedule_name}] 일지 변경사항이 저장 되었습니다.`);
+                                            }, ()=>{
+                                                show_error_message(`<span style="color:var(--font-highlight)">일지 변경사항 저장에 실패 하였습니다.</span>`);
+                                            });
+                    }},
                     absence:{text:"결석", callback:()=>{Plan_func.status({"schedule_id":schedule_id, "state_cd":SCHEDULE_ABSENCE}, ()=>{
                                                             this.init();
                                                             try{
@@ -293,7 +305,7 @@ class Member_schedule_history{
                     option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
                 });
             };
-            let row = CComponent.schedule_history_row (numbering, schedule_id, date, schedule_name, attend_status, memo, onclick);
+            let row = CComponent.schedule_history_row (numbering, schedule_id, date, schedule_name, attend_status, memo, daily_record_id, onclick);
             html_to_join.push(row);
         }
         if(html_to_join.length == 0){

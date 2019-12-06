@@ -17,6 +17,7 @@ class Plan_daily_record{
     }
 
     set_initial_data(data_){
+        console.log("data_", data_)
         this.data = [];
         let data = data_.schedule_info[0];
         let schedule_type = data.schedule_type;
@@ -26,14 +27,14 @@ class Plan_daily_record{
 
         if(schedule_type == 1){
             this.data.push(
-                {schedule_id: data.schedule_id, schedule_name: data.member_name, state_cd: data.state_cd}
+                {schedule_id: data.schedule_id, schedule_name: data.member_name, state_cd: data.state_cd, daily_record_id: data.daily_record_id}
             );
         }else if(schedule_type == 2){
             let length = data.lecture_schedule_data.length;
             let data_ = data.lecture_schedule_data;
             for(let i=0; i<length; i++){
                 this.data.push(
-                    {schedule_id: data_[i].schedule_id, schedule_name: data_[i].member_name, state_cd: data_[i].state_cd}
+                    {schedule_id: data_[i].schedule_id, schedule_name: data_[i].member_name, state_cd: data_[i].state_cd, daily_record_id:data_[i].daily_record_id}
                 );
             }
         }
@@ -71,12 +72,17 @@ class Plan_daily_record{
             let schedule_name = this.data[i].schedule_name;
             let schedule_id = this.data[i].schedule_id;
             let state_cd = this.data[i].state_cd;
+            let daily_record_id = this.data[i].daily_record_id;
             let attend_icon = "";
             if(state_cd == SCHEDULE_FINISH){
                 attend_icon = CImg.confirm(["green"], {"vertical-align":"middle", "margin-bottom":"3px"});
             }else if(state_cd == SCHEDULE_ABSENCE){
                 attend_icon = CImg.x(["#ff0022"], {"vertical-align":"middle", "margin-bottom":"3px"});
             }
+
+            let button_write = CComponent.button(`daily_record_write_${schedule_id}`, "작성", button_style, ()=>{this.event_write(schedule_id, schedule_name);})
+            let button_edit = CComponent.button(`daily_record_edit_${schedule_id}`, "편집", button_style, ()=>{this.event_write(schedule_id, schedule_name);})
+            let button_delete = CComponent.button(`daily_record_delete_${schedule_id}`, "삭제", button_style, ()=>{this.event_delete(schedule_id, schedule_name);})
 
             // let html = `<li class="plan_daily_record_li">
             //                 <div class="plan_daily_record_member_row">
@@ -92,7 +98,9 @@ class Plan_daily_record{
                             <div class="plan_daily_record_member_row">
                                 <div class="plan_daily_record_member_row_name">${schedule_name} ${attend_icon}</div>
                                 <div class="plan_daily_record_member_row_tools">
-                                    ${CComponent.button(`daily_record_write_${schedule_id}`, CImg.pencil("", {"vertical-align":"middle", "margin-bottom":"3px;"}), button_style, ()=>{this.event_write(schedule_id, schedule_name);})}
+                                    ${daily_record_id == null ? button_write : ""}
+                                    ${daily_record_id != null ? button_edit : ""}
+                                    ${daily_record_id != null ? button_delete : ""}
                                 </div>
                             </div>
                         </li>`;   
@@ -108,7 +116,7 @@ class Plan_daily_record{
             let schedule_name_array = this.data.map((el)=>{return el.schedule_name});
             html_to_join.unshift(`<li class="plan_daily_record_li">
                                     <div class="plan_daily_record_member_row">
-                                        <div class="plan_daily_record_member_row_name">일괄 작성</div>
+                                        <div class="plan_daily_record_member_row_name">일괄</div>
                                         <div class="plan_daily_record_member_row_tools">
                                             ${CComponent.button(`daily_record_write_all`, CImg.pencil("", {"vertical-align":"middle", "margin-bottom":"3px;"}), button_style, ()=>{this.event_write_all(schedule_id_array, schedule_name_array);})}
                                         </div>
@@ -120,7 +128,9 @@ class Plan_daily_record{
     }
 
     event_write_all(schedule_id_array, schedule_name_array){
-        Plan_daily_record_func.write_article_all(schedule_id_array, schedule_name_array)
+        Plan_daily_record_func.write_article_all(schedule_id_array, schedule_name_array, ()=>{
+            this.init();
+        })
     }
 
     event_write(schedule_id, schedule_name){
@@ -134,7 +144,9 @@ class Plan_daily_record{
     }
 
     event_delete(schedule_id, schedule_name, callback){
-        Plan_daily_record_func.delete_article(schedule_id, schedule_name);
+        Plan_daily_record_func.delete_article(schedule_id, schedule_name, ()=>{
+            this.init();
+        });
     }
 
     upper_html_caution(){
@@ -159,7 +171,7 @@ class Plan_daily_record{
 
 
 class Plan_daily_record_func{
-    static write_article_all(schedule_id_array, schedule_name_array){
+    static write_article_all(schedule_id_array, schedule_name_array, callback, error_callback){
         let upperhtml = `<div style="padding:20px 10px;font-size:13px;">
                             <div style="color:var(--font-main);font-size:15px;">일지 작성 대상: ${schedule_name_array.join(", ")}</div>
                             <div style="color:var(--font-highlight)">일지는 해당 회원님께서 확인하실 수 있습니다.</div>
@@ -204,6 +216,13 @@ class Plan_daily_record_func{
                             Plan_daily_record_func.create(data, ()=>{
                                 if(i == schedule_id_array - 1){
                                     show_error_message("일괄 일지 등록이 정상적으로 완료 되었습니다.")
+                                    if(callback != undefined){
+                                        callback();
+                                    }
+                                }
+                            }, ()=>{
+                                if(error_callback != undefined){
+                                    error_callback();
                                 }
                             });
                         });
