@@ -4,8 +4,9 @@
 		line-height: 30px;
 	}
 	.trainee_main .obj_font_size_15_weight_bold{
-		height: 28px;
+		/* height: 28px; */
 		line-height: 28px;
+		height: auto;
 	}
 	.trainee_main .obj_font_size_13_weight_500{
 		height: 30px;
@@ -46,8 +47,9 @@
 		line-height: 25px;
 	}
 	.trainee_main .wrapper_program_select{
-		width : 20%;
+		/* width : 20%; */
 		text-align : right;
+		float: right;
 	}
 	.trainee_main .wrapper_program_select select{
 		-webkit-appearance: none;

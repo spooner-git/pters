@@ -60,6 +60,7 @@
 		}
 	.popup_ticket_info .wrapper_my_ticket_detail_date_title{
 		display: inline-block;
+		vertical-align: top;
 		width: 70px;
 		height: auto;
 	}
