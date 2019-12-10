@@ -8,6 +8,7 @@ class Home {
         this.current_year = d.getFullYear();
         this.current_month = d.getMonth()+1;
         this.current_date = d.getDate();
+        this.current_day = d.getDay();
         this.today = DateRobot.to_yyyymmdd(this.current_year, this.current_month, this.current_date);
 
         this.data = {
@@ -70,6 +71,7 @@ class Home {
     render_content (){
         // let today_plan;
 
+        let current_date;
         let program_dom;
         let plan_dom;
         let end_alert_dom;
@@ -105,8 +107,9 @@ class Home {
                             sales_summary_dom = '<div class="contents">' + sales_summary + '</div>';
 
                             my_pters_pass_dom = '<div class="contents">' + this.dom_row_my_pters_pass() + '</div>';
+                            current_date = '<div class="contents">' + this.dom_row_current_date() + '</div>';
 
-                            let html = program_dom + plan_dom + end_alert_dom + sales_summary_dom + my_pters_pass_dom;
+                            let html = current_date + program_dom + plan_dom + end_alert_dom + sales_summary_dom + my_pters_pass_dom;
                             document.querySelector('#home_content_wrap').innerHTML = html;
                             // $('#root_content').scrollTop(0);
                         });
@@ -119,12 +122,16 @@ class Home {
     render_content_offline (){
         // let today_plan;
 
+        let current_date_dom;
         let program_dom;
         let plan_dom;
         let end_alert_dom;
         let sales_summary_dom;
 
         let data = this.received_data;
+
+        let current_date = this.dom_row_current_date();
+        current_date_dom = '<div class="contents">' + current_date + '</div>';
 
         let program = this.dom_row_program(data.program);
         program_dom = '<div class="contents">' + program + '</div>';
@@ -141,8 +148,26 @@ class Home {
         let my_pters_pass_dom;
         my_pters_pass_dom = '<div class="contents">' + this.dom_row_my_pters_pass() + '</div>';
                         
-        let html = program_dom + plan_dom + end_alert_dom + sales_summary_dom + my_pters_pass_dom;
+        let html = current_date_dom + program_dom + plan_dom + end_alert_dom + sales_summary_dom + my_pters_pass_dom;
         document.querySelector('#home_content_wrap').innerHTML = html;
+    }
+
+    dom_row_current_date(){
+
+        let id = "home_current_date";
+        let title = `${this.current_year}년 ${this.current_month}월 ${this.current_date}일 (${DAYNAME_KR[this.current_day]})`;
+        let icon = DELETE;
+        let icon_r_visible = HIDE;
+        let icon_r_text = ``;
+        let style = {"font-size":"15px", "font-weight":"bold"};
+        let onclick = ()=>{
+            sideGoPage("calendar");
+        };
+        let my_pters_pass = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
+        let dom = `<article class="my_pters_pass_wrapper">
+                        ${my_pters_pass}
+                    </article>`;
+        return dom;
     }
 
     dom_row_program(data){
