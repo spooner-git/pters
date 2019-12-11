@@ -71,7 +71,8 @@ class Menu {
                         this.dom_menu_ticket() + 
                         this.dom_menu_statistics() + 
                         this.dom_menu_attendmode() + 
-                       CComponent.dom_tag('설정', dom_tag_style) + 
+                       CComponent.dom_tag('설정', dom_tag_style) +
+                        this.dom_menu_setting_supervisor() +  
                         this.dom_menu_setting_calendar() + 
                         this.dom_menu_setting_worktime() + 
                         this.dom_menu_setting_autocomplete() +
@@ -304,6 +305,19 @@ class Menu {
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             sideGoPopup("setting_menu_access");
+        });
+        return html;
+    }
+
+    dom_menu_setting_supervisor(){
+        let id = 'menu_setting_supervisor';
+        let title = '관리자 (공유??) - 본섭에 업로드 X';
+        let icon = CImg.supervisor();
+        let icon_r_visible = NONE;
+        let icon_r_text = "";
+        let style = {"color":"red", "font-size":"17px", "padding":"13px 0"};
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            sideGoPopup("setting_supervisor");
         });
         return html;
     }

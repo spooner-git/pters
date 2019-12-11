@@ -191,6 +191,9 @@ const POPUP_ADDRESS_SETTING_ALARM = 'popup_setting_alarm';
 const POPUP_ADDRESS_SETTING_ATTENDMODE = 'popup_setting_attendmode';
 const POPUP_ADDRESS_SETTING_THEME = 'popup_setting_theme';
 const POPUP_ADDRESS_SETTING_MENU_ACCESS = 'popup_setting_menu_access';
+const POPUP_ADDRESS_SETTING_SUPERVISOR = 'popup_setting_supervisor';
+const POPUP_ADDRESS_SETTING_SUPERVISOR_MEMBER_SEARCH = 'popup_setting_supervisor_member_search';
+const POPUP_ADDRESS_SETTING_SUPERVISOR_MEMBER_AUTH = 'popup_setting_supervisor_member_auth';
 
 const POPUP_ADDRESS_SERVICE_NOTICE = 'popup_service_notice';
 const POPUP_ADDRESS_SERVICE_INQUIRY_MENU = 'popup_service_inquiry_menu';
