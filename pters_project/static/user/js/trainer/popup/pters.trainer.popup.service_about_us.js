@@ -102,7 +102,6 @@ class Service_about_us {
                         <div>
                             <div><span class="about_us_tag">대표 자문</span><span class="about_us_name">박상혁 골프 프로님</span></div>
                             <div><span class="about_us_tag">자문</span><span class="about_us_name">목동 서울 플루트 김민아 원장님</span></div>
-                            <div><span class="about_us_tag">자문</span><span class="about_us_name">Bns발레 강현화 대표님</span></div>
                         </div>
                     `;
 
