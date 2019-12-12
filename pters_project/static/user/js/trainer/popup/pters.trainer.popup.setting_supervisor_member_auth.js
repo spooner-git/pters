@@ -7,7 +7,7 @@ class Setting_supervisor_member_auth{
 
         this.data = {
                 schedule:{
-                    create:ON,
+                    create:OFF,
                     read:OFF,
                     update:OFF,
                     delete:OFF
@@ -15,7 +15,7 @@ class Setting_supervisor_member_auth{
                 member:{
                     create:OFF,
                     read:OFF,
-                    update:ON,
+                    update:OFF,
                     delete:OFF
                 },
                 lecture:{
@@ -99,12 +99,14 @@ class Setting_supervisor_member_auth{
     dom_sub_assembly_schedule(){
         let schedule = this.dom_row_share_menu_title("일정", "schedule");
         let schedule_auth_create = this.dom_row_share_menu_auth_toggle("일정", "등록", "schedule", "create");
-        let schedule_auth_read = this.dom_row_share_menu_auth_toggle("일정", "보기", "schedule", "read");
+        // let schedule_auth_read = this.dom_row_share_menu_auth_toggle("일정", "보기", "schedule", "read");
         let schedule_auth_update = this.dom_row_share_menu_auth_toggle("일정", "수정", "schedule", "update");
         let schedule_auth_delete = this.dom_row_share_menu_auth_toggle("일정", "삭제", "schedule", "delete");
+        
+        let child_assemble = this.data.schedule.read == ON ? schedule_auth_create + schedule_auth_update + schedule_auth_delete : "";
 
         let html = `<article class="obj_input_box_full">` +
-                        schedule + schedule_auth_create + schedule_auth_read + schedule_auth_update + schedule_auth_delete +
+                        schedule + child_assemble + 
                     `</article>`;
         return html;
     }
@@ -112,12 +114,14 @@ class Setting_supervisor_member_auth{
     dom_sub_assembly_member(){
         let member = this.dom_row_share_menu_title("회원", "member");
         let member_auth_create = this.dom_row_share_menu_auth_toggle("회원", "등록", "member", "create");
-        let member_auth_read = this.dom_row_share_menu_auth_toggle("회원", "보기", "member", "read");
+        // let member_auth_read = this.dom_row_share_menu_auth_toggle("회원", "보기", "member", "read");
         let member_auth_update = this.dom_row_share_menu_auth_toggle("회원", "수정", "member", "update");
         let member_auth_delete = this.dom_row_share_menu_auth_toggle("회원", "삭제", "member", "delete");
 
+        let child_assemble = this.data.member.read == ON ? member_auth_create +  member_auth_update + member_auth_delete : "";
+
         let html = `<article class="obj_input_box_full">` +
-                        member + member_auth_create + member_auth_read + member_auth_update + member_auth_delete +
+                        member + child_assemble +
                     `</article>`;
         return html;
     }
@@ -125,12 +129,14 @@ class Setting_supervisor_member_auth{
     dom_sub_assembly_lecture(){
         let lecture = this.dom_row_share_menu_title("수업", "lecture");
         let lecture_auth_create = this.dom_row_share_menu_auth_toggle("수업", "등록", "lecture", "create");
-        let lecture_auth_read = this.dom_row_share_menu_auth_toggle("수업", "보기", "lecture", "read");
+        // let lecture_auth_read = this.dom_row_share_menu_auth_toggle("수업", "보기", "lecture", "read");
         let lecture_auth_update = this.dom_row_share_menu_auth_toggle("수업", "수정", "lecture", "update");
         let lecture_auth_delete = this.dom_row_share_menu_auth_toggle("수업", "삭제", "lecture", "delete");
 
+        let child_assemble = this.data.lecture.read == ON ? lecture_auth_create + lecture_auth_update + lecture_auth_delete : "";
+
         let html = `<article class="obj_input_box_full">` +
-                        lecture + lecture_auth_create + lecture_auth_read + lecture_auth_update + lecture_auth_delete +
+                        lecture + child_assemble +
                     `</article>`;
         return html;
     }
@@ -138,25 +144,26 @@ class Setting_supervisor_member_auth{
     dom_sub_assembly_ticket(){
         let ticket = this.dom_row_share_menu_title("수강권", "ticket");
         let ticket_auth_create = this.dom_row_share_menu_auth_toggle("수강권", "등록", "ticket", "create");
-        let ticket_auth_read = this.dom_row_share_menu_auth_toggle("수강권", "보기", "ticket", "read");
+        // let ticket_auth_read = this.dom_row_share_menu_auth_toggle("수강권", "보기", "ticket", "read");
         let ticket_auth_update = this.dom_row_share_menu_auth_toggle("수강권", "수정", "ticket", "update");
         let ticket_auth_delete = this.dom_row_share_menu_auth_toggle("수강권", "삭제", "ticket", "delete");
 
+        let child_assemble = this.data.ticket.read == ON ? ticket_auth_create +  ticket_auth_update + ticket_auth_delete : "";
+
         let html = `<article class="obj_input_box_full">` +
-                        ticket + ticket_auth_create + ticket_auth_read + ticket_auth_update + ticket_auth_delete +
+                        ticket + child_assemble +
                     `</article>`;
         return html;
     }
 
     dom_sub_assembly_statistics(){
         let statistics = this.dom_row_share_menu_title("통계", "statistics");
-        // let statistics_auth_create = this.dom_row_share_menu_auth_toggle("통계", "등록", "statistics", "create");
         let statistics_auth_read = this.dom_row_share_menu_auth_toggle("통계", "보기", "statistics", "read");
-        // let statistics_auth_update = this.dom_row_share_menu_auth_toggle("통계", "수정", "statistics", "update");
-        // let statistics_auth_delete = this.dom_row_share_menu_auth_toggle("통계", "삭제", "statistics", "delete");
+
+        let child_assemble = this.data.statistics.read == ON ? statistics_auth_read : "";
 
         let html = `<article class="obj_input_box_full">` +
-                        statistics + statistics_auth_read +
+                        statistics + child_assemble +
                     `</article>`;
         return html;
     }
@@ -179,10 +186,20 @@ class Setting_supervisor_member_auth{
         return html;
     }
 
-    dom_row_share_menu_title(name, en_name){
-        let id = `share_menu_name_${en_name}`;
-        let title_description = `<p style="font-size:12px;font-weight:500;margin:0;color:var(--font-sub-normal)">${name} 메뉴에 관련된 권한 설정입니다.</p>`;
-        let title = `${name} ${title_description}`;
+    dom_row_share_menu_title(menu, menu_en){
+        let id_toggle = `menu_auth_parent_${menu_en}`;
+        let power = this.data[menu_en]["read"];
+        let style_toggle = {"float":"right"};
+        let menu_lock_goggle = CComponent.toggle_button (id_toggle, power, style_toggle, (data)=>{
+                                this.data[menu_en]["read"] = data; // ON or OFF
+                                this.render_content();
+                            });
+
+
+        let id = `share_menu_name_${menu_en}`;
+        let title_description = `<p style="font-size:12px;font-weight:500;margin:0;color:var(--font-sub-normal)">${menu} 메뉴에 관련된 권한 설정입니다.</p>`;
+        // let title = `<div style="padding-right:5px;">${menu} ${menu_lock_goggle}</div> ${title_description}`;
+        let title = `<div style="padding-right:5px;">${menu} ${menu_lock_goggle}</div>`;
         let icon = DELETE;
         let icon_r_visible = NONE;
         let icon_r_text = "";
@@ -197,7 +214,7 @@ class Setting_supervisor_member_auth{
     dom_row_share_menu_auth_toggle(menu, auth, menu_en, auth_en){
         let id = `menu_auth_${menu_en}_${auth_en}`;
         let power = this.data[menu_en][auth_en];
-        let style = null;
+        let style = {"transform":"scale(0.8)"};
         let menu_lock_goggle = CComponent.toggle_button (id, power, style, (data)=>{
                                 this.data[menu_en][auth_en] = data; // ON or OFF
                                 this.render_content();

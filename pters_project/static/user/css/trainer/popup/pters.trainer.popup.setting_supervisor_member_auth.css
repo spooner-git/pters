@@ -29,5 +29,6 @@
 
 .popup_setting_supervisor_member_auth .setting_menu_auth_toggle_wrapper{
 	padding: 10px 20px;
+	padding-right: 0;
 	border: 0;
 }
