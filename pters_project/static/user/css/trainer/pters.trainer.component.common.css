@@ -407,19 +407,21 @@ input:disabled{
 
 .schedule_history_row{
 	list-style: none;
-	/*height: 70px;*/
-	/*line-height: auto;*/
 	line-height: inherit;
 	cursor: pointer;
 	font-size: 12px;
   	font-weight: 500;
   	letter-spacing: -0.6px;
 	color: var(--font-base);
-	padding-top:6px;
+	/* padding-top:6px;
 	padding-bottom:6px;
-	padding-left:14px;
-	/* border-bottom: 1px solid #cccccc; */
-	/*padding: 10px 4px;*/
+	padding-left:14px; */
+
+	box-shadow: var(--box-shadow-article);
+	margin-bottom: 4px;
+	border-top:var(--border-article);
+	border-bottom:var(--border-article);
+	padding: 6px 14px;
 }
 
 .schedule_history_row .cell_schedule_num{
