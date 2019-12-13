@@ -45,6 +45,7 @@ from registration.forms import RegistrationForm
 from configs.const import USE, UN_USE, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, ACTIVATE, ON_SCHEDULE_TYPE, STATE_CD_FINISH, \
     STATE_CD_ABSENCE
 from configs import settings
+from configs.functions import func_delete_profile_image_logic
 from payment.functions import func_cancel_period_billing_schedule
 from payment.models import PaymentInfoTb, BillingInfoTb, BillingCancelInfoTb
 from schedule.models import ScheduleTb, RepeatScheduleTb
@@ -739,9 +740,9 @@ class AddTempMemberInfoView(RegistrationView, View):
         form = MyRegistrationForm(request.POST, request.FILES)
         member_id = request.POST.get('member_id', '')
         error = None
-        user = None
+        member_info = None
         try:
-            user = User.objects.get(id=member_id)
+            member_info = MemberTb.objects.get(member_id=member_id)
         except ObjectDoesNotExist:
             error = '가입되지 않은 회원입니다.'
 
@@ -749,10 +750,15 @@ class AddTempMemberInfoView(RegistrationView, View):
             if form.is_valid():
                 try:
                     with transaction.atomic():
-                        user.username = form.cleaned_data['username']
-                        user.set_password(form.cleaned_data['password1'])
-                        user.is_active = True
-                        user.save()
+                        member_info.user.username = form.cleaned_data['username']
+                        member_info.user.set_password(form.cleaned_data['password1'])
+                        member_info.user.is_active = True
+                        member_info.user.save()
+
+                        if member_info.profile_url is not None and member_info.profile_url != '':
+                            func_delete_profile_image_logic(member_info.profile_url)
+                        member_info.profile_url = ''
+                        member_info.save()
 
                 except ValueError:
                     error = '오류가 발생했습니다.[1]'
