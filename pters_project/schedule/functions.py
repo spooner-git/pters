@@ -1049,8 +1049,8 @@ def func_get_member_schedule_all_by_monthly(class_id, member_id):
             end_dt_time = '24:00'
 
         end_dt = str(member_schedule_info.start_dt).split(' ')[0] + ' ' + end_dt_time
-
-        month_num = str(member_schedule_info.start_dt).split('-')[1]
+        member_schedule_start_dt_split = str(member_schedule_info.start_dt).split('-')
+        month_num = member_schedule_start_dt_split[0] + '-' + member_schedule_start_dt_split[1]
 
         # 일정 정보를 추가하고 수강권에 할당
         schedule_info = {'schedule_id': str(member_schedule_info.schedule_id),

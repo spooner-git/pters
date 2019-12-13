@@ -368,7 +368,8 @@ class Member_schedule_history{
             let expand_button;
             let expand_status;
             let expand_style;
-            let month_num = member_monthly_list[i].month_num +' 월 ';
+            let month_num_split = member_monthly_list[i].month_num.split('-');
+            let month_num = month_num_split[0]+'년 ' + month_num_split[1] + '월 ';
 
             for(let j=length-1; j>=0; j--){
                 let data = member_monthly_list[i].schedule_data[j];
