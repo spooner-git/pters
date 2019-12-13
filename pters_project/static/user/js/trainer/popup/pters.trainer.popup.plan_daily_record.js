@@ -41,6 +41,7 @@ class Plan_daily_record{
 
     request_list (callback){
         Plan_func.read_plan(this.schedule_id, (data)=>{
+            console.log("data", data)
             this.set_initial_data(data); // 초기값을 미리 셋팅한다.
             callback(data);
         });
@@ -219,7 +220,7 @@ class Plan_daily_record_func{
                             let data = {"schedule_id":schedule_id_array[i], "img_list":JSON.stringify(images_uploaded), "title":"",
                                     "contents":data_written.content, "is_member_view":data_written.is_member_view};
                             Plan_daily_record_func.create(data, ()=>{
-                                if(i == schedule_id_array - 1){
+                                if(i == schedule_id_array.length - 1){
                                     show_error_message("일괄 일지 등록이 정상적으로 완료 되었습니다.")
                                     if(callback != undefined){
                                         callback();
