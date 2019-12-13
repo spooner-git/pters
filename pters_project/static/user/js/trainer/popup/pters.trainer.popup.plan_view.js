@@ -213,9 +213,10 @@ class Plan_view{
     render(){
         let top_left = `<span class="icon_left" onclick="plan_view_popup.upper_left_menu();">${CImg.arrow_left(["#5c5859"])}</span>`;
         let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right">
-                            ${CImg.delete(["#5c5859"], null, `plan_view_popup.upper_right_menu(0)`)}
+        let top_right = `<span class="icon_right">    
+                            ${CImg.memo(["#5c5859"], this.data.schedule_type == 0 ? {"display":"none"} : null, `plan_view_popup.upper_right_menu(2)`)}
                             ${CImg.attend_check(["#5c5859"], this.data.schedule_type == 0 ? {"display":"none"} : null, `plan_view_popup.upper_right_menu(1)`)}
+                            ${CImg.delete(["#5c5859"], null, `plan_view_popup.upper_right_menu(0)`)}
                         </span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;background-color:${this.data.lecture_color}">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
@@ -300,11 +301,12 @@ class Plan_view{
                         //회원 간단 정보 팝업 열기
                     });
                 }},
-                schedule_history:{text:"회원 일정 이력", callback:()=>{
+                daily_record:{text:"일지", callback:()=>{
                     layer_popup.close_layer_popup();
-                    let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
-                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_SCHEDULE_HISTORY, 100, popup_style, null, ()=>{
-                        member_schedule_history = new Member_schedule_history('.popup_member_schedule_history', this.data.member_id[0], null);
+                    Plan_daily_record_func.write_artice(this.data.member_schedule_id[0], this.data.member_name[0], ()=>{
+                        show_error_message(`[${this.data.member_name[0]}] 일지 변경사항이 저장 되었습니다.`);
+                    }, ()=>{
+                        show_error_message(`<span style="color:var(--font-highlight)">일지 변경사항 저장에 실패 하였습니다.</span>`);
                     });
                 }},
                 sign_image:{text:"출석 서명 확인", callback:()=>{
@@ -312,6 +314,13 @@ class Plan_view{
                     show_error_message(
                         `<img src="https://s3.ap-northeast-2.amazonaws.com/pters-image-master/${this.data.member_schedule_id[0]}.png" style="width:100%;filter:invert(1);" onerror="this.onerror=null;this.src='/static/common/icon/icon_no_signature.png'">`
                     );
+                }},
+                schedule_history:{text:"회원 일정 이력", callback:()=>{
+                    layer_popup.close_layer_popup();
+                    let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_SCHEDULE_HISTORY, 100, popup_style, null, ()=>{
+                        member_schedule_history = new Member_schedule_history('.popup_member_schedule_history', this.data.member_id[0], null);
+                    });
                 }}
             };
 
@@ -398,9 +407,11 @@ class Plan_view{
             let state = this.data.member_schedule_state[i];
             let state_icon_url;
             if(state == SCHEDULE_ABSENCE){
-                state_icon_url = CImg.x(["var(--img-sub1)"], {"vertical-align":"middle", "margin-bottom":"3px"});
+                // state_icon_url = CImg.x(["var(--img-sub1)"], {"vertical-align":"middle", "margin-bottom":"3px"});
+                state_icon_url = CImg.x(["#ff0022"], {"vertical-align":"middle", "margin-bottom":"3px"});
             }else if(state == SCHEDULE_FINISH){
-                state_icon_url = CImg.confirm(["var(--img-sub1)"], {"vertical-align":"middle", "margin-bottom":"3px"});
+                // state_icon_url = CImg.confirm(["var(--img-sub1)"], {"vertical-align":"middle", "margin-bottom":"3px"});
+                state_icon_url = CImg.confirm(["green"], {"vertical-align":"middle", "margin-bottom":"3px"});
             }else if(state == SCHEDULE_NOT_FINISH){
                 state_icon_url = DELETE;
             }
@@ -417,18 +428,26 @@ class Plan_view{
                                 //회원 간단 정보 팝업 열기
                             });
                         }},
-                        schedule_history:{text:"회원 일정 이력", callback:()=>{
+                        daily_record:{text:"일지", callback:()=>{
                             layer_popup.close_layer_popup();
-                            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
-                            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_SCHEDULE_HISTORY, 100, popup_style, null, ()=>{
-                                member_schedule_history = new Member_schedule_history('.popup_member_schedule_history', member_id, null);
-                            });
+                            Plan_daily_record_func.write_artice(member_schedule_id, member_name, ()=>{
+                                show_error_message(`[${member_name}] 일지 변경사항이 저장 되었습니다.`);
+                            }, ()=>{
+                                show_error_message(`<span style="color:var(--font-highlight)">일지 변경사항 저장에 실패 하였습니다.</span>`);
+                            }); 
                         }},
                         sign_image:{text:"출석 서명 확인", callback:()=>{
                             layer_popup.close_layer_popup();
                             show_error_message(
                                 `<img src="https://s3.ap-northeast-2.amazonaws.com/pters-image-master/${member_schedule_id}.png" style="width:100%;filter:invert(1);" onerror="this.onerror=null;this.src='/static/common/icon/icon_no_signature.png'">`
                             );
+                        }},
+                        schedule_history:{text:"일정 이력", callback:()=>{
+                            layer_popup.close_layer_popup();
+                            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_SCHEDULE_HISTORY, 100, popup_style, null, ()=>{
+                                member_schedule_history = new Member_schedule_history('.popup_member_schedule_history', member_id, null);
+                            });
                         }}
                     };
                     if(state != SCHEDULE_FINISH){
@@ -696,7 +715,6 @@ class Plan_view{
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_ATTEND, 100, popup_style, null, ()=>{
                     member_attend = new Member_attend('.popup_member_attend', this.schedule_id, (data)=>{
-                        console.log("data",data)
                         let schedule = data.schedule;
                         let set_data = data.member_schedule;
                         //출석체크 팝업에서 완료버튼을 눌렀을때 할 행동
@@ -800,7 +818,13 @@ class Plan_view{
                         }
                     });
                 });
-            }   
+            },
+            ()=>{
+                let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PLAN_DAILY_RECORD, 100, popup_style, null, ()=>{
+                    plan_daily_record_popup = new Plan_daily_record('.popup_plan_daily_record', this.schedule_id, ()=>{});
+                });
+            }  
         ];
 
         user_option[number]();

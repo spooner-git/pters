@@ -8,6 +8,7 @@ class Home {
         this.current_year = d.getFullYear();
         this.current_month = d.getMonth()+1;
         this.current_date = d.getDate();
+        this.current_day = d.getDay();
         this.today = DateRobot.to_yyyymmdd(this.current_year, this.current_month, this.current_date);
 
         this.data = {
@@ -27,6 +28,8 @@ class Home {
         this.received_data = {
             program:null, schedule:null, member:null, statistics:null
         };
+
+        this.setting_data_cache = null;
     }
 
     init (){
@@ -68,53 +71,67 @@ class Home {
     render_content (){
         // let today_plan;
 
+        let current_date;
         let program_dom;
         let plan_dom;
         let end_alert_dom;
         let sales_summary_dom;
-        let google_adsense_dom;
+        let my_pters_pass_dom;
 
-        Program_func.read((data)=>{
-            this.received_data.program = data;
-            let program = this.dom_row_program(data);
-            program_dom = '<div class="contents">' + program + '</div>';
+        Setting_menu_access_func.read((data)=>{
+            this.setting_data_cache = data;
+            let menu_lock_statistics = data.setting_trainer_statistics_lock;
+        
+            Program_func.read((data)=>{
+                this.received_data.program = data;
+                let program = this.dom_row_program(data);
+                program_dom = '<div class="contents">' + program + '</div>';
 
-            calendar.request_schedule_data (this.today, 1, (data)=>{
-                this.received_data.schedule = data;
-                let today_plan = this.dom_row_today_plan(data);
-                plan_dom = '<div class="contents">' + today_plan + '</div>';
+                calendar.request_schedule_data (this.today, 1, (data)=>{
+                    this.received_data.schedule = data;
+                    let today_plan = this.dom_row_today_plan(data);
+                    plan_dom = '<div class="contents">' + today_plan + '</div>';
 
-                member.request_member_list("ing", (data)=>{
-                    this.received_data.member = data;
-                    let end_alert = this.dom_row_end_alert(data);
-                    end_alert_dom = '<div class="contents">' + end_alert + '</div>';
+                    member.request_member_list("ing", (data)=>{
+                        this.received_data.member = data;
+                        let end_alert = this.dom_row_end_alert(data);
+                        end_alert_dom = '<div class="contents">' + end_alert + '</div>';
 
-                    Statistics_func.read("sales", {"start_date":this.today, "end_date":this.today}, (data)=>{
-                        this.received_data.statistics = data;
-                        if(current_page_text != this.page_name){
-                            return false;
-                        }
-                        let sales_summary = this.dom_row_sales_this_month(data);
-                        sales_summary_dom = '<div class="contents">' + sales_summary + '</div>';
+                        Statistics_func.read("sales", {"start_date":this.today, "end_date":this.today}, (data)=>{
+                            this.received_data.statistics = data;
+                            if(current_page_text != this.page_name){
+                                return false;
+                            }
+                            let locked = menu_lock_statistics;
+                            let sales_summary = this.dom_row_sales_this_month(data, locked);
+                            sales_summary_dom = '<div class="contents">' + sales_summary + '</div>';
 
-                        let html = program_dom + plan_dom + end_alert_dom + sales_summary_dom ;
-                        document.querySelector('#home_content_wrap').innerHTML = html;
-                        // $('#root_content').scrollTop(0);
-                    });
+                            my_pters_pass_dom = '<div class="contents">' + this.dom_row_my_pters_pass() + '</div>';
+                            current_date = '<div class="contents">' + this.dom_row_current_date() + '</div>';
+
+                            let html = current_date + program_dom + plan_dom + end_alert_dom + sales_summary_dom;
+                            document.querySelector('#home_content_wrap').innerHTML = html;
+                            // $('#root_content').scrollTop(0);
+                        });
+                    }, OFF);
                 }, OFF);
-            }, OFF);
+            });
         });
     }
 
     render_content_offline (){
         // let today_plan;
 
+        let current_date_dom;
         let program_dom;
         let plan_dom;
         let end_alert_dom;
         let sales_summary_dom;
 
         let data = this.received_data;
+
+        let current_date = this.dom_row_current_date();
+        current_date_dom = '<div class="contents">' + current_date + '</div>';
 
         let program = this.dom_row_program(data.program);
         program_dom = '<div class="contents">' + program + '</div>';
@@ -125,11 +142,32 @@ class Home {
         let end_alert = this.dom_row_end_alert(data.member);
         end_alert_dom = '<div class="contents">' + end_alert + '</div>';
 
-        let sales_summary = this.dom_row_sales_this_month(data.statistics);
+        let sales_summary = this.dom_row_sales_this_month(data.statistics, this.setting_data_cache.setting_trainer_statistics_lock);
         sales_summary_dom = '<div class="contents">' + sales_summary + '</div>';
+
+        let my_pters_pass_dom;
+        my_pters_pass_dom = '<div class="contents">' + this.dom_row_my_pters_pass() + '</div>';
                         
-        let html = program_dom + plan_dom + end_alert_dom + sales_summary_dom;
+        let html = current_date_dom + program_dom + plan_dom + end_alert_dom + sales_summary_dom;
         document.querySelector('#home_content_wrap').innerHTML = html;
+    }
+
+    dom_row_current_date(){
+
+        let id = "home_current_date";
+        let title = `${this.current_year}년 ${this.current_month}월 ${this.current_date}일 (${DAYNAME_KR[this.current_day]})`;
+        let icon = DELETE;
+        let icon_r_visible = HIDE;
+        let icon_r_text = ``;
+        let style = {"font-size":"15px", "font-weight":"bold"};
+        let onclick = ()=>{
+            sideGoPage("calendar");
+        };
+        let my_pters_pass = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
+        let dom = `<article class="my_pters_pass_wrapper">
+                        ${my_pters_pass}
+                    </article>`;
+        return dom;
     }
 
     dom_row_program(data){
@@ -158,6 +196,31 @@ class Home {
                         </article>`;
             html_to_join.push(dom);
         }
+
+
+        let html = html_to_join.join("");
+        return html;
+    }
+
+    dom_row_my_pters_pass(){
+        let html_to_join = [];
+
+
+        let id = "home_my_pters_pass";
+        let title = "이용 중인 PTERS 패스";
+        let icon = DELETE;
+        let icon_r_visible = HIDE;
+        let icon_r_text = `${pass_inspector.data.auth_member_create.limit_type} ${CImg.arrow_right(["var(--img-sub1)"], {"vertical-align":"middle"})}`;
+        let style = {"font-size":"13px", "font-weight":"bold"};
+        let onclick = ()=>{
+            sideGoPopup("pters_pass_main");
+        };
+        let my_pters_pass = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
+        let dom = `<article class="my_pters_pass_wrapper">
+                        ${my_pters_pass}
+                    </article>`;
+        html_to_join.push(dom);
+        
 
 
         let html = html_to_join.join("");
@@ -320,7 +383,7 @@ class Home {
         return html;
     }
 
-    dom_row_sales_this_month(data){
+    dom_row_sales_this_month(data, data_lock){
         let html_to_join = [];
 
         let id = "home_sales_summary";
@@ -328,11 +391,20 @@ class Home {
         let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text = `${UnitRobot.numberWithCommas(Number(data.price[0]) - Number(data.refund_price[0]))} 원 ${CImg.arrow_right(["var(--img-sub1)"], {"vertical-align":"middle"})}`;
+        if(data_lock == ON){
+            icon_r_text = `${CImg.lock(["var(--img-sub1)"], {"vertical-align":"middle"})} ${CImg.arrow_right(["var(--img-sub1)"], {"vertical-align":"middle"})}`;
+        }
         let style = {"font-size":"15px", "font-weight":"bold"};
         let onclick = ()=>{
-            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_STATISTICS, 100, popup_style, null, ()=>{
-                statistics_popup = new Statistics('.popup_statistics')});
+            if(data_lock == ON){
+                Setting_menu_access_func.locked_menu(()=>{
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_STATISTICS, 100, POPUP_FROM_RIGHT, null, ()=>{
+                                                    statistics_popup = new Statistics('.popup_statistics');});
+                });
+            }else{
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_STATISTICS, 100, POPUP_FROM_RIGHT, null, ()=>{
+                    statistics_popup = new Statistics('.popup_statistics');});
+            }
         };
         let sales_data = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
         let dom = `<article class="sales_wrapper">
@@ -354,49 +426,6 @@ class Home {
                     </div>`;
         
         return pass_inspector.data.auth_ads.limit_num != 0 ? html : "";
-    }
-
-
-    //회원 리스트 서버에서 불러오기
-    request_home (callback, async){
-        var url;
-        if(async == undefined){
-            async = true;
-        }
-        $.ajax({
-            url:url,
-            dataType : 'JSON',
-            async:async,
-    
-            beforeSend:function (){
-                // ajax_load_image(SHOW);
-            },
-    
-            //통신성공시 처리
-            success:function (data){
-                check_app_version(data.app_version);
-                if(data.messageArray != undefined){
-                    if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
-                        return false;
-                    }
-                }
-                if(callback != undefined){
-                    callback(data);
-                }
-                return data;
-            },
-
-            //보내기후 팝업창 닫기
-            complete:function (){
-                // ajax_load_image(HIDE);
-            },
-    
-            //통신 실패시 처리
-            error:function (){
-                console.log('server error');
-            }
-        });
     }
 
     popup_plan_view(schedule_id){
@@ -433,7 +462,7 @@ class Home {
 }
 
 class Home_func{
-    static read(data, callback){
+    static read(data, callback, error_callback){
         //데이터 형태 {"home_id":""};
         $.ajax({
             url:'/trainer/get_home_info/',
@@ -469,6 +498,9 @@ class Home_func{
     
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 location.reload();
             }

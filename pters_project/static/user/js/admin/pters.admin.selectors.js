@@ -4765,7 +4765,7 @@ class BoardWriter{
                         return false;
                     }
                 }
-                $('#board_writer_content_input').summernote('insertImage', jsondata.img_url);
+                $('#board_writer_content_input').summernote('insertImage', data.img_url);
             },
 
             complete:function(){

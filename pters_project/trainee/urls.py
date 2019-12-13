@@ -112,6 +112,10 @@ urlpatterns = [
     url(r'^popup_my_password_change/$', views.PopupMyPasswordChangeView.as_view(),
         name='popup_my_password_change'),
 
+    # 회원 일지 팝업 페이지
+    url(r'^popup_plan_daily_record/$', views.PopupPlanDailyRecordView.as_view(),
+        name='popup_plan_daily_record'),
+
     # 삭제된 페이지
     # 회원 빈 월간 일정 페이지
     url(r'^cal_month_blank/$', views.CalMonthBlankView.as_view(), name='cal_month_blank'),

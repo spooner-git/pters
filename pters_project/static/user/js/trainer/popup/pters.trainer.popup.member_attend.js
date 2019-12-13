@@ -24,6 +24,7 @@ class Member_attend{
         let length = data.lecture_schedule_data.length;
         let new_data = {};
         for(let i=0; i<length; i++){
+            let member_profile_img = data.lecture_schedule_data[i].member_profile_url;
             let member_schedule_id = data.lecture_schedule_data[i].schedule_id;
             let member_id = data.lecture_schedule_data[i].member_id;
             let state = data.lecture_schedule_data[i].state_cd;
@@ -32,19 +33,20 @@ class Member_attend{
             if(state != SCHEDULE_FINISH){
                 image_url = null;
             }
-            new_data[member_id] = {name:member_name, member_id:member_id, state_cd:state, image:image_url};
+            new_data[member_id] = {name:member_name, member_id:member_id, state_cd:state, image:image_url, profile_img: member_profile_img};
             //서버로부터 image를 받아오면 image를 null이 아니라 image 주소로
             if(state != SCHEDULE_FINISH){
                 this.check_entire = false;
             }
         }
         if(data.schedule_type == 1){
+            let member_profile_img = data.member_profile_url;
             let state = data_.schedule_info[0].state_cd;
             let image_url = `https://s3.ap-northeast-2.amazonaws.com/pters-image-master/${data.schedule_id}.png`;
             if(state != SCHEDULE_FINISH){
                 image_url = null;
             }
-            new_data[null] = {name:data.member_name, state_cd:data.state_cd, member_id:null, image:image_url};
+            new_data[null] = {name:data.member_name, state_cd:data.state_cd, member_id:null, image:image_url, profile_img:member_profile_img};
             //서버로부터 image를 받아오면 image를 null이 아니라 image 주소로
         }
 
@@ -123,6 +125,7 @@ class Member_attend{
             let location = 'member_attend';
             let member_id = data.member_id;
             let image = data.image;
+            let profile_img = data.profile_img;
             let tag = "";
             // if(image != null && this.check_image_link(image) != false && data.state_cd == SCHEDULE_FINISH){
             if(image != null && data.state_cd == SCHEDULE_FINISH){
@@ -132,7 +135,7 @@ class Member_attend{
                     '</div>';
             }
             let member_name = tag + data.name;
-            html = CComponent.select_attend_row (checked_absence, checked_attend, location, member_id, member_name, (add_or_substract)=>{
+            html = CComponent.select_attend_row (checked_absence, checked_attend, location, member_id, member_name, profile_img, (add_or_substract)=>{
                 switch(add_or_substract){
                 case 'check_absence':
                     this.data[member_id].state_cd = SCHEDULE_ABSENCE;

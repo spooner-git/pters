@@ -74,10 +74,10 @@ class Setting_attendmode{
                     '<article class="obj_input_box_full">' +
                        this.dom_row_display_session_start() + 
                        this.dom_row_display_session_end() +
-                    '</article>' +
-                    '<article class="obj_input_box_full">' +
-                        this.dom_row_set_password() + 
                     '</article>';
+                    // '<article class="obj_input_box_full">' +
+                    //     this.dom_row_set_password() +
+                    // '</article>';
         return html;
     }
 
@@ -133,13 +133,15 @@ class Setting_attendmode{
 
     dom_row_set_password(){
         let id = "set_password";
-        let title = "비밀번호 설정";
+        let title_description = `<p style="font-size:12px;font-weight:500;margin:0;color:var(--font-sub-normal)">출석 체크 모드와 통계 잠금에서 사용</p>`;
+        let title = `관리자 비밀번호 설정 ${title_description}`;
         let icon = DELETE;
         let icon_r_visible = SHOW;
-        let icon_r_text = this.data.password == null ? '설정되지 않음' : this.data.password;
-        let style = null;
+        // let icon_r_text = this.data.password == null ? '설정되지 않음' : "";
+        let icon_r_text = "";
+        let style = {"height":"auto", "padding-bottom": "0"};
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            let title = "비밀번호 설정";
+            let title = "관리자 비밀번호 설정";
             let install_target = "#wrapper_box_password_4d_input";
             let original_data = this.data.password == null ? "0000" : this.data.password;
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
@@ -209,7 +211,7 @@ class Setting_attendmode{
             this.set_initial_data();
             show_error_message('변경 내용이 저장되었습니다.');
             // this.render_content();
-        });
+        }, ()=>{this.data_sending_now = false;});
     }
 
     upper_right_menu(){
@@ -218,7 +220,7 @@ class Setting_attendmode{
 }
 
 class Setting_attendmode_func{
-    static update(data, callback){
+    static update(data, callback, error_callback){
         //업무 시간 설정
         $.ajax({
             url:"/trainer/update_attend_mode_setting/",
@@ -254,13 +256,16 @@ class Setting_attendmode_func{
     
             //통신 실패시 처리
             error:function (){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 console.log('server error');
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
             }
         });
     }
 
-    static read(callback){
+    static read(callback, error_callback){
         $.ajax({
             url:"/trainer/get_trainer_setting_data/",
             type:'GET',
@@ -293,6 +298,9 @@ class Setting_attendmode_func{
     
             //통신 실패시 처리
             error:function (){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 console.log('server error');
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
             }

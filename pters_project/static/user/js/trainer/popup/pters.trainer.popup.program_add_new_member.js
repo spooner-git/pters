@@ -242,7 +242,7 @@ class Program_add_new_member{
 }
 
 class Program_func{
-    static create(data, callback){
+    static create(data, callback, error_callback){
         //프로그램 추가
         $.ajax({
             url:"/trainer/add_program_info/",
@@ -278,16 +278,20 @@ class Program_func{
     
             //통신 실패시 처리
             error:function (){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 console.log('server error');
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
             }
         });
     }
 
-    static read(callback, async){
+    static read(callback, error_callback, async){
         if(async == undefined){
             async = true;
         }
+
         //프로그램 리스트 서버에서 불러오기
         $.ajax({
             url:"/trainer/get_program_list/",
@@ -319,12 +323,15 @@ class Program_func{
     
             //통신 실패시 처리
             error:function (){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 console.log('server error');
             }
         });
     }
 
-    static update(data, callback){
+    static update(data, callback, error_callback){
         //프로그램 추가
         $.ajax({
             url:"/trainer/update_program_info/",
@@ -360,13 +367,16 @@ class Program_func{
     
             //통신 실패시 처리
             error:function (){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 console.log('server error');
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
             }
         });
     }
 
-    static delete(data, callback){
+    static delete(data, callback, error_callback){
         //프로그램 추가
         $.ajax({
             url:"/trainer/delete_program_info/",
@@ -402,6 +412,9 @@ class Program_func{
     
             //통신 실패시 처리
             error:function (){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 console.log('server error');
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
             }

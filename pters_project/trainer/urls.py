@@ -49,7 +49,6 @@ urlpatterns = [
         name='get_member_repeat_schedule'),
 
 
-
     # 회원 기능 #####################################################################################################
     # 회원 정보 조회 - refactoring
     url(r'^get_member_info/$', views.GetMemberInfoView.as_view(), name='get_member_info'),
@@ -202,9 +201,15 @@ urlpatterns = [
     # 사용자 앱 view 관련 Setting 수정
     url(r'^update_setting_theme/$', views.update_setting_theme_logic, name='update_setting_theme'),
 
+    # 사용자 앱 view 관련 Setting 수정
+    url(r'^update_setting_access_lock/$', views.update_setting_access_lock_logic,
+        name='update_setting_access_lock'),
+
     # Setting 정보 가져오기
     url(r'^get_trainer_setting_data/$', views.GetTrainerSettingDataView.as_view(), name='get_trainer_setting_data'),
     url(r'^get_trainer_auth_data/$', views.GetTrainerAuthDataView.as_view(), name='get_trainer_auth_data'),
+
+
 
     # 알람 기능 ##########################################################################################################
     # 알람 삭제

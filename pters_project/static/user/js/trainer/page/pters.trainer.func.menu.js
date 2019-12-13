@@ -71,14 +71,16 @@ class Menu {
                         this.dom_menu_ticket() + 
                         this.dom_menu_statistics() + 
                         this.dom_menu_attendmode() + 
-                       CComponent.dom_tag('설정', dom_tag_style) + 
+                       CComponent.dom_tag('설정', dom_tag_style) +
+                        // this.dom_menu_setting_supervisor() +  
                         this.dom_menu_setting_calendar() + 
                         this.dom_menu_setting_worktime() + 
                         this.dom_menu_setting_autocomplete() +
                         this.dom_menu_setting_reserve() + 
                         this.dom_menu_setting_alarm() + 
-                        this.dom_menu_setting_attendmode() + 
-                        this.dom_menu_theme() + 
+                        this.dom_menu_setting_attendmode() +
+                        this.dom_menu_setting_menu_access() +
+                        this.dom_menu_theme() +
                        CComponent.dom_tag('서비스', dom_tag_style) + 
                         this.dom_menu_pters_pass() + 
                         this.dom_menu_service_notice() + 
@@ -294,6 +296,32 @@ class Menu {
         return html;
     }
 
+    dom_menu_setting_menu_access(){
+        let id = 'menu_setting_menu_access';
+        let title = '정보 보호';
+        let icon = CImg.lock();
+        let icon_r_visible = NONE;
+        let icon_r_text = "";
+        let style = {"font-size":"17px", "padding":"13px 0"};
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            sideGoPopup("setting_menu_access");
+        });
+        return html;
+    }
+
+    dom_menu_setting_supervisor(){
+        let id = 'menu_setting_supervisor';
+        let title = '관리자 (공유??) - 본섭에 업로드 X';
+        let icon = CImg.supervisor();
+        let icon_r_visible = NONE;
+        let icon_r_text = "";
+        let style = {"color":"red", "font-size":"17px", "padding":"13px 0"};
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            sideGoPopup("setting_supervisor");
+        });
+        return html;
+    }
+
     dom_menu_pters_pass(){
         let id = 'menu_pters_pass';
         let title = 'PTERS 패스 구매';
@@ -387,5 +415,50 @@ class Menu {
                 initial_page:`<div id="menu_display_panel"></div><div id="menu_content_wrap" class="pages"></div>`
             }
         );
+    }
+}
+
+
+class Setting_func{
+    static read(callback, error_callback){
+        $.ajax({
+            url:"/trainer/get_trainer_setting_data/",
+            type:'GET',
+            dataType : 'JSON',
+    
+            beforeSend:function(xhr, settings){
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+    
+            //통신성공시 처리
+            success:function (data){
+                check_app_version(data.app_version);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message(data.messageArray[0]);
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(data);
+                }
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function (){
+
+            },
+    
+            //통신 실패시 처리
+            error:function (){
+                if(error_callback != undefined){
+                    error_callback();
+                }
+                console.log('server error');
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+            }
+        });
     }
 }

@@ -277,6 +277,9 @@ class Ticket{
 
     //수강권 리스트 서버에서 불러오기
     request_ticket_list (status, callback, load_image, async){
+        if(async == undefined){
+            async = true;
+        }
         //sort_order_by : ticket_type_seq, ticket_name, ticket_member_many, ticket_member_few, ticket_create_new, ticket_create_old
         let url;
         if(status=='ing'){
@@ -357,7 +360,7 @@ class Ticket{
 }
 
 class Ticket_func{
-    static create(data, callback){
+    static create(data, callback, error_callback){
         $.ajax({
             url:'/trainer/add_ticket_info/',
             type:'POST',
@@ -392,13 +395,16 @@ class Ticket_func{
     
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 location.reload();
             }
         });
     }
 
-    static read(data, callback){
+    static read(data, callback, error_callback){
         //데이터 형태 {"ticket_id":""};
         $.ajax({
             url:'/trainer/get_ticket_info/',
@@ -434,13 +440,16 @@ class Ticket_func{
     
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 location.reload();
             }
         });
     }
 
-    static delete(data, callback){
+    static delete(data, callback, error_callback){
         //데이터 형태 {"ticket_id":""};
         $.ajax({
             url:'/trainer/delete_ticket_info/',
@@ -476,13 +485,16 @@ class Ticket_func{
     
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 location.reload();
             }
         });
     }
 
-    static update(data, callback){
+    static update(data, callback, error_callback){
         //데이터 형태 {"ticket_id":"", "ticket_name":"", "ticket_note":""};
         $.ajax({
             url:'/trainer/update_ticket_info/',
@@ -518,13 +530,16 @@ class Ticket_func{
     
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 location.reload();
             }
         });
     }
 
-    static status(data, callback){
+    static status(data, callback, error_callback){
         //데이터 형태 {"ticket_id":"", "state_cd":""};
         $.ajax({
             url:'/trainer/update_ticket_status_info/',
@@ -560,13 +575,16 @@ class Ticket_func{
     
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 location.reload();
             }
         });
     }
 
-    static read_member_list(data, callback){
+    static read_member_list(data, callback, error_callback){
         $.ajax({
             url:'/trainer/get_ticket_ing_member_list/',
             type:'GET',
@@ -601,13 +619,16 @@ class Ticket_func{
     
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 location.reload();
             }
         });
     }
 
-    static update_lecture(type, data, callback){
+    static update_lecture(type, data, callback, error_callback){
         let url;
         if(type == ADD){
             url = '/trainer/add_ticket_lecture_info/';
@@ -649,6 +670,9 @@ class Ticket_func{
     
             //통신 실패시 처리
             error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
                 location.reload();
             }

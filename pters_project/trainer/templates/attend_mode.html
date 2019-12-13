@@ -13,6 +13,8 @@
     <link rel="icon" href="/static/common/favicon.ico">
     <link rel="apple-touch-icon" href="/static/common/favicon-48.png">
     <link rel="shortcut icon" href="/static/common/favicon-48.png">
+    {% load static_url %}
+    <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.base.css" %}>
     <style type="text/css">
         @import url(/static/common/fonts/notosanskr.css);
 
@@ -369,13 +371,14 @@
 
     <div id="popup_storage"></div>
     <input type="hidden" id="admin_password" name="setting_admin_password" value="">
-   
+
+    <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.const.js" %}></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script>
 
         let lecture_schedule_id = [{% for lecture_schedule_info in lecture_schedule_data %}'{{ lecture_schedule_info.schedule_id }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
         let scheduleIdArray = [{% for pt_schedule_info in pt_schedule_data %}'{{ pt_schedule_info.schedule_id }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-
+        let attend_mode_out_lock = '{{ request.session.setting_trainer_attend_mode_out_lock }}';
         window.onload=function(){
             let window_height = window.innerHeight;
             let content_height = $('#content_wrapper').height();
@@ -463,8 +466,12 @@
         function back_to_normal_mode(e, popup_name){
             e.preventDefault();
             // let a = popup('admin_check');
-            let a = popup(popup_name);
-            a.draw();
+            if(attend_mode_out_lock == ON){
+                let a = popup(popup_name);
+                a.draw();
+            }else{
+                location.href = '/trainer/trainer_main/';
+            }
         }
 
         function lesson_select(context){
@@ -560,7 +567,7 @@
                         //             <div class="popup_shade" onclick="clear_popup(event);">
                         //             </div>`,
                         'exit':`<div id="popup_input_password" class="popup">
-                                    <div><p class="fts_20 ftw_bd">관리자 비밀번호를 입력해주세요.</p></div>
+                                    <div><p class="fts_20 ftw_bd">잠금 해제 비밀번호를 입력해주세요.</p></div>
                                     <div style="position:relative;">
                                             <input type='tel' value="" onkeyup="limit_char_only_number(this);" minlength="4" maxlength="4">
                                             <!--<input type="text" name="username" autocomplete="off" style="position:absolute;z-index:1500;background-color:transparent;caret-color:transparent;-webkit-text-color-fill:transparent;color:transparent" onkeyup="document.querySelector('#password_real').value = this.value">
@@ -600,7 +607,7 @@
         function save_setting_value(e){
             e.preventDefault();
             if($('#input_setting_admin_password').val().length!=4){
-                alert('관리자 비밀번호는 4자만 가능합니다.')
+                alert('잠금 해제 비밀번호는 4자만 가능합니다.')
             }
             else{
                 $('#form_admin_menu').submit();

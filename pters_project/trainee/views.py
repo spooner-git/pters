@@ -23,7 +23,7 @@ from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 from schedule.functions import func_get_member_ticket_id, func_check_lecture_available_member_before,\
     func_check_lecture_available_member_after, func_add_schedule, func_refresh_member_ticket_count, \
     func_get_lecture_member_ticket_id_from_trainee, func_send_push_trainee, func_get_holiday_schedule
-from schedule.models import ScheduleTb, DeleteScheduleTb
+from schedule.models import ScheduleTb, DeleteScheduleTb, DailyRecordTb
 from trainer.functions import func_get_trainer_setting_list
 from trainer.models import ClassMemberTicketTb,  ClassTb, SettingTb, LectureTb, TicketLectureTb,\
     TicketTb
@@ -1723,6 +1723,28 @@ class TraineeInquiryView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = super(TraineeInquiryView, self).get_context_data(**kwargs)
         qa_type_list = CommonCdTb.objects.filter(upper_common_cd='16', use=1).order_by('order')
         context['qa_type_data'] = qa_type_list
+        return context
+
+
+class PopupPlanDailyRecordView(TemplateView):
+    template_name = 'popup/trainee_popup_plan_daily_record.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PopupPlanDailyRecordView, self).get_context_data(**kwargs)
+        schedule_id = self.request.GET.get('schedule_id')
+        daily_record_info = None
+        error = None
+        if schedule_id is None or schedule_id == '':
+            error = '일지 정보를 불러오지 못했습니다.'
+        try:
+            daily_record_info = DailyRecordTb.objects.get(schedule_tb_id=schedule_id)
+            if daily_record_info.class_tb.member.profile_url is None or daily_record_info.class_tb.member.profile_url == '':
+                daily_record_info.class_tb.member.profile_url = '/static/common/icon/icon_account.png'
+        except ObjectDoesNotExist:
+            error = '일지 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            context['daily_record_info'] = daily_record_info
         return context
 
 

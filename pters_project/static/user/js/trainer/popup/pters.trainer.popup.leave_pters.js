@@ -199,7 +199,7 @@ class Leave_pters{
 
 
 class Leave_pters_func{
-    static update(data, callback){
+    static update(data, callback, error_callback){
         $.ajax({
             url:"/login/out_member/",
             type:'POST',
@@ -234,6 +234,9 @@ class Leave_pters_func{
     
             //통신 실패시 처리
             error:function (){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 console.log('server error');
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
             }

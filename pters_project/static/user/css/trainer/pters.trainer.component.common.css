@@ -570,6 +570,9 @@ input:disabled{
 	padding: 0 20px;
 }
 
+.select_attend_row .cell_member_profile_img{
+	flex-basis:50px;
+}
 .select_attend_row .cell_member_name{
 	/* display: table-cell; */
 	/* width: 150px; */

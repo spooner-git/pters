@@ -703,7 +703,7 @@ class Plan_add{
                 try{
                     current_page.init();
                 }catch(e){}
-            });
+            }, ()=>{this.data_sending_now = false;});
             
         }else if(this.data.repeat.power == ON){
             let inspect_date = DateRobot.to_yyyymmdd(this.data.repeat.repeat_end.year, this.data.repeat.repeat_end.month, this.data.repeat.repeat_end.date);
@@ -727,8 +727,8 @@ class Plan_add{
                     try{
                         current_page.init();
                     }catch(e){}
-                });
-            });
+                }, ()=>{this.data_sending_now = false;});
+            }, ()=>{this.data_sending_now = false;});
         }   
     }
 
@@ -843,10 +843,33 @@ class Plan_add{
         }
     }
 
+    // pass_inspect(selected_date){
+    //     let id = "go_to_shop";
+    //     let title = "패스 구매";
+    //     let style = {"display":"inline-block", "background-color":"var(--bg-highlight)", "border-radius":"2px", "margin-top":"15px"};
+    //     let onclick = ()=>{
+    //         layer_popup.all_close_layer_popup();
+    //         sideGoPopup("pters_pass_main");
+    //     };
+    //     let go_to_shop_button = `<div>${CComponent.button (id, title, style, onclick)}</div>`;
+
+
+    //     let inspect = pass_inspector.schedule(selected_date);
+    //     if(inspect.barrier == BLOCKED){
+    //         show_error_message(`[${inspect.limit_type}] 이용자께서는 오늘 기준 전/후 ${inspect.limit_num}일간 일정 관리 하실 수 있습니다.${go_to_shop_button}`);
+    //         return false;
+    //     }
+    // }
+
     pass_inspect(selected_date){
         let inspect = pass_inspector.schedule(selected_date);
         if(inspect.barrier == BLOCKED){
-            show_error_message(`[${inspect.limit_type}] 이용자께서는 오늘 기준 전/후 ${inspect.limit_num}일간 일정 관리 하실 수 있습니다.`);
+            let message = `[${inspect.limit_type}] 이용자께서는 오늘 기준 전/후 ${inspect.limit_num}일간 일정 관리 하실 수 있습니다.
+                            <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까??</p>`;
+            show_user_confirm (message, ()=>{
+                layer_popup.close_layer_popup();
+                sideGoPopup("pters_pass_main");
+            });
             return false;
         }
     }

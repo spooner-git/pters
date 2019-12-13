@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import RepeatScheduleTb, ScheduleTb, DeleteRepeatScheduleTb, DeleteScheduleTb, HolidayTb
+from .models import RepeatScheduleTb, ScheduleTb, DeleteRepeatScheduleTb, DeleteScheduleTb, HolidayTb, DailyRecordTb
 
 
 @admin.register(RepeatScheduleTb)
@@ -42,4 +42,11 @@ class DeleteRepeatScheduleTbAdmin(admin.ModelAdmin):
 @admin.register(HolidayTb)
 class HolidayTbAdmin(admin.ModelAdmin):
     list_display = ('holiday_id', 'holiday_dt', 'holiday_name', 'use')
+    search_fields = ['holiday_name']
+
+
+@admin.register(DailyRecordTb)
+class DailyRecordTbAdmin(admin.ModelAdmin):
+    list_display = ('daily_record_id', 'class_tb', 'schedule_tb', 'title', 'contents', 'reg_member',
+                    'is_member_view', 'img_list', 'use')
     search_fields = ['holiday_name']

@@ -4281,89 +4281,6 @@ class CustomSelector{
     }
 }
 
-// class PasswordFourDigitInput{
-//     constructor(title, install_target, original_data, callback){
-//         this.title = title;
-//         this.target = {install:install_target};
-//         this.unique_instance = install_target.replace(/#./gi, "");
-//         this.callback = callback;
-//         this.original_data = original_data;
-//         this.data = {
-//             password:null
-//         };
-//         this.init();
-//         this.set_initial_data();
-//     }
-
-//     init(){
-//         this.render();
-//     }
-
-//     set_initial_data(){
-//         this.data.password = this.original_data;
-//         this.init();
-//     }
-
-//     clear(){
-//         setTimeout(()=>{
-//             document.querySelector(this.target.install).innerHTML = "";
-//         }, 300);
-//     }
-
-//     render(){
-//         let top_left = `<span class="icon_left" onclick="password_4d_input.upper_right_menu();">${CImg.arrow_left()}</span>`;
-//         let top_center = `<span class="icon_center">
-//                             <span id="">${this.title}</span>
-//                           </span>`;
-//         let top_right = `<span class="icon_right" onclick="password_4d_input.upper_right_menu();">
-//                             <span style="color:var(--font-highlight);font-weight: 500;">완료</span>
-//                         </span>`;
-//         let content =   `<section>${this.dom_list()}</section>`;
-        
-//         let html = PopupBase.base(top_left, top_center, top_right, content, "");
-
-//         document.querySelector(this.target.install).innerHTML = html;
-//     }
-
-//     dom_list (){
-//         let html = this.dom_row_input() + 
-//                     `<div style="font-size:12px;color:var(--font-sub-dark);text-align:center;">초기 비밀번호는 0000입니다.<br>암호화 되어 저장되지 않으므로 일상적인 번호로 하세요.</div>`;
-
-//         return html;
-//     }
-
-//     dom_row_input(){
-//         let html = `<div style="margin:40px 0;">
-//                         <div style="text-align:center;">
-//                             <input id="password_4d_input_field" type="tel" maxlength=4 style="-webkit-appearance:none;border:0;background-color:unset;width:260px;letter-spacing:33px;font-size:40px;font-weight:500;text-align:left;margin:0 auto;padding-left:37px;box-sizing:border-box" value="${this.data.password}">
-//                         </div>
-//                         <div style="height:2px;width:220px;text-align:center;margin:0 auto">
-//                             <div id="password_digit_1" class="password_4d_input_bar"></div>
-//                             <div id="password_digit_2" class="password_4d_input_bar"></div>
-//                             <div id="password_digit_3" class="password_4d_input_bar"></div>
-//                             <div id="password_digit_4" class="password_4d_input_bar"></div>
-//                         </div>
-//                     </div>`;
-//         let self = this;
-//         $(document).off('focusout', '#password_4d_input_field').on('focusout', '#password_4d_input_field', function(e){
-//             let user_input_data = e.target.value;
-//             self.data.password = user_input_data;
-//         });
-//         return html;
-//     }
-
-//     request_list (callback){
-//         // this.received_data = color_data;
-//         // callback();
-//     }
-
-//     upper_right_menu(){
-//         this.callback(this.data);
-//         layer_popup.close_layer_popup();
-//         this.clear();
-//     }
-// }
-
 class PasswordFourDigitInput{
     constructor(title, install_target, original_data, callback){
         this.title = title;
@@ -4377,7 +4294,7 @@ class PasswordFourDigitInput{
             password_digit_3:null,
             password_digit_4:null
         };
-        this.init();
+        // this.init();
         this.set_initial_data();
     }
 
@@ -4386,10 +4303,14 @@ class PasswordFourDigitInput{
     }
 
     set_initial_data(){
-        this.data.password_digit_1 = Number(String(this.original_data).substr(0, 1));
-        this.data.password_digit_2 = Number(String(this.original_data).substr(1, 1));
-        this.data.password_digit_3 = Number(String(this.original_data).substr(2, 1));
-        this.data.password_digit_4 = Number(String(this.original_data).substr(3, 1));
+        // this.data.password_digit_1 = Number(String(this.original_data).substr(0, 1));
+        // this.data.password_digit_2 = Number(String(this.original_data).substr(1, 1));
+        // this.data.password_digit_3 = Number(String(this.original_data).substr(2, 1));
+        // this.data.password_digit_4 = Number(String(this.original_data).substr(3, 1));
+        this.data.password_digit_1 = '';
+        this.data.password_digit_2 = '';
+        this.data.password_digit_3 = '';
+        this.data.password_digit_4 = '';
         this.init();
     }
 
@@ -4422,12 +4343,26 @@ class PasswordFourDigitInput{
     }
 
     dom_row_input(){
+        // let html = `<div style="margin:40px 0;">
+        //                 <div style="text-align:center;">
+        //                     <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_1" value="${this.data.password_digit_1 == null ? "" : this.data.password_digit_1}">
+        //                     <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_2" value="${this.data.password_digit_2 == null ? "" : this.data.password_digit_2}">
+        //                     <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_3" value="${this.data.password_digit_3 == null ? "" : this.data.password_digit_3}">
+        //                     <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_4" value="${this.data.password_digit_4 == null ? "" : this.data.password_digit_4}">
+        //                 </div>
+        //                 <div style="height:2px;width:220px;text-align:center;margin:0 auto">
+        //                     <div id="password_digit_1" class="password_4d_input_bar"></div>
+        //                     <div id="password_digit_2" class="password_4d_input_bar"></div>
+        //                     <div id="password_digit_3" class="password_4d_input_bar"></div>
+        //                     <div id="password_digit_4" class="password_4d_input_bar"></div>
+        //                 </div>
+        //             </div>`;
         let html = `<div style="margin:40px 0;">
                         <div style="text-align:center;">
-                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_1" value="${this.data.password_digit_1 == null ? "" : this.data.password_digit_1}">
-                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_2" value="${this.data.password_digit_2 == null ? "" : this.data.password_digit_2}">
-                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_3" value="${this.data.password_digit_3 == null ? "" : this.data.password_digit_3}">
-                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_4" value="${this.data.password_digit_4 == null ? "" : this.data.password_digit_4}">
+                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_1" value="" autocomplete="off">
+                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_2" value="" autocomplete="off">
+                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_3" value="" autocomplete="off">
+                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_4" value="" autocomplete="off">
                         </div>
                         <div style="height:2px;width:220px;text-align:center;margin:0 auto">
                             <div id="password_digit_1" class="password_4d_input_bar"></div>
@@ -4497,7 +4432,158 @@ class PasswordFourDigitInput{
 
     upper_right_menu(){
         let combined_data = {password : `${this.data.password_digit_1}${this.data.password_digit_2}${this.data.password_digit_3}${this.data.password_digit_4}`};
+        if(combined_data.password == ''){
+            combined_data.password = this.original_data;
+        }
         this.callback(combined_data);
+        layer_popup.close_layer_popup();
+        this.clear();
+    }
+}
+
+class PasswordInput{
+    constructor(title, install_target, original_data, callback){
+        this.title = title;
+        this.target = {install:install_target};
+        this.unique_instance = install_target.replace(/#./gi, "");
+        this.callback = callback;
+        this.original_data = original_data;
+        this.data = {
+            password_digit_1:null,
+            password_digit_2:null,
+            password_digit_3:null,
+            password_digit_4:null
+        };
+        this.init();
+        this.set_initial_data();
+    }
+
+    init(){
+        this.render();
+    }
+
+    set_initial_data(){
+        // this.data.password_digit_1 = Number(String(this.original_data).substr(0, 1));
+        // this.data.password_digit_2 = Number(String(this.original_data).substr(1, 1));
+        // this.data.password_digit_3 = Number(String(this.original_data).substr(2, 1));
+        // this.data.password_digit_4 = Number(String(this.original_data).substr(3, 1));
+        this.init();
+    }
+
+    clear(){
+        setTimeout(()=>{
+            document.querySelector(this.target.install).innerHTML = "";
+        }, 300);
+    }
+
+    render(){
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();">
+                            <span style="color:var(--font-main);font-weight: 500;">닫기</span>
+                        </span>`;
+        let top_center = `<span class="icon_center">
+                            <span id="">${this.title}</span>
+                          </span>`;
+        let top_right = `<span class="icon_right" onclick="password_input.upper_right_menu();">
+                            <span style="color:var(--font-highlight);font-weight: 500;">확인</span>
+                        </span>`;
+        let content =   `<section>${this.dom_list()}</section>`;
+        
+        let html = PopupBase.base(top_left, top_center, top_right, content, "");
+
+        // let html = content;
+
+        document.querySelector(this.target.install).innerHTML = html;
+    }
+
+    dom_list (){
+        let html = this.dom_row_input() + 
+                    `<div style="font-size:12px;color:var(--font-sub-dark);text-align:center;">계정 소유자에 의해 잠겨있는 항목입니다.<br>비밀번호를 입력 해주세요.</div>`;
+
+        return html;
+    }
+
+    dom_row_input(){
+        let html = `<div style="margin:20px 0 10px 0;">
+                        <div style="text-align:center;">
+                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_1" value="" autocomplete="off">
+                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_2" value="" autocomplete="off">
+                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_3" value="" autocomplete="off">
+                            <input type="tel" maxlength="1" class="password_4d_input" id="password_4d_input_slot_4" value="" autocomplete="off">
+                        </div>
+                        <div style="height:2px;width:220px;text-align:center;margin:0 auto">
+                            <div id="password_digit_1" class="password_4d_input_bar"></div>
+                            <div id="password_digit_2" class="password_4d_input_bar"></div>
+                            <div id="password_digit_3" class="password_4d_input_bar"></div>
+                            <div id="password_digit_4" class="password_4d_input_bar"></div>
+                        </div>
+                    </div>`;
+        let self = this;
+
+        $(document).off('keyup', '#password_4d_input_slot_1').on('keyup', '#password_4d_input_slot_1', function(e){
+            let user_input_data = e.target.value;
+            self.data.password_digit_1 = user_input_data;
+            if(e.keyCode == 8){
+                return;
+            }else{
+                setTimeout(()=>{
+                    if(user_input_data != ""){
+                        $('#password_4d_input_slot_2').val("").focus();
+                    }
+                }, 50);
+            }
+        });
+        $(document).off('keyup', '#password_4d_input_slot_2').on('keyup', '#password_4d_input_slot_2', function(e){
+            let user_input_data = e.target.value;
+            self.data.password_digit_2 = user_input_data;
+            if(e.keyCode == 8){
+                let value = $('#password_4d_input_slot_1').val();
+                $('#password_4d_input_slot_1').focus().val('').val(value);
+            }else{
+                if(user_input_data != ""){
+                    $('#password_4d_input_slot_3').val("").focus();
+                }
+            }
+        });
+        $(document).off('keyup', '#password_4d_input_slot_3').on('keyup', '#password_4d_input_slot_3', function(e){
+            let user_input_data = e.target.value;
+            self.data.password_digit_3 = user_input_data;
+            if(e.keyCode == 8){
+                let value = $('#password_4d_input_slot_2').val();
+                $('#password_4d_input_slot_2').focus().val('').val(value);
+            }else{
+                if(user_input_data != ""){
+                    $('#password_4d_input_slot_4').val("").focus();
+                }
+            }
+        });
+        $(document).off('keyup', '#password_4d_input_slot_4').on('keyup', '#password_4d_input_slot_4', function(e){
+            let user_input_data = e.target.value;
+            self.data.password_digit_4 = user_input_data;
+            if(e.keyCode == 8){
+                let value = $('#password_4d_input_slot_3').val();
+                $('#password_4d_input_slot_3').focus().val('').val(value);
+            }else{
+                if(user_input_data != ""){
+                    $('input').blur();
+                }
+            }
+        });
+        return html;
+    }
+
+    request_list (callback){
+        // this.received_data = color_data;
+        // callback();
+    }
+
+    upper_right_menu(){
+        let combined_data = {password : `${this.data.password_digit_1}${this.data.password_digit_2}${this.data.password_digit_3}${this.data.password_digit_4}`};
+        console.log(combined_data.password, this.original_data, "여기")
+        if(combined_data.password != this.original_data){
+            show_error_message("비밀번호가 맞지 않습니다.");
+            return;
+        }
+        this.callback();
         layer_popup.close_layer_popup();
         this.clear();
     }
@@ -4761,7 +4847,7 @@ class BoardWriter{
                         return false;
                     }
                 }
-                $('#board_writer_content_input').summernote('insertImage', jsondata.img_url);
+                $('#board_writer_content_input').summernote('insertImage', data.img_url);
             },
 
             complete:function(){
@@ -4810,6 +4896,414 @@ class BoardWriter{
             }
         }
 
+        this.callback(this.data);
+        layer_popup.close_layer_popup();
+        this.clear();
+    }
+}
+
+class BoardWriter_for_daily_record{
+    constructor(title, install_target, instance, data, callback){
+        this.title = title;
+        this.target = {install:install_target, instance:instance, upper_html:"section_board_writer_upper_html", category_selector:"section_board_writer_category_selector", content_writer:"section_board_writer_content_writer"};
+        this.callback = callback;
+        this.external_data = data;
+        this.data = {
+            title:null,
+            content:null,
+            category:[
+                
+            ],
+            category_selected:{
+                
+            },
+            schedule_id:null,
+            is_member_view:false,
+            images: {}
+        };
+        // this.init();
+        this.set_initial_data();
+        this.init();
+    }
+
+    init(){
+        this.render();
+    }
+
+    set_initial_data(){
+        for(let item in this.external_data){
+            if(this.external_data[item] != undefined){
+                this.data[item] = this.external_data[item];
+            }
+        }
+    }
+
+    clear(){
+        setTimeout(()=>{
+            document.querySelector(this.target.install).innerHTML = "";
+        }, 300);
+    }
+
+    render(){
+        let top_left = `<span class="icon_left" onclick="${this.target.instance}.close();">${CImg.arrow_left()}</span>`;
+        let top_center = `<span class="icon_center">
+                            <span id="">${this.title}</span>
+                          </span>`;
+        let top_right = `<span class="icon_right"  onclick="${this.target.instance}.upper_right_menu();">
+                            <span style="color:var(--font-highlight);font-weight: 500;">저장</span>
+                        </span>`;
+        let content =   `<section id="${this.target.upper_html}">${this.data.upper_html != null ? this.data.upper_html : ""}</section>`+
+                        `<section id="${this.target.category_selector}">${this.dom_assembly_category()}</section>`+
+                        `<section id="${this.target.content_writer}">${this.dom_content_assembly()}</section>`;
+        
+        let html = PopupBase.base(top_left, top_center, top_right, content, "");
+
+        document.querySelector(this.target.install).innerHTML = html;
+        this.init_summernote();
+    }
+
+    render_upper_html(){
+        let html = this.data.upper_html != null ? this.data.upper_html : ""
+        document.getElementById(this.target.upper_html).innerHTML = html;
+    }
+
+    render_category_selector(){
+        let html = this.dom_assembly_category();
+        document.getElementById(this.target.category_selector).innerHTML = html;
+    }
+
+    render_content_writer(){
+        let html = this.dom_content_assembly();
+        document.getElementById(this.target.content_writer).innerHTML = html;
+    }
+
+    dom_content_assembly (){
+        // let upper_html = this.data.upper_html != null ? this.data.upper_html : "";
+        let title_input = `<div class="obj_input_box_full" style="padding:8px 16px;">`+ this.dom_row_subject_input() + `</div>`;
+        let content_input = `<div class="obj_input_box_full">` + this.dom_row_content_input() + `</div>`;
+        // let category = this.dom_assembly_category();
+        let bottom_html = this.data.bottom_html != null ? this.data.bottom_html : "";
+
+        if(this.data.visibility.title == HIDE){
+            title_input = "";
+        }
+        if(this.data.visibility.content == HIDE){
+            content_input = "";
+        }
+
+        let html =  
+                    title_input + 
+                    content_input +
+                    bottom_html;
+
+        return html;
+    }
+
+    dom_assembly_category(){
+        let length = this.data.category.length;
+        let html_to_join = [];
+        for(let i=0; i<length; i++){
+            let html = this.dom_row_category(this.data.category[i]);
+            html_to_join.push(html);
+        }
+        return html_to_join.join("");
+    }
+
+    dom_row_subject_input(){
+        let id = "dom_row_subject_input";
+        let title = this.data.title != null ? this.data.title : "";
+        let placeholder = "제목";
+        let icon = DELETE;
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
+        let style = null;
+        let disabled = false;
+        let onfocusout = (data)=>{
+            this.data.title = data;
+            // this.render_content();
+        };
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+.,\\s 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
+        let pattern_message = "+ - _ ., 제외 특수문자는 입력 불가";
+        let required = "";
+        let row = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, onfocusout, pattern, pattern_message, required);
+        let html = row;
+        return html;
+    }
+
+    dom_row_content_input(){
+        let row = `<div id="board_writer_content_input"></div>`;
+        let html = row;
+        return html;
+    }
+
+    dom_row_category(data){
+        let category_id = data.id;
+        let category_title = data.title;
+        let category_data = data.data;
+
+        let id = `dom_row_category_${category_id}`;
+        let title = category_title;
+        let icon = DELETE;
+        let icon_r_visible = SHOW;
+        let icon_r_text = this.data.category_selected[category_id].text.length == 0 ? '' : this.data.category_selected[category_id].text;
+        // let style = {"display":"inline-block", 'padding':"16px", "padding-right":"0", "width":"43%", "min-width":"170px", "max-width":"208px", "font-size":"14px"};
+        let style = {"display":"inline-block", 'padding':"16px", "padding-right":"0", "width":"43%", "min-width":"300px", "max-width":"320px", "font-size":"14px"};
+        let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            let title = category_title;
+            let install_target = "#wrapper_box_custom_select";
+            let multiple_select = 1;
+            let data = category_data;
+            let selected_data = this.data.category_selected[category_id];
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, popup_style, null, ()=>{
+                custom_selector = new CustomSelector(title, install_target, multiple_select, data, selected_data, (set_data)=>{
+                    this.data.category_selected[category_id] = set_data;
+                    this.render_category_selector();
+                });
+            });
+        });
+        let html = row;
+        return html;
+    }
+
+    init_summernote(){
+        let popup_width = $root_content.width();
+        let category_width = 320;
+        let category_row_number = this.data.category.length / Math.floor(popup_width/category_width);
+
+        let wrapper_top_height = 60;
+        let category_height = 61 * category_row_number;
+        let title_input_height = 65;
+        let summer_note_toolbar_height = 42;
+        let summer_note_textarea_padding = 32;
+        let wrapper_bottom_padding_height = 60;
+
+        let summer_note_textarea_height = $root_content.height() - wrapper_top_height - category_height - title_input_height - summer_note_toolbar_height -summer_note_textarea_padding - wrapper_bottom_padding_height;
+
+        let summernote_attachment = {"name":[], "size":[]};
+        $(`#board_writer_content_input`).summernote({
+            minHeight: 150,
+            maxHeight:summer_note_textarea_height,
+            fontSizes:['12', '14', '16'],
+            placeholder: "내용을 입력해주세요.",
+            tabsize: 2,
+            lang: 'ko-KR',
+            toolbar: [
+                ['style', ['bold', 'italic', 'underline', 'clear']],
+                // ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['insert', ['picture', 'video']],
+                ['para', ['paragraph']],
+                ['table', ['table']],
+            ],
+            focus: false,
+            // fontSize: 14,
+            maximumImageFileSize: 10485760,
+            callbacks:{
+                onImageUpload: function(files) {
+                    if(pass_inspector.data.auth_ads.limit_type == "무료"){
+                        show_error_message("피터스 패스 이용 고객께서만 이미지를 첨부 하실 수 있습니다.");
+                        return false;
+                    }
+                    // if(board_writer.data.category_selected['type'].text.length == 0){
+                    //     show_error_message('게시글 분류부터 선택해주세요.');
+                    //     return false;
+                    // }
+                    // upload image to server and create imgNode...
+                    let img_error_flag = false;
+                    for (let i = files.length - 1; i >= 0; i--) {
+                        if(files[i].size > 10485760){
+                            show_error_message('이미지는 최대 10mb까지 업로드 가능합니다.');
+                            img_error_flag = true;
+                            break;
+                        }
+                    }
+                    if(!img_error_flag){
+                        for (let i = files.length - 1; i >= 0; i--) {
+                            summernote_attachment["name"].push(files[i].name);
+                            summernote_attachment["size"].push(files[i].size/1024000);
+                            board_writer.update_content_img(files[i]);
+                        }
+                    }
+                }
+            },
+        });
+        if(this.data.content == "" || this.data.content == null){
+            this.data.content = " "
+        }
+
+        $(`#board_writer_content_input`).summernote('code', this.data.content);
+        $('.note-editable').blur();
+    }
+
+    update_content_img(file){
+        let date = new Date();
+        let content_img_file_name = file.name+'_'+file.lastModified+'_'+date.getTime();
+        let form_data = new FormData();
+        this.resizeImage(file, (resized_image_blob)=>{
+            form_data.append('content_img_file', resized_image_blob );
+            form_data.append('content_img_file_name', file.lastModified+'_'+file.name);
+            form_data.append('schedule_id', this.data.schedule_id);
+            // form_data.append('board_type_cd', this.data.category_selected['type'].value);
+            let self = this;
+            $.ajax({
+                url: '/schedule/update_daily_record_content_img/',
+                data: form_data,
+                dataType : 'JSON',
+                type:'POST',
+                processData: false,
+                contentType: false,
+                enctype:'multipart/form-data',
+
+                beforeSend: function (xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                    ajax_load_image(SHOW);
+                },
+
+                success:function(data){
+                    check_app_version(data.app_version);
+                    if(data.messageArray != undefined) {
+                        if (data.messageArray.length > 0) {
+                            show_error_message(data.messageArray);
+                            return false;
+                        }
+                    }
+                    $('#board_writer_content_input').summernote('insertImage', data.img_url);
+                    self.data.images[`${data.img_url}`] = null;
+                },
+
+                complete:function(){
+                    ajax_load_image(HIDE);
+                },
+
+                error:function(){
+                    //alert('통신이 불안정합니다.');
+                    show_error_message('통신이 불안정합니다.');
+                }
+            });
+        });
+    }
+
+    resizeImage(file, callback) {
+        // 문서내에 img 객체를 생성합니다
+        var img = document.createElement("img");
+        // 파일을 읽을 수 있는 File Reader 를 생성합니다
+        var reader = new FileReader();
+
+        let self = this;
+        reader.onload = function(event){
+            let file_DataURL = event.target.result;
+            img.src = file_DataURL;
+            // HTML5 canvas 객체를 생성합니다
+            img.onload = ()=>{
+                var canvas = document.createElement("canvas");      
+                var ctx = canvas.getContext("2d");
+
+                // 캔버스에 업로드된 이미지를 그려줍니다
+                ctx.drawImage(img, 0, 0);
+
+                // 최대폭을 400 으로 정했다고 가정했을때
+                // 최대폭을 넘어가는 경우 canvas 크기를 변경해 줍니다.
+                var MAX_WIDTH = 800;
+                var MAX_HEIGHT = 800;
+                var width = img.width;
+                var height = img.height;
+
+                if (width > height) {
+                    if (width > MAX_WIDTH) {
+                        height *= MAX_WIDTH / width;
+                        width = MAX_WIDTH;
+                    }
+                } else {
+                    if (height > MAX_HEIGHT) {
+                        width *= MAX_HEIGHT / height;
+                        height = MAX_HEIGHT;
+                    }
+                }
+                canvas.width = width;
+                canvas.height = height;
+
+                // canvas에 변경된 크기의 이미지를 다시 그려줍니다.
+                var ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0, width, height);
+            
+                // canvas 에 있는 이미지를 img 태그로 넣어줍니다
+                var dataurl = canvas.toDataURL("image/png");
+                callback(self.dataURItoBlob(dataurl));
+            }
+        };
+        reader.readAsDataURL(file);
+    }
+        
+    dataURItoBlob(dataURI) {
+        // convert base64/URLEncoded data component to raw binary data held in a string
+        var byteString;
+        if (dataURI.split(',')[0].indexOf('base64') >= 0)
+            byteString = atob(dataURI.split(',')[1]);
+        else
+            byteString = unescape(dataURI.split(',')[1]);
+    
+        // separate out the mime component
+        var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+    
+        // write the bytes of the string to a typed array
+        var ia = new Uint8Array(byteString.length);
+        for (var i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+        }
+        
+        return new Blob([ia], {type:mimeString});
+    }
+
+    request_list (callback){
+        // this.received_data = color_data;
+        // callback();
+    }
+
+    close(){
+        //업로드 된 이미지를 모두 지운다.
+        for(let image in this.data.images){
+            let data = {"content_img_file_name":image};
+            Plan_daily_record_func.delete_image_from_server(data, ()=>{console.log("서버에서 지우자", image);});
+        }
+        this.clear();
+        layer_popup.close_layer_popup();
+    }
+
+    upper_right_menu(){
+        let content_value = $('#board_writer_content_input').summernote('code');
+        this.data.content = content_value;
+
+        if(this.data.title == null){
+            show_error_message("제목을 입력해주세요.");
+            return false;
+        }
+        if(this.data.content.length <= 1 && this.data.visibility.content != HIDE){
+            show_error_message("내용을 입력해주세요.");
+            return false;
+        }
+        if(this.data.category.length > 0){
+            let selected_value_ok = true;
+            for(let item in this.data.category_selected){
+                if(this.data.category_selected[item].value.length == 0){
+                    selected_value_ok = false;
+                }
+            }
+            if(selected_value_ok == false){
+                show_error_message("카테고리를 선택해주세요.");
+                return false;
+            }
+        }
+
+        if(this.data.content.match(/<img/g) != null){
+            if(this.data.content.match(/img/g).length > 2){
+                show_error_message("이미지는 2장만 첨부 가능합니다.");
+                return false;
+            }
+        }
+        
         this.callback(this.data);
         layer_popup.close_layer_popup();
         this.clear();
@@ -4890,7 +5384,7 @@ class BoardReader{
 
     dom_row_title(){
         let date = this.data.date == null ? "" : this.data.date;
-        if(date != null){
+        if(this.data.date != null){
             let date_info_split = date.split(' ')[0];
             let date_info = date_info_split.split('-');
             let date_text = DateRobot.to_text(date_info[0], date_info[1], date_info[2]);

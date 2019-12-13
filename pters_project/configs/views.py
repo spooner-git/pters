@@ -126,14 +126,14 @@ class AccessTestMixin(UserPassesTestMixin):
         if error is None:
             if url[1] == 'trainee':
                 if group_name == 'trainee':
-                    # func_setting_data_update(self.request, group_name)
-                    # get_function_auth_type_cd(self.request)
+                    func_setting_data_update(self.request, group_name)
+                    get_function_auth_type_cd(self.request)
                     update_finish_schedule_data(self.request)
                     test_result = True
             if url[1] == 'trainer':
                 if group_name == 'trainer':
-                    # func_setting_data_update(self.request, group_name)
-                    # get_function_auth_type_cd(self.request)
+                    func_setting_data_update(self.request, group_name)
+                    get_function_auth_type_cd(self.request)
                     update_finish_schedule_data(self.request)
                     test_result = True
             if url[1] == 'center':
@@ -267,6 +267,8 @@ def func_setting_data_update(request, group):
         request.session['setting_calendar_basic_select_time'] = context['setting_calendar_basic_select_time']
         request.session['setting_calendar_time_selector_type'] = context['setting_calendar_time_selector_type']
         request.session['one_to_one_lecture_time_duration'] = context['one_to_one_lecture_time_duration']
+        request.session['setting_trainer_statistics_lock'] = context['setting_trainer_statistics_lock']
+        request.session['setting_trainer_attend_mode_out_lock'] = context['setting_trainer_attend_mode_out_lock']
         if group == 'trainee':
             try:
                 setting_data = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_LAN_01')

@@ -2,7 +2,9 @@ import collections
 import datetime
 import json
 
+import boto3
 import httplib2
+from awscli.errorhandler import ClientError
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import InternalError
 from django.db import transaction
@@ -19,7 +21,7 @@ from login.models import PushInfoTb
 from trainee.models import MemberTicketTb
 from trainer.functions import func_update_lecture_member_fix_status_cd
 from trainer.models import MemberClassTb, ClassMemberTicketTb, LectureTb, TicketLectureTb
-from .models import ScheduleTb, RepeatScheduleTb, DeleteScheduleTb, DeleteRepeatScheduleTb, HolidayTb
+from .models import ScheduleTb, RepeatScheduleTb, DeleteScheduleTb, DeleteRepeatScheduleTb, HolidayTb, DailyRecordTb
 
 if DEBUG is False:
     from kombu.exceptions import OperationalError
@@ -364,6 +366,7 @@ def func_delete_schedule(class_id, schedule_id,  user_id):
                                                     member_ticket_tb_id=schedule_info.member_ticket_tb_id,
                                                     lecture_schedule_id=schedule_info.lecture_schedule_id,
                                                     delete_repeat_schedule_tb=schedule_info.repeat_schedule_tb_id,
+                                                    daily_record_tb_id=schedule_info.daily_record_tb_id,
                                                     start_dt=schedule_info.start_dt, end_dt=schedule_info.end_dt,
                                                     permission_state_cd=schedule_info.permission_state_cd,
                                                     state_cd=schedule_info.state_cd, note=schedule_info.note,
@@ -374,6 +377,12 @@ def func_delete_schedule(class_id, schedule_id,  user_id):
                                                     reg_dt=schedule_info.reg_dt, mod_dt=timezone.now(), use=UN_USE)
 
             delete_schedule_info.save()
+            daily_record_info = DailyRecordTb.objects.filter(schedule_tb_id=schedule_id)
+            daily_record_info.delete()
+            func_delete_daily_record_content_image_logic(
+                'https://s3.ap-northeast-2.amazonaws.com/pters-image-master/daily-record/'
+                + str(user_id) + '_' + str(class_id) + '/' + str(schedule_id)+'/')
+
             schedule_info.delete()
 
             if str(delete_schedule_info.en_dis_type) == str(ON_SCHEDULE_TYPE):
@@ -705,6 +714,7 @@ def func_get_trainer_schedule_all(class_id, start_date, end_date):
                                    'schedule_type': schedule_type,
                                    'note': schedule_info.note,
                                    'member_name': member_name,
+                                   'daily_record_id': schedule_info.daily_record_tb_id,
                                    'lecture_id': str(lecture_id),
                                    'lecture_name': lecture_name,
                                    'lecture_ing_color_cd': schedule_info.ing_color_cd,
@@ -763,9 +773,11 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
         try:
             member_name = schedule_info.member_ticket_tb.member.name
             member_id = schedule_info.member_ticket_tb.member.member_id
+            member_profile_url = schedule_info.member_ticket_tb.member.profile_url
         except AttributeError:
             member_name = ''
             member_id = ''
+            member_profile_url = '/static/common/icon/icon_account.png'
 
         # 수업 일정인 경우 정보 추가, 수업이 아닌 경우 빈값
         try:
@@ -792,16 +804,22 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
                                                use=USE).order_by('start_dt')
 
         for lecture_member_schedule_info in lecture_member_schedule_data:
+            lecture_member_profile_url = lecture_member_schedule_info.member_ticket_tb.member.profile_url
+            if lecture_member_profile_url is None or lecture_member_profile_url == '':
+                lecture_member_profile_url = '/static/common/icon/icon_account.png'
+
             lecture_schedule_info = {'schedule_id': str(lecture_member_schedule_info.schedule_id),
                                      'member_id': str(lecture_member_schedule_info.member_ticket_tb.member.member_id),
                                      'member_name': lecture_member_schedule_info.member_ticket_tb.member.name,
+                                     'member_profile_url': lecture_member_profile_url,
                                      'member_ticket_id':
                                          str(lecture_member_schedule_info.member_ticket_tb.member_ticket_id),
                                      'schedule_type': GROUP_SCHEDULE,
                                      'start_dt': str(lecture_member_schedule_info.start_dt),
                                      'end_dt': str(lecture_member_schedule_info.end_dt),
                                      'state_cd': lecture_member_schedule_info.state_cd,
-                                     'note': lecture_member_schedule_info.note
+                                     'note': lecture_member_schedule_info.note,
+                                     'daily_record_id': lecture_member_schedule_info.daily_record_tb_id
                                      }
             lecture_schedule_list.append(lecture_schedule_info)
 
@@ -814,6 +832,8 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
                                    'note': schedule_info.note,
                                    'member_name': member_name,
                                    'member_id': member_id,
+                                   'member_profile_url': member_profile_url,
+                                   'daily_record_id': schedule_info.daily_record_tb_id,
                                    'lecture_id': str(lecture_id),
                                    'lecture_name': lecture_name,
                                    'lecture_ing_color_cd': schedule_info.ing_color_cd,
@@ -884,6 +904,7 @@ def func_get_member_schedule_all_by_member_ticket(class_id, member_id):
                          'end_dt': str(end_dt),
                          'state_cd': member_schedule_info.state_cd,
                          'note': member_schedule_info.note,
+                         'daily_record_id': member_schedule_info.daily_record_tb_id
                          }
         schedule_list.append(schedule_info)
         ordered_schedule_dict[member_ticket_id] = {'schedule_data': schedule_list,
@@ -961,6 +982,7 @@ def func_get_member_schedule_all_by_schedule_dt(class_id, member_id):
                          'end_dt': str(end_dt),
                          'state_cd': member_schedule_info.state_cd,
                          'note': member_schedule_info.note,
+                         'daily_record_id': member_schedule_info.daily_record_tb_id,
                          'member_ticket_id': str(member_ticket_tb.member_ticket_id),
                          'member_ticket_name': member_ticket_tb.ticket_tb.name,
                          'member_ticket_state_cd': member_ticket_tb.state_cd,
@@ -1021,6 +1043,7 @@ def func_get_lecture_schedule_all(class_id, lecture_id):
                                       'state_cd': schedule_info.state_cd,
                                       'schedule_type': schedule_type,
                                       'note': schedule_info.note,
+                                      'daily_record_id': schedule_info.daily_record_tb_id,
                                       'lecture_id': str(lecture_id),
                                       'lecture_name': lecture_name,
                                       'lecture_max_member_num': lecture_max_member_num,
@@ -1106,3 +1129,89 @@ def func_get_repeat_schedule_date_list(repeat_type, week_type, repeat_schedule_s
         if idx > 365:
             break
     return repeat_schedule_date_list
+
+
+def func_upload_daily_record_content_image_logic(file, file_name, user_id, class_id, schedule_id):
+
+    # project_id = request.POST.get('project_id', '')
+    # image = request.POST.get('upload_file', '')
+    # context = {'error': None}
+    bucket_name = getattr(settings, "PTERS_AWS_S3_BUCKET_NAME", '')
+
+    s3 = boto3.resource('s3', aws_access_key_id=getattr(settings, "PTERS_AWS_ACCESS_KEY_ID", ''),
+                        aws_secret_access_key=getattr(settings, "PTERS_AWS_SECRET_ACCESS_KEY", ''))
+    bucket = s3.Bucket(bucket_name)
+    exists = True
+    img_url = None
+
+    try:
+        s3.meta.client.head_bucket(Bucket=getattr(settings, "PTERS_AWS_S3_BUCKET_NAME", ''))
+    except ClientError as e:
+        # If a client error is thrown, then check that it was a 404 error.
+        # If it was a 404 error, then the bucket does not exist.
+        error_code = int(e.response['Error']['Code'])
+        if error_code == 404:
+            exists = False
+
+    if exists is True:
+        content = file.read()
+        s3_img_url = 'daily-record/'+str(user_id)+'_'+str(class_id)+'/'+str(schedule_id)+'/'+file_name
+        bucket.put_object(Key=s3_img_url, Body=content, ContentType=file.content_type, ACL='public-read')
+        img_url = 'https://s3.ap-northeast-2.amazonaws.com/'+bucket_name+'/'+s3_img_url
+
+    return img_url
+
+
+def func_delete_daily_record_content_image_logic(file_name):
+
+    # project_id = request.POST.get('project_id', '')
+    # image = request.POST.get('upload_file', '')
+    # context = {'error': None}
+    # print(str(file_name))
+    bucket_name = getattr(settings, "PTERS_AWS_S3_BUCKET_NAME", '')
+    s3 = boto3.resource('s3', aws_access_key_id=getattr(settings, "PTERS_AWS_ACCESS_KEY_ID", ''),
+                        aws_secret_access_key=getattr(settings, "PTERS_AWS_SECRET_ACCESS_KEY", ''))
+    bucket = s3.Bucket(bucket_name)
+    exists = True
+    error_code = None
+
+    try:
+        s3.meta.client.head_bucket(Bucket=getattr(settings, "PTERS_AWS_S3_BUCKET_NAME", ''))
+    except ClientError as e:
+        # If a client error is thrown, then check that it was a 404 error.
+        # If it was a 404 error, then the bucket does not exist.
+        error_code = int(e.response['Error']['Code'])
+        if error_code == 404:
+            exists = False
+
+    if exists is True:
+        # image_format, image_str = content.split(';base64,')
+        # ext = image_format.split('/')[-1]
+        # data = ContentFile(base64.b64decode(image_str), name='temp.' + ext)
+        file_name_split = file_name.split('https://s3.ap-northeast-2.amazonaws.com/pters-image-master/')
+        if len(file_name_split) >= 2:
+            s3_img_url = file_name.split('https://s3.ap-northeast-2.amazonaws.com/pters-image-master/')[1]
+            bucket.objects.filter(Prefix=s3_img_url).delete()
+
+            # if s3_img_url in '.jpg' or s3_img_url in '.png':
+            #     objects_to_delete = [{'Key': s3_img_url}]
+            #     try:
+            #         bucket.delete_objects(
+            #             Delete={
+            #                 'Objects': objects_to_delete
+            #             })
+            #     except ClientError:
+            #         error_code = '이미지 삭제중 오류가 발생했습니다.'
+            # else:
+            #     for key in bucket.list(prefix=s3_img_url):
+            #         objects_to_delete = [{'Key': key}]
+            #         try:
+            #             bucket.delete_objects(
+            #                 Delete={
+            #                     'Objects': objects_to_delete
+            #                 })
+            #         except ClientError:
+            #             error_code = '이미지 삭제중 오류가 발생했습니다.'
+        else:
+            error_code = None
+    return error_code

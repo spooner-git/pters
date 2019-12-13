@@ -156,12 +156,13 @@ class Service_notice {
             let data = {
                 title:title, content:content, date:date
             };
-            board_reader = new BoardReader("공지", '.popup_board_reader', "board_reader", data);});
+            board_reader = new BoardReader("공지", '.popup_board_reader', "board_reader", data);
+        });
     }
 
 
     //수강권 리스트 서버에서 불러오기
-    request_notice_list (callback){
+    request_notice_list (callback, error_callback){
         let url = '/board/get_notice_list/';
 
         $.ajax({
@@ -197,6 +198,9 @@ class Service_notice {
     
             //통신 실패시 처리
             error:function (){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 console.log('server error');
             }
         });

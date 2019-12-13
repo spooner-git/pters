@@ -417,7 +417,7 @@ class Setting_worktime{
             this.data_sending_now = false;
             this.set_initial_data();
             show_error_message('변경 내용이 저장되었습니다.');
-        });
+        }, ()=>{this.data_sending_now = false;});
     }
 
     check_before_send(){
@@ -444,7 +444,7 @@ class Setting_worktime{
 }
 
 class Setting_worktime_func{
-    static update(data, callback){
+    static update(data, callback, error_callback){
         //업무 시간 설정
         $.ajax({
             url:"/trainer/update_setting_work_time/",
@@ -480,13 +480,16 @@ class Setting_worktime_func{
     
             //통신 실패시 처리
             error:function (){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 console.log('server error');
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
             }
         });
     }
 
-    static read(callback){
+    static read(callback, error_callback){
         $.ajax({
             url:"/trainer/get_trainer_setting_data/",
             type:'GET',
@@ -519,6 +522,9 @@ class Setting_worktime_func{
     
             //통신 실패시 처리
             error:function (){
+                if(error_callback != undefined){
+                    error_callback();
+                }
                 console.log('server error');
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
             }
