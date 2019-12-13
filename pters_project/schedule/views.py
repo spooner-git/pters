@@ -1,6 +1,7 @@
 import base64
 import datetime
 import logging
+import random
 
 import boto3
 from botocore.exceptions import ClientError
@@ -2395,9 +2396,13 @@ def update_daily_record_content_img_logic(request):
     context = {}
     if request.method == 'POST':
         # 대표 이미지 설정
+
+        max_range = 9999999999
+        random_file_name = str(random.randrange(0, max_range)).zfill(len(str(max_range)))
         try:
             img_url = func_upload_daily_record_content_image_logic(request.FILES['content_img_file'],
-                                                                   request.POST.get('content_img_file_name'),
+                                                                   # request.POST.get('content_img_file_name'),
+                                                                   random_file_name,
                                                                    request.user.id,
                                                                    request.session.get('class_id'),
                                                                    request.POST.get('schedule_id'))
