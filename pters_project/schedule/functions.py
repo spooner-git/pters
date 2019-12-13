@@ -774,6 +774,8 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
             member_name = schedule_info.member_ticket_tb.member.name
             member_id = schedule_info.member_ticket_tb.member.member_id
             member_profile_url = schedule_info.member_ticket_tb.member.profile_url
+            if member_profile_url is None or member_profile_url == '':
+                member_profile_url = '/static/common/icon/icon_account.png'
         except AttributeError:
             member_name = ''
             member_id = ''
