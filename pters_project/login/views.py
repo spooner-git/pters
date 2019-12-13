@@ -747,8 +747,6 @@ class AddTempMemberInfoView(RegistrationView, View):
             error = '가입되지 않은 회원입니다.'
 
         if error is None:
-
-        if error is None:
             if form.is_valid():
                 try:
                     with transaction.atomic():

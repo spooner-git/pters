@@ -4845,6 +4845,12 @@ def update_member_profile_img_logic(request):
         error = '회원 정보를 불러오지 못했습니다.'
 
     if error is None:
+        if member_info.user.is_active:
+            error = '회원가입이 완료된 회원의 프로필 이미지는 등록/수정이 불가능합니다.'
+        if str(member_info.reg_info) != str(request.user.id):
+            error = '직접 등록한 회원만 프로필 이미지만 등록/수정이 가능합니다.'
+
+    if error is None:
         if member_info.profile_url is not None and member_info.profile_url != '':
             error = func_delete_profile_image_logic(member_info.profile_url)
 
@@ -4881,6 +4887,12 @@ def delete_member_profile_img_logic(request):
         member_info = MemberTb.objects.get(member_id=member_id)
     except ObjectDoesNotExist:
         error = '회원 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        if member_info.user.is_active:
+            error = '회원가입이 완료된 회원의 프로필 이미지는 삭제가 불가능합니다.'
+        if str(member_info.reg_info) != str(request.user.id):
+            error = '직접 등록한 회원만 프로필 이미지 삭제 가능합니다.'
 
     if error is None:
         if member_info.profile_url is not None and member_info.profile_url != '':
