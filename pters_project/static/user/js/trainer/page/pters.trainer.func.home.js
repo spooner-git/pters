@@ -109,7 +109,7 @@ class Home {
                             my_pters_pass_dom = '<div class="contents">' + this.dom_row_my_pters_pass() + '</div>';
                             current_date = '<div class="contents">' + this.dom_row_current_date() + '</div>';
 
-                            let html = current_date + program_dom + plan_dom + end_alert_dom + sales_summary_dom + my_pters_pass_dom;
+                            let html = current_date + program_dom + plan_dom + end_alert_dom + sales_summary_dom;
                             document.querySelector('#home_content_wrap').innerHTML = html;
                             // $('#root_content').scrollTop(0);
                         });
@@ -148,7 +148,7 @@ class Home {
         let my_pters_pass_dom;
         my_pters_pass_dom = '<div class="contents">' + this.dom_row_my_pters_pass() + '</div>';
                         
-        let html = current_date_dom + program_dom + plan_dom + end_alert_dom + sales_summary_dom + my_pters_pass_dom;
+        let html = current_date_dom + program_dom + plan_dom + end_alert_dom + sales_summary_dom;
         document.querySelector('#home_content_wrap').innerHTML = html;
     }
 
