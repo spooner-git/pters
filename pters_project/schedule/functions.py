@@ -773,9 +773,11 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
         try:
             member_name = schedule_info.member_ticket_tb.member.name
             member_id = schedule_info.member_ticket_tb.member.member_id
+            member_profile_url = schedule_info.member_ticket_tb.member.profile_url
         except AttributeError:
             member_name = ''
             member_id = ''
+            member_profile_url = '/static/common/icon/icon_account.png'
 
         # 수업 일정인 경우 정보 추가, 수업이 아닌 경우 빈값
         try:
@@ -802,9 +804,14 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
                                                use=USE).order_by('start_dt')
 
         for lecture_member_schedule_info in lecture_member_schedule_data:
+            lecture_member_profile_url = lecture_member_schedule_info.member_ticket_tb.member.profile_url
+            if lecture_member_profile_url is None or lecture_member_profile_url == '':
+                lecture_member_profile_url = '/static/common/icon/icon_account.png'
+
             lecture_schedule_info = {'schedule_id': str(lecture_member_schedule_info.schedule_id),
                                      'member_id': str(lecture_member_schedule_info.member_ticket_tb.member.member_id),
                                      'member_name': lecture_member_schedule_info.member_ticket_tb.member.name,
+                                     'member_profile_url': lecture_member_profile_url,
                                      'member_ticket_id':
                                          str(lecture_member_schedule_info.member_ticket_tb.member_ticket_id),
                                      'schedule_type': GROUP_SCHEDULE,
@@ -825,6 +832,7 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
                                    'note': schedule_info.note,
                                    'member_name': member_name,
                                    'member_id': member_id,
+                                   'member_profile_url': member_profile_url,
                                    'daily_record_id': schedule_info.daily_record_tb_id,
                                    'lecture_id': str(lecture_id),
                                    'lecture_name': lecture_name,
