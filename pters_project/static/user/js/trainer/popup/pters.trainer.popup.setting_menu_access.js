@@ -324,24 +324,26 @@ class Setting_menu_access{
     }
 
     send_data(){
-        if(this.data_sending_now == true){
-            return false;
-        }else if(this.data_sending_now == false){
-            this.data_sending_now = true;
-        }
+        Setting_menu_access_func.locked_menu(()=>{
+            if(this.data_sending_now == true){
+                return false;
+            }else if(this.data_sending_now == false){
+                this.data_sending_now = true;
+            }
 
-        let data = {
-            "setting_admin_password":this.data.password,
-            "setting_trainer_statistics_lock":this.data.menu_lock.statistics,
-            "setting_trainer_attend_mode_out_lock":this.data.menu_lock.attend_mode_out
-        };
-        
-        Setting_menu_access_func.update(data, ()=>{
-            this.data_sending_now = false;
-            this.set_initial_data();
-            show_error_message('변경 내용이 저장되었습니다.');
-            // this.render_content();
-        }, ()=>{this.data_sending_now = false;});
+            let data = {
+                "setting_admin_password":this.data.password,
+                "setting_trainer_statistics_lock":this.data.menu_lock.statistics,
+                "setting_trainer_attend_mode_out_lock":this.data.menu_lock.attend_mode_out
+            };
+            
+            Setting_menu_access_func.update(data, ()=>{
+                this.data_sending_now = false;
+                this.set_initial_data();
+                show_error_message('변경 내용이 저장되었습니다.');
+                // this.render_content();
+            }, ()=>{this.data_sending_now = false;});
+        });
     }
 
     upper_right_menu(){

@@ -4463,10 +4463,10 @@ class PasswordInput{
     }
 
     set_initial_data(){
-        this.data.password_digit_1 = Number(String(this.original_data).substr(0, 1));
-        this.data.password_digit_2 = Number(String(this.original_data).substr(1, 1));
-        this.data.password_digit_3 = Number(String(this.original_data).substr(2, 1));
-        this.data.password_digit_4 = Number(String(this.original_data).substr(3, 1));
+        // this.data.password_digit_1 = Number(String(this.original_data).substr(0, 1));
+        // this.data.password_digit_2 = Number(String(this.original_data).substr(1, 1));
+        // this.data.password_digit_3 = Number(String(this.original_data).substr(2, 1));
+        // this.data.password_digit_4 = Number(String(this.original_data).substr(3, 1));
         this.init();
     }
 
@@ -4578,8 +4578,9 @@ class PasswordInput{
 
     upper_right_menu(){
         let combined_data = {password : `${this.data.password_digit_1}${this.data.password_digit_2}${this.data.password_digit_3}${this.data.password_digit_4}`};
+        console.log(combined_data.password, this.original_data, "여기")
         if(combined_data.password != this.original_data){
-            show_error_message("비밀번호가 맞지 않습니다.")
+            show_error_message("비밀번호가 맞지 않습니다.");
             return;
         }
         this.callback();
