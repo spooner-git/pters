@@ -128,7 +128,8 @@ class Mypage_photo_update{
 		$('.upload-result').on('click', function(){
 			self.uploadCrop.croppie('result', {
 				type: 'base64',
-				size: 'viewport',
+                // size: 'viewport',
+                size:{width:600, height:600},
                 format: 'png'
 			}).then(function (resp) {
                 // $('#result').attr('src', resp);
