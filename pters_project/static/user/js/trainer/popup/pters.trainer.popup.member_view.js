@@ -375,9 +375,11 @@ class Member_view{
                 disabled = true;
             }
             if(disabled == true){
-                show_error_message("수강 회원님께서 PTERS에 직접 접속하신 이후로는 <br> 타인이 정보를 수정할 수 없습니다.");
+                let edit_enable = false;
+                this.event_edit_photo(edit_enable);
             }else{
-                this.event_edit_photo();
+                let edit_enable = true;
+                this.event_edit_photo(edit_enable);
             }
         };
 
@@ -667,8 +669,14 @@ class Member_view{
         return html;
     }
 
-    event_edit_photo(){
+    event_edit_photo(edit_enable){
         let user_option = {
+            view:{text:"사진 보기", callback:()=>{
+                    layer_popup.close_layer_popup();
+                    let profile_img = `<img src="${this.data.profile_img}" style="width:100%;">`;
+                    show_error_message(profile_img);
+                }
+            },
             change:{text:"프로필 사진 변경", callback:()=>{
                     layer_popup.close_layer_popup();
                     let external_data = {member_id: this.member_id, callback:()=>{this.init();}};
@@ -722,6 +730,12 @@ class Member_view{
                 }
             }
         };
+
+        if(edit_enable == false){
+            delete user_option.change;
+            delete user_option.delete;
+        }
+
         let options_padding_top_bottom = 16;
         let button_height = 8 + 8 + 52;
         let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
