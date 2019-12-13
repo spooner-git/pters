@@ -181,7 +181,7 @@ class Plan_daily_record_func{
         let upperhtml = `<div style="padding:20px 10px;font-size:13px;">
                             <div style="color:var(--font-main);font-size:15px;">일지 작성 대상: ${schedule_name_array.join(", ")}</div>
                             <div style="color:var(--font-highlight)">일지는 해당 회원님께서 확인하실 수 있습니다.</div>
-                            <div>이미지는 자동 리사이즈 되어 업로드 되며, 최대 2장까지 첨부 가능합니다.</div>
+                            <div>이미지는 자동 리사이즈 되며, 최대 2장 첨부 가능합니다.</div>
                             <div style="font-size:11px;">${pass_inspector.data.auth_ads.limit_type == "무료"
                                 ? "(피터스 패스 이용 고객께서만 이미지를 첨부 하실 수 있습니다.)" 
                                 : "" }

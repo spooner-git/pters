@@ -1,5 +1,5 @@
 class PopupBase{
-    static base(top_left, top_center, top_right, content, bottom, wrapper_middle_style){
+    static base(top_left, top_center, top_right, content, bottom){
 
 
         let html = `
@@ -8,7 +8,7 @@ class PopupBase{
                         ${top_center}
                         ${top_right}
                     </div>
-                    <div class="wrapper_middle" style="${PopupBase.data_to_style_code(wrapper_middle_style)}">
+                    <div class="wrapper_middle">
                         ${content}
                     </div>
                     <div class="wrapper_bottom">

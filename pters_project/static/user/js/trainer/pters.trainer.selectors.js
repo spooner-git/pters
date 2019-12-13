@@ -5071,16 +5071,6 @@ class BoardWriter_for_daily_record{
         let category_width = 320;
         let category_row_number = this.data.category.length / Math.floor(popup_width/category_width);
 
-        // let wrapper_top_height = 60;
-        // let category_height = 61 * category_row_number;
-        // let title_input_height = 65;
-        // let summer_note_toolbar_height = 42;
-        // let summer_note_textarea_padding = 32;
-        // let wrapper_bottom_padding_height = 60;
-        // let wrapper_middle_padding_bottom = 60;
-
-        // let summer_note_textarea_height = $root_content.height() - wrapper_top_height - category_height - title_input_height - summer_note_toolbar_height -summer_note_textarea_padding - wrapper_bottom_padding_height - wrapper_middle_padding_bottom;
-
         let category_height = 100;
         let summer_note_toolbar_height = 42;
         let wrapper_middle_padding_top = 60;
@@ -5093,7 +5083,6 @@ class BoardWriter_for_daily_record{
         $(`#board_writer_content_input`).summernote({
             minHeight: 150,
             maxHeight:summer_note_textarea_height,
-            // height:summer_note_textarea_height,
             fontSizes:['12', '14', '16'],
             placeholder: "내용을 입력해주세요.",
             tabsize: 2,
