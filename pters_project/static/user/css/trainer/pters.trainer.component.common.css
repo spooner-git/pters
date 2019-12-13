@@ -417,8 +417,8 @@ input:disabled{
 	padding-bottom:6px;
 	padding-left:14px; */
 
-	box-shadow: var(--box-shadow-article);
-	margin-bottom: 4px;
+	/* box-shadow: var(--box-shadow-article); */
+	/* margin-bottom: 4px; */
 	border-top:var(--border-article);
 	border-bottom:var(--border-article);
 	padding: 6px 14px;
