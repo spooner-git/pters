@@ -24,10 +24,11 @@ class Member_view{
             birth: null,
             sex: null,
             memo: null,
-            email:null,
+            email: null,
+            profile_img: null,
 
-            connection:null,
-            active:null,
+            connection: null,
+            active: null,
 
             ticket:
                 [
@@ -180,6 +181,7 @@ class Member_view{
             this.data.connection = data.member_connection_check;
             this.data.active = data.member_is_active;
             this.data.email = data.member_email;
+            this.data.profile_img = data.member_profile_url;
 
 
             Member_func.read_ticket_list({"member_id":this.member_id}, (data)=>{
@@ -192,7 +194,7 @@ class Member_view{
                 member_ticket_list.sort(function(a, b){
                     let return_val = 0;
                     if(a.member_ticket_start_date < b.member_ticket_start_date){
-                      return_val = -1;
+                        return_val = -1;
                     }
                     else if(a.member_ticket_start_date > b.member_ticket_start_date){
                         return_val = 1;
@@ -332,7 +334,7 @@ class Member_view{
         let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text;
-        let style = {"font-size":"20px", "font-weight":"bold", "letter-spacing":"-1px", "color":"var(--font-main)"};
+        let style = {"font-size":"20px", "font-weight":"bold", "letter-spacing":"-1px", "color":"var(--font-main)", "text-align":"center"};
         let disabled = false;
         let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+.,@一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{1,20}";
         let pattern_message = ". , + - _ @ 제외 특수문자는 입력 불가";
@@ -348,12 +350,41 @@ class Member_view{
         
         let html = `
         <div class="member_view_upper_box">
-            <div style="display:inline-block;width:100%;">
+            <div style="padding-top:10px;text-align:center;">
+                ${this.dom_row_profile_image()}
+            </div>
+            <div style="width:100%;">
                     ${sub_html}
             </div>
             <span style="display:none;">${title}</span>
         </div>
         `;
+        return html;
+    }
+
+    dom_row_profile_image(){
+        let id = "member_profile_image";
+        let title = `<img src="${this.data.profile_img}" style="width:75px;height:75px;border-radius:50%;">`;
+        if(this.data.profile_img == null){
+            title = CImg.blank("", {"width":"75px", "height":"75px"});
+        }
+        let style = {"height":"auto"};
+        let onclick = ()=>{
+            let disabled = false;
+            if(this.data.active == 'True'){
+                disabled = true;
+            }
+            if(disabled == true){
+                let edit_enable = false;
+                this.event_edit_photo(edit_enable);
+            }else{
+                let edit_enable = true;
+                this.event_edit_photo(edit_enable);
+            }
+        };
+
+        let html = CComponent.text_button (id, title, style, onclick);
+
         return html;
     }
 
@@ -636,6 +667,82 @@ class Member_view{
         let html = html_to_join.join('');
 
         return html;
+    }
+
+    event_edit_photo(edit_enable){
+        let user_option = {
+            view:{text:"사진 보기", callback:()=>{
+                    layer_popup.close_layer_popup();
+                    let profile_img = `<img src="${this.data.profile_img}" style="width:100%;">`;
+                    show_error_message(profile_img);
+                }
+            },
+            change:{text:"프로필 사진 변경", callback:()=>{
+                    layer_popup.close_layer_popup();
+                    let external_data = {member_id: this.member_id, callback:()=>{this.init();}};
+                    let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_VIEW_PHOTO_UPDATE, 100, popup_style, null, ()=>{
+                        member_view_photo_update_popup = new Member_view_photo_update('.popup_member_view_photo_update', external_data);
+                    });
+                }
+            },
+            delete:{text:"프로필 사진 삭제", callback:()=>{
+                    let data = {"member_id": this.member_id};
+                    let self = this;
+                    $.ajax({
+                        url: '/trainer/delete_member_profile_img/',
+                        dataType : 'html',
+                        data: data,
+                        type:'POST',
+
+                        beforeSend: function (xhr, settings) {
+                            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                            }
+                            ajax_load_image(SHOW);
+                        },
+
+                        success:function(data){
+                            let jsondata = JSON.parse(data);
+                            check_app_version(jsondata.app_version);
+                            if(jsondata.messageArray.length>0){
+                                show_error_message(jsondata.messageArray);
+                                return false;
+                            }
+                            try{
+                                current_page.init();
+                            }catch(e){}
+                            try{
+                                self.init();
+                            }catch(e){}
+                        },
+
+                        complete:function(){
+                            ajax_load_image(HIDE);
+                        },
+
+                        error:function(){
+                            //alert('통신이 불안정합니다.');
+                            show_error_message('통신이 불안정합니다.');
+                        }
+                    });
+                    layer_popup.close_layer_popup();
+                }
+            }
+        };
+
+        if(edit_enable == false){
+            delete user_option.change;
+            delete user_option.delete;
+        }
+
+        let options_padding_top_bottom = 16;
+        let button_height = 8 + 8 + 52;
+        let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
+        let root_content_height = $root_content.height();
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
+            option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+        });
     }
 
     send_data(){

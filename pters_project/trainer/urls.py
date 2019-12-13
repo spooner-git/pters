@@ -90,6 +90,9 @@ urlpatterns = [
     url(r'^update_member_connection_info/$', views.update_member_connection_info_logic,
         name='update_member_connection_info'),
 
+    # 회원 프로필 업데이트/삭제
+    url(r'^update_member_profile_img', views.update_member_profile_img_logic, name='update_member_profile_img'),
+    url(r'^delete_member_profile_img', views.delete_member_profile_img_logic, name='delete_member_profile_img'),
 
 
     # 수업 기능 ##########################################################################################################
@@ -312,7 +315,6 @@ urlpatterns = [
     # 프로그램 추가 페이지
     url(r'^add_program/$', views.add_program_logic, name='add_program'),
     # url(r'^refresh_all_data/$', views.refresh_all_data_logic, name='refresh_all_data')
-
 
 
     url(r'^update_trainer_board_content_img/$', views.update_trainer_board_content_img_logic,

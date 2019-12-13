@@ -16,7 +16,8 @@
 	position: -webkit-sticky; */
 	position: relative;
 	top: 0;
-	padding: 0 16px 20px 60px;
+	/* padding: 0 16px 20px 60px; */
+	padding: 0 16px 20px 16px;
 }
 
 .popup_member_view .popup_content{
