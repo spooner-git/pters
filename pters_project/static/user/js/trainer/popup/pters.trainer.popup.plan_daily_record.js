@@ -17,7 +17,6 @@ class Plan_daily_record{
     }
 
     set_initial_data(data_){
-        console.log("data_", data_)
         this.data = [];
         let data = data_.schedule_info[0];
         let schedule_type = data.schedule_type;
@@ -42,6 +41,7 @@ class Plan_daily_record{
 
     request_list (callback){
         Plan_func.read_plan(this.schedule_id, (data)=>{
+            console.log("asdf", data)
             this.set_initial_data(data); // 초기값을 미리 셋팅한다.
             callback(data);
         });
