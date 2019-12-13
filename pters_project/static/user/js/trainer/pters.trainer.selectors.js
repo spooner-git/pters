@@ -4952,7 +4952,7 @@ class BoardWriter_for_daily_record{
         let top_right = `<span class="icon_right"  onclick="${this.target.instance}.upper_right_menu();">
                             <span style="color:var(--font-highlight);font-weight: 500;">저장</span>
                         </span>`;
-        let content =   `<section id="${this.target.upper_html}">${this.data.upper_html != null ? this.data.upper_html : ""}</section>`+
+        let content =   `<section id="${this.target.upper_html}" style="height:100px;overflow:auto;">${this.data.upper_html != null ? this.data.upper_html : ""}</section>`+
                         `<section id="${this.target.category_selector}">${this.dom_assembly_category()}</section>`+
                         `<section id="${this.target.content_writer}">${this.dom_content_assembly()}</section>`;
         
@@ -5071,30 +5071,37 @@ class BoardWriter_for_daily_record{
         let category_width = 320;
         let category_row_number = this.data.category.length / Math.floor(popup_width/category_width);
 
-        let wrapper_top_height = 60;
-        let category_height = 61 * category_row_number;
-        let title_input_height = 65;
-        let summer_note_toolbar_height = 42;
-        let summer_note_textarea_padding = 32;
-        let wrapper_bottom_padding_height = 60;
+        // let wrapper_top_height = 60;
+        // let category_height = 61 * category_row_number;
+        // let title_input_height = 65;
+        // let summer_note_toolbar_height = 42;
+        // let summer_note_textarea_padding = 32;
+        // let wrapper_bottom_padding_height = 60;
+        // let wrapper_middle_padding_bottom = 60;
 
-        let summer_note_textarea_height = $root_content.height() - wrapper_top_height - category_height - title_input_height - summer_note_toolbar_height -summer_note_textarea_padding - wrapper_bottom_padding_height;
+        // let summer_note_textarea_height = $root_content.height() - wrapper_top_height - category_height - title_input_height - summer_note_toolbar_height -summer_note_textarea_padding - wrapper_bottom_padding_height - wrapper_middle_padding_bottom;
+
+        let category_height = 100;
+        let summer_note_toolbar_height = 42;
+        let wrapper_middle_padding_top = 60;
+        let wrapper_middle_padding_bottom = 60;
+        let summer_note_textarea_bottom_bar = 15;
+
+        let summer_note_textarea_height = $root_content.height() -  category_height - summer_note_toolbar_height - wrapper_middle_padding_top - wrapper_middle_padding_bottom - summer_note_textarea_bottom_bar;
 
         let summernote_attachment = {"name":[], "size":[]};
         $(`#board_writer_content_input`).summernote({
             minHeight: 150,
-            maxHeight:summer_note_textarea_height,
+            // maxHeight:summer_note_textarea_height,
             fontSizes:['12', '14', '16'],
             placeholder: "내용을 입력해주세요.",
             tabsize: 2,
             lang: 'ko-KR',
             toolbar: [
-                ['style', ['bold', 'italic', 'underline', 'clear']],
-                // ['fontsize', ['fontsize']],
+                ['style', ['bold', 'underline']],
                 ['color', ['color']],
                 ['insert', ['picture', 'video']],
                 ['para', ['paragraph']],
-                ['table', ['table']],
             ],
             focus: false,
             // fontSize: 14,
