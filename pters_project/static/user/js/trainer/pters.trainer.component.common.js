@@ -536,22 +536,27 @@ class CComponent{
 
     //회원의 일정 이력에 사용되는 행
     static schedule_history_row (numbering, schedule_id, date, schedule_name, attend_status, memo, daily_record_id, callback){
+        let sign_image = `<img src="https://s3.ap-northeast-2.amazonaws.com/pters-image-master/${schedule_id}.png" style="height:100%;filter:invert(1);" onerror="this.onerror=null;this.src='/static/common/icon/icon_no_signature.png'">`;
         let tag_daily_record = daily_record_id == null ? "" : "<div style='display:inline-block;font-size:10px;padding:0 2px;border:1px solid var(--font-main);border-radius:5px;margin-left:3px;'>일지</div>";
         let html = `<li class="schedule_history_row" id="schedule_history_row_${schedule_id}">`;
         let raw_1 = `<div class="obj_table_raw">
-                            <div class="cell_schedule_num">${numbering}</div>
-                            <div class="cell_schedule_info">${schedule_name} ${tag_daily_record}</div>
-                            <div class="cell_schedule_attend" style="color:${SCHEDULE_STATUS_COLOR[attend_status]}">${SCHEDULE_STATUS[attend_status]}</div>
-                        </div>`;
+                        <div class="cell_schedule_num">${numbering}</div>
+                        <div class="cell_schedule_info">${schedule_name} ${tag_daily_record}</div>
+                        <div class="cell_schedule_attend"></div>
+                    </div>`;
         let raw_2 = `<div class="obj_table_raw table_date_info">
-                            <div class="cell_schedule_num"></div>
-                            <div class="cell_schedule_info">${date}</div>
-                        </div>`;
+                        <div class="cell_schedule_num" style="color:${SCHEDULE_STATUS_COLOR[attend_status]}">${SCHEDULE_STATUS[attend_status]}</div>
+                        <div class="cell_schedule_info">${date}</div>
+                    </div>`;
         let raw_3 = `<div class="obj_table_raw table_memo_info">
-                            <div class="cell_schedule_num"></div>
-                            <div class="cell_schedule_info">${memo}</div>
-                        </div>`;
-        html += raw_1 + raw_2;
+                        <div class="cell_schedule_num"></div>
+                        <div class="cell_schedule_info">${memo}</div>
+                    </div>`;
+        html += 
+                `<div style="display:flex;height:44px;">
+                    <div style="flex:1 1 0;">${raw_1} ${raw_2}</div>
+                    <div style="flex-basis:80px;text-align:right;">${attend_status == SCHEDULE_FINISH ? sign_image : ''}</div>
+                </div>`;
         if(memo != ''){
             html += raw_3;
         }
