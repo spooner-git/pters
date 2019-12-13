@@ -39,6 +39,9 @@
 .popup_plan_daily_record .plan_daily_record_member_row{
 	display: flex;
 }
+.popup_plan_daily_record .plan_daily_record_member_row_profile_img{
+	flex-basis: 50px;
+}
 .popup_plan_daily_record .plan_daily_record_member_row_name{
 	flex: 1 1 0;
 	overflow: hidden;

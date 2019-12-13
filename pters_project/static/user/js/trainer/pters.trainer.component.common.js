@@ -485,10 +485,13 @@ class CComponent{
     }
 
     //출석 체크 팝업에 사용되는 행
-    static select_attend_row (checked_absence, checked_attend, location, member_id, member_name, onclick){
+    static select_attend_row (checked_absence, checked_attend, location, member_id, member_name, profile_img, onclick){
         let html = `
                     <li class="select_attend_row sar_${location}" id="sar_${member_id}">
                         <div style="display:flex;">
+                            <div class="cell_member_profile_img">
+                                <img src="${profile_img}" style="height:35px;border-radius:50%;vertical-align:middle;margin-bottom:3px;">
+                            </div>
                             <div class="cell_member_name">
                                 <span>${member_name}</span>
                             </div>
