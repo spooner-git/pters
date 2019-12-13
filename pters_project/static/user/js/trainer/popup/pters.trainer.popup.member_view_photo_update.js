@@ -2,11 +2,12 @@ class Member_view_photo_update{
     constructor(install_target, external_data){
         this.target = {install: install_target, toolbox:'section_member_view_photo_update_toolbox', content:'section_member_view_photo_update_content'};
         this.form_id = 'id_member_view_photo_update_form';
+        this.external_data = external_data;
 
         this.data = {
             src:null,
             file:null,
-            member_id: external_data.member_id
+            member_id: this.external_data.member_id
         };
         this.uploadCrop;
         this.user_file;
@@ -185,8 +186,9 @@ class Member_view_photo_update{
                             let form_data = new FormData();
                             form_data.append('profile_img_file', this.data.file);
                             form_data.append('member_id', this.data.member_id);
+                            let self = this;
                             $.ajax({
-                                url: '/update_member_profile_img/',
+                                url: '/trainer/update_member_profile_img/',
                                 data: form_data,
                                 dataType : 'html',
                                 type:'POST',
@@ -216,7 +218,7 @@ class Member_view_photo_update{
                                         current_page.init();
                                     }catch(e){}
                                     try{
-                                        this.external_data.callback();
+                                        self.external_data.callback();
                                     }catch(e){}
                                 },
 

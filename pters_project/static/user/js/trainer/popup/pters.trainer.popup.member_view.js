@@ -363,12 +363,25 @@ class Member_view{
     }
 
     dom_row_profile_image(){
-        let image = `<img src="${this.data.profile_img}" style="width:75px;height:75px;border-radius:50%;">`;
+        let id = "member_profile_image";
+        let title = `<img src="${this.data.profile_img}" style="width:75px;height:75px;border-radius:50%;">`;
         if(this.data.profile_img == null){
-            image = CImg.blank("", {"width":"75px", "height":"75px"});
+            title = CImg.blank("", {"width":"75px", "height":"75px"});
         }
+        let style = {"height":"auto"};
+        let onclick = ()=>{
+            let disabled = false;
+            if(this.data.active == 'True'){
+                disabled = true;
+            }
+            if(disabled == true){
+                show_error_message("수강 회원님께서 PTERS에 직접 접속하신 이후로는 <br> 타인이 정보를 수정할 수 없습니다.");
+            }else{
+                this.event_edit_photo();
+            }
+        };
 
-        let html = `<div onclick="member_view_popup.event_edit_photo();">${image}</div>`
+        let html = CComponent.text_button (id, title, style, onclick);
 
         return html;
     }
@@ -658,7 +671,7 @@ class Member_view{
         let user_option = {
             change:{text:"프로필 사진 변경", callback:()=>{
                     layer_popup.close_layer_popup();
-                    let external_data = {"member_id": this.member_id, "callback":()=>{this.init();}};
+                    let external_data = {member_id: this.member_id, callback:()=>{this.init();}};
                     let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_VIEW_PHOTO_UPDATE, 100, popup_style, null, ()=>{
                         member_view_photo_update_popup = new Member_view_photo_update('.popup_member_view_photo_update', external_data);
@@ -669,7 +682,7 @@ class Member_view{
                     let data = {"member_id": this.member_id};
                     let self = this;
                     $.ajax({
-                        url: '/delete_member_profile_img/',
+                        url: '/trainer/delete_member_profile_img/',
                         dataType : 'html',
                         data: data,
                         type:'POST',
