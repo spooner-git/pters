@@ -24,10 +24,11 @@ class Member_view{
             birth: null,
             sex: null,
             memo: null,
-            email:null,
+            email: null,
+            profile_img: null,
 
-            connection:null,
-            active:null,
+            connection: null,
+            active: null,
 
             ticket:
                 [
@@ -180,6 +181,7 @@ class Member_view{
             this.data.connection = data.member_connection_check;
             this.data.active = data.member_is_active;
             this.data.email = data.member_email;
+            this.data.profile_img = data.member_profile_url;
 
 
             Member_func.read_ticket_list({"member_id":this.member_id}, (data)=>{
@@ -192,7 +194,7 @@ class Member_view{
                 member_ticket_list.sort(function(a, b){
                     let return_val = 0;
                     if(a.member_ticket_start_date < b.member_ticket_start_date){
-                      return_val = -1;
+                        return_val = -1;
                     }
                     else if(a.member_ticket_start_date > b.member_ticket_start_date){
                         return_val = 1;
@@ -348,12 +350,23 @@ class Member_view{
         
         let html = `
         <div class="member_view_upper_box">
-            <div style="display:inline-block;width:100%;">
+            <div>
+                ${this.dom_row_profile_image()}
+            </div>
+            <div style="width:100%;">
                     ${sub_html}
             </div>
             <span style="display:none;">${title}</span>
         </div>
         `;
+        return html;
+    }
+
+    dom_row_profile_image(){
+        let html = `<img src="${this.data.profile_img}" style="width:75px;height:75px;border-radius:50%;">`;
+        if(this.data.profile_img == null){
+            html = CImg.blank("", {"width":"75px", "height":"75px"});
+        }
         return html;
     }
 
