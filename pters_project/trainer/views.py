@@ -27,6 +27,7 @@ from openpyxl.writer.excel import save_virtual_workbook
 
 from admin_spooner.functions import func_upload_board_content_image_logic
 from configs import settings
+from configs.functions import func_upload_profile_image_logic, func_delete_profile_image_logic
 from configs.views import AccessTestMixin, get_function_auth_type_cd, func_setting_data_update
 from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO_FINISH_OFF, \
     MEMBER_RESERVE_PROHIBITION_ON, SORT_MEMBER_NAME, SORT_REMAIN_COUNT, SORT_START_DATE, SORT_ASC, SORT_REG_COUNT, \
@@ -4827,3 +4828,70 @@ def update_trainer_board_content_img_logic(request):
     else:
         context['img_url'] = img_url
     return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+
+
+# 프로필 사진 수정
+def update_member_profile_img_logic(request):
+    error = None
+    member_info = None
+    img_url = None
+    member_id = request.POST.get('member_id', '')
+    # group_name = request.session.get('group_name', 'trainer')
+    group_name = 'trainee'
+
+    try:
+        member_info = MemberTb.objects.get(member_id=member_id)
+    except ObjectDoesNotExist:
+        error = '회원 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        if member_info.profile_url is not None and member_info.profile_url != '':
+            error = func_delete_profile_image_logic(member_info.profile_url)
+
+    if error is None:
+        max_range = 9999999999
+        random_file_name = str(random.randrange(0, max_range)).zfill(len(str(max_range)))
+        if request.method == 'POST':
+            try:
+                img_url = func_upload_profile_image_logic(request.POST.get('profile_img_file'),
+                                                          str(member_id)+'/'+str(random_file_name), group_name)
+                if img_url is None:
+                    error = '프로필 이미지 변경에 실패했습니다.[1]'
+            except MultiValueDictKeyError:
+                error = '프로필 이미지 변경에 실패했습니다.[2]'
+
+    if error is None:
+        member_info.profile_url = img_url
+        member_info.save()
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
+# 프로필 사진 삭제
+def delete_member_profile_img_logic(request):
+    error = None
+    member_info = None
+    member_id = request.POST.get('member_id', '')
+
+    try:
+        member_info = MemberTb.objects.get(member_id=member_id)
+    except ObjectDoesNotExist:
+        error = '회원 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        if member_info.profile_url is not None and member_info.profile_url != '':
+            error = func_delete_profile_image_logic(member_info.profile_url)
+
+    if error is None:
+        member_info.profile_url = ''
+        member_info.save()
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+    return render(request, 'ajax/trainer_error_ajax.html')
