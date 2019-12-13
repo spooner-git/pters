@@ -350,7 +350,7 @@ class Member_view{
         
         let html = `
         <div class="member_view_upper_box">
-            <div>
+            <div style="padding-top:10px;">
                 ${this.dom_row_profile_image()}
             </div>
             <div style="width:100%;">
@@ -363,10 +363,13 @@ class Member_view{
     }
 
     dom_row_profile_image(){
-        let html = `<img src="${this.data.profile_img}" style="width:75px;height:75px;border-radius:50%;">`;
+        let image = `<img src="${this.data.profile_img}" style="width:75px;height:75px;border-radius:50%;">`;
         if(this.data.profile_img == null){
-            html = CImg.blank("", {"width":"75px", "height":"75px"});
+            image = CImg.blank("", {"width":"75px", "height":"75px"});
         }
+
+        let html = `<div onclick="member_view_popup.event_edit_photo();">${image}</div>`
+
         return html;
     }
 
@@ -649,6 +652,70 @@ class Member_view{
         let html = html_to_join.join('');
 
         return html;
+    }
+
+    event_edit_photo(){
+        let user_option = {
+            change:{text:"프로필 사진 변경", callback:()=>{
+                    layer_popup.close_layer_popup();
+                    let external_data = {"member_id": this.member_id, "callback":()=>{this.init();}};
+                    let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_VIEW_PHOTO_UPDATE, 100, popup_style, null, ()=>{
+                        member_view_photo_update_popup = new Member_view_photo_update('.popup_member_view_photo_update', external_data);
+                    });
+                }
+            },
+            delete:{text:"프로필 사진 삭제", callback:()=>{
+                    let data = {"member_id": this.member_id};
+                    let self = this;
+                    $.ajax({
+                        url: '/delete_member_profile_img/',
+                        dataType : 'html',
+                        data: data,
+                        type:'POST',
+
+                        beforeSend: function (xhr, settings) {
+                            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                            }
+                            ajax_load_image(SHOW);
+                        },
+
+                        success:function(data){
+                            check_app_version(data);
+                            let jsondata = JSON.parse(data);
+                            if(jsondata.messageArray.length>0){
+                                show_error_message(jsondata.messageArray);
+                                return false;
+                            }
+                            try{
+                                current_page.init();
+                            }catch(e){}
+                            try{
+                                self.init();
+                            }catch(e){}
+                        },
+
+                        complete:function(){
+                            ajax_load_image(HIDE);
+                        },
+
+                        error:function(){
+                            //alert('통신이 불안정합니다.');
+                            show_error_message('통신이 불안정합니다.');
+                        }
+                    });
+                    layer_popup.close_layer_popup();
+                }
+            }
+        };
+        let options_padding_top_bottom = 16;
+        let button_height = 8 + 8 + 52;
+        let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
+        let root_content_height = $root_content.height();
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
+            option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+        });
     }
 
     send_data(){

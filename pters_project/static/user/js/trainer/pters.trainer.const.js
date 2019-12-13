@@ -156,6 +156,7 @@ const POPUP_ADDRESS_MEMBER_SIMPLE_VIEW = 'popup_member_simple_view';
 const POPUP_ADDRESS_MEMBER_ADD = 'popup_member_add';
 const POPUP_ADDRESS_MEMBER_EDIT = 'popup_member_edit';
 const POPUP_ADDRESS_MEMBER_SEARCH = 'popup_member_search';
+const POPUP_ADDRESS_MEMBER_VIEW_PHOTO_UPDATE = 'popup_member_view_photo_update';
 
 const POPUP_ADDRESS_LECTURE_VIEW = 'popup_lecture_view';
 const POPUP_ADDRESS_LECTURE_SIMPLE_VIEW = 'popup_lecture_simple_view';
