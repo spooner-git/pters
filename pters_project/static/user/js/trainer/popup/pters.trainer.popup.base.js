@@ -1,12 +1,14 @@
 class PopupBase{
-    static base(top_left, top_center, top_right, content, bottom){
+    static base(top_left, top_center, top_right, content, bottom, wrapper_middle_style){
+
+
         let html = `
                     <div class="wrapper_top">
                         ${top_left}
                         ${top_center}
                         ${top_right}
                     </div>
-                    <div class="wrapper_middle">
+                    <div class="wrapper_middle" style="${PopupBase.data_to_style_code(wrapper_middle_style)}">
                         ${content}
                     </div>
                     <div class="wrapper_bottom">
@@ -46,5 +48,19 @@ class PopupBase{
             // $(`${install_target} .popup_toolbox`).show();
             $(`${install_target} .popup_toolbox`).css('visibility', 'visible');
         }
+    }
+
+    //스타일 코드를 인라인스타일 스타일 코드로 변환시켜주는 함수
+    static data_to_style_code(data){
+        if(data == null || data == undefined){
+            return "";
+        }
+        let style_to_join = [];
+        for(let item in data){
+            style_to_join.push( `${item}:${data[item]}` );
+        }
+
+        let style_code = style_to_join.join(';');
+        return style_code;
     }
 }
