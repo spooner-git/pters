@@ -82,6 +82,9 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                     request.session['class_hour'] = class_info.class_tb.class_hour
                     request.session['class_type_code'] = class_info.class_tb.subject_cd
                     request.session['class_type_name'] = class_info.class_tb.get_class_type_cd_name()
+                    if str(class_info.class_tb.member_id) != str(request.user.id):
+                        request.session['class_type_name'] = class_info.class_tb.get_class_type_cd_name() \
+                                                             + '-' + class_info.class_tb.member.name
                     request.session['class_center_name'] = class_info.class_tb.get_center_name()
 
             else:
@@ -96,6 +99,9 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                         request.session['class_hour'] = class_info.class_tb.class_hour
                         request.session['class_type_code'] = class_info.class_tb.subject_cd
                         request.session['class_type_name'] = class_info.class_tb.get_class_type_cd_name()
+                        if str(class_info.class_tb.member_id) != str(request.user.id):
+                            request.session['class_type_name'] = class_info.class_tb.get_class_type_cd_name() \
+                                                                 + '-' + class_info.class_tb.member.name
                         request.session['class_center_name'] = class_info.class_tb.get_center_name()
                         temp_class_counter = class_member_ticket_counter
 
@@ -3467,11 +3473,16 @@ class GetProgramListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                 program_selected = 'NOT_SELECTED'
                 if str(class_id) == str(program_info.class_tb.class_id):
                     program_selected = 'SELECTED'
+
+                program_subject_type_name = program_info.class_tb.get_class_type_cd_name()
+                if str(program_info.class_tb.member.member_id) != str(request.user.id):
+                    program_subject_type_name += ' - ' + program_info.class_tb.member.name
+
                 program_dict = {'program_id': program_info.class_tb.class_id,
                                 'program_total_member_num': total_member_num,
                                 'program_state_cd': program_info.class_tb.state_cd,
                                 'program_subject_cd': program_info.class_tb.subject_cd,
-                                'program_subject_type_name': program_info.class_tb.get_class_type_cd_name(),
+                                'program_subject_type_name': program_subject_type_name,
                                 'program_upper_subject_cd': program_info.class_tb.get_upper_class_type_cd(),
                                 'program_upper_subject_type_name': program_info.class_tb.get_upper_class_type_cd_name(),
                                 'program_selected': program_selected,
