@@ -86,6 +86,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                         request.session['class_type_name'] = class_info.class_tb.get_class_type_cd_name() \
                                                              + '-' + class_info.class_tb.member.name
                     request.session['class_center_name'] = class_info.class_tb.get_center_name()
+                    request.session['trainer_name'] = class_info.class_tb.member.name
 
             else:
                 self.url = '/trainer/trainer_main/'
@@ -103,6 +104,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                             request.session['class_type_name'] = class_info.class_tb.get_class_type_cd_name() \
                                                                  + '-' + class_info.class_tb.member.name
                         request.session['class_center_name'] = class_info.class_tb.get_center_name()
+                        request.session['trainer_name'] = class_info.class_tb.member.name
                         temp_class_counter = class_member_ticket_counter
 
                 # self.url = '/trainer/class_select/'
@@ -1368,7 +1370,8 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, View):
                                         'alarm_detail': alarm_info.log_detail,
                                         'time_ago': alarm_info.time_ago,
                                         'read_check': alarm_info.log_read,
-                                        'reg_dt': alarm_info.reg_dt})
+                                        'reg_dt': alarm_info.reg_dt,
+                                        'reg_member_name': alarm_info.auth_member.name})
                 ordered_alarm_dict[alarm_date] = date_alarm_list
         return JsonResponse(ordered_alarm_dict, json_dumps_params={'ensure_ascii': True})
 
@@ -3579,6 +3582,7 @@ def add_program_info_logic(request):
         request.session['class_type_code'] = class_info.subject_cd
         request.session['class_type_name'] = class_info.get_class_type_cd_name()
         request.session['class_center_name'] = class_info.get_center_name()
+        request.session['trainer_name'] = class_info.member.name
 
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
@@ -3613,6 +3617,7 @@ def delete_program_info_logic(request):
             request.session['class_type_code'] = ''
             request.session['class_type_name'] = ''
             request.session['class_center_name'] = ''
+            request.session['trainer_name'] = ''
 
     if error is None:
         log_data = LogTb(log_type='LC02', auth_member_id=request.user.id,
@@ -3712,6 +3717,7 @@ def select_program_processing_logic(request):
         request.session['class_type_code'] = class_info.subject_cd
         request.session['class_type_name'] = class_info.get_class_type_cd_name()
         request.session['class_center_name'] = class_info.get_center_name()
+        request.session['trainer_name'] = class_info.member.name
 
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)

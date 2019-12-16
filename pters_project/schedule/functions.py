@@ -625,6 +625,42 @@ def func_send_push_trainee(class_id, title, message):
     return error
 
 
+# 강사 -> 강사 push 메시지 전달
+def func_send_push_trainer_trainer(class_id, title, message, member_id):
+    error = None
+    if class_id is not None and class_id != '':
+
+        member_class_data = MemberClassTb.objects.select_related('member').filter(class_tb_id=class_id,
+                                                                                  auth_cd=AUTH_TYPE_VIEW, use=USE)
+        for member_class_info in member_class_data:
+            if str(member_id) != str(member_class_info.member_id):
+                token_data = PushInfoTb.objects.filter(member_id=member_class_info.member_id, use=USE)
+                for token_info in token_data:
+                    if token_info.device_id != 'pc':
+                        token_info.badge_counter += 1
+                        token_info.save()
+                    instance_id = token_info.token
+                    badge_counter = token_info.badge_counter
+                    check_async = False
+                    if DEBUG is False:
+                        check_async = True
+                        # from configs.celery import CELERY_WORKING
+                        # try:
+                        #     if CELERY_WORKING:
+                        #         check_async = True
+                        #     else:
+                        #         check_async = False
+                        # except OperationalError:
+                        #     check_async = False
+
+                    if check_async:
+                        error = task_send_fire_base_push.delay(instance_id, title, message, badge_counter)
+                    else:
+                        error = send_fire_base_push(instance_id, title, message, badge_counter)
+
+    return error
+
+
 def send_fire_base_push(instance_id, title, message, badge_counter):
     push_server_id = getattr(settings, "PTERS_PUSH_SERVER_KEY", '')
     error = None

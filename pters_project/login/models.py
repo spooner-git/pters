@@ -74,7 +74,7 @@ class CommonCdTb(models.Model):
 class LogTb(TimeStampedModel):
     log_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     log_type = models.CharField(db_column='LOG_TYPE', max_length=20, blank=True, default='')
-    auth_member_id = models.CharField(db_column='AUTH_MEMBER_ID', max_length=20, blank=True, default='')
+    auth_member = models.ForeignKey(MemberTb, db_column='AUTH_MEMBER_ID', null=True, default='')
     from_member_name = models.CharField(db_column='FROM_MEMBER_NAME', max_length=20, blank=True, default='')
     to_member_name = models.CharField(db_column='TO_MEMBER_NAME', max_length=20, blank=True, default='')
     class_tb_id = models.CharField(db_column='CLASS_TB_ID', max_length=20, blank=True, default='')

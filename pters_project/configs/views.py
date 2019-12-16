@@ -234,8 +234,10 @@ def func_setting_data_update(request, group):
             request.session['class_hour'] = class_info.class_hour
             request.session['class_type_code'] = class_info.subject_cd
             request.session['class_type_name'] = class_info.get_class_type_cd_name()
+            if str(class_info.member_id) != str(request.user.id):
+                request.session['class_type_name'] += ' - ' + class_info.member.name
             request.session['class_center_name'] = class_info.get_center_name()
-
+            request.session['trainer_name'] = class_info.member.name
         context = func_get_trainer_setting_list(context, trainer_id, class_id, class_info.class_hour)
         request.session['setting_member_reserve_time_available'] = context['setting_member_reserve_time_available']
         request.session['setting_member_reserve_prohibition'] = context['setting_member_reserve_prohibition']

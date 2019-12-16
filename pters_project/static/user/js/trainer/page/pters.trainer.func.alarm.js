@@ -79,6 +79,7 @@ class Alarm {
                 
                 let data = jsondata[date][i];
                 let alarm_id = data.alarm_id;
+                let alarm_reg_member = data.reg_member_name;
                 let alarm_from = data.alarm_from_member_name;
                 let alarm_to = data.alarm_to_member_name;
                 let alarm_what = data.alarm_info;
@@ -110,7 +111,7 @@ class Alarm {
                                 <div class="alarm_data_b">
                                     <div></div>
                                     <div>
-                                        <span>${alarm_from}님이 ${alarm_to != "" ? alarm_to+'님의' :''} ${alarm_what}을 ${alarm_how} 했습니다.</span>
+                                        <span>${alarm_reg_member}님이 ${alarm_to != "" ? alarm_to+'님의' :''} ${alarm_what}을 ${alarm_how} 했습니다.</span>
                                         <div style="margin-top:3px;">
                                             ${alarm_detail}
                                         </div>
