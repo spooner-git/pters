@@ -53,7 +53,7 @@ from trainee.models import MemberTicketTb
 from trainer.models import LectureMemberTb, ClassTb, SettingTb, LectureTb, MemberClassTb, ClassMemberTicketTb
 from trainer.models import LectureMemberTicketTb
 from .forms import MyPasswordResetForm, MyPasswordChangeForm, MyRegistrationForm
-from .models import MemberTb, PushInfoTb, SnsInfoTb, MemberOutInfoTb
+from .models import MemberTb, PushInfoTb, SnsInfoTb, MemberOutInfoTb, LogTb
 
 logger = logging.getLogger(__name__)
 
@@ -696,6 +696,7 @@ class AddMemberNoEmailView(View):
         sex = request.POST.get('sex', '')
         birthday_dt = request.POST.get('birthday', '')
         phone = request.POST.get('phone', '')
+        class_id = request.session.get('class_id', '')
         context = add_member_no_email_func(request.user.id, first_name, phone, sex, birthday_dt)
         error = context['error']
 
@@ -708,6 +709,12 @@ class AddMemberNoEmailView(View):
             if context['error'] is not None:
                 logger.error(name + '[강사 회원가입]' + context['error'])
                 messages.error(request, context['error'])
+            else:
+                log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+                                 from_member_name=request.user.first_name,
+                                 class_tb_id=class_id,
+                                 log_info=name+' 회원님', log_how='추가', use=USE)
+                log_data.save()
 
             return render(request, self.template_name, {'username': context['username'],
                                                         'user_db_id': context['user_db_id']})

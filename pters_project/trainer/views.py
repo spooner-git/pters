@@ -702,7 +702,7 @@ def update_member_info_logic(request):
     phone = request.POST.get('phone', '')
     sex = request.POST.get('sex', '')
     birthday_dt = request.POST.get('birthday', '')
-
+    class_id = request.session.get('class_id', '')
     error = None
     member = None
 
@@ -762,6 +762,12 @@ def update_member_info_logic(request):
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=member.name+' 회원 정보', log_how='변경', use=USE)
+        log_data.save()
 
     return render(request, 'ajax/trainer_error_ajax.html')
 
@@ -845,6 +851,12 @@ def delete_member_info_logic(request):
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=member.name+' 회원 정보', log_how='삭제', use=USE)
+        log_data.save()
 
     return render(request, 'ajax/trainer_error_ajax.html')
 
@@ -1788,7 +1800,8 @@ def add_member_ticket_info_logic(request):
     end_date = request.POST.get('end_date')
     ticket_id = request.POST.get('ticket_id', '')
     class_id = request.session.get('class_id', '')
-
+    member_name = ''
+    ticket_name= ''
     error = None
 
     if member_id is None or member_id == '':
@@ -1812,17 +1825,29 @@ def add_member_ticket_info_logic(request):
 
     if error is None:
         try:
-            User.objects.get(id=member_id)
+            member_info = MemberTb.objects.get(member_id=member_id)
+            member_name = member_info.name
         except ObjectDoesNotExist:
             error = '가입되지 않은 회원입니다.'
-
+    if error is None:
+        try:
+            ticket_info = TicketTb.objects.get(ticket_id=ticket_id)
+            ticket_name = ticket_info.name
+        except ObjectDoesNotExist:
+            error = '수강권 정보를 확인해주세요.'
     if error is None:
         error = func_add_member_ticket_info(request.user.id, class_id, ticket_id, counts, price, start_date, end_date,
                                             contents, member_id)
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
-
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=member_name + ' 회원님에게 '
+                                  + ticket_name + ' 수강권',  log_how='추가', use=USE)
+        log_data.save()
     return render(request, 'ajax/trainer_error_ajax.html')
 
 
@@ -1836,6 +1861,7 @@ def update_member_ticket_info_logic(request):
     refund_price = request.POST.get('refund_price', '')
     refund_date = request.POST.get('refund_date', '')
     member_ticket_reg_count = request.POST.get('member_ticket_reg_count', '')
+    class_id = request.session.get('class_id', '')
     error = None
     member_ticket_info = None
 
@@ -1925,6 +1951,13 @@ def update_member_ticket_info_logic(request):
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
 
+    else:
+        log_data = LogTb(log_type='LC02', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=member_ticket_info.member.name + ' 회원님의 '
+                                  + member_ticket_info.ticket_tb.name + ' 수강권 정보', log_how='변경', use=USE)
+        log_data.save()
     return render(request, 'ajax/trainer_error_ajax.html')
 
 
@@ -1953,6 +1986,13 @@ def delete_member_ticket_info_logic(request):
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=member_ticket_info.member.name + ' 회원님의 '
+                                  + member_ticket_info.ticket_tb.name + ' 수강권', log_how='삭제', use=USE)
+        log_data.save()
 
     return render(request, 'ajax/trainer_error_ajax.html')
 
@@ -2058,6 +2098,13 @@ def update_member_ticket_status_info_logic(request):
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=member_ticket_info.member.name + ' 회원님의 '
+                                  + member_ticket_info.ticket_tb.name + ' 수강권 상태', log_how='변경', use=USE)
+        log_data.save()
 
     return render(request, 'ajax/trainer_error_ajax.html')
 
@@ -2145,7 +2192,12 @@ def add_lecture_info_logic(request):
 
     if error is not None:
         messages.error(request, error)
-
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=name+' 수업', log_how='추가', use=USE)
+        log_data.save()
     return JsonResponse({'lecture_id': str(lecture_id)}, json_dumps_params={'ensure_ascii': True})
 
 
@@ -2239,6 +2291,12 @@ def delete_lecture_info_logic(request):
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=lecture_info.name+' 수업', log_how='삭제', use=USE)
+        log_data.save()
 
     return render(request, 'ajax/trainer_error_ajax.html')
 
@@ -2345,6 +2403,12 @@ def update_lecture_info_logic(request):
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=lecture_info.name+' 수업', log_how='변경', use=USE)
+        log_data.save()
 
     return render(request, 'ajax/trainer_error_ajax.html')
 
@@ -2410,6 +2474,12 @@ def update_lecture_status_info_logic(request):
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=lecture_info.name+' 수업', log_how='변경', use=USE)
+        log_data.save()
 
     return render(request, 'ajax/trainer_error_ajax.html')
 
@@ -2841,6 +2911,12 @@ def add_ticket_info_logic(request):
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=ticket_name+' 수강권', log_how='추가', use=USE)
+        log_data.save()
 
     return render(request, 'ajax/trainer_error_ajax.html')
 
@@ -2913,6 +2989,12 @@ def delete_ticket_info_logic(request):
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=ticket_info.name+' 수강권', log_how='삭제', use=USE)
+        log_data.save()
 
     return render(request, 'ajax/trainer_error_ajax.html')
 
@@ -2956,6 +3038,12 @@ def update_ticket_info_logic(request):
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=ticket_info.name+' 수강권', log_how='변경', use=USE)
+        log_data.save()
 
     return render(request, 'ajax/trainer_error_ajax.html')
 
@@ -2992,6 +3080,13 @@ def add_ticket_lecture_info_logic(request):
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=ticket_lecture_info.ticket_tb.name + ' 수강권에 '
+                                  + ticket_lecture_info.lecture_tb.name + '수업', log_how='추가', use=USE)
+        log_data.save()
 
     return render(request, 'ajax/trainer_error_ajax.html')
 
@@ -3001,11 +3096,23 @@ def delete_ticket_lecture_info_logic(request):
     class_id = request.session.get('class_id', '')
     ticket_id = request.POST.get('ticket_id', '')
     lecture_id = request.POST.get('lecture_id', '')
+    ticket_name = ''
+    lecture_name = ''
     error = None
     if error is None:
         try:
             with transaction.atomic():
                 # 그룹에 패키지에서 제외되도록 설정
+                try:
+                    ticket_info = TicketTb.objects.get(ticket_id=ticket_id)
+                    ticket_name = ticket_info.name
+                except ObjectDoesNotExist:
+                    ticket_name = ''
+                try:
+                    lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
+                    lecture_name = lecture_info.name
+                except ObjectDoesNotExist:
+                    lecture_name = ''
                 ticket_lecture_data = TicketLectureTb.objects.filter(class_tb_id=class_id,
                                                                      ticket_tb_id=ticket_id, lecture_tb_id=lecture_id,
                                                                      use=USE)
@@ -3066,6 +3173,13 @@ def delete_ticket_lecture_info_logic(request):
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=ticket_name + ' 수강권에 '
+                                  + lecture_name + '수업', log_how='삭제', use=USE)
+        log_data.save()
 
     return render(request, 'ajax/trainer_error_ajax.html')
 
@@ -3134,6 +3248,12 @@ def update_ticket_status_info_logic(request):
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=ticket_info.name + ' 수강권', log_how='변경', use=USE)
+        log_data.save()
 
     return render(request, 'ajax/trainer_error_ajax.html')
 
@@ -4856,6 +4976,7 @@ def update_member_profile_img_logic(request):
     member_info = None
     img_url = None
     member_id = request.POST.get('member_id', '')
+    class_id = request.session.get('class_id', '')
     # group_name = request.session.get('group_name', 'trainer')
     group_name = 'trainee'
 
@@ -4893,6 +5014,12 @@ def update_member_profile_img_logic(request):
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=member.name+' 회원 프로필', log_how='변경', use=USE)
+        log_data.save()
 
     return render(request, 'ajax/trainer_error_ajax.html')
 
@@ -4902,6 +5029,7 @@ def delete_member_profile_img_logic(request):
     error = None
     member_info = None
     member_id = request.POST.get('member_id', '')
+    class_id = request.session.get('class_id', '')
 
     try:
         member_info = MemberTb.objects.get(member_id=member_id)
@@ -4925,5 +5053,11 @@ def delete_member_profile_img_logic(request):
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=member.name+' 회원 프로필', log_how='삭제', use=USE)
+        log_data.save()
 
     return render(request, 'ajax/trainer_error_ajax.html')
