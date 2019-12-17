@@ -210,6 +210,7 @@ urlpatterns = [
 
     # Setting 정보 가져오기
     url(r'^get_trainer_setting_data/$', views.GetTrainerSettingDataView.as_view(), name='get_trainer_setting_data'),
+    url(r'^get_program_auth_data/$', views.GetProgramAuthDataView.as_view(), name='get_program_auth_data'),
     url(r'^get_trainer_auth_data/$', views.GetTrainerAuthDataView.as_view(), name='get_trainer_auth_data'),
 
 

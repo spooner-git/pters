@@ -52,7 +52,7 @@ class Pters_pass_main{
 
  
     init(){
-        this.render();
+        // this.render();
         this.set_initial_data();
     }
 
@@ -129,8 +129,8 @@ class Pters_pass_main{
     }
 
     dom_row_my_pters_pass(){
-        let data = pass_inspector.data;
-        
+        // let data = pass_inspector.data;
+        let data = pass_inspector.trainer_data;
         let schedule =  this.dom_row_auth_info("일정", `매일 오늘 기준 전/후 ${data["auth_plan_create"].limit_num}일 등록, 취소`);
         let member =  this.dom_row_auth_info("회원", `${data["auth_member_create"].limit_num} 명 (진행중)`);
         // let lecture =  this.dom_row_auth_info("수업", `${data["auth_group_create"].limit_num} 개 (진행중)`);

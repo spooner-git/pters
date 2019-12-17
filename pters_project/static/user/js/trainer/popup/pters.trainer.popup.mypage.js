@@ -169,7 +169,7 @@ class Mypage{
         let title = "PTERS 패스";
         let icon = DELETE;
         let icon_r_visible = SHOW;
-        let icon_r_text = `${pass_inspector.data.auth_plan_create.limit_type}`;
+        let icon_r_text = `${pass_inspector.trainer_data.auth_plan_create.limit_type}`;
         let style = null;
         let onclick = ()=>{
             sideGoPopup('pters_pass_main');

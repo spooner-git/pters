@@ -553,6 +553,7 @@ class UnitRobot{
 class PassInspector{
     constructor(){
         this.data;
+        this.trainer_data;
         this.init();
     }
     
@@ -560,11 +561,14 @@ class PassInspector{
         this.get_pass((data)=>{
             this.data = data;
         });
+        this.get_trainer_pass((data)=>{
+            this.trainer_data = data;
+        });
     }
 
     get_pass(callback){
         $.ajax({
-            url:"/trainer/get_trainer_auth_data/",
+            url:"/trainer/get_program_auth_data/",
             type:'GET',
             dataType : 'JSON',
     
@@ -593,6 +597,45 @@ class PassInspector{
 
             },
     
+            //통신 실패시 처리
+            error:function (){
+                console.log('server error');
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+            }
+        });
+    }
+
+    get_trainer_pass(callback){
+        $.ajax({
+            url:"/trainer/get_trainer_auth_data/",
+            type:'GET',
+            dataType : 'JSON',
+
+            beforeSend:function(xhr, settings){
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+
+            //통신성공시 처리
+            success:function (data){
+                check_app_version(data.app_version);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message(data.messageArray[0]);
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(data);
+                }
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function (){
+
+            },
+
             //통신 실패시 처리
             error:function (){
                 console.log('server error');
@@ -700,8 +743,8 @@ class PassInspector{
             data = d1;
         }, ()=>{}, async);
         let current_program_number = data.program_data.length;
-        let limit_number = this.data.auth_program_create.limit_num;
-        let limit_type = this.data.auth_program_create.limit_type;
+        let limit_number = this.trainer_data.auth_program_create.limit_num;
+        let limit_type = this.trainer_data.auth_program_create.limit_type;
 
         if(current_program_number >= limit_number){
             return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};

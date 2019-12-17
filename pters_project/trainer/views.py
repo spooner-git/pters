@@ -1,6 +1,7 @@
     # Create your views here.
 import collections
 import datetime
+import json
 import logging
 import random
 import urllib
@@ -47,6 +48,7 @@ from schedule.functions import func_refresh_member_ticket_count, func_get_traine
 from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb
 from stats.functions import get_sales_data
 from trainee.models import MemberTicketTb
+from payment.models import PaymentInfoTb, ProductFunctionAuthTb
 from .functions import func_get_trainer_setting_list, \
     func_get_member_ing_list, func_get_member_end_list, func_get_class_member_ing_list, func_get_class_member_end_list,\
     func_get_member_info, func_get_member_from_member_ticket_list, \
@@ -4465,11 +4467,63 @@ class GetTrainerSettingDataView(LoginRequiredMixin, AccessTestMixin, View):
         return JsonResponse(request.session['setting_data'], json_dumps_params={'ensure_ascii': True})
 
 
-class GetTrainerAuthDataView(LoginRequiredMixin, AccessTestMixin, View):
+class GetProgramAuthDataView(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
         get_function_auth_type_cd(request)
         return JsonResponse(request.session['auth_info'], json_dumps_params={'ensure_ascii': True})
+
+
+class GetTrainerAuthDataView(LoginRequiredMixin, AccessTestMixin, View):
+    def get(self, request):
+        context = {}
+        today = datetime.date.today()
+        payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id,
+                                                    status='paid',
+                                                    start_date__lte=today, end_date__gte=today,
+                                                    use=USE).order_by('-payment_info_id')
+        context["auth_info"] = {}
+        if len(payment_data) > 0:
+            payment_info = payment_data[0]
+            payment_info.start_date = str(payment_info.start_date)
+            payment_info.end_date = str(payment_info.end_date)
+
+            function_list = ProductFunctionAuthTb.objects.select_related(
+                'function_auth_tb', 'product_tb').filter(product_tb_id=payment_info.product_tb_id,
+                                                         use=USE).order_by('product_tb_id',
+                                                                           'function_auth_tb_id',
+                                                                           'auth_type_cd')
+            for function_info in function_list:
+                auth_info = {}
+                if function_info.auth_type_cd is None:
+                    function_auth_type_cd_name = str(function_info.function_auth_tb.function_auth_type_cd)
+                else:
+                    function_auth_type_cd_name = str(function_info.function_auth_tb.function_auth_type_cd) \
+                                                 + str(function_info.auth_type_cd)
+
+                auth_info["active"] = 1
+                auth_info["limit_num"] = function_info.counts
+                auth_info["limit_type"] = function_info.product_tb.name
+                context["auth_info"][function_auth_type_cd_name] = auth_info
+
+        else:
+            function_list = ProductFunctionAuthTb.objects.select_related(
+                'function_auth_tb', 'product_tb').filter(product_tb_id=6, use=USE).order_by('product_tb_id',
+                                                                                            'function_auth_tb_id',
+                                                                                            'auth_type_cd')
+
+            for function_info in function_list:
+                auth_info = {}
+                if function_info.auth_type_cd is None:
+                    function_auth_type_cd_name = str(function_info.function_auth_tb.function_auth_type_cd)
+                else:
+                    function_auth_type_cd_name = str(function_info.function_auth_tb.function_auth_type_cd) \
+                                                 + str(function_info.auth_type_cd)
+                auth_info["active"] = 1
+                auth_info["limit_num"] = function_info.counts
+                auth_info["limit_type"] = str(function_info.product_tb.name)
+                context["auth_info"][function_auth_type_cd_name] = auth_info
+        return JsonResponse(context["auth_info"], json_dumps_params={'ensure_ascii': True})
 
 
 # log 삭제

@@ -974,6 +974,7 @@ class GetPaymentInfoView(LoginRequiredMixin, View):
             payment_info = payment_data[0]
             payment_info.start_date = str(payment_info.start_date)
             payment_info.end_date = str(payment_info.end_date)
+
         context['payment_info'] = payment_info
 
         return render(request, self.template_name, context)
@@ -1008,8 +1009,8 @@ class GetProductInfoView(LoginRequiredMixin, View):
 
     def get(self, request):
         context = {}
-        product_id = request.GET.get('product_id', '')
-
+        # product_id = request.GET.get('product_id', '')
+        product_id = request.session.get('product_id', '')
         product_function_data = []
         try:
             product_info = ProductTb.objects.get(product_id=product_id, use=USE)
