@@ -39,7 +39,7 @@ class Supervisor_member_search {
     }
 
     render(){
-        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();supervisor_member_search_popup.clear();">${CImg.arrow_left()}</span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();setting_supervisor_member_search_popup.clear();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"><span style="color:var(--font-highlight);font-weight: 500;"></span><span style="color:var(--font-highlight);font-weight: 500;"></span></span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;">${this.dom_assembly_toolbox()}</section>
