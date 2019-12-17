@@ -24,7 +24,7 @@ from payment.models import ProductFunctionAuthTb, PaymentInfoTb
 from schedule.functions import func_refresh_member_ticket_count
 from schedule.models import ScheduleTb, DeleteScheduleTb
 from trainer.functions import func_get_trainer_setting_list
-from trainer.models import ClassTb, SettingTb, BackgroundImgTb
+from trainer.models import ClassTb, SettingTb, BackgroundImgTb, ProgramAuthTb
 
 logger = logging.getLogger(__name__)
 
@@ -127,13 +127,13 @@ class AccessTestMixin(UserPassesTestMixin):
             if url[1] == 'trainee':
                 if group_name == 'trainee':
                     func_setting_data_update(self.request, group_name)
-                    get_function_auth_type_cd(self.request)
+                    # get_function_auth_type_cd(self.request)
                     update_finish_schedule_data(self.request)
                     test_result = True
             if url[1] == 'trainer':
                 if group_name == 'trainer':
                     func_setting_data_update(self.request, group_name)
-                    get_function_auth_type_cd(self.request)
+                    # get_function_auth_type_cd(self.request)
                     update_finish_schedule_data(self.request)
                     test_result = True
             if url[1] == 'center':
@@ -364,6 +364,22 @@ def get_function_auth_type_cd(request):
                 auth_info['limit_num'] = function_info.counts
                 auth_info['limit_type'] = str(function_info.product_tb.name)
                 request.session['auth_info'][function_auth_type_cd_name] = auth_info
+
+        if str(trainer_id) != str(request.user.id):
+            function_list = ProgramAuthTb.objects.select_related('function_auth_tb').filter(class_tb_id=class_id,
+                                                                                            member_id=request.user.id)
+
+            for function_info in function_list:
+                auth_info = {}
+                if function_info.auth_type_cd is None:
+                    function_auth_type_cd_name = str(function_info.function_auth_tb.function_auth_type_cd)
+                else:
+                    function_auth_type_cd_name = str(function_info.function_auth_tb.function_auth_type_cd) \
+                                                 + str(function_info.auth_type_cd)
+                if function_info.auth_type_cd != '_crate':
+                    auth_info['active'] = function_info.enable_flag
+                    auth_info['limit_type'] = str('공유 프로그램')
+                    request.session['auth_info'][function_auth_type_cd_name] = auth_info
 
 
 def get_background_url(request):

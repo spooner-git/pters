@@ -1,7 +1,6 @@
-    # Create your views here.
+# Create your views here.
 import collections
 import datetime
-import json
 import logging
 import random
 import urllib
@@ -37,7 +36,8 @@ from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO
     LECTURE_TYPE_NORMAL, SHOW, SORT_TICKET_TYPE, SORT_TICKET_NAME, SORT_TICKET_MEMBER_COUNT, SORT_TICKET_CREATE_DATE, \
     SORT_LECTURE_NAME, SORT_LECTURE_MEMBER_COUNT, SORT_LECTURE_CAPACITY_COUNT, SORT_LECTURE_CREATE_DATE, ON_SCHEDULE, \
     CALENDAR_TIME_SELECTOR_BASIC, SORT_END_DATE, SORT_MEMBER_TICKET, SORT_SCHEDULE_DT, STATE_CD_REFUND, \
-    SORT_SCHEDULE_MONTHLY, SHARED_PROGRAM, MY_PROGRAM
+    SORT_SCHEDULE_MONTHLY, SHARED_PROGRAM, MY_PROGRAM, PROGRAM_SELECT, PROGRAM_LECTURE_CONNECT_DELETE, \
+    PROGRAM_LECTURE_CONNECT_ACCEPT
 from board.models import BoardTb
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 from schedule.functions import func_refresh_member_ticket_count, func_get_trainer_attend_schedule, \
@@ -55,9 +55,9 @@ from .functions import func_get_trainer_setting_list, \
     func_check_member_connection_info, func_get_member_lecture_list, \
     func_get_member_ticket_list, func_get_lecture_info, func_add_member_ticket_info, func_get_ticket_info, \
     func_delete_member_ticket_info, func_update_lecture_member_fix_status_cd, update_setting_data, \
-    func_get_member_ticket_info
+    func_get_member_ticket_info, func_get_trainer_info
 from .models import ClassMemberTicketTb, LectureTb, ClassTb, MemberClassTb, BackgroundImgTb, \
-    SettingTb, TicketTb, TicketLectureTb, CenterTrainerTb, LectureMemberTb
+    SettingTb, TicketTb, TicketLectureTb, CenterTrainerTb, LectureMemberTb, ProgramAuthTb
 
 logger = logging.getLogger(__name__)
 
@@ -596,6 +596,54 @@ class SearchMemberInfoView(LoginRequiredMixin, AccessTestMixin, View):
                     group_type = member_info.user.groups.filter(user=member_info.user.id, name='trainee')
                     if len(group_type) > 0:
                         member_result = func_get_member_info(class_id, request.user.id, member_info.user.id)
+                        member_result_list.append(member_result['member_info'])
+        if error is not None:
+            logger.error(request.user.first_name + ' ' + '[' + str(request.user.id) + ']' + error)
+            messages.error(request, error)
+
+        return JsonResponse({'member_list': member_result_list}, json_dumps_params={'ensure_ascii': True})
+
+
+class SearchTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        class_id = self.request.session.get('class_id', '')
+        search_val = request.GET.get('search_val', '')
+        error = None
+        user_info = None
+        member_list = None
+        member_result_list = []
+        if search_val == '':
+            error = '회원 정보를 입력해 주세요.'
+
+        if error is None:
+            if len(search_val) < 3:
+                error = '3글자 이상 입력해주세요.'
+        if error is None:
+            try:
+                user_info = User.objects.get(username=search_val)
+            except ObjectDoesNotExist:
+                error = '회원 ID를 확인해 주세요.'
+
+            if error is not None:
+                member_list = MemberTb.objects.select_related('user').filter(phone=search_val)
+                if len(member_list) == 0:
+                    error = '회원 정보를 확인해 주세요.'
+                else:
+                    error = None
+
+        if error is None:
+            if user_info is not None:
+                group_type = user_info.groups.filter(user=user_info.id, name='trainer')
+                if len(group_type) > 0:
+                    member_result = func_get_trainer_info(class_id, user_info.id)
+                    error = member_result['error']
+                    member_result_list.append(member_result['member_info'])
+            else:
+                for member_info in member_list:
+                    group_type = member_info.user.groups.filter(user=member_info.user.id, name='trainer')
+                    if len(group_type) > 0:
+                        member_result = func_get_trainer_info(class_id, member_info.user.id)
                         member_result_list.append(member_result['member_info'])
         if error is not None:
             logger.error(request.user.first_name + ' ' + '[' + str(request.user.id) + ']' + error)
@@ -3820,6 +3868,171 @@ def update_program_info_logic(request):
     return render(request, template_name)
 
 
+def update_share_program_info_logic(request):
+    trainer_id = request.POST.get('trainer_id', '')
+    auth_cd = request.POST.get('auth_cd', '')
+    class_id = request.session.get('class_id', '')
+    error = None
+
+    if trainer_id is None or trainer_id == '':
+        error = '강사 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        if auth_cd != AUTH_TYPE_VIEW and auth_cd != AUTH_TYPE_WAIT and auth_cd != AUTH_TYPE_DELETE:
+            error = '프로그램 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            class_member_info = MemberClassTb.objects.select_related(
+                'class_tb', 'member').get(class_tb_id=class_id, member_id=trainer_id, use=USE)
+            class_member_info.auth_cd = auth_cd
+            class_member_info.save()
+        except ObjectDoesNotExist:
+            class_member_info = MemberClassTb(class_tb_id=class_id, member_id=trainer_id, auth_cd=auth_cd, use=USE)
+            class_member_info.save()
+
+        function_list = ProductFunctionAuthTb.objects.select_related(
+            'function_auth_tb', 'product_tb').filter(product_tb_id=6,
+                                                     use=USE).order_by('product_tb_id',
+                                                                       'function_auth_tb_id',
+                                                                       'auth_type_cd')
+        for function_info in function_list:
+            if function_info.auth_type_cd is None:
+                function_auth_type_cd_name = str(function_info.function_auth_tb.function_auth_type_cd)
+            else:
+                function_auth_type_cd_name = str(function_info.function_auth_tb.function_auth_type_cd) \
+                                             + str(function_info.auth_type_cd)
+
+            enable_flag = request.POST.get(function_auth_type_cd_name, '')
+            if enable_flag is not None and enable_flag != '':
+                try:
+                    program_auth_info = ProgramAuthTb.objects.get(class_tb_id=class_id, member_id=trainer_id,
+                                                                  function_auth_tb=function_info.function_auth_tb,
+                                                                  auth_type_cd=function_info.auth_type_cd)
+                except ObjectDoesNotExist:
+                    program_auth_info = ProgramAuthTb(class_tb_id=class_id, member_id=trainer_id,
+                                                      function_auth_tb=function_info.function_auth_tb,
+                                                      auth_type_cd=function_info.auth_type_cd,
+                                                      use=USE)
+
+                program_auth_info.enable_flag = enable_flag
+                program_auth_info.save()
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
+class GetShareProgramDataViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        class_id = self.request.session.get('class_id', '')
+        error = None
+        member_program_auth_list = collections.OrderedDict()
+
+        if class_id is None or class_id == '':
+            error = '오류가 발생했습니다.'
+
+        program_auth_data = ProgramAuthTb.objects.filter(class_tb_id=class_id, use=USE)
+
+        for program_auth_info in program_auth_data:
+            if program_auth_info.auth_type_cd is None:
+                function_auth_type_cd_name = str(program_auth_info.function_auth_tb.function_auth_type_cd)
+            else:
+                function_auth_type_cd_name = str(program_auth_info.function_auth_tb.function_auth_type_cd) \
+                                             + str(program_auth_info.auth_type_cd)
+            member_program_auth_list[program_auth_info.member_id][function_auth_type_cd_name] \
+                = program_auth_info.enable_flag
+
+        if error is not None:
+            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+            messages.error(request, error)
+        return JsonResponse(member_program_auth_list, json_dumps_params={'ensure_ascii': True})
+
+
+def update_trainer_program_connection_info_logic(request):
+
+    class_id = request.POST.get('class_id', '')
+    program_connection_check = request.POST.get('program_connection_check', PROGRAM_SELECT)
+    error = None
+    member_ticket_connection_check = int(program_connection_check)
+    if class_id == '':
+        error = '수강보권 정보를 불러오지 못했습니다.[0]'
+
+    if error is None:
+        if member_ticket_connection_check == PROGRAM_LECTURE_CONNECT_DELETE:
+            # 선택한 프로그램의 연결 대기중인 수강권 전부 삭제
+            member_program_data = MemberClassTb.objects.select_related(
+                'class_tb', 'member'
+            ).filter(class_tb_id=class_id, member_id=request.user.id, auth_cd=AUTH_TYPE_WAIT, use=USE)
+            member_program_data.update(auth_cd=AUTH_TYPE_DELETE)
+
+            class_info = None
+            try:
+                class_info = ClassTb.objects.get(class_id=class_id)
+            except ObjectDoesNotExist:
+                error = '프로그램 정보를 불러오지 못했습니다.[1]'
+
+            log_data = LogTb(log_type='LP02', auth_member_id=request.user.id,
+                             from_member_name=request.user.first_name,
+                             class_tb_id=class_info.class_id,
+                             log_info=class_info.member.name + ' 강사님의 \''
+                                      + class_info.get_class_type_cd_name()+'\' 프로그램',
+                             log_how='공유 거절',
+                             log_detail='', use=USE)
+            log_data.save()
+
+        elif member_ticket_connection_check == PROGRAM_LECTURE_CONNECT_ACCEPT:
+            # 선택한 프로그램의 연결 대기중인 수강권 전부 연결
+            member_program_data = MemberClassTb.objects.select_related(
+                'class_tb', 'member'
+            ).filter(class_tb_id=class_id, member_id=request.user.id, auth_cd=AUTH_TYPE_WAIT, use=USE)
+            member_program_data.update(auth_cd=AUTH_TYPE_VIEW)
+
+            class_info = None
+            try:
+                class_info = ClassTb.objects.get(class_id=class_id)
+            except ObjectDoesNotExist:
+                error = '수강권 정보를 불러오지 못했습니다.[2]'
+
+            log_data = LogTb(log_type='LP01', auth_member_id=request.user.id,
+                             from_member_name=request.user.first_name,
+                             class_tb_id=class_info.class_id,
+                             log_info=class_info.member.name + ' 강사님의 \''
+                                      + class_info.get_class_type_cd_name()+'\' 프로그램',
+                             log_how='공유 완료',
+                             log_detail='', use=USE)
+            log_data.save()
+
+    if error is not None:
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
+        messages.error(request, error)
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
+class GetTrainerProgramConnectionListView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+
+    def get(self, request):
+        member_program_auth_list = collections.OrderedDict()
+        member_program_data = MemberClassTb.objects.filter(member_id=request.user.id, auth_cd=AUTH_TYPE_WAIT)
+        # 프로그램에 따른 권한 추가
+        for member_program_info in member_program_data:
+            program_auth_data = ProgramAuthTb.objects.filter(class_tb_id=member_program_info.class_tb_id, use=USE)
+
+            for program_auth_info in program_auth_data:
+                if program_auth_info.auth_type_cd is None:
+                    function_auth_type_cd_name = str(program_auth_info.function_auth_tb.function_auth_type_cd)
+                else:
+                    function_auth_type_cd_name = str(program_auth_info.function_auth_tb.function_auth_type_cd) \
+                                                 + str(program_auth_info.auth_type_cd)
+                member_program_auth_list[program_auth_info.class_tb_id][function_auth_type_cd_name] \
+                    = program_auth_info.enable_flag
+
+        return JsonResponse(member_program_auth_list, json_dumps_params={'ensure_ascii': True})
+
+
 def select_program_processing_logic(request):
     class_id = request.GET.get('class_id', '')
     next_page = request.GET.get('next_page', '')
@@ -5075,7 +5288,7 @@ def update_member_profile_img_logic(request):
         log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
                          from_member_name=request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=member.name+' 회원 프로필', log_how='변경', use=USE)
+                         log_info=member_info.name+' 회원 프로필', log_how='변경', use=USE)
         log_data.save()
 
     return render(request, 'ajax/trainer_error_ajax.html')
@@ -5114,7 +5327,7 @@ def delete_member_profile_img_logic(request):
         log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
                          from_member_name=request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=member.name+' 회원 프로필', log_how='삭제', use=USE)
+                         log_info=member_info.name+' 회원 프로필', log_how='삭제', use=USE)
         log_data.save()
 
     return render(request, 'ajax/trainer_error_ajax.html')

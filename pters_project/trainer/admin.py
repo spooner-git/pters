@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 from .models import ClassTb, MemberClassTb, ClassMemberTicketTb, LectureTb, LectureMemberTicketTb, SettingTb,\
-    TicketTb, TicketLectureTb, LectureMemberTb
+    TicketTb, TicketLectureTb, LectureMemberTb, ProgramAuthTb
 
 
 @admin.register(ClassTb)
@@ -70,4 +70,8 @@ class SettingTbAdmin(admin.ModelAdmin):
     search_fields = ['member__name', 'class_tb']
 
 
-
+@admin.register(ProgramAuthTb)
+class SettingTbAdmin(admin.ModelAdmin):
+    list_display = ('product_function_auth_id', 'class_tb', 'member', 'function_auth_tb', 'auth_type_cd', 'enable_flag',
+                    'reg_dt', 'mod_dt', 'use')
+    search_fields = ['member__name', 'class_tb']

@@ -18,7 +18,7 @@ from configs.const import USE, UN_USE, AUTO_FINISH_OFF, FROM_TRAINEE_LESSON_ALAR
 from login.models import MemberTb
 from schedule.models import ScheduleTb, RepeatScheduleTb
 from trainee.models import MemberTicketTb
-from .models import ClassMemberTicketTb, LectureTb, SettingTb, TicketLectureTb, TicketTb, LectureMemberTb
+from .models import ClassMemberTicketTb, LectureTb, SettingTb, TicketLectureTb, TicketTb, LectureMemberTb, MemberClassTb
 from configs import settings
 
 # 전체 회원 id 정보 가져오기
@@ -206,6 +206,45 @@ def func_get_member_from_member_ticket_list(all_member_ticket_list, lecture_id, 
     return member_list
 
 
+def func_get_trainer_info(class_id, member_id):
+    member_info = {}
+    error = None
+    member = None
+
+    try:
+        member = MemberTb.objects.get(member_id=member_id)
+    except ObjectDoesNotExist:
+        error = '회원 ID를 확인해 주세요.'
+
+    if error is None:
+        connection_check = func_check_trainer_connection_info(class_id, member_id)
+        # 연결이 안되어 있는 경우 회원 정보 표시 안함
+        if connection_check != 2:
+            member.sex = ''
+            member.birthday_dt = ''
+            if member.phone is None or member.phone == '':
+                member.phone = ''
+            else:
+                member.phone = '*******' + member.phone[7:]
+            member.user.email = ''
+            member.profile_url = '/static/common/icon/icon_account.png'
+        if member.profile_url is None or member.profile_url == '':
+            member.profile_url = '/static/common/icon/icon_account.png'
+
+        member_info = {'member_id': str(member.member_id),
+                       'member_user_id': member.user.username,
+                       'member_name': member.name,
+                       'member_phone': str(member.phone),
+                       'member_email': str(member.user.email),
+                       'member_sex': str(member.sex),
+                       'member_birthday_dt': str(member.birthday_dt),
+                       'member_connection_check': connection_check,
+                       'member_profile_url': member.profile_url
+                       }
+
+    return {'member_info': member_info, 'error': error}
+
+
 def func_get_member_info(class_id, user_id, member_id):
     member_info = {}
     error = None
@@ -269,6 +308,24 @@ def func_check_member_connection_info(class_id, member_id):
                                            member_ticket_tb__member_auth_cd=AUTH_TYPE_WAIT,
                                            member_ticket_tb__use=USE, auth_cd=AUTH_TYPE_VIEW,
                                            use=USE).count()
+    if view_lecture_count > 0:
+        connection_check = 2
+    else:
+        if wait_lecture_count > 0:
+            connection_check = 1
+
+    return connection_check
+
+
+def func_check_trainer_connection_info(class_id, trainer_id):
+    connection_check = 0
+
+    view_lecture_count = MemberClassTb.objects.select_related(
+        'class_tb', 'member').filter(class_tb_id=class_id, member_id=trainer_id, auth_cd=AUTH_TYPE_VIEW,
+                                     use=USE).count()
+    wait_lecture_count = MemberClassTb.objects.select_related(
+        'class_tb', 'member').filter(class_tb_id=class_id, member_id=trainer_id, auth_cd=AUTH_TYPE_WAIT,
+                                     use=USE).count()
     if view_lecture_count > 0:
         connection_check = 2
     else:

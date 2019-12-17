@@ -7,6 +7,7 @@ from django.db import models
 from configs.const import LECTURE_TYPE_ONE_TO_ONE
 from configs.models import TimeStampedModel
 from login.models import MemberTb, CommonCdTb
+from payment.models import FunctionAuthTb
 from trainee.models import MemberTicketTb
 
 
@@ -284,3 +285,17 @@ class SettingTb(TimeStampedModel):
     class Meta:
         managed = False
         db_table = 'SETTING_TB'
+
+
+class ProgramAuthTb(TimeStampedModel):
+    product_function_auth_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    function_auth_tb = models.ForeignKey(FunctionAuthTb, on_delete=models.CASCADE, null=True)
+    auth_type_cd = models.CharField(db_column='AUTH_TYPE_CD', max_length=45, blank=True, null=True)
+    enable_flag = models.IntegerField(db_column='ENABLE_FLAG', default=1)
+    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'PROGRAM_AUTH_TB'

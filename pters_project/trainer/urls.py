@@ -161,6 +161,20 @@ urlpatterns = [
     # 강좌 정보 선택 처리
     url(r'^select_program_processing/$', views.select_program_processing_logic, name='select_program_processing'),
 
+    # 강사 검색 기능
+    url(r'^search_trainer_info/$', views.SearchTrainerInfoView.as_view(), name='search_trainer_info'),
+    # 프로그램 공유 기능
+    url(r'^update_share_program_info/$', views.update_share_program_info_logic, name='update_share_program_info'),
+    # 프로그램 공유 내역 조회
+    url(r'^get_share_program_data/$', views.GetShareProgramDataViewAjax.as_view(), name='get_share_program_data'),
+
+    # 프로그램 공유 수락/거절 기능
+    url(r'^update_trainer_program_connection_info/$', views.update_trainer_program_connection_info_logic,
+        name='update_trainer_program_connection_info'),
+    # 수강 정보 연결 안된 정보 조회
+    url(r'^get_trainer_program_connection_list/$', views.GetTrainerProgramConnectionListView.as_view(),
+        name='get_trainer_program_connection_list'),
+
 
     # 배경 이미지 설정 기능 #################################################################################################
     # 배경 이미지 타입 코드 조회
