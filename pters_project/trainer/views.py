@@ -3998,7 +3998,7 @@ def update_trainer_program_connection_info_logic(request):
             # 선택한 프로그램의 연결 대기중인 수강권 전부 삭제
             member_program_data = MemberClassTb.objects.select_related(
                 'class_tb', 'member'
-            ).filter(class_tb_id=class_id, member_id=request.user.id, auth_cd=AUTH_TYPE_WAIT, use=USE)
+            ).filter(class_tb_id=class_id, member_id=request.user.id, use=USE)
             member_program_data.update(auth_cd=AUTH_TYPE_DELETE)
 
             class_info = None
@@ -4012,7 +4012,7 @@ def update_trainer_program_connection_info_logic(request):
                              class_tb_id=class_info.class_id,
                              log_info=class_info.member.name + ' 님의 \''
                                       + class_info.get_class_type_cd_name()+'\' 프로그램',
-                             log_how='공유 거절',
+                             log_how='공유 해제',
                              log_detail='', use=USE)
             log_data.save()
 
@@ -4037,6 +4037,43 @@ def update_trainer_program_connection_info_logic(request):
                              log_how='공유 완료',
                              log_detail='', use=USE)
             log_data.save()
+
+    if error is not None:
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
+        messages.error(request, error)
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
+def delete_trainer_program_connection_logic(request):
+
+    class_id = request.session.get('class_id', '')
+    error = None
+    if class_id == '':
+        error = '프로그램 정보를 불러오지 못했습니다.[0]'
+
+    if error is None:
+        # 선택한 프로그램의 연결 대기중인 수강권 전부 삭제
+        member_program_data = MemberClassTb.objects.select_related(
+            'class_tb', 'member'
+        ).filter(class_tb_id=class_id, member_id=request.user.id, use=USE)
+        member_program_data.update(auth_cd=AUTH_TYPE_DELETE)
+
+        class_info = None
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+        except ObjectDoesNotExist:
+            error = '프로그램 정보를 불러오지 못했습니다.[1]'
+
+        if error is None:
+            log_data = LogTb(log_type='LP02', auth_member_id=request.user.id,
+                             from_member_name=request.user.first_name,
+                             class_tb_id=class_info.class_id,
+                             log_info=class_info.member.name + ' 님의 \''
+                                      + class_info.get_class_type_cd_name()+'\' 프로그램',
+                             log_how='공유 해제',
+                             log_detail='', use=USE)
+            log_data.save()
+            request.session['class_id'] = None
 
     if error is not None:
         logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
