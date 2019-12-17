@@ -64,7 +64,7 @@ class Menu_settings {
 
         let assembly = 
                        CComponent.dom_tag('설정', dom_tag_style) + 
-                        // this.dom_menu_setting_supervisor() + 
+                        this.dom_menu_setting_supervisor() + 
                         this.dom_menu_setting_calendar() + 
                         this.dom_menu_setting_worktime() + 
                         this.dom_menu_setting_autocomplete() +
@@ -295,11 +295,11 @@ class Menu_settings {
 
     dom_menu_setting_supervisor(){
         let id = 'menu_setting_supervisor';
-        let title = '관리자 (공유???)';
+        let title = '공유 - 작업중';
         let icon = CImg.supervisor();
         let icon_r_visible = NONE;
         let icon_r_text = "";
-        let style = {"font-size":"17px", "padding":"13px 0"};
+        let style = {"color":"red", "font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             sideGoPopup("setting_supervisor");
         });
