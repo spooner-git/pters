@@ -278,7 +278,8 @@ const LECTURE_TYPE_ONE_TO_ONE = 'ONE_TO_ONE';
 //  수업 종류 - 일반 수업
 const LECTURE_TYPE_NORMAL = 'NORMAL';
 
-
+const MY_PROGRAM = 0;
+const SHARED_PROGRAM = 1;
 
 
 //프로그램 리스트

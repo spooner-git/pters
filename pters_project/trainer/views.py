@@ -37,7 +37,7 @@ from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO
     LECTURE_TYPE_NORMAL, SHOW, SORT_TICKET_TYPE, SORT_TICKET_NAME, SORT_TICKET_MEMBER_COUNT, SORT_TICKET_CREATE_DATE, \
     SORT_LECTURE_NAME, SORT_LECTURE_MEMBER_COUNT, SORT_LECTURE_CAPACITY_COUNT, SORT_LECTURE_CREATE_DATE, ON_SCHEDULE, \
     CALENDAR_TIME_SELECTOR_BASIC, SORT_END_DATE, SORT_MEMBER_TICKET, SORT_SCHEDULE_DT, STATE_CD_REFUND, \
-    SORT_SCHEDULE_MONTHLY
+    SORT_SCHEDULE_MONTHLY, SHARED_PROGRAM, MY_PROGRAM
 from board.models import BoardTb
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 from schedule.functions import func_refresh_member_ticket_count, func_get_trainer_attend_schedule, \
@@ -75,6 +75,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
 
         error = None
         if class_id is None or class_id == '':
+            request.session['shared_program_flag'] = MY_PROGRAM
             if len(class_auth_data) == 0:
                 self.url = '/trainer/add_program/'
             elif len(class_auth_data) == 1:
@@ -87,6 +88,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                     if str(class_info.class_tb.member_id) != str(request.user.id):
                         request.session['class_type_name'] = class_info.class_tb.get_class_type_cd_name() \
                                                              + '-' + class_info.class_tb.member.name
+                        request.session['shared_program_flag'] = SHARED_PROGRAM
                     request.session['class_center_name'] = class_info.class_tb.get_center_name()
                     request.session['trainer_name'] = class_info.class_tb.member.name
 
@@ -105,6 +107,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                         if str(class_info.class_tb.member_id) != str(request.user.id):
                             request.session['class_type_name'] = class_info.class_tb.get_class_type_cd_name() \
                                                                  + '-' + class_info.class_tb.member.name
+                            request.session['shared_program_flag'] = SHARED_PROGRAM
                         request.session['class_center_name'] = class_info.class_tb.get_center_name()
                         request.session['trainer_name'] = class_info.class_tb.member.name
                         temp_class_counter = class_member_ticket_counter
