@@ -62,6 +62,8 @@ class Menu {
 
         let dom_tag_style = {"font-size":"13px", "color":"var(--font-sub-normal)", "padding-left":"0", "margin-bottom":"8px"};
 
+        let share = shared_program_flag == 0 ? this.dom_menu_setting_sharing() : this.dom_menu_setting_shared();
+
         let assembly = this.dom_who_i_am() + 
                        CComponent.dom_tag('운영', dom_tag_style) + 
                         this.dom_menu_program() + 
@@ -72,7 +74,7 @@ class Menu {
                         this.dom_menu_statistics() + 
                         this.dom_menu_attendmode() + 
                        CComponent.dom_tag('설정', dom_tag_style) +
-                        this.dom_menu_setting_supervisor() +  
+                        share + 
                         this.dom_menu_setting_calendar() + 
                         this.dom_menu_setting_worktime() + 
                         this.dom_menu_setting_autocomplete() +
@@ -309,15 +311,28 @@ class Menu {
         return html;
     }
 
-    dom_menu_setting_supervisor(){
-        let id = 'menu_setting_supervisor';
-        let title = '공유 - 작업중';
+    dom_menu_setting_sharing(){
+        let id = 'menu_setting_sharing';
+        let title = '공유 하기';
         let icon = CImg.supervisor();
         let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"color":"red", "font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            sideGoPopup("setting_supervisor");
+            sideGoPopup("setting_sharing");
+        });
+        return html;
+    }
+
+    dom_menu_setting_shared(){
+        let id = 'menu_setting_shared';
+        let title = '공유 받음';
+        let icon = CImg.supervisor();
+        let icon_r_visible = NONE;
+        let icon_r_text = "";
+        let style = {"color":"red", "font-size":"17px", "padding":"13px 0"};
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            sideGoPopup("setting_shared");
         });
         return html;
     }
