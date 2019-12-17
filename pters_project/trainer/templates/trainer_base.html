@@ -570,26 +570,7 @@
         current_page_text = page;
         $('#debug_toolbar').hide();
 
-        try{
-            $(`.nav_img .nav_svg`).each(function(e){
-               $(this).css('fill', 'var(--img-main)')
-            });
-            $(`#${page} .nav_img .nav_svg`).css('fill', 'var(--img-highlight)')
-
-            $(`.side_menu_item .nav_svg`).each(function(e){
-               $(this).css('fill', 'var(--img-main)')
-            });
-            $(`#side_${page} .nav_svg`).css('fill', 'var(--fundamental-white)')
-        }
-        catch(e){
-
-        }
-        try{
-            $('.side_menu_selected').removeClass('side_menu_selected');
-            $(`#side_${page}`).addClass('side_menu_selected');
-        }catch(e){
-
-        }
+        
         try{
             //메뉴 이동시 팝업이 열려있으면 모두 닫고 이동
             $('#root_content').scrollTop(0);
@@ -600,24 +581,53 @@
             console.log(e);
         }
 
+        let inspect;
         switch(page){
             case 'home':
                 current_page = home;
                 home.init();
             break;
             case 'calendar':
+                inspect = pass_inspector.schedule_read();
+                if(inspect.barrier == BLOCKED){
+                    let message = `현재 프로그램의 ${inspect.limit_type}`;
+                    show_error_message(message);
+                    return false;
+                }
+
                 current_page = calendar;
                 calendar.init_new();
             break;
             case 'ticket_page_type':
+                inspect = pass_inspector.ticket_read();
+                if(inspect.barrier == BLOCKED){
+                    let message = `현재 프로그램의 ${inspect.limit_type}`;
+                    show_error_message(message);
+                    return false;
+                }
+
                 current_page = ticket;
                 ticket.init();
             break;
             case 'lecture_page_type':
+                inspect = pass_inspector.lecture_read();
+                if(inspect.barrier == BLOCKED){
+                    let message = `현재 프로그램의 ${inspect.limit_type}`;
+                    show_error_message(message);
+                    return false;
+                }
+
                 current_page = lecture;
                 lecture.init();
             break;
             case 'member':
+                inspect = pass_inspector.member_read();
+                if(inspect.barrier == BLOCKED){
+                    let message = `현재 프로그램의 ${inspect.limit_type}`;
+                    show_error_message(message);
+                    return false;
+                }
+
                 current_page = member;
                 member.init();
             break;
@@ -642,6 +652,26 @@
             break;
         }
         
+        try{
+            $(`.nav_img .nav_svg`).each(function(e){
+               $(this).css('fill', 'var(--img-main)')
+            });
+            $(`#${page} .nav_img .nav_svg`).css('fill', 'var(--img-highlight)')
+
+            $(`.side_menu_item .nav_svg`).each(function(e){
+               $(this).css('fill', 'var(--img-main)')
+            });
+            $(`#side_${page} .nav_svg`).css('fill', 'var(--fundamental-white)')
+        }
+        catch(e){
+
+        }
+        try{
+            $('.side_menu_selected').removeClass('side_menu_selected');
+            $(`#side_${page}`).addClass('side_menu_selected');
+        }catch(e){
+
+        }
     }
 
     //PC사이드 메뉴 토글
@@ -681,22 +711,42 @@
         $('#debug_toolbar').hide();
 
         let open;
-
+        let inspect;
         switch(page){
             case 'ticket':
                 open = ()=>{
+                    inspect = pass_inspector.ticket_read();
+                    if(inspect.barrier == BLOCKED){
+                        let message = `현재 프로그램의 ${inspect.limit_type}`;
+                        show_error_message(message);
+                        return false;
+                    }
+
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_LIST, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     ticket_list_popup = new Ticket_list('.popup_ticket_list', 'ticket_list_popup')});
                     }
             break;
             case 'lecture':
                 open = ()=>{
+                    inspect = pass_inspector.lecture_read();
+                    if(inspect.barrier == BLOCKED){
+                        let message = `현재 프로그램의 ${inspect.limit_type}`;
+                        show_error_message(message);
+                        return false;
+                    }
+
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_LIST, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     lecture_list_popup = new Lecture_list('.popup_lecture_list', 'lecture_list_popup')});
                     }
             break;
             case 'program':
                 open = ()=>{
+                    inspect = pass_inspector.program_read();
+                    if(inspect.barrier == BLOCKED){
+                        let message = `현재 프로그램의 ${inspect.limit_type}`;
+                        show_error_message(message);
+                        return false;
+                    }
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PROGRAM_LIST, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     program_list_popup = new Program_list('.popup_program_list')});
                 }

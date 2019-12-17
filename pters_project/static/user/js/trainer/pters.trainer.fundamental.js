@@ -905,6 +905,36 @@ class PassInspector{
         return {barrier:PASSED};
     }
 
+    schedule_read(){ //일정 읽기 자체를 막을지 아닐지 여부 (On, Off)
+        let limit_number = Number(this.data.auth_plan_read.limit_num);
+        let limit_type = "일정 읽기 권한이 없습니다.";
+
+        if(limit_number == 0){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
+    }
+
+    schedule_update(){ //일정 수정 자체를 막을지 아닐지 여부 (On, Off)
+        let limit_number = Number(this.data.auth_plan_update.limit_num);
+        let limit_type = "일정 수정 권한이 없습니다.";
+
+        if(limit_number == 0){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
+    }
+
+    schedule_delete(){ //일정 수정 자체를 막을지 아닐지 여부 (On, Off)
+        let limit_number = Number(this.data.auth_plan_update.limit_num);
+        let limit_type = "일정 삭제 권한이 없습니다.";
+
+        if(limit_number == 0){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
+    }
+
     member_create(re_contract){
         let async = false;
         let data;
@@ -926,15 +956,33 @@ class PassInspector{
     }
 
     member_read(){
+        let limit_number = Number(this.data.auth_member_read.limit_num);
+        let limit_type = "회원 읽기 권한이 없습니다.";
 
+        if(limit_number == 0){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
     }
 
     member_update(){
+        let limit_number = Number(this.data.auth_member_update.limit_num);
+        let limit_type = "회원 수정 권한이 없습니다.";
 
+        if(limit_number == 0){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
     }
 
     member_delete(){
+        let limit_number = Number(this.data.auth_member_delete.limit_num);
+        let limit_type = "회원 삭제 권한이 없습니다.";
 
+        if(limit_number == 0){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
     }
 
     lecture_create(){
@@ -960,15 +1008,33 @@ class PassInspector{
     }
 
     lecture_read(){
-        
+        let limit_number = Number(this.data.auth_group_read.limit_num);
+        let limit_type = "수업 읽기 권한이 없습니다.";
+
+        if(limit_number == 0){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
     }
 
     lecture_update(){
+        let limit_number = Number(this.data.auth_group_update.limit_num);
+        let limit_type = "수업 수정 권한이 없습니다.";
 
+        if(limit_number == 0){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
     }
 
     lecture_delete(){
+        let limit_number = Number(this.data.auth_group_delete.limit_num);
+        let limit_type = "수업 삭제 권한이 없습니다.";
 
+        if(limit_number == 0){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
     }
 
     ticket_create(){
@@ -996,15 +1062,33 @@ class PassInspector{
     }
 
     ticket_read(){
-        
+        let limit_number = Number(this.data.auth_package_read.limit_num);
+        let limit_type = "수강권 읽기 권한이 없습니다.";
+
+        if(limit_number == 0){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
     }
 
     ticket_update(){
+        let limit_number = Number(this.data.auth_package_update.limit_num);
+        let limit_type = "수강권 수정 권한이 없습니다.";
 
+        if(limit_number == 0){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
     }
 
     ticket_delete(){
+        let limit_number = Number(this.data.auth_package_delete.limit_num);
+        let limit_type = "수강권 삭제 권한이 없습니다.";
 
+        if(limit_number == 0){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
     }
 
     statistics(selected_start_date, selected_end_date){
@@ -1035,15 +1119,33 @@ class PassInspector{
     }
 
     program_read(){
-        
+        let limit_number = Number(this.data.auth_program_read.limit_num);
+        let limit_type = "프로그램 읽기 권한이 없습니다.";
+
+        if(limit_number == 0){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
     }
 
     program_update(){
+        let limit_number = Number(this.data.auth_program_update.limit_num);
+        let limit_type = "프로그램 수정 권한이 없습니다.";
 
+        if(limit_number == 0){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
     }
 
     program_delete(){
+        let limit_number = Number(this.data.auth_program_delete.limit_num);
+        let limit_type = "프로그램 삭제 권한이 없습니다.";
 
+        if(limit_number == 0){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
     }
 
     settings(){
