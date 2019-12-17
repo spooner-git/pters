@@ -3886,9 +3886,11 @@ def update_share_program_info_logic(request):
             class_member_info = MemberClassTb.objects.select_related(
                 'class_tb', 'member').get(class_tb_id=class_id, member_id=trainer_id, use=USE)
             class_member_info.auth_cd = auth_cd
+            class_member_info.mod_member_id=request.user.id
             class_member_info.save()
         except ObjectDoesNotExist:
-            class_member_info = MemberClassTb(class_tb_id=class_id, member_id=trainer_id, auth_cd=auth_cd, use=USE)
+            class_member_info = MemberClassTb(class_tb_id=class_id, member_id=trainer_id, auth_cd=auth_cd,
+                                              mod_member_id=request.user.id, use=USE)
             class_member_info.save()
 
         function_list = ProductFunctionAuthTb.objects.select_related(
@@ -4062,13 +4064,14 @@ class GetTrainerProgramConnectionListView(LoginRequiredMixin, AccessTestMixin, T
                                                  + str(program_auth_info.auth_type_cd)
 
                 try:
-                    member_program_auth_list[member_program_info.member_id]
+                    member_program_auth_list[member_program_info.class_tb_id]
                 except KeyError:
-                    member_program_auth_list[member_program_info.member_id] = {}
+                    member_program_auth_list[member_program_info.class_tb_id] = {}
                     member_result = func_get_trainer_info(member_program_info.class_tb_id,
-                                                          member_program_info.member_id)
-                    member_program_auth_list[program_auth_info.member_id]['member_info'] \
+                                                          member_program_info.class_tb.member_id)
+                    member_program_auth_list[member_program_info.class_tb_id]['member_info'] \
                         = member_result['member_info']
+
                 member_program_auth_list[member_program_info.class_tb_id][function_auth_type_cd_name] \
                     = program_auth_info.enable_flag
 
