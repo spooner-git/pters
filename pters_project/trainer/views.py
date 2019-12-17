@@ -4071,6 +4071,8 @@ class GetTrainerProgramConnectionListView(LoginRequiredMixin, AccessTestMixin, T
                                                           member_program_info.class_tb.member_id)
                     member_program_auth_list[member_program_info.class_tb_id]['member_info'] \
                         = member_result['member_info']
+                    member_program_auth_list[member_program_info.class_tb_id]['program_name'] \
+                        = member_program_info.class_tb.get_class_type_cd_name()
 
                 member_program_auth_list[member_program_info.class_tb_id][function_auth_type_cd_name] \
                     = program_auth_info.enable_flag
