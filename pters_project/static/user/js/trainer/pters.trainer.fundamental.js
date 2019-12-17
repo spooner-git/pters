@@ -925,7 +925,7 @@ class PassInspector{
         return {barrier:PASSED};
     }
 
-    schedule_delete(){ //일정 수정 자체를 막을지 아닐지 여부 (On, Off)
+    schedule_delete(){ //일정 삭제 자체를 막을지 아닐지 여부 (On, Off)
         let limit_number = Number(this.data.auth_plan_update.limit_num);
         let limit_type = "일정 삭제 권한이 없습니다.";
 
@@ -1097,6 +1097,16 @@ class PassInspector{
         let limit_type = this.data.auth_analytics_read.limit_type;
 
         if(diff_month >= limit_number){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
+    }
+
+    statistics_read(){
+        let limit_number = Number(this.data.auth_analytics_read.limit_num);
+        let limit_type = "통계 읽기 권한이 없습니다.";
+
+        if(limit_number == 0){
             return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
         }
         return {barrier:PASSED};
