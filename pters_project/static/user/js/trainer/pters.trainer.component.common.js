@@ -73,7 +73,7 @@ class CComponent{
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} >
                                 ${icon_r_text}
-                                ${CImg.arrow_right()}
+                                ${CImg.arrow_right("", {"vertical-align":"middle"})}
                             </div>
                         </div>
                     </li>`;
@@ -116,7 +116,7 @@ class CComponent{
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} >
                                 ${icon_r_text}
-                                ${CImg.arrow_right()}
+                                ${CImg.arrow_right("", {"vertical-align":"middle"})}
                             </div>
                         </div>
                     </li>`;

@@ -112,9 +112,8 @@ class Lecture_list {
             let lecture_class_hour = data.lecture_minute;
             let lecture_ing_bg_color = data.lecture_ing_color_cd;
 
-            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
-            let onclick = `layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_LECTURE_VIEW}', 100, ${popup_style}, {'lecture_id':${lecture_id}}, ()=>{
-                lecture_view_popup = new Lecture_view('.popup_lecture_view', ${lecture_id}, 'lecture_view_popup');});`;
+            
+            let onclick = `lecture_list_popup.event_view_lecture(${lecture_id})`;
             let html = `<article class="lecture_wrapper" data-text="${lecture_name}" data-lectureid="${lecture_id}" onclick="${onclick}" style="color:${this.list_status_type == "ing" ? "" : 'var(--font-inactive)'}">
                             <div>
                                 <div class="lecture_data_l">
@@ -137,6 +136,20 @@ class Lecture_list {
         }
 
         return html_temp.join("");
+    }
+
+    event_view_lecture(lecture_id){
+        let auth_inspect = pass_inspector.lecture_read();
+        if(auth_inspect.barrier == BLOCKED){
+            let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+            show_error_message(message);
+            return false;
+        }
+
+        let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_VIEW, 100, popup_style, {'lecture_id':lecture_id}, ()=>{
+            lecture_view_popup = new Lecture_view('.popup_lecture_view', lecture_id, 'lecture_view_popup');
+        });
     }
 
     dom_row_toolbox(){

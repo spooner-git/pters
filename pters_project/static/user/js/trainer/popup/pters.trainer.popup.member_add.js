@@ -689,7 +689,7 @@ class Member_add{
         }
 
         let recontract = this.data_from_external == null ? OFF : ON;
-        let inspect = pass_inspector.member_create(recontract);
+        let inspect = pass_inspector.member(recontract);
         if(inspect.barrier == BLOCKED){
             // let id = "go_to_shop";
             // let title = "패스 구매";

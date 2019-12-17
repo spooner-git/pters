@@ -703,6 +703,14 @@ class Plan_view{
     upper_right_menu(number){
         let user_option = [
             ()=>{ show_user_confirm(`정말 ${this.data.schedule_type != "0" ? this.data.lecture_name : 'OFF'} 일정을 취소하시겠습니까?`, ()=>{
+                    let inspect = pass_inspector.schedule_delete();
+                    if(inspect.barrier == BLOCKED){
+                        let message = `현재 프로그램의 ${inspect.limit_type}`;
+                        layer_popup.close_layer_popup();
+                        show_error_message(message);
+                        return false;
+                    }
+                    
                     Plan_func.delete({"schedule_id":this.schedule_id}, ()=>{
                         try{
                             current_page.init();
@@ -824,7 +832,7 @@ class Plan_view{
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PLAN_DAILY_RECORD, 100, popup_style, null, ()=>{
                     plan_daily_record_popup = new Plan_daily_record('.popup_plan_daily_record', this.schedule_id, ()=>{});
                 });
-            }  
+            }
         ];
 
         user_option[number]();
@@ -832,9 +840,15 @@ class Plan_view{
 
     upper_left_menu(){
         if(this.if_user_changed_any_information == true){
-            // if(this.send_data() == false){
-            //     return false;
-            // }
+            let inspect = pass_inspector.schedule_update();
+            if(inspect.barrier == BLOCKED){
+                let message = `현재 프로그램의 ${inspect.limit_type}`;
+                layer_popup.close_layer_popup();
+                this.clear();
+                show_error_message(message);
+                return false;
+            }
+            
             let user_option = {
                 confirm:{text:"변경사항 적용", callback:()=>{this.send_data();layer_popup.close_layer_popup();layer_popup.close_layer_popup();this.clear();}},
                 cancel:{text:"아무것도 변경하지 않음", callback:()=>{ layer_popup.close_layer_popup();layer_popup.close_layer_popup();this.clear();}}

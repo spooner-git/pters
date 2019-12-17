@@ -284,13 +284,21 @@ class Ticket_add{
     }
 
     send_data(){
+        let auth_inspect = pass_inspector.ticket_create();
+        if(auth_inspect.barrier == BLOCKED){
+            let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+            this.init();
+            show_error_message(message);
+            return false;
+        }
+        
         if(this.data_sending_now == true){
             return false;
         }else if(this.data_sending_now == false){
             this.data_sending_now = true;
         }
 
-        let inspect = pass_inspector.ticket_create();
+        let inspect = pass_inspector.ticket();
         if(inspect.barrier == BLOCKED){
             // let id = "go_to_shop";
             // let title = "패스 구매";

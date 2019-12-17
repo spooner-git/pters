@@ -1257,6 +1257,13 @@ class Calendar {
         this.user_data.user_selected_plan.date.year = year;
         this.user_data.user_selected_plan.date.month = month;
         this.user_data.user_selected_plan.date.date = date;
+        let inspect = pass_inspector.schedule_read();
+        
+        if(inspect.barrier == BLOCKED){
+            let message = `현재 프로그램의 ${inspect.limit_type}`;
+            show_error_message(message);
+            return false;
+        }
         let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PLAN_VIEW, 100, popup_style, {'schedule_id':schedule_id}, ()=>{
             plan_view_popup = new Plan_view('.popup_plan_view', this.user_data.user_selected_plan, "plan_view_popup");
