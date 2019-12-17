@@ -290,7 +290,7 @@ class Ticket_add{
             this.data_sending_now = true;
         }
 
-        let inspect = pass_inspector.ticket();
+        let inspect = pass_inspector.ticket_create();
         if(inspect.barrier == BLOCKED){
             // let id = "go_to_shop";
             // let title = "패스 구매";
