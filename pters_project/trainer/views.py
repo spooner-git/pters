@@ -4064,13 +4064,14 @@ class GetTrainerProgramConnectionListView(LoginRequiredMixin, AccessTestMixin, T
                                                  + str(program_auth_info.auth_type_cd)
 
                 try:
-                    member_program_auth_list[member_program_info.member_id]
+                    member_program_auth_list[member_program_info.class_tb_id]
                 except KeyError:
-                    member_program_auth_list[member_program_info.member_id] = {}
+                    member_program_auth_list[member_program_info.class_tb_id] = {}
                     member_result = func_get_trainer_info(member_program_info.class_tb_id,
-                                                          member_program_info.member_id)
-                    member_program_auth_list[program_auth_info.member_id]['member_info'] \
+                                                          member_program_info.class_tb.member_id)
+                    member_program_auth_list[member_program_info.class_tb_id]['member_info'] \
                         = member_result['member_info']
+
                 member_program_auth_list[member_program_info.class_tb_id][function_auth_type_cd_name] \
                     = program_auth_info.enable_flag
 
