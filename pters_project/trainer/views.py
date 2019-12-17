@@ -4103,6 +4103,11 @@ def select_program_processing_logic(request):
         request.session['class_type_name'] = class_info.get_class_type_cd_name()
         request.session['class_center_name'] = class_info.get_center_name()
         request.session['trainer_name'] = class_info.member.name
+        request.session['shared_program_flag'] = MY_PROGRAM
+        if str(class_info.class_tb.member_id) != str(request.user.id):
+            request.session['class_type_name'] = class_info.class_tb.get_class_type_cd_name() \
+                                                 + '-' + class_info.class_tb.member.name
+            request.session['shared_program_flag'] = SHARED_PROGRAM
 
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
