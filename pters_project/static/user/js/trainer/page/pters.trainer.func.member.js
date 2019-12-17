@@ -181,9 +181,8 @@ class Member {
                 member_profile_photo = `<img src="${data.member_profile_url}">`;
             }
 
-            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
-            let onclick = `layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_MEMBER_VIEW}', 100, ${popup_style}, {'member_id':${member_id}}, ()=>{
-                member_view_popup = new Member_view('.popup_member_view', ${member_id}, 'member_view_popup');});`;
+            
+            let onclick = `member.event_view_member(${member_id})`;
             let html = `<article class="member_wrapper" data-member_id="${member_id}" data-name="${member_name}" onclick="${onclick}" style="color:${list_type == "ing" ? "" : 'var(--font-inactive)'}">
                             <div class="member_data_wrapper">
                                 <div class="member_data_l">
@@ -233,6 +232,21 @@ class Member {
         }
         
         document.querySelector('.member_search_tool').innerHTML = html;
+    }
+    
+    event_view_member(member_id){
+        let inspect = pass_inspector.member_read();
+        if(inspect.barrier == BLOCKED){
+            let message = `현재 프로그램의 ${inspect.limit_type}`;
+            show_error_message(message);
+            return false;
+        }
+
+        let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_VIEW, 100, popup_style, {'member_id':member_id}, ()=>{
+            member_view_popup = new Member_view('.popup_member_view', member_id, 'member_view_popup');
+        });
+
     }
 
     event_add_member(){

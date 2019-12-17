@@ -581,16 +581,16 @@
             console.log(e);
         }
 
-        let inspect;
+        let auth_inspect;
         switch(page){
             case 'home':
                 current_page = home;
                 home.init();
             break;
             case 'calendar':
-                inspect = pass_inspector.schedule_read();
-                if(inspect.barrier == BLOCKED){
-                    let message = `현재 프로그램의 ${inspect.limit_type}`;
+                auth_inspect = pass_inspector.schedule_read();
+                if(auth_inspect.barrier == BLOCKED){
+                    let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
                     show_error_message(message);
                     return false;
                 }
@@ -599,9 +599,9 @@
                 calendar.init_new();
             break;
             case 'ticket_page_type':
-                inspect = pass_inspector.ticket_read();
-                if(inspect.barrier == BLOCKED){
-                    let message = `현재 프로그램의 ${inspect.limit_type}`;
+                auth_inspect = pass_inspector.ticket_read();
+                if(auth_inspect.barrier == BLOCKED){
+                    let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
                     show_error_message(message);
                     return false;
                 }
@@ -610,9 +610,9 @@
                 ticket.init();
             break;
             case 'lecture_page_type':
-                inspect = pass_inspector.lecture_read();
-                if(inspect.barrier == BLOCKED){
-                    let message = `현재 프로그램의 ${inspect.limit_type}`;
+                auth_inspect = pass_inspector.lecture_read();
+                if(auth_inspect.barrier == BLOCKED){
+                    let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
                     show_error_message(message);
                     return false;
                 }
@@ -621,9 +621,9 @@
                 lecture.init();
             break;
             case 'member':
-                inspect = pass_inspector.member_read();
-                if(inspect.barrier == BLOCKED){
-                    let message = `현재 프로그램의 ${inspect.limit_type}`;
+                auth_inspect = pass_inspector.member_read();
+                if(auth_inspect.barrier == BLOCKED){
+                    let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
                     show_error_message(message);
                     return false;
                 }
@@ -711,13 +711,13 @@
         $('#debug_toolbar').hide();
 
         let open;
-        let inspect;
+        let auth_inspect
         switch(page){
             case 'ticket':
                 open = ()=>{
-                    inspect = pass_inspector.ticket_read();
-                    if(inspect.barrier == BLOCKED){
-                        let message = `현재 프로그램의 ${inspect.limit_type}`;
+                    auth_inspect = pass_inspector.ticket_read();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
                         show_error_message(message);
                         return false;
                     }
@@ -728,9 +728,9 @@
             break;
             case 'lecture':
                 open = ()=>{
-                    inspect = pass_inspector.lecture_read();
-                    if(inspect.barrier == BLOCKED){
-                        let message = `현재 프로그램의 ${inspect.limit_type}`;
+                    auth_inspect = pass_inspector.lecture_read();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
                         show_error_message(message);
                         return false;
                     }
@@ -741,9 +741,9 @@
             break;
             case 'program':
                 open = ()=>{
-                    inspect = pass_inspector.program_read();
-                    if(inspect.barrier == BLOCKED){
-                        let message = `현재 프로그램의 ${inspect.limit_type}`;
+                    auth_inspect = pass_inspector.program_read();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
                         show_error_message(message);
                         return false;
                     }
@@ -819,9 +819,9 @@
             break;
             case 'statistics':
                 open = ()=>{
-                    let inspect = pass_inspector.statistics_read();
-                    if(inspect.barrier == BLOCKED){
-                        let message = `현재 프로그램의 ${inspect.limit_type}`;
+                    let auth_inspect = pass_inspector.statistics_read();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
                         show_error_message(message);
                         return false;
                     }

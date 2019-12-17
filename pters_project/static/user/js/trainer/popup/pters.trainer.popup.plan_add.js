@@ -657,6 +657,14 @@ class Plan_add{
     }
 
     send_data(){
+        let auth_inspect = pass_inspector.schedule_create();
+        if(auth_inspect.barrier == BLOCKED){
+            let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+            layer_popup.close_layer_popup();
+            show_error_message(message);
+            return false;
+        }
+
         if(this.check_before_send() == false){
             return false;
         }
@@ -862,7 +870,7 @@ class Plan_add{
     // }
 
     pass_inspect(selected_date){
-        let inspect = pass_inspector.schedule_create(selected_date);
+        let inspect = pass_inspector.schedule(selected_date);
         if(inspect.barrier == BLOCKED){
             let message = `[${inspect.limit_type}] 이용자께서는 오늘 기준 전/후 ${inspect.limit_num}일간 일정 관리 하실 수 있습니다.
                             <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까??</p>`;

@@ -679,6 +679,13 @@ class Member_view{
             },
             change:{text:"프로필 사진 변경", callback:()=>{
                     layer_popup.close_layer_popup();
+                    let auth_inspect = pass_inspector.member_update();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+                        show_error_message(message);
+                        return false;
+                    }
+
                     let external_data = {member_id: this.member_id, callback:()=>{this.init();}};
                     let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_VIEW_PHOTO_UPDATE, 100, popup_style, null, ()=>{
@@ -687,6 +694,14 @@ class Member_view{
                 }
             },
             delete:{text:"프로필 사진 삭제", callback:()=>{
+                    layer_popup.close_layer_popup();
+                    let auth_inspect = pass_inspector.member_update();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+                        show_error_message(message);
+                        return false;
+                    }
+
                     let data = {"member_id": this.member_id};
                     let self = this;
                     $.ajax({
@@ -726,7 +741,7 @@ class Member_view{
                             show_error_message('통신이 불안정합니다.');
                         }
                     });
-                    layer_popup.close_layer_popup();
+                    
                 }
             }
         };
@@ -746,6 +761,14 @@ class Member_view{
     }
 
     send_data(){
+        let auth_inspect = pass_inspector.member_update();
+        if(auth_inspect.barrier == BLOCKED){
+            let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+            show_error_message(message);
+            this.set_initial_data();
+            return false;
+        }
+
         if(this.check_before_send() == false){
             return false;
         }
@@ -806,6 +829,14 @@ class Member_view{
             },
             delete:{text:"회원 삭제", callback:()=>{
                     show_user_confirm(`"${this.data.name}" 님 정보를 완전 삭제 하시겠습니까? <br> 다시 복구할 수 없습니다.`, ()=>{
+                        let auth_inspect = pass_inspector.member_delete();
+                        if(auth_inspect.barrier == BLOCKED){
+                            let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+                            show_error_message(message);
+                            layer_popup.close_layer_popup();
+                            return false;
+                        }
+
                         Member_func.delete({"member_id":this.member_id}, ()=>{
                             try{
                                 current_page.init();
@@ -893,7 +924,6 @@ class Member_simple_view{
                         lecture_state:[]
                     }
                 ]
-                
         };
 
         //팝업의 날짜, 시간등의 입력란을 미리 외부에서 온 데이터로 채워서 보여준다.

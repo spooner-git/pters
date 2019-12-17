@@ -215,6 +215,14 @@ class Ticket_view{
         let pattern_message = "+ - _ : ()[] 제외 특수문자는 입력 불가";
         let required = "required";
         let sub_html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
+            let auth_inspect = pass_inspector.ticket_update();
+            if(auth_inspect.barrier == BLOCKED){
+                let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+                this.init();
+                show_error_message(message);
+                return false;
+            }
+
             let user_input_data = input_data;
             this.name = user_input_data;
             this.send_data();
@@ -249,6 +257,14 @@ class Ticket_view{
         });
         let style = null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            let auth_inspect = pass_inspector.ticket_update();
+            if(auth_inspect.barrier == BLOCKED){
+                let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+                this.init();
+                show_error_message(message);
+                return false;
+            }
+
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SELECT, 100, popup_style, null, ()=>{
                 lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 999, {'title':'수업'}, (set_data)=>{
@@ -277,6 +293,13 @@ class Ticket_view{
                                     <span style="${text_decoration};vertical-align:middle;">${lecture_name}</span>`;
             html_to_join.push(
                 CComponent.icon_button (lecture_id, lecture_name_set, NONE, icon_button_style, ()=>{
+                    let auth_inspect = pass_inspector.lecture_read();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+                        this.init();
+                        show_error_message(message);
+                        return false;
+                    }
                     let root_content_height = $root_content.height();
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SIMPLE_VIEW, 100*(247/root_content_height), POPUP_FROM_BOTTOM, {'lecture_id':lecture_id}, ()=>{
                         lecture_simple_view_popup = new Lecture_simple_view('.popup_lecture_simple_view', lecture_id, 'lecture_simple_view_popup');
@@ -304,6 +327,14 @@ class Ticket_view{
         let pattern_message = "";
         let required = "";
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
+            let auth_inspect = pass_inspector.ticket_update();
+            if(auth_inspect.barrier == BLOCKED){
+                let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+                this.init();
+                show_error_message(message);
+                return false;
+            }
+
             if(input_data != '' && input_data != null){
                 input_data = Number(input_data);
             }
@@ -327,6 +358,14 @@ class Ticket_view{
         let pattern_message = "";
         let required = "";
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
+            let auth_inspect = pass_inspector.ticket_update();
+            if(auth_inspect.barrier == BLOCKED){
+                let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+                this.init();
+                show_error_message(message);
+                return false;
+            }
+
             if(input_data != '' && input_data != null){
                 input_data = Number(input_data);
             }
@@ -349,6 +388,14 @@ class Ticket_view{
         let pattern_message = "+ - _ : ., 제외 특수문자는 입력 불가";
         let required = "";
         let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
+            let auth_inspect = pass_inspector.ticket_update();
+            if(auth_inspect.barrier == BLOCKED){
+                let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+                this.init();
+                show_error_message(message);
+                return false;
+            }
+
             let user_input_data = input_data;
             this.memo = user_input_data;
             this.send_data();
@@ -389,6 +436,13 @@ class Ticket_view{
             let style = {"display":"block", "font-size":"15px", "font-weight":"500", "padding":"0", "height":"44px", "line-height":"44px"};
             let member_button =
                 CComponent.text_button(member_id, member_name, style, ()=>{
+                    let auth_inspect = pass_inspector.member_read();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+                        this.init();
+                        show_error_message(message);
+                        return false;
+                    }
                     let root_content_height = $root_content.height();
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SIMPLE_VIEW, 100*(400/root_content_height), POPUP_FROM_BOTTOM, {'member_id':member_id}, ()=>{
                         member_simple_view_popup = new Member_simple_view('.popup_member_simple_view', member_id, 'member_simple_view_popup');
@@ -448,8 +502,15 @@ class Ticket_view{
     upper_right_menu(){
         let user_option = {
             activate:{text:"활성화", callback:()=>{
+                    let auth_inspect = pass_inspector.ticket_update();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+                        this.init();
+                        show_error_message(message);
+                        return false;
+                    }
                     show_user_confirm(`"${this.data.name}" <br> 수강권을 활성화 하시겠습니까? <br> 활성화 탭에서 다시 확인할 수 있습니다.`, ()=>{
-                        let inspect = pass_inspector.ticket_create();
+                        let inspect = pass_inspector.ticket();
                         if(inspect.barrier == BLOCKED){
                             // let id = "go_to_shop";
                             // let title = "패스 구매";
@@ -492,6 +553,13 @@ class Ticket_view{
                 }   
             },
             deactivate:{text:"비활성화", callback:()=>{
+                    let auth_inspect = pass_inspector.ticket_update();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+                        this.init();
+                        show_error_message(message);
+                        return false;
+                    }
                     show_user_confirm(`"${this.data.name}" <br> 수강권을 비활성화 하시겠습니까?  <br> 비활성화 탭에서 다시 활성화 할 수 있습니다. <br><br>
                                                             <img src="/static/common/icon/icon_stopmark.png" style="width:25px;"><br>
                                                             <span style="color:var(--font-highlight); font-size:12px;">이 수강권을 가진 회원들에게서 수강권이 삭제됩니다. <br>
@@ -513,6 +581,13 @@ class Ticket_view{
                 }   
             },
             delete:{text:"삭제", callback:()=>{
+                    let auth_inspect = pass_inspector.ticket_delete();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+                        this.init();
+                        show_error_message(message);
+                        return false;
+                    }
                     show_user_confirm(`"${this.data.name}" <br> 수강권을 영구 삭제 하시겠습니까? <br> 데이터를 복구할 수 없습니다. <br><br>
                                                             <img src="/static/common/icon/icon_stopmark.png" style="width:25px;"><br>
                                                             <span style="color:var(--font-highlight); font-size:12px;">수강권과 연결된 수업, 회원에게서 <br>이 수강권과 관련된 정보가 모두 삭제됩니다.</span>`, ()=>{
