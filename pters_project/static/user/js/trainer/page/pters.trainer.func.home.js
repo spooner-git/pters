@@ -186,6 +186,12 @@ class Home {
             let icon_r_text = `변경 ${CImg.arrow_right(["var(--img-sub1)"], {"vertical-align":"middle"})}`;
             let style = {"font-size":"15px", "font-weight":"bold"};
             let onclick = ()=>{
+                let inspect = pass_inspector.program_read();
+                if(inspect.barrier == BLOCKED){
+                    let message = `현재 프로그램의 ${inspect.limit_type}`;
+                    show_error_message(message);
+                    return false;
+                }
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PROGRAM_LIST, 100, popup_style, null, ()=>{
                     program_list_popup = new Program_list('.popup_program_list');});
@@ -343,6 +349,13 @@ class Home {
             let icon_r_text = `<span style="font-size:12px;font-weight:500;letter-spacing:-0.5px;">${end_info}</span>`;
             let style = {"font-size":"14px", "padding":"12px 0"};
             let onclick = ()=>{
+                let inspect = pass_inspector.member_read();
+                if(inspect.barrier == BLOCKED){
+                    let message = `현재 프로그램의 ${inspect.limit_type}`;
+                    show_error_message(message);
+                    return false;
+                }
+
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_VIEW, 100, popup_style, null, ()=>{
                     member_view_popup = new Member_view('.popup_member_view', member_id, 'member_view_popup');});
@@ -396,6 +409,13 @@ class Home {
         }
         let style = {"font-size":"15px", "font-weight":"bold"};
         let onclick = ()=>{
+            let inspect = pass_inspector.statistics_read();
+            if(inspect.barrier == BLOCKED){
+                let message = `현재 프로그램의 ${inspect.limit_type}`;
+                show_error_message(message);
+                return false;
+            }
+            
             if(data_lock == ON){
                 Setting_menu_access_func.locked_menu(()=>{
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_STATISTICS, 100, POPUP_FROM_RIGHT, null, ()=>{
@@ -429,6 +449,13 @@ class Home {
     }
 
     popup_plan_view(schedule_id){
+        let inspect = pass_inspector.schedule_read();
+        if(inspect.barrier == BLOCKED){
+            let message = `현재 프로그램의 ${inspect.limit_type}`;
+            show_error_message(message);
+            return false;
+        }
+
         let user_selected_plan = {schedule_id:schedule_id, date:{year:this.current_year, month:this.current_month, date:this.current_date}};
         let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PLAN_VIEW, 100, popup_style, null, ()=>{

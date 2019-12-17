@@ -2094,9 +2094,6 @@ class Plan_func{
 }
 
 
-
-
-
 // 중복일정 관련 함수 - 겹치지 않는 큰 일정으로 만들기
 
 class Plan_calc{

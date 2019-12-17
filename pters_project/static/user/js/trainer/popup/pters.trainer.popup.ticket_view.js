@@ -449,7 +449,7 @@ class Ticket_view{
         let user_option = {
             activate:{text:"활성화", callback:()=>{
                     show_user_confirm(`"${this.data.name}" <br> 수강권을 활성화 하시겠습니까? <br> 활성화 탭에서 다시 확인할 수 있습니다.`, ()=>{
-                        let inspect = pass_inspector.ticket();
+                        let inspect = pass_inspector.ticket_create();
                         if(inspect.barrier == BLOCKED){
                             // let id = "go_to_shop";
                             // let title = "패스 구매";

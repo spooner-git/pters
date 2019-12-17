@@ -197,7 +197,7 @@ class Program_add{
             this.data_sending_now = true;
         }
         
-        let inspect = pass_inspector.program();
+        let inspect = pass_inspector.program_create();
         if(inspect.barrier == BLOCKED){
             // let id = "go_to_shop";
             // let title = "패스 구매";

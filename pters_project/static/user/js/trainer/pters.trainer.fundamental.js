@@ -550,6 +550,253 @@ class UnitRobot{
     }
 }
 
+// class PassInspector{
+//     constructor(){
+//         this.data;
+//         this.trainer_data;
+//         this.init();
+//     }
+    
+//     init(){
+//         this.get_pass((data)=>{
+//             this.data = data;
+//         });
+//         this.get_trainer_pass((data)=>{
+//             this.trainer_data = data;
+//         });
+//     }
+
+//     get_pass(callback){
+//         $.ajax({
+//             url:"/trainer/get_program_auth_data/",
+//             type:'GET',
+//             dataType : 'JSON',
+    
+//             beforeSend:function(xhr, settings){
+//                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+//                     xhr.setRequestHeader("X-CSRFToken", csrftoken);
+//                 }
+//             },
+    
+//             //통신성공시 처리
+//             success:function (data){
+//                 check_app_version(data.app_version);
+//                 if(data.messageArray != undefined){
+//                     if(data.messageArray.length > 0){
+//                         show_error_message(data.messageArray[0]);
+//                         return false;
+//                     }
+//                 }
+//                 if(callback != undefined){
+//                     callback(data);
+//                 }
+//             },
+
+//             //보내기후 팝업창 닫기
+//             complete:function (){
+
+//             },
+    
+//             //통신 실패시 처리
+//             error:function (){
+//                 console.log('server error');
+//                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+//             }
+//         });
+//     }
+
+//     get_trainer_pass(callback){
+//         $.ajax({
+//             url:"/trainer/get_trainer_auth_data/",
+//             type:'GET',
+//             dataType : 'JSON',
+
+//             beforeSend:function(xhr, settings){
+//                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+//                     xhr.setRequestHeader("X-CSRFToken", csrftoken);
+//                 }
+//             },
+
+//             //통신성공시 처리
+//             success:function (data){
+//                 check_app_version(data.app_version);
+//                 if(data.messageArray != undefined){
+//                     if(data.messageArray.length > 0){
+//                         show_error_message(data.messageArray[0]);
+//                         return false;
+//                     }
+//                 }
+//                 if(callback != undefined){
+//                     callback(data);
+//                 }
+//             },
+
+//             //보내기후 팝업창 닫기
+//             complete:function (){
+
+//             },
+
+//             //통신 실패시 처리
+//             error:function (){
+//                 console.log('server error');
+//                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+//             }
+//         });
+//     }
+
+//     schedule(selected_date){
+//         let d = new Date();
+//         let today = `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
+
+//         let diff_date = Math.abs(DateRobot.diff_date(today, selected_date));
+//         let limit_number = Number(this.data.auth_plan_create.limit_num);
+//         let limit_type = this.data.auth_plan_create.limit_type;
+
+//         if(diff_date >= limit_number){
+//             return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+//         }
+//         return {barrier:PASSED};
+//     }
+
+//     member(re_contract){
+//         let async = false;
+//         let data;
+//         member.request_member_list("ing", (data1)=>{
+//             data = data1;
+//         }, OFF, async);
+//         let current_member_number = data.current_member_data.length;
+//         let finish_member_number = data.finish_member_num;
+//         let total_member = current_member_number;
+//         let limit_number = this.data.auth_member_create.limit_num;
+//         let limit_type = this.data.auth_member_create.limit_type;
+
+//         if(re_contract == ON){
+//             return {barrier:PASSED};
+//         }
+//         if(total_member >= limit_number){
+//             return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+//         }
+//         return {barrier:PASSED};
+//     }
+
+//     member_read(){
+
+//     }
+
+//     member_update(){
+
+//     }
+
+//     member_delete(){
+
+//     }
+
+//     lecture(){
+//         let async = false;
+//         let data1;
+//         let data2;
+//         lecture.request_lecture_list("ing", (d1)=>{
+//             data1 = d1;
+//         }, OFF, async);
+//         lecture.request_lecture_list("end", (d2)=>{
+//             data2 = d2;
+//         }, OFF, async);
+//         let current_lecture_number = data1.current_lecture_data.length;
+//         let finish_lecture_number = data2.finish_lecture_data.length;
+//         let total_number = current_lecture_number;
+//         let limit_number = this.data.auth_group_create.limit_num;
+//         let limit_type = this.data.auth_group_create.limit_type;
+
+//         if(total_number >= limit_number){
+//             return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+//         }
+//         return {barrier:PASSED};
+//     }
+
+//     lecture_read(){
+        
+//     }
+
+//     lecture_update(){
+
+//     }
+
+//     lecture_delete(){
+
+//     }
+
+//     ticket(){
+//         let async = false;
+//         let data1;
+//         let data2;
+//         let current_ticket_number = 0;
+//         let finish_ticket_number = 0;
+//         ticket.request_ticket_list("ing", (d1)=>{
+//             data1 = d1;
+//             current_ticket_number = data1.current_ticket_data.length;
+//         }, OFF, async);
+//         ticket.request_ticket_list("end", (d2)=>{
+//             data2 = d2;
+//             finish_ticket_number = data2.finish_ticket_data.length;
+//         },  OFF, async);
+//         let total_number = current_ticket_number;
+//         let limit_number = this.data.auth_package_create.limit_num;
+//         let limit_type = this.data.auth_package_create.limit_type;
+
+//         if(total_number >= limit_number){
+//             return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+//         }
+//         return {barrier:PASSED};
+//     }
+
+//     ticket_read(){
+        
+//     }
+
+//     ticket_update(){
+
+//     }
+
+//     ticket_delete(){
+
+//     }
+
+//     statistics(selected_start_date, selected_end_date){
+//         let diff_month = Number(DateRobot.diff_month(selected_start_date, selected_end_date));
+//         let limit_number = Number(this.data.auth_analytics_read.limit_num);
+//         let limit_type = this.data.auth_analytics_read.limit_type;
+
+//         if(diff_month >= limit_number){
+//             return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+//         }
+//         return {barrier:PASSED};
+//     }
+
+//     program(){
+//         let async = false;
+//         let data;
+//         Program_func.read((d1)=>{
+//             data = d1;
+//         }, ()=>{}, async);
+//         let current_program_number = data.program_data.length;
+//         let limit_number = this.trainer_data.auth_program_create.limit_num;
+//         let limit_type = this.trainer_data.auth_program_create.limit_type;
+
+//         if(current_program_number >= limit_number){
+//             return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+//         }
+//         return {barrier:PASSED};
+//     }
+
+//     settings(){
+
+//     }
+
+//     ads(){
+
+//     }
+// }
+
 class PassInspector{
     constructor(){
         this.data;
@@ -644,7 +891,7 @@ class PassInspector{
         });
     }
 
-    schedule(selected_date){
+    schedule_create(selected_date){
         let d = new Date();
         let today = `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
 
@@ -658,14 +905,43 @@ class PassInspector{
         return {barrier:PASSED};
     }
 
-    member(re_contract){
+    schedule_read(){ //일정 읽기 자체를 막을지 아닐지 여부 (On, Off)
+        let limit_number = Number(this.data.auth_plan_read.limit_num);
+        let limit_type = "일정 읽기 권한이 없습니다.";
+
+        if(limit_number == 0){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
+    }
+
+    schedule_update(){ //일정 수정 자체를 막을지 아닐지 여부 (On, Off)
+        let limit_number = Number(this.data.auth_plan_update.limit_num);
+        let limit_type = "일정 수정 권한이 없습니다.";
+
+        if(limit_number == 0){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
+    }
+
+    schedule_delete(){ //일정 삭제 자체를 막을지 아닐지 여부 (On, Off)
+        let limit_number = Number(this.data.auth_plan_update.limit_num);
+        let limit_type = "일정 삭제 권한이 없습니다.";
+
+        if(limit_number == 0){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
+    }
+
+    member_create(re_contract){
         let async = false;
         let data;
         member.request_member_list("ing", (data1)=>{
             data = data1;
         }, OFF, async);
         let current_member_number = data.current_member_data.length;
-        let finish_member_number = data.finish_member_num;
         let total_member = current_member_number;
         let limit_number = this.data.auth_member_create.limit_num;
         let limit_type = this.data.auth_member_create.limit_type;
@@ -679,7 +955,37 @@ class PassInspector{
         return {barrier:PASSED};
     }
 
-    lecture(){
+    member_read(){
+        let limit_number = Number(this.data.auth_member_read.limit_num);
+        let limit_type = "회원 읽기 권한이 없습니다.";
+
+        if(limit_number == 0){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
+    }
+
+    member_update(){
+        let limit_number = Number(this.data.auth_member_update.limit_num);
+        let limit_type = "회원 수정 권한이 없습니다.";
+
+        if(limit_number == 0){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
+    }
+
+    member_delete(){
+        let limit_number = Number(this.data.auth_member_delete.limit_num);
+        let limit_type = "회원 삭제 권한이 없습니다.";
+
+        if(limit_number == 0){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
+    }
+
+    lecture_create(){
         let async = false;
         let data1;
         let data2;
@@ -701,7 +1007,37 @@ class PassInspector{
         return {barrier:PASSED};
     }
 
-    ticket(){
+    lecture_read(){
+        let limit_number = Number(this.data.auth_group_read.limit_num);
+        let limit_type = "수업 읽기 권한이 없습니다.";
+
+        if(limit_number == 0){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
+    }
+
+    lecture_update(){
+        let limit_number = Number(this.data.auth_group_update.limit_num);
+        let limit_type = "수업 수정 권한이 없습니다.";
+
+        if(limit_number == 0){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
+    }
+
+    lecture_delete(){
+        let limit_number = Number(this.data.auth_group_delete.limit_num);
+        let limit_type = "수업 삭제 권한이 없습니다.";
+
+        if(limit_number == 0){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
+    }
+
+    ticket_create(){
         let async = false;
         let data1;
         let data2;
@@ -725,12 +1061,52 @@ class PassInspector{
         return {barrier:PASSED};
     }
 
+    ticket_read(){
+        let limit_number = Number(this.data.auth_package_read.limit_num);
+        let limit_type = "수강권 읽기 권한이 없습니다.";
+
+        if(limit_number == 0){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
+    }
+
+    ticket_update(){
+        let limit_number = Number(this.data.auth_package_update.limit_num);
+        let limit_type = "수강권 수정 권한이 없습니다.";
+
+        if(limit_number == 0){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
+    }
+
+    ticket_delete(){
+        let limit_number = Number(this.data.auth_package_delete.limit_num);
+        let limit_type = "수강권 삭제 권한이 없습니다.";
+
+        if(limit_number == 0){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
+    }
+
     statistics(selected_start_date, selected_end_date){
         let diff_month = Number(DateRobot.diff_month(selected_start_date, selected_end_date));
         let limit_number = Number(this.data.auth_analytics_read.limit_num);
         let limit_type = this.data.auth_analytics_read.limit_type;
 
         if(diff_month >= limit_number){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
+    }
+
+    statistics_read(){
+        let limit_number = Number(this.data.auth_analytics_read.limit_num);
+        let limit_type = "통계 읽기 권한이 없습니다.";
+
+        if(limit_number == 0){
             return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
         }
         return {barrier:PASSED};
@@ -747,6 +1123,36 @@ class PassInspector{
         let limit_type = this.trainer_data.auth_program_create.limit_type;
 
         if(current_program_number >= limit_number){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
+    }
+
+    program_read(){
+        let limit_number = Number(this.data.auth_program_read.limit_num);
+        let limit_type = "프로그램 읽기 권한이 없습니다.";
+
+        if(limit_number == 0){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
+    }
+
+    program_update(){
+        let limit_number = Number(this.data.auth_program_update.limit_num);
+        let limit_type = "프로그램 수정 권한이 없습니다.";
+
+        if(limit_number == 0){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
+    }
+
+    program_delete(){
+        let limit_number = Number(this.data.auth_program_delete.limit_num);
+        let limit_type = "프로그램 삭제 권한이 없습니다.";
+
+        if(limit_number == 0){
             return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
         }
         return {barrier:PASSED};

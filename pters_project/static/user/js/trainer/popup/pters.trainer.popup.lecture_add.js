@@ -333,7 +333,7 @@ class Lecture_add{
     }
 
     send_date_create_ticket_at_the_same_time(lecture_id){
-        let inspect = pass_inspector.ticket();
+        let inspect = pass_inspector.ticket_create();
         if(inspect.barrier == BLOCKED){
             // let id = "go_to_shop";
             // let title = "패스 구매";
@@ -380,7 +380,7 @@ class Lecture_add{
             this.data_sending_now = true;
         }
         
-        let inspect = pass_inspector.lecture();
+        let inspect = pass_inspector.lecture_create();
         if(inspect.barrier == BLOCKED){
             // let id = "go_to_shop";
             // let title = "패스 구매";
