@@ -16,10 +16,13 @@ class Setting_supervisor{
     }
 
     set_initial_data (){
-        // Setting_supervisor_func.read((data)=>{
-            
-        // });
-        func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
+        Setting_supervisor_func.read((data)=>{
+            this.data = data;
+            console.log("data", data);
+            this.render();
+            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
+        });
+        
     }
 
     clear(){
@@ -55,35 +58,83 @@ class Setting_supervisor{
     }
     
     dom_assembly_content(){
-        let html = this.dom_row_shared_members();
+        let html_to_join = [];
+        for(let user in this.data){
+            html_to_join.push(
+                    this.dom_row_shared_members(this.data[user])
+            );
+        }
+        let html = html_to_join.join("");
+
         return html;
     }
 
-    dom_row_shared_members(){
-        let member_name = "한예슬";
-        let member_user_id = "yess0135";
-        let member_db_id = "00000000000";
+    dom_row_shared_members(indiv_auth_data){
+        let member_name = indiv_auth_data.member_info.member_name;
+        let member_user_id = indiv_auth_data.member_info.member_user_id;
+        let member_db_id = indiv_auth_data.member_info.member_id;
+
+        let auth_plan_create = indiv_auth_data.auth_plan_create == 1 ? "등록" : null;
+        let auth_plan_read = indiv_auth_data.auth_plan_read == 1 ? "조회" :  null;
+        let auth_plan_update = indiv_auth_data.auth_plan_update == 1 ? "수정" :  null;
+        let auth_plan_delete = indiv_auth_data.auth_plan_delete == 1 ? "삭제" :  null;
+
+        let auth_member_create = indiv_auth_data.auth_member_create == 1 ? "등록" :  null;
+        let auth_member_read = indiv_auth_data.auth_member_read == 1 ? "조회" :  null;
+        let auth_member_update = indiv_auth_data.auth_member_update == 1 ? "수정" :  null;
+        let auth_member_delete = indiv_auth_data.auth_member_delete == 1 ? "삭제" :  null;
+
+        let auth_lecture_create = indiv_auth_data.auth_group_create == 1 ? "등록" :  null;
+        let auth_lecture_read = indiv_auth_data.auth_group_read == 1 ? "조회" :  null;
+        let auth_lecture_update = indiv_auth_data.auth_group_update == 1 ? "수정" :  null;
+        let auth_lecture_delete = indiv_auth_data.auth_group_delete == 1 ? "삭제" :  null;
+
+        let auth_ticket_create = indiv_auth_data.auth_package_create == 1 ? "등록" :  null;
+        let auth_ticket_read = indiv_auth_data.auth_package_read == 1 ? "조회" :  null;
+        let auth_ticket_update = indiv_auth_data.auth_package_update == 1 ? "수정" :  null;
+        let auth_ticket_delete = indiv_auth_data.auth_package_delete == 1 ? "삭제" :  null;
+
+        let auth_statistics_read = indiv_auth_data.auth_analytics_read == 1 ? "조회" :  null;
+
+        let schedule_auth = [auth_plan_create, auth_plan_read, auth_plan_update, auth_plan_delete];
+        let member_auth = [auth_member_create, auth_member_read, auth_member_update, auth_member_delete];
+        let lecture_auth = [auth_lecture_create, auth_lecture_read, auth_lecture_update, auth_lecture_delete];
+        let ticket_auth = [auth_ticket_create, auth_ticket_read, auth_ticket_update, auth_ticket_delete];
+        let statistics_auth = [auth_statistics_read];
 
         let auth_schedule = `<div class="shared_member_auth">
                                 <div class="auth_title">일정</div>
-                                <div class="auth_setting">읽기/추가/수정/삭제</div>
+                                <div class="auth_setting">
+                                    ${schedule_auth.filter((el)=>{ if(el == null){return false} return true }).map((el)=>{return el}).join("/")}
+                                </div>
                             </div>`;
         let auth_member = `<div class="shared_member_auth">
                                 <div class="auth_title">회원</div>
-                                <div class="auth_setting">읽기/추가/수정</div>
+                                <div class="auth_setting">
+                                    ${member_auth.filter((el)=>{ if(el == null){return false} return true }).map((el)=>{return el}).join("/")}
+                                </div>
                             </div>`;
         let auth_lecture = `<div class="shared_member_auth">
                                 <div class="auth_title">수업</div>
-                                <div class="auth_setting">읽기</div>
+                                <div class="auth_setting">
+                                    ${lecture_auth.filter((el)=>{ if(el == null){return false} return true }).map((el)=>{return el}).join("/")}
+                                </div>
                             </div>`;
         let auth_ticket = `<div class="shared_member_auth">
                                 <div class="auth_title">수강권</div>
-                                <div class="auth_setting">읽기</div>
+                                <div class="auth_setting">
+                                    ${ticket_auth.filter((el)=>{ if(el == null){return false} return true }).map((el)=>{return el}).join("/")}
+                                </div>
                             </div>`;
-        let auth_statistics = null;
+        let auth_statistics = `<div class="shared_member_auth">
+                                <div class="auth_title">통계</div>
+                                <div class="auth_setting">
+                                    ${statistics_auth.join("/")}
+                                </div>
+                            </div>`;
 
         let html = `<article class="obj_input_box_full" id="shared_member_row_${member_db_id}">
-                        <div class="shared_members_auth_name_wrapper">${member_name} ${member_user_id}</div>
+                        <div class="shared_members_auth_name_wrapper">${member_name} (${member_user_id})</div>
                         <div class="shared_members_auth_wrapper">
                             ${auth_schedule == null ? "" : auth_schedule}
                             ${auth_member == null ? "" : auth_member}
@@ -204,7 +255,7 @@ class Setting_supervisor_func{
 
     static read(callback, error_callback){
         $.ajax({
-            url:"/trainer/get_trainer_setting_data/",
+            url:"/trainer/get_share_program_data/",
             type:'GET',
             dataType : 'JSON',
     

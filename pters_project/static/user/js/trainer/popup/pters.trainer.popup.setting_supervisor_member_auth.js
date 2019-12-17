@@ -50,6 +50,7 @@ class Setting_supervisor_member_auth{
 
     set_initial_data (){
         Setting_supervisor_member_auth_func.read((data)=>{
+            console.log(this.member_db_id, data)
             let my_auth = data[this.member_db_id];
 
             this.data.schedule.create = my_auth.auth_plan_create != undefined ? my_auth.auth_plan_create : null;
@@ -198,17 +199,17 @@ class Setting_supervisor_member_auth{
 
 
     dom_row_toolbox(){
-        let shared_status_button = this.dom_button_shared_status();
+        let shared_status_button = this.shared_status == AUTH_TYPE_WAIT ? "" : this.dom_button_shared_status();
         let title = `공유자 권한 설정 - ${this.member_name}`;
         let description = `<p style="font-size:13px;font-weight:500;margin-top:5px;color:var(--font-sub-dark)">공유받은 사람의 각종 권한을 설정합니다.</p>`;
         let html = `
         <div class="setting_supervisor_member_auth_upper_box" style="">
+            ${shared_status_button}
             <div style="display:inline-block;">
                 <span style="display:inline-block;font-size:23px;font-weight:bold">
                     ${title}
                     ${description}
                 </span>
-                ${shared_status_button}
                 <span style="display:none;">${title}</span>
             </div>
         </div>
@@ -221,7 +222,7 @@ class Setting_supervisor_member_auth{
         let title = "공유 해제";
         let style = {"font-size":"13px", "font-weight":"500", "float":"right"};
         let onclick = ()=>{
-            
+            this.event_select_shared_status();
         };
         let html = CComponent.text_button (id, title, style, onclick);
         return html;
@@ -237,6 +238,8 @@ class Setting_supervisor_member_auth{
                 show_user_confirm (message, ()=>{
                     this.shared_status = AUTH_TYPE_DELETE;
                     this.send_data();
+                    layer_popup.close_layer_popup(); //옵션 셀렉터 닫기
+                    layer_popup.close_layer_popup(); //권한 설정창 닫기
                 });
             }},
         };
@@ -350,14 +353,14 @@ class Setting_supervisor_member_auth{
 
             "auth_analytics_read":this.data.statistics.read,
         };
-
-        console.log("send", data)
-
+        console.log("데이터", data)
         Setting_supervisor_member_auth_func.update(data, ()=>{
             this.data_sending_now = false;
             // this.set_initial_data();
             show_error_message('변경 내용이 저장되었습니다.');
             // this.render_content();
+            layer_popup.close_layer_popup();
+            setting_supervisor_popup.init();
         }, ()=>{this.data_sending_now = false;});
     }
 
