@@ -3945,15 +3945,17 @@ class GetShareProgramDataViewAjax(LoginRequiredMixin, AccessTestMixin, View):
             else:
                 function_auth_type_cd_name = str(program_auth_info.function_auth_tb.function_auth_type_cd) \
                                              + str(program_auth_info.auth_type_cd)
+
             try:
                 member_program_auth_list[program_auth_info.member_id]
             except KeyError:
                 member_program_auth_list[program_auth_info.member_id] = {}
+                member_result = func_get_trainer_info(class_id, program_auth_info.member_id)
+                member_program_auth_list[program_auth_info.member_id]['member_info'] \
+                    = member_result['member_info']
+
             member_program_auth_list[program_auth_info.member_id][function_auth_type_cd_name] \
                 = program_auth_info.enable_flag
-            member_result = func_get_trainer_info(class_id, program_auth_info.member_id)
-            member_program_auth_list[program_auth_info.member_id]['member_info'] \
-                = member_result['member_info']
 
         if error is not None:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
@@ -4044,11 +4046,12 @@ class GetTrainerProgramConnectionListView(LoginRequiredMixin, AccessTestMixin, T
                     member_program_auth_list[member_program_info.member_id]
                 except KeyError:
                     member_program_auth_list[member_program_info.member_id] = {}
+                    member_result = func_get_trainer_info(member_program_info.class_tb_id,
+                                                          member_program_info.member_id)
+                    member_program_auth_list[program_auth_info.member_id]['member_info'] \
+                        = member_result['member_info']
                 member_program_auth_list[member_program_info.class_tb_id][function_auth_type_cd_name] \
                     = program_auth_info.enable_flag
-                member_result = func_get_trainer_info(class_id, program_auth_info.member_id)
-                member_program_auth_list[program_auth_info.member_id]['member_info'] \
-                    = member_result['member_info']
 
         return JsonResponse(member_program_auth_list, json_dumps_params={'ensure_ascii': True})
 
