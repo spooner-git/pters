@@ -27,7 +27,7 @@ class Setting_shared{
     render(){
         let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();setting_shared_popup.clear();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right" onclick="setting_shared_popup.event_disconnect();"><span>연결 끊기</span></span>`;
+        let top_right = `<span class="icon_right" onclick="setting_shared_popup.event_disconnect();"><span style="color:var(--font-highlight);font-weight: 500;">연결 끊기</span></span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
         
