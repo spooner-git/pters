@@ -20,14 +20,18 @@ class Alarm {
 
 
         this.render_upper_box();
-        Alarm_func.read((jsondata) => {
-            // this.render_list(jsondata);
-            this.data = this.dom_list(jsondata);
-            this.render_list(this.data);
-            this.render_upper_box();
-            $root_content.scrollTop(1);
-            this.new_alarms_id_cache = [];
-        });
+        Setting_shared_func.read_request((data)=>{
+            console.log("data", data);
+            Alarm_func.read((jsondata) => {
+                // this.render_list(jsondata);
+                this.data = this.dom_list(jsondata);
+                this.render_list(this.data);
+                this.render_upper_box();
+                $root_content.scrollTop(1);
+                this.new_alarms_id_cache = [];
+            });
+        }, ()=>{});
+        
     }
 
 

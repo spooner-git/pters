@@ -16,13 +16,10 @@ class Setting_shared{
     }
 
     set_initial_data (){
-        Setting_shared_func.read((data)=>{
-            console.log("asdf",data);
-            this.data = data;
-            // console.log("data", data);
-            // this.render();
-            // func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
-        });
+        // Setting_shared_func.read((data)=>{
+        //     console.log("asdf",data);
+        //     this.data = data;
+        // });
         
     }
 
@@ -232,7 +229,7 @@ class Setting_shared_func{
         });
     }
 
-    static read(callback, error_callback){
+    static read_request(callback, error_callback){
         $.ajax({
             url:"/trainer/get_trainer_program_connection_list/",
             type:'GET',
@@ -272,6 +269,52 @@ class Setting_shared_func{
                 show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
             }
         });
+    }
+
+    static send_accept(data, callback, error_callback){
+        // {"class_id":"", "program_connection_check":""}
+        $.ajax({
+            url:"/trainer/update_trainer_program_connection_info/",
+            type:'POST',
+            data: data,
+            dataType : 'html',
+    
+            beforeSend:function(xhr, settings){
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+    
+            //통신성공시 처리
+            success:function (data_){
+                let data = JSON.parse(data_);
+                check_app_version(data.app_version);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message(data.messageArray[0]);
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(data); 
+                }
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function (){
+
+            },
+    
+            //통신 실패시 처리
+            error:function (){
+                if(error_callback != undefined){
+                    error_callback();
+                }
+                console.log('server error');
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+            }
+        });
+        
     }
 }
 
