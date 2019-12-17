@@ -906,7 +906,7 @@ class PassInspector{
     }
 
     schedule_create(){
-        let limit_number = Number(this.data.auth_plan_create.limit_num);
+        let limit_number = Number(this.data.auth_plan_create.active);
         let limit_type = "일정 작성 권한이 없습니다.";
 
         if(limit_number == 0){
@@ -916,7 +916,7 @@ class PassInspector{
     }
 
     schedule_read(){ //일정 읽기 자체를 막을지 아닐지 여부 (On, Off)
-        let limit_number = Number(this.data.auth_plan_read.limit_num);
+        let limit_number = Number(this.data.auth_plan_read.active);
         let limit_type = "일정 읽기 권한이 없습니다.";
 
         if(limit_number == 0){
@@ -926,7 +926,7 @@ class PassInspector{
     }
 
     schedule_update(){ //일정 수정 자체를 막을지 아닐지 여부 (On, Off)
-        let limit_number = Number(this.data.auth_plan_update.limit_num);
+        let limit_number = Number(this.data.auth_plan_update.active);
         let limit_type = "일정 수정 권한이 없습니다.";
 
         if(limit_number == 0){
@@ -936,7 +936,7 @@ class PassInspector{
     }
 
     schedule_delete(){ //일정 삭제 자체를 막을지 아닐지 여부 (On, Off)
-        let limit_number = Number(this.data.auth_plan_update.limit_num);
+        let limit_number = Number(this.data.auth_plan_update.active);
         let limit_type = "일정 삭제 권한이 없습니다.";
 
         if(limit_number == 0){
@@ -966,7 +966,7 @@ class PassInspector{
     }
 
     member_create(){
-        let limit_number = Number(this.data.auth_member_create.limit_num);
+        let limit_number = Number(this.data.auth_member_create.active);
         let limit_type = "회원 읽기 권한이 없습니다.";
 
         if(limit_number == 0){
@@ -976,7 +976,7 @@ class PassInspector{
     }
 
     member_read(){
-        let limit_number = Number(this.data.auth_member_read.limit_num);
+        let limit_number = Number(this.data.auth_member_read.active);
         let limit_type = "회원 읽기 권한이 없습니다.";
 
         if(limit_number == 0){
@@ -986,7 +986,7 @@ class PassInspector{
     }
 
     member_update(){
-        let limit_number = Number(this.data.auth_member_update.limit_num);
+        let limit_number = Number(this.data.auth_member_update.active);
         let limit_type = "회원 수정 권한이 없습니다.";
 
         if(limit_number == 0){
@@ -996,7 +996,7 @@ class PassInspector{
     }
 
     member_delete(){
-        let limit_number = Number(this.data.auth_member_delete.limit_num);
+        let limit_number = Number(this.data.auth_member_delete.active);
         let limit_type = "회원 삭제 권한이 없습니다.";
 
         if(limit_number == 0){
@@ -1028,7 +1028,7 @@ class PassInspector{
     }
 
     lecture_create(){
-        let limit_number = Number(this.data.auth_group_create.limit_num);
+        let limit_number = Number(this.data.auth_group_create.active);
         let limit_type = "수업 읽기 권한이 없습니다.";
 
         if(limit_number == 0){
@@ -1038,7 +1038,7 @@ class PassInspector{
     }
 
     lecture_read(){
-        let limit_number = Number(this.data.auth_group_read.limit_num);
+        let limit_number = Number(this.data.auth_group_read.active);
         let limit_type = "수업 읽기 권한이 없습니다.";
 
         if(limit_number == 0){
@@ -1048,7 +1048,7 @@ class PassInspector{
     }
 
     lecture_update(){
-        let limit_number = Number(this.data.auth_group_update.limit_num);
+        let limit_number = Number(this.data.auth_group_update.active);
         let limit_type = "수업 수정 권한이 없습니다.";
 
         if(limit_number == 0){
@@ -1058,7 +1058,7 @@ class PassInspector{
     }
 
     lecture_delete(){
-        let limit_number = Number(this.data.auth_group_delete.limit_num);
+        let limit_number = Number(this.data.auth_group_delete.active);
         let limit_type = "수업 삭제 권한이 없습니다.";
 
         if(limit_number == 0){
@@ -1092,7 +1092,7 @@ class PassInspector{
     }
 
     ticket_create(){
-        let limit_number = Number(this.data.auth_package_create.limit_num);
+        let limit_number = Number(this.data.auth_package_create.active);
         let limit_type = "수강권 작성 권한이 없습니다.";
 
         if(limit_number == 0){
@@ -1102,7 +1102,7 @@ class PassInspector{
     }
 
     ticket_read(){
-        let limit_number = Number(this.data.auth_package_read.limit_num);
+        let limit_number = Number(this.data.auth_package_read.active);
         let limit_type = "수강권 읽기 권한이 없습니다.";
 
         if(limit_number == 0){
@@ -1112,7 +1112,7 @@ class PassInspector{
     }
 
     ticket_update(){
-        let limit_number = Number(this.data.auth_package_update.limit_num);
+        let limit_number = Number(this.data.auth_package_update.active);
         let limit_type = "수강권 수정 권한이 없습니다.";
 
         if(limit_number == 0){
@@ -1122,7 +1122,7 @@ class PassInspector{
     }
 
     ticket_delete(){
-        let limit_number = Number(this.data.auth_package_delete.limit_num);
+        let limit_number = Number(this.data.auth_package_delete.active);
         let limit_type = "수강권 삭제 권한이 없습니다.";
 
         if(limit_number == 0){
@@ -1143,7 +1143,7 @@ class PassInspector{
     }
 
     statistics_read(){
-        let limit_number = Number(this.data.auth_analytics_read.limit_num);
+        let limit_number = Number(this.data.auth_analytics_read.active);
         let limit_type = "통계 읽기 권한이 없습니다.";
 
         if(limit_number == 0){
@@ -1169,7 +1169,7 @@ class PassInspector{
     }
 
     program_create(){
-        let limit_number = Number(this.data.auth_program_create.limit_num);
+        let limit_number = Number(this.data.auth_program_create.active);
         let limit_type = "프로그램 작성 권한이 없습니다.";
 
         if(limit_number == 0){
@@ -1179,7 +1179,7 @@ class PassInspector{
     }
 
     program_read(){
-        let limit_number = Number(this.data.auth_program_read.limit_num);
+        let limit_number = Number(this.data.auth_program_read.active);
         let limit_type = "프로그램 읽기 권한이 없습니다.";
 
         if(limit_number == 0){
@@ -1189,7 +1189,7 @@ class PassInspector{
     }
 
     program_update(){
-        let limit_number = Number(this.data.auth_program_update.limit_num);
+        let limit_number = Number(this.data.auth_program_update.active);
         let limit_type = "프로그램 수정 권한이 없습니다.";
 
         if(limit_number == 0){
@@ -1199,7 +1199,7 @@ class PassInspector{
     }
 
     program_delete(){
-        let limit_number = Number(this.data.auth_program_delete.limit_num);
+        let limit_number = Number(this.data.auth_program_delete.active);
         let limit_type = "프로그램 삭제 권한이 없습니다.";
 
         if(limit_number == 0){

@@ -353,7 +353,6 @@ class Setting_supervisor_member_auth{
 
             "auth_analytics_read":this.data.statistics.read,
         };
-        console.log("데이터", data)
         Setting_supervisor_member_auth_func.update(data, ()=>{
             this.data_sending_now = false;
             // this.set_initial_data();
