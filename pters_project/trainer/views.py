@@ -3902,25 +3902,44 @@ def update_share_program_info_logic(request):
             else:
                 function_auth_type_cd_name = str(function_info.function_auth_tb.function_auth_type_cd) \
                                              + str(function_info.auth_type_cd)
+            if auth_cd != AUTH_TYPE_DELETE:
+                enable_flag = request.POST.get(function_auth_type_cd_name, '')
+                if enable_flag is not None and enable_flag != '':
+                    try:
+                        program_auth_info = ProgramAuthTb.objects.get(class_tb_id=class_id, member_id=trainer_id,
+                                                                      function_auth_tb=function_info.function_auth_tb,
+                                                                      auth_type_cd=function_info.auth_type_cd)
+                    except ObjectDoesNotExist:
+                        program_auth_info = ProgramAuthTb(class_tb_id=class_id, member_id=trainer_id,
+                                                          function_auth_tb=function_info.function_auth_tb,
+                                                          auth_type_cd=function_info.auth_type_cd,
+                                                          use=USE)
 
-            enable_flag = request.POST.get(function_auth_type_cd_name, '')
-            if enable_flag is not None and enable_flag != '':
+                    program_auth_info.enable_flag = enable_flag
+                    program_auth_info.save()
+            else:
                 try:
                     program_auth_info = ProgramAuthTb.objects.get(class_tb_id=class_id, member_id=trainer_id,
                                                                   function_auth_tb=function_info.function_auth_tb,
                                                                   auth_type_cd=function_info.auth_type_cd)
+                    program_auth_info.delete()
                 except ObjectDoesNotExist:
-                    program_auth_info = ProgramAuthTb(class_tb_id=class_id, member_id=trainer_id,
-                                                      function_auth_tb=function_info.function_auth_tb,
-                                                      auth_type_cd=function_info.auth_type_cd,
-                                                      use=USE)
-
-                program_auth_info.enable_flag = enable_flag
-                program_auth_info.save()
+                    program_auth_info = None
 
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
+    else:
+        log_how = '공유 신청'
+        if auth_cd == AUTH_TYPE_DELETE:
+            log_how = '공유 해제'
+        log_data = LogTb(log_type='LP02', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=request.user.first_name + '님 에게 \''
+                                  + request.session.get('class_type_name', '') + '\' 프로그램',
+                         log_how=log_how, log_detail='', use=USE)
+        log_data.save()
 
     return render(request, 'ajax/trainer_error_ajax.html')
 
@@ -3970,7 +3989,7 @@ def update_trainer_program_connection_info_logic(request):
     error = None
     member_ticket_connection_check = int(program_connection_check)
     if class_id == '':
-        error = '수강보권 정보를 불러오지 못했습니다.[0]'
+        error = '프로그램 정보를 불러오지 못했습니다.[0]'
 
     if error is None:
         if member_ticket_connection_check == PROGRAM_LECTURE_CONNECT_DELETE:
@@ -3989,7 +4008,7 @@ def update_trainer_program_connection_info_logic(request):
             log_data = LogTb(log_type='LP02', auth_member_id=request.user.id,
                              from_member_name=request.user.first_name,
                              class_tb_id=class_info.class_id,
-                             log_info=class_info.member.name + ' 강사님의 \''
+                             log_info=class_info.member.name + ' 님의 \''
                                       + class_info.get_class_type_cd_name()+'\' 프로그램',
                              log_how='공유 거절',
                              log_detail='', use=USE)
@@ -4006,12 +4025,12 @@ def update_trainer_program_connection_info_logic(request):
             try:
                 class_info = ClassTb.objects.get(class_id=class_id)
             except ObjectDoesNotExist:
-                error = '수강권 정보를 불러오지 못했습니다.[2]'
+                error = '프로그램 정보를 불러오지 못했습니다.[2]'
 
             log_data = LogTb(log_type='LP01', auth_member_id=request.user.id,
                              from_member_name=request.user.first_name,
                              class_tb_id=class_info.class_id,
-                             log_info=class_info.member.name + ' 강사님의 \''
+                             log_info=class_info.member.name + ' 님의 \''
                                       + class_info.get_class_type_cd_name()+'\' 프로그램',
                              log_how='공유 완료',
                              log_detail='', use=USE)
