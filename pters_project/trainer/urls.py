@@ -174,6 +174,9 @@ urlpatterns = [
     # 프로그램 공유 수락/거절 기능
     url(r'^update_trainer_program_connection_info/$', views.update_trainer_program_connection_info_logic,
         name='update_trainer_program_connection_info'),
+    # 프로그램 공유 해제 기능
+    url(r'^delete_trainer_program_connection/$', views.delete_trainer_program_connection_logic,
+        name='delete_trainer_program_connection'),
 
 
     # 배경 이미지 설정 기능 #################################################################################################
