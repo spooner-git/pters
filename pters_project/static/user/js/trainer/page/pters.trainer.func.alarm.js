@@ -4,6 +4,8 @@ class Alarm {
         this.targetHTML = targetHTML;
         this.instance = instance;
 
+        this.sharing_invite = {};
+
         this.data;
         this.paging = 0;
 
@@ -21,7 +23,7 @@ class Alarm {
 
         this.render_upper_box();
         Setting_shared_func.read_request((data)=>{
-            console.log("data", data);
+            this.sharing_invite = data;
             Alarm_func.read((jsondata) => {
                 // this.render_list(jsondata);
                 this.data = this.dom_list(jsondata);
@@ -125,6 +127,13 @@ class Alarm {
                 html_temp.push(html);
             }
         }
+
+        if(Object.keys(this.sharing_invite).length > 0){
+            html_temp.unshift(
+                this.dom_row_program_share_invited(this.sharing_invite)
+            );
+        }
+
         if(html_temp.length == 0){
             html_temp.push(`<article class="alarm_wrapper">   
                                 <div>
@@ -146,26 +155,77 @@ class Alarm {
         return pass_inspector.data.auth_ads.limit_num != 0 ? html : "";
     }
 
+
+    dom_row_program_share_invited(invited_programs){
+
+        let html_to_join = [];
+
+        for(let program in invited_programs){
+            let data = invited_programs[program];
+            let invitor_name = data.member_info.member_name;
+            let invitor_user_id = data.member_info.member_user_id;
+
+
+            let onclick_accept = ()=>{
+                let message = `프로그램 공유 참가 요청에 <span style="color:green;">수락</span> 하시겠습니까?`;
+                show_user_confirm (message, ()=>{
+                    Setting_shared_func.send_accept({"class_id":program, "program_connection_check":1}, ()=>{
+                        show_error_message("프로그램 메뉴에서 공유 프로그램을 확인할 수 있습니다.");
+                        this.init();
+                    }, ()=>{});
+                });
+                
+            };
+
+            let onclick_decline =()=>{
+                let message = `프로그램 공유 참가 요청에 <span style="color:red;">거절</span> 하시겠습니까?`;
+                show_user_confirm (message, ()=>{
+                    Setting_shared_func.send_accept({"class_id":program, "program_connection_check":2}, ()=>{
+                        show_error_message("거절 되었습니다.");
+                        this.init();
+                    }, ()=>{});
+                });
+            };
+
+            let comp = `<div style="padding:20px;box-shadow:var(--box-shadow-article);border:var(--border-article);">
+                            <div style="padding:5px 0 10px 0;font-size:14px;">${invitor_name} (${invitor_user_id}) 님께서 프로그램에 공유 참가 요청을 보내셨습니다.</div>
+                            <div style="display:flex;height:40px;">
+                                <div style="flex:1 1 0;">${CComponent.button (`share_invited_${program}_accept`, "수락", {"line-height":"40px", "font-size":"14px"}, onclick_accept)}</div>
+                                <div style="flex:1 1 0;">${CComponent.button (`share_invited_${program}_decline`, "거절", {"line-height":"40px", "font-size":"14px"}, onclick_decline)}</div>
+                            </div>
+                        </div>`;
+            html_to_join.push(comp);
+        }
+
+        let html = html_to_join.join("");
+        return html;
+    }
+
+
+
     are_there_new_alarm(callback){
         let READ = 1;
         let UNREAD = 0;
-
-        Alarm_func.read((data)=>{
-            for(let date in data){
-                let length = data[date].length;
-                for(let i=0; i<length; i++){
-                    let read_check = data[date][i].read_check;
-                    let alarm_id = data[date][i].alarm_id;
-                    if(read_check == UNREAD){
-                        this.new_alarms_id_cache.push(alarm_id);
+        Setting_shared_func.read_request((invited)=>{
+            let invited_length = Object.keys(invited).length;
+            Alarm_func.read((data)=>{
+                for(let date in data){
+                    let length = data[date].length;
+                    for(let i=0; i<length; i++){
+                        let read_check = data[date][i].read_check;
+                        let alarm_id = data[date][i].alarm_id;
+                        if(read_check == UNREAD){
+                            this.new_alarms_id_cache.push(alarm_id);
+                        }
                     }
                 }
-            }
-            // if(this.new_alarms_id_cache.length > 0){
-            //     return false;
-            // }
-            callback(this.new_alarms_id_cache.length);
+                // if(this.new_alarms_id_cache.length > 0){
+                //     return false;
+                // }
+                callback(this.new_alarms_id_cache.length + invited_length);
+            });
         });
+            
     }
 
     static_component (){
