@@ -50,9 +50,34 @@ class Setting_supervisor_member_auth{
 
     set_initial_data (){
         Setting_supervisor_member_auth_func.read((data)=>{
-            console.log("data", data)
+            let my_auth = data[this.member_db_id];
+
+            this.data.schedule.create = my_auth.auth_plan_create != undefined ? my_auth.auth_plan_create : null;
+            this.data.schedule.read = my_auth.auth_plan_read != undefined ? my_auth.auth_plan_read : null;
+            this.data.schedule.update = my_auth.auth_plan_update != undefined ? my_auth.auth_plan_update : null;
+            this.data.schedule.delete = my_auth.auth_plan_delete != undefined ? my_auth.auth_plan_delete : null ;
+
+            this.data.member.create = my_auth.auth_member_create != undefined ? my_auth.auth_member_create : null;
+            this.data.member.read = my_auth.auth_member_read != undefined ? my_auth.auth_member_read : null;
+            this.data.member.update = my_auth.auth_member_update != undefined ? my_auth.auth_member_update : null;
+            this.data.member.delete = my_auth.auth_member_delete != undefined ? my_auth.auth_member_delete : null;
+
+            this.data.lecture.create = my_auth.auth_group_create != undefined ? my_auth.auth_group_create : null;
+            this.data.lecture.read = my_auth.auth_group_read != undefined ? my_auth.auth_group_read : null;
+            this.data.lecture.update = my_auth.auth_group_update != undefined ? my_auth.auth_group_update : null;
+            this.data.lecture.delete = my_auth.auth_group_delete != undefined ? my_auth.auth_group_delete : null;
+
+            this.data.ticket.create = my_auth.auth_package_create != undefined ? my_auth.auth_package_create : null;
+            this.data.ticket.read = my_auth.auth_package_read != undefined ? my_auth.auth_package_read : null;
+            this.data.ticket.update = my_auth.auth_package_update != undefined ? my_auth.auth_package_update : null;
+            this.data.ticket.delete = my_auth.auth_package_delete != undefined ? my_auth.auth_package_delete : null;
+
+            this.data.statistics.read = my_auth.auth_analytics_read != undefined ? my_auth.auth_analytics_read : null;
+
+            this.render();
+            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
         });
-        func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
+        
     }
 
     clear(){
@@ -173,6 +198,7 @@ class Setting_supervisor_member_auth{
 
 
     dom_row_toolbox(){
+        let shared_status_button = this.dom_button_shared_status();
         let title = `공유자 권한 설정 - ${this.member_name}`;
         let description = `<p style="font-size:13px;font-weight:500;margin-top:5px;color:var(--font-sub-dark)">공유받은 사람의 각종 권한을 설정합니다.</p>`;
         let html = `
@@ -192,18 +218,19 @@ class Setting_supervisor_member_auth{
 
     dom_button_shared_status(){
         let id = null;
-        let title = null;
-        let style = null;
+        let title = "공유 해제";
+        let style = {"font-size":"13px", "font-weight":"500", "float":"right"};
         let onclick = ()=>{
             
         };
         let html = CComponent.text_button (id, title, style, onclick);
+        return html;
     }
 
     event_select_shared_status(){
         let user_option = {
             request:{text:"공유 초대", callback:()=>{
-                
+
             }},
             disconnect:{text:"공유 끊기", callback:()=>{
                 let message = `${this.member_name}님께 현재 프로그램 공유를 해제 하시겠습니까?`;
@@ -321,7 +348,7 @@ class Setting_supervisor_member_auth{
             "auth_package_update":this.data.ticket.update,
             "auth_package_delete":this.data.ticket.delete,
 
-            "auth_statistics_read":this.data.statistics.read,
+            "auth_analytics_read":this.data.statistics.read,
         };
 
         console.log("send", data)
