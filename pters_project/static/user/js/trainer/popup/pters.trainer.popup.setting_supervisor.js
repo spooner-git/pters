@@ -62,7 +62,7 @@ class Setting_supervisor{
     dom_row_shared_members(){
         let member_name = "한예슬";
         let member_user_id = "yess0135";
-        let member_db_id = "00000000000"
+        let member_db_id = "00000000000";
 
         let auth_schedule = `<div class="shared_member_auth">
                                 <div class="auth_title">일정</div>
@@ -94,7 +94,7 @@ class Setting_supervisor{
                     </article>`;
 
         $(document).off('click', `#shared_member_row_${member_db_id}`).on('click', `#shared_member_row_${member_db_id}`, ()=>{
-            let external_data = {"db_id":member_db_id, "member_name":member_name};
+            let external_data = {"db_id":member_db_id, "member_name":member_name, "shared_status": AUTH_TYPE_VIEW};
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_SUPERVISOR_MEMBER_AUTH, 100, POPUP_FROM_RIGHT, null, ()=>{
                 setting_supervisor_member_auth_popup = new Setting_supervisor_member_auth('.popup_setting_supervisor_member_auth', external_data);
             });

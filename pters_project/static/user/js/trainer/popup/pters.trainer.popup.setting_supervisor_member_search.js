@@ -7,7 +7,8 @@ class Supervisor_member_search {
         this.data = {
             searched_data : [],
             search_id:null,
-            selected_member_id:null
+            selected_member_id:null,
+            selected_member_name:null
         };
 
         this.step = 0;
@@ -30,6 +31,7 @@ class Supervisor_member_search {
         this.data.searched_data = [];
         this.data.search_id = null;
         this.data.selected_member_id = null;
+        this.data.selected_member_name = null;
     }
 
     clear(){
@@ -119,7 +121,7 @@ class Supervisor_member_search {
             }
             this.render_loading_image();
             let data = {"search_val":this.data.search_id};
-            Member_func.search(data, (data)=>{
+            Supervisor_member_search_func.search(data, (data)=>{
                 this.data.searched_data = data.member_list;
                 this.step = 1;
                 this.render_content();
@@ -138,14 +140,16 @@ class Supervisor_member_search {
         }
         let onclick = ()=>{
             if(this.data.selected_member_id == null){
-                show_error_message('회원을 선택해주세요.');
+                show_error_message('강사를 선택해주세요.');
                 return false;
             }
             layer_popup.close_layer_popup();
             this.clear();
-            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_BOTTOM;
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_ADD, 100, popup_style, null, ()=>{
-                member_add_popup = new Member_add('.popup_member_add', {member_id: this.data.selected_member_id}, 'member_add_popup');});
+
+            let external_data = {"db_id":this.data.selected_member_id, "member_name":this.data.selected_member_name, "shared_status": AUTH_TYPE_WAIT};
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_SUPERVISOR_MEMBER_AUTH, 100, POPUP_FROM_RIGHT, null, ()=>{
+                setting_supervisor_member_auth_popup = new Setting_supervisor_member_auth('.popup_setting_supervisor_member_auth', external_data);
+            });
         };
         let html = CComponent.button (id, title, style, onclick);
         return html;
@@ -162,7 +166,7 @@ class Supervisor_member_search {
             }
             this.render_loading_image();
             let data = {"search_val":this.data.search_id};
-            Member_func.search(data, (data)=>{
+            Supervisor_member_search_func.search(data, (data)=>{
                 this.data.searched_data = data.member_list;
                 this.step = 1;
                 this.render_content();
@@ -214,6 +218,7 @@ class Supervisor_member_search {
             
             $(document).off('click', `#supervisor_member_searched_${data.member_id}`).on('click', `#supervisor_member_searched_${data.member_id}`, ()=>{
                 this.step = 2;
+                this.data.selected_member_name = data.member_name;
                 this.data.selected_member_id = data.member_id;
                 this.render_content();
             });
@@ -244,6 +249,55 @@ class Supervisor_member_search {
     }
 
 }
+
+
+class Supervisor_member_search_func{
+    static search(data, callback, error_callback){
+        //{"search_val":""}
+        $.ajax({
+            url:'/trainer/search_trainer_info/',
+            type:'GET',
+            data: data,
+            dataType : 'JSON',
+
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+                // ajax_load_image(SHOW);
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function(){
+                // ajax_load_image(HIDE);
+            },
+
+            //통신성공시 처리
+            success:function(data){
+                check_app_version(data.app_version);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message(data.messageArray[0]);
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(data);
+                }
+            },
+
+            //통신 실패시 처리
+            error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
+                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                // location.reload();
+            }
+        });
+    }
+}
+
 
 /* global $, 
 ajax_load_image, 
