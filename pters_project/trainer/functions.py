@@ -217,9 +217,9 @@ def func_get_trainer_info(class_id, member_id):
         error = '회원 ID를 확인해 주세요.'
 
     if error is None:
-        connection_check = func_check_trainer_connection_info(class_id, member_id)
+        auth_cd = func_check_trainer_connection_info(class_id, member_id)
         # 연결이 안되어 있는 경우 회원 정보 표시 안함
-        if connection_check != 2:
+        if str(auth_cd) != str(AUTH_TYPE_VIEW):
             member.sex = ''
             member.birthday_dt = ''
             if member.phone is None or member.phone == '':
@@ -238,8 +238,8 @@ def func_get_trainer_info(class_id, member_id):
                        'member_email': str(member.user.email),
                        'member_sex': str(member.sex),
                        'member_birthday_dt': str(member.birthday_dt),
-                       'member_connection_check': connection_check,
-                       'member_profile_url': member.profile_url
+                       'member_profile_url': member.profile_url,
+                       'auth_cd': auth_cd
                        }
 
     return {'member_info': member_info, 'error': error}
@@ -318,7 +318,7 @@ def func_check_member_connection_info(class_id, member_id):
 
 
 def func_check_trainer_connection_info(class_id, trainer_id):
-    connection_check = 0
+    connection_check = AUTH_TYPE_DELETE
 
     view_lecture_count = MemberClassTb.objects.select_related(
         'class_tb', 'member').filter(class_tb_id=class_id, member_id=trainer_id, auth_cd=AUTH_TYPE_VIEW,
@@ -327,10 +327,10 @@ def func_check_trainer_connection_info(class_id, trainer_id):
         'class_tb', 'member').filter(class_tb_id=class_id, member_id=trainer_id, auth_cd=AUTH_TYPE_WAIT,
                                      use=USE).count()
     if view_lecture_count > 0:
-        connection_check = 2
+        connection_check = AUTH_TYPE_VIEW
     else:
         if wait_lecture_count > 0:
-            connection_check = 1
+            connection_check = AUTH_TYPE_WAIT
 
     return connection_check
 
