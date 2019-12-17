@@ -27,7 +27,7 @@ class Setting_shared{
     render(){
         let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();setting_shared_popup.clear();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right" onclick="setting_shared_popup.upper_right_menu();">${CImg.plus()}</span>`;
+        let top_right = `<span class="icon_right" onclick="setting_shared_popup.event_disconnect();"><span>연결 끊기</span></span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
         
@@ -136,13 +136,7 @@ class Setting_shared{
         //     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_shared_MEMBER_AUTH, 100, POPUP_FROM_RIGHT, null, ()=>{
         //         setting_shared_member_auth_popup = new Setting_shared_member_auth('.popup_setting_shared_member_auth', external_data);
         //     });
-        // });
-
-        // Setting_shared_func.send_accept({"class_id":program, "program_connection_check":2}, ()=>{
-        //     layer_popup.close_layer_popup();
-        //     this.init();
-        // }, ()=>{});
-        
+        // }); 
         return html;
     }
 
@@ -164,6 +158,15 @@ class Setting_shared{
         return html;
     }
 
+    event_disconnect(){
+        let message = `현재 프로그램의 공유 연결을 해제합니다. <br>다시 연결하려면 프로그램 소유자에게 요청 해야합니다.`;
+        show_user_confirm (message, ()=>{
+            Setting_shared_func.disconnect(()=>{
+                location.href = "/trainer/";
+            }, ()=>{});
+        });
+        
+    }
 
     send_data(){
         
@@ -178,12 +181,11 @@ class Setting_shared{
 }
 
 class Setting_shared_func{
-    static update(data, callback, error_callback){
+    static disconnect(callback, error_callback){
         //업무 시간 설정
         $.ajax({
-            url:"/trainer/update_share_program_info/",
+            url:"/trainer/delete_trainer_program_connection/",
             type:'POST',
-            data: data,
             dataType : 'JSON',
     
             beforeSend:function(xhr, settings){
