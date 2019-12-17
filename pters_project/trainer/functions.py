@@ -13,7 +13,7 @@ from django.db.models.expressions import RawSQL
 from configs.const import USE, UN_USE, AUTO_FINISH_OFF, FROM_TRAINEE_LESSON_ALARM_ON, \
     TO_TRAINEE_LESSON_ALARM_OFF, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, STATE_CD_IN_PROGRESS, STATE_CD_FINISH,\
     STATE_CD_ABSENCE, AUTH_TYPE_DELETE, STATE_CD_NOT_PROGRESS, SHOW, CALENDAR_TIME_SELECTOR_BASIC, \
-    LECTURE_TYPE_ONE_TO_ONE
+    LECTURE_TYPE_ONE_TO_ONE, ING_MEMBER_TRUE, ING_MEMBER_FALSE
 
 from login.models import MemberTb
 from schedule.models import ScheduleTb, RepeatScheduleTb
@@ -108,6 +108,19 @@ def func_get_member_end_list(class_id, user_id, keyword):
                                                                       'member_ticket_tb__end_date')
 
     return func_get_member_from_member_ticket_list(all_member_ticket_list, None, user_id)
+
+
+# 진행중 회원 여부 확인
+def func_get_member_ing_check(class_id, member_id):
+
+    all_member_ticket_list = ClassMemberTicketTb.objects.select_related(
+        'member_ticket_tb__ticket_tb',
+        'member_ticket_tb__member__user'
+    ).filter(class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__member_id=member_id,
+             member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+             member_ticket_tb__use=USE, use=USE).order_by('member_ticket_tb__member_id', 'member_ticket_tb__end_date')
+
+    return len(all_member_ticket_list)
 
 
 # 회원 리스트 가져오기
@@ -219,6 +232,12 @@ def func_get_member_info(class_id, user_id, member_id):
         if member.profile_url is None or member.profile_url == '':
             member.profile_url = '/static/common/icon/icon_account.png'
 
+        ing_member_check = func_get_member_ing_check(class_id, member_id)
+        if ing_member_check > 0:
+            ing_member_check = ING_MEMBER_TRUE
+        else:
+            ing_member_check = ING_MEMBER_FALSE
+
         member_info = {'member_id': str(member.member_id),
                        'member_user_id': member.user.username,
                        'member_name': member.name,
@@ -228,7 +247,8 @@ def func_get_member_info(class_id, user_id, member_id):
                        'member_birthday_dt': str(member.birthday_dt),
                        'member_connection_check': connection_check,
                        'member_is_active': str(member.user.is_active),
-                       'member_profile_url': member.profile_url
+                       'member_profile_url': member.profile_url,
+                       'ing_member_check': ing_member_check
                        }
 
     return {'member_info': member_info, 'error': error}
