@@ -376,6 +376,10 @@
     var session_app_version = `{{ APP_VERSION }}`;
     var user_username = '{{ request.user.username }}';
     var setting_theme = '{{ request.session.setting_theme }}';
+
+    // MY_PROGRAM = 0 / SHARED_PROGRAM = 1
+    var shared_program_flag = '{{ request.session.shared_program_flag }}';
+
     //기기종류 판단
     const varUA = navigator.userAgent.toLowerCase();
     let device = PC;
