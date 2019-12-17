@@ -168,12 +168,12 @@ urlpatterns = [
     # 프로그램 공유 내역 조회
     url(r'^get_share_program_data/$', views.GetShareProgramDataViewAjax.as_view(), name='get_share_program_data'),
 
+    # 프로그램 공유 연결 안된 정보 조회
+    url(r'^get_trainer_program_connection_list/$', views.GetTrainerProgramConnectionListView.as_view(),
+        name='get_trainer_program_connection_list'),
     # 프로그램 공유 수락/거절 기능
     url(r'^update_trainer_program_connection_info/$', views.update_trainer_program_connection_info_logic,
         name='update_trainer_program_connection_info'),
-    # 수강 정보 연결 안된 정보 조회
-    url(r'^get_trainer_program_connection_list/$', views.GetTrainerProgramConnectionListView.as_view(),
-        name='get_trainer_program_connection_list'),
 
 
     # 배경 이미지 설정 기능 #################################################################################################

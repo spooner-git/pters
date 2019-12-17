@@ -3935,7 +3935,9 @@ class GetShareProgramDataViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         if class_id is None or class_id == '':
             error = '오류가 발생했습니다.'
 
-        program_auth_data = ProgramAuthTb.objects.filter(class_tb_id=class_id, use=USE)
+        program_auth_data = ProgramAuthTb.objects.select_related('class_tb',
+                                                                 'function_auth_tb').filter(class_tb_id=class_id,
+                                                                                            use=USE)
 
         for program_auth_info in program_auth_data:
             if program_auth_info.auth_type_cd is None:
@@ -4016,10 +4018,13 @@ class GetTrainerProgramConnectionListView(LoginRequiredMixin, AccessTestMixin, T
 
     def get(self, request):
         member_program_auth_list = collections.OrderedDict()
-        member_program_data = MemberClassTb.objects.filter(member_id=request.user.id, auth_cd=AUTH_TYPE_WAIT)
+        member_program_data = MemberClassTb.objects.select_related('class_tb',
+                                                                   'member').filter(member_id=request.user.id,
+                                                                                    auth_cd=AUTH_TYPE_WAIT)
         # 프로그램에 따른 권한 추가
         for member_program_info in member_program_data:
-            program_auth_data = ProgramAuthTb.objects.filter(class_tb_id=member_program_info.class_tb_id, use=USE)
+            program_auth_data = ProgramAuthTb.objects.select_related(
+                'function_auth_tb').filter(class_tb_id=member_program_info.class_tb_id, use=USE)
 
             for program_auth_info in program_auth_data:
                 if program_auth_info.auth_type_cd is None:
@@ -4027,7 +4032,7 @@ class GetTrainerProgramConnectionListView(LoginRequiredMixin, AccessTestMixin, T
                 else:
                     function_auth_type_cd_name = str(program_auth_info.function_auth_tb.function_auth_type_cd) \
                                                  + str(program_auth_info.auth_type_cd)
-                member_program_auth_list[program_auth_info.class_tb_id][function_auth_type_cd_name] \
+                member_program_auth_list[member_program_info.class_tb_id][function_auth_type_cd_name] \
                     = program_auth_info.enable_flag
 
         return JsonResponse(member_program_auth_list, json_dumps_params={'ensure_ascii': True})
