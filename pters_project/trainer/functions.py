@@ -697,7 +697,7 @@ def func_get_trainer_setting_list(context, user_id, class_id, class_hour):
     avail_date_list = []
     setting_week_start_date = 'SUN'
     setting_holiday_hide = SHOW
-    setting_data = SettingTb.objects.filter(member_id=user_id, class_tb_id=class_id, use=USE)
+    setting_data = SettingTb.objects.filter(class_tb_id=class_id, use=USE)
     setting_calendar_basic_select_time = 60
     setting_calendar_time_selector_type = CALENDAR_TIME_SELECTOR_BASIC
     setting_trainer_statistics_lock = UN_USE
@@ -997,7 +997,7 @@ def func_update_lecture_member_fix_status_cd(class_id, member_id):
     return error
 
 
-def update_setting_data(class_id, user_id, setting_type_cd_data, setting_info_data):
+def update_user_setting_data(class_id, user_id, setting_type_cd_data, setting_info_data):
 
     error = None
     try:
@@ -1010,6 +1010,36 @@ def update_setting_data(class_id, user_id, setting_type_cd_data, setting_info_da
                 except ObjectDoesNotExist:
                     setting_data = SettingTb(member_id=user_id,
                                              class_tb_id=class_id, setting_type_cd=setting_type_cd_info, use=USE)
+
+                setting_data.setting_info = setting_info_data[idx]
+                setting_data.save()
+
+    except ValueError:
+        error = '등록 값에 문제가 있습니다.'
+    except IntegrityError:
+        error = '등록 값에 문제가 있습니다.'
+    except TypeError:
+        error = '등록 값에 문제가 있습니다.'
+    except ValidationError:
+        error = '등록 값에 문제가 있습니다.'
+    except InternalError:
+        error = '등록 값에 문제가 있습니다.'
+
+    return error
+
+
+def update_program_setting_data(class_id, setting_type_cd_data, setting_info_data):
+
+    error = None
+    try:
+        with transaction.atomic():
+
+            for idx, setting_type_cd_info in enumerate(setting_type_cd_data):
+                try:
+                    setting_data = SettingTb.objects.get(class_tb_id=class_id,
+                                                         setting_type_cd=setting_type_cd_info)
+                except ObjectDoesNotExist:
+                    setting_data = SettingTb(class_tb_id=class_id, setting_type_cd=setting_type_cd_info, use=USE)
 
                 setting_data.setting_info = setting_info_data[idx]
                 setting_data.save()

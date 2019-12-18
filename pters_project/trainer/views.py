@@ -54,8 +54,8 @@ from .functions import func_get_trainer_setting_list, \
     func_get_member_info, func_get_member_from_member_ticket_list, \
     func_check_member_connection_info, func_get_member_lecture_list, \
     func_get_member_ticket_list, func_get_lecture_info, func_add_member_ticket_info, func_get_ticket_info, \
-    func_delete_member_ticket_info, func_update_lecture_member_fix_status_cd, update_setting_data, \
-    func_get_member_ticket_info, func_get_trainer_info
+    func_delete_member_ticket_info, func_update_lecture_member_fix_status_cd, update_user_setting_data, \
+    update_program_setting_data, func_get_member_ticket_info, func_get_trainer_info
 from .models import ClassMemberTicketTb, LectureTb, ClassTb, MemberClassTb, BackgroundImgTb, \
     SettingTb, TicketTb, TicketLectureTb, CenterTrainerTb, LectureMemberTb, ProgramAuthTb
 
@@ -4458,7 +4458,7 @@ def update_setting_push_logic(request):
     setting_type_cd_data = ['LT_PUS_TO_TRAINEE_LESSON_ALARM', 'LT_PUS_FROM_TRAINEE_LESSON_ALARM']
     setting_info_data = [setting_to_trainee_lesson_alarm, setting_from_trainee_lesson_alarm]
 
-    error = update_setting_data(class_id, request.user.id, setting_type_cd_data, setting_info_data)
+    error = update_program_setting_data(class_id, setting_type_cd_data, setting_info_data)
 
     if error is None:
         request.session['setting_to_trainee_lesson_alarm'] = int(setting_to_trainee_lesson_alarm)
@@ -4490,7 +4490,7 @@ def update_setting_calendar_setting_logic(request):
     setting_info_data = [setting_calendar_basic_select_time, setting_calendar_time_selector_type,
                          setting_week_start_date]
 
-    error = update_setting_data(class_id, request.user.id, setting_type_cd_data, setting_info_data)
+    error = update_program_setting_data(class_id, setting_type_cd_data, setting_info_data)
 
     if error is None:
         request.session['setting_calendar_basic_select_time'] = setting_calendar_basic_select_time
@@ -4542,7 +4542,7 @@ def update_setting_work_time_logic(request):
                          setting_trainer_work_ths_time_avail, setting_trainer_work_fri_time_avail,
                          setting_trainer_work_sat_time_avail, setting_holiday_hide]
 
-    error = update_setting_data(class_id, request.user.id, setting_type_cd_data, setting_info_data)
+    error = update_program_setting_data(class_id, setting_type_cd_data, setting_info_data)
 
     if error is None:
         request.session['setting_trainer_work_sun_time_avail'] = setting_trainer_work_sun_time_avail
@@ -4574,7 +4574,7 @@ def update_setting_auto_complete_logic(request):
 
     setting_type_cd_data = ['LT_SCHEDULE_AUTO_FINISH', 'LT_LECTURE_AUTO_FINISH']
     setting_info_data = [setting_schedule_auto_finish, setting_member_ticket_auto_finish]
-    error = update_setting_data(class_id, request.user.id, setting_type_cd_data, setting_info_data)
+    error = update_program_setting_data(class_id, setting_type_cd_data, setting_info_data)
 
     if error is None:
         request.session['setting_schedule_auto_finish'] = setting_schedule_auto_finish
@@ -4619,7 +4619,7 @@ def update_setting_reserve_logic(request):
     setting_info_data = [setting_member_reserve_time_available, setting_member_reserve_prohibition,
                          setting_member_reserve_date_available, setting_member_reserve_cancel_time,
                          setting_member_reserve_enable_time, setting_member_start_time]
-    error = update_setting_data(class_id, request.user.id, setting_type_cd_data, setting_info_data)
+    error = update_program_setting_data(class_id, setting_type_cd_data, setting_info_data)
 
     if error is None:
         request.session['setting_member_reserve_time_available'] = setting_member_reserve_time_available
@@ -4657,7 +4657,7 @@ def update_setting_sales_logic(request):
 
     setting_type_cd_data = ['LT_SAL_01', 'LT_SAL_02', 'LT_SAL_03', 'LT_SAL_04', 'LT_SAL_05', 'LT_SAL_00']
     setting_info_data = [setting_sal_01, setting_sal_02, setting_sal_03, setting_sal_04, setting_sal_05, setting_sal_00]
-    error = update_setting_data(class_id, request.user.id, setting_type_cd_data, setting_info_data)
+    error = update_program_setting_data(class_id, setting_type_cd_data, setting_info_data)
 
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
@@ -4679,11 +4679,9 @@ def update_setting_language_logic(request):
 
     if error is None:
         try:
-            lt_lan_01 = SettingTb.objects.get(member_id=request.user.id,
-                                              class_tb_id=class_id, setting_type_cd='LT_LAN_01')
+            lt_lan_01 = SettingTb.objects.get(member_id=request.user.id,  setting_type_cd='LT_LAN_01')
         except ObjectDoesNotExist:
-            lt_lan_01 = SettingTb(member_id=request.user.id, class_tb_id=class_id,
-                                  setting_type_cd='LT_LAN_01', use=USE)
+            lt_lan_01 = SettingTb(member_id=request.user.id, setting_type_cd='LT_LAN_01', use=USE)
 
     if error is None:
         try:
@@ -4709,7 +4707,7 @@ def update_setting_language_logic(request):
     return render(request, 'ajax/trainer_error_ajax.html')
 
 
-# 강사 예약허용시간 setting 업데이트 api
+# 강사 ㅌㅔ마 setting 업데이트 api
 def update_setting_theme_logic(request):
     setting_theme = request.POST.get('theme', 'light')
     class_id = request.session.get('class_id', '')
@@ -4719,7 +4717,7 @@ def update_setting_theme_logic(request):
 
     setting_type_cd_data = ['THEME']
     setting_info_data = [setting_theme]
-    error = update_setting_data(class_id, request.user.id, setting_type_cd_data, setting_info_data)
+    error = update_user_setting_data(None, request.user.id, setting_type_cd_data, setting_info_data)
 
     if error is None:
         request.session['setting_theme'] = setting_theme
@@ -4751,7 +4749,7 @@ def update_setting_access_lock_logic(request):
     if error is None:
         setting_type_cd_data = ['LT_ADMIN_PASSWORD', 'ATTEND_MODE_OUT_LOCK', 'STATISTICS_LOCK']
         setting_info_data = [setting_admin_password, setting_trainer_attend_mode_out_lock, setting_trainer_statistics_lock]
-        error = update_setting_data(class_id, request.user.id, setting_type_cd_data, setting_info_data)
+        error = update_program_setting_data(class_id, setting_type_cd_data, setting_info_data)
 
     if error is None:
         request.session['setting_admin_password'] = setting_trainer_statistics_lock
@@ -5058,7 +5056,7 @@ def update_attend_mode_setting_logic(request):
     setting_type_cd_data = ['LT_ADMIN_PASSWORD', 'LT_ATTEND_CLASS_PREV_DISPLAY_TIME',
                             'LT_ATTEND_CLASS_AFTER_DISPLAY_TIME']
     setting_info_data = [setting_admin_password, setting_attend_class_prev_display_time, setting_attend_class_after_display_time]
-    error = update_setting_data(class_id, request.user.id, setting_type_cd_data, setting_info_data)
+    error = update_program_setting_data(class_id, setting_type_cd_data, setting_info_data)
 
     if error is None:
         request.session['setting_admin_password'] = setting_admin_password
