@@ -1,19 +1,19 @@
 
-.popup_setting_supervisor{
+.popup_setting_sharing{
 	/* -webkit-overflow-scrolling: touch; */
 }
 
-.popup_setting_supervisor .obj_box_full{
+.popup_setting_sharing .obj_box_full{
 	padding: 15px 20px;
 	border: 0;
 }
 
-.popup_setting_supervisor .obj_input_box_full{
+.popup_setting_sharing .obj_input_box_full{
 	padding: 15px 20px;
 	/* border: 0; */
 }
 
-.popup_setting_supervisor .popup_toolbox{
+.popup_setting_sharing .popup_toolbox{
 	/* position: sticky;
 	position: -webkit-sticky; */
 	position: relative;
@@ -23,30 +23,30 @@
 	z-index: 1;
 }
 
-.popup_setting_supervisor .popup_content{
+.popup_setting_sharing .popup_content{
 	/* padding-top: 20px; */
 }
 
-.popup_setting_supervisor .shared_members_auth_name_wrapper{
+.popup_setting_sharing .shared_members_auth_name_wrapper{
 	font-size: 16px;
 	font-weight: 500;
 }
 
-.popup_setting_supervisor .shared_members_auth_wrapper{
+.popup_setting_sharing .shared_members_auth_wrapper{
 	margin: 10px 0;
 }
 
-.popup_setting_supervisor .shared_member_auth{
+.popup_setting_sharing .shared_member_auth{
 	display: flex;
 	font-size: 12px;
 	padding: 3px 5px;
 }
 
-.popup_setting_supervisor .auth_title{
+.popup_setting_sharing .auth_title{
 	flex-basis: 60px;
 	color: var(--font-sub-dark);
 }
-.popup_setting_supervisor .auth_setting{
+.popup_setting_sharing .auth_setting{
 	flex: 1 1 0;
 	color: var(--font-sub-dark);
 	text-align: right;

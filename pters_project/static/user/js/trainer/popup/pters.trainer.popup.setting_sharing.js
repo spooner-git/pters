@@ -1,6 +1,6 @@
-class Setting_supervisor{
+class Setting_sharing{
     constructor(install_target){
-        this.target = {install: install_target, toolbox:'section_setting_supervisor_toolbox', content:'section_setting_supervisor_content'};
+        this.target = {install: install_target, toolbox:'section_setting_sharing_toolbox', content:'section_setting_sharing_content'};
         this.data_sending_now = false;
 
         this.data = {
@@ -16,7 +16,7 @@ class Setting_supervisor{
     }
 
     set_initial_data (){
-        Setting_supervisor_func.read((data)=>{
+        Setting_sharing_func.read((data)=>{
             this.data = data;
             console.log("data", data);
             this.render();
@@ -32,16 +32,16 @@ class Setting_supervisor{
     }
 
     render(){
-        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();setting_supervisor_popup.clear();">${CImg.arrow_left()}</span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();setting_sharing_popup.clear();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right" onclick="setting_supervisor_popup.upper_right_menu();">${CImg.plus()}</span>`;
+        let top_right = `<span class="icon_right" onclick="setting_sharing_popup.upper_right_menu();">${CImg.plus()}</span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
 
         document.querySelector(this.target.install).innerHTML = html;
-        document.querySelector('.popup_setting_supervisor .wrapper_top').style.border = 0;
+        document.querySelector('.popup_setting_sharing .wrapper_top').style.border = 0;
         PopupBase.top_menu_effect(this.target.install);
     }
 
@@ -73,6 +73,7 @@ class Setting_supervisor{
         let member_name = indiv_auth_data.member_info.member_name;
         let member_user_id = indiv_auth_data.member_info.member_user_id;
         let member_db_id = indiv_auth_data.member_info.member_id;
+        let share_status = indiv_auth_data.member_info.auth_cd;
 
         let auth_plan_create = indiv_auth_data.auth_plan_create == 1 ? "등록" : null;
         let auth_plan_read = indiv_auth_data.auth_plan_read == 1 ? "조회" :  null;
@@ -96,37 +97,37 @@ class Setting_supervisor{
 
         let auth_statistics_read = indiv_auth_data.auth_analytics_read == 1 ? "조회" :  null;
 
-        let schedule_auth = [auth_plan_create, auth_plan_read, auth_plan_update, auth_plan_delete];
-        let member_auth = [auth_member_create, auth_member_read, auth_member_update, auth_member_delete];
-        let lecture_auth = [auth_lecture_create, auth_lecture_read, auth_lecture_update, auth_lecture_delete];
-        let ticket_auth = [auth_ticket_create, auth_ticket_read, auth_ticket_update, auth_ticket_delete];
-        let statistics_auth = [auth_statistics_read];
+        let schedule_auth = [auth_plan_create, auth_plan_read, auth_plan_update, auth_plan_delete].filter((el)=>{ if(el == null){return false} return true }).map((el)=>{return el});
+        let member_auth = [auth_member_create, auth_member_read, auth_member_update, auth_member_delete].filter((el)=>{ if(el == null){return false} return true }).map((el)=>{return el});
+        let lecture_auth = [auth_lecture_create, auth_lecture_read, auth_lecture_update, auth_lecture_delete].filter((el)=>{ if(el == null){return false} return true }).map((el)=>{return el});
+        let ticket_auth = [auth_ticket_create, auth_ticket_read, auth_ticket_update, auth_ticket_delete].filter((el)=>{ if(el == null){return false} return true }).map((el)=>{return el});
+        let statistics_auth = [auth_statistics_read].filter((el)=>{ if(el == null){return false} return true }).map((el)=>{return el});
 
-        let auth_schedule = `<div class="shared_member_auth">
+        let auth_schedule = `<div class="shared_member_auth" style="${schedule_auth.length == 0 ? "display:none" : ""}">
                                 <div class="auth_title">일정</div>
                                 <div class="auth_setting">
-                                    ${schedule_auth.filter((el)=>{ if(el == null){return false} return true }).map((el)=>{return el}).join("/")}
+                                    ${schedule_auth.join("/")}
                                 </div>
                             </div>`;
-        let auth_member = `<div class="shared_member_auth">
+        let auth_member = `<div class="shared_member_auth" style="${member_auth.length == 0 ? "display:none" : ""}">
                                 <div class="auth_title">회원</div>
                                 <div class="auth_setting">
-                                    ${member_auth.filter((el)=>{ if(el == null){return false} return true }).map((el)=>{return el}).join("/")}
+                                    ${member_auth.join("/")}
                                 </div>
                             </div>`;
-        let auth_lecture = `<div class="shared_member_auth">
+        let auth_lecture = `<div class="shared_member_auth" style="${lecture_auth.length == 0 ? "display:none" : ""}">
                                 <div class="auth_title">수업</div>
                                 <div class="auth_setting">
-                                    ${lecture_auth.filter((el)=>{ if(el == null){return false} return true }).map((el)=>{return el}).join("/")}
+                                    ${lecture_auth.join("/")}
                                 </div>
                             </div>`;
-        let auth_ticket = `<div class="shared_member_auth">
+        let auth_ticket = `<div class="shared_member_auth" style="${ticket_auth.length == 0 ? "display:none" : ""}">
                                 <div class="auth_title">수강권</div>
                                 <div class="auth_setting">
-                                    ${ticket_auth.filter((el)=>{ if(el == null){return false} return true }).map((el)=>{return el}).join("/")}
+                                    ${ticket_auth.join("/")}
                                 </div>
                             </div>`;
-        let auth_statistics = `<div class="shared_member_auth">
+        let auth_statistics = `<div class="shared_member_auth" style="${statistics_auth.length == 0 ? "display:none" : ""}">
                                 <div class="auth_title">통계</div>
                                 <div class="auth_setting">
                                     ${statistics_auth.join("/")}
@@ -134,7 +135,10 @@ class Setting_supervisor{
                             </div>`;
 
         let html = `<article class="obj_input_box_full" id="shared_member_row_${member_db_id}">
-                        <div class="shared_members_auth_name_wrapper">${member_name} (${member_user_id})</div>
+                        <div class="shared_members_auth_name_wrapper">
+                            ${member_name} (${member_user_id})
+                            <span style="float:right;font-size:13px;">${AUTH_TYPE_TEXT[share_status]}</span>
+                        </div>
                         <div class="shared_members_auth_wrapper">
                             ${auth_schedule == null ? "" : auth_schedule}
                             ${auth_member == null ? "" : auth_member}
@@ -146,8 +150,8 @@ class Setting_supervisor{
 
         $(document).off('click', `#shared_member_row_${member_db_id}`).on('click', `#shared_member_row_${member_db_id}`, ()=>{
             let external_data = {"db_id":member_db_id, "member_name":member_name, "shared_status": AUTH_TYPE_VIEW};
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_SUPERVISOR_MEMBER_AUTH, 100, POPUP_FROM_RIGHT, null, ()=>{
-                setting_supervisor_member_auth_popup = new Setting_supervisor_member_auth('.popup_setting_supervisor_member_auth', external_data);
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_SHARING_MEMBER_AUTH, 100, POPUP_FROM_RIGHT, null, ()=>{
+                setting_sharing_member_auth_popup = new Setting_sharing_member_auth('.popup_setting_sharing_member_auth', external_data);
             });
         });
         
@@ -159,7 +163,7 @@ class Setting_supervisor{
         let title = "공유 하기";
         let description = `<p style="font-size:12px;font-weight:500;margin-top:5px;color:var(--font-sub-normal)">현재 프로그램에 다른 PTERS 강사를 초대합니다.</p>`;
         let html = `
-        <div class="setting_supervisor_upper_box" style="">
+        <div class="setting_sharing_upper_box" style="">
             <div style="display:inline-block;">
                 <span style="display:inline-block;font-size:23px;font-weight:bold">
                     ${title}
@@ -174,44 +178,22 @@ class Setting_supervisor{
 
 
     send_data(){
-        // if(this.data_sending_now == true){
-        //     return false;
-        // }else if(this.data_sending_now == false){
-        //     this.data_sending_now = true;
-        // }
-        // let data = {
-        //     "setting_member_supervisor_time_available":'00:00-23:59', //예약 가능 시간대
-        //     "setting_member_supervisor_prohibition":this.data.stop_supervisor, // 예약 일시 정지
-        //     "setting_member_time_duration":this.data.time_for_private_supervisor.value[0], //개인 수업 예약 시간
-        //     "setting_member_start_time": this.data.start_time_for_private_supervisor.value[0], //개인 수업 예약 시작 시각
 
-        //     "setting_member_supervisor_date_available":this.data.available_supervisor_date.value[0], //예약 가능 날짜
-        //     "setting_member_supervisor_enable_time":this.data.available_supervisor_time.value[0], //예약 가능 시간
-        //     "setting_member_supervisor_cancel_time":this.data.available_cancel_time.value[0] //예약 취소 가능 시간
-
-        // };
-        
-        // Setting_supervisor_func.update(data, ()=>{
-        //     this.data_sending_now = false;
-        //     this.set_initial_data();
-        //     show_error_message('변경 내용이 저장되었습니다.');
-        //     // this.render_content();
-        // }, ()=>{this.data_sending_now = false;});
     }
 
     upper_right_menu(){
         let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_BOTTOM;
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_SUPERVISOR_MEMBER_SEARCH, 100, popup_style, null, ()=>{
-                    setting_supervisor_member_search_popup = new Supervisor_member_search('.popup_setting_supervisor_member_search', 'setting_supervisor_member_search_popup');
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_SHARING_MEMBER_SEARCH, 100, popup_style, null, ()=>{
+                    setting_sharing_member_search_popup = new Setting_sharing_member_search('.popup_setting_sharing_member_search', 'setting_sharing_member_search_popup');
         });
     }
 }
 
-class Setting_supervisor_func{
+class Setting_sharing_func{
     static update(data, callback, error_callback){
         //업무 시간 설정
         $.ajax({
-            url:"/trainer/update_setting_supervisor/",
+            url:"/trainer/update_setting_sharing/",
             type:'POST',
             data: data,
             dataType : 'html',

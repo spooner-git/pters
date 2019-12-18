@@ -313,7 +313,7 @@ class Menu {
 
     dom_menu_setting_sharing(){
         let id = 'menu_setting_sharing';
-        let title = '공유 하기';
+        let title = '프로그램 공유';
         let icon = CImg.supervisor();
         let icon_r_visible = NONE;
         let icon_r_text = "";
@@ -326,7 +326,7 @@ class Menu {
 
     dom_menu_setting_shared(){
         let id = 'menu_setting_shared';
-        let title = '공유 받음';
+        let title = '프로그램 공유';
         let icon = CImg.supervisor();
         let icon_r_visible = NONE;
         let icon_r_text = "";

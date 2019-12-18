@@ -194,7 +194,7 @@ class Alarm {
 
             let comp = `<div style="padding:20px 20px 15px 20px;box-shadow:var(--box-shadow-article);border:var(--border-article);">
                             <div style="padding:5px 0 20px 0;font-size:14px;font-weight:bold;">${invitor_name} (${invitor_user_id}) 님께서 "${program_name}" 프로그램에 공유 참가 요청을 보내셨습니다.</div>
-                            <div style="display:flex;height:35px;">
+                            <div style="display:flex;">
                                 <div style="flex:1 1 0;padding:3px;">${CComponent.button (`share_invited_${program}_decline`, "거절", button_style, onclick_decline)}</div>
                                 <div style="flex:1 1 0;padding:3px;">${CComponent.button (`share_invited_${program}_accept`, "수락", button_style, onclick_accept)}</div>
                             </div>

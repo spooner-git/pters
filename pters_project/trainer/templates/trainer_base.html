@@ -338,9 +338,9 @@
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_attendmode.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_theme.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_menu_access.js" %}></script>
-<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_supervisor.js" %}></script>
-<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_supervisor_member_search.js" %}></script>
-<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_supervisor_member_auth.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_sharing.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_sharing_member_search.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_sharing_member_auth.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_shared.js" %}></script>
 
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.service_notice.js" %}></script>
@@ -519,9 +519,9 @@
     var setting_attendmode_popup;
     var setting_theme_popup;
     var setting_menu_access_popup;
-    var setting_supervisor_popup;
-    var setting_supervisor_member_search_popup;
-    var setting_supervisor_member_auth_popup;
+    var setting_sharing_popup;
+    var setting_sharing_member_search_popup;
+    var setting_sharing_member_auth_popup;
     var setting_shared_popup;
     
     var service_notice_popup;
@@ -803,8 +803,8 @@
             break;
             case 'setting_sharing':
                 open = ()=>{
-                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_SUPERVISOR, 100, POPUP_FROM_RIGHT, null, ()=>{
-                                                    setting_supervisor_popup = new Setting_supervisor('.popup_setting_supervisor')});
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_SHARING, 100, POPUP_FROM_RIGHT, null, ()=>{
+                                                    setting_sharing_popup = new Setting_sharing('.popup_setting_sharing')});
                     }
             break;
             case 'setting_shared':
