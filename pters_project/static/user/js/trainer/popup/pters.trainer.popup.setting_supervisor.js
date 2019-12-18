@@ -73,6 +73,7 @@ class Setting_supervisor{
         let member_name = indiv_auth_data.member_info.member_name;
         let member_user_id = indiv_auth_data.member_info.member_user_id;
         let member_db_id = indiv_auth_data.member_info.member_id;
+        let share_status = indiv_auth_data.member_info.auth_cd;
 
         let auth_plan_create = indiv_auth_data.auth_plan_create == 1 ? "등록" : null;
         let auth_plan_read = indiv_auth_data.auth_plan_read == 1 ? "조회" :  null;
@@ -134,7 +135,10 @@ class Setting_supervisor{
                             </div>`;
 
         let html = `<article class="obj_input_box_full" id="shared_member_row_${member_db_id}">
-                        <div class="shared_members_auth_name_wrapper">${member_name} (${member_user_id})</div>
+                        <div class="shared_members_auth_name_wrapper">
+                            ${member_name} (${member_user_id})
+                            <span style="float:right;font-size:13px;">${AUTH_TYPE_TEXT[share_status]}</span>
+                        </div>
                         <div class="shared_members_auth_wrapper">
                             ${auth_schedule == null ? "" : auth_schedule}
                             ${auth_member == null ? "" : auth_member}

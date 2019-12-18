@@ -110,7 +110,7 @@ class Supervisor_member_search {
     dom_row_search_button(){
         let id = "dom_row_search_button";
         let title = "검색";
-        let style = {"background-color":"var(--bg-highlight)", "color":"var(--font-invisible)", "height":"50px", "line-height":"50px"};
+        let style = {"background-color":"var(--bg-highlight)", "color":"var(--fundamental-white)", "height":"50px", "line-height":"50px"};
         if(this.data.search_id == null){
             style = {"background-color":"var(--bg-sub-dark)", "color":"var(--font-invisible)", "height":"50px", "line-height":"50px"};
         }
@@ -134,7 +134,7 @@ class Supervisor_member_search {
     dom_row_reg_button(){
         let id = "dom_row_reg_button";
         let title = "등록";
-        let style = {"background-color":"var(--bg-highlight)", "color":"var(--font-invisible)", "height":"50px", "line-height":"50px"};
+        let style = {"background-color":"var(--bg-highlight)", "color":"var(--fundamental-white)", "height":"50px", "line-height":"50px"};
         if(this.data.selected_member_id == null){
             style = {"background-color":"var(--bg-sub-dark)", "color":"var(--font-invisible)", "height":"50px", "line-height":"50px"};
         }

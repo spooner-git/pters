@@ -24,6 +24,8 @@ const AUTH_TYPE_VIEW = 'VIEW';
 const AUTH_TYPE_DELETE = 'DELETE';
 const AUTH_TYPE_WAIT = 'WAIT';
 
+const AUTH_TYPE_TEXT = {'VIEW':"공유 중", "DELETE":"공유 해제됨", "WAIT":"공유 요청 중"};
+
 const PROGRAM_SELECT = 0;
 const PROGRAM_LECTURE_CONNECT_ACCEPT = 1;
 const PROGRAM_LECTURE_CONNECT_DELETE = 2;
