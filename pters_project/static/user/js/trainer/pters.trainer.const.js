@@ -24,7 +24,7 @@ const AUTH_TYPE_VIEW = 'VIEW';
 const AUTH_TYPE_DELETE = 'DELETE';
 const AUTH_TYPE_WAIT = 'WAIT';
 
-const AUTH_TYPE_TEXT = {'VIEW':"공유 중", "DELETE":"공유 해제됨", "WAIT":"공유 요청 중"};
+const AUTH_TYPE_TEXT = {'VIEW':"공유 중", "DELETE":"공유 해제됨", "WAIT":"공유 수락 대기"};
 
 const PROGRAM_SELECT = 0;
 const PROGRAM_LECTURE_CONNECT_ACCEPT = 1;
@@ -195,9 +195,9 @@ const POPUP_ADDRESS_SETTING_ALARM = 'popup_setting_alarm';
 const POPUP_ADDRESS_SETTING_ATTENDMODE = 'popup_setting_attendmode';
 const POPUP_ADDRESS_SETTING_THEME = 'popup_setting_theme';
 const POPUP_ADDRESS_SETTING_MENU_ACCESS = 'popup_setting_menu_access';
-const POPUP_ADDRESS_SETTING_SUPERVISOR = 'popup_setting_supervisor';
-const POPUP_ADDRESS_SETTING_SUPERVISOR_MEMBER_SEARCH = 'popup_setting_supervisor_member_search';
-const POPUP_ADDRESS_SETTING_SUPERVISOR_MEMBER_AUTH = 'popup_setting_supervisor_member_auth';
+const POPUP_ADDRESS_SETTING_SHARING = 'popup_setting_sharing';
+const POPUP_ADDRESS_SETTING_SHARING_MEMBER_SEARCH = 'popup_setting_sharing_member_search';
+const POPUP_ADDRESS_SETTING_SHARING_MEMBER_AUTH = 'popup_setting_sharing_member_auth';
 const POPUP_ADDRESS_SETTING_SHARED = 'popup_setting_shared';
 
 const POPUP_ADDRESS_SERVICE_NOTICE = 'popup_service_notice';

@@ -1,6 +1,6 @@
-class Setting_supervisor_member_auth{
+class Setting_sharing_member_auth{
     constructor(install_target, external_data){
-        this.target = {install: install_target, toolbox:'section_setting_supervisor_member_auth_toolbox', content:'section_setting_supervisor_member_auth_content'};
+        this.target = {install: install_target, toolbox:'section_setting_sharing_member_auth_toolbox', content:'section_setting_sharing_member_auth_content'};
         this.data_sending_now = false;
         this.external_data = external_data;
         this.member_name = this.external_data.member_name;
@@ -49,7 +49,7 @@ class Setting_supervisor_member_auth{
     }
 
     set_initial_data (){
-        Setting_supervisor_member_auth_func.read((data)=>{
+        Setting_sharing_member_auth_func.read((data)=>{
             let my_auth = data[this.member_db_id];
 
             this.data.schedule.create = my_auth.auth_plan_create != undefined ? my_auth.auth_plan_create : null;
@@ -87,16 +87,16 @@ class Setting_supervisor_member_auth{
     }
 
     render(){
-        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();setting_supervisor_member_auth_popup.clear();">${CImg.arrow_left()}</span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();setting_sharing_member_auth_popup.clear();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right" onclick="setting_supervisor_member_auth_popup.upper_right_menu();">${CImg.confirm()}</span>`;
+        let top_right = `<span class="icon_right" onclick="setting_sharing_member_auth_popup.upper_right_menu();">${CImg.confirm()}</span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
 
         document.querySelector(this.target.install).innerHTML = html;
-        document.querySelector('.popup_setting_supervisor_member_auth .wrapper_top').style.border = 0;
+        document.querySelector('.popup_setting_sharing_member_auth .wrapper_top').style.border = 0;
         PopupBase.top_menu_effect(this.target.install);
     }
 
@@ -202,7 +202,7 @@ class Setting_supervisor_member_auth{
         let title = `공유자 권한 설정 - ${this.member_name}`;
         let description = `<p style="font-size:13px;font-weight:500;margin-top:5px;color:var(--font-sub-dark)">공유받은 사람의 각종 권한을 설정합니다.</p>`;
         let html = `
-        <div class="setting_supervisor_member_auth_upper_box" style="">
+        <div class="setting_sharing_member_auth_upper_box" style="">
             <div style="display:inline-block;">
                 <span style="display:inline-block;font-size:23px;font-weight:bold">
                     ${title}
@@ -351,13 +351,13 @@ class Setting_supervisor_member_auth{
 
             "auth_analytics_read":this.data.statistics.read,
         };
-        Setting_supervisor_member_auth_func.update(data, ()=>{
+        Setting_sharing_member_auth_func.update(data, ()=>{
             this.data_sending_now = false;
             // this.set_initial_data();
             show_error_message('변경 내용이 저장되었습니다.');
             // this.render_content();
             layer_popup.close_layer_popup();
-            setting_supervisor_popup.init();
+            setting_sharing_popup.init();
         }, ()=>{this.data_sending_now = false;});
     }
 
@@ -366,7 +366,7 @@ class Setting_supervisor_member_auth{
     }
 }
 
-class Setting_supervisor_member_auth_func{
+class Setting_sharing_member_auth_func{
     static update(data, callback, error_callback){
         //업무 시간 설정
         $.ajax({

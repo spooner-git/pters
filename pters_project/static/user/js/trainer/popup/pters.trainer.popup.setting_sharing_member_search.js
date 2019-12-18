@@ -1,9 +1,9 @@
-class Supervisor_member_search {
+class Setting_sharing_member_search {
     constructor (install_target, instance){
-        this.target = {install: install_target, toolbox:'section_supervisor_member_search_toolbox', content:'section_supervisor_member_search_content'};
+        this.target = {install: install_target, toolbox:'section_sharing_member_search_toolbox', content:'section_sharing_member_search_content'};
 
         this.instance = instance;
-        this.page_name = 'supervisor_member_search';
+        this.page_name = 'sharing_member_search';
         this.data = {
             searched_data : [],
             search_id:null,
@@ -41,7 +41,7 @@ class Supervisor_member_search {
     }
 
     render(){
-        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();setting_supervisor_member_search_popup.clear();">${CImg.arrow_left()}</span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();setting_sharing_member_search_popup.clear();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"><span style="color:var(--font-highlight);font-weight: 500;"></span><span style="color:var(--font-highlight);font-weight: 500;"></span></span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;">${this.dom_assembly_toolbox()}</section>
@@ -50,12 +50,12 @@ class Supervisor_member_search {
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
 
         document.querySelector(this.target.install).innerHTML = html;
-        document.querySelector('.popup_setting_supervisor_member_search .wrapper_top').style.border = 0;
+        document.querySelector('.popup_setting_sharing_member_search .wrapper_top').style.border = 0;
         PopupBase.top_menu_effect(this.target.install);
     }
 
     render_loading_image(){
-        document.querySelector("#section_supervisor_member_search_content").innerHTML = 
+        document.querySelector("#section_sharing_member_search_content").innerHTML = 
             `<div style="position:fixed;top:50%;left:50%;transform:translate(-50%, -50%);text-align:center;">
                 <img src="/static/common/loading.svg">
                 <div style="font-size:12px;color:var(--font-sub-normal);word-break:keep-all">검색중...</div>
@@ -96,7 +96,7 @@ class Supervisor_member_search {
 
     dom_row_toolbox(){
         let title = "PTERS 강사 검색";
-        let html = `<div class="supervisor_member_search_upper_box">
+        let html = `<div class="sharing_member_search_upper_box">
                         <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:var(--font-main); letter-spacing: -1px; height:28px;">
                             <span style="display:inline-block;">${title}</span>
                             <span style="display:none;">${title}</span>
@@ -121,7 +121,7 @@ class Supervisor_member_search {
             }
             this.render_loading_image();
             let data = {"search_val":this.data.search_id};
-            Supervisor_member_search_func.search(data, (data)=>{
+            sharing_member_search_func.search(data, (data)=>{
                 this.data.searched_data = data.member_list;
                 this.step = 1;
                 this.render_content();
@@ -147,8 +147,8 @@ class Supervisor_member_search {
             this.clear();
 
             let external_data = {"db_id":this.data.selected_member_id, "member_name":this.data.selected_member_name, "shared_status": AUTH_TYPE_WAIT};
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_SUPERVISOR_MEMBER_AUTH, 100, POPUP_FROM_RIGHT, null, ()=>{
-                setting_supervisor_member_auth_popup = new Setting_supervisor_member_auth('.popup_setting_supervisor_member_auth', external_data);
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_SHARING_MEMBER_AUTH, 100, POPUP_FROM_RIGHT, null, ()=>{
+                setting_sharing_member_auth_popup = new Setting_sharing_member_auth('.popup_setting_sharing_member_auth', external_data);
             });
         };
         let html = CComponent.button (id, title, style, onclick);
@@ -166,7 +166,7 @@ class Supervisor_member_search {
             }
             this.render_loading_image();
             let data = {"search_val":this.data.search_id};
-            Supervisor_member_search_func.search(data, (data)=>{
+            sharing_member_search_func.search(data, (data)=>{
                 this.data.searched_data = data.member_list;
                 this.step = 1;
                 this.render_content();
@@ -177,7 +177,7 @@ class Supervisor_member_search {
     }
 
     dom_row_search_input(){
-        let id = "supervisor_member_search_subject_input";
+        let id = "sharing_member_search_subject_input";
         let title = this.data.search_id == null ? "" : this.data.search_id;
         let placeholder = "아이디 또는 휴대폰 번호 입력";
         let icon = DELETE;
@@ -210,13 +210,13 @@ class Supervisor_member_search {
             };
             let radio_button = CComponent.radio_button (`radio_dom_row_member_list`, checked, style_radio, onclick_radio);
 
-            let html = `<article style="display: flex;height: 40px;line-height: 40px;padding: 10px 0;" id="supervisor_member_searched_${data.member_id}">
+            let html = `<article style="display: flex;height: 40px;line-height: 40px;padding: 10px 0;" id="sharing_member_searched_${data.member_id}">
                             <div style="flex-basis:70px;background-image:url('${data.member_profile_url}');background-size:contain;background-repeat:no-repeat;"></div>
                             <div style="flex:1 0 0;">${data.member_name} <span style="font-size:12px;color:var(--font-sub-normal)">(${data.member_phone})</span></div>
                             <div style="flex-basis:50px;text-align:right;">${radio_button}</div>
                         </article>`;
             
-            $(document).off('click', `#supervisor_member_searched_${data.member_id}`).on('click', `#supervisor_member_searched_${data.member_id}`, ()=>{
+            $(document).off('click', `#sharing_member_searched_${data.member_id}`).on('click', `#sharing_member_searched_${data.member_id}`, ()=>{
                 this.step = 2;
                 this.data.selected_member_name = data.member_name;
                 this.data.selected_member_id = data.member_id;
@@ -251,7 +251,7 @@ class Supervisor_member_search {
 }
 
 
-class Supervisor_member_search_func{
+class sharing_member_search_func{
     static search(data, callback, error_callback){
         //{"search_val":""}
         $.ajax({

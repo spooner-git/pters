@@ -1,19 +1,19 @@
 
-.popup_setting_supervisor_member_auth{
+.popup_setting_sharing_member_auth{
 	/* -webkit-overflow-scrolling: touch; */
 }
 
-.popup_setting_supervisor_member_auth .obj_box_full{
+.popup_setting_sharing_member_auth .obj_box_full{
 	padding: 15px 20px;
 	border: 0;
 }
 
-.popup_setting_supervisor_member_auth .obj_input_box_full{
+.popup_setting_sharing_member_auth .obj_input_box_full{
 	padding: 15px 20px;
 	/* border: 0; */
 }
 
-.popup_setting_supervisor_member_auth .popup_toolbox{
+.popup_setting_sharing_member_auth .popup_toolbox{
 	/* position: sticky;
 	position: -webkit-sticky; */
 	position: relative;
@@ -23,11 +23,11 @@
 	z-index: 1;
 }
 
-.popup_setting_supervisor_member_auth .popup_content{
+.popup_setting_sharing_member_auth .popup_content{
 	/* padding-top: 20px; */
 }
 
-.popup_setting_supervisor_member_auth .setting_menu_auth_toggle_wrapper{
+.popup_setting_sharing_member_auth .setting_menu_auth_toggle_wrapper{
 	padding: 10px 20px;
 	padding-right: 0;
 	border: 0;

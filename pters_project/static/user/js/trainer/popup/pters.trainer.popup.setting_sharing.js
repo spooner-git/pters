@@ -1,6 +1,6 @@
-class Setting_supervisor{
+class Setting_sharing{
     constructor(install_target){
-        this.target = {install: install_target, toolbox:'section_setting_supervisor_toolbox', content:'section_setting_supervisor_content'};
+        this.target = {install: install_target, toolbox:'section_setting_sharing_toolbox', content:'section_setting_sharing_content'};
         this.data_sending_now = false;
 
         this.data = {
@@ -16,7 +16,7 @@ class Setting_supervisor{
     }
 
     set_initial_data (){
-        Setting_supervisor_func.read((data)=>{
+        Setting_sharing_func.read((data)=>{
             this.data = data;
             console.log("data", data);
             this.render();
@@ -32,16 +32,16 @@ class Setting_supervisor{
     }
 
     render(){
-        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();setting_supervisor_popup.clear();">${CImg.arrow_left()}</span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();setting_sharing_popup.clear();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right" onclick="setting_supervisor_popup.upper_right_menu();">${CImg.plus()}</span>`;
+        let top_right = `<span class="icon_right" onclick="setting_sharing_popup.upper_right_menu();">${CImg.plus()}</span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
 
         document.querySelector(this.target.install).innerHTML = html;
-        document.querySelector('.popup_setting_supervisor .wrapper_top').style.border = 0;
+        document.querySelector('.popup_setting_sharing .wrapper_top').style.border = 0;
         PopupBase.top_menu_effect(this.target.install);
     }
 
@@ -150,8 +150,8 @@ class Setting_supervisor{
 
         $(document).off('click', `#shared_member_row_${member_db_id}`).on('click', `#shared_member_row_${member_db_id}`, ()=>{
             let external_data = {"db_id":member_db_id, "member_name":member_name, "shared_status": AUTH_TYPE_VIEW};
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_SUPERVISOR_MEMBER_AUTH, 100, POPUP_FROM_RIGHT, null, ()=>{
-                setting_supervisor_member_auth_popup = new Setting_supervisor_member_auth('.popup_setting_supervisor_member_auth', external_data);
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_SHARING_MEMBER_AUTH, 100, POPUP_FROM_RIGHT, null, ()=>{
+                setting_sharing_member_auth_popup = new Setting_sharing_member_auth('.popup_setting_sharing_member_auth', external_data);
             });
         });
         
@@ -163,7 +163,7 @@ class Setting_supervisor{
         let title = "공유 하기";
         let description = `<p style="font-size:12px;font-weight:500;margin-top:5px;color:var(--font-sub-normal)">현재 프로그램에 다른 PTERS 강사를 초대합니다.</p>`;
         let html = `
-        <div class="setting_supervisor_upper_box" style="">
+        <div class="setting_sharing_upper_box" style="">
             <div style="display:inline-block;">
                 <span style="display:inline-block;font-size:23px;font-weight:bold">
                     ${title}
@@ -183,17 +183,17 @@ class Setting_supervisor{
 
     upper_right_menu(){
         let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_BOTTOM;
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_SUPERVISOR_MEMBER_SEARCH, 100, popup_style, null, ()=>{
-                    setting_supervisor_member_search_popup = new Supervisor_member_search('.popup_setting_supervisor_member_search', 'setting_supervisor_member_search_popup');
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_SHARING_MEMBER_SEARCH, 100, popup_style, null, ()=>{
+                    setting_sharing_member_search_popup = new Setting_sharing_member_search('.popup_setting_sharing_member_search', 'setting_sharing_member_search_popup');
         });
     }
 }
 
-class Setting_supervisor_func{
+class Setting_sharing_func{
     static update(data, callback, error_callback){
         //업무 시간 설정
         $.ajax({
-            url:"/trainer/update_setting_supervisor/",
+            url:"/trainer/update_setting_sharing/",
             type:'POST',
             data: data,
             dataType : 'html',
