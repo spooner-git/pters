@@ -96,37 +96,37 @@ class Setting_supervisor{
 
         let auth_statistics_read = indiv_auth_data.auth_analytics_read == 1 ? "조회" :  null;
 
-        let schedule_auth = [auth_plan_create, auth_plan_read, auth_plan_update, auth_plan_delete];
-        let member_auth = [auth_member_create, auth_member_read, auth_member_update, auth_member_delete];
-        let lecture_auth = [auth_lecture_create, auth_lecture_read, auth_lecture_update, auth_lecture_delete];
-        let ticket_auth = [auth_ticket_create, auth_ticket_read, auth_ticket_update, auth_ticket_delete];
-        let statistics_auth = [auth_statistics_read];
+        let schedule_auth = [auth_plan_create, auth_plan_read, auth_plan_update, auth_plan_delete].filter((el)=>{ if(el == null){return false} return true }).map((el)=>{return el});
+        let member_auth = [auth_member_create, auth_member_read, auth_member_update, auth_member_delete].filter((el)=>{ if(el == null){return false} return true }).map((el)=>{return el});
+        let lecture_auth = [auth_lecture_create, auth_lecture_read, auth_lecture_update, auth_lecture_delete].filter((el)=>{ if(el == null){return false} return true }).map((el)=>{return el});
+        let ticket_auth = [auth_ticket_create, auth_ticket_read, auth_ticket_update, auth_ticket_delete].filter((el)=>{ if(el == null){return false} return true }).map((el)=>{return el});
+        let statistics_auth = [auth_statistics_read].filter((el)=>{ if(el == null){return false} return true }).map((el)=>{return el});
 
-        let auth_schedule = `<div class="shared_member_auth">
+        let auth_schedule = `<div class="shared_member_auth" style="${schedule_auth.length == 0 ? "display:none" : ""}">
                                 <div class="auth_title">일정</div>
                                 <div class="auth_setting">
-                                    ${schedule_auth.filter((el)=>{ if(el == null){return false} return true }).map((el)=>{return el}).join("/")}
+                                    ${schedule_auth.join("/")}
                                 </div>
                             </div>`;
-        let auth_member = `<div class="shared_member_auth">
+        let auth_member = `<div class="shared_member_auth" style="${member_auth.length == 0 ? "display:none" : ""}">
                                 <div class="auth_title">회원</div>
                                 <div class="auth_setting">
-                                    ${member_auth.filter((el)=>{ if(el == null){return false} return true }).map((el)=>{return el}).join("/")}
+                                    ${member_auth.join("/")}
                                 </div>
                             </div>`;
-        let auth_lecture = `<div class="shared_member_auth">
+        let auth_lecture = `<div class="shared_member_auth" style="${lecture_auth.length == 0 ? "display:none" : ""}">
                                 <div class="auth_title">수업</div>
                                 <div class="auth_setting">
-                                    ${lecture_auth.filter((el)=>{ if(el == null){return false} return true }).map((el)=>{return el}).join("/")}
+                                    ${lecture_auth.join("/")}
                                 </div>
                             </div>`;
-        let auth_ticket = `<div class="shared_member_auth">
+        let auth_ticket = `<div class="shared_member_auth" style="${ticket_auth.length == 0 ? "display:none" : ""}">
                                 <div class="auth_title">수강권</div>
                                 <div class="auth_setting">
-                                    ${ticket_auth.filter((el)=>{ if(el == null){return false} return true }).map((el)=>{return el}).join("/")}
+                                    ${ticket_auth.join("/")}
                                 </div>
                             </div>`;
-        let auth_statistics = `<div class="shared_member_auth">
+        let auth_statistics = `<div class="shared_member_auth" style="${statistics_auth.length == 0 ? "display:none" : ""}">
                                 <div class="auth_title">통계</div>
                                 <div class="auth_setting">
                                     ${statistics_auth.join("/")}
@@ -174,29 +174,7 @@ class Setting_supervisor{
 
 
     send_data(){
-        // if(this.data_sending_now == true){
-        //     return false;
-        // }else if(this.data_sending_now == false){
-        //     this.data_sending_now = true;
-        // }
-        // let data = {
-        //     "setting_member_supervisor_time_available":'00:00-23:59', //예약 가능 시간대
-        //     "setting_member_supervisor_prohibition":this.data.stop_supervisor, // 예약 일시 정지
-        //     "setting_member_time_duration":this.data.time_for_private_supervisor.value[0], //개인 수업 예약 시간
-        //     "setting_member_start_time": this.data.start_time_for_private_supervisor.value[0], //개인 수업 예약 시작 시각
 
-        //     "setting_member_supervisor_date_available":this.data.available_supervisor_date.value[0], //예약 가능 날짜
-        //     "setting_member_supervisor_enable_time":this.data.available_supervisor_time.value[0], //예약 가능 시간
-        //     "setting_member_supervisor_cancel_time":this.data.available_cancel_time.value[0] //예약 취소 가능 시간
-
-        // };
-        
-        // Setting_supervisor_func.update(data, ()=>{
-        //     this.data_sending_now = false;
-        //     this.set_initial_data();
-        //     show_error_message('변경 내용이 저장되었습니다.');
-        //     // this.render_content();
-        // }, ()=>{this.data_sending_now = false;});
     }
 
     upper_right_menu(){

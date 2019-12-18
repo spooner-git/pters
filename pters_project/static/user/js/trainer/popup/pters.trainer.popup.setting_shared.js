@@ -83,37 +83,37 @@ class Setting_shared{
 
         let auth_statistics_read = data.auth_analytics_read.active == 1 ? "조회" :  null;
 
-        let schedule_auth = [auth_plan_create, auth_plan_read, auth_plan_update, auth_plan_delete];
-        let member_auth = [auth_member_create, auth_member_read, auth_member_update, auth_member_delete];
-        let lecture_auth = [auth_lecture_create, auth_lecture_read, auth_lecture_update, auth_lecture_delete];
-        let ticket_auth = [auth_ticket_create, auth_ticket_read, auth_ticket_update, auth_ticket_delete];
-        let statistics_auth = [auth_statistics_read];
+        let schedule_auth = [auth_plan_create, auth_plan_read, auth_plan_update, auth_plan_delete].filter((el)=>{ if(el == null){return false} return true }).map((el)=>{return el});
+        let member_auth = [auth_member_create, auth_member_read, auth_member_update, auth_member_delete].filter((el)=>{ if(el == null){return false} return true }).map((el)=>{return el});
+        let lecture_auth = [auth_lecture_create, auth_lecture_read, auth_lecture_update, auth_lecture_delete].filter((el)=>{ if(el == null){return false} return true }).map((el)=>{return el});
+        let ticket_auth = [auth_ticket_create, auth_ticket_read, auth_ticket_update, auth_ticket_delete].filter((el)=>{ if(el == null){return false} return true }).map((el)=>{return el});
+        let statistics_auth = [auth_statistics_read].filter((el)=>{ if(el == null){return false} return true }).map((el)=>{return el});
 
-        let auth_schedule = `<div class="shared_member_auth">
+        let auth_schedule = `<div class="shared_member_auth" style="${schedule_auth.length == 0 ? "display:none" : ""}">
                                 <div class="auth_title">일정</div>
                                 <div class="auth_setting">
-                                    ${schedule_auth.filter((el)=>{ if(el == null){return false;} return true; }).map((el)=>{return el;}).join("/")}
+                                    ${schedule_auth.join("/")}
                                 </div>
                             </div>`;
-        let auth_member = `<div class="shared_member_auth">
+        let auth_member = `<div class="shared_member_auth" style="${member_auth.length == 0 ? "display:none" : ""}">
                                 <div class="auth_title">회원</div>
                                 <div class="auth_setting">
-                                    ${member_auth.filter((el)=>{ if(el == null){return false;} return true; }).map((el)=>{return el;}).join("/")}
+                                    ${member_auth.join("/")}
                                 </div>
                             </div>`;
-        let auth_lecture = `<div class="shared_member_auth">
+        let auth_lecture = `<div class="shared_member_auth" style="${lecture_auth.length == 0 ? "display:none" : ""}">
                                 <div class="auth_title">수업</div>
                                 <div class="auth_setting">
-                                    ${lecture_auth.filter((el)=>{ if(el == null){return false;} return true; }).map((el)=>{return el;}).join("/")}
+                                    ${lecture_auth.join("/")}
                                 </div>
                             </div>`;
-        let auth_ticket = `<div class="shared_member_auth">
+        let auth_ticket = `<div class="shared_member_auth" style="${ticket_auth.length == 0 ? "display:none" : ""}">
                                 <div class="auth_title">수강권</div>
                                 <div class="auth_setting">
-                                    ${ticket_auth.filter((el)=>{ if(el == null){return false;} return true; }).map((el)=>{return el;}).join("/")}
+                                    ${ticket_auth.join("/")}
                                 </div>
                             </div>`;
-        let auth_statistics = `<div class="shared_member_auth">
+        let auth_statistics = `<div class="shared_member_auth" style="${statistics_auth.length == 0 ? "display:none" : ""}">
                                 <div class="auth_title">통계</div>
                                 <div class="auth_setting">
                                     ${statistics_auth.join("/")}

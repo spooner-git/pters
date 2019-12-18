@@ -50,7 +50,6 @@ class Setting_supervisor_member_auth{
 
     set_initial_data (){
         Setting_supervisor_member_auth_func.read((data)=>{
-            console.log(this.member_db_id, data)
             let my_auth = data[this.member_db_id];
 
             this.data.schedule.create = my_auth.auth_plan_create != undefined ? my_auth.auth_plan_create : null;
@@ -114,13 +113,14 @@ class Setting_supervisor_member_auth{
     }
     
     dom_assembly_content(){
+        let shared_status_button = this.shared_status == AUTH_TYPE_WAIT ? "" : this.dom_button_shared_status();
         let schedule = this.dom_sub_assembly_schedule();
         let member = this.dom_sub_assembly_member();
         let lecture = this.dom_sub_assembly_lecture();
         let ticket = this.dom_sub_assembly_ticket();
         let statistics = this.dom_sub_assembly_statistics();
 
-        let html = schedule + member + lecture + ticket + statistics;
+        let html = schedule + member + lecture + ticket + statistics + `<article class="obj_input_box_full">${shared_status_button}</article>`;
 
         return html;
     }
@@ -199,12 +199,10 @@ class Setting_supervisor_member_auth{
 
 
     dom_row_toolbox(){
-        let shared_status_button = this.shared_status == AUTH_TYPE_WAIT ? "" : this.dom_button_shared_status();
         let title = `공유자 권한 설정 - ${this.member_name}`;
         let description = `<p style="font-size:13px;font-weight:500;margin-top:5px;color:var(--font-sub-dark)">공유받은 사람의 각종 권한을 설정합니다.</p>`;
         let html = `
         <div class="setting_supervisor_member_auth_upper_box" style="">
-            ${shared_status_button}
             <div style="display:inline-block;">
                 <span style="display:inline-block;font-size:23px;font-weight:bold">
                     ${title}
@@ -220,11 +218,11 @@ class Setting_supervisor_member_auth{
     dom_button_shared_status(){
         let id = null;
         let title = "공유 해제";
-        let style = {"font-size":"13px", "font-weight":"500", "float":"right"};
+        let style = {"font-size":"13px", "font-weight":"500", "background-color":"var(--bg-highlight)", "color":"var(--fundamental-white)", "line-height":"40px"};
         let onclick = ()=>{
             this.event_select_shared_status();
         };
-        let html = CComponent.text_button (id, title, style, onclick);
+        let html = CComponent.button (id, title, style, onclick);
         return html;
     }
 
@@ -233,8 +231,8 @@ class Setting_supervisor_member_auth{
             request:{text:"공유 초대", callback:()=>{
 
             }},
-            disconnect:{text:"공유 끊기", callback:()=>{
-                let message = `${this.member_name}님께 현재 프로그램 공유를 해제 하시겠습니까?`;
+            disconnect:{text:"공유 해제", callback:()=>{
+                let message = `정말 ${this.member_name}님과 현재 프로그램 공유를 해제 하시겠습니까?`;
                 show_user_confirm (message, ()=>{
                     this.shared_status = AUTH_TYPE_DELETE;
                     this.send_data();
