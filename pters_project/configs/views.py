@@ -207,7 +207,7 @@ def func_setting_data_update(request, group):
     else:
         request.session['device_info'] = 'app'
 
-    if class_id != '':
+    if class_id != '' and class_id is not None:
         question_counts = QATb.objects.filter(member_id=request.user.id, status_type_cd='QA_COMPLETE',
                                               read=0, use=USE).count()
         request.session['question_counts'] = question_counts

@@ -3873,10 +3873,14 @@ def update_share_program_info_logic(request):
     auth_cd = request.POST.get('auth_cd', '')
     class_id = request.session.get('class_id', '')
     error = None
-
+    member_info = None
     if trainer_id is None or trainer_id == '':
         error = '강사 정보를 불러오지 못했습니다.'
-
+    if error is None:
+        try:
+            member_info = MemberTb.objects.get(member_id=trainer_id)
+        except ObjectDoesNotExist:
+            error = '강사 정보를 불러오지 못했습니다.'
     if error is None:
         if auth_cd != AUTH_TYPE_VIEW and auth_cd != AUTH_TYPE_WAIT and auth_cd != AUTH_TYPE_DELETE:
             error = '프로그램 정보를 불러오지 못했습니다.'
@@ -3938,7 +3942,7 @@ def update_share_program_info_logic(request):
         log_data = LogTb(log_type='LP02', auth_member_id=request.user.id,
                          from_member_name=request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=request.user.first_name + '님 에게 \''
+                         log_info=member_info.name + '님 에게 \''
                                   + request.session.get('class_type_name', '') + '\' 프로그램',
                          log_how=log_how, log_detail='', use=USE)
         log_data.save()
@@ -3956,27 +3960,28 @@ class GetShareProgramDataViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         if class_id is None or class_id == '':
             error = '오류가 발생했습니다.'
 
-        program_auth_data = ProgramAuthTb.objects.select_related('class_tb', 'member',
-                                                                 'function_auth_tb').filter(class_tb_id=class_id,
-                                                                                            use=USE)
+        if error is None:
+            program_auth_data = ProgramAuthTb.objects.select_related('class_tb', 'member',
+                                                                     'function_auth_tb').filter(class_tb_id=class_id,
+                                                                                                use=USE)
 
-        for program_auth_info in program_auth_data:
-            if program_auth_info.auth_type_cd is None:
-                function_auth_type_cd_name = str(program_auth_info.function_auth_tb.function_auth_type_cd)
-            else:
-                function_auth_type_cd_name = str(program_auth_info.function_auth_tb.function_auth_type_cd) \
-                                             + str(program_auth_info.auth_type_cd)
+            for program_auth_info in program_auth_data:
+                if program_auth_info.auth_type_cd is None:
+                    function_auth_type_cd_name = str(program_auth_info.function_auth_tb.function_auth_type_cd)
+                else:
+                    function_auth_type_cd_name = str(program_auth_info.function_auth_tb.function_auth_type_cd) \
+                                                 + str(program_auth_info.auth_type_cd)
 
-            try:
-                member_program_auth_list[program_auth_info.member_id]
-            except KeyError:
-                member_program_auth_list[program_auth_info.member_id] = {}
-                member_result = func_get_trainer_info(class_id, program_auth_info.member_id)
-                member_program_auth_list[program_auth_info.member_id]['member_info'] \
-                    = member_result['member_info']
+                try:
+                    member_program_auth_list[program_auth_info.member_id]
+                except KeyError:
+                    member_program_auth_list[program_auth_info.member_id] = {}
+                    member_result = func_get_trainer_info(class_id, program_auth_info.member_id)
+                    member_program_auth_list[program_auth_info.member_id]['member_info'] \
+                        = member_result['member_info']
 
-            member_program_auth_list[program_auth_info.member_id][function_auth_type_cd_name] \
-                = program_auth_info.enable_flag
+                member_program_auth_list[program_auth_info.member_id][function_auth_type_cd_name] \
+                    = program_auth_info.enable_flag
 
         if error is not None:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)

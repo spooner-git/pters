@@ -51,7 +51,7 @@ class Setting_sharing_member_auth{
     set_initial_data (){
         Setting_sharing_member_auth_func.read((data)=>{
             let my_auth = data[this.member_db_id];
-
+            console.log(my_auth);
             this.data.schedule.create = my_auth.auth_plan_create != undefined ? my_auth.auth_plan_create : null;
             this.data.schedule.read = my_auth.auth_plan_read != undefined ? my_auth.auth_plan_read : null;
             this.data.schedule.update = my_auth.auth_plan_update != undefined ? my_auth.auth_plan_update : null;
@@ -73,7 +73,8 @@ class Setting_sharing_member_auth{
             this.data.ticket.delete = my_auth.auth_package_delete != undefined ? my_auth.auth_package_delete : null;
 
             this.data.statistics.read = my_auth.auth_analytics_read != undefined ? my_auth.auth_analytics_read : null;
-
+            this.shared_status = my_auth.member_info.auth_cd;
+            console.log(this.shared_status);
             this.render();
             func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
         });
@@ -325,10 +326,13 @@ class Setting_sharing_member_auth{
         }else if(this.data_sending_now == false){
             this.data_sending_now = true;
         }
-
+        let auth_cd = this.shared_status;
+        if(this.shared_status==AUTH_TYPE_DELETE){
+            auth_cd = AUTH_TYPE_WAIT;
+        }
         let data = {
             "trainer_id": this.member_db_id,
-            "auth_cd": this.shared_status,
+            "auth_cd": auth_cd,
             "auth_plan_create":this.data.schedule.create,
             "auth_plan_read":this.data.schedule.read,
             "auth_plan_update":this.data.schedule.update,
