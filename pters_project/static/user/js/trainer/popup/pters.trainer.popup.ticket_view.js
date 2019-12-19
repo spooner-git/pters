@@ -72,7 +72,7 @@ class Ticket_view{
 
     set period(text){
         this.data.ticket_effective_days = text;
-        this.render_content();
+        // this.render_content();
     }
 
     get period(){
@@ -81,7 +81,7 @@ class Ticket_view{
 
     set memo(text){
         this.data.memo = text;
-        this.render_content();
+        // this.render_content();
     }
 
     get memo(){
@@ -90,7 +90,7 @@ class Ticket_view{
     
     set count(number){
         this.data.count = number;
-        this.render_content();
+        // this.render_content();
     }
 
     get count(){
@@ -99,7 +99,7 @@ class Ticket_view{
 
     set price(number){
         this.data.price = number;
-        this.render_content();
+        // this.render_content();
     }
 
     get price(){
@@ -177,11 +177,16 @@ class Ticket_view{
     dom_assembly_content(){
         let lecture = this.dom_row_lecture_select();
         let lecture_list = this.dom_row_lecture_select_list();
+        let basic_count = this.dom_row_ticket_count_input();
+        let basic_price = this.dom_row_ticket_price_input();
+        let basic_period = this.dom_row_ticket_period_input();
         let memo = this.dom_row_ticket_memo_input();
-        // let member = this.dom_row_member();
         let member_list = this.dom_row_member_list();
 
         let lecture_list_assembly = '<div class="obj_input_box_full">'+CComponent.dom_tag('수업 구성')+lecture+lecture_list+'</div>';
+        let ticket_basic_count_assembly = '<div class="obj_input_box_full">'+CComponent.dom_tag('횟수') +  basic_count +  '</div>';
+        let ticket_basic_period_assembly = '<div class="obj_input_box_full">'+CComponent.dom_tag('유효 기간') +  basic_period + '</div>';
+        let ticket_basic_price_assembly = '<div class="obj_input_box_full">'+CComponent.dom_tag('가격') + basic_price + '</div>';
         let ticket_memo_assembly = '<div class="obj_input_box_full">'+CComponent.dom_tag('설명')+memo+ '</div>';
         let ticket_member_list_assembly = '<div class="obj_input_box_full" style="padding-top:16px;">'+CComponent.dom_tag(`수강권 보유 회원 (${this.data.member_id.length} 명)`, 
                                             {"font-size":"13px", "font-weight":"bold", "letter-spacing":"-0.6px", "padding":"0", "padding-bottom":"8px", "color":"var(--font-sub-normal)", "height":"20px"}) + 
@@ -195,6 +200,9 @@ class Ticket_view{
 
         let html =  lecture_list_assembly +
                     ticket_memo_assembly +
+                    ticket_basic_count_assembly +
+                    ticket_basic_period_assembly +
+                    ticket_basic_price_assembly +
                     ticket_member_list_assembly;
         return html;
     }
@@ -316,13 +324,13 @@ class Ticket_view{
     dom_row_ticket_count_input(){
         let unit = '회';
         let id = 'ticket_count_view';
-        let title = this.data.count == null ? '' : this.data.count+unit;
+        let title = this.data.count == null ? '' : UnitRobot.numberWithCommas(this.data.count) + unit;
         let placeholder = '횟수';
         let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
-        let disabled = true;
+        let disabled = false;
         let pattern = "[0-9]{0,4}";
         let pattern_message = "";
         let required = "";
@@ -340,6 +348,7 @@ class Ticket_view{
             }
             let user_input_data = input_data;
             this.count = user_input_data;
+            this.send_data();
         }, pattern, pattern_message, required);
         return html;
     }
@@ -347,13 +356,13 @@ class Ticket_view{
     dom_row_ticket_price_input(){
         let unit = '원';
         let id = 'ticket_price_view';
-        let title = this.data.price == null ? '' : this.data.price+unit;
+        let title = this.data.price == null ? '' : UnitRobot.numberWithCommas(this.data.price) + unit;
         let placeholder = '가격';
         let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
-        let disabled = true;
+        let disabled = false;
         let pattern = "[0-9]{0,8}";
         let pattern_message = "";
         let required = "";
@@ -371,13 +380,46 @@ class Ticket_view{
             }
             let user_input_data = input_data;
             this.price = user_input_data;
+            this.send_data();
+        }, pattern, pattern_message, required);
+        return html;
+    }
+
+    dom_row_ticket_period_input(){
+        let unit = '일';
+        let id = 'ticket_ticket_effective_days_view';
+        let title = this.data.ticket_effective_days == null ? '' : UnitRobot.numberWithCommas(this.data.ticket_effective_days) + unit;
+        let placeholder = '유효 기간';
+        let icon = NONE;
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
+        let style = null;
+        let disabled = false;
+        let pattern = "[0-9]{0,4}";
+        let pattern_message = "";
+        let required = "";
+        let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
+            let auth_inspect = pass_inspector.ticket_update();
+            if(auth_inspect.barrier == BLOCKED){
+                let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+                this.init();
+                show_error_message(message);
+                return false;
+            }
+
+            if(input_data != '' && input_data != null){
+                input_data = Number(input_data);
+            }
+            let user_input_data = input_data;
+            this.period = user_input_data;
+            this.send_data();
         }, pattern, pattern_message, required);
         return html;
     }
 
     dom_row_ticket_memo_input(){
         let id = 'ticket_memo_view';
-        let title = this.data.memo == null ? '' : this.data.memo;
+        let title = this.data.memo == null || this.data.memo == " " ? '' : this.data.memo;
         let placeholder = '설명';
         let icon = CImg.memo();
         let icon_r_visible = HIDE;
@@ -460,7 +502,6 @@ class Ticket_view{
 
         return html;
     }
-
 
     send_data(){
         if(this.check_before_send() == false){
