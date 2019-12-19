@@ -376,7 +376,7 @@ class Lecture_add{
     send_data(){
         let auth_inspect = pass_inspector.lecture_create();
         if(auth_inspect.barrier == BLOCKED){
-            let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+            let message = `${auth_inspect.limit_type}`;
             this.init();
             show_error_message(message);
             return false;

@@ -592,7 +592,7 @@
             case 'calendar':
                 auth_inspect = pass_inspector.schedule_read();
                 if(auth_inspect.barrier == BLOCKED){
-                    let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+                    let message = `${auth_inspect.limit_type}`;
                     show_error_message(message);
                     return false;
                 }
@@ -603,7 +603,7 @@
             case 'ticket_page_type':
                 auth_inspect = pass_inspector.ticket_read();
                 if(auth_inspect.barrier == BLOCKED){
-                    let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+                    let message = `${auth_inspect.limit_type}`;
                     show_error_message(message);
                     return false;
                 }
@@ -614,7 +614,7 @@
             case 'lecture_page_type':
                 auth_inspect = pass_inspector.lecture_read();
                 if(auth_inspect.barrier == BLOCKED){
-                    let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+                    let message = `${auth_inspect.limit_type}`;
                     show_error_message(message);
                     return false;
                 }
@@ -625,7 +625,7 @@
             case 'member':
                 auth_inspect = pass_inspector.member_read();
                 if(auth_inspect.barrier == BLOCKED){
-                    let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+                    let message = `${auth_inspect.limit_type}`;
                     show_error_message(message);
                     return false;
                 }
@@ -719,7 +719,7 @@
                 open = ()=>{
                     auth_inspect = pass_inspector.ticket_read();
                     if(auth_inspect.barrier == BLOCKED){
-                        let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+                        let message = `${auth_inspect.limit_type}`;
                         show_error_message(message);
                         return false;
                     }
@@ -732,7 +732,7 @@
                 open = ()=>{
                     auth_inspect = pass_inspector.lecture_read();
                     if(auth_inspect.barrier == BLOCKED){
-                        let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+                        let message = `${auth_inspect.limit_type}`;
                         show_error_message(message);
                         return false;
                     }
@@ -745,7 +745,7 @@
                 open = ()=>{
                     auth_inspect = pass_inspector.program_read();
                     if(auth_inspect.barrier == BLOCKED){
-                        let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+                        let message = `${auth_inspect.limit_type}`;
                         show_error_message(message);
                         return false;
                     }
@@ -877,7 +877,7 @@
                 open = ()=>{
                     let auth_inspect = pass_inspector.statistics_read();
                     if(auth_inspect.barrier == BLOCKED){
-                        let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+                        let message = `${auth_inspect.limit_type}`;
                         show_error_message(message);
                         return false;
                     }

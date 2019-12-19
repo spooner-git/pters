@@ -705,7 +705,7 @@ class Plan_view{
             ()=>{ show_user_confirm(`정말 ${this.data.schedule_type != "0" ? this.data.lecture_name : 'OFF'} 일정을 취소하시겠습니까?`, ()=>{
                     let inspect = pass_inspector.schedule_delete();
                     if(inspect.barrier == BLOCKED){
-                        let message = `현재 프로그램의 ${inspect.limit_type}`;
+                        let message = `${inspect.limit_type}`;
                         layer_popup.close_layer_popup();
                         show_error_message(message);
                         return false;
@@ -842,7 +842,7 @@ class Plan_view{
         if(this.if_user_changed_any_information == true){
             let inspect = pass_inspector.schedule_update();
             if(inspect.barrier == BLOCKED){
-                let message = `현재 프로그램의 ${inspect.limit_type}`;
+                let message = `${inspect.limit_type}`;
                 layer_popup.close_layer_popup();
                 this.clear();
                 show_error_message(message);

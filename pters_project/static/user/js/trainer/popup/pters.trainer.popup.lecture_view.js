@@ -218,7 +218,7 @@ class Lecture_view{
         let sub_html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let auth_inspect = pass_inspector.lecture_update();
             if(auth_inspect.barrier == BLOCKED){
-                let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+                let message = `${auth_inspect.limit_type}`;
                 this.init();
                 show_error_message(message);
                 return false;
@@ -262,7 +262,7 @@ class Lecture_view{
                 if(this.data.capacity != null){
                     let auth_inspect = pass_inspector.lecture_update();
                     if(auth_inspect.barrier == BLOCKED){
-                        let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+                        let message = `${auth_inspect.limit_type}`;
                         this.init();
                         show_error_message(message);
                         return false;
@@ -286,7 +286,7 @@ class Lecture_view{
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let auth_inspect = pass_inspector.lecture_update();
             if(auth_inspect.barrier == BLOCKED){
-                let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+                let message = `${auth_inspect.limit_type}`;
                 this.init();
                 show_error_message(message);
                 return false;
@@ -345,7 +345,7 @@ class Lecture_view{
         let onfocusout = (user_input_data)=>{
             let auth_inspect = pass_inspector.lecture_update();
             if(auth_inspect.barrier == BLOCKED){
-                let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+                let message = `${auth_inspect.limit_type}`;
                 this.init();
                 show_error_message(message);
                 return false;
@@ -381,7 +381,7 @@ class Lecture_view{
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             let auth_inspect = pass_inspector.lecture_update();
             if(auth_inspect.barrier == BLOCKED){
-                let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+                let message = `${auth_inspect.limit_type}`;
                 this.init();
                 show_error_message(message);
                 return false;
@@ -437,7 +437,7 @@ class Lecture_view{
                 CComponent.text_button(ticket_id, ticket_name, style, ()=>{
                     let auth_inspect = pass_inspector.ticket_read();
                     if(auth_inspect.barrier == BLOCKED){
-                        let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+                        let message = `${auth_inspect.limit_type}`;
                         this.init();
                         show_error_message(message);
                         return false;
@@ -514,7 +514,7 @@ class Lecture_view{
     event_member_view(member_id){
         let auth_inspect = pass_inspector.member_read();
         if(auth_inspect.barrier == BLOCKED){
-            let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+            let message = `${auth_inspect.limit_type}`;
             this.init();
             show_error_message(message);
             return false;
@@ -561,7 +561,7 @@ class Lecture_view{
             activate:{text:"활성화", callback:()=>{
                     let auth_inspect = pass_inspector.lecture_update();
                     if(auth_inspect.barrier == BLOCKED){
-                        let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+                        let message = `${auth_inspect.limit_type}`;
                         this.init();
                         show_error_message(message);
                         return false;
@@ -613,7 +613,7 @@ class Lecture_view{
             deactivate:{text:"비활성화", callback:()=>{
                     let auth_inspect = pass_inspector.lecture_update();
                     if(auth_inspect.barrier == BLOCKED){
-                        let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+                        let message = `${auth_inspect.limit_type}`;
                         this.init();
                         show_error_message(message);
                         return false;
@@ -642,7 +642,7 @@ class Lecture_view{
             delete:{text:"삭제", callback:()=>{
                     let auth_inspect = pass_inspector.lecture_delete();
                     if(auth_inspect.barrier == BLOCKED){
-                        let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+                        let message = `${auth_inspect.limit_type}`;
                         this.init();
                         show_error_message(message);
                         return false;
