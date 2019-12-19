@@ -175,6 +175,11 @@ class GetLectureMemberScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, 
                                      use=USE).order_by('start_dt')
 
             for lecture_schedule_info in lecture_schedule_data:
+                mod_member_id = ''
+                mod_member_name = ''
+                if lecture_schedule_info.mod_member is not None and lecture_schedule_info.mod_member != '':
+                    mod_member_id = lecture_schedule_info.mod_member_id
+                    mod_member_name = lecture_schedule_info.mod_member.name
                 schedule_info = {'schedule_id': lecture_schedule_info.schedule_id,
                                  'member_name': lecture_schedule_info.member_ticket_tb.member.name,
                                  'schedule_type': GROUP_SCHEDULE,
@@ -184,6 +189,8 @@ class GetLectureMemberScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, 
                                  'note': lecture_schedule_info.note,
                                  'reg_member_id': lecture_schedule_info.reg_member_id,
                                  'reg_member_name': lecture_schedule_info.reg_member.name,
+                                 'mod_member_id': mod_member_id,
+                                 'mod_member_name': mod_member_name,
                                  'mod_dt': lecture_schedule_info.mod_dt,
                                  'reg_dt': lecture_schedule_info.reg_dt,
                                  'daily_record_id': lecture_schedule_info.daily_record_tb_id
@@ -311,6 +318,11 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
         for off_repeat_schedule_info in off_repeat_schedule_data:
             week_data = off_repeat_schedule_info.week_info.split('/')
             week_data = sorted(week_data, key=lambda week_info: week_order.get(week_info))
+            mod_member_id = ''
+            mod_member_name = ''
+            if off_repeat_schedule_info.mod_member is not None and off_repeat_schedule_info.mod_member != '':
+                mod_member_id = off_repeat_schedule_info.mod_member_id
+                mod_member_name = off_repeat_schedule_info.mod_member.name
             off_repeat_schedule = {
                 'repeat_schedule_id': off_repeat_schedule_info.repeat_schedule_id,
                 'repeat_type_cd': off_repeat_schedule_info.repeat_type_cd,
@@ -323,6 +335,8 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
                 'state_cd': off_repeat_schedule_info.state_cd,
                 'reg_member_id': off_repeat_schedule_info.reg_member_id,
                 'reg_member_name': off_repeat_schedule_info.reg_member.name,
+                'mod_member_id': mod_member_id,
+                'mod_member_name': mod_member_name,
                 'mod_dt': str(off_repeat_schedule_info.mod_dt),
                 'reg_dt': str(off_repeat_schedule_info.reg_dt)
             }
@@ -337,6 +351,11 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
             week_data = member_repeat_schedule_info.week_info.split('/')
             week_data = sorted(week_data, key=lambda week_info: week_order.get(week_info))
 
+            mod_member_id = ''
+            mod_member_name = ''
+            if member_repeat_schedule_info.mod_member is not None and member_repeat_schedule_info.mod_member != '':
+                mod_member_id = member_repeat_schedule_info.mod_member_id
+                mod_member_name = member_repeat_schedule_info.mod_member.name
             member_repeat_schedule = {
                 'repeat_schedule_id': member_repeat_schedule_info.repeat_schedule_id,
                 'repeat_type_cd': member_repeat_schedule_info.repeat_type_cd,
@@ -349,6 +368,8 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
                 'repeat_state_cd': member_repeat_schedule_info.state_cd,
                 'reg_member_id': member_repeat_schedule_info.reg_member_id,
                 'reg_member_name': member_repeat_schedule_info.reg_member.name,
+                'mod_member_id': mod_member_id,
+                'mod_member_name': mod_member_name,
                 'mod_dt': str(member_repeat_schedule_info.mod_dt),
                 'reg_dt': str(member_repeat_schedule_info.reg_dt),
                 'lecture_ing_color_cd': member_lecture_ing_color_cd,
@@ -366,6 +387,11 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
             week_data = lecture_repeat_schedule_info.week_info.split('/')
             week_data = sorted(week_data, key=lambda week_info: week_order.get(week_info))
 
+            mod_member_id = ''
+            mod_member_name = ''
+            if lecture_repeat_schedule_info.mod_member is not None and lecture_repeat_schedule_info.mod_member != '':
+                mod_member_id = lecture_repeat_schedule_info.mod_member_id
+                mod_member_name = lecture_repeat_schedule_info.mod_member.name
             lecture_member_repeat_schedule_ordered_dict[lecture_repeat_schedule_info.repeat_schedule_id] = {
                 'repeat_schedule_id': lecture_repeat_schedule_info.repeat_schedule_id,
                 'repeat_type_cd': lecture_repeat_schedule_info.repeat_type_cd,
@@ -378,6 +404,8 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
                 'state_cd': lecture_repeat_schedule_info.state_cd,
                 'reg_member_id': lecture_repeat_schedule_info.reg_member_id,
                 'reg_member_name': lecture_repeat_schedule_info.reg_member.name,
+                'mod_member_id': mod_member_id,
+                'mod_member_name': mod_member_name,
                 'mod_dt': str(lecture_repeat_schedule_info.mod_dt),
                 'reg_dt': str(lecture_repeat_schedule_info.reg_dt),
                 'lecture_id': lecture_repeat_schedule_info.lecture_tb.lecture_id,
@@ -400,6 +428,11 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
             week_data = lecture_member_repeat_schedule_info.week_info.split('/')
             week_data = sorted(week_data, key=lambda week_info: week_order.get(week_info))
 
+            mod_member_id = ''
+            mod_member_name = ''
+            if lecture_member_repeat_schedule_info.mod_member is not None and lecture_member_repeat_schedule_info.mod_member != '':
+                mod_member_id = lecture_member_repeat_schedule_info.mod_member_id
+                mod_member_name = lecture_member_repeat_schedule_info.mod_member.name
             lecture_member_repeat_schedule_dict = {
                 'repeat_schedule_id': lecture_member_repeat_schedule_info.repeat_schedule_id,
                 'repeat_type_cd': lecture_member_repeat_schedule_info.repeat_type_cd,
@@ -412,6 +445,8 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
                 'state_cd': lecture_member_repeat_schedule_info.state_cd,
                 'reg_member_id': lecture_member_repeat_schedule_info.reg_member_id,
                 'reg_member_name': lecture_member_repeat_schedule_info.reg_member.name,
+                'mod_member_id': mod_member_id,
+                'mod_member_name': mod_member_name,
                 'mod_dt': str(lecture_member_repeat_schedule_info.mod_dt),
                 'reg_dt': str(lecture_member_repeat_schedule_info.reg_dt),
                 'member_id': lecture_member_repeat_schedule_info.member_ticket_tb.member.member_id,
@@ -438,6 +473,11 @@ class GetOffRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, View):
         off_repeat_schedule_data = RepeatScheduleTb.objects.select_related('reg_member').filter(class_tb_id=class_id, en_dis_type=OFF_SCHEDULE_TYPE)
 
         for off_repeat_schedule_info in off_repeat_schedule_data:
+            mod_member_id = ''
+            mod_member_name = ''
+            if off_repeat_schedule_info.mod_member is not None and off_repeat_schedule_info.mod_member != '':
+                mod_member_id = off_repeat_schedule_info.mod_member_id
+                mod_member_name = off_repeat_schedule_info.mod_member.name
             off_repeat_schedule = {'repeat_schedule_id': off_repeat_schedule_info.repeat_schedule_id,
                                    'repeat_type_cd': off_repeat_schedule_info.repeat_type_cd,
                                    'start_date': off_repeat_schedule_info.start_date,
@@ -448,6 +488,8 @@ class GetOffRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, View):
                                    'state_cd': off_repeat_schedule_info.state_cd,
                                    'reg_member_id': off_repeat_schedule_info.reg_member_id,
                                    'reg_member_name': off_repeat_schedule_info.reg_member.name,
+                                   'mod_member_id': mod_member_id,
+                                   'mod_member_name': mod_member_name,
                                    'mod_dt': str(off_repeat_schedule_info.mod_dt),
                                    'reg_dt': str(off_repeat_schedule_info.reg_dt)}
             off_repeat_schedule_list.append(off_repeat_schedule)
@@ -477,6 +519,11 @@ class GetLectureRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, 
 
             for lecture_repeat_schedule_info in lecture_repeat_schedule_data:
 
+                mod_member_id = ''
+                mod_member_name = ''
+                if lecture_repeat_schedule_info.mod_member is not None and lecture_repeat_schedule_info.mod_member != '':
+                    mod_member_id = lecture_repeat_schedule_info.mod_member_id
+                    mod_member_name = lecture_repeat_schedule_info.mod_member.name
                 lecture_repeat_schedule = {'repeat_schedule_id': lecture_repeat_schedule_info.repeat_schedule_id,
                                            'repeat_type_cd': lecture_repeat_schedule_info.repeat_type_cd,
                                            'start_date': lecture_repeat_schedule_info.start_date,
@@ -489,6 +536,8 @@ class GetLectureRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, 
                                                lecture_repeat_schedule_info.lecture_repeat_schedule_id,
                                            'reg_member_id': lecture_repeat_schedule_info.reg_member_id,
                                            'reg_member_name': lecture_repeat_schedule_info.reg_member.name,
+                                           'mod_member_id': mod_member_id,
+                                           'mod_member_name': mod_member_name,
                                            'mod_dt': str(lecture_repeat_schedule_info.mod_dt),
                                            'reg_dt': str(lecture_repeat_schedule_info.reg_dt)}
                 lecture_repeat_schedule_list.append(lecture_repeat_schedule)
@@ -541,6 +590,11 @@ class GetMemberRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, View):
                     lecture_max_member_num = ''
                     # lecture_max_member_num_view_flag = ''
 
+                mod_member_id = ''
+                mod_member_name = ''
+                if member_repeat_schedule_info.mod_member is not None and member_repeat_schedule_info.mod_member != '':
+                    mod_member_id = member_repeat_schedule_info.mod_member_id
+                    mod_member_name = member_repeat_schedule_info.mod_member.name
                 member_repeat_schedule = {'repeat_schedule_id': member_repeat_schedule_info.repeat_schedule_id,
                                           'repeat_type_cd': member_repeat_schedule_info.repeat_type_cd,
                                           'start_date': member_repeat_schedule_info.start_date,
@@ -551,6 +605,8 @@ class GetMemberRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, View):
                                           'state_cd': member_repeat_schedule_info.state_cd,
                                           'reg_member_id': member_repeat_schedule_info.reg_member_id,
                                           'reg_member_name': member_repeat_schedule_info.reg_member.name,
+                                          'mod_member_id': mod_member_id,
+                                          'mod_member_name': mod_member_name,
                                           'mod_dt': str(member_repeat_schedule_info.mod_dt),
                                           'reg_dt': str(member_repeat_schedule_info.reg_dt),
                                           'lecture_repeat_schedule_id':
@@ -4566,6 +4622,7 @@ def update_setting_calendar_setting_logic(request):
     setting_calendar_time_selector_type = request.POST.get('setting_calendar_time_selector_type',
                                                            CALENDAR_TIME_SELECTOR_BASIC)
     setting_week_start_date = request.POST.get('setting_week_start_date', 'SUN')
+    setting_schedule_sign_enable = request.POST.get('setting_schedule_sign_enable', USE)
     class_id = request.session.get('class_id', '')
 
     if setting_calendar_basic_select_time is None or setting_calendar_basic_select_time == '':
@@ -4574,10 +4631,13 @@ def update_setting_calendar_setting_logic(request):
         setting_calendar_time_selector_type = CALENDAR_TIME_SELECTOR_BASIC
     if setting_week_start_date is None or setting_week_start_date == '':
         setting_week_start_date = 'SUN'
+    if setting_schedule_sign_enable is None or setting_schedule_sign_enable == '':
+        setting_schedule_sign_enable = USE
 
-    setting_type_cd_data = ['LT_CALENDAR_BASIC_SETTING_TIME', 'LT_CALENDAR_TIME_SELECTOR_TYPE', 'LT_WEEK_START_DATE']
+    setting_type_cd_data = ['LT_CALENDAR_BASIC_SETTING_TIME', 'LT_CALENDAR_TIME_SELECTOR_TYPE',
+                            'LT_WEEK_START_DATE', 'SCHEDULE_SIGN_ENABLE']
     setting_info_data = [setting_calendar_basic_select_time, setting_calendar_time_selector_type,
-                         setting_week_start_date]
+                         setting_week_start_date, setting_schedule_sign_enable]
 
     error = update_program_setting_data(class_id, setting_type_cd_data, setting_info_data)
 
@@ -4585,6 +4645,7 @@ def update_setting_calendar_setting_logic(request):
         request.session['setting_calendar_basic_select_time'] = setting_calendar_basic_select_time
         request.session['setting_calendar_time_selector_type'] = setting_calendar_time_selector_type
         request.session['setting_week_start_date'] = setting_week_start_date
+        request.session['setting_schedule_sign_enable'] = setting_schedule_sign_enable
 
     else:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
@@ -5162,29 +5223,6 @@ def update_attend_mode_setting_logic(request):
         messages.error(request, error)
 
     return render(request, 'ajax/trainer_error_ajax.html')
-
-
-# 강사 일정 관련 setting 업데이트 api
-def update_setting_schedule_logic(request):
-    setting_schedule_sign_enable = request.POST.get('setting_schedule_sign_enable', USE)
-    class_id = request.session.get('class_id', '')
-    # next_page = request.POST.get('next_page', '/trainer/attend_mode/')
-
-    if setting_schedule_sign_enable is None or setting_schedule_sign_enable == '':
-        setting_schedule_sign_enable = USE
-
-    setting_type_cd_data = ['SCHEDULE_SIGN_ENABLE']
-    setting_info_data = [setting_schedule_sign_enable]
-    error = update_program_setting_data(class_id, setting_type_cd_data, setting_info_data)
-
-    if error is None:
-        request.session['setting_schedule_sign_enable'] = setting_schedule_sign_enable
-    else:
-        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
-        messages.error(request, error)
-
-    return render(request, 'ajax/trainer_error_ajax.html')
-
 
 #
 def check_admin_password_logic(request):
