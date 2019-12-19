@@ -135,10 +135,20 @@ class Ticket_add{
         let lecture_list = this.dom_row_lecture_select_list();
         let count = this.dom_row_ticket_count_input();
         let price = this.dom_row_ticket_price_input();
+        let period = this.dom_row_ticket_period_input();
         let memo = this.dom_row_ticket_memo_input();
 
         let html =  '<div class="obj_input_box_full">' + CComponent.dom_tag('수강권명') + name + '</div>' +
                     '<div class="obj_input_box_full">' + CComponent.dom_tag('수업 구성') + lecture + lecture_list + '</div>' +
+                    '<div class="obj_input_box_full">' + 
+                        CComponent.dom_tag('횟수') + 
+                        count + `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>` +
+                        CComponent.dom_tag('유효기간') + 
+                        period + `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>` +
+                        CComponent.dom_tag('가격') + 
+                        price + `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>` +
+                    
+                    '</div>' +
                     '<div class="obj_input_box_full">' + CComponent.dom_tag('설명') + memo + '</div>';
 
         // document.getElementById(this.target.content).innerHTML = html;
@@ -220,18 +230,26 @@ class Ticket_add{
 
     dom_row_ticket_count_input(){
         let unit = '회';
-        let id = 'input_ticket_count';
-        let title = this.data.count == null ? '' : this.data.count+unit;
+        let id = 'ticket_count_view';
+        let title = this.data.count == null ? '' : UnitRobot.numberWithCommas(this.data.count) + unit;
         let placeholder = '횟수';
         let icon = NONE;
         let icon_r_visible = HIDE;
-        let icon_r_text;
+        let icon_r_text = "";
         let style = null;
         let disabled = false;
-        let pattern = '[0-9]{0,4}';
+        let pattern = "[0-9]{0,4}";
         let pattern_message = "";
         let required = "";
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
+            let auth_inspect = pass_inspector.ticket_update();
+            if(auth_inspect.barrier == BLOCKED){
+                let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+                this.init();
+                show_error_message(message);
+                return false;
+            }
+
             if(input_data != '' && input_data != null){
                 input_data = Number(input_data);
             }
@@ -243,23 +261,62 @@ class Ticket_add{
 
     dom_row_ticket_price_input(){
         let unit = '원';
-        let id = 'input_ticket_price';
-        let title = this.data.price == null ? '' : this.data.price+unit;
+        let id = 'ticket_price_view';
+        let title = this.data.price == null ? '' : UnitRobot.numberWithCommas(this.data.price) + unit;
         let placeholder = '가격';
         let icon = NONE;
         let icon_r_visible = HIDE;
-        let icon_r_text;
+        let icon_r_text = "";
         let style = null;
         let disabled = false;
         let pattern = "[0-9]{0,8}";
         let pattern_message = "";
         let required = "";
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
+            let auth_inspect = pass_inspector.ticket_update();
+            if(auth_inspect.barrier == BLOCKED){
+                let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+                this.init();
+                show_error_message(message);
+                return false;
+            }
+
             if(input_data != '' && input_data != null){
                 input_data = Number(input_data);
             }
             let user_input_data = input_data;
             this.price = user_input_data;
+        }, pattern, pattern_message, required);
+        return html;
+    }
+
+    dom_row_ticket_period_input(){
+        let unit = '일';
+        let id = 'ticket_ticket_effective_days_view';
+        let title = this.data.ticket_effective_days == null ? '' : UnitRobot.numberWithCommas(this.data.ticket_effective_days) + unit;
+        let placeholder = '유효 기간';
+        let icon = NONE;
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
+        let style = null;
+        let disabled = false;
+        let pattern = "[0-9]{0,4}";
+        let pattern_message = "";
+        let required = "";
+        let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
+            let auth_inspect = pass_inspector.ticket_update();
+            if(auth_inspect.barrier == BLOCKED){
+                let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+                this.init();
+                show_error_message(message);
+                return false;
+            }
+
+            if(input_data != '' && input_data != null){
+                input_data = Number(input_data);
+            }
+            let user_input_data = input_data;
+            this.period = user_input_data;
         }, pattern, pattern_message, required);
         return html;
     }
@@ -330,9 +387,9 @@ class Ticket_add{
         let data = {
                     "ticket_name":this.data.name,
                     "lecture_id_list[]":this.data.lecture_id,
-                    // "ticket_effective_days":30,
-                    // "ticket_reg_count":this.data.count,
-                    // "ticket_price":this.data.price,
+                    "ticket_effective_days":this.data.ticket_effective_days,
+                    "ticket_reg_count":this.data.count,
+                    "ticket_price":this.data.price,
                     "ticket_note":this.data.memo,
                     "ticket_week_schedule_enable":7, //주간 수강 제한 횟수
                     "ticket_day_schedule_enable":1  //일일 수강 제한 횟수

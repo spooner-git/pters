@@ -29,8 +29,8 @@ class Member_add{
                 ticket_id:[],
                 ticket_name:[],
                 ticket_effective_days:[],
-                ticket_reg_count:null,
-                ticket_price:null,
+                ticket_reg_count:[],
+                ticket_price:[],
                 start_date:null,
                 start_date_text:null,
                 end_date:null,
@@ -117,15 +117,33 @@ class Member_add{
         this.data.ticket_id = data.id;
         this.data.ticket_name = data.name;
         this.data.ticket_effective_days = data.effective_days;
+        this.data.ticket_reg_count = data.reg_count;
+        this.data.ticket_price = data.reg_price;
+
+        //시작일자가 없는 경우 오늘로 셋팅
+        if(this.data.start_date == null){
+            this.data.start_date = {year: this.dates.current_year, month:this.dates.current_month, date:this.dates.current_date};
+            this.data.start_date_text = DateRobot.to_text(this.data.start_date.year, this.data.start_date.month, this.data.start_date.date, SHORT); 
+        }
+        //종료일자를 수강권의 기본 유효기간 만큼 시작일자에 더한 날짜로
+        let end_date = DateRobot.to_yyyymmdd(this.start_date.year, this.start_date.month, this.start_date.date);
+        let new_date = DateRobot.add_date(end_date, data.effective_days[0]);
+        let new_date_year = new_date.split('-')[0];
+        let new_date_month = new_date.split('-')[1];
+        let new_date_date = new_date.split('-')[2];
+
+        this.data.end_date = {year:Number(new_date_year), month:Number(new_date_month), date:Number(new_date_date)};
+        this.data.end_date_text = DateRobot.to_text(new_date_year, new_date_month, new_date_date, SHORT);
+
         this.render_content();
     }
 
     get ticket(){
-        return {id:this.data.ticket_id, name:this.data.ticket_name, effective_days: this.data.ticket_effective_days};
+        return {id:this.data.ticket_id, name:this.data.ticket_name, effective_days: this.data.ticket_effective_days, reg_count:this.data.reg_count, reg_price:this.data.reg_price};
     }
 
     set reg_count(number){
-        this.data.ticket_reg_count = number;
+        this.data.ticket_reg_count = [number];
         this.render_content();
     }
 
@@ -134,7 +152,7 @@ class Member_add{
     }
 
     set reg_price(number){
-        this.data.ticket_price = number;
+        this.data.ticket_price = [number];
         this.render_content();
     }
 
@@ -604,7 +622,7 @@ class Member_add{
     dom_row_member_reg_count_input(){
         let unit = '회';
         let id = 'input_reg_count';
-        let title = this.data.ticket_reg_count == null ? '' : this.data.ticket_reg_count;
+        let title = this.data.ticket_reg_count.length == 0 ? '' : this.data.ticket_reg_count;
         let placeholder = '횟수*';
         let icon = NONE;
         let icon_r_visible = HIDE;
@@ -626,7 +644,7 @@ class Member_add{
     dom_row_member_reg_price_input(){
         let unit = '원';
         let id = 'input_reg_price';
-        let title = this.data.ticket_price == null ? '' : UnitRobot.numberWithCommas(this.data.ticket_price);
+        let title = this.data.ticket_price.length == 0 ? '' : UnitRobot.numberWithCommas(this.data.ticket_price);
         let placeholder = '가격';
         let icon = NONE;
         let icon_r_visible = HIDE;
@@ -691,16 +709,6 @@ class Member_add{
         let recontract = this.data_from_external == null ? OFF : ON;
         let inspect = pass_inspector.member(recontract);
         if(inspect.barrier == BLOCKED){
-            // let id = "go_to_shop";
-            // let title = "패스 구매";
-            // let style = {"display":"inline-block", "background-color":"var(--bg-highlight)", "border-radius":"2px", "margin-top":"15px"};
-            // let onclick = ()=>{
-            //     layer_popup.all_close_layer_popup();
-            //     sideGoPopup("pters_pass_main");
-            // };
-            // let go_to_shop_button = `<div>${CComponent.button (id, title, style, onclick)}</div>`;
-            // show_error_message(`[${inspect.limit_type}] 이용자께서는 회원을 최대 ${inspect.limit_num}명까지 등록하실 수 있습니다.${go_to_shop_button}`);
-
             this.data_sending_now = false;
             let message = `[${inspect.limit_type}] 이용자께서는 회원을 최대 ${inspect.limit_num}명까지 등록하실 수 있습니다.
                             <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까??</p>`;
@@ -728,8 +736,8 @@ class Member_add{
                     "ticket_id":this.data.ticket_id[0],
                     "start_date": DateRobot.to_yyyymmdd(this.data.start_date.year, this.data.start_date.month, this.data.start_date.date),
                     "end_date":DateRobot.to_yyyymmdd(this.data.end_date.year, this.data.end_date.month, this.data.end_date.date),
-                    "counts":this.data.ticket_reg_count,
-                    "price":this.data.ticket_price
+                    "counts":this.data.ticket_reg_count[0],
+                    "price":this.data.ticket_price[0]
         };
 
         let data_for_re = {
@@ -738,8 +746,8 @@ class Member_add{
             "ticket_id":this.data.ticket_id[0],
             "start_date": DateRobot.to_yyyymmdd(this.data.start_date.year, this.data.start_date.month, this.data.start_date.date),
             "end_date":DateRobot.to_yyyymmdd(this.data.end_date.year, this.data.end_date.month, this.data.end_date.date),
-            "counts":this.data.ticket_reg_count,
-            "price":this.data.ticket_price
+            "counts":this.data.ticket_reg_count[0],
+            "price":this.data.ticket_price[0]
         };
 
         if(this.data_from_external == null){ //신규 회원 등록

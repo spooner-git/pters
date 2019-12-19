@@ -2661,6 +2661,7 @@ class TicketSelector{
         if(length == 0){
             html_to_join.push(CComponent.no_data_row('수업 목록이 비어있습니다.'));
         }
+
         for(let i=0; i<length; i++){
             let data = this.received_data[i];
             let ticket_id = data.ticket_id;
@@ -3797,7 +3798,7 @@ class DatePickerSelector{
                     $(document).off('click', `#calendar_cell_${data_date}`).on('click', `#calendar_cell_${data_date}`, ()=>{
                         if(date_compare != true){
                             let date = Number(data_date.split('-')[2]);
-                            this.dataset = {data:{year:reference_date_year, month:reference_date_month, date}};
+                            this.dataset = {data:{year:reference_date_year, month:reference_date_month, date:date}};
                             this.option.callback_when_set(this.store); 
                             layer_popup.close_layer_popup();
                         }else{
