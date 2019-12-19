@@ -313,6 +313,7 @@ class Home {
             let end_date = data.current_member_data[i].end_date;
             let diff_date = DateRobot.diff_date(end_date, this.today);
             let rem_count = data.current_member_data[i].member_ticket_rem_count;
+            let reg_count = data.current_member_data[i].member_ticket_reg_count;
             if(diff_date > 7 && rem_count > 3){
                 passed_number++;
                 continue;
@@ -330,6 +331,10 @@ class Home {
                 date_info = Math.abs(diff_date) + ' 일 지남';
             }
             let rem_info = `잔여 ${rem_count}회`;
+
+            if(reg_count == 99999){
+                rem_info = "무제한";
+            }
 
             if(rem_count <= 3){
                 rem_info = `<span style='color:#ff0022;'>${rem_info}</span>`;

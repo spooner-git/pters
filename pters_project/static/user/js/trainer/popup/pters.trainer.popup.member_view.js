@@ -5,6 +5,8 @@ class Member_view{
         this.member_id = member_id;
         this.form_id = 'id_member_view_form';
 
+        this.if_user_changed_any_information = false;
+
         let d = new Date();
         this.dates = {
             current_year: d.getFullYear(),
@@ -229,7 +231,8 @@ class Member_view{
                     let ticket_end_date_of_this_member = member_ticket_list[i].member_ticket_end_date;
                     let ticket_refund_date_of_this_member = member_ticket_list[i].member_ticket_refund_date;
                     let ticket_refund_price_of_this_member = member_ticket_list[i].member_ticket_refund_price;
-                    let ticket_remain_date = Math.round((new Date(ticket_end_date_of_this_member).getTime() - new Date().getTime()) / (1000*60*60*24));
+                    // let ticket_remain_date = Math.round((new Date(ticket_end_date_of_this_member).getTime() - new Date().getTime()) / (1000*60*60*24));
+                    let ticket_remain_date = DateRobot.diff_date(ticket_end_date_of_this_member, `${this.dates.current_year}-${this.dates.current_month}-${this.dates.current_date}`);
                     let ticket_pay_method = member_ticket_list[i].member_ticket_pay_method;
                     let ticket_remain_alert_text = "";
                     if(ticket_remain_date < 0){
@@ -278,7 +281,7 @@ class Member_view{
     }
 
     render(){
-        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();member_view_popup.clear();">${CImg.arrow_left()}</span>`;
+        let top_left = `<span class="icon_left" onclick="member_view_popup.upper_left_menu();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
         let top_right = `<span class="icon_right" onclick="member_view_popup.upper_right_menu();">${CImg.more()}</span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
@@ -347,7 +350,8 @@ class Member_view{
         let sub_html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.name = user_input_data;
-            this.send_data();
+            // this.send_data();
+            this.if_user_changed_any_information = true;
         }, pattern, pattern_message, required);
         
         let html = `
@@ -493,7 +497,8 @@ class Member_view{
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.phone = user_input_data;
-            this.send_data();
+            // this.send_data();
+            this.if_user_changed_any_information = true;
         }, pattern, pattern_message, required);
         return html;
     }
@@ -529,7 +534,8 @@ class Member_view{
                                                                                                 range:{start: this.dates.current_year - 90, end: this.dates.current_year}, 
                                                                                                 callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
                                                                                                     this.birth = object; 
-                                                                                                    this.send_data();
+                                                                                                    // this.send_data();
+                                                                                                    this.if_user_changed_any_information = true;
                                                                                                     //셀렉터에서 선택된 값(object)을 this.data_to_send에 셋팅하고 rerender 한다.
                                                                                                 }});
                 
@@ -556,9 +562,14 @@ class Member_view{
                 return false;
             }
 
+            // let user_option = {
+            //                     male:{text:"남성", callback:()=>{this.sex = "M";this.send_data();layer_popup.close_layer_popup();}},
+            //                     female:{text:"여성", callback:()=>{this.sex = "W";this.send_data();layer_popup.close_layer_popup();}}
+            // };
+
             let user_option = {
-                                male:{text:"남성", callback:()=>{this.sex = "M";this.send_data();layer_popup.close_layer_popup();}},
-                                female:{text:"여성", callback:()=>{this.sex = "W";this.send_data();layer_popup.close_layer_popup();}}
+                male:{text:"남성", callback:()=>{this.sex = "M";this.if_user_changed_any_information = true;layer_popup.close_layer_popup();}},
+                female:{text:"여성", callback:()=>{this.sex = "W";this.if_user_changed_any_information = true;layer_popup.close_layer_popup();}}
             };
 
             let options_padding_top_bottom = 16;
@@ -791,6 +802,33 @@ class Member_view{
         });
     }
 
+    upper_left_menu(){
+        if(this.if_user_changed_any_information == true){
+            let inspect = pass_inspector.member_update();
+            if(inspect.barrier == BLOCKED){
+                let message = `${inspect.limit_type}`;
+                layer_popup.close_layer_popup();
+                this.clear();
+                show_error_message(message);
+                return false;
+            }
+            
+            let user_option = {
+                confirm:{text:"변경사항 적용", callback:()=>{this.send_data();layer_popup.close_layer_popup();layer_popup.close_layer_popup();this.clear();}},
+                cancel:{text:"아무것도 변경하지 않음", callback:()=>{ layer_popup.close_layer_popup();layer_popup.close_layer_popup();this.clear();}}
+            };
+            let options_padding_top_bottom = 16;
+            let button_height = 8 + 8 + 52;
+            let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
+            let root_content_height = $root_content.height();
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
+                option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+            });
+        }else{
+            layer_popup.close_layer_popup();this.clear();
+        }
+    }
+
     upper_right_menu(){
         let user_option = {
             
@@ -961,7 +999,7 @@ class Member_simple_view{
                 member_ticket_list.sort(function(a, b){
                     let return_val = 0;
                     if(a.member_ticket_start_date < b.member_ticket_start_date){
-                      return_val = -1;
+                        return_val = -1;
                     }
                     else if(a.member_ticket_start_date > b.member_ticket_start_date){
                         return_val = 1;
@@ -994,7 +1032,8 @@ class Member_simple_view{
                     let ticket_reg_price_of_this_member = member_ticket_list[i].member_ticket_price;
                     let ticket_reg_date_of_this_member = member_ticket_list[i].member_ticket_start_date;
                     let ticket_end_date_of_this_member = member_ticket_list[i].member_ticket_end_date;
-                    let ticket_remain_date = Math.round((new Date(ticket_end_date_of_this_member).getTime() - new Date().getTime()) / (1000*60*60*24));
+                    // let ticket_remain_date = Math.round((new Date(ticket_end_date_of_this_member).getTime() - new Date().getTime()) / (1000*60*60*24));
+                    let ticket_remain_date = DateRobot.diff_date(ticket_end_date_of_this_member, `${this.dates.current_year}-${this.dates.current_month}-${this.dates.current_date}`);
                     let ticket_remain_alert_text = "";
                     if(ticket_remain_date < 0){
                         ticket_remain_alert_text = " 지남";
