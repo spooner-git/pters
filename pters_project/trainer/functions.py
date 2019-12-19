@@ -438,6 +438,7 @@ def func_get_member_ticket_info(class_id, member_ticket_id):
                               'member_ticket_start_date': str(member_ticket_tb.start_date),
                               'member_ticket_end_date': str(member_ticket_tb.end_date),
                               'member_ticket_price': member_ticket_tb.price,
+                              'member_ticket_pay_method': member_ticket_tb.pay_method,
                               'member_ticket_refund_date': str(member_ticket_tb.refund_date),
                               'member_ticket_refund_price': member_ticket_tb.refund_price,
                               'member_ticket_note': str(member_ticket_tb.note),
@@ -535,6 +536,7 @@ def func_get_member_ticket_list(class_id, member_id):
                               'member_ticket_start_date': str(member_ticket_tb.start_date),
                               'member_ticket_end_date': str(member_ticket_tb.end_date),
                               'member_ticket_price': member_ticket_tb.price,
+                              'member_ticket_pay_method': member_ticket_tb.pay_method,
                               'member_ticket_refund_date': str(member_ticket_tb.refund_date),
                               'member_ticket_refund_price': member_ticket_tb.refund_price,
                               'member_ticket_note': str(member_ticket_tb.note),
@@ -565,7 +567,7 @@ def func_get_member_ticket_list(class_id, member_id):
 
 
 # 회원의 수강권 추가하기
-def func_add_member_ticket_info(user_id, class_id, ticket_id, counts, price,
+def func_add_member_ticket_info(user_id, class_id, ticket_id, counts, price, pay_method,
                                 start_date, end_date, contents, member_id):
     error = None
     member = None
@@ -588,7 +590,7 @@ def func_add_member_ticket_info(user_id, class_id, ticket_id, counts, price,
             if member_ticket_counts > 0:
                 auth_cd = AUTH_TYPE_VIEW
 
-            member_ticket_info = MemberTicketTb(member_id=member_id, ticket_tb_id=ticket_id,
+            member_ticket_info = MemberTicketTb(member_id=member_id, ticket_tb_id=ticket_id, pay_method=pay_method,
                                                 member_ticket_reg_count=counts, member_ticket_rem_count=counts,
                                                 member_ticket_avail_count=counts, price=price, option_cd='DC',
                                                 state_cd=STATE_CD_IN_PROGRESS, start_date=start_date, end_date=end_date,

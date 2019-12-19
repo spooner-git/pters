@@ -1852,6 +1852,8 @@ def add_member_ticket_info_logic(request):
     start_date = request.POST.get('start_date')
     end_date = request.POST.get('end_date')
     ticket_id = request.POST.get('ticket_id', '')
+    # NONE : 선택 안함 / CASH : 현금 , CARD : 카드 , TRANS : 계좌 이체 , CASH+CARD : 현금 + 카드, CARD + TRANS : 카드 + 계좌 이체, CASH + TRANS : 현금 + 계좌 이체
+    pay_method = request.POST.get('pay_method', 'NONE')
     class_id = request.session.get('class_id', '')
     member_name = ''
     ticket_name= ''
@@ -1859,6 +1861,9 @@ def add_member_ticket_info_logic(request):
 
     if member_id is None or member_id == '':
         error = '오류가 발생했습니다.[0]'
+
+    if pay_method == '':
+        pay_method = 'NONE'
 
     if price == '':
         price = 0
@@ -1876,6 +1881,7 @@ def add_member_ticket_info_logic(request):
     if ticket_id == '':
         error = '수강권을 선택해 주세요.'
 
+
     if error is None:
         try:
             member_info = MemberTb.objects.get(member_id=member_id)
@@ -1889,8 +1895,8 @@ def add_member_ticket_info_logic(request):
         except ObjectDoesNotExist:
             error = '수강권 정보를 확인해주세요.'
     if error is None:
-        error = func_add_member_ticket_info(request.user.id, class_id, ticket_id, counts, price, start_date, end_date,
-                                            contents, member_id)
+        error = func_add_member_ticket_info(request.user.id, class_id, ticket_id, counts, price, pay_method,
+                                            start_date, end_date, contents, member_id)
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
@@ -1914,6 +1920,8 @@ def update_member_ticket_info_logic(request):
     refund_price = request.POST.get('refund_price', '')
     refund_date = request.POST.get('refund_date', '')
     member_ticket_reg_count = request.POST.get('member_ticket_reg_count', '')
+    # NONE : 선택 안함 / CASH : 현금 , CARD : 카드 , TRANS : 계좌 이체 , CASH+CARD : 현금 + 카드, CARD + TRANS : 카드 + 계좌 이체, CASH + TRANS : 현금 + 계좌 이체
+    pay_method = request.POST.get('pay_method', 'NONE')
     class_id = request.session.get('class_id', '')
     error = None
     member_ticket_info = None
@@ -1936,6 +1944,8 @@ def update_member_ticket_info_logic(request):
             end_date = member_ticket_info.end_date
         if price is None or price == '':
             price = member_ticket_info.price
+        if pay_method is None or pay_method == '':
+            pay_method = member_ticket_info.pay_method
         if refund_price is None or refund_price == '':
             refund_price = member_ticket_info.refund_price
         if refund_date is None or refund_date == '':
@@ -1987,6 +1997,7 @@ def update_member_ticket_info_logic(request):
         member_ticket_info.start_date = start_date
         member_ticket_info.end_date = end_date
         member_ticket_info.price = price
+        member_ticket_info.pay_method = pay_method
         member_ticket_info.refund_price = refund_price
         member_ticket_info.refund_date = refund_date
         member_ticket_info.note = note
