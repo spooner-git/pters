@@ -997,7 +997,7 @@ def func_update_lecture_member_fix_status_cd(class_id, member_id):
     return error
 
 
-def update_user_setting_data(class_id, user_id, setting_type_cd_data, setting_info_data):
+def update_user_setting_data(user_id, setting_type_cd_data, setting_info_data):
 
     error = None
     try:
@@ -1005,11 +1005,10 @@ def update_user_setting_data(class_id, user_id, setting_type_cd_data, setting_in
 
             for idx, setting_type_cd_info in enumerate(setting_type_cd_data):
                 try:
-                    setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id,
+                    setting_data = SettingTb.objects.get(member_id=user_id,
                                                          setting_type_cd=setting_type_cd_info)
                 except ObjectDoesNotExist:
-                    setting_data = SettingTb(member_id=user_id,
-                                             class_tb_id=class_id, setting_type_cd=setting_type_cd_info, use=USE)
+                    setting_data = SettingTb(member_id=user_id, setting_type_cd=setting_type_cd_info, use=USE)
 
                 setting_data.setting_info = setting_info_data[idx]
                 setting_data.save()
