@@ -5151,6 +5151,28 @@ def update_attend_mode_setting_logic(request):
     return render(request, 'ajax/trainer_error_ajax.html')
 
 
+# 강사 일정 관련 setting 업데이트 api
+def update_setting_schedule_logic(request):
+    setting_schedule_sign_enable = request.POST.get('setting_schedule_sign_enable', USE)
+    class_id = request.session.get('class_id', '')
+    # next_page = request.POST.get('next_page', '/trainer/attend_mode/')
+
+    if setting_schedule_sign_enable is None or setting_schedule_sign_enable == '':
+        setting_schedule_sign_enable = USE
+
+    setting_type_cd_data = ['SCHEDULE_SIGN_ENABLE']
+    setting_info_data = [setting_schedule_sign_enable]
+    error = update_program_setting_data(class_id, setting_type_cd_data, setting_info_data)
+
+    if error is None:
+        request.session['setting_schedule_sign_enable'] = setting_schedule_sign_enable
+    else:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
 #
 def check_admin_password_logic(request):
     setting_admin_password = request.POST.get('setting_admin_password', '')
