@@ -272,6 +272,7 @@ def func_setting_data_update(request, group):
         request.session['setting_trainer_statistics_lock'] = context['setting_trainer_statistics_lock']
         request.session['setting_trainer_attend_mode_out_lock'] = context['setting_trainer_attend_mode_out_lock']
 
+        request.session['setting_member_lecture_max_num_view_available'] = context['setting_member_lecture_max_num_view_available']
         request.session['setting_schedule_sign_enable'] = context['setting_schedule_sign_enable']
         if group == 'trainee':
             try:

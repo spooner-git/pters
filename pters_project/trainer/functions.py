@@ -362,7 +362,7 @@ def func_get_member_lecture_list(class_id, member_id):
                             'lecture_name': lecture_tb.name,
                             'lecture_note': lecture_tb.note,
                             'lecture_max_num': lecture_tb.member_num,
-                            'lecture_max_member_num_view_flag': lecture_tb.member_num_view_flag,
+                            # 'lecture_max_member_num_view_flag': lecture_tb.member_num_view_flag,
                             'lecture_minute': lecture_tb.lecture_minute
                             }
             member_lecture_list[str(lecture_tb.lecture_id)] = lecture_info
@@ -711,6 +711,7 @@ def func_get_trainer_setting_list(context, user_id, class_id, class_hour):
     setting_calendar_time_selector_type = CALENDAR_TIME_SELECTOR_BASIC
     setting_trainer_statistics_lock = UN_USE
     setting_trainer_attend_mode_out_lock = UN_USE
+    setting_member_lecture_max_num_view_available = USE
     setting_schedule_sign_enable = USE
 
     for setting_info in setting_data:
@@ -772,8 +773,11 @@ def func_get_trainer_setting_list(context, user_id, class_id, class_hour):
             setting_trainer_statistics_lock = setting_info.setting_info
         if setting_info.setting_type_cd == 'ATTEND_MODE_OUT_LOCK':
             setting_trainer_attend_mode_out_lock = setting_info.setting_info
+        if setting_info.setting_type_cd == 'LT_RES_MEMBER_LECTURE_MAX_NUM_VIEW':
+            setting_member_lecture_max_num_view_available = setting_info.setting_info
         if setting_info.setting_type_cd == 'SCHEDULE_SIGN_ENABLE':
             setting_schedule_sign_enable = setting_info.setting_info
+
     try:
         lecture_info = LectureTb.objects.get(class_tb_id=class_id, lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, use=USE)
         one_to_one_lecture_time_duration = lecture_info.lecture_minute
@@ -837,6 +841,7 @@ def func_get_trainer_setting_list(context, user_id, class_id, class_hour):
     context['setting_calendar_time_selector_type'] = setting_calendar_time_selector_type
     context['setting_trainer_statistics_lock'] = setting_trainer_statistics_lock
     context['setting_trainer_attend_mode_out_lock'] = setting_trainer_attend_mode_out_lock
+    context['setting_member_lecture_max_num_view_available'] = setting_member_lecture_max_num_view_available
     context['setting_schedule_sign_enable'] = setting_schedule_sign_enable
     return context
 
@@ -979,7 +984,7 @@ def func_get_lecture_info(class_id, lecture_id, user_id):
     if lecture_tb is not None:
         lecture_info = {'lecture_id': str(lecture_id), 'lecture_name': lecture_tb.name, 'lecture_note': lecture_tb.note,
                         'lecture_state_cd': lecture_tb.state_cd, 'lecture_max_num': lecture_tb.member_num,
-                        'lecture_max_member_num_view_flag': lecture_tb.member_num_view_flag,
+                        # 'lecture_max_member_num_view_flag': lecture_tb.member_num_view_flag,
                         'lecture_reg_dt': str(lecture_tb.reg_dt), 'lecture_mod_dt': str(lecture_tb.mod_dt),
                         'lecture_ticket_list': lecture_ticket_list,
                         'lecture_ticket_state_cd_list': lecture_ticket_state_cd_list,
