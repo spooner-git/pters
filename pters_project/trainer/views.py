@@ -3692,7 +3692,7 @@ class GetProgramListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         class_id = self.request.session.get('class_id', '')
         program_list = []
         error = None
-        program_data = MemberClassTb.objects.select_related('class_tb'
+        program_data = MemberClassTb.objects.select_related('class_tb', 'member'
                                                             ).filter(member_id=self.request.user.id,
                                                                      auth_cd__contains=AUTH_TYPE_VIEW,
                                                                      use=USE).order_by('-reg_dt')
@@ -3706,8 +3706,10 @@ class GetProgramListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                     program_selected = 'SELECTED'
 
                 program_subject_type_name = program_info.class_tb.get_class_type_cd_name()
+                shared_program_flag = MY_PROGRAM
                 if str(program_info.class_tb.member.member_id) != str(request.user.id):
                     program_subject_type_name += ' - ' + program_info.class_tb.member.name
+                    shared_program_flag = SHARED_PROGRAM
 
                 program_dict = {'program_id': program_info.class_tb.class_id,
                                 'program_total_member_num': total_member_num,
@@ -3717,6 +3719,9 @@ class GetProgramListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                 'program_upper_subject_cd': program_info.class_tb.get_upper_class_type_cd(),
                                 'program_upper_subject_type_name': program_info.class_tb.get_upper_class_type_cd_name(),
                                 'program_selected': program_selected,
+                                'program_program_owner_id': program_info.class_tb.member_id,
+                                'program_program_owner_name': program_info.class_tb.member.name,
+                                'shared_program_flag': shared_program_flag,
                                 'program_center_name': ''
                                 }
                 program_list.append(program_dict)
