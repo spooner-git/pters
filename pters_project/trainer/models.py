@@ -4,7 +4,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 
-from configs.const import LECTURE_TYPE_ONE_TO_ONE
+from configs.const import LECTURE_TYPE_ONE_TO_ONE, LECTURE_MEMBER_NUM_VIEW_ENABLE
 from configs.models import TimeStampedModel
 from login.models import MemberTb, CommonCdTb
 from payment.models import FunctionAuthTb
@@ -171,6 +171,7 @@ class LectureTb(TimeStampedModel):
     end_font_color_cd = models.CharField(db_column='END_FONT_COLOR_CD', max_length=20, default='#282828')
     state_cd = models.CharField(db_column='STATE_CD', max_length=10, blank=True, null=True)
     member_num = models.IntegerField(db_column='MEMBER_NUM', default=2)  # Field name made lowercase.
+    member_num_view_flag = models.IntegerField(db_column='MEMBER_NUM_VIEW_FLAG', default=LECTURE_MEMBER_NUM_VIEW_ENABLE)
     lecture_type_cd = models.CharField(db_column='GROUP_TYPE_CD', max_length=20, blank=True, null=True,
                                        default=LECTURE_TYPE_ONE_TO_ONE)
     name = models.CharField(db_column='NAME', max_length=255, blank=True, null=True, default='')

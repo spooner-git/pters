@@ -37,7 +37,7 @@ from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO
     SORT_LECTURE_NAME, SORT_LECTURE_MEMBER_COUNT, SORT_LECTURE_CAPACITY_COUNT, SORT_LECTURE_CREATE_DATE, ON_SCHEDULE, \
     CALENDAR_TIME_SELECTOR_BASIC, SORT_END_DATE, SORT_MEMBER_TICKET, SORT_SCHEDULE_DT, STATE_CD_REFUND, \
     SORT_SCHEDULE_MONTHLY, SHARED_PROGRAM, MY_PROGRAM, PROGRAM_SELECT, PROGRAM_LECTURE_CONNECT_DELETE, \
-    PROGRAM_LECTURE_CONNECT_ACCEPT
+    PROGRAM_LECTURE_CONNECT_ACCEPT, LECTURE_MEMBER_NUM_VIEW_ENABLE
 from board.models import BoardTb
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 from schedule.functions import func_refresh_member_ticket_count, func_get_trainer_attend_schedule, \
@@ -383,6 +383,7 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
                 'lecture_id': lecture_repeat_schedule_info.lecture_tb.lecture_id,
                 'lecture_name': lecture_repeat_schedule_info.lecture_tb.name,
                 'lecture_max_member_num': lecture_repeat_schedule_info.lecture_tb.member_num,
+                'lecture_max_member_num_view_flag': lecture_repeat_schedule_info.lecture_tb.member_num_view_flag,
                 'lecture_ing_color_cd': lecture_repeat_schedule_info.lecture_tb.ing_color_cd,
                 'lecture_end_color_cd': lecture_repeat_schedule_info.lecture_tb.end_color_cd,
                 'lecture_ing_font_color_cd': lecture_repeat_schedule_info.lecture_tb.ing_font_color_cd,
@@ -532,11 +533,13 @@ class GetMemberRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, View):
                     lecture_id = member_repeat_schedule_info.lecture_tb.lecture_id
                     lecture_name = member_repeat_schedule_info.lecture_tb.name
                     lecture_max_member_num = member_repeat_schedule_info.lecture_tb.member_num
+                    lecture_max_member_num_view_flag = member_repeat_schedule_info.lecture_tb.member_num_view_flag
                     schedule_type = 2
                 except AttributeError:
                     lecture_id = ''
                     lecture_name = ''
                     lecture_max_member_num = ''
+                    lecture_max_member_num_view_flag = ''
 
                 member_repeat_schedule = {'repeat_schedule_id': member_repeat_schedule_info.repeat_schedule_id,
                                           'repeat_type_cd': member_repeat_schedule_info.repeat_type_cd,
@@ -555,6 +558,7 @@ class GetMemberRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, View):
                                           'lecture_id': lecture_id,
                                           'lecture_name': lecture_name,
                                           'lecture_max_member_num': lecture_max_member_num,
+                                          'lecture_max_member_num_view_flag': lecture_max_member_num_view_flag,
                                           'schedule_type': schedule_type}
                 member_repeat_schedule_list.append(member_repeat_schedule)
         else:
@@ -2257,6 +2261,7 @@ def add_lecture_info_logic(request):
     class_id = request.session.get('class_id', '')
     name = request.POST.get('name', '')
     member_num = request.POST.get('member_num', '')
+    member_num_view_flag = request.POST.get('member_num_view_flag', LECTURE_MEMBER_NUM_VIEW_ENABLE)
     note = request.POST.get('note', '')
     ing_color_cd = request.POST.get('ing_color_cd', '#ffd3d9')
     end_color_cd = request.POST.get('end_color_cd', '#d2d1cf')
@@ -2268,7 +2273,8 @@ def add_lecture_info_logic(request):
 
     try:
         with transaction.atomic():
-            lecture_info = LectureTb(class_tb_id=class_id, member_num=member_num, lecture_type_cd=LECTURE_TYPE_NORMAL,
+            lecture_info = LectureTb(class_tb_id=class_id, member_num=member_num,
+                                     member_num_view_flag=member_num_view_flag, lecture_type_cd=LECTURE_TYPE_NORMAL,
                                      name=name, note=note, ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
                                      ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
                                      lecture_minute=lecture_minute, state_cd=STATE_CD_IN_PROGRESS, use=USE)
@@ -2401,6 +2407,7 @@ def update_lecture_info_logic(request):
     class_id = request.session.get('class_id', '')
     lecture_id = request.POST.get('lecture_id', '')
     member_num = request.POST.get('member_num', '')
+    member_num_view_flag = request.POST.get('member_num_view_flag', LECTURE_MEMBER_NUM_VIEW_ENABLE)
     name = request.POST.get('name', '')
     note = request.POST.get('note', '')
     ing_color_cd = request.POST.get('ing_color_cd', '')
@@ -2420,6 +2427,9 @@ def update_lecture_info_logic(request):
     if error is None:
         if member_num == '' or member_num is None:
             member_num = lecture_info.member_num
+
+        if member_num_view_flag == '' or member_num_view_flag is None:
+            member_num_view_flag = lecture_info.member_num_view_flag
 
         if name == '' or name is None:
             name = lecture_info.name
@@ -2461,6 +2471,7 @@ def update_lecture_info_logic(request):
 
     if error is None:
         lecture_info.member_num = member_num
+        lecture_info.member_num_view_flag = member_num_view_flag
         lecture_info.name = name
         lecture_info.note = note
         lecture_info.ing_color_cd = ing_color_cd
@@ -2661,6 +2672,7 @@ class GetLectureInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View):
             lecture_info = {'lecture_id': '', 'lecture_name': 'OFF',
                             'lecture_note': '',
                             'lecture_state_cd': STATE_CD_IN_PROGRESS, 'lecture_max_num': 0,
+                            'lecture_max_member_num_view_flag': LECTURE_MEMBER_NUM_VIEW_ENABLE,
                             'lecture_reg_dt': '', 'lecture_mod_dt': '',
                             'lecture_ticket_list': [],
                             'lecture_ticket_state_cd_list': [],
@@ -2709,6 +2721,7 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                  'lecture_name': lecture_tb.name,
                                                  'lecture_note': lecture_tb.note,
                                                  'lecture_max_num': lecture_tb.member_num,
+                                                 'lecture_max_member_num_view_flag': lecture_tb.member_num_view_flag,
                                                  'lecture_ing_color_cd': lecture_tb.ing_color_cd,
                                                  'lecture_ing_font_color_cd': lecture_tb.ing_font_color_cd,
                                                  'lecture_end_color_cd': lecture_tb.end_color_cd,
@@ -2735,6 +2748,7 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                      'lecture_name': lecture_info.name,
                                                      'lecture_note': lecture_info.note,
                                                      'lecture_max_num': lecture_info.member_num,
+                                                     'lecture_max_member_num_view_flag': lecture_info.member_num_view_flag,
                                                      'lecture_ing_color_cd': lecture_info.ing_color_cd,
                                                      'lecture_ing_font_color_cd': lecture_info.ing_font_color_cd,
                                                      'lecture_end_color_cd': lecture_info.end_color_cd,
@@ -2833,6 +2847,7 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                  'lecture_name': lecture_tb.name,
                                                  'lecture_note': lecture_tb.note,
                                                  'lecture_max_num': lecture_tb.member_num,
+                                                 'lecture_max_member_num_view_flag': lecture_tb.member_num_view_flag,
                                                  'lecture_ing_color_cd': lecture_tb.ing_color_cd,
                                                  'lecture_ing_font_color_cd': lecture_tb.ing_font_color_cd,
                                                  'lecture_end_color_cd': lecture_tb.end_color_cd,
@@ -2859,6 +2874,7 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                      'lecture_name': lecture_info.name,
                                                      'lecture_note': lecture_info.note,
                                                      'lecture_max_num': lecture_info.member_num,
+                                                     'lecture_max_member_num_view_flag': lecture_info.member_num_view_flag,
                                                      'lecture_ing_color_cd': lecture_info.ing_color_cd,
                                                      'lecture_ing_font_color_cd': lecture_info.ing_font_color_cd,
                                                      'lecture_end_color_cd': lecture_info.end_color_cd,
@@ -5128,6 +5144,28 @@ def update_attend_mode_setting_logic(request):
         request.session['setting_admin_password'] = setting_admin_password
         request.session['setting_attend_class_prev_display_time'] = setting_attend_class_prev_display_time
         request.session['setting_attend_class_after_display_time'] = setting_attend_class_after_display_time
+    else:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
+# 강사 일정 관련 setting 업데이트 api
+def update_setting_schedule_logic(request):
+    setting_schedule_sign_enable = request.POST.get('setting_schedule_sign_enable', USE)
+    class_id = request.session.get('class_id', '')
+    # next_page = request.POST.get('next_page', '/trainer/attend_mode/')
+
+    if setting_schedule_sign_enable is None or setting_schedule_sign_enable == '':
+        setting_schedule_sign_enable = USE
+
+    setting_type_cd_data = ['SCHEDULE_SIGN_ENABLE']
+    setting_info_data = [setting_schedule_sign_enable]
+    error = update_program_setting_data(class_id, setting_type_cd_data, setting_info_data)
+
+    if error is None:
+        request.session['setting_schedule_sign_enable'] = setting_schedule_sign_enable
     else:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)

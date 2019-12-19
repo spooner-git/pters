@@ -271,6 +271,8 @@ def func_setting_data_update(request, group):
         request.session['one_to_one_lecture_time_duration'] = context['one_to_one_lecture_time_duration']
         request.session['setting_trainer_statistics_lock'] = context['setting_trainer_statistics_lock']
         request.session['setting_trainer_attend_mode_out_lock'] = context['setting_trainer_attend_mode_out_lock']
+
+        request.session['setting_schedule_sign_enable'] = context['setting_schedule_sign_enable']
         if group == 'trainee':
             try:
                 setting_data = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_LAN_01')

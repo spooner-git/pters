@@ -209,7 +209,8 @@ urlpatterns = [
     # 출석체크 모드 Setting 수정
     url(r'^update_attend_mode_setting/$', views.update_attend_mode_setting_logic, name='update_attend_mode_setting'),
 
-
+    # 일정 서명 저장 여부 설정 수정
+    url(r'^update_setting_schedule/$', views.update_setting_schedule_logic, name='update_setting_schedule'),
 
     # 예약관련 Setting 수정
     url(r'^update_setting_reserve/$', views.update_setting_reserve_logic, name='update_setting_reserve'),
