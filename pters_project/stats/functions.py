@@ -160,6 +160,7 @@ def get_sales_info(class_id, month_first_day):
                           'trade_type': trade_type,
                           'trade_info': trade_info,
                           'price': price_info.member_ticket_tb.price,
+                          'pay_method': price_info.member_ticket_tb.pay_method,
                           'member_db_id': price_info.member_ticket_tb.member_id,
                           'member_name': price_info.member_ticket_tb.member.name,
                           'package_name': price_info.member_ticket_tb.ticket_tb.name}
@@ -186,6 +187,7 @@ def get_sales_info(class_id, month_first_day):
                           'trade_type': trade_type,
                           'trade_info': trade_info,
                           'price': refund_price_info.member_ticket_tb.refund_price,
+                          'pay_method': refund_price_info.member_ticket_tb.pay_method,
                           'member_db_id': refund_price_info.member_ticket_tb.member_id,
                           'member_name': refund_price_info.member_ticket_tb.member.name,
                           'package_name': refund_price_info.member_ticket_tb.ticket_tb.name}
