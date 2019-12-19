@@ -481,7 +481,7 @@ def update_schedule_logic(request):
                         log_data.save()
                 schedule_info.start_dt = start_dt
                 schedule_info.end_dt = end_dt
-                schedule_info.reg_member_id = request.user.id
+                schedule_info.mod_member_id = request.user.id
                 schedule_info.save()
             if error is None:
 
@@ -556,6 +556,7 @@ def update_schedule_state_cd_logic(request):
         try:
             with transaction.atomic():
                 schedule_info.state_cd = schedule_state_cd
+                schedule_info.mod_member_id = request.user.id
                 schedule_info.save()
                 # 남은 횟수 차감
                 if member_ticket_info is not None:
@@ -696,6 +697,7 @@ def update_memo_schedule_logic(request):
             lecture_schedule_data.update(note=note)
 
         schedule_info.note = note
+        schedule_info.mod_member_id = requst.user.id
         schedule_info.save()
 
     if error is not None:
@@ -1606,6 +1608,7 @@ def finish_lecture_schedule_logic(request):
         try:
             with transaction.atomic():
                 schedule_info.state_cd = schedule_state_cd
+                schedule_info.mod_member_id = request.user.id
                 schedule_info.save()
 
                 repeat_schedule_data = None
@@ -1653,6 +1656,7 @@ def finish_lecture_schedule_logic(request):
                 try:
                     with transaction.atomic():
                         member_lecture_schedule_info.state_cd = schedule_state_cd
+                        member_lecture_schedule_info.mod_member_id = request.user.id
                         member_lecture_schedule_info.save()
                         # 남은 횟수 차감
                         temp_error = func_refresh_member_ticket_count(class_id, member_ticket_info.member_ticket_id)
