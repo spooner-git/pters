@@ -83,6 +83,7 @@ class Program_list{
             let status = data.program_state_cd;
             let selected = data.program_selected;
             let shared = data.shared_program_flag;
+            let sharing_member_num = data.share_member_num;
             let category_code = data.program_upper_subject_cd != "" ? data.program_upper_subject_cd : "ETC";
             let category_sub_name = PROGRAM_CATEGORY[category_code].sub_category[data.program_subject_cd].name;
             let category_sub_code = data.program_subject_cd;
@@ -91,6 +92,7 @@ class Program_list{
                             <div class="program_data_u">
                                 <div>
                                     <span>${name}</span>
+                                    ${sharing_member_num > 0 ? '<span style="font-size:12px;">'+CImg.share("",{"vertical-align":"middle", "width":"20px", "margin-bottom":"3px", "margin-left":"5px"}) + +sharing_member_num+'</span>' :""}
                                 </div>
                                 <div>
                                     <span>${member_num} 명</span>

@@ -1332,7 +1332,7 @@ class CImg{
         return svg;
     }
 
-    static supervisor(svg_color, style, onclick){
+    static share(svg_color, style, onclick){
         if(svg_color == undefined){
             svg_color = [];
         }

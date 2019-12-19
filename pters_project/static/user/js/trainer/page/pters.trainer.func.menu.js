@@ -314,7 +314,7 @@ class Menu {
     dom_menu_setting_sharing(){
         let id = 'menu_setting_sharing';
         let title = '프로그램 공유';
-        let icon = CImg.supervisor();
+        let icon = CImg.share();
         let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"color":"red", "font-size":"17px", "padding":"13px 0"};
@@ -327,7 +327,7 @@ class Menu {
     dom_menu_setting_shared(){
         let id = 'menu_setting_shared';
         let title = '프로그램 공유';
-        let icon = CImg.supervisor();
+        let icon = CImg.share();
         let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"color":"red", "font-size":"17px", "padding":"13px 0"};
