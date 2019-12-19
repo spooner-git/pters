@@ -27,6 +27,7 @@ class Member_ticket_modify{
             end_date_text:null,
             reg_count: null,
             price:null,
+            pay_method:{value:[], text:[]},
             status:null,
             note:null,
             refund_date:null,
@@ -57,6 +58,7 @@ class Member_ticket_modify{
                 this.data[item] = this.external_data[item];
             }
         }
+        this.data.pay_method = {value:[this.external_data.pay_method], text:[TICKET_PAY_METHOD[this.external_data.pay_method]]};
         this.render();
     }
 
@@ -109,6 +111,8 @@ class Member_ticket_modify{
                     `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>`;
         let price  = CComponent.dom_tag('가격') + this.dom_row_price_input() + 
                     `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>`;
+        let pay_method = CComponent.dom_tag("지불 방법") + this.dom_row_ticket_pay_method_select() +
+                    `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>`;
         let note = CComponent.dom_tag('특이사항') + this.dom_row_note_input();
 
         // if(this.data.refund_date == null || this.data.refund_price == null){
@@ -126,6 +130,7 @@ class Member_ticket_modify{
                 + start
                 + end
                 + price
+                + pay_method
                 + note +
             '</div>';
 
@@ -475,6 +480,35 @@ class Member_ticket_modify{
         return html;
     }
 
+    dom_row_ticket_pay_method_select(){
+        let option_data = {
+            value:["NONE", "CASH", "CARD", "TRANS", "CASH+CARD", "CARD+TRANS", "CASH+TRANS"],
+            text:["선택 안함", "현금", "카드", "계좌이체", "현금 + 카드", "카드 + 계좌 이체", "현금 + 계좌 이체"]
+        };
+        
+        let id = 'input_ticket_pay_method_select';
+        let title = this.data.pay_method.value[0] == "NONE" ? '지불 방법' : this.data.pay_method.text[0];
+        let icon = NONE;
+        let icon_r_visible = SHOW;
+        let icon_r_text = "";
+        let style = this.data.pay_method.value[0] == "NONE" ? {"color":"var(--font-inactive)"} : null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
+            let title = "지불 방법";
+            let install_target = "#wrapper_box_custom_select";
+            let multiple_select = 1;
+            let data = option_data;
+            let selected_data = this.data.pay_method;
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, popup_style, null, ()=>{
+                custom_selector = new CustomSelector(title, install_target, multiple_select, data, selected_data, (set_data)=>{
+                    this.data.pay_method = set_data;
+                    this.render_content();
+                });
+            });
+        });
+        return html;  
+    }
+
     dom_row_note_input(){
         let id = 'member_ticket_note_modify';
         let title = this.data.note == null || this.data.note == 'None' ? '' :this.data.note;
@@ -507,7 +541,9 @@ class Member_ticket_modify{
         let data = {"member_ticket_id":this.data.member_ticket_id, "note":this.data.note, 
                     "start_date":start_date, "end_date":end_date, 
                     "price":this.data.price, "refund_price":this.data.refund_price, 
-                    "refund_date":this.data.refund_date == "None" ? "" : refund_date, "member_ticket_reg_count":this.data.reg_count};
+                    "refund_date":this.data.refund_date == "None" ? "" : refund_date, "member_ticket_reg_count":this.data.reg_count,
+                    "pay_method":this.data.pay_method.value[0]
+                };
         Member_func.ticket_update(data, ()=>{
             layer_popup.close_layer_popup();
             this.set_initial_data();

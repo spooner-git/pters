@@ -112,7 +112,15 @@ const LECTURE_MEMBER_NUM_VIEW_ENABLE = 0;
 const MY_PROGRAM = 0;
 const SHARED_PROGRAM = 1;
 
-
+const TICKET_PAY_METHOD = {
+    "NONE":"선택 안함",
+    "CASH":"현금",
+    "CARD":"카드",
+    "TRANS":"계좌이체",
+    "CASH+CARD":"현금 + 카드",
+    "CARD+TRANS":"카드 + 계좌 이체",
+    "CASH+TRANS":"현금 + 계좌 이체"
+};
 
 /* 정렬 관련된 값 */
 const SORT_MEMBER_NAME = 0;

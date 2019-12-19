@@ -146,7 +146,7 @@ class Ticket_add{
                         CComponent.dom_tag('유효기간') + 
                         period + `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>` +
                         CComponent.dom_tag('가격') + 
-                        price + `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>` +
+                        price + 
                     
                     '</div>' +
                     '<div class="obj_input_box_full">' + CComponent.dom_tag('설명') + memo + '</div>';
@@ -416,7 +416,6 @@ class Ticket_add{
         let forms = document.getElementById(`${this.form_id}`);
         update_check_registration_form(forms);
         let error_info = check_registration_form(forms);
-        console.log(error_info);
         if(error_info != ''){
             show_error_message(error_info);
             return false;

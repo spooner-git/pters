@@ -184,9 +184,11 @@ class Ticket_view{
         let member_list = this.dom_row_member_list();
 
         let lecture_list_assembly = '<div class="obj_input_box_full">'+CComponent.dom_tag('수업 구성')+lecture+lecture_list+'</div>';
-        let ticket_basic_count_assembly = '<div class="obj_input_box_full">'+CComponent.dom_tag('횟수') +  basic_count +  '</div>';
-        let ticket_basic_period_assembly = '<div class="obj_input_box_full">'+CComponent.dom_tag('유효 기간') +  basic_period + '</div>';
-        let ticket_basic_price_assembly = '<div class="obj_input_box_full">'+CComponent.dom_tag('가격') + basic_price + '</div>';
+        let ticket_basic_info_assembly = '<div class="obj_input_box_full">'+
+                                                CComponent.dom_tag('횟수') +  basic_count +  `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>` +
+                                                CComponent.dom_tag('유효 기간') +  basic_period +  `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>` +
+                                                CComponent.dom_tag('가격') + basic_price + 
+                                        '</div>';
         let ticket_memo_assembly = '<div class="obj_input_box_full">'+CComponent.dom_tag('설명')+memo+ '</div>';
         let ticket_member_list_assembly = '<div class="obj_input_box_full" style="padding-top:16px;">'+CComponent.dom_tag(`수강권 보유 회원 (${this.data.member_id.length} 명)`, 
                                             {"font-size":"13px", "font-weight":"bold", "letter-spacing":"-0.6px", "padding":"0", "padding-bottom":"8px", "color":"var(--font-sub-normal)", "height":"20px"}) + 
@@ -200,9 +202,7 @@ class Ticket_view{
 
         let html =  lecture_list_assembly +
                     ticket_memo_assembly +
-                    ticket_basic_count_assembly +
-                    ticket_basic_period_assembly +
-                    ticket_basic_price_assembly +
+                    ticket_basic_info_assembly +
                     ticket_member_list_assembly;
         return html;
     }
@@ -295,7 +295,7 @@ class Ticket_view{
             let lecture_color = this.data.lecture_color[i];
             let text_decoration = (lecture_state_cd == STATE_END_PROGRESS ? 'color:var(--font-domtag); text-decoration:line-through;' : '');
             let icon_button_style = {"display":"block", "padding":"0", "padding-left":"10px", "font-size":"15px",
-                                     "font-weight":"500", "height":"50px", "line-height":"50px", "overflow":"hidden", "text-overflow":"ellipsis", "white-space":"nowrap"};
+                                     "font-weight":"500", "height":"40px", "line-height":"40px", "overflow":"hidden", "text-overflow":"ellipsis", "white-space":"nowrap"};
 
             let lecture_name_set = `<div style="display:inline-block;width: 4px;height:16px;border-radius:6px;background-color:${lecture_color};margin-right:12px;vertical-align:middle;"></div>
                                     <span style="${text_decoration};vertical-align:middle;">${lecture_name}</span>`;

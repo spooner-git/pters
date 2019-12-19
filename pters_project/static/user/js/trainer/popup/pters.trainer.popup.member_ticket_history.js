@@ -77,6 +77,7 @@ class Member_ticket_history{
             let ticket_end_date = data.member_ticket_end_date;
             let reg_count = data.member_ticket_reg_count;
             let ticket_price = data.member_ticket_price;
+            let ticket_pay_method = data.member_ticket_pay_method;
             let ticket_refund_price = data.member_ticket_refund_price;
             let remain_count = data.member_ticket_rem_count;
             let avail_count = data.member_ticket_avail_count;
@@ -99,12 +100,12 @@ class Member_ticket_history{
                                 "reg_count":reg_count, "price":ticket_price, "status":status_code,
                                 "refund_date":refund_date == null ? null : DateRobot.to_split(refund_date), 
                                 "refund_date_text": refund_date == null? null : DateRobot.to_text(refund_date, "", "", SHORT),
-                                "refund_price":refund_price, "note":note};
+                                "refund_price":refund_price, "note":note, "pay_method":ticket_pay_method};
                     member_ticket_modify = new Member_ticket_modify('.popup_member_ticket_modify', data, 'member_ticket_modify');
                 });
             };
 
-            html = CComponent.ticket_history_row (numbering, member_ticket_id, date, ticket_name, UnitRobot.numberWithCommas(ticket_price), UnitRobot.numberWithCommas(ticket_refund_price), reg_count, remain_count, avail_count, status_code, note, onclick);
+            html = CComponent.ticket_history_row (numbering, member_ticket_id, date, ticket_name, TICKET_PAY_METHOD[ticket_pay_method], UnitRobot.numberWithCommas(ticket_price), UnitRobot.numberWithCommas(ticket_refund_price), reg_count, remain_count, avail_count, status_code, note, onclick);
 
             html_to_join.push(html);
         }

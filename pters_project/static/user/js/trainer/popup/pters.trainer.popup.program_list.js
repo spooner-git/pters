@@ -120,7 +120,6 @@ class Program_list{
         html_shared_program.unshift(CComponent.dom_tag(`공유 받은 프로그램 (${shared_program_count})`, {"padding":"5px 20px", "font-weight":"bold", "color":"var(--font-sub-normal)"}));
         html_temp.unshift(CComponent.dom_tag(`내 프로그램 (${not_selected_program_count})`, {"padding":"5px 20px", "font-weight":"bold", "color":"var(--font-sub-normal)"}));
 
-
         if(html_shared_program.length == 1){
             html_shared_program.push(this.introduce("shared"));
         }

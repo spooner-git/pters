@@ -230,6 +230,7 @@ class Member_view{
                     let ticket_refund_date_of_this_member = member_ticket_list[i].member_ticket_refund_date;
                     let ticket_refund_price_of_this_member = member_ticket_list[i].member_ticket_refund_price;
                     let ticket_remain_date = Math.round((new Date(ticket_end_date_of_this_member).getTime() - new Date().getTime()) / (1000*60*60*24));
+                    let ticket_pay_method = member_ticket_list[i].member_ticket_pay_method;
                     let ticket_remain_alert_text = "";
                     if(ticket_remain_date < 0){
                         ticket_remain_alert_text = " 지남";
@@ -249,6 +250,7 @@ class Member_view{
                                             ticket_note:member_ticket_list[i].member_ticket_note,
                                             ticket_refund_date: ticket_refund_date_of_this_member,
                                             ticket_refund_price: ticket_refund_price_of_this_member,
+                                            ticket_pay_method:ticket_pay_method,
                                             member_ticket_id:member_ticket_list[i].member_ticket_id,
                                             start_date:ticket_reg_date_of_this_member,
                                             start_date_text:DateRobot.to_text(ticket_reg_date_of_this_member, '', '', SHORT),
@@ -600,6 +602,7 @@ class Member_view{
             let ticket_reg_count =  this.data.ticket[i].ticket_reg_count;
             let ticket_avail_count =  this.data.ticket[i].ticket_avail_count;
             let ticket_price =  this.data.ticket[i].ticket_price;
+            let ticket_pay_method = this.data.ticket[i].ticket_pay_method;
             let ticket_note = this.data.ticket[i].ticket_note;
             let ticket_status = this.data.ticket[i].ticket_state;
             let ticket_refund_date = this.data.ticket[i].ticket_refund_date;
@@ -623,7 +626,7 @@ class Member_view{
                                 "reg_count":ticket_reg_count, "price":ticket_price, "status":ticket_status,
                                 "refund_date": ticket_refund_date == null ? null : DateRobot.to_split(ticket_refund_date), 
                                 "refund_date_text": ticket_refund_date == null ? null : DateRobot.to_text(ticket_refund_date, "", "", SHORT),
-                                "refund_price":ticket_refund_price, "note":ticket_note};
+                                "refund_price":ticket_refund_price, "note":ticket_note, "pay_method":ticket_pay_method};
                     member_ticket_modify = new Member_ticket_modify('.popup_member_ticket_modify', data, 'member_ticket_modify');
                 });
             });

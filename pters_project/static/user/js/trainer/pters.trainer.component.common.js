@@ -568,7 +568,7 @@ class CComponent{
     }
 
     //회원의 수강권 이력에 사용되는 행
-    static ticket_history_row (numbering, ticket_id, date, ticket_name, ticket_price, ticket_refund_price, reg_count, remain_count, avail_count, status_code, note, onclick){
+    static ticket_history_row (numbering, ticket_id, date, ticket_name, ticket_pay_method, ticket_price, ticket_refund_price, reg_count, remain_count, avail_count, status_code, note, onclick){
         let status_color = "";
         if(status_code == "IP"){
             status_color = "green";
@@ -583,7 +583,11 @@ class CComponent{
                         </div>
                         <div class="obj_table_raw table_date_info">
                             <div class="cell_ticket_num"></div>
-                            <div class="cell_ticket_info">등록금액: ${ticket_price} ${status_code == "RF" ? ' 환불금액: -' + ticket_refund_price : ""}</div>
+                            <div class="cell_ticket_info">등록 금액: ${ticket_price}원 ${status_code == "RF" ? ' / 환불금액: -' + ticket_refund_price +'원' : ""}</div>
+                        </div>
+                        <div class="obj_table_raw table_date_info">
+                            <div class="cell_ticket_num"></div>
+                            <div class="cell_ticket_info">지불 방법: ${ticket_pay_method}</div>
                         </div>
                         <div class="obj_table_raw table_date_info">
                             <div class="cell_ticket_num"></div>

@@ -716,8 +716,8 @@ class Plan_view{
         let mod_date = DateRobot.to_text(this.data.mod_date.split(" ")[0]) + ' ' +
                             TimeRobot.to_text(this.data.mod_date.split(" ")[1]);
 
-        let reg_date_text = reg_date == mod_date ? reg_date + ' ' + member_name : reg_date;
-        let mod_date_text = mod_date + ' ' + member_name;
+        let reg_date_text = reg_date == mod_date ? reg_date + ' - ' + member_name : reg_date;
+        let mod_date_text = mod_date + ' - ' + member_name;
 
         let html1 = CComponent.create_row('reg_date_view', `등록: ${reg_date_text}`, NONE, NONE, "", style, ()=>{});
         let html2 = CComponent.create_row('mod_date_view', `수정: ${mod_date_text}`, NONE, NONE, "", style, ()=>{});

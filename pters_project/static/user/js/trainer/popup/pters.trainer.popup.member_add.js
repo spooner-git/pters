@@ -31,6 +31,7 @@ class Member_add{
                 ticket_effective_days:[],
                 ticket_reg_count:[],
                 ticket_price:[],
+                pay_method:{value:["NONE"], text:["선택 안함"]},
                 start_date:null,
                 start_date_text:null,
                 end_date:null,
@@ -224,6 +225,7 @@ class Member_add{
         let end_date = this.dom_row_end_date_select();
         let reg_count = this.dom_row_member_reg_count_input();
         let reg_price = this.dom_row_member_reg_price_input();
+        let pay_method = this.dom_row_ticket_pay_method_select();
 
         let html =
             '<div class="obj_input_box_full">'
@@ -238,6 +240,7 @@ class Member_add{
                 + CComponent.dom_tag('시작일') + start_date + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('종료일') + end_date + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('가격') + reg_price + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag('지불 방법') + pay_method + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('특이사항') + memo +
             '</div>';
         
@@ -252,6 +255,7 @@ class Member_add{
                 + CComponent.dom_tag('시작일') + start_date + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('종료일') + end_date + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('가격') + reg_price + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag('지불 방법') + pay_method + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('특이사항') + memo +
             '</div>';
         }
@@ -618,7 +622,6 @@ class Member_add{
         return html;
     }
 
-
     dom_row_member_reg_count_input(){
         let unit = '회';
         let id = 'input_reg_count';
@@ -687,6 +690,35 @@ class Member_add{
         return html;
     }
 
+    dom_row_ticket_pay_method_select(){
+        let option_data = {
+            value:["NONE", "CASH", "CARD", "TRANS", "CASH+CARD", "CARD+TRANS", "CASH+TRANS"],
+            text:["선택 안함", "현금", "카드", "계좌이체", "현금 + 카드", "카드 + 계좌 이체", "현금 + 계좌 이체"]
+        };
+
+        let id = 'input_ticket_pay_method_select';
+        let title = this.data.pay_method.value[0] == "NONE" ? '지불 방법' : this.data.pay_method.text[0];
+        let icon = NONE;
+        let icon_r_visible = SHOW;
+        let icon_r_text = "";
+        let style = this.data.pay_method.value[0] == "NONE" ? {"color":"var(--font-inactive)"} : null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
+            let title = "지불 방법";
+            let install_target = "#wrapper_box_custom_select";
+            let multiple_select = 1;
+            let data = option_data;
+            let selected_data = this.data.pay_method;
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, popup_style, null, ()=>{
+                custom_selector = new CustomSelector(title, install_target, multiple_select, data, selected_data, (set_data)=>{
+                    this.data.pay_method = set_data;
+                    this.render_content();
+                });
+            });
+        });
+        return html;  
+    }
+
     switch_type(){
         switch(this.list_type){
             case "lesson":
@@ -737,7 +769,8 @@ class Member_add{
                     "start_date": DateRobot.to_yyyymmdd(this.data.start_date.year, this.data.start_date.month, this.data.start_date.date),
                     "end_date":DateRobot.to_yyyymmdd(this.data.end_date.year, this.data.end_date.month, this.data.end_date.date),
                     "counts":this.data.ticket_reg_count[0],
-                    "price":this.data.ticket_price[0]
+                    "price":this.data.ticket_price[0],
+                    "pay_method":this.data.pay_method.value[0]
         };
 
         let data_for_re = {
@@ -747,7 +780,8 @@ class Member_add{
             "start_date": DateRobot.to_yyyymmdd(this.data.start_date.year, this.data.start_date.month, this.data.start_date.date),
             "end_date":DateRobot.to_yyyymmdd(this.data.end_date.year, this.data.end_date.month, this.data.end_date.date),
             "counts":this.data.ticket_reg_count[0],
-            "price":this.data.ticket_price[0]
+            "price":this.data.ticket_price[0],
+            "pay_method":this.data.pay_method.value[0]
         };
 
         if(this.data_from_external == null){ //신규 회원 등록
