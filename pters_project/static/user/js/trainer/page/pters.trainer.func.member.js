@@ -146,9 +146,15 @@ class Member {
             let end_date_text = DateRobot.to_text(end_date, '', '', SHORT);
             let remain_date = Math.round((new Date(end_date).getTime() - new Date().getTime()) / (1000*60*60*24));
 
+            
+
             let remain_count_text = '잔여 '+member_rem+'회';
             end_date_text = '-'+end_date_text+' ('+remain_date+'일)';
             let member_counts_text;
+
+            if(member_reg == 99999){
+                remain_count_text = "무제한";
+            }
 
             if(end_date == "9999-12-31"){
                 end_date_text = '소진 시까지';

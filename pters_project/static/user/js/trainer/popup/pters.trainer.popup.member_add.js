@@ -637,7 +637,7 @@ class Member_add{
         let required = "required";
         
         if(title == 99999){
-            title = "제한 없음";
+            title = "무제한";
         }
 
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, input_disabled, (input_data)=>{
@@ -654,7 +654,7 @@ class Member_add{
     dom_row_count_simple_input_machine(){
         let button_style = {"flex":"1 1 0", "padding":"10px 8px", "color":"var(--font-sub-dark)"};
 
-        let button_limitless = CComponent.button ("button_limitless", "제한없음", button_style, ()=>{ this.data.ticket_reg_count[0] = 99999;this.render_content(); });
+        let button_limitless = CComponent.button ("button_limitless", "무제한", button_style, ()=>{ this.data.ticket_reg_count[0] = 99999;this.render_content(); });
         let button_50 = CComponent.button ("button_50c", "+ 50회", button_style, ()=>{ this.data.ticket_reg_count[0] = this.data.ticket_reg_count[0] + 50;this.render_content(); });
         let button_10 = CComponent.button ("button_10c", "+ 10회", button_style, ()=>{ this.data.ticket_reg_count[0] = this.data.ticket_reg_count[0] + 10;this.render_content(); });
         let button_1 = CComponent.button ("button_1c", "+ 1회", button_style, ()=>{ this.data.ticket_reg_count[0] = this.data.ticket_reg_count[0] + 1;this.render_content(); });

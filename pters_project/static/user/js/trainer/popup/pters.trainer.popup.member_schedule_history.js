@@ -234,9 +234,9 @@ class Member_schedule_history{
                                         <div id="member_schedule_history_ticket_${i+1}" style="padding:15px 10px;background-color:var(--bg-light);font-size:14px;font-weight:bold;">
                                             <div>${ticket_name} <span style="color:${TICKET_STATUS_COLOR[ticket_status]};font-size:12px;font-weight:500">(${TICKET_STATUS[ticket_status]})</span> <span style="float:right;">${expand_button}</span></div>
                                             <div style="font-size:12px;color:var(--font-main);font-weight:500;">
-                                                등록 <span style="font-weight:bold;">${ticket_reg_count}</span>회 / 
-                                                잔여 <span style="font-weight:bold;">${ticket_rem_count}</span>회 / 
-                                                예약가능 <span style="font-weight:bold;">${ticket_avail_count}</span>회</div>
+                                                등록 <span style="font-weight:bold;">${ticket_reg_count == 99999 ? "무제한" : ticket_reg_count + '회'}</span> / 
+                                                잔여 <span style="font-weight:bold;">${ticket_reg_count == 99999 ? "무제한" : ticket_rem_count + '회'}</span> / 
+                                                예약가능 <span style="font-weight:bold;">${ticket_reg_count == 99999 ? "무제한" : ticket_avail_count + '회'}</span></div>
                                             <div style="font-size:12px;color:var(--font-main);font-weight:500;">${ticket_start_date} - ${ticket_end_date}</div>
                                         </div>
                                         <div id="member_schedule_history_${i+1}_list" data-expand="${expand_status}" style="display:${expand_style};">

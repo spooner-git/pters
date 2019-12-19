@@ -318,7 +318,7 @@ class CComponent{
     }
 
     //회원 선택 팝업에 사용되는 행
-    static select_member_row (multiple_select, checked, location, member_id, member_name, member_avail_count, member_expiry, member_fix_state_cd, member_profile_url, disable_zero_avail_count, onclick){
+    static select_member_row (multiple_select, checked, location, member_id, member_name, member_reg_count, member_avail_count, member_expiry, member_fix_state_cd, member_profile_url, disable_zero_avail_count, onclick){
         let fix_member_check = '';
         if(member_fix_state_cd==FIX){
             fix_member_check = '고정회원';
@@ -334,7 +334,7 @@ class CComponent{
                                     ${member_name}
                                 </div>
                                 <div class="cell_member_info">
-                                    예약가능 ${member_avail_count}회 / ${member_expiry} 까지
+                                    예약가능 ${member_reg_count == 99999 ? "제한없음" : member_avail_count + '회'} / ${member_expiry} 까지
                                 </div>
                             </div>
                             <div style="display:table-cell; line-height:35px; float:right;">
@@ -595,7 +595,10 @@ class CComponent{
                         </div>
                         <div class="obj_table_raw table_memo_info">
                             <div class="cell_ticket_num"></div>
-                            <div class="cell_ticket_info">등록 ${reg_count} 회 / 잔여 ${remain_count} / 예약가능 ${avail_count}</div>
+                            <div class="cell_ticket_info">
+                                등록 ${reg_count == 99999 ? "제한없음" : reg_count + '회'} /
+                                잔여 ${reg_count == 99999 ? "제한없음" : remain_count + '회'} / 
+                                예약가능 ${reg_count == 99999 ? "제한없음" : avail_count + '회'}</div>
                         </div>
                         <div class="obj_table_raw table_memo_info" style="color:#ff7184;">
                             <div class="cell_ticket_num"></div>

@@ -2983,6 +2983,7 @@ class MemberSelector{
             let member_id = data.member_id;
             let member_name = data.member_name;
             // let member_rem_count = data.member_ticket_rem_count;
+            let member_reg_count = data.member_ticket_reg_count;
             let member_avail_count = data.member_ticket_avail_count;
             let member_expiry = data.end_date;
             let member_fix_state_cd = data.member_fix_state_cd;
@@ -3001,7 +3002,7 @@ class MemberSelector{
             //     checked = 0;
             // }
             let html = CComponent.select_member_row (
-                this.multiple_select, checked, this.unique_instance, member_id, member_name, member_avail_count, member_expiry, member_fix_state_cd, member_profile_url, this.appendix.disable_zero_avail_count, (add_or_substract)=>{
+                this.multiple_select, checked, this.unique_instance, member_id, member_name, member_reg_count, member_avail_count, member_expiry, member_fix_state_cd, member_profile_url, this.appendix.disable_zero_avail_count, (add_or_substract)=>{
                     if(this.appendix.lecture_id != null){
                         let member_id_list = this.received_data_lecture_member.map((el)=>{return el.member_id;});
                         if(member_id_list.indexOf(member_id) == -1){ // 선택한 회원이 수업 리스트의 회원이 아니라면 (전체회원에서 선택했다면)
@@ -3149,6 +3150,7 @@ class MemberSelector{
             let member_id = data.member_id;
             let member_name = data.member_name;
             // let member_rem_count = data.member_ticket_rem_count;
+            let member_reg_count = data.member_ticket_reg_count;
             let member_avail_count = data.member_ticket_avail_count;
             let member_expiry = data.end_date;
             let member_fix_state_cd = data.member_fix_state_cd;
@@ -3161,7 +3163,7 @@ class MemberSelector{
             //     checked = 0;
             // }
             let html = CComponent.select_member_row (
-                this.multiple_select, checked, this.unique_instance, member_id, member_name, member_avail_count, member_expiry, member_fix_state_cd, member_profile_url, this.appendix.disable_zero_avail_count, (add_or_substract)=>{
+                this.multiple_select, checked, this.unique_instance, member_id, member_name, member_reg_count, member_avail_count, member_expiry, member_fix_state_cd, member_profile_url, this.appendix.disable_zero_avail_count, (add_or_substract)=>{
                     
                     if(add_or_substract == "add"){
                         this.data.id.push(member_id);
