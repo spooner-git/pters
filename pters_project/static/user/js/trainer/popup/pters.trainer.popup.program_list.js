@@ -127,7 +127,7 @@ class Program_list{
 
         let assembly_selected_program = html_selected_current_program.join("") + `<div style="margin-top:20px;"></div>`;
         let assembly_shared_program = html_shared_program.join("") + `<div style="margin-top:20px;"></div>`;
-        let assembly_reg_program = html_temp.join("");
+        let assembly_reg_program = html_temp.join("") + `<div style="margin-top:20px;"></div>`;
 
         let html =  assembly_selected_program +
                     assembly_reg_program +
