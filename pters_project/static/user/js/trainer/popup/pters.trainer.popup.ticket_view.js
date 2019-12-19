@@ -50,7 +50,7 @@ class Ticket_view{
             count : OFF,
             price : OFF,
             period : OFF
-        }
+        };
 
         this.init();
         this.set_initial_data();
@@ -379,9 +379,9 @@ class Ticket_view{
         let button_style = {"flex":"1 1 0", "padding":"10px 8px", "color":"var(--font-sub-dark)"};
 
         let button_limitless = CComponent.button ("button_limitless", "제한없음", button_style, ()=>{ this.data.count = 99999;this.render_content(); });
-        let button_50 = CComponent.button ("button_50c", "+ 50회", button_style, ()=>{ this.data.count = this.data.count + 50;this.render_content(); });
-        let button_10 = CComponent.button ("button_10c", "+ 10회", button_style, ()=>{ this.data.count = this.data.count + 10;this.render_content(); });
-        let button_1 = CComponent.button ("button_1c", "+ 1회", button_style, ()=>{ this.data.count = this.data.count + 1;this.render_content(); });
+        let button_50 = CComponent.button ("button_50c", "+ 50회", button_style, ()=>{ this.data.count = Number(this.data.count) + 50;this.render_content(); });
+        let button_10 = CComponent.button ("button_10c", "+ 10회", button_style, ()=>{ this.data.count = Number(this.data.count) + 10;this.render_content(); });
+        let button_1 = CComponent.button ("button_1c", "+ 1회", button_style, ()=>{ this.data.count = Number(this.data.count) + 1;this.render_content(); });
         let button_delete = CComponent.button ("button_delete_c", "지우기", button_style, ()=>{ this.data.count = null;this.render_content(); });
         
         let wrapper_style = "display:flex;padding:0px 0 0px 20px;font-size:12px;";
@@ -445,10 +445,10 @@ class Ticket_view{
     dom_row_price_simple_input_machine(){
         let button_style = {"flex":"1 1 0", "padding":"10px 8px", "color":"var(--font-sub-dark)"};
 
-        let button_100 = CComponent.button ("button_100", "+ 100만", button_style, ()=>{ this.data.price =this.data.price + 1000000;this.render_content(); });
-        let button_50 = CComponent.button ("button_50", "+ 50만", button_style, ()=>{ this.data.price = this.data.price + 500000;this.render_content(); });
-        let button_10 = CComponent.button ("button_10", "+ 10만", button_style, ()=>{ this.data.price = this.data.price + 100000;this.render_content(); });
-        let button_1 = CComponent.button ("button_1", "+ 1만", button_style, ()=>{ this.data.price = this.data.price + 10000;this.render_content(); });
+        let button_100 = CComponent.button ("button_100", "+ 100만", button_style, ()=>{ this.data.price = Number(this.data.price) + 1000000;this.render_content(); });
+        let button_50 = CComponent.button ("button_50", "+ 50만", button_style, ()=>{ this.data.price = Number(this.data.price) + 500000;this.render_content(); });
+        let button_10 = CComponent.button ("button_10", "+ 10만", button_style, ()=>{ this.data.price = Number(this.data.price) + 100000;this.render_content(); });
+        let button_1 = CComponent.button ("button_1", "+ 1만", button_style, ()=>{ this.data.price = Number(this.data.price) + 10000;this.render_content(); });
         let button_delete = CComponent.button ("button_delete", "지우기", button_style, ()=>{ this.data.price = null;this.render_content(); });
         
         let wrapper_style = "display:flex;padding:0px 0 0px 20px;font-size:12px;";
@@ -512,10 +512,10 @@ class Ticket_view{
     dom_row_period_simple_input_machine(){
         let button_style = {"flex":"1 1 0", "padding":"10px 8px", "color":"var(--font-sub-dark)"};
 
-        let button_50 = CComponent.button ("button_50d", "+ 50일", button_style, ()=>{ this.data.ticket_effective_days =this.data.ticket_effective_days + 50;this.render_content(); });
-        let button_10 = CComponent.button ("button_10d", "+ 10일", button_style, ()=>{ this.data.ticket_effective_days = this.data.ticket_effective_days + 10;this.render_content(); });
-        let button_7 = CComponent.button ("button_7d", "+ 7일", button_style, ()=>{ this.data.ticket_effective_days = this.data.ticket_effective_days + 7;this.render_content(); });
-        let button_1 = CComponent.button ("button_1d", "+ 1일", button_style, ()=>{ this.data.ticket_effective_days = this.data.ticket_effective_days + 1;this.render_content(); });
+        let button_50 = CComponent.button ("button_50d", "+ 50일", button_style, ()=>{ this.data.ticket_effective_days = Number(this.data.ticket_effective_days) + 50;this.render_content(); });
+        let button_10 = CComponent.button ("button_10d", "+ 10일", button_style, ()=>{ this.data.ticket_effective_days = Number(this.data.ticket_effective_days) + 10;this.render_content(); });
+        let button_7 = CComponent.button ("button_7d", "+ 7일", button_style, ()=>{ this.data.ticket_effective_days = Number(this.data.ticket_effective_days) + 7;this.render_content(); });
+        let button_1 = CComponent.button ("button_1d", "+ 1일", button_style, ()=>{ this.data.ticket_effective_days = Number(this.data.ticket_effective_days) + 1;this.render_content(); });
         let button_delete = CComponent.button ("button_delete_d", "지우기", button_style, ()=>{ this.data.ticket_effective_days = null;this.render_content(); });
         
         let wrapper_style = "display:flex;padding:0px 0 0px 20px;font-size:12px;";

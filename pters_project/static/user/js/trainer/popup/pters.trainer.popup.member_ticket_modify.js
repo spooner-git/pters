@@ -40,6 +40,12 @@ class Member_ticket_modify{
             this.date_start = date_start_array[data.setting_week_start_date];
         });
 
+        this.simple_input = {
+            count : OFF,
+            price : OFF,
+            period : OFF
+        };
+
         //팝업의 날짜, 시간등의 입력란을 미리 외부에서 온 데이터로 채워서 보여준다.
        
         this.init();
@@ -451,11 +457,50 @@ class Member_ticket_modify{
         let pattern = "[0-9]{0,15}";
         let pattern_message = "";
         let required = "";
+
+        if(this.data.reg_count == 99999){
+            title = "제한 없음";
+        }
+
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.data.reg_count = user_input_data;
 
         }, pattern, pattern_message, required);
+
+        $(document).off('click', `#c_i_n_r_${id}`).on('click', `#c_i_n_r_${id}`, ()=>{
+            if(this.simple_input.count == OFF){
+                this.simple_input.count = ON;
+                this.render_content();
+            }
+        });
+
+        if(this.simple_input.count == ON){
+            html = html + this.dom_row_count_simple_input_machine();
+        }
+
+        return html;
+    }
+
+    dom_row_count_simple_input_machine(){
+        let button_style = {"flex":"1 1 0", "padding":"10px 8px", "color":"var(--font-sub-dark)"};
+
+        let button_limitless = CComponent.button ("button_limitless", "제한없음", button_style, ()=>{ this.data.reg_count = 99999; this.render_content(); });
+        let button_50 = CComponent.button ("button_50c", "+ 50회", button_style, ()=>{ this.data.reg_count = Number(this.data.reg_count) + 50;this.render_content(); });
+        let button_10 = CComponent.button ("button_10c", "+ 10회", button_style, ()=>{ this.data.reg_count = Number(this.data.reg_count) + 10;this.render_content(); });
+        let button_1 = CComponent.button ("button_1c", "+ 1회", button_style, ()=>{ this.data.reg_count = Number(this.data.reg_count) + 1;this.render_content(); });
+        let button_delete = CComponent.button ("button_delete_c", "지우기", button_style, ()=>{ this.data.reg_count = null;this.render_content(); });
+        
+        let wrapper_style = "display:flex;padding:0px 0 0px 20px;font-size:12px;";
+        let divider_style = "flex-basis:1px;height:20px;margin-top:10px;background-color:var(--bg-light);display:none;";
+        let html = `<div style="${wrapper_style}">
+                        ${button_1} <div style="${divider_style}"></div>
+                        ${button_10} <div style="${divider_style}"></div>
+                        ${button_50} <div style="${divider_style}"></div>
+                        ${button_limitless} <div style="${divider_style}"></div>
+                        ${button_delete}
+                    </div>`;
+
         return html;
     }
 
@@ -477,6 +522,40 @@ class Member_ticket_modify{
             this.data.price = user_input_data;
             this.render_content();
         }, pattern, pattern_message, required);
+
+        $(document).off('click', `#c_i_n_r_${id}`).on('click', `#c_i_n_r_${id}`, (e)=>{
+            if(this.simple_input.price == OFF){
+                this.simple_input.price = ON;
+                this.render_content();
+            }
+        });
+
+        if(this.simple_input.price == ON){
+            html = html + this.dom_row_price_simple_input_machine();
+        }
+
+        return html;
+    }
+
+    dom_row_price_simple_input_machine(){
+        let button_style = {"flex":"1 1 0", "padding":"10px 8px", "color":"var(--font-sub-dark)"};
+
+        let button_100 = CComponent.button ("button_100", "+ 100만", button_style, ()=>{ this.data.price = Number(this.data.price) + 1000000;this.render_content(); });
+        let button_50 = CComponent.button ("button_50", "+ 50만", button_style, ()=>{ this.data.price = Number(this.data.price) + 500000;this.render_content(); });
+        let button_10 = CComponent.button ("button_10", "+ 10만", button_style, ()=>{ this.data.price = Number(this.data.price) + 100000;this.render_content(); });
+        let button_1 = CComponent.button ("button_1", "+ 1만", button_style, ()=>{ this.data.price = Number(this.data.price) + 10000;this.render_content(); });
+        let button_delete = CComponent.button ("button_delete", "지우기", button_style, ()=>{ this.data.price = null;this.render_content(); });
+        
+        let wrapper_style = "display:flex;padding:0px 0 0px 20px;font-size:12px;";
+        let divider_style = "flex-basis:1px;height:20px;margin-top:10px;background-color:var(--bg-light);display:none;";
+        let html = `<div style="${wrapper_style}">
+                        ${button_100} <div style="${divider_style}"></div>
+                        ${button_50} <div style="${divider_style}"></div>
+                        ${button_10} <div style="${divider_style}"></div>
+                        ${button_1} <div style="${divider_style}"></div>
+                        ${button_delete}
+                    </div>`;
+
         return html;
     }
 
