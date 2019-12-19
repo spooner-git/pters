@@ -53,7 +53,12 @@ class Plan_view{
             lecture_state_cd: null,
             schedule_type:null,
 
-            duplicate_plan_when_add:[]
+            duplicate_plan_when_add:[],
+
+            reg_member_id:null,
+            reg_member_name:null,
+            reg_date:null,
+            mod_date:null
         };
 
         this.work_time = {start_hour:0, end_hour:24};
@@ -169,6 +174,12 @@ class Plan_view{
         this.data.lecture_state_cd = data.schedule_info[0].state_cd;
         this.data.memo = data.schedule_info[0].note;
         this.data.schedule_type = data.schedule_info[0].schedule_type;
+
+        this.data.reg_member_id = data.schedule_info[0].reg_member_id;
+        this.data.reg_member_name = data.schedule_info[0].reg_member_name;
+        this.data.reg_date = data.schedule_info[0].reg_dt;
+        this.data.mod_date = data.schedule_info[0].mod_dt;
+
     }
 
     calc_end_time_by_start_time(start_time_, lecture_minute, work_time_end){
@@ -252,6 +263,7 @@ class Plan_view{
         let end_time_select_row = this.dom_row_end_time_select();
         let classic_time_selector = this.dom_row_classic_time_selector();
         let memo_select_row = this.dom_row_memo_select();
+        let reg_mod_info = this.dom_row_reg_mod_date();
 
         let display = "";
         if(this.data.schedule_type != 2){ //0: OFF, 1: 개인, 2:그룹
@@ -263,12 +275,14 @@ class Plan_view{
             html =  `<div class="obj_input_box_full" style="display:${display}; border:0;">`+ CComponent.dom_tag('회원') + member_select_row + member_list_row+'</div>' +
                         '<div class="obj_input_box_full">' +  CComponent.dom_tag('일자') + date_select_row +
                                                         CComponent.dom_tag('진행시간') + classic_time_selector + '</div>' +
-                        '<div class="obj_input_box_full">'+ CComponent.dom_tag('메모 <span style="color:var(--font-highlight)">(회원님께 공유되는 메모입니다.)</span>') + memo_select_row + '</div>';
+                        '<div class="obj_input_box_full">'+ CComponent.dom_tag('메모 <span style="color:var(--font-highlight)">(회원님께 공유되는 메모입니다.)</span>') + memo_select_row + '</div>' +
+                        '<div class="obj_input_box_full" style="padding:18px;">' + reg_mod_info + '<div>';
         }else{
             html =  `<div class="obj_input_box_full" style="display:${display}; border:0;">`+ CComponent.dom_tag('회원') + member_select_row + member_list_row+'</div>' +
                         '<div class="obj_input_box_full">' +  CComponent.dom_tag('일자') + date_select_row +
                                                         CComponent.dom_tag('진행시간') + start_time_select_row + end_time_select_row + '</div>' +
-                        '<div class="obj_input_box_full">'+ CComponent.dom_tag('메모 <span style="color:var(--font-highlight)">(회원님께 공유되는 메모입니다.)</span>') + memo_select_row + '</div>';
+                        '<div class="obj_input_box_full">'+ CComponent.dom_tag('메모 <span style="color:var(--font-highlight)">(회원님께 공유되는 메모입니다.)</span>') + memo_select_row + '</div>' +
+                        '<div class="obj_input_box_full" style="padding:18px;">' + reg_mod_info + '<div>';
         }
 
         return html;
@@ -692,6 +706,29 @@ class Plan_view{
         return html;
     }
 
+    dom_row_reg_mod_date(){
+        // let icon_button_style = {"display":"block", "padding":0, "font-size":"12px"};
+        let style = {"font-size":"12px", "height":"25px", "line-height":"25px", "padding":"0"};
+
+        let member_name = this.data.reg_member_name;
+        let reg_date = DateRobot.to_text(this.data.reg_date.split(" ")[0]) + ' ' +
+                            TimeRobot.to_text(this.data.reg_date.split(" ")[1]);
+        let mod_date = DateRobot.to_text(this.data.mod_date.split(" ")[0]) + ' ' +
+                            TimeRobot.to_text(this.data.mod_date.split(" ")[1]);
+
+        let reg_date_text = reg_date == mod_date ? reg_date + ' ' + member_name : reg_date;
+        let mod_date_text = mod_date + ' ' + member_name;
+
+        let html1 = CComponent.create_row('reg_date_view', `등록: ${reg_date_text}`, NONE, NONE, "", style, ()=>{});
+        let html2 = CComponent.create_row('mod_date_view', `수정: ${mod_date_text}`, NONE, NONE, "", style, ()=>{});
+
+        let html = html1 + html2;
+        if(reg_date_text == mod_date_text){
+            html = html1;
+        }
+        return html;
+    }
+
     request_data (callback){
         Plan_func.read_plan(this.schedule_id, (data)=>{
             this.received_data = data;
@@ -705,7 +742,7 @@ class Plan_view{
             ()=>{ show_user_confirm(`정말 ${this.data.schedule_type != "0" ? this.data.lecture_name : 'OFF'} 일정을 취소하시겠습니까?`, ()=>{
                     let inspect = pass_inspector.schedule_delete();
                     if(inspect.barrier == BLOCKED){
-                        let message = `현재 프로그램의 ${inspect.limit_type}`;
+                        let message = `${inspect.limit_type}`;
                         layer_popup.close_layer_popup();
                         show_error_message(message);
                         return false;
@@ -842,7 +879,7 @@ class Plan_view{
         if(this.if_user_changed_any_information == true){
             let inspect = pass_inspector.schedule_update();
             if(inspect.barrier == BLOCKED){
-                let message = `현재 프로그램의 ${inspect.limit_type}`;
+                let message = `${inspect.limit_type}`;
                 layer_popup.close_layer_popup();
                 this.clear();
                 show_error_message(message);

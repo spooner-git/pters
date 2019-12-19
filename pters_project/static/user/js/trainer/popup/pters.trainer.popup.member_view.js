@@ -681,7 +681,7 @@ class Member_view{
                     layer_popup.close_layer_popup();
                     let auth_inspect = pass_inspector.member_update();
                     if(auth_inspect.barrier == BLOCKED){
-                        let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+                        let message = `${auth_inspect.limit_type}`;
                         show_error_message(message);
                         return false;
                     }
@@ -697,7 +697,7 @@ class Member_view{
                     layer_popup.close_layer_popup();
                     let auth_inspect = pass_inspector.member_update();
                     if(auth_inspect.barrier == BLOCKED){
-                        let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+                        let message = `${auth_inspect.limit_type}`;
                         show_error_message(message);
                         return false;
                     }
@@ -763,7 +763,7 @@ class Member_view{
     send_data(){
         let auth_inspect = pass_inspector.member_update();
         if(auth_inspect.barrier == BLOCKED){
-            let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+            let message = `${auth_inspect.limit_type}`;
             show_error_message(message);
             this.set_initial_data();
             return false;
@@ -831,7 +831,7 @@ class Member_view{
                     show_user_confirm(`"${this.data.name}" 님 정보를 완전 삭제 하시겠습니까? <br> 다시 복구할 수 없습니다.`, ()=>{
                         let auth_inspect = pass_inspector.member_delete();
                         if(auth_inspect.barrier == BLOCKED){
-                            let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+                            let message = `${auth_inspect.limit_type}`;
                             show_error_message(message);
                             layer_popup.close_layer_popup();
                             return false;

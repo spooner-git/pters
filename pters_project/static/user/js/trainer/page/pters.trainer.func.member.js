@@ -237,7 +237,7 @@ class Member {
     event_view_member(member_id){
         let inspect = pass_inspector.member_read();
         if(inspect.barrier == BLOCKED){
-            let message = `현재 프로그램의 ${inspect.limit_type}`;
+            let message = `${inspect.limit_type}`;
             show_error_message(message);
             return false;
         }

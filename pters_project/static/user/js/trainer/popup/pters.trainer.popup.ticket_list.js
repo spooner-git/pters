@@ -214,7 +214,7 @@ class Ticket_list {
     event_view_ticket(ticket_id){
         let auth_inspect = pass_inspector.ticket_read();
         if(auth_inspect.barrier == BLOCKED){
-            let message = `현재 프로그램의 ${auth_inspect.limit_type}`;
+            let message = `${auth_inspect.limit_type}`;
             show_error_message(message);
             return false;
         }

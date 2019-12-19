@@ -188,7 +188,7 @@ class Home {
             let onclick = ()=>{
                 let inspect = pass_inspector.program_read();
                 if(inspect.barrier == BLOCKED){
-                    let message = `현재 프로그램의 ${inspect.limit_type}`;
+                    let message = `${inspect.limit_type}`;
                     show_error_message(message);
                     return false;
                 }
@@ -351,7 +351,7 @@ class Home {
             let onclick = ()=>{
                 let inspect = pass_inspector.member_read();
                 if(inspect.barrier == BLOCKED){
-                    let message = `현재 프로그램의 ${inspect.limit_type}`;
+                    let message = `${inspect.limit_type}`;
                     show_error_message(message);
                     return false;
                 }
@@ -411,7 +411,7 @@ class Home {
         let onclick = ()=>{
             let inspect = pass_inspector.statistics_read();
             if(inspect.barrier == BLOCKED){
-                let message = `현재 프로그램의 ${inspect.limit_type}`;
+                let message = `${inspect.limit_type}`;
                 show_error_message(message);
                 return false;
             }
@@ -451,7 +451,7 @@ class Home {
     popup_plan_view(schedule_id){
         let inspect = pass_inspector.schedule_read();
         if(inspect.barrier == BLOCKED){
-            let message = `현재 프로그램의 ${inspect.limit_type}`;
+            let message = `${inspect.limit_type}`;
             show_error_message(message);
             return false;
         }

@@ -68,9 +68,13 @@ class Program_list{
     }
     
     dom_assembly_content(){
-        let html_selected_current_program = [CComponent.dom_tag("선택된 프로그램", {"padding":"5px 20px", "font-weight":"bold", "color":"var(--font-highlight)"})];
-        let html_temp = [CComponent.dom_tag('등록된 프로그램', {"padding":"5px 20px", "font-weight":"bold", "color":"var(--font-sub-normal)"})];
+        let html_selected_current_program = [];
+        let html_shared_program = [];
+        let html_temp = [];
         let length = this.data.program_data.length;
+
+        let shared_program_count = 0;
+        let not_selected_program_count = 0;
         for (let i=0; i<length; i++){
             let data = this.data.program_data[i];
             let name = data.program_subject_type_name;
@@ -78,11 +82,12 @@ class Program_list{
             let member_num = data.program_total_member_num;
             let status = data.program_state_cd;
             let selected = data.program_selected;
+            let shared = data.shared_program_flag;
             let category_code = data.program_upper_subject_cd != "" ? data.program_upper_subject_cd : "ETC";
             let category_sub_name = PROGRAM_CATEGORY[category_code].sub_category[data.program_subject_cd].name;
             let category_sub_code = data.program_subject_cd;
 
-            let html = `<article class="program_wrapper" data-program_id="${id}" onclick="program_list_popup.event_program_click(${id}, '${name}', '${category_code}', '${category_sub_code}', '${selected}');">
+            let html = `<article class="program_wrapper" data-program_id="${id}" onclick="program_list_popup.event_program_click(${id}, '${name}', '${category_code}', '${category_sub_code}', '${selected}', '${shared}');">
                             <div class="program_data_u">
                                 <div>
                                     <span>${name}</span>
@@ -99,12 +104,50 @@ class Program_list{
                 html_selected_current_program.push(html);
             }else{
                 html_temp.push(html);
+                not_selected_program_count++;
+            }
+            if(shared == ON){
+                html_shared_program.push(html);
+                shared_program_count++;
+                continue;
             }
         }
-        
-        let html = html_selected_current_program.join("") + `<div style="margin-top:20px;"></div>` + html_temp.join("");
+
+        html_selected_current_program.unshift(CComponent.dom_tag("선택된 프로그램", {"padding":"5px 20px", "font-weight":"bold", "color":"var(--font-highlight)"}));
+        html_shared_program.unshift(CComponent.dom_tag(`공유 받은 프로그램 (${shared_program_count})`, {"padding":"5px 20px", "font-weight":"bold", "color":"var(--font-sub-normal)"}));
+        html_temp.unshift(CComponent.dom_tag(`등록된 프로그램 (${not_selected_program_count})`, {"padding":"5px 20px", "font-weight":"bold", "color":"var(--font-sub-normal)"}));
+
+
+        if(html_shared_program.length == 1){
+            html_shared_program.push(this.introduce("shared"));
+        }
+
+        let assembly_selected_program = html_selected_current_program.join("") + `<div style="margin-top:20px;"></div>`;
+        let assembly_shared_program = html_shared_program.join("") + `<div style="margin-top:20px;"></div>`;
+        let assembly_reg_program = html_temp.join("");
+
+        let html =  assembly_selected_program +
+                    assembly_shared_program +
+                    assembly_reg_program;
 
         return html;
+    }
+
+    introduce(type){
+        let text;
+        switch(type){
+            case "shared":
+                text = `<article class='program_wrapper'>
+                            <p style='font-size:11px;padding:0 5px;margin:0'>다른 PTERS 강사님으로부터 공유 받은 프로그램이 없습니다.</p>
+                        </article>`;
+            break;
+            case "sharing":
+                text = `<article class='program_wrapper'>
+                            <p style='font-size:11px;padding:0 5px;margin:0'>다른 PTERS 강사님께 내 프로그램을 공유하여, 함께 관리합니다.</p>
+                        </article>`;
+            break;
+        }
+        return text;
     }
 
     dom_row_toolbox(){
@@ -121,7 +164,7 @@ class Program_list{
         return html;
     }
 
-    event_program_click(id, name, category, category_sub, selected){
+    event_program_click(id, name, category, category_sub, selected, shared){
         let user_option = {
             goto:{text:"프로그램 이동", callback:()=>{ 
                     window.location.href=`/trainer/select_program_processing/?class_id=${id}&next_page=/trainer/`; 
@@ -143,6 +186,9 @@ class Program_list{
                 }
             }
         };
+        if(shared == ON){
+            delete user_option["edit"];
+        }
         let options_padding_top_bottom = 16;
         let button_height = 8 + 8 + 52;
         let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
