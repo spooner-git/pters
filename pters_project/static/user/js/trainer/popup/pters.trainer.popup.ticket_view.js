@@ -6,6 +6,8 @@ class Ticket_view{
         this.readonly = readonly;
         this.form_id = 'id_ticket_view_form';
 
+        this.if_user_changed_any_information = false;
+
         let d = new Date();
         this.dates = {
             current_year: d.getFullYear(),
@@ -44,6 +46,12 @@ class Ticket_view{
             member_profile_url:[]
         };
 
+        this.simple_input = {
+            count : OFF,
+            price : OFF,
+            period : OFF
+        }
+
         this.init();
         this.set_initial_data();
     }
@@ -72,7 +80,7 @@ class Ticket_view{
 
     set period(text){
         this.data.ticket_effective_days = text;
-        // this.render_content();
+        this.render_content();
     }
 
     get period(){
@@ -81,7 +89,7 @@ class Ticket_view{
 
     set memo(text){
         this.data.memo = text;
-        // this.render_content();
+        this.render_content();
     }
 
     get memo(){
@@ -90,7 +98,7 @@ class Ticket_view{
     
     set count(number){
         this.data.count = number;
-        // this.render_content();
+        this.render_content();
     }
 
     get count(){
@@ -99,7 +107,7 @@ class Ticket_view{
 
     set price(number){
         this.data.price = number;
-        // this.render_content();
+        this.render_content();
     }
 
     get price(){
@@ -149,7 +157,7 @@ class Ticket_view{
     }
 
     render(){
-        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();ticket_view_popup.clear();">${CImg.arrow_left()}</span>`;
+        let top_left = `<span class="icon_left" onclick="ticket_view_popup.upper_left_menu();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
         let top_right = `<span class="icon_right" onclick="ticket_view_popup.upper_right_menu();">${CImg.more()}</span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
@@ -277,7 +285,8 @@ class Ticket_view{
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SELECT, 100, popup_style, null, ()=>{
                 lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 999, {'title':'수업'}, (set_data)=>{
                     this.lecture = set_data; //타겟에 선택된 데이터를 set
-                    this.send_data();
+                    // this.send_data(); wait_here_testing
+                    this.if_user_changed_any_information = true;
                 });
             });
         });
@@ -348,8 +357,43 @@ class Ticket_view{
             }
             let user_input_data = input_data;
             this.count = user_input_data;
-            this.send_data();
+            // this.send_data(); wait_here_testing
+            this.if_user_changed_any_information = true;
         }, pattern, pattern_message, required);
+
+        $(document).off('click', `#c_i_n_r_${id}`).on('click', `#c_i_n_r_${id}`, ()=>{
+            if(this.simple_input.count == OFF){
+                this.simple_input.count = ON;
+                this.render_content();
+            }
+        });
+
+        if(this.simple_input.count == ON){
+            html = html + this.dom_row_count_simple_input_machine();
+        }
+
+        return html;
+    }
+
+    dom_row_count_simple_input_machine(){
+        let button_style = {"flex":"1 1 0", "padding":"10px 8px", "color":"var(--font-sub-dark)"};
+
+        let button_limitless = CComponent.button ("button_limitless", "제한없음", button_style, ()=>{ this.data.count = 99999;this.render_content(); });
+        let button_50 = CComponent.button ("button_50c", "+ 50회", button_style, ()=>{ this.data.count = this.data.count + 50;this.render_content(); });
+        let button_10 = CComponent.button ("button_10c", "+ 10회", button_style, ()=>{ this.data.count = this.data.count + 10;this.render_content(); });
+        let button_1 = CComponent.button ("button_1c", "+ 1회", button_style, ()=>{ this.data.count = this.data.count + 1;this.render_content(); });
+        let button_delete = CComponent.button ("button_delete_c", "지우기", button_style, ()=>{ this.data.count = null;this.render_content(); });
+        
+        let wrapper_style = "display:flex;padding:0px 0 0px 20px;font-size:12px;";
+        let divider_style = "flex-basis:1px;height:20px;margin-top:10px;background-color:var(--bg-light);display:none;";
+        let html = `<div style="${wrapper_style}">
+                        ${button_1} <div style="${divider_style}"></div>
+                        ${button_10} <div style="${divider_style}"></div>
+                        ${button_50} <div style="${divider_style}"></div>
+                        ${button_limitless} <div style="${divider_style}"></div>
+                        ${button_delete}
+                    </div>`;
+
         return html;
     }
 
@@ -380,8 +424,43 @@ class Ticket_view{
             }
             let user_input_data = input_data;
             this.price = user_input_data;
-            this.send_data();
+            // this.send_data(); wait_here_testing
+            this.if_user_changed_any_information = true;
         }, pattern, pattern_message, required);
+
+        $(document).off('click', `#c_i_n_r_${id}`).on('click', `#c_i_n_r_${id}`, ()=>{
+            if(this.simple_input.price == OFF){
+                this.simple_input.price = ON;
+                this.render_content();
+            }
+        });
+
+        if(this.simple_input.price == ON){
+            html = html + this.dom_row_price_simple_input_machine();
+        }
+
+        return html;
+    }
+
+    dom_row_price_simple_input_machine(){
+        let button_style = {"flex":"1 1 0", "padding":"10px 8px", "color":"var(--font-sub-dark)"};
+
+        let button_100 = CComponent.button ("button_100", "+ 100만", button_style, ()=>{ this.data.price =this.data.price + 1000000;this.render_content(); });
+        let button_50 = CComponent.button ("button_50", "+ 50만", button_style, ()=>{ this.data.price = this.data.price + 500000;this.render_content(); });
+        let button_10 = CComponent.button ("button_10", "+ 10만", button_style, ()=>{ this.data.price = this.data.price + 100000;this.render_content(); });
+        let button_1 = CComponent.button ("button_1", "+ 1만", button_style, ()=>{ this.data.price = this.data.price + 10000;this.render_content(); });
+        let button_delete = CComponent.button ("button_delete", "지우기", button_style, ()=>{ this.data.price = null;this.render_content(); });
+        
+        let wrapper_style = "display:flex;padding:0px 0 0px 20px;font-size:12px;";
+        let divider_style = "flex-basis:1px;height:20px;margin-top:10px;background-color:var(--bg-light);display:none;";
+        let html = `<div style="${wrapper_style}">
+                        ${button_100} <div style="${divider_style}"></div>
+                        ${button_50} <div style="${divider_style}"></div>
+                        ${button_10} <div style="${divider_style}"></div>
+                        ${button_1} <div style="${divider_style}"></div>
+                        ${button_delete}
+                    </div>`;
+
         return html;
     }
 
@@ -412,8 +491,43 @@ class Ticket_view{
             }
             let user_input_data = input_data;
             this.period = user_input_data;
-            this.send_data();
+            // this.send_data(); wait_here_testing
+            this.if_user_changed_any_information = true;
         }, pattern, pattern_message, required);
+
+        $(document).off('click', `#c_i_n_r_${id}`).on('click', `#c_i_n_r_${id}`, ()=>{
+            if(this.simple_input.period == OFF){
+                this.simple_input.period = ON;
+                this.render_content();
+            }
+        });
+
+        if(this.simple_input.period == ON){
+            html = html + this.dom_row_period_simple_input_machine();
+        }
+
+        return html;
+    }
+
+    dom_row_period_simple_input_machine(){
+        let button_style = {"flex":"1 1 0", "padding":"10px 8px", "color":"var(--font-sub-dark)"};
+
+        let button_50 = CComponent.button ("button_50d", "+ 50일", button_style, ()=>{ this.data.ticket_effective_days =this.data.ticket_effective_days + 50;this.render_content(); });
+        let button_10 = CComponent.button ("button_10d", "+ 10일", button_style, ()=>{ this.data.ticket_effective_days = this.data.ticket_effective_days + 10;this.render_content(); });
+        let button_7 = CComponent.button ("button_7d", "+ 7일", button_style, ()=>{ this.data.ticket_effective_days = this.data.ticket_effective_days + 7;this.render_content(); });
+        let button_1 = CComponent.button ("button_1d", "+ 1일", button_style, ()=>{ this.data.ticket_effective_days = this.data.ticket_effective_days + 1;this.render_content(); });
+        let button_delete = CComponent.button ("button_delete_d", "지우기", button_style, ()=>{ this.data.ticket_effective_days = null;this.render_content(); });
+        
+        let wrapper_style = "display:flex;padding:0px 0 0px 20px;font-size:12px;";
+        let divider_style = "flex-basis:1px;height:20px;margin-top:10px;background-color:var(--bg-light);display:none;";
+        let html = `<div style="${wrapper_style}">
+                        ${button_1} <div style="${divider_style}"></div>
+                        ${button_7} <div style="${divider_style}"></div>
+                        ${button_10} <div style="${divider_style}"></div>
+                        ${button_50} <div style="${divider_style}"></div>
+                        ${button_delete}
+                    </div>`;
+
         return html;
     }
 
@@ -440,7 +554,8 @@ class Ticket_view{
 
             let user_input_data = input_data;
             this.memo = user_input_data;
-            this.send_data();
+            // this.send_data(); wait_here_testing
+            this.if_user_changed_any_information = true;
         }, pattern, pattern_message, required);
         return html;
     }
@@ -538,6 +653,33 @@ class Ticket_view{
                 ticket_list_popup.init();
             }catch(e){}
         });
+    }
+
+    upper_left_menu(){
+        if(this.if_user_changed_any_information == true){
+            let inspect = pass_inspector.ticket_update();
+            if(inspect.barrier == BLOCKED){
+                let message = `${inspect.limit_type}`;
+                layer_popup.close_layer_popup();
+                this.clear();
+                show_error_message(message);
+                return false;
+            }
+            
+            let user_option = {
+                confirm:{text:"변경사항 적용", callback:()=>{this.send_data();layer_popup.close_layer_popup();layer_popup.close_layer_popup();this.clear();}},
+                cancel:{text:"아무것도 변경하지 않음", callback:()=>{ layer_popup.close_layer_popup();layer_popup.close_layer_popup();this.clear();}}
+            };
+            let options_padding_top_bottom = 16;
+            let button_height = 8 + 8 + 52;
+            let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
+            let root_content_height = $root_content.height();
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
+                option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+            });
+        }else{
+            layer_popup.close_layer_popup();this.clear();
+        }
     }
 
     upper_right_menu(){

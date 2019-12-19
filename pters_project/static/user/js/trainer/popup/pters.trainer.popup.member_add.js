@@ -29,7 +29,7 @@ class Member_add{
                 ticket_id:[],
                 ticket_name:[],
                 ticket_effective_days:[],
-                ticket_reg_count:[],
+                ticket_reg_count:[null],
                 ticket_price:[],
                 pay_method:{value:["NONE"], text:["선택 안함"]},
                 start_date:null,
@@ -625,7 +625,7 @@ class Member_add{
     dom_row_member_reg_count_input(){
         let unit = '회';
         let id = 'input_reg_count';
-        let title = this.data.ticket_reg_count.length == 0 ? '' : this.data.ticket_reg_count;
+        let title = this.data.ticket_reg_count.length == 0 || this.data.ticket_reg_count[0] == null ? '' : this.data.ticket_reg_count[0];
         let placeholder = '횟수*';
         let icon = NONE;
         let icon_r_visible = HIDE;
@@ -635,12 +635,41 @@ class Member_add{
         let pattern = "[0-9]{1,4}";
         let pattern_message = "";
         let required = "required";
+        
+        if(title == 99999){
+            title = "제한 없음";
+        }
+
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, input_disabled, (input_data)=>{
             if(input_data != '' && input_data != null){
                 input_data = Number(input_data);
             }
             this.reg_count = input_data;
         }, pattern, pattern_message, required);
+
+        let count_simple_input = this.dom_row_count_simple_input_machine();
+        return html + count_simple_input;
+    }
+
+    dom_row_count_simple_input_machine(){
+        let button_style = {"flex":"1 1 0", "padding":"10px 8px", "color":"var(--font-sub-dark)"};
+
+        let button_limitless = CComponent.button ("button_limitless", "제한없음", button_style, ()=>{ this.data.ticket_reg_count[0] = 99999;this.render_content(); });
+        let button_50 = CComponent.button ("button_50c", "+ 50회", button_style, ()=>{ this.data.ticket_reg_count[0] = this.data.ticket_reg_count[0] + 50;this.render_content(); });
+        let button_10 = CComponent.button ("button_10c", "+ 10회", button_style, ()=>{ this.data.ticket_reg_count[0] = this.data.ticket_reg_count[0] + 10;this.render_content(); });
+        let button_1 = CComponent.button ("button_1c", "+ 1회", button_style, ()=>{ this.data.ticket_reg_count[0] = this.data.ticket_reg_count[0] + 1;this.render_content(); });
+        let button_delete = CComponent.button ("button_delete_c", "지우기", button_style, ()=>{ this.data.ticket_reg_count[0] = null;this.render_content(); });
+        
+        let wrapper_style = "display:flex;padding:0px 0 0px 20px;font-size:12px;";
+        let divider_style = "flex-basis:1px;height:20px;margin-top:10px;background-color:var(--bg-light);display:none;";
+        let html = `<div style="${wrapper_style}">
+                        ${button_1} <div style="${divider_style}"></div>
+                        ${button_10} <div style="${divider_style}"></div>
+                        ${button_50} <div style="${divider_style}"></div>
+                        ${button_limitless} <div style="${divider_style}"></div>
+                        ${button_delete}
+                    </div>`;
+
         return html;
     }
 
