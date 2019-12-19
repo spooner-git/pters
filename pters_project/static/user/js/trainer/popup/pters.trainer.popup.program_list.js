@@ -104,20 +104,21 @@ class Program_list{
                         </article>`;
             if(selected == PROGRAM_SELECTED){
                 html_selected_current_program.push(html);
-            }else{
-                html_temp.push(html);
-                not_selected_program_count++;
             }
+            
             if(shared == ON){
                 html_shared_program.push(html);
                 shared_program_count++;
                 continue;
+            }else{
+                html_temp.push(html);
+                not_selected_program_count++;
             }
         }
 
         html_selected_current_program.unshift(CComponent.dom_tag("선택된 프로그램", {"padding":"5px 20px", "font-weight":"bold", "color":"var(--font-highlight)"}));
         html_shared_program.unshift(CComponent.dom_tag(`공유 받은 프로그램 (${shared_program_count})`, {"padding":"5px 20px", "font-weight":"bold", "color":"var(--font-sub-normal)"}));
-        html_temp.unshift(CComponent.dom_tag(`등록된 프로그램 (${not_selected_program_count})`, {"padding":"5px 20px", "font-weight":"bold", "color":"var(--font-sub-normal)"}));
+        html_temp.unshift(CComponent.dom_tag(`내 프로그램 (${not_selected_program_count})`, {"padding":"5px 20px", "font-weight":"bold", "color":"var(--font-sub-normal)"}));
 
 
         if(html_shared_program.length == 1){
@@ -126,11 +127,12 @@ class Program_list{
 
         let assembly_selected_program = html_selected_current_program.join("") + `<div style="margin-top:20px;"></div>`;
         let assembly_shared_program = html_shared_program.join("") + `<div style="margin-top:20px;"></div>`;
-        let assembly_reg_program = html_temp.join("");
+        let assembly_reg_program = html_temp.join("") + `<div style="margin-top:20px;"></div>`;
 
         let html =  assembly_selected_program +
-                    assembly_shared_program +
-                    assembly_reg_program;
+                    assembly_reg_program +
+                    assembly_shared_program;
+                    
 
         return html;
     }
