@@ -327,7 +327,6 @@ class Setting_menu_access{
         let auth_inspect = pass_inspector.setting_update();
         if(auth_inspect.barrier == BLOCKED){
             let message = `${auth_inspect.limit_type}`;
-            layer_popup.close_layer_popup();
             show_error_message(message);
             return false;
         }
