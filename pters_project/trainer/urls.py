@@ -221,6 +221,7 @@ urlpatterns = [
     # 사용자 앱 view 관련 Setting 수정
     url(r'^update_setting_theme/$', views.update_setting_theme_logic, name='update_setting_theme'),
 
+
     # 사용자 앱 view 관련 Setting 수정
     url(r'^update_setting_access_lock/$', views.update_setting_access_lock_logic,
         name='update_setting_access_lock'),
