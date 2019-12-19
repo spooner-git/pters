@@ -194,6 +194,14 @@ class Setting_attendmode{
     }
 
     send_data(){
+        let auth_inspect = pass_inspector.setting_update();
+        if(auth_inspect.barrier == BLOCKED){
+            let message = `${auth_inspect.limit_type}`;
+            layer_popup.close_layer_popup();
+            show_error_message(message);
+            return false;
+        }
+        
         if(this.data_sending_now == true){
             return false;
         }else if(this.data_sending_now == false){

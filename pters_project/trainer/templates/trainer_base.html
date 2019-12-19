@@ -755,48 +755,96 @@
             break;
             case 'setting_calendar':
                 open = ()=>{
+                    auth_inspect = pass_inspector.setting_read();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `${auth_inspect.limit_type}`;
+                        show_error_message(message);
+                        return false;
+                    }
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_CALENDAR, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     setting_calendar_popup = new Setting_calendar('.popup_setting_calendar')});
                     }
             break;
             case 'setting_worktime':
                 open = ()=>{
+                    auth_inspect = pass_inspector.setting_read();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `${auth_inspect.limit_type}`;
+                        show_error_message(message);
+                        return false;
+                    }
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_WORKTIME, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     setting_worktime_popup = new Setting_worktime('.popup_setting_worktime')});
                 }
             break;
             case 'setting_autocomplete':
                 open = ()=>{
+                    auth_inspect = pass_inspector.setting_read();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `${auth_inspect.limit_type}`;
+                        show_error_message(message);
+                        return false;
+                    }
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_AUTOCOMPLETE, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     setting_autocomplete_popup = new Setting_autocomplete('.popup_setting_autocomplete')});
                     }
             break;
             case 'setting_reserve':
                 open = ()=>{
+                    auth_inspect = pass_inspector.setting_read();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `${auth_inspect.limit_type}`;
+                        show_error_message(message);
+                        return false;
+                    }
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_RESERVE, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     setting_reserve_popup = new Setting_reserve('.popup_setting_reserve')});
                     }
             break;
             case 'setting_alarm':
                 open = ()=>{
+                    auth_inspect = pass_inspector.setting_read();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `${auth_inspect.limit_type}`;
+                        show_error_message(message);
+                        return false;
+                    }
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_ALARM, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     setting_alarm_popup = new Setting_alarm('.popup_setting_alarm')});
                 }
             break;
             case 'setting_attendmode':
                 open = ()=>{
+                    auth_inspect = pass_inspector.setting_read();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `${auth_inspect.limit_type}`;
+                        show_error_message(message);
+                        return false;
+                    }
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_ATTENDMODE, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     setting_attendmode_popup = new Setting_attendmode('.popup_setting_attendmode')});
                     }
             break;
             case 'setting_theme':
                 open = ()=>{
+                    auth_inspect = pass_inspector.setting_read();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `${auth_inspect.limit_type}`;
+                        show_error_message(message);
+                        return false;
+                    }
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_THEME, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     setting_theme_popup = new Setting_theme('.popup_setting_theme')});
                     }
             break;
             case 'setting_menu_access':
                 open = ()=>{
+                    auth_inspect = pass_inspector.setting_read();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `${auth_inspect.limit_type}`;
+                        show_error_message(message);
+                        return false;
+                    }
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_MENU_ACCESS, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     setting_menu_access_popup = new Setting_menu_access('.popup_setting_menu_access')});
                     }

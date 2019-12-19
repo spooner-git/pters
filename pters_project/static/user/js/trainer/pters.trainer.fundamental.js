@@ -1208,8 +1208,24 @@ class PassInspector{
         return {barrier:PASSED};
     }
 
-    settings(){
+    setting_read(){
+        let limit_number = Number(this.data.auth_setting_read.active);
+        let limit_type = this.data.auth_setting_read.limit_type;
 
+        if(limit_number == 0){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
+    }
+
+    setting_update(){
+        let limit_number = Number(this.data.auth_setting_update.active);
+        let limit_type = this.data.auth_setting_update.limit_type;
+
+        if(limit_number == 0){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
     }
 
     ads(){
