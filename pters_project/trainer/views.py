@@ -170,8 +170,9 @@ class GetLectureMemberScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, 
         if error is None:
             # 그룹 수업 일정에 해당하는 회원의 일정들 불러오기
             lecture_schedule_data = ScheduleTb.objects.select_related(
-                'member_ticket_tb__member').filter(class_tb_id=class_id, lecture_schedule_id=lecture_schedule_id,
-                                                   use=USE).order_by('start_dt')
+                'member_ticket_tb__member',
+                'reg_member').filter(class_tb_id=class_id, lecture_schedule_id=lecture_schedule_id,
+                                     use=USE).order_by('start_dt')
 
             for lecture_schedule_info in lecture_schedule_data:
                 schedule_info = {'schedule_id': lecture_schedule_info.schedule_id,
@@ -181,6 +182,10 @@ class GetLectureMemberScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, 
                                  'end_dt': str(lecture_schedule_info.end_dt),
                                  'state_cd': lecture_schedule_info.state_cd,
                                  'note': lecture_schedule_info.note,
+                                 'reg_member_id': lecture_schedule_info.reg_member_id,
+                                 'reg_member_name': lecture_schedule_info.reg_member.name,
+                                 'mod_dt': lecture_schedule_info.mod_dt,
+                                 'reg_dt': lecture_schedule_info.reg_dt,
                                  'daily_record_id': lecture_schedule_info.daily_record_tb_id
                                  }
 
@@ -276,25 +281,27 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
             member_lecture_end_font_color_cd = ''
 
         # OFF 반복 일정 정보 불러오기
-        off_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id, en_dis_type=OFF_SCHEDULE_TYPE).exclude(end_date__lt=today).order_by('-reg_dt')
+        off_repeat_schedule_data = RepeatScheduleTb.objects.select_related(
+            'reg_member').filter(class_tb_id=class_id,
+                                 en_dis_type=OFF_SCHEDULE_TYPE).exclude(end_date__lt=today).order_by('-reg_dt')
 
         # 회원의 반복 일정 정보 불러오기
         member_repeat_schedule_data = RepeatScheduleTb.objects.select_related(
-            'member_ticket_tb__member').filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,
-                                               lecture_tb__isnull=True,
-                                               lecture_schedule_id__isnull=True
-                                               ).exclude(end_date__lt=today).order_by('-reg_dt', 'lecture_tb',
-                                                                                      'lecture_schedule_id')
+            'member_ticket_tb__member',
+            'reg_member').filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, lecture_tb__isnull=True,
+                                 lecture_schedule_id__isnull=True
+                                 ).exclude(end_date__lt=today).order_by('-reg_dt', 'lecture_tb', 'lecture_schedule_id')
 
         # 수업 반복 일정 정보 불러오기
         lecture_repeat_schedule_data = RepeatScheduleTb.objects.select_related(
-            'lecture_tb').filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, lecture_tb__isnull=False,
+            'lecture_tb',
+            'reg_member').filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, lecture_tb__isnull=False,
                                  lecture_schedule_id__isnull=True
                                  ).exclude(end_date__lt=today).order_by('-reg_dt', 'lecture_tb', 'lecture_schedule_id',)
 
         # 수업에 속한 회원의 반복 일정 정보 불러오기
         lecture_member_repeat_schedule_data = RepeatScheduleTb.objects.select_related(
-            'lecture_tb', 'member_ticket_tb__member').filter(
+            'lecture_tb', 'member_ticket_tb__member', 'reg_member').filter(
             class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, lecture_tb__isnull=False,
             lecture_schedule_id__isnull=False).exclude(end_date__lt=today).order_by('-reg_dt', 'lecture_tb',
                                                                                     'lecture_schedule_id')
@@ -314,6 +321,9 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
                 'end_time': off_repeat_schedule_info.end_time,
                 'time_duration': off_repeat_schedule_info.time_duration,
                 'state_cd': off_repeat_schedule_info.state_cd,
+                'reg_member_id': off_repeat_schedule_info.reg_member_id,
+                'reg_member_name': off_repeat_schedule_info.reg_member.name,
+                'mod_dt': str(off_repeat_schedule_info.mod_dt),
                 'reg_dt': str(off_repeat_schedule_info.reg_dt)
             }
             off_repeat_schedule_list.append(off_repeat_schedule)
@@ -337,6 +347,9 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
                 'repeat_end_time': member_repeat_schedule_info.end_time,
                 'repeat_time_duration': member_repeat_schedule_info.time_duration,
                 'repeat_state_cd': member_repeat_schedule_info.state_cd,
+                'reg_member_id': member_repeat_schedule_info.reg_member_id,
+                'reg_member_name': member_repeat_schedule_info.reg_member.name,
+                'mod_dt': str(member_repeat_schedule_info.mod_dt),
                 'reg_dt': str(member_repeat_schedule_info.reg_dt),
                 'lecture_ing_color_cd': member_lecture_ing_color_cd,
                 'lecture_end_color_cd': member_lecture_end_color_cd,
@@ -363,6 +376,9 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
                 'end_time': lecture_repeat_schedule_info.end_time,
                 'time_duration': lecture_repeat_schedule_info.time_duration,
                 'state_cd': lecture_repeat_schedule_info.state_cd,
+                'reg_member_id': lecture_repeat_schedule_info.reg_member_id,
+                'reg_member_name': lecture_repeat_schedule_info.reg_member.name,
+                'mod_dt': str(lecture_repeat_schedule_info.mod_dt),
                 'reg_dt': str(lecture_repeat_schedule_info.reg_dt),
                 'lecture_id': lecture_repeat_schedule_info.lecture_tb.lecture_id,
                 'lecture_name': lecture_repeat_schedule_info.lecture_tb.name,
@@ -393,6 +409,9 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
                 'end_time': lecture_member_repeat_schedule_info.end_time,
                 'time_duration': lecture_member_repeat_schedule_info.time_duration,
                 'state_cd': lecture_member_repeat_schedule_info.state_cd,
+                'reg_member_id': lecture_member_repeat_schedule_info.reg_member_id,
+                'reg_member_name': lecture_member_repeat_schedule_info.reg_member.name,
+                'mod_dt': str(lecture_member_repeat_schedule_info.mod_dt),
                 'reg_dt': str(lecture_member_repeat_schedule_info.reg_dt),
                 'member_id': lecture_member_repeat_schedule_info.member_ticket_tb.member.member_id,
                 'member_name': lecture_member_repeat_schedule_info.member_ticket_tb.member.name,
@@ -415,7 +434,7 @@ class GetOffRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, View):
         class_id = self.request.session.get('class_id', '')
         off_repeat_schedule_list = []
 
-        off_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id, en_dis_type=OFF_SCHEDULE_TYPE)
+        off_repeat_schedule_data = RepeatScheduleTb.objects.select_related('reg_member').filter(class_tb_id=class_id, en_dis_type=OFF_SCHEDULE_TYPE)
 
         for off_repeat_schedule_info in off_repeat_schedule_data:
             off_repeat_schedule = {'repeat_schedule_id': off_repeat_schedule_info.repeat_schedule_id,
@@ -425,7 +444,11 @@ class GetOffRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, View):
                                    'start_time': off_repeat_schedule_info.start_time,
                                    'end_time': off_repeat_schedule_info.end_time,
                                    'time_duration': off_repeat_schedule_info.time_duration,
-                                   'state_cd': off_repeat_schedule_info.state_cd}
+                                   'state_cd': off_repeat_schedule_info.state_cd,
+                                   'reg_member_id': off_repeat_schedule_info.reg_member_id,
+                                   'reg_member_name': off_repeat_schedule_info.reg_member.name,
+                                   'mod_dt': str(off_repeat_schedule_info.mod_dt),
+                                   'reg_dt': str(off_repeat_schedule_info.reg_dt)}
             off_repeat_schedule_list.append(off_repeat_schedule)
 
         messages.error(request, '')
@@ -448,7 +471,8 @@ class GetLectureRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, 
         if error is None:
             # 그룹 반복 일정 정보 불러오기
             lecture_repeat_schedule_data = RepeatScheduleTb.objects.select_related(
-                'lecture_tb').filter(class_tb_id=class_id, lecture_tb_id=lecture_id).order_by('start_date')
+                'lecture_tb', 'reg_member').filter(class_tb_id=class_id,
+                                                   lecture_tb_id=lecture_id).order_by('start_date')
 
             for lecture_repeat_schedule_info in lecture_repeat_schedule_data:
 
@@ -461,7 +485,11 @@ class GetLectureRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, 
                                            'time_duration': lecture_repeat_schedule_info.time_duration,
                                            'state_cd': lecture_repeat_schedule_info.state_cd,
                                            'lecture_repeat_schedule_id':
-                                               lecture_repeat_schedule_info.lecture_repeat_schedule_id}
+                                               lecture_repeat_schedule_info.lecture_repeat_schedule_id,
+                                           'reg_member_id': lecture_repeat_schedule_info.reg_member_id,
+                                           'reg_member_name': lecture_repeat_schedule_info.reg_member.name,
+                                           'mod_dt': str(lecture_repeat_schedule_info.mod_dt),
+                                           'reg_dt': str(lecture_repeat_schedule_info.reg_dt)}
                 lecture_repeat_schedule_list.append(lecture_repeat_schedule)
         else:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
@@ -518,6 +546,10 @@ class GetMemberRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, View):
                                           'end_time': member_repeat_schedule_info.end_time,
                                           'time_duration': member_repeat_schedule_info.time_duration,
                                           'state_cd': member_repeat_schedule_info.state_cd,
+                                          'reg_member_id': member_repeat_schedule_info.reg_member_id,
+                                          'reg_member_name': member_repeat_schedule_info.reg_member.name,
+                                          'mod_dt': str(member_repeat_schedule_info.mod_dt),
+                                          'reg_dt': str(member_repeat_schedule_info.reg_dt),
                                           'lecture_repeat_schedule_id':
                                               member_repeat_schedule_info.lecture_repeat_schedule_id,
                                           'lecture_id': lecture_id,
