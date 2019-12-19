@@ -35,6 +35,12 @@ class Setting_sharing_member_auth{
                 statistics:{
                     read : OFF
                 },
+                setting:{
+                    create:OFF,
+                    read:OFF,
+                    update:OFF,
+                    delete:OFF
+                },
         };
 
         this.data_received;
@@ -73,8 +79,14 @@ class Setting_sharing_member_auth{
             this.data.ticket.delete = my_auth.auth_package_delete != undefined ? my_auth.auth_package_delete : null;
 
             this.data.statistics.read = my_auth.auth_analytics_read != undefined ? my_auth.auth_analytics_read : null;
+
+            this.data.setting.create = my_auth.auth_setting_create != undefined ? my_auth.auth_setting_create : null;
+            this.data.setting.read = my_auth.auth_setting_read != undefined ? my_auth.auth_setting_read : null;
+            this.data.setting.update = my_auth.auth_setting_update != undefined ? my_auth.auth_setting_update : null;
+            this.data.setting.delete = my_auth.auth_setting_delete != undefined ? my_auth.auth_setting_delete : null;
+
             this.shared_status = my_auth.member_info.auth_cd;
-            console.log(this.shared_status);
+
             this.render();
             func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
         });
@@ -120,8 +132,9 @@ class Setting_sharing_member_auth{
         let lecture = this.dom_sub_assembly_lecture();
         let ticket = this.dom_sub_assembly_ticket();
         let statistics = this.dom_sub_assembly_statistics();
+        let settings = this.dom_sub_assembly_setting();
 
-        let html = schedule + member + lecture + ticket + statistics + `<article class="obj_input_box_full">${shared_status_button}</article>`;
+        let html = schedule + member + lecture + ticket + statistics + settings + `<article class="obj_input_box_full">${shared_status_button}</article>`;
 
         return html;
     }
@@ -194,6 +207,21 @@ class Setting_sharing_member_auth{
 
         let html = `<article class="obj_input_box_full">` +
                         statistics + child_assemble +
+                    `</article>`;
+        return html;
+    }
+
+    dom_sub_assembly_setting(){
+        let setting = this.dom_row_share_menu_title("설정", "setting");
+        // let setting_auth_create = this.dom_row_share_menu_auth_toggle("설정", "등록", "setting", "create");
+        let setting_auth_read = this.dom_row_share_menu_auth_toggle("설정", "조회", "setting", "read");
+        let setting_auth_update = this.dom_row_share_menu_auth_toggle("설정", "수정", "setting", "update");
+        // let setting_auth_delete = this.dom_row_share_menu_auth_toggle("설정", "삭제", "setting", "delete");
+
+        let child_assemble = this.data.setting.read == ON ? setting_auth_read + setting_auth_update  : "";
+
+        let html = `<article class="obj_input_box_full">` +
+                        setting + child_assemble +
                     `</article>`;
         return html;
     }
@@ -354,6 +382,9 @@ class Setting_sharing_member_auth{
             "auth_package_delete":this.data.ticket.delete,
 
             "auth_analytics_read":this.data.statistics.read,
+
+            "auth_setting_read":this.data.setting.read,
+            "auth_setting_update":this.data.setting.update,
         };
         Setting_sharing_member_auth_func.update(data, ()=>{
             this.data_sending_now = false;

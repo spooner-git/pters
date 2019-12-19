@@ -324,6 +324,13 @@ class Setting_menu_access{
     }
 
     send_data(){
+        let auth_inspect = pass_inspector.setting_update();
+        if(auth_inspect.barrier == BLOCKED){
+            let message = `${auth_inspect.limit_type}`;
+            show_error_message(message);
+            return false;
+        }
+        
         Setting_menu_access_func.locked_menu(()=>{
             if(this.data_sending_now == true){
                 return false;
