@@ -126,13 +126,13 @@ class AccessTestMixin(UserPassesTestMixin):
         if error is None:
             if url[1] == 'trainee':
                 if group_name == 'trainee':
-                    func_setting_data_update(self.request, group_name)
+                    # func_setting_data_update(self.request, group_name)
                     # get_function_auth_type_cd(self.request)
                     update_finish_schedule_data(self.request)
                     test_result = True
             if url[1] == 'trainer':
                 if group_name == 'trainer':
-                    func_setting_data_update(self.request, group_name)
+                    # func_setting_data_update(self.request, group_name)
                     # get_function_auth_type_cd(self.request)
                     update_finish_schedule_data(self.request)
                     test_result = True

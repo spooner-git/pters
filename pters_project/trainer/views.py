@@ -38,7 +38,7 @@ from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO
     CALENDAR_TIME_SELECTOR_BASIC, SORT_END_DATE, SORT_MEMBER_TICKET, SORT_SCHEDULE_DT, STATE_CD_REFUND, \
     SORT_SCHEDULE_MONTHLY, SHARED_PROGRAM, MY_PROGRAM, PROGRAM_SELECT, PROGRAM_LECTURE_CONNECT_DELETE, \
     PROGRAM_LECTURE_CONNECT_ACCEPT, LECTURE_MEMBER_NUM_VIEW_ENABLE
-from board.models import BoardTb
+from board.models import BoardTb, QATb
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 from schedule.functions import func_refresh_member_ticket_count, func_get_trainer_attend_schedule, \
     func_get_lecture_member_ticket_id, func_check_lecture_available_member_before, func_add_schedule, \
@@ -1474,6 +1474,7 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, View):
                                         'reg_dt': alarm_info.reg_dt,
                                         'reg_member_name': alarm_info.auth_member.name})
                 ordered_alarm_dict[alarm_date] = date_alarm_list
+
         return JsonResponse(ordered_alarm_dict, json_dumps_params={'ensure_ascii': True})
 
 
@@ -3725,6 +3726,9 @@ class GetProgramListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
                 program_subject_type_name = program_info.class_tb.get_class_type_cd_name()
                 shared_program_flag = MY_PROGRAM
+                share_member_num = MemberClassTb.objects.filter(class_tb_id=program_info.class_tb.class_id,
+                                                                auth_cd__contains=AUTH_TYPE_VIEW).count() - 1
+
                 if str(program_info.class_tb.member.member_id) != str(request.user.id):
                     program_subject_type_name += ' - ' + program_info.class_tb.member.name
                     shared_program_flag = SHARED_PROGRAM
@@ -3740,6 +3744,7 @@ class GetProgramListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                 'program_program_owner_id': program_info.class_tb.member_id,
                                 'program_program_owner_name': program_info.class_tb.member.name,
                                 'shared_program_flag': shared_program_flag,
+                                'share_member_num': share_member_num,
                                 'program_center_name': ''
                                 }
                 program_list.append(program_dict)

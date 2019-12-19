@@ -481,6 +481,7 @@ def update_schedule_logic(request):
                         log_data.save()
                 schedule_info.start_dt = start_dt
                 schedule_info.end_dt = end_dt
+                schedule_info.reg_member_id = request.user.id
                 schedule_info.save()
             if error is None:
 
