@@ -4566,6 +4566,7 @@ def update_setting_calendar_setting_logic(request):
     setting_calendar_time_selector_type = request.POST.get('setting_calendar_time_selector_type',
                                                            CALENDAR_TIME_SELECTOR_BASIC)
     setting_week_start_date = request.POST.get('setting_week_start_date', 'SUN')
+    setting_schedule_sign_enable = request.POST.get('setting_schedule_sign_enable', USE)
     class_id = request.session.get('class_id', '')
 
     if setting_calendar_basic_select_time is None or setting_calendar_basic_select_time == '':
@@ -4574,10 +4575,13 @@ def update_setting_calendar_setting_logic(request):
         setting_calendar_time_selector_type = CALENDAR_TIME_SELECTOR_BASIC
     if setting_week_start_date is None or setting_week_start_date == '':
         setting_week_start_date = 'SUN'
+    if setting_schedule_sign_enable is None or setting_schedule_sign_enable == '':
+        setting_schedule_sign_enable = USE
 
-    setting_type_cd_data = ['LT_CALENDAR_BASIC_SETTING_TIME', 'LT_CALENDAR_TIME_SELECTOR_TYPE', 'LT_WEEK_START_DATE']
+    setting_type_cd_data = ['LT_CALENDAR_BASIC_SETTING_TIME', 'LT_CALENDAR_TIME_SELECTOR_TYPE',
+                            'LT_WEEK_START_DATE', 'SCHEDULE_SIGN_ENABLE']
     setting_info_data = [setting_calendar_basic_select_time, setting_calendar_time_selector_type,
-                         setting_week_start_date]
+                         setting_week_start_date, setting_schedule_sign_enable]
 
     error = update_program_setting_data(class_id, setting_type_cd_data, setting_info_data)
 
@@ -4585,6 +4589,7 @@ def update_setting_calendar_setting_logic(request):
         request.session['setting_calendar_basic_select_time'] = setting_calendar_basic_select_time
         request.session['setting_calendar_time_selector_type'] = setting_calendar_time_selector_type
         request.session['setting_week_start_date'] = setting_week_start_date
+        request.session['setting_schedule_sign_enable'] = setting_schedule_sign_enable
 
     else:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
@@ -5162,29 +5167,6 @@ def update_attend_mode_setting_logic(request):
         messages.error(request, error)
 
     return render(request, 'ajax/trainer_error_ajax.html')
-
-
-# 강사 일정 관련 setting 업데이트 api
-def update_setting_schedule_logic(request):
-    setting_schedule_sign_enable = request.POST.get('setting_schedule_sign_enable', USE)
-    class_id = request.session.get('class_id', '')
-    # next_page = request.POST.get('next_page', '/trainer/attend_mode/')
-
-    if setting_schedule_sign_enable is None or setting_schedule_sign_enable == '':
-        setting_schedule_sign_enable = USE
-
-    setting_type_cd_data = ['SCHEDULE_SIGN_ENABLE']
-    setting_info_data = [setting_schedule_sign_enable]
-    error = update_program_setting_data(class_id, setting_type_cd_data, setting_info_data)
-
-    if error is None:
-        request.session['setting_schedule_sign_enable'] = setting_schedule_sign_enable
-    else:
-        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
-        messages.error(request, error)
-
-    return render(request, 'ajax/trainer_error_ajax.html')
-
 
 #
 def check_admin_password_logic(request):
