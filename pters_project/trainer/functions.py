@@ -898,6 +898,7 @@ def func_get_ticket_info(class_id, ticket_id, user_id):
                        'ticket_state_cd': ticket_tb.state_cd,
                        'ticket_effective_days': ticket_tb.effective_days,
                        'ticket_price': ticket_tb.price,
+                       'ticket_month_schedule_enable': ticket_tb.month_schedule_enable,
                        'ticket_week_schedule_enable': ticket_tb.week_schedule_enable,
                        'ticket_day_schedule_enable': ticket_tb.day_schedule_enable,
                        'ticket_reg_count': ticket_tb.reg_count,

@@ -2905,6 +2905,7 @@ def add_ticket_info_logic(request):
     ticket_note = request.POST.get('ticket_note')
     ticket_effective_days = request.POST.get('ticket_effective_days', 30)
     ticket_price = request.POST.get('ticket_price', 0)
+    ticket_month_schedule_enable = request.POST.get('ticket_month_schedule_enable', 7)
     ticket_week_schedule_enable = request.POST.get('ticket_week_schedule_enable', 7)
     ticket_day_schedule_enable = request.POST.get('ticket_day_schedule_enable', 1)
     ticket_reg_count = request.POST.get('ticket_reg_count', 0)
@@ -2920,6 +2921,11 @@ def add_ticket_info_logic(request):
         ticket_price = int(ticket_price)
     except ValueError:
         error = '수강 금액은 숫자만 입력 가능합니다.'
+
+    try:
+        ticket_month_schedule_enable = int(ticket_month_schedule_enable)
+    except ValueError:
+        error = '월간 수강 제한 횟수는 숫자만 입력 가능합니다.'
 
     try:
         ticket_week_schedule_enable = int(ticket_week_schedule_enable)
@@ -2942,6 +2948,7 @@ def add_ticket_info_logic(request):
 
                 ticket_info = TicketTb(class_tb_id=class_id, name=ticket_name, state_cd=STATE_CD_IN_PROGRESS,
                                        effective_days=ticket_effective_days, price=ticket_price,
+                                       month_schedule_enable=ticket_month_schedule_enable,
                                        week_schedule_enable=ticket_week_schedule_enable,
                                        day_schedule_enable=ticket_day_schedule_enable,
                                        reg_count=ticket_reg_count, note=ticket_note, use=USE)
@@ -3060,6 +3067,7 @@ def update_ticket_info_logic(request):
     ticket_note = request.POST.get('ticket_note', '')
     ticket_effective_days = request.POST.get('ticket_effective_days', '')
     ticket_price = request.POST.get('ticket_price', '')
+    ticket_month_schedule_enable = request.POST.get('ticket_month_schedule_enable', '')
     ticket_week_schedule_enable = request.POST.get('ticket_week_schedule_enable', '')
     ticket_day_schedule_enable = request.POST.get('ticket_day_schedule_enable', '')
     ticket_reg_count = request.POST.get('ticket_reg_count', '')
@@ -3080,6 +3088,8 @@ def update_ticket_info_logic(request):
             ticket_info.effective_days = ticket_effective_days
         if ticket_price != '' and ticket_price is not None:
             ticket_info.price = ticket_price
+        if ticket_month_schedule_enable != '' and ticket_month_schedule_enable is not None:
+            ticket_info.month_schedule_enable = ticket_month_schedule_enable
         if ticket_week_schedule_enable != '' and ticket_week_schedule_enable is not None:
             ticket_info.week_schedule_enable = ticket_week_schedule_enable
         if ticket_day_schedule_enable != '' and ticket_day_schedule_enable is not None:
@@ -3355,6 +3365,7 @@ class GetTicketIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                'ticket_note': ticket_tb.note,
                                                'ticket_effective_days': ticket_tb.effective_days,
                                                'ticket_price': ticket_tb.price,
+                                               'ticket_month_schedule_enable': ticket_tb.month_schedule_enable,
                                                'ticket_week_schedule_enable': ticket_tb.week_schedule_enable,
                                                'ticket_day_schedule_enable': ticket_tb.day_schedule_enable,
                                                'ticket_reg_count': ticket_tb.reg_count,
@@ -3387,6 +3398,7 @@ class GetTicketIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                    'ticket_note': ticket_info.note,
                                                    'ticket_effective_days': ticket_info.effective_days,
                                                    'ticket_price': ticket_info.price,
+                                                   'ticket_month_schedule_enable': ticket_info.month_schedule_enable,
                                                    'ticket_week_schedule_enable': ticket_info.week_schedule_enable,
                                                    'ticket_day_schedule_enable': ticket_info.day_schedule_enable,
                                                    'ticket_reg_count': ticket_info.reg_count,
