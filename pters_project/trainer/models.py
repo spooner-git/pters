@@ -202,6 +202,7 @@ class TicketTb(TimeStampedModel):
     ticket_type_cd = models.CharField(db_column='PACKAGE_TYPE_CD', max_length=20, blank=True, null=True, default='')
     effective_days = models.IntegerField(db_column='EFFECTIVE_DAYS', default=30)
     price = models.IntegerField(db_column='PRICE', default=0)
+    month_schedule_enable = models.IntegerField(db_column='MONTH_SCHEDULE_ENABLE', default=31)
     week_schedule_enable = models.IntegerField(db_column='WEEK_SCHEDULE_ENABLE', default=7)
     day_schedule_enable = models.IntegerField(db_column='DAY_SCHEDULE_ENABLE', default=1)
     reg_count = models.IntegerField(db_column='REG_COUNT', default=0)

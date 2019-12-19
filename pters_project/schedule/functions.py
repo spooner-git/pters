@@ -695,7 +695,7 @@ def func_get_trainer_schedule_all(class_id, start_date, end_date):
 
     # 그룹 수업에 속한 회원들의 일정은 제외하고 불러온다.
     schedule_data = ScheduleTb.objects.select_related(
-        'member_ticket_tb__member',
+        'member_ticket_tb__member', 'reg_member',
         'lecture_tb').filter(class_tb=class_id, start_dt__gte=start_date, start_dt__lt=end_date,
                              lecture_schedule_id__isnull=True,
                              use=USE).annotate(lecture_current_member_num=RawSQL(query,
@@ -749,6 +749,10 @@ def func_get_trainer_schedule_all(class_id, start_date, end_date):
                                    'state_cd': schedule_info.state_cd,
                                    'schedule_type': schedule_type,
                                    'note': schedule_info.note,
+                                   'reg_member_id': str(schedule_info.reg_member_id),
+                                   'reg_member_name': schedule_info.reg_member.name,
+                                   'mod_dt': str(schedule_info.mod_dt),
+                                   'reg_dt': str(schedule_info.reg_dt),
                                    'member_name': member_name,
                                    'daily_record_id': schedule_info.daily_record_tb_id,
                                    'lecture_id': str(lecture_id),
@@ -777,7 +781,7 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
                              " AND B." + ScheduleTb._meta.get_field('use').column + "=" + str(USE)
 
     schedule_data = ScheduleTb.objects.select_related(
-        'member_ticket_tb__member',
+        'member_ticket_tb__member', 'reg_member',
         'lecture_tb').filter(class_tb=class_id, schedule_id=schedule_id,
                              use=USE).annotate(lecture_current_member_num=RawSQL(query,
                                                                                  [])).order_by('start_dt', 'reg_dt')
@@ -838,8 +842,8 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
                     lecture_current_member_num = 1
         lecture_schedule_list = []
         lecture_member_schedule_data = ScheduleTb.objects.select_related(
-            'member_ticket_tb__member').filter(class_tb_id=class_id, lecture_schedule_id=schedule_id,
-                                               use=USE).order_by('start_dt')
+            'member_ticket_tb__member', 'reg_member').filter(class_tb_id=class_id, lecture_schedule_id=schedule_id,
+                                                             use=USE).order_by('start_dt')
 
         for lecture_member_schedule_info in lecture_member_schedule_data:
             lecture_member_profile_url = lecture_member_schedule_info.member_ticket_tb.member.profile_url
@@ -857,6 +861,10 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
                                      'end_dt': str(lecture_member_schedule_info.end_dt),
                                      'state_cd': lecture_member_schedule_info.state_cd,
                                      'note': lecture_member_schedule_info.note,
+                                     'reg_member_id': str(lecture_member_schedule_info.reg_member_id),
+                                     'reg_member_name': lecture_member_schedule_info.reg_member.name,
+                                     'mod_dt': str(lecture_member_schedule_info.mod_dt),
+                                     'reg_dt': str(lecture_member_schedule_info.reg_dt),
                                      'daily_record_id': lecture_member_schedule_info.daily_record_tb_id
                                      }
             lecture_schedule_list.append(lecture_schedule_info)
@@ -868,6 +876,10 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
                                    'state_cd': schedule_info.state_cd,
                                    'schedule_type': schedule_type,
                                    'note': schedule_info.note,
+                                   'reg_member_id': str(schedule_info.reg_member_id),
+                                   'reg_member_name': schedule_info.reg_member.name,
+                                   'mod_dt': str(schedule_info.mod_dt),
+                                   'reg_dt': str(schedule_info.reg_dt),
                                    'member_name': member_name,
                                    'member_id': member_id,
                                    'member_profile_url': member_profile_url,
@@ -896,7 +908,7 @@ def func_get_member_schedule_all_by_member_ticket(class_id, member_id):
                  " and B." + ClassMemberTicketTb._meta.get_field('use').column + "=" + str(USE)
 
     member_schedule_data = ScheduleTb.objects.select_related(
-        'member_ticket_tb__member',
+        'member_ticket_tb__member', 'reg_member',
         'lecture_tb').filter(
         class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, use=USE, member_ticket_tb__member_id=member_id,
         member_ticket_tb__use=USE).annotate(auth_cd=RawSQL(query_auth,
@@ -942,6 +954,10 @@ def func_get_member_schedule_all_by_member_ticket(class_id, member_id):
                          'end_dt': str(end_dt),
                          'state_cd': member_schedule_info.state_cd,
                          'note': member_schedule_info.note,
+                         'reg_member_id': str(member_schedule_info.reg_member_id),
+                         'reg_member_name': member_schedule_info.reg_member.name,
+                         'mod_dt': str(member_schedule_info.mod_dt),
+                         'reg_dt': str(member_schedule_info.reg_dt),
                          'daily_record_id': member_schedule_info.daily_record_tb_id
                          }
         schedule_list.append(schedule_info)
@@ -976,7 +992,7 @@ def func_get_member_schedule_all_by_schedule_dt(class_id, member_id):
                  " and B." + ClassMemberTicketTb._meta.get_field('use').column + "=" + str(USE)
 
     member_schedule_data = ScheduleTb.objects.select_related(
-        'member_ticket_tb__member',
+        'member_ticket_tb__member', 'reg_member',
         'lecture_tb').filter(
         class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, use=USE, member_ticket_tb__member_id=member_id,
         member_ticket_tb__use=USE).annotate(auth_cd=RawSQL(query_auth,
@@ -1020,6 +1036,10 @@ def func_get_member_schedule_all_by_schedule_dt(class_id, member_id):
                          'end_dt': str(end_dt),
                          'state_cd': member_schedule_info.state_cd,
                          'note': member_schedule_info.note,
+                         'reg_member_id': str(member_schedule_info.reg_member_id),
+                         'reg_member_name': member_schedule_info.reg_member.name,
+                         'mod_dt': str(member_schedule_info.mod_dt),
+                         'reg_dt': str(member_schedule_info.reg_dt),
                          'daily_record_id': member_schedule_info.daily_record_tb_id,
                          'member_ticket_id': str(member_ticket_tb.member_ticket_id),
                          'member_ticket_name': member_ticket_tb.ticket_tb.name,
@@ -1051,7 +1071,7 @@ def func_get_member_schedule_all_by_monthly(class_id, member_id):
                  " and B." + ClassMemberTicketTb._meta.get_field('use').column + "=" + str(USE)
 
     member_schedule_data = ScheduleTb.objects.select_related(
-        'member_ticket_tb__member',
+        'member_ticket_tb__member', 'reg_member',
         'lecture_tb').filter(
         class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, use=USE, member_ticket_tb__member_id=member_id,
         member_ticket_tb__use=USE).annotate(auth_cd=RawSQL(query_auth,
@@ -1098,6 +1118,10 @@ def func_get_member_schedule_all_by_monthly(class_id, member_id):
                          'end_dt': str(end_dt),
                          'state_cd': member_schedule_info.state_cd,
                          'note': member_schedule_info.note,
+                         'reg_member_id': str(member_schedule_info.reg_member_id),
+                         'reg_member_name': member_schedule_info.reg_member.name,
+                         'mod_dt': str(member_schedule_info.mod_dt),
+                         'reg_dt': str(member_schedule_info.reg_dt),
                          'daily_record_id': member_schedule_info.daily_record_tb_id,
                          'member_ticket_id': str(member_ticket_tb.member_ticket_id),
                          'member_ticket_name': member_ticket_tb.ticket_tb.name,
@@ -1136,7 +1160,7 @@ def func_get_lecture_schedule_all(class_id, lecture_id):
             ScheduleTb._meta.get_field('use').column+"="+str(USE)
 
     schedule_data = ScheduleTb.objects.select_related(
-        'member_ticket_tb__member',
+        'member_ticket_tb__member', 'reg_member',
         'lecture_tb').filter(class_tb=class_id, lecture_tb_id=lecture_id, lecture_schedule_id__isnull=True,
                              use=USE).annotate(lecture_current_member_num=RawSQL(query,
                                                                                  [])).order_by('start_dt',
@@ -1166,6 +1190,10 @@ def func_get_lecture_schedule_all(class_id, lecture_id):
                                       'state_cd': schedule_info.state_cd,
                                       'schedule_type': schedule_type,
                                       'note': schedule_info.note,
+                                      'reg_member_id': str(schedule_info.reg_member_id),
+                                      'reg_member_name': schedule_info.reg_member.name,
+                                      'mod_dt': str(schedule_info.mod_dt),
+                                      'reg_dt': str(schedule_info.reg_dt),
                                       'daily_record_id': schedule_info.daily_record_tb_id,
                                       'lecture_id': str(lecture_id),
                                       'lecture_name': lecture_name,

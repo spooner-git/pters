@@ -170,8 +170,9 @@ class GetLectureMemberScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, 
         if error is None:
             # 그룹 수업 일정에 해당하는 회원의 일정들 불러오기
             lecture_schedule_data = ScheduleTb.objects.select_related(
-                'member_ticket_tb__member').filter(class_tb_id=class_id, lecture_schedule_id=lecture_schedule_id,
-                                                   use=USE).order_by('start_dt')
+                'member_ticket_tb__member',
+                'reg_member').filter(class_tb_id=class_id, lecture_schedule_id=lecture_schedule_id,
+                                     use=USE).order_by('start_dt')
 
             for lecture_schedule_info in lecture_schedule_data:
                 schedule_info = {'schedule_id': lecture_schedule_info.schedule_id,
@@ -181,6 +182,10 @@ class GetLectureMemberScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, 
                                  'end_dt': str(lecture_schedule_info.end_dt),
                                  'state_cd': lecture_schedule_info.state_cd,
                                  'note': lecture_schedule_info.note,
+                                 'reg_member_id': lecture_schedule_info.reg_member_id,
+                                 'reg_member_name': lecture_schedule_info.reg_member.name,
+                                 'mod_dt': lecture_schedule_info.mod_dt,
+                                 'reg_dt': lecture_schedule_info.reg_dt,
                                  'daily_record_id': lecture_schedule_info.daily_record_tb_id
                                  }
 
@@ -276,25 +281,27 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
             member_lecture_end_font_color_cd = ''
 
         # OFF 반복 일정 정보 불러오기
-        off_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id, en_dis_type=OFF_SCHEDULE_TYPE).exclude(end_date__lt=today).order_by('-reg_dt')
+        off_repeat_schedule_data = RepeatScheduleTb.objects.select_related(
+            'reg_member').filter(class_tb_id=class_id,
+                                 en_dis_type=OFF_SCHEDULE_TYPE).exclude(end_date__lt=today).order_by('-reg_dt')
 
         # 회원의 반복 일정 정보 불러오기
         member_repeat_schedule_data = RepeatScheduleTb.objects.select_related(
-            'member_ticket_tb__member').filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,
-                                               lecture_tb__isnull=True,
-                                               lecture_schedule_id__isnull=True
-                                               ).exclude(end_date__lt=today).order_by('-reg_dt', 'lecture_tb',
-                                                                                      'lecture_schedule_id')
+            'member_ticket_tb__member',
+            'reg_member').filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, lecture_tb__isnull=True,
+                                 lecture_schedule_id__isnull=True
+                                 ).exclude(end_date__lt=today).order_by('-reg_dt', 'lecture_tb', 'lecture_schedule_id')
 
         # 수업 반복 일정 정보 불러오기
         lecture_repeat_schedule_data = RepeatScheduleTb.objects.select_related(
-            'lecture_tb').filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, lecture_tb__isnull=False,
+            'lecture_tb',
+            'reg_member').filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, lecture_tb__isnull=False,
                                  lecture_schedule_id__isnull=True
                                  ).exclude(end_date__lt=today).order_by('-reg_dt', 'lecture_tb', 'lecture_schedule_id',)
 
         # 수업에 속한 회원의 반복 일정 정보 불러오기
         lecture_member_repeat_schedule_data = RepeatScheduleTb.objects.select_related(
-            'lecture_tb', 'member_ticket_tb__member').filter(
+            'lecture_tb', 'member_ticket_tb__member', 'reg_member').filter(
             class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, lecture_tb__isnull=False,
             lecture_schedule_id__isnull=False).exclude(end_date__lt=today).order_by('-reg_dt', 'lecture_tb',
                                                                                     'lecture_schedule_id')
@@ -314,6 +321,9 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
                 'end_time': off_repeat_schedule_info.end_time,
                 'time_duration': off_repeat_schedule_info.time_duration,
                 'state_cd': off_repeat_schedule_info.state_cd,
+                'reg_member_id': off_repeat_schedule_info.reg_member_id,
+                'reg_member_name': off_repeat_schedule_info.reg_member.name,
+                'mod_dt': str(off_repeat_schedule_info.mod_dt),
                 'reg_dt': str(off_repeat_schedule_info.reg_dt)
             }
             off_repeat_schedule_list.append(off_repeat_schedule)
@@ -337,6 +347,9 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
                 'repeat_end_time': member_repeat_schedule_info.end_time,
                 'repeat_time_duration': member_repeat_schedule_info.time_duration,
                 'repeat_state_cd': member_repeat_schedule_info.state_cd,
+                'reg_member_id': member_repeat_schedule_info.reg_member_id,
+                'reg_member_name': member_repeat_schedule_info.reg_member.name,
+                'mod_dt': str(member_repeat_schedule_info.mod_dt),
                 'reg_dt': str(member_repeat_schedule_info.reg_dt),
                 'lecture_ing_color_cd': member_lecture_ing_color_cd,
                 'lecture_end_color_cd': member_lecture_end_color_cd,
@@ -363,6 +376,9 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
                 'end_time': lecture_repeat_schedule_info.end_time,
                 'time_duration': lecture_repeat_schedule_info.time_duration,
                 'state_cd': lecture_repeat_schedule_info.state_cd,
+                'reg_member_id': lecture_repeat_schedule_info.reg_member_id,
+                'reg_member_name': lecture_repeat_schedule_info.reg_member.name,
+                'mod_dt': str(lecture_repeat_schedule_info.mod_dt),
                 'reg_dt': str(lecture_repeat_schedule_info.reg_dt),
                 'lecture_id': lecture_repeat_schedule_info.lecture_tb.lecture_id,
                 'lecture_name': lecture_repeat_schedule_info.lecture_tb.name,
@@ -393,6 +409,9 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
                 'end_time': lecture_member_repeat_schedule_info.end_time,
                 'time_duration': lecture_member_repeat_schedule_info.time_duration,
                 'state_cd': lecture_member_repeat_schedule_info.state_cd,
+                'reg_member_id': lecture_member_repeat_schedule_info.reg_member_id,
+                'reg_member_name': lecture_member_repeat_schedule_info.reg_member.name,
+                'mod_dt': str(lecture_member_repeat_schedule_info.mod_dt),
                 'reg_dt': str(lecture_member_repeat_schedule_info.reg_dt),
                 'member_id': lecture_member_repeat_schedule_info.member_ticket_tb.member.member_id,
                 'member_name': lecture_member_repeat_schedule_info.member_ticket_tb.member.name,
@@ -415,7 +434,7 @@ class GetOffRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, View):
         class_id = self.request.session.get('class_id', '')
         off_repeat_schedule_list = []
 
-        off_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id, en_dis_type=OFF_SCHEDULE_TYPE)
+        off_repeat_schedule_data = RepeatScheduleTb.objects.select_related('reg_member').filter(class_tb_id=class_id, en_dis_type=OFF_SCHEDULE_TYPE)
 
         for off_repeat_schedule_info in off_repeat_schedule_data:
             off_repeat_schedule = {'repeat_schedule_id': off_repeat_schedule_info.repeat_schedule_id,
@@ -425,7 +444,11 @@ class GetOffRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, View):
                                    'start_time': off_repeat_schedule_info.start_time,
                                    'end_time': off_repeat_schedule_info.end_time,
                                    'time_duration': off_repeat_schedule_info.time_duration,
-                                   'state_cd': off_repeat_schedule_info.state_cd}
+                                   'state_cd': off_repeat_schedule_info.state_cd,
+                                   'reg_member_id': off_repeat_schedule_info.reg_member_id,
+                                   'reg_member_name': off_repeat_schedule_info.reg_member.name,
+                                   'mod_dt': str(off_repeat_schedule_info.mod_dt),
+                                   'reg_dt': str(off_repeat_schedule_info.reg_dt)}
             off_repeat_schedule_list.append(off_repeat_schedule)
 
         messages.error(request, '')
@@ -448,7 +471,8 @@ class GetLectureRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, 
         if error is None:
             # 그룹 반복 일정 정보 불러오기
             lecture_repeat_schedule_data = RepeatScheduleTb.objects.select_related(
-                'lecture_tb').filter(class_tb_id=class_id, lecture_tb_id=lecture_id).order_by('start_date')
+                'lecture_tb', 'reg_member').filter(class_tb_id=class_id,
+                                                   lecture_tb_id=lecture_id).order_by('start_date')
 
             for lecture_repeat_schedule_info in lecture_repeat_schedule_data:
 
@@ -461,7 +485,11 @@ class GetLectureRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, 
                                            'time_duration': lecture_repeat_schedule_info.time_duration,
                                            'state_cd': lecture_repeat_schedule_info.state_cd,
                                            'lecture_repeat_schedule_id':
-                                               lecture_repeat_schedule_info.lecture_repeat_schedule_id}
+                                               lecture_repeat_schedule_info.lecture_repeat_schedule_id,
+                                           'reg_member_id': lecture_repeat_schedule_info.reg_member_id,
+                                           'reg_member_name': lecture_repeat_schedule_info.reg_member.name,
+                                           'mod_dt': str(lecture_repeat_schedule_info.mod_dt),
+                                           'reg_dt': str(lecture_repeat_schedule_info.reg_dt)}
                 lecture_repeat_schedule_list.append(lecture_repeat_schedule)
         else:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
@@ -518,6 +546,10 @@ class GetMemberRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, View):
                                           'end_time': member_repeat_schedule_info.end_time,
                                           'time_duration': member_repeat_schedule_info.time_duration,
                                           'state_cd': member_repeat_schedule_info.state_cd,
+                                          'reg_member_id': member_repeat_schedule_info.reg_member_id,
+                                          'reg_member_name': member_repeat_schedule_info.reg_member.name,
+                                          'mod_dt': str(member_repeat_schedule_info.mod_dt),
+                                          'reg_dt': str(member_repeat_schedule_info.reg_dt),
                                           'lecture_repeat_schedule_id':
                                               member_repeat_schedule_info.lecture_repeat_schedule_id,
                                           'lecture_id': lecture_id,
@@ -1852,6 +1884,8 @@ def add_member_ticket_info_logic(request):
     start_date = request.POST.get('start_date')
     end_date = request.POST.get('end_date')
     ticket_id = request.POST.get('ticket_id', '')
+    # NONE : 선택 안함 / CASH : 현금 , CARD : 카드 , TRANS : 계좌 이체 , CASH+CARD : 현금 + 카드, CARD + TRANS : 카드 + 계좌 이체, CASH + TRANS : 현금 + 계좌 이체
+    pay_method = request.POST.get('pay_method', 'NONE')
     class_id = request.session.get('class_id', '')
     member_name = ''
     ticket_name= ''
@@ -1859,6 +1893,9 @@ def add_member_ticket_info_logic(request):
 
     if member_id is None or member_id == '':
         error = '오류가 발생했습니다.[0]'
+
+    if pay_method == '':
+        pay_method = 'NONE'
 
     if price == '':
         price = 0
@@ -1876,6 +1913,7 @@ def add_member_ticket_info_logic(request):
     if ticket_id == '':
         error = '수강권을 선택해 주세요.'
 
+
     if error is None:
         try:
             member_info = MemberTb.objects.get(member_id=member_id)
@@ -1889,8 +1927,8 @@ def add_member_ticket_info_logic(request):
         except ObjectDoesNotExist:
             error = '수강권 정보를 확인해주세요.'
     if error is None:
-        error = func_add_member_ticket_info(request.user.id, class_id, ticket_id, counts, price, start_date, end_date,
-                                            contents, member_id)
+        error = func_add_member_ticket_info(request.user.id, class_id, ticket_id, counts, price, pay_method,
+                                            start_date, end_date, contents, member_id)
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
@@ -1914,6 +1952,8 @@ def update_member_ticket_info_logic(request):
     refund_price = request.POST.get('refund_price', '')
     refund_date = request.POST.get('refund_date', '')
     member_ticket_reg_count = request.POST.get('member_ticket_reg_count', '')
+    # NONE : 선택 안함 / CASH : 현금 , CARD : 카드 , TRANS : 계좌 이체 , CASH+CARD : 현금 + 카드, CARD + TRANS : 카드 + 계좌 이체, CASH + TRANS : 현금 + 계좌 이체
+    pay_method = request.POST.get('pay_method', 'NONE')
     class_id = request.session.get('class_id', '')
     error = None
     member_ticket_info = None
@@ -1936,6 +1976,8 @@ def update_member_ticket_info_logic(request):
             end_date = member_ticket_info.end_date
         if price is None or price == '':
             price = member_ticket_info.price
+        if pay_method is None or pay_method == '':
+            pay_method = member_ticket_info.pay_method
         if refund_price is None or refund_price == '':
             refund_price = member_ticket_info.refund_price
         if refund_date is None or refund_date == '':
@@ -1987,6 +2029,7 @@ def update_member_ticket_info_logic(request):
         member_ticket_info.start_date = start_date
         member_ticket_info.end_date = end_date
         member_ticket_info.price = price
+        member_ticket_info.pay_method = pay_method
         member_ticket_info.refund_price = refund_price
         member_ticket_info.refund_date = refund_date
         member_ticket_info.note = note
@@ -2905,6 +2948,7 @@ def add_ticket_info_logic(request):
     ticket_note = request.POST.get('ticket_note')
     ticket_effective_days = request.POST.get('ticket_effective_days', 30)
     ticket_price = request.POST.get('ticket_price', 0)
+    ticket_month_schedule_enable = request.POST.get('ticket_month_schedule_enable', 7)
     ticket_week_schedule_enable = request.POST.get('ticket_week_schedule_enable', 7)
     ticket_day_schedule_enable = request.POST.get('ticket_day_schedule_enable', 1)
     ticket_reg_count = request.POST.get('ticket_reg_count', 0)
@@ -2920,6 +2964,11 @@ def add_ticket_info_logic(request):
         ticket_price = int(ticket_price)
     except ValueError:
         error = '수강 금액은 숫자만 입력 가능합니다.'
+
+    try:
+        ticket_month_schedule_enable = int(ticket_month_schedule_enable)
+    except ValueError:
+        error = '월간 수강 제한 횟수는 숫자만 입력 가능합니다.'
 
     try:
         ticket_week_schedule_enable = int(ticket_week_schedule_enable)
@@ -2942,6 +2991,7 @@ def add_ticket_info_logic(request):
 
                 ticket_info = TicketTb(class_tb_id=class_id, name=ticket_name, state_cd=STATE_CD_IN_PROGRESS,
                                        effective_days=ticket_effective_days, price=ticket_price,
+                                       month_schedule_enable=ticket_month_schedule_enable,
                                        week_schedule_enable=ticket_week_schedule_enable,
                                        day_schedule_enable=ticket_day_schedule_enable,
                                        reg_count=ticket_reg_count, note=ticket_note, use=USE)
@@ -3060,6 +3110,7 @@ def update_ticket_info_logic(request):
     ticket_note = request.POST.get('ticket_note', '')
     ticket_effective_days = request.POST.get('ticket_effective_days', '')
     ticket_price = request.POST.get('ticket_price', '')
+    ticket_month_schedule_enable = request.POST.get('ticket_month_schedule_enable', '')
     ticket_week_schedule_enable = request.POST.get('ticket_week_schedule_enable', '')
     ticket_day_schedule_enable = request.POST.get('ticket_day_schedule_enable', '')
     ticket_reg_count = request.POST.get('ticket_reg_count', '')
@@ -3080,6 +3131,8 @@ def update_ticket_info_logic(request):
             ticket_info.effective_days = ticket_effective_days
         if ticket_price != '' and ticket_price is not None:
             ticket_info.price = ticket_price
+        if ticket_month_schedule_enable != '' and ticket_month_schedule_enable is not None:
+            ticket_info.month_schedule_enable = ticket_month_schedule_enable
         if ticket_week_schedule_enable != '' and ticket_week_schedule_enable is not None:
             ticket_info.week_schedule_enable = ticket_week_schedule_enable
         if ticket_day_schedule_enable != '' and ticket_day_schedule_enable is not None:
@@ -3355,9 +3408,10 @@ class GetTicketIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                'ticket_note': ticket_tb.note,
                                                'ticket_effective_days': ticket_tb.effective_days,
                                                'ticket_price': ticket_tb.price,
+                                               'ticket_reg_count': ticket_tb.reg_count,
+                                               'ticket_month_schedule_enable': ticket_tb.month_schedule_enable,
                                                'ticket_week_schedule_enable': ticket_tb.week_schedule_enable,
                                                'ticket_day_schedule_enable': ticket_tb.day_schedule_enable,
-                                               'ticket_reg_count': ticket_tb.reg_count,
                                                # 'ticket_type_cd': ticket_tb.ticket_type_cd,
                                                'ticket_reg_dt': ticket_tb.reg_dt,
                                                'ticket_lecture_list': [],
@@ -3387,9 +3441,10 @@ class GetTicketIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                    'ticket_note': ticket_info.note,
                                                    'ticket_effective_days': ticket_info.effective_days,
                                                    'ticket_price': ticket_info.price,
+                                                   'ticket_reg_count': ticket_info.reg_count,
+                                                   'ticket_month_schedule_enable': ticket_info.month_schedule_enable,
                                                    'ticket_week_schedule_enable': ticket_info.week_schedule_enable,
                                                    'ticket_day_schedule_enable': ticket_info.day_schedule_enable,
-                                                   'ticket_reg_count': ticket_info.reg_count,
                                                    # 'ticket_type_cd': ticket_info.ticket_type_cd,
                                                    'ticket_reg_dt': ticket_info.reg_dt,
                                                    'ticket_lecture_list': [],
@@ -3479,9 +3534,10 @@ class GetTicketEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                'ticket_note': ticket_tb.note,
                                                'ticket_effective_days': ticket_tb.effective_days,
                                                'ticket_price': ticket_tb.price,
+                                               'ticket_reg_count': ticket_tb.reg_count,
+                                               'ticket_month_schedule_enable': ticket_tb.month_schedule_enable,
                                                'ticket_week_schedule_enable': ticket_tb.week_schedule_enable,
                                                'ticket_day_schedule_enable': ticket_tb.day_schedule_enable,
-                                               'ticket_reg_count': ticket_tb.reg_count,
                                                'ticket_lecture_list': [],
                                                'ticket_lecture_state_cd_list': [],
                                                'ticket_lecture_id_list': [],
@@ -3509,9 +3565,10 @@ class GetTicketEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                    'ticket_note': ticket_info.note,
                                                    'ticket_effective_days': ticket_info.effective_days,
                                                    'ticket_price': ticket_info.price,
+                                                   'ticket_reg_count': ticket_info.reg_count,
+                                                   'ticket_month_schedule_enable': ticket_tb.month_schedule_enable,
                                                    'ticket_week_schedule_enable': ticket_info.week_schedule_enable,
                                                    'ticket_day_schedule_enable': ticket_info.day_schedule_enable,
-                                                   'ticket_reg_count': ticket_info.reg_count,
                                                    'ticket_lecture_list': [],
                                                    'ticket_lecture_state_cd_list': [],
                                                    'ticket_lecture_id_list': [],
@@ -3637,7 +3694,7 @@ class GetProgramListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         class_id = self.request.session.get('class_id', '')
         program_list = []
         error = None
-        program_data = MemberClassTb.objects.select_related('class_tb'
+        program_data = MemberClassTb.objects.select_related('class_tb', 'member'
                                                             ).filter(member_id=self.request.user.id,
                                                                      auth_cd__contains=AUTH_TYPE_VIEW,
                                                                      use=USE).order_by('-reg_dt')
@@ -3651,8 +3708,10 @@ class GetProgramListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                     program_selected = 'SELECTED'
 
                 program_subject_type_name = program_info.class_tb.get_class_type_cd_name()
+                shared_program_flag = MY_PROGRAM
                 if str(program_info.class_tb.member.member_id) != str(request.user.id):
                     program_subject_type_name += ' - ' + program_info.class_tb.member.name
+                    shared_program_flag = SHARED_PROGRAM
 
                 program_dict = {'program_id': program_info.class_tb.class_id,
                                 'program_total_member_num': total_member_num,
@@ -3662,6 +3721,9 @@ class GetProgramListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                 'program_upper_subject_cd': program_info.class_tb.get_upper_class_type_cd(),
                                 'program_upper_subject_type_name': program_info.class_tb.get_upper_class_type_cd_name(),
                                 'program_selected': program_selected,
+                                'program_program_owner_id': program_info.class_tb.member_id,
+                                'program_program_owner_name': program_info.class_tb.member.name,
+                                'shared_program_flag': shared_program_flag,
                                 'program_center_name': ''
                                 }
                 program_list.append(program_dict)
