@@ -7,6 +7,7 @@ const ALL_CLOSE = "all_close";
 const STATE_IN_PROGRESS = "IP";
 const STATE_END_PROGRESS = "PE";
 
+
 const ON = 1;
 const OFF = 0;
 
@@ -104,6 +105,13 @@ const AUTOCOMPLETE_ABSENCE = 2;
 const AUTOCOMPLETE_CANCEL = 3;
 
 const FIX = 'FIX';
+
+/* 2019-12-20-hkkim */
+const LECTURE_MEMBER_NUM_VIEW_DISABLE = 0;
+const LECTURE_MEMBER_NUM_VIEW_ENABLE = 0;
+const MY_PROGRAM = 0;
+const SHARED_PROGRAM = 1;
+
 
 
 /* 정렬 관련된 값 */
@@ -281,8 +289,6 @@ const LECTURE_TYPE_ONE_TO_ONE = 'ONE_TO_ONE';
 //  수업 종류 - 일반 수업
 const LECTURE_TYPE_NORMAL = 'NORMAL';
 
-const MY_PROGRAM = 0;
-const SHARED_PROGRAM = 1;
 
 
 //프로그램 리스트

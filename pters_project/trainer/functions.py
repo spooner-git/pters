@@ -362,6 +362,7 @@ def func_get_member_lecture_list(class_id, member_id):
                             'lecture_name': lecture_tb.name,
                             'lecture_note': lecture_tb.note,
                             'lecture_max_num': lecture_tb.member_num,
+                            'lecture_max_member_num_view_flag': lecture_tb.member_num_view_flag,
                             'lecture_minute': lecture_tb.lecture_minute
                             }
             member_lecture_list[str(lecture_tb.lecture_id)] = lecture_info
@@ -974,6 +975,7 @@ def func_get_lecture_info(class_id, lecture_id, user_id):
     if lecture_tb is not None:
         lecture_info = {'lecture_id': str(lecture_id), 'lecture_name': lecture_tb.name, 'lecture_note': lecture_tb.note,
                         'lecture_state_cd': lecture_tb.state_cd, 'lecture_max_num': lecture_tb.member_num,
+                        'lecture_max_member_num_view_flag': lecture_tb.member_num_view_flag,
                         'lecture_reg_dt': str(lecture_tb.reg_dt), 'lecture_mod_dt': str(lecture_tb.mod_dt),
                         'lecture_ticket_list': lecture_ticket_list,
                         'lecture_ticket_state_cd_list': lecture_ticket_state_cd_list,
