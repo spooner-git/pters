@@ -333,6 +333,7 @@
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.selectors.js" %}></script>
 
     <script>
+        var sign_use = OFF;
         window.onload=function(){
             let window_height = window.innerHeight;
             let content_height = $('#content_wrapper').height();
@@ -346,6 +347,12 @@
             }
 
             func_set_webkit_overflow_scrolling('#content_wrapper');
+
+            
+            setting_calendar_read((data)=>{
+                sign_use = data.setting_schedule_sign_enable;
+            }, ()=>{})
+
         }
         var $root_content = $('#content_wrapper');
 
@@ -359,21 +366,27 @@
 
         function form_confirm(e, type){
             e.preventDefault();
-            let root_content_height = $(window).height();
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_DRAWING_BOARD, 100*315/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
-                let data = {    title:"일정 완료 서명",
-                                description:"완료 서명을 입력해주세요.",
-                                width: $root_content.width() <= 500 ? $root_content.width() : 500,
-                                height:250,
-                                color:{pencil:"#ffffff", paper:"#282828"},
-                                border:0,
-                                callback:(data)=>{
-                                    let image_data = data;
-                                    complete_this_plan(image_data);
-                                }
-                            };
-                drawing_board = new DrawingBoard('#wrapper_box_drawing_board', "drawing_board", data);
-            });
+            if(sign_use == ON){
+                let root_content_height = $(window).height();
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_DRAWING_BOARD, 100*315/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
+                    let data = {    title:"일정 완료 서명",
+                                    description:"완료 서명을 입력해주세요.",
+                                    width: $root_content.width() <= 500 ? $root_content.width() : 500,
+                                    height:250,
+                                    color:{pencil:"#ffffff", paper:"#282828"},
+                                    border:0,
+                                    callback:(data)=>{
+                                        let image_data = data;
+                                        complete_this_plan(image_data);
+                                    }
+                                };
+                    drawing_board = new DrawingBoard('#wrapper_box_drawing_board', "drawing_board", data);
+                });
+            }else{
+                // complete_this_plan();
+                $('#form_attend_data').submit();
+            }
+            
         }
 
 
@@ -428,6 +441,48 @@
                     console.log('sign_image_save_fail');
                 }
             })
+        }
+
+        function setting_calendar_read(callback, error_callback){
+            $.ajax({
+                url:"/trainer/get_trainer_setting_data/",
+                type:'GET',
+                dataType : 'JSON',
+        
+                beforeSend:function(xhr, settings){
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                },
+        
+                //통신성공시 처리
+                success:function (data){
+                    check_app_version(data.app_version);
+                    if(data.messageArray != undefined){
+                        if(data.messageArray.length > 0){
+                            show_error_message(data.messageArray[0]);
+                            return false;
+                        }
+                    }
+                    if(callback != undefined){
+                        callback(data);
+                    }
+                },
+
+                //보내기후 팝업창 닫기
+                complete:function (){
+
+                },
+        
+                //통신 실패시 처리
+                error:function (){
+                    if(error_callback != undefined){
+                        error_callback();
+                    }
+                    console.log('server error');
+                    show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                }
+            });
         }
     </script>
 

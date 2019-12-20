@@ -8,6 +8,9 @@ class Member_attend{
         this.data = {
             id:{name:null, member_id:null, state_cd:null, image:null, schedule_id:null}
         };
+        this.settings = {
+            sign_use:OFF
+        };
         this.lecture_max_num = null;
         this.lecture_current_num = null;
         this.init();
@@ -146,7 +149,17 @@ class Member_attend{
                         this.check_entire = false;
                     break;
                 case 'check_attend':
-                        this.open_drawing_board(member_id, ()=>{
+                        if(this.settings.sign_use == ON){
+                            this.open_drawing_board(member_id, ()=>{
+                                this.data[member_id].state_cd = SCHEDULE_FINISH;
+                                this.check_entire = true;
+                                for(let id in this.data){
+                                    if(this.data[id].state_cd != SCHEDULE_FINISH){
+                                        this.check_entire = false;
+                                    }
+                                }
+                            });
+                        }else{
                             this.data[member_id].state_cd = SCHEDULE_FINISH;
                             this.check_entire = true;
                             for(let id in this.data){
@@ -154,7 +167,8 @@ class Member_attend{
                                     this.check_entire = false;
                                 }
                             }
-                        });
+                        }
+                        
                     break;
                 case 'uncheck_attend':
                         this.data[member_id].state_cd = SCHEDULE_NOT_FINISH;
@@ -179,10 +193,14 @@ class Member_attend{
     }
 
     request_list (callback){
-        Plan_func.read_plan(this.schedule_id, (data)=>{
-            this.set_initial_data(data); // 초기값을 미리 셋팅한다.
-            callback(data);
+        Setting_calendar_func.read((settings)=>{
+            this.settings.sign_use = settings.setting_schedule_sign_enable;
+            Plan_func.read_plan(this.schedule_id, (data)=>{
+                this.set_initial_data(data); // 초기값을 미리 셋팅한다.
+                callback(data);
+            });
         });
+        
     }
 
     send_data(){
