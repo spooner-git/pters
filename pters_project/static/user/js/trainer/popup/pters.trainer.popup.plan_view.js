@@ -61,6 +61,10 @@ class Plan_view{
             mod_date:null
         };
 
+        this.settings = {
+            sign_use: OFF
+        };
+
         this.work_time = {start_hour:0, end_hour:24};
         this.lecture_minute;
         this.date_start = 0;
@@ -138,6 +142,11 @@ class Plan_view{
                 this.work_time = calendar.calc_worktime_display(data);
                 this.render();
             });
+
+            Setting_calendar_func.read((settings)=>{
+                this.settings.sign_use = settings.setting_schedule_sign_enable;
+            });
+
             Lecture_func.read({"lecture_id": this.data.lecture_id}, (data)=>{
                 this.lecture_minute = data.lecture_minute;
             });
@@ -341,6 +350,9 @@ class Plan_view{
             if(this.data.member_schedule_state[0] != SCHEDULE_FINISH){
                 delete user_option.sign_image;
             }
+            if(this.settings.sign_use == OFF){
+                delete user_option.sign_image;
+            }
 
             let options_padding_top_bottom = 16;
             let button_height = 8 + 8 + 52;
@@ -465,6 +477,9 @@ class Plan_view{
                         }}
                     };
                     if(state != SCHEDULE_FINISH){
+                        delete user_option.sign_image;
+                    }
+                    if(this.settings.sign_use == OFF){
                         delete user_option.sign_image;
                     }
 
