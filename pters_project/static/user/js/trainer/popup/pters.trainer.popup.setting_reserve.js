@@ -9,7 +9,8 @@ class Setting_reserve{
                 start_time_for_private_reserve:{value:[], text:[]},
                 available_reserve_date:{value:[], text:[]},
                 available_reserve_time:{value:[], text:[]},
-                available_cancel_time:{value:[], text:[]}
+                available_cancel_time:{value:[], text:[]},
+                capacity_visible:OFF
         };
 
         this.data_for_selector = {
@@ -37,8 +38,6 @@ class Setting_reserve{
     set_initial_data (){
         Setting_reserve_func.read((data)=>{
             this.data.stop_reserve = data.setting_member_reserve_prohibition;
-            // this.data.time_for_private_reserve.value[0] = data.setting_member_time_duration;
-            // this.data.time_for_private_reserve.text[0] = this.data_for_selector.time_for_private_reserve.text[ this.data_for_selector.time_for_private_reserve.value.indexOf(Number(data.setting_member_time_duration) ) ];
 
             this.data.start_time_for_private_reserve.value[0] = data.setting_member_start_time;
             this.data.start_time_for_private_reserve.text[0] = this.data_for_selector.start_time_for_private_reserve.text[ this.data_for_selector.start_time_for_private_reserve.value.indexOf(data.setting_member_start_time) ];
@@ -51,6 +50,9 @@ class Setting_reserve{
 
             this.data.available_cancel_time.value[0] = data.setting_member_reserve_cancel_time;
             this.data.available_cancel_time.text[0] = this.data_for_selector.available_cancel_time.text[ this.data_for_selector.available_cancel_time.value.indexOf(Number(data.setting_member_reserve_cancel_time) ) ];
+
+            this.data.capacity_visible = data.setting_member_lecture_max_num_view_available;
+
             this.render_content();
         });
         func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
@@ -108,9 +110,17 @@ class Setting_reserve{
                         this.dom_row_available_reserve_date() + 
                         this.dom_row_available_reserve_time() + 
                         this.dom_row_available_cancel_time() +
+                    '</article>' +
+                    '<article class="obj_input_box_full">' +
+                        this.dom_row_capacity_visible() +
+                        "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>회원님께서 예약 시 일정의 현재 참석자와 정원 숫자를 볼 수 있습니다.</span>" +
                     '</article>';
         if(this.data.stop_reserve == ON){
-            html = this.dom_row_stop_reserve();
+            html = this.dom_row_stop_reserve() + 
+                    '<article class="obj_input_box_full">' +
+                        this.dom_row_capacity_visible() +
+                        "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>회원님께서 예약 시 일정의 현재 참석자와 정원 숫자를 볼 수 있습니다.</span>" +
+                    '</article>';
         }
         return html;
     }
@@ -258,6 +268,24 @@ class Setting_reserve{
         return html;
     }
 
+    dom_row_capacity_visible(){
+        let id = `capacity_visible`;
+        let power = this.data.capacity_visible;
+        let style = null;
+        let capacity_visible_toggle = CComponent.toggle_button (id, power, style, (data)=>{
+                                this.data.capacity_visible = data; // ON or OFF
+                                this.render_content();
+                            });
+        let title_row = CComponent.text_button ("capacity_visible_text", '일정의 [참석자 수/정원] 표기', {"font-size":"15px", "font-weight":"500", "letter-spacing":"-0.8px"}, ()=>{});
+        let html = `
+                    <div style="display:table;width:100%;">
+                        <div style="display:table-cell;width:auto;vertical-align:middle">${title_row}</div>
+                        <div style="display:table-cell;width:50px;vertical-align:middle">${capacity_visible_toggle}</div>
+                    </div>
+                   `;
+        return html;
+    }
+
     dom_row_toolbox(){
         let title = "회원 예약";
         let description = "<p style='font-size:14px;font-weight:500;'>회원에게 적용되는 예약 관련 설정입니다.</p>";
@@ -297,8 +325,8 @@ class Setting_reserve{
 
             "setting_member_reserve_date_available":this.data.available_reserve_date.value[0], //예약 가능 날짜
             "setting_member_reserve_enable_time":this.data.available_reserve_time.value[0], //예약 가능 시간
-            "setting_member_reserve_cancel_time":this.data.available_cancel_time.value[0] //예약 취소 가능 시간
-
+            "setting_member_reserve_cancel_time":this.data.available_cancel_time.value[0], //예약 취소 가능 시간
+            "setting_member_lecture_max_num_view_available":this.data.capacity_visible // 현재 참석자/정원 보이기
         };
         
         Setting_reserve_func.update(data, ()=>{
