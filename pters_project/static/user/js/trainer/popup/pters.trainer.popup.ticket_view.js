@@ -382,9 +382,9 @@ class Ticket_view{
         let button_style = {"flex":"1 1 0", "padding":"10px 8px", "color":"var(--font-sub-dark)"};
 
         let button_limitless = CComponent.button ("button_limitless", "무제한", button_style, ()=>{ this.data.count = 99999;this.render_content(); });
-        let button_50 = CComponent.button ("button_50c", "+ 50회", button_style, ()=>{ this.data.count = Number(this.data.count) + 50;this.render_content(); });
-        let button_10 = CComponent.button ("button_10c", "+ 10회", button_style, ()=>{ this.data.count = Number(this.data.count) + 10;this.render_content(); });
-        let button_1 = CComponent.button ("button_1c", "+ 1회", button_style, ()=>{ this.data.count = Number(this.data.count) + 1;this.render_content(); });
+        let button_50 = CComponent.button ("button_50c", "+ 50회", button_style, ()=>{if(this.data.count == 99999){this.data.count = null;} this.data.count = Number(this.data.count) + 50;this.render_content(); });
+        let button_10 = CComponent.button ("button_10c", "+ 10회", button_style, ()=>{if(this.data.count == 99999){this.data.count = null;}  this.data.count = Number(this.data.count) + 10;this.render_content(); });
+        let button_1 = CComponent.button ("button_1c", "+ 1회", button_style, ()=>{if(this.data.count == 99999){this.data.count = null;}  this.data.count = Number(this.data.count) + 1;this.render_content(); });
         let button_delete = CComponent.button ("button_delete_c", "지우기", button_style, ()=>{ this.data.count = null;this.render_content(); });
         
         let wrapper_style = "display:flex;padding:0px 0 0px 20px;font-size:12px;";
@@ -480,6 +480,9 @@ class Ticket_view{
         let pattern = "[0-9]{0,4}";
         let pattern_message = "";
         let required = "";
+        if(this.data.ticket_effective_days == -1){
+            title = "소진 시까지";
+        }
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let auth_inspect = pass_inspector.ticket_update();
             if(auth_inspect.barrier == BLOCKED){
@@ -515,10 +518,10 @@ class Ticket_view{
     dom_row_period_simple_input_machine(){
         let button_style = {"flex":"1 1 0", "padding":"10px 8px", "color":"var(--font-sub-dark)"};
 
-        let button_50 = CComponent.button ("button_50d", "+ 50일", button_style, ()=>{ this.data.ticket_effective_days = Number(this.data.ticket_effective_days) + 50;this.render_content(); });
-        let button_10 = CComponent.button ("button_10d", "+ 10일", button_style, ()=>{ this.data.ticket_effective_days = Number(this.data.ticket_effective_days) + 10;this.render_content(); });
-        let button_7 = CComponent.button ("button_7d", "+ 7일", button_style, ()=>{ this.data.ticket_effective_days = Number(this.data.ticket_effective_days) + 7;this.render_content(); });
-        let button_1 = CComponent.button ("button_1d", "+ 1일", button_style, ()=>{ this.data.ticket_effective_days = Number(this.data.ticket_effective_days) + 1;this.render_content(); });
+        let button_limitless_d = CComponent.button ("button_limitless_d", "소진 시", button_style, ()=>{ this.data.ticket_effective_days = -1;this.render_content(); });
+        let button_10 = CComponent.button ("button_10d", "+ 10일", button_style, ()=>{if(this.data.ticket_effective_days == -1){this.data.ticket_effective_days = null;} this.data.ticket_effective_days = Number(this.data.ticket_effective_days) + 10;this.render_content(); });
+        let button_7 = CComponent.button ("button_7d", "+ 7일", button_style, ()=>{if(this.data.ticket_effective_days == -1){this.data.ticket_effective_days = null;} this.data.ticket_effective_days = Number(this.data.ticket_effective_days) + 7;this.render_content(); });
+        let button_1 = CComponent.button ("button_1d", "+ 1일", button_style, ()=>{if(this.data.ticket_effective_days == -1){this.data.ticket_effective_days = null;} this.data.ticket_effective_days = Number(this.data.ticket_effective_days) + 1;this.render_content(); });
         let button_delete = CComponent.button ("button_delete_d", "지우기", button_style, ()=>{ this.data.ticket_effective_days = null;this.render_content(); });
         
         let wrapper_style = "display:flex;padding:0px 0 0px 20px;font-size:12px;";
@@ -527,7 +530,7 @@ class Ticket_view{
                         ${button_1} <div style="${divider_style}"></div>
                         ${button_7} <div style="${divider_style}"></div>
                         ${button_10} <div style="${divider_style}"></div>
-                        ${button_50} <div style="${divider_style}"></div>
+                        ${button_limitless_d} <div style="${divider_style}"></div>
                         ${button_delete}
                     </div>`;
 

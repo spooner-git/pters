@@ -127,14 +127,19 @@ class Member_add{
             this.data.start_date_text = DateRobot.to_text(this.data.start_date.year, this.data.start_date.month, this.data.start_date.date, SHORT); 
         }
         //종료일자를 수강권의 기본 유효기간 만큼 시작일자에 더한 날짜로
-        let end_date = DateRobot.to_yyyymmdd(this.start_date.year, this.start_date.month, this.start_date.date);
-        let new_date = DateRobot.add_date(end_date, data.effective_days[0]);
-        let new_date_year = new_date.split('-')[0];
-        let new_date_month = new_date.split('-')[1];
-        let new_date_date = new_date.split('-')[2];
-
-        this.data.end_date = {year:Number(new_date_year), month:Number(new_date_month), date:Number(new_date_date)};
-        this.data.end_date_text = DateRobot.to_text(new_date_year, new_date_month, new_date_date, SHORT);
+        if(this.data.ticket_effective_days == -1){ //수강권 유효날짜가 -1 (소진시까지)
+            this.data.end_date = {year:9999, month:12, date:31};
+            this.data.end_date_text = "소진 시까지";
+        }else{
+            let end_date = DateRobot.to_yyyymmdd(this.start_date.year, this.start_date.month, this.start_date.date);
+            let new_date = DateRobot.add_date(end_date, data.effective_days[0]);
+            let new_date_year = new_date.split('-')[0];
+            let new_date_month = new_date.split('-')[1];
+            let new_date_date = new_date.split('-')[2];
+    
+            this.data.end_date = {year:Number(new_date_year), month:Number(new_date_month), date:Number(new_date_date)};
+            this.data.end_date_text = DateRobot.to_text(new_date_year, new_date_month, new_date_date, SHORT);
+        }
 
         this.render_content();
     }
