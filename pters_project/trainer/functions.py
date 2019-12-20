@@ -1059,7 +1059,7 @@ def update_program_setting_data(class_id, setting_type_cd_data, setting_info_dat
                                                          setting_type_cd=setting_type_cd_info)
                 except ObjectDoesNotExist:
                     setting_data = SettingTb(class_tb_id=class_id, setting_type_cd=setting_type_cd_info, use=USE)
-
+                setting_data.member_id = None
                 setting_data.setting_info = setting_info_data[idx]
                 setting_data.save()
 
