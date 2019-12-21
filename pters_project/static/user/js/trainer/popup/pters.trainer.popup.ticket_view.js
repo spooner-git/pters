@@ -189,6 +189,8 @@ class Ticket_view{
         let basic_price = this.dom_row_ticket_price_input();
         let basic_period = this.dom_row_ticket_period_input();
         let memo = this.dom_row_ticket_memo_input();
+        let max_reserve_number_daily = this.dom_row_reserve_limit_number_daily();
+        let max_reserve_number_weekly = this.dom_row_reserve_limit_number_weekly();
         let member_list = this.dom_row_member_list();
 
         let lecture_list_assembly = '<div class="obj_input_box_full">'+CComponent.dom_tag('수업 구성')+lecture+lecture_list+'</div>';
@@ -197,6 +199,10 @@ class Ticket_view{
                                                 CComponent.dom_tag('유효 기간') +  basic_period +  `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>` +
                                                 CComponent.dom_tag('가격') + basic_price + 
                                         '</div>';
+        let ticket_additional_setting_assembly = '<div class="obj_input_box_full">'+
+                                                        CComponent.dom_tag('하루 최대 예약 횟수') +  max_reserve_number_daily +  `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>` +
+                                                        CComponent.dom_tag('주간 최대 예약 횟수') +  max_reserve_number_weekly + 
+                                                '</div>';
         let ticket_memo_assembly = '<div class="obj_input_box_full">'+CComponent.dom_tag('설명')+memo+ '</div>';
         let ticket_member_list_assembly = '<div class="obj_input_box_full" style="padding-top:16px;">'+CComponent.dom_tag(`수강권 보유 회원 (${this.data.member_id.length} 명)`, 
                                             {"font-size":"13px", "font-weight":"bold", "letter-spacing":"-0.6px", "padding":"0", "padding-bottom":"8px", "color":"var(--font-sub-normal)", "height":"20px"}) + 
@@ -211,6 +217,7 @@ class Ticket_view{
         let html =  lecture_list_assembly +
                     ticket_memo_assembly +
                     ticket_basic_info_assembly +
+                    ticket_additional_setting_assembly +
                     ticket_member_list_assembly;
         return html;
     }
@@ -537,6 +544,64 @@ class Ticket_view{
         return html;
     }
 
+    dom_row_reserve_limit_number_daily(){
+        let unit = '회';
+        let id = 'reserve_limit_number_daily';
+        let title = this.data.ticket_day_schedule_enable == null ? '' : UnitRobot.numberWithCommas(this.data.ticket_day_schedule_enable) + unit;
+        let placeholder = `미입력시 '없음'`;
+        let icon = NONE;
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
+        let style = null;
+        let disabled = false;
+        let pattern = "[0-9]{0,3}";
+        let pattern_message = "";
+        let required = "";
+
+        let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
+
+            if(input_data != '' && input_data != null){
+                input_data = Number(input_data);
+            }
+
+            let user_input_data = input_data;
+            this.data.ticket_day_schedule_enable = user_input_data;
+            this.render_content();
+            this.if_user_changed_any_information = true;
+        }, pattern, pattern_message, required);
+
+        return html;
+    }
+
+    dom_row_reserve_limit_number_weekly(){
+        let unit = '회';
+        let id = 'reserve_limit_number_weekly';
+        let title = this.data.ticket_week_schedule_enable == null ? '' : UnitRobot.numberWithCommas(this.data.ticket_week_schedule_enable) + unit;
+        let placeholder = `미입력시 '없음'`;
+        let icon = NONE;
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
+        let style = null;
+        let disabled = false;
+        let pattern = "[0-9]{0,3}";
+        let pattern_message = "";
+        let required = "";
+
+        let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
+
+            if(input_data != '' && input_data != null){
+                input_data = Number(input_data);
+            }
+
+            let user_input_data = input_data;
+            this.data.ticket_week_schedule_enable = user_input_data;
+            this.render_content();
+            this.if_user_changed_any_information = true;
+        }, pattern, pattern_message, required);
+
+        return html;
+    }
+
     dom_row_ticket_memo_input(){
         let id = 'ticket_memo_view';
         let title = this.data.memo == null || this.data.memo == " " ? '' : this.data.memo;
@@ -636,9 +701,11 @@ class Ticket_view{
                     "ticket_reg_count":this.data.count,
                     "ticket_price":this.data.price,
                     "ticket_note":this.data.memo,
-                    "ticket_week_schedule_enable":7, //주간 수강 제한 횟수
-                    "ticket_day_schedule_enable":1  //일일 수강 제한 횟수
+                    "ticket_week_schedule_enable":this.data.ticket_week_schedule_enable, //주간 수강 제한 횟수
+                    "ticket_day_schedule_enable":this.data.ticket_day_schedule_enable  //일일 수강 제한 횟수
         };
+
+        console.log(data)
 
         Ticket_func.update(data, ()=>{
             let lecture_to_be_update = this.func_update_lecture();
