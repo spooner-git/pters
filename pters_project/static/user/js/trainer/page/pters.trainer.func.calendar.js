@@ -1598,6 +1598,7 @@ class Calendar {
 
         case "off":
             selector_body.off("touchstart").off("touchend").off('touchmove');
+            $('#root_content').off('touchmove');
             break;
         }
     }
