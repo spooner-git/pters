@@ -95,7 +95,7 @@ class Program_list{
                                     ${sharing_member_num > 0 ? '<span style="font-size:12px;">'+CImg.share("",{"vertical-align":"middle", "width":"20px", "margin-bottom":"3px", "margin-left":"5px"}) + +sharing_member_num+'</span>' :""}
                                 </div>
                                 <div>
-                                    <span>${member_num} 명</span>
+                                    <span>${member_num} ${TEXT.unit.person[language]}</span>
                                 </div>
                             </div>                
                             <div class="program_data_b">
@@ -116,9 +116,9 @@ class Program_list{
             }
         }
 
-        html_selected_current_program.unshift(CComponent.dom_tag("선택된 프로그램", {"padding":"5px 20px", "font-weight":"bold", "color":"var(--font-highlight)"}));
-        html_shared_program.unshift(CComponent.dom_tag(`공유 받은 프로그램 (${shared_program_count})`, {"padding":"5px 20px", "font-weight":"bold", "color":"var(--font-sub-normal)"}));
-        html_temp.unshift(CComponent.dom_tag(`내 프로그램 (${not_selected_program_count})`, {"padding":"5px 20px", "font-weight":"bold", "color":"var(--font-sub-normal)"}));
+        html_selected_current_program.unshift(CComponent.dom_tag(TEXT.word.selected_program[language], {"padding":"5px 20px", "font-weight":"bold", "color":"var(--font-highlight)"}));
+        html_shared_program.unshift(CComponent.dom_tag(`${TEXT.word.shared_program[language]} (${shared_program_count})`, {"padding":"5px 20px", "font-weight":"bold", "color":"var(--font-sub-normal)"}));
+        html_temp.unshift(CComponent.dom_tag(`${TEXT.word.my_program[language]} (${not_selected_program_count})`, {"padding":"5px 20px", "font-weight":"bold", "color":"var(--font-sub-normal)"}));
 
         if(html_shared_program.length == 1){
             html_shared_program.push(this.introduce("shared"));
@@ -141,12 +141,12 @@ class Program_list{
         switch(type){
             case "shared":
                 text = `<article class='program_wrapper'>
-                            <p style='font-size:11px;padding:0 5px;margin:0'>다른 PTERS 강사님으로부터 공유 받은 프로그램이 없습니다.</p>
+                            <p style='font-size:11px;padding:0 5px;margin:0'>${TEXT.word.no_shared_programs[language]}</p>
                         </article>`;
             break;
             case "sharing":
                 text = `<article class='program_wrapper'>
-                            <p style='font-size:11px;padding:0 5px;margin:0'>다른 PTERS 강사님께 내 프로그램을 공유하여, 함께 관리합니다.</p>
+                            <p style='font-size:11px;padding:0 5px;margin:0'>${TEXT.word.sharing_my_programs[language]}</p>
                         </article>`;
             break;
         }
@@ -154,7 +154,7 @@ class Program_list{
     }
 
     dom_row_toolbox(){
-        let title = "프로그램";
+        let title = TEXT.word.program[language];
         let html = `
         <div class="lecture_view_upper_box" style="">
             <div style="display:inline-block;">
@@ -169,11 +169,11 @@ class Program_list{
 
     event_program_click(id, name, category, category_sub, selected, shared){
         let user_option = {
-            goto:{text:"프로그램 이동", callback:()=>{ 
+            goto:{text:`${TEXT.word.program[language]} ${TEXT.word.move[language]}`, callback:()=>{ 
                     window.location.href=`/trainer/select_program_processing/?class_id=${id}&next_page=/trainer/`; 
                 }
             },
-            edit:{text:"편집", callback:()=>{
+            edit:{text:TEXT.word.edit[language], callback:()=>{
                     layer_popup.close_layer_popup();
                     let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PROGRAM_VIEW, 100, popup_style, null, ()=>{
@@ -250,7 +250,7 @@ class Program_func{
                     error_callback();
                 }
                 console.log('server error');
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message(TEXT.message.ajax_error[language]);
             }
         });
     }
@@ -339,7 +339,7 @@ class Program_func{
                     error_callback();
                 }
                 console.log('server error');
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message(TEXT.message.ajax_error[language]);
             }
         });
     }
@@ -384,7 +384,7 @@ class Program_func{
                     error_callback();
                 }
                 console.log('server error');
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message(TEXT.message.ajax_error[language]);
             }
         });
     }

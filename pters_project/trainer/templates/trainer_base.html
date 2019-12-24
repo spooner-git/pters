@@ -60,6 +60,7 @@
     <script type="text/javascript" src="https://service.iamport.kr/js/iamport.payment-1.1.5.js"></script>
 
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.const.js" %}></script>
+    <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.text.js" %}></script>
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.fundamental.js" %}></script>
 
     {% block local_css %}
@@ -380,6 +381,7 @@
 
     // MY_PROGRAM = 0 / SHARED_PROGRAM = 1
     var shared_program_flag = '{{ request.session.shared_program_flag }}';
+    var language = "KOR";
 
     //기기종류 판단
     const varUA = navigator.userAgent.toLowerCase();
