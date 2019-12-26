@@ -37,12 +37,23 @@ class Home {
             return false;
         }
 
+        this.set_current_date();
+
         let component = this.static_component();
         document.querySelector(this.targetHTML).innerHTML = component.initial_page;
 
         this.render_loading_image();
         this.render_upper_box();
         this.render_content();
+    }
+
+    set_current_date(){
+        let d = new Date();
+        this.current_year = d.getFullYear();
+        this.current_month = d.getMonth()+1;
+        this.current_date = d.getDate();
+        this.current_day = d.getDay();
+        this.today = DateRobot.to_yyyymmdd(this.current_year, this.current_month, this.current_date);
     }
 
     //상단을 렌더링
