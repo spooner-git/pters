@@ -33,6 +33,7 @@ const TEXT = {
         registration:{KOR:"등록", EN:"Add", JP:"登録"},
         move:{KOR:"이동", EN:"Move", JP:"移動"},
         edit:{KOR:"편집", EN:"Edit", JP:"編集"},
+        share:{KOR:"공유", EN:"Sharing", JP:"共有"},
 
         //홈
         private:{KOR:"개인", EN:"Private", JP:"プライベート"},

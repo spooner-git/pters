@@ -187,11 +187,23 @@ class Program_list{
                         program_view_popup = new Program_view('.popup_program_view', external_data);
                     });
                 }
+            },
+            sharing:{text:`${TEXT.word.program[language]} ${TEXT.word.share[language]}`, callback:()=>{ 
+                    if(selected == "NOT_SELECTED"){
+                        show_error_message("선택된 프로그램만 공유 가능합니다.<br>프로그램으로 이동 후 공유할 수 있습니다.");
+                        return false;
+                    }
+                    sideGoPopup("setting_sharing"); 
+                }
             }
         };
         if(shared == ON){
             delete user_option["edit"];
+            delete user_option["sharing"];
         }
+        // if(selected == "NOT_SELECTED"){
+        //     delete user_option["sharing"];
+        // }
         let options_padding_top_bottom = 16;
         let button_height = 8 + 8 + 52;
         let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
