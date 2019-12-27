@@ -195,11 +195,21 @@ class Program_list{
                     }
                     sideGoPopup("setting_sharing"); 
                 }
+            },
+            shared:{text:`${TEXT.word.program[language]} ${TEXT.word.share[language]} ${TEXT.word.auth[language]}`, callback:()=>{ 
+                    if(selected == "NOT_SELECTED"){
+                        show_error_message("선택된 프로그램만 공유 권한 확인이 가능합니다.<br>프로그램으로 이동 후 확인 할 수 있습니다.");
+                        return false;
+                    }
+                    sideGoPopup("setting_shared");
+                }
             }
         };
         if(shared == ON){
             delete user_option["edit"];
             delete user_option["sharing"];
+        }else{
+            delete user_option["shared"];
         }
         // if(selected == "NOT_SELECTED"){
         //     delete user_option["sharing"];

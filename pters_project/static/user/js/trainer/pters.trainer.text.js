@@ -34,6 +34,7 @@ const TEXT = {
         move:{KOR:"이동", EN:"Move", JP:"移動"},
         edit:{KOR:"편집", EN:"Edit", JP:"編集"},
         share:{KOR:"공유", EN:"Sharing", JP:"共有"},
+        auth:{KOR:"권한", EN:"Authority", JP:"権限"},
 
         //홈
         private:{KOR:"개인", EN:"Private", JP:"プライベート"},

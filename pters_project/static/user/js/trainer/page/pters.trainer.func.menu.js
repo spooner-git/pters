@@ -74,7 +74,7 @@ class Menu {
                         this.dom_menu_statistics() + 
                         this.dom_menu_attendmode() + 
                        CComponent.dom_tag('설정', dom_tag_style) +
-                        share + 
+                        // share + 
                         this.dom_menu_setting_calendar() + 
                         this.dom_menu_setting_worktime() + 
                         this.dom_menu_setting_autocomplete() +
