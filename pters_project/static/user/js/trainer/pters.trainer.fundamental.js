@@ -964,7 +964,7 @@ class PassInspector{
         //     return {barrier:PASSED};
         // }
         if(total_member >= limit_number){
-            let current_members_id_list = data.map((el)=>{return el.member_id;});
+            let current_members_id_list = data.current_member_data.map((el)=>{return el.member_id;});
             if(current_members_id_list.indexOf(member_id) != -1){ //진행중 회원에 이 회원이 있을 경우
                 return {barrier:PASSED};
             }
