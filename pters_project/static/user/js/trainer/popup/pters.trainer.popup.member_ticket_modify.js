@@ -172,6 +172,19 @@ class Member_ticket_modify{
                     layer_popup.close_layer_popup();}
                 },
                 resume:{text:"재개", callback:()=>{
+                    let inspect = pass_inspector.member("recontract", this.data.member_id);
+                    if(inspect.barrier == BLOCKED){
+                        this.data_sending_now = false;
+                        let message = `[${inspect.limit_type}] 이용자께서는 회원을 최대 ${inspect.limit_num}명까지 등록하실 수 있습니다.
+                                        <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까??</p>`;
+                        show_user_confirm (message, ()=>{
+                            layer_popup.all_close_layer_popup();
+                            sideGoPopup("pters_pass_main");
+                        });
+
+                        return false;
+                    }
+
                     Member_func.ticket_status({"member_ticket_id":this.data.member_ticket_id, "state_cd":"IP", "refund_price":"", "refund_date":""}, ()=>{
                         this.data.status = "IP";
                         this.render_content();

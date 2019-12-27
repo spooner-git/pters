@@ -795,7 +795,7 @@ class Member_add{
         }
 
         let recontract = this.data_from_external == null ? OFF : ON;
-        let inspect = pass_inspector.member(recontract);
+        let inspect = pass_inspector.member(recontract, this.data.member_id);
         if(inspect.barrier == BLOCKED){
             this.data_sending_now = false;
             let message = `[${inspect.limit_type}] 이용자께서는 회원을 최대 ${inspect.limit_num}명까지 등록하실 수 있습니다.

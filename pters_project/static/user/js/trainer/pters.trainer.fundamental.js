@@ -949,7 +949,7 @@ class PassInspector{
         return {barrier:PASSED};
     }
 
-    member(re_contract){
+    member(re_contract, member_id){
         let async = false;
         let data;
         member.request_member_list("ing", (data1)=>{
@@ -960,10 +960,13 @@ class PassInspector{
         let limit_number = this.data.auth_member_create.limit_num;
         let limit_type = this.data.auth_member_create.limit_type;
 
-        if(re_contract == ON){
-            return {barrier:PASSED};
-        }
+        // if(re_contract == ON){
+        //     return {barrier:PASSED};
+        // }
         if(total_member >= limit_number){
+            if(data.indexOf(member_id) != -1){ //진행중 회원에 이 회원이 있을 경우
+                return {barrier:PASSED};
+            }
             return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
         }
         return {barrier:PASSED};
