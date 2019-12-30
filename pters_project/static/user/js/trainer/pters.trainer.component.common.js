@@ -44,6 +44,7 @@ class CComponent{
 
 
         $(document).off('click', `#c_r_${id}`).on('click', `#c_r_${id}`, function(e){
+            e.stopPropagation();
             onclick();
         });
         return html;

@@ -16,7 +16,7 @@ const TEXT = {
         work_time:{KOR:"업무 시간", EN:"Working time", JP:"業務時間"},
         auto_complete:{KOR:"자동 완료", EN:"Auto Complete", JP:"自動完了"},
         member_reserve:{KOR:"회원 예약", EN:"Member Reserve", JP:"会員の予約"},
-        attend_mode:{KOR:"출석 체크 모드", EN:"Attend Mode", JP:"出席チェックモード"},
+        attend_mode:{KOR:"출석 체크 모드", EN:"Attend Check Mode", JP:"出席チェックモード"},
         security:{KOR:"정보 보호", EN:"Security", JP:"情報保安"},
         theme:{KOR:"테마", EN:"Theme", JP:"テーマ"},
         notice:{KOR:"공지 사항", EN:"Notice", JP:"お知らせ"},
@@ -40,7 +40,7 @@ const TEXT = {
         private:{KOR:"개인", EN:"Private", JP:"プライベート"},
         change:{KOR:"변경", EN:"Change", JP:"変更"},
         today_plans:{KOR:"오늘의 일정", EN:"Today's Plan", JP:"今日の日程"},
-        today_no_plans:{KOR:"오늘의 일정이 없습니다.", EN:"There's no plan today", JP:"今日の日程がありません。"},
+        today_no_plans:{KOR:"오늘의 일정이 없습니다.", EN:"No plans today", JP:"今日の日程がありません。"},
         hide_show:{KOR:"접기/펼치기", EN:"Hide/Show", JP:""},
         hide:{KOR:"접기", EN:"Hide", JP:"隠す"},
         show:{KOR:"펼치기", EN:"Show", JP:"開く"},
@@ -69,7 +69,7 @@ const TEXT = {
         my_program:{KOR:"내 프로그램", EN:"My programs", JP:"マイ"},
         no_shared_programs:{
             KOR:"다른 PTERS 강사님으로부터 공유 받은 프로그램이 없습니다.", 
-            EN:"There's no shared programs from other PTERS teachers.", 
+            EN:"Any shared programs from the other PTERS teachers.", 
             JP:"他のPTERSユーザから共有してもらったプログラムがありません。"},
         sharing_my_programs:{
             KOR:"다른 PTERS 강사님께 내 프로그램을 공유하여, 함께 관리합니다.", 
