@@ -4011,7 +4011,7 @@ def update_program_info_logic(request):
 def update_share_program_info_logic(request):
     trainer_id = request.POST.get('trainer_id', '')
     auth_cd = request.POST.get('auth_cd', '')
-    class_id = request.session.get('class_id', '')
+    class_id = request.POST.get('class_id', '')
     error = None
     member_info = None
     if trainer_id is None or trainer_id == '':
@@ -4093,7 +4093,7 @@ def update_share_program_info_logic(request):
 class GetShareProgramDataViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
-        class_id = self.request.session.get('class_id', '')
+        class_id = self.request.POST.get('class_id', '')
         error = None
         member_program_auth_list = collections.OrderedDict()
 
@@ -4191,7 +4191,7 @@ def update_trainer_program_connection_info_logic(request):
 
 def delete_trainer_program_connection_logic(request):
 
-    class_id = request.session.get('class_id', '')
+    class_id = request.POST.get('class_id', '')
     error = None
     if class_id == '':
         error = '프로그램 정보를 불러오지 못했습니다.[0]'
