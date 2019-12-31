@@ -6,6 +6,7 @@ class Setting_sharing_member_auth{
         this.member_name = this.external_data.member_name;
         this.member_db_id = this.external_data.db_id;
         this.shared_status = this.external_data.shared_status;
+        this.program_id = this.external_data.program_id;
 
         this.data = {
                 schedule:{
@@ -55,7 +56,7 @@ class Setting_sharing_member_auth{
     }
 
     set_initial_data (){
-        Setting_sharing_member_auth_func.read((data)=>{
+        Setting_sharing_member_auth_func.read({"class_id": this.program_id}, (data)=>{
             let my_auth = data[this.member_db_id];
             console.log(my_auth);
             this.data.schedule.create = my_auth.auth_plan_create != undefined ? my_auth.auth_plan_create : null;
@@ -359,6 +360,7 @@ class Setting_sharing_member_auth{
             auth_cd = AUTH_TYPE_WAIT;
         }
         let data = {
+            "class_id":this.program_id,
             "trainer_id": this.member_db_id,
             "auth_cd": auth_cd,
             "auth_plan_create":this.data.schedule.create,
@@ -446,10 +448,11 @@ class Setting_sharing_member_auth_func{
         });
     }
 
-    static read(callback, error_callback){
+    static read(data, callback, error_callback){
         $.ajax({
             url:"/trainer/get_share_program_data/",
-            type:'GET',
+            type: 'GET',
+            data: data,
             dataType : 'JSON',
     
             beforeSend:function(xhr, settings){

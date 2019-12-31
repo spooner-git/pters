@@ -1,8 +1,9 @@
 class Setting_shared{
-    constructor(install_target){
+    constructor(install_target, external_data){
         this.target = {install: install_target, toolbox:'section_setting_shared_toolbox', content:'section_setting_shared_content'};
         this.data_sending_now = false;
 
+        this.program_id = external_data.program_id;
         this.data = pass_inspector.data;
 
         this.init();
@@ -161,7 +162,8 @@ class Setting_shared{
     event_disconnect(){
         let message = `현재 프로그램의 공유 연결을 해제합니다. <br>다시 연결하려면 프로그램 소유자에게 요청 해야합니다.`;
         show_user_confirm (message, ()=>{
-            Setting_shared_func.disconnect(()=>{
+            let data = {"class_id": this.program_id};
+            Setting_shared_func.disconnect(data, ()=>{
                 location.href = "/trainer/";
             }, ()=>{});
         });
@@ -181,11 +183,12 @@ class Setting_shared{
 }
 
 class Setting_shared_func{
-    static disconnect(callback, error_callback){
+    static disconnect(data, callback, error_callback){
         //업무 시간 설정
         $.ajax({
             url:"/trainer/delete_trainer_program_connection/",
             type:'POST',
+            data:data,
             dataType : 'JSON',
     
             beforeSend:function(xhr, settings){

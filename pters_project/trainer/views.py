@@ -4093,7 +4093,7 @@ def update_share_program_info_logic(request):
 class GetShareProgramDataViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
-        class_id = self.request.POST.get('class_id', '')
+        class_id = self.request.GET.get('class_id', '')
         error = None
         member_program_auth_list = collections.OrderedDict()
 

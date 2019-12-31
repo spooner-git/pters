@@ -1,8 +1,9 @@
 class Setting_sharing{
-    constructor(install_target){
+    constructor(install_target, external_data){
         this.target = {install: install_target, toolbox:'section_setting_sharing_toolbox', content:'section_setting_sharing_content'};
         this.data_sending_now = false;
 
+        this.program_id = external_data.program_id;
         this.data = {
         };
 
@@ -16,9 +17,8 @@ class Setting_sharing{
     }
 
     set_initial_data (){
-        Setting_sharing_func.read((data)=>{
+        Setting_sharing_func.read({"class_id":this.program_id}, (data)=>{
             this.data = data;
-            console.log("data", data);
             this.render();
             func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
         });
@@ -160,7 +160,7 @@ class Setting_sharing{
                     </article>`;
 
         $(document).off('click', `#shared_member_row_${member_db_id}`).on('click', `#shared_member_row_${member_db_id}`, ()=>{
-            let external_data = {"db_id":member_db_id, "member_name":member_name, "shared_status": AUTH_TYPE_VIEW};
+            let external_data = {"db_id":member_db_id, "member_name":member_name, "shared_status": AUTH_TYPE_VIEW, "program_id":this.program_id};
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_SHARING_MEMBER_AUTH, 100, POPUP_FROM_RIGHT, null, ()=>{
                 setting_sharing_member_auth_popup = new Setting_sharing_member_auth('.popup_setting_sharing_member_auth', external_data);
             });
@@ -195,7 +195,8 @@ class Setting_sharing{
     upper_right_menu(){
         let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_BOTTOM;
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_SHARING_MEMBER_SEARCH, 100, popup_style, null, ()=>{
-                    setting_sharing_member_search_popup = new Setting_sharing_member_search('.popup_setting_sharing_member_search', 'setting_sharing_member_search_popup');
+                    let external_data = {"program_id": this.program_id};
+                    setting_sharing_member_search_popup = new Setting_sharing_member_search('.popup_setting_sharing_member_search', external_data);
         });
     }
 }
@@ -246,10 +247,11 @@ class Setting_sharing_func{
         });
     }
 
-    static read(callback, error_callback){
+    static read(data, callback, error_callback){
         $.ajax({
             url:"/trainer/get_share_program_data/",
             type:'GET',
+            data:data,
             dataType : 'JSON',
     
             beforeSend:function(xhr, settings){

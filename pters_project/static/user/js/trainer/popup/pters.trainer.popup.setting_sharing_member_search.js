@@ -1,8 +1,8 @@
 class Setting_sharing_member_search {
-    constructor (install_target, instance){
+    constructor (install_target, external_data){
         this.target = {install: install_target, toolbox:'section_sharing_member_search_toolbox', content:'section_sharing_member_search_content'};
 
-        this.instance = instance;
+        this.program_id = external_data.program_id;
         this.page_name = 'sharing_member_search';
         this.data = {
             searched_data : [],
@@ -146,7 +146,7 @@ class Setting_sharing_member_search {
             layer_popup.close_layer_popup();
             this.clear();
 
-            let external_data = {"db_id":this.data.selected_member_id, "member_name":this.data.selected_member_name, "shared_status": AUTH_TYPE_WAIT};
+            let external_data = {"db_id":this.data.selected_member_id, "member_name":this.data.selected_member_name, "shared_status": AUTH_TYPE_WAIT, "program_id": this.program_id};
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_SHARING_MEMBER_AUTH, 100, POPUP_FROM_RIGHT, null, ()=>{
                 setting_sharing_member_auth_popup = new Setting_sharing_member_auth('.popup_setting_sharing_member_auth', external_data);
             });

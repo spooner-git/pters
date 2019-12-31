@@ -189,19 +189,21 @@ class Program_list{
                 }
             },
             sharing:{text:`${TEXT.word.program[language]} ${TEXT.word.share[language]}`, callback:()=>{ 
-                    if(selected == "NOT_SELECTED"){
-                        show_error_message("선택된 프로그램만 공유 가능합니다.<br>프로그램으로 이동 후 공유할 수 있습니다.");
-                        return false;
-                    }
-                    sideGoPopup("setting_sharing"); 
+                    // if(selected == "NOT_SELECTED"){
+                    //     show_error_message("선택된 프로그램만 공유 가능합니다.<br>프로그램으로 이동 후 공유할 수 있습니다.");
+                    //     return false;
+                    // }
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_SHARING, 100, POPUP_FROM_RIGHT, null, ()=>{
+                        setting_sharing_popup = new Setting_sharing('.popup_setting_sharing', {program_id:id});});
                 }
             },
             shared:{text:`${TEXT.word.program[language]} ${TEXT.word.share[language]} ${TEXT.word.auth[language]}`, callback:()=>{ 
-                    if(selected == "NOT_SELECTED"){
-                        show_error_message("선택된 프로그램만 공유 권한 확인이 가능합니다.<br>프로그램으로 이동 후 확인 할 수 있습니다.");
-                        return false;
-                    }
-                    sideGoPopup("setting_shared");
+                    // if(selected == "NOT_SELECTED"){
+                    //     show_error_message("선택된 프로그램만 공유 권한 확인이 가능합니다.<br>프로그램으로 이동 후 확인 할 수 있습니다.");
+                    //     return false;
+                    // }
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_SHARED, 100, POPUP_FROM_RIGHT, null, ()=>{
+                        setting_shared_popup = new Setting_shared('.popup_setting_shared', {program_id:id});});
                 }
             }
         };
