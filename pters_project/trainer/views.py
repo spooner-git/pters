@@ -3021,7 +3021,7 @@ def add_ticket_info_logic(request):
     ticket_note = request.POST.get('ticket_note')
     ticket_effective_days = request.POST.get('ticket_effective_days', 30)
     ticket_price = request.POST.get('ticket_price', 0)
-    ticket_month_schedule_enable = request.POST.get('ticket_month_schedule_enable', 7)
+    ticket_month_schedule_enable = request.POST.get('ticket_month_schedule_enable', 31)
     ticket_week_schedule_enable = request.POST.get('ticket_week_schedule_enable', 7)
     ticket_day_schedule_enable = request.POST.get('ticket_day_schedule_enable', 1)
     ticket_reg_count = request.POST.get('ticket_reg_count', 0)

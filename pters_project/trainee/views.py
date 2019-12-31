@@ -319,6 +319,7 @@ def add_trainee_schedule_logic(request):
     # time_duration = request.POST.get('time_duration', '')
     training_time = request.POST.get('training_time', '')
     class_type_name = request.session.get('class_type_name', '')
+    setting_week_start_date = request.session.get('setting_week_start_date', 'SUN')
     error = None
     class_info = None
     start_date = None
@@ -327,6 +328,7 @@ def add_trainee_schedule_logic(request):
     schedule_info = None
     member_ticket_id = None
     member_ticket_info = None
+    error = None
     # lt_res_member_time_duration = 60
 
     if class_id is None or class_id == '':
@@ -439,6 +441,37 @@ def add_trainee_schedule_logic(request):
             member_ticket_info = MemberTicketTb.objects.get(member_ticket_id=member_ticket_id)
         except ObjectDoesNotExist:
             error = '수강정보를 불러오지 못했습니다.'
+        #
+    if error is None:
+        select_date = start_date.date()
+        if member_ticket_info.ticket_tb.day_schedule_enable < 9999:
+            # 체크 하기
+            tomorrow = select_date + datetime.timedelta(days=1)
+            day_schedule_count = ScheduleTb.objects.filter(member_ticket_tb_id=member_ticket_info.member_ticket_id,
+                                                           start_dt__gte=select_date, start_dt__lt=tomorrow,
+                                                           use=USE).count()
+
+            if day_schedule_count >= member_ticket_info.ticket_tb.day_schedule_enable:
+                error = member_ticket_info.ticket_tb.name + ' 수강권의 하루 최대 이용 횟수를 초과했습니다.'
+    if error is None:
+        select_date = start_date.date()
+        if member_ticket_info.ticket_tb.week_schedule_enable < 9999:
+            week_idx = 0
+            if setting_week_start_date == 'MON':
+                week_idx = 1
+
+            # 주의 마지막 날짜 찾기
+            week_idx -= int(select_date.strftime('%w'))
+            first_day = select_date + datetime.timedelta(days=week_idx)
+
+            # 주의 첫번째 날짜 찾기
+            last_day = first_day + datetime.timedelta(days=7)
+
+            week_schedule_count = ScheduleTb.objects.filter(member_ticket_tb_id=member_ticket_info.member_ticket_id,
+                                                            start_dt__gte=first_day, start_dt__lt=last_day,
+                                                            use=USE).count()
+            if week_schedule_count >= member_ticket_info.ticket_tb.week_schedule_enable:
+                error = member_ticket_info.ticket_tb.name + ' 수강권의 주간 최대 이용 횟수를 초과했습니다.'
 
         if error is None:
             if member_ticket_info.member_auth_cd == AUTH_TYPE_WAIT:
