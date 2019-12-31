@@ -184,6 +184,7 @@ body{
     padding-left: 16px;
     display:table-cell;
     vertical-align: middle;
+    cursor: pointer;
 }
 .registration_right{
     width: 24px;
@@ -213,7 +214,6 @@ body{
 }
 
 .registration_content{
-
     height:auto;
     margin: 0 20px;
     overflow-y:hidden;
@@ -222,6 +222,7 @@ body{
     height: calc(100% - 390px);
     min-height: 300px;
 }
+
 .registration_foot{
     bottom:0;
     padding-left:20px;
