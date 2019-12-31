@@ -88,8 +88,8 @@ class Menu {
                         this.dom_menu_service_notice() + 
                         this.dom_menu_service_faq() +
                         this.dom_menu_service_inquiry() +
-                        this.dom_menu_service_about_us();
-                        // + this.dom_menu_service_help();
+                        this.dom_menu_service_about_us()
+                        + this.dom_menu_service_help();
           
         return assembly;
     }

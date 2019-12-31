@@ -944,10 +944,10 @@
     
 
     //튜토리얼을 본적이 없으면 튜토리얼을 띄우기
-    // let tutorial_view = localStorage.getItem("tutorial_view");
-    // if(tutorial_view != "1"){
-    //     sideGoPopup("helper");
-    // }
+    let tutorial_view = localStorage.getItem("tutorial_view");
+    if(tutorial_view != "1"){
+        sideGoPopup("helper");
+    }
 
     //새로운 알림이 있을때 알림 아이콘에 표시해주기
     function are_there_new_alarm(){
