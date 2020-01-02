@@ -869,7 +869,7 @@ class Member_view{
                 }
             },
             delete:{text:"회원 삭제", callback:()=>{
-                    show_user_confirm(`"${this.data.name}" 님 정보를 완전 삭제 하시겠습니까? <br> 다시 복구할 수 없습니다.`, ()=>{
+                    show_user_confirm(`"${this.data.name}" 님 정보를 완전 삭제 하시겠습니까? <br> 다시 복구할 수 없습니다. <br> <span style="color:var(--font-highlight);">통계에서도 정보가 삭제되어 반영됩니다.</span>`, ()=>{
                         let auth_inspect = pass_inspector.member_delete();
                         if(auth_inspect.barrier == BLOCKED){
                             let message = `${auth_inspect.limit_type}`;
