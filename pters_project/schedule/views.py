@@ -70,6 +70,127 @@ class GetHolidayScheduleView(LoginRequiredMixin, View):
         return JsonResponse(holiday_schedule, json_dumps_params={'ensure_ascii': True})
 
 
+# 일정 체크
+def check_schedule_logic(request):
+    # start_time = timezone.now()
+    # 폼 검사 시작
+    schedule_input_form = AddScheduleTbForm(request.POST)
+
+    class_id = request.session.get('class_id', '')
+    setting_week_start_date = request.session.get('setting_week_start_date', 'SUN')
+    error = None
+    info_message = None
+    context = {'messageArray': ''}
+    if schedule_input_form.is_valid():
+        schedule_start_datetime = schedule_input_form.cleaned_data['start_dt']
+        schedule_end_datetime = schedule_input_form.cleaned_data['end_dt']
+        en_dis_type = schedule_input_form.cleaned_data['en_dis_type']
+        # note = schedule_input_form.cleaned_data['note']
+        # duplication_enable_flag = schedule_input_form.cleaned_data['duplication_enable_flag']
+        lecture_id = schedule_input_form.cleaned_data['lecture_id']
+
+        lecture_info = schedule_input_form.get_lecture_info()
+        member_list = schedule_input_form.get_member_list(class_id)
+
+        if len(member_list) == 0:
+            error = '회원을 선택해주세요.'
+
+        if error is None:
+            # 그룹 레슨이거나 개인 레슨인 경우
+            for member_info in member_list:
+                error_temp = None
+
+                if member_info['error'] is None:
+                    try:
+                        with transaction.atomic():
+                            # 자유형 문제
+                            # 개일 레슨인 경우
+                            if lecture_info.lecture_type_cd == LECTURE_TYPE_ONE_TO_ONE:
+                                lecture_id = None
+                            else:
+                                if lecture_id is None:
+                                    raise InternalError
+
+                            try:
+                                member_ticket_info = MemberTicketTb.objects.get(member_ticket_id=
+                                                                                member_info['member_ticket_id'])
+                            except ObjectDoesNotExist:
+                                error_temp = '수강정보를 불러오지 못했습니다.'
+                            if error_temp is None:
+                                select_date = schedule_start_datetime.date()
+                                if member_ticket_info.ticket_tb.day_schedule_enable < 9999:
+                                    # 체크 하기
+                                    tomorrow = select_date + datetime.timedelta(days=1)
+                                    day_schedule_count = ScheduleTb.objects.filter(
+                                        member_ticket_tb_id=member_ticket_info.member_ticket_id,
+                                        start_dt__gte=select_date, start_dt__lt=tomorrow,
+                                        use=USE).count()
+
+                                    if day_schedule_count >= member_ticket_info.ticket_tb.day_schedule_enable:
+                                        error_temp = member_info['member_name'] +'님의 '+ member_ticket_info.ticket_tb.name + ' 수강권의 하루 최대 이용 횟수를 초과했습니다.'
+
+                            if error_temp is None:
+                                select_date = schedule_start_datetime.date()
+                                if member_ticket_info.ticket_tb.week_schedule_enable < 9999:
+                                    week_idx = 0
+                                    if setting_week_start_date == 'MON':
+                                        week_idx = 1
+
+                                    # 주의 마지막 날짜 찾기
+                                    week_idx -= int(select_date.strftime('%w'))
+                                    first_day = select_date + datetime.timedelta(days=week_idx)
+
+                                    # 주의 첫번째 날짜 찾기
+                                    last_day = first_day + datetime.timedelta(days=7)
+
+                                    week_schedule_count = ScheduleTb.objects.filter(
+                                        member_ticket_tb_id=member_ticket_info.member_ticket_id,
+                                        start_dt__gte=first_day, start_dt__lt=last_day,
+                                        use=USE).count()
+                                    if week_schedule_count >= member_ticket_info.ticket_tb.week_schedule_enable:
+                                        error_temp = member_info['member_name'] +'님의 '+ member_ticket_info.ticket_tb.name + ' 수강권의 주간 최대 이용 횟수를 초과했습니다.'
+
+                            if error_temp is not None:
+                                raise InternalError
+                    except TypeError:
+                        error_temp = '오류가 발생했습니다. [1]'
+                    except ValueError:
+                        error_temp = '오류가 발생했습니다. [2]'
+                    except IntegrityError:
+                        error_temp = '오류가 발생했습니다. [3]'
+                    except InternalError:
+                        error_temp = error_temp
+                else:
+                    error_temp = member_info['error']
+
+                if error_temp is not None:
+                    if info_message is None or info_message == '':
+                        info_message = error_temp
+                    else:
+                        info_message = info_message + '/' + error_temp
+
+    else:
+        for field in schedule_input_form:
+            for field_error in field.errors:
+                error = field_error
+                break
+        for non_field_error in schedule_input_form.non_field_errors():
+            error = non_field_error
+            break
+
+    if error is None:
+        if info_message is not None:
+            context['schedule_info_message'] = info_message
+    else:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        # messages.error(request, error)
+        context['messageArray'] = error
+    # end_time = timezone.now()
+
+    return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+    # return render(request, 'ajax/schedule_error_info.html', context)
+
+
 # 일정 추가
 def add_schedule_logic(request):
     # start_time = timezone.now()

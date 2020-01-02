@@ -703,7 +703,8 @@ class Plan_add{
                 return false;
             }
 
-            let url ='/schedule/add_schedule/';
+            // let url ='/schedule/add_schedule/';
+            let url = '/schedule/check_schedule/';
             layer_popup.close_layer_popup();
             Plan_func.create(url, data, ()=>{
                 this.data_sending_now = false;

@@ -441,7 +441,7 @@ def add_trainee_schedule_logic(request):
             member_ticket_info = MemberTicketTb.objects.get(member_ticket_id=member_ticket_id)
         except ObjectDoesNotExist:
             error = '수강정보를 불러오지 못했습니다.'
-        #
+
     if error is None:
         select_date = start_date.date()
         if member_ticket_info.ticket_tb.day_schedule_enable < 9999:
