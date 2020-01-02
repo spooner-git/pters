@@ -108,7 +108,7 @@ class Pters_pass_shop{
         let premium_color = `background-color:#362e2e;`;
         let standard_color = `background-color:#d6424e;`;
         let basic_color = `background-color:#fe4e65;`;
-        let custom_color = `background-color:#ffffff;`;
+        let custom_color = `background-color:var(--bg-invisible);`;
         let html =  '<article class="obj_input_box_full">' +
                         `<div class="pters_pass_product_wrapper" style="${basic_color}" onclick="pters_pass_shop_popup.event_buy('basic')">` +
                             this.dom_row_pters_pass_basic() +
@@ -365,7 +365,7 @@ class Pters_pass_shop{
         //     unit = "/ 30일";
         // }
         let id = "pters_pass_custom_ticket";
-        let title = `<div style='font-size:12px;font-weight:500;margin-bottom:10px'>맞춤 앱 제작</div>
+        let title = `<div style='font-size:12px;font-weight:500;margin-bottom:10px'>전용 앱 제작</div>
                     <span style="font-size:32px;font-weight:900">&#8361; 500,000</span><span style="font-size:13px">${unit}</span>
                     `;
         let icon = DELETE;
