@@ -150,8 +150,8 @@ class Service_inquiry {
             this.render_content();
         };
         let style = {"height":`${windowHeight - 61 - 82 - 69 - 69 - 12 - 16 - 28}px`};
-        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_:.,\\s\\n 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
-        let pattern_message = "+ - _ : 제외 특수문자는 입력 불가";
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_:?!.,\\s\\n 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
+        let pattern_message = "+ - _ : ? ! . ,제외 특수문자는 입력 불가";
         let required = "";
         let row = CComponent.create_input_textarea_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, onfocusout, pattern, pattern_message, required);
         let html = row;
@@ -184,6 +184,186 @@ class Service_inquiry {
             service_inquiry_history_popup = new Service_inquiry_history('.popup_service_inquiry_history');});
     }
 
+}
+
+class Service_inquiry_for_custom_app_launch {
+    constructor (install_target, instance){
+        this.target = {install: install_target, toolbox:'section_inquiry_list_toolbox', content:'section_inquiry_list_content'};
+
+        this.instance = instance;
+        this.page_name = 'service_inquiry';
+        this.data = {
+            inquiry_type:{value:["OTHER"], text:["기타"]},
+            inquiry_subject:"[맞춤 앱 제작 상담]",
+            inquiry_content:null
+        };
+
+        this.received_data_cache = null; // 재랜더링시 스크롤 위치를 기억하도록 먼저 이전 데이터를 그려주기 위해
+
+        
+
+        this.init();
+    }
+
+    init(){
+        this.render();
+        this.set_initial_data();
+    }
+
+    init_data(){
+        this.data = {
+            inquiry_type:{value:[], text:[]},
+            inquiry_subject:null,
+            inquiry_content:null
+        };
+    }
+
+    set_initial_data (){
+        this.render_content();
+        func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
+    }
+        clear(){
+        setTimeout(()=>{
+            document.querySelector(this.target.install).innerHTML = "";
+        }, 300);
+    }
+
+    render(){
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();service_inquiry_popup.clear();">${CImg.arrow_left()}</span>`;
+        let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
+        let top_right = `<span class="icon_right"><span style="color:var(--font-highlight);font-weight: 500;"></span><span style="color:var(--font-highlight);font-weight: 500;" onclick="service_inquiry_popup.send_data()">보내기</span></span>`;
+        let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;">${this.dom_assembly_toolbox()}</section>
+                        <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
+
+        let html = PopupBase.base(top_left, top_center, top_right, content, "");
+
+        document.querySelector(this.target.install).innerHTML = html;
+        document.querySelector('.popup_service_inquiry .wrapper_top').style.border = 0;
+        PopupBase.top_menu_effect(this.target.install);
+    }
+
+    render_toolbox(){
+        document.getElementById(this.target.toolbox).innerHTML = this.dom_assembly_toolbox();
+    }
+
+    render_content(){
+        document.getElementById(this.target.content).innerHTML = this.dom_assembly_content();
+    }
+
+    dom_assembly_toolbox(){
+        return this.dom_row_toolbox();
+    }
+
+    dom_assembly_content(){
+        let type_select = this.dom_row_type_select();
+        let subject_input = this.dom_row_subject_input();
+        let inquiry_input = this.dom_row_inquiry_input();
+
+        let assembled = '<div class="obj_input_box_full" style="display:none;">' + type_select + '</div>' + 
+                        '<div class="obj_input_box_full" style="display:none;">' + subject_input + '</div>'+
+                        '<div class="obj_input_box_full">' + inquiry_input + '</div>';
+
+        return assembled;
+    }
+
+    dom_row_toolbox(){
+        let title = "맞춤 앱 제작 상담";
+        let html = `<div class="inquiry_upper_box">
+                        <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:var(--font-main); letter-spacing: -1px; height:28px;">
+                            <span style="display:inline-block;">${title}</span>
+                            <span style="display:none;">${title}</span>
+                            <!--<div style="display:inline-block; color:var(--font-highlight); font-weight:900;">${this.data_length}</div>-->
+                        </div>
+                        <div style="font-size:14px;font-weight:500;color:var(--font-sub-dark);letter-spacing:-0.65px">맞춤 앱 제작 상담을 위해 아래에 양식을 작성해주세요.</div>
+                    </div>
+                    `;
+        return html;
+    }
+
+    dom_row_type_select(){
+        let id = "inquiry_type";
+        let title = this.data.inquiry_type.text.length == 0 ? '문의 유형' : this.data.inquiry_type.text;
+        let icon = DELETE;
+        let icon_r_visible = SHOW;
+        let icon_r_text = '';
+        let style = this.data.inquiry_type.text.length == 0 ? {"color":"var(--font-inactive)"} : null;
+        let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            let title = "문의 유형";
+            let install_target = "#wrapper_box_custom_select";
+            let multiple_select = 1;
+            let data = {value:["USAGE", "SUGGEST", "ERROR", "OTHER"], text:["사용문의", "기능 제안", "기능 오류", "기타"]};
+            let selected_data = this.data.inquiry_type;
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, popup_style, null, ()=>{
+                custom_selector = new CustomSelector(title, install_target, multiple_select, data, selected_data, (set_data)=>{
+                    this.data.inquiry_type = set_data;
+                    this.render_content();
+                });
+            });
+        });
+        let html = row;
+        return html;
+    }
+
+    dom_row_subject_input(){
+        let id = "inquiry_subject_input";
+        let title = this.data.inquiry_subject == null ? "" : this.data.inquiry_subject;
+        let placeholder = "제목";
+        let icon = DELETE;
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
+        let style = null;
+        let disabled = false;
+        let onfocusout = (data)=>{
+            this.data.inquiry_subject = data;
+            this.render_content();
+        };
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+.,\\s 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
+        let pattern_message = "+ - _ . , 제외 특수문자는 입력 불가";
+        let required = "";
+        let row = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, onfocusout, pattern, pattern_message, required);
+        let html = row;
+        return html;
+    }
+
+    dom_row_inquiry_input(){
+        let id = "inquiry_content_textarea";
+        let title = this.data.inquiry_content == null ? "" : this.data.inquiry_content;
+        let placeholder = "연락을 받으실 분의 성함과 연락처를 작성해주세요. \n제작에 관한 궁금하신 부분이 있다면 함께 적어주세요.";
+        let icon = DELETE;
+        let icon_r_visible = HIDE;
+        let icon_r_text = '';
+        let onfocusout = (data)=>{
+            this.data.inquiry_content = data;
+            this.render_content();
+        };
+        let style = {"height":`${windowHeight - 61 - 82 - 69 - 69 - 12 - 16 - 28}px`};
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_:?!.,\\s\\n 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
+        let pattern_message = "+ - _ : ? ! . ,제외 특수문자는 입력 불가";
+        let required = "";
+        let row = CComponent.create_input_textarea_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, onfocusout, pattern, pattern_message, required);
+        let html = row;
+        return html;
+    }
+
+    send_data(){
+        let data = {
+            "inquire_type":this.data.inquiry_type.value[0],
+            "inquire_subject":this.data.inquiry_subject,
+            "inquire_body":this.data.inquiry_content,
+            "next_page":""
+        };
+
+        Service_inquiry_func.create(data, ()=>{
+            show_error_message("상담을 접수했습니다.");
+            // this.init_data();
+            // Service_inquiry.render_content();
+            // Service_inquiry_func.read((data)=>{
+            //     console.log(data);
+            // });
+            layer_popup.close_layer_popup();
+        });
+    }
 }
 
 class Service_inquiry_func {

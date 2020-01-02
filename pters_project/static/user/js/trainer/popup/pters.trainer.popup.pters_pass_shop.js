@@ -108,6 +108,7 @@ class Pters_pass_shop{
         let premium_color = `background-color:#362e2e;`;
         let standard_color = `background-color:#d6424e;`;
         let basic_color = `background-color:#fe4e65;`;
+        let custom_color = `background-color:#ffffff;`;
         let html =  '<article class="obj_input_box_full">' +
                         `<div class="pters_pass_product_wrapper" style="${basic_color}" onclick="pters_pass_shop_popup.event_buy('basic')">` +
                             this.dom_row_pters_pass_basic() +
@@ -120,6 +121,10 @@ class Pters_pass_shop{
                         `<div class="pters_pass_product_wrapper" style="${premium_color}" onclick="pters_pass_shop_popup.event_buy('premium')">` +
                             this.dom_row_pters_pass_premium() +
                             this.dom_row_pters_pass_premium_explain() +
+                        '</div>' +
+                        `<div class="pters_pass_product_wrapper" style="${custom_color}" onclick="pters_pass_shop_popup.event_custom_app_launch()">` +
+                            this.dom_row_pters_pass_custom() +
+                            this.dom_row_pters_pass_custom_explain() +
                         '</div>' +
                     '</article>';
         if(os == IOS && user_username =='guest'){
@@ -162,6 +167,10 @@ class Pters_pass_shop{
                             this.dom_row_pters_pass_premium_explain() +
                         '</div>';
                 }
+                html += `<div class="pters_pass_product_wrapper" style="${custom_color}" onclick="pters_pass_shop_popup.event_custom_app_launch()">` +
+                            this.dom_row_pters_pass_custom() +
+                            this.dom_row_pters_pass_custom_explain() +
+                        '</div>';
 
                 html += '</article>';
             }
@@ -350,6 +359,59 @@ class Pters_pass_shop{
         return html;
     }
 
+    dom_row_pters_pass_custom(){
+        let unit = ' 부터';
+        // if(user_username =='guest'){
+        //     unit = "/ 30일";
+        // }
+        let id = "pters_pass_custom_ticket";
+        let title = `<div style='font-size:12px;font-weight:500;margin-bottom:10px'>맞춤 앱 제작</div>
+                    <span style="font-size:32px;font-weight:900">&#8361; 500,000</span><span style="font-size:13px">${unit}</span>
+                    `;
+        let icon = DELETE;
+        let icon_r_visible = NONE;
+        let icon_r_text = "";
+        
+        let style = {"color":"var(--font-main)", "font-weight":"bold", "height":"auto", "cursor":"unset"};
+        let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            
+        });
+
+        let html = row;
+        return html;
+    }
+
+    dom_row_pters_pass_custom_explain(){
+        let html = `<article class="pters_pass_explain_wrapper">
+                        <div class="product_explain_row">
+                            <div class="product_explain_row_title" style="display:none;">${CImg.confirm(["var(--fundamental-white)"], {"vertical-align":"middle", "width":"17px", "margin-right":"5px"})} 일정</div>
+                            <div class="product_explain_row_detail" style="color:var(--font-main)">
+                                ${CImg.confirm("", {"vertical-align":"middle", "width":"17px", "margin-right":"5px"})}
+                                iOS, 안드로이드 앱 런칭
+                            </div>
+                        </div>
+                        <div class="product_explain_row">
+                            <div class="product_explain_row_detail" style="color:var(--font-main)">
+                                ${CImg.confirm("", {"vertical-align":"middle", "width":"17px", "margin-right":"5px"})}
+                                포인트 색상 변경
+                            </div>
+                        </div>
+                        <div class="product_explain_row">
+                            <div class="product_explain_row_detail" style="color:var(--font-main)">
+                                ${CImg.confirm("", {"vertical-align":"middle", "width":"17px", "margin-right":"5px"})}
+                                로그인 화면, 서비스 내 로고 변경
+                            </div>
+                        </div>
+                        <div class="product_explain_row">
+                            <div class="product_explain_row_detail" style="color:var(--font-main)">
+                                ${CImg.confirm("", {"vertical-align":"middle", "width":"17px", "margin-right":"5px"})}
+                                월 유지 비용 PTERS 패스와 동일
+                            </div>
+                        </div>
+                    </article>`;
+        return html;
+    }
+
     event_buy(product){
         let pass_purchase_change = this.data.pass_purchase_change;
 
@@ -386,6 +448,12 @@ class Pters_pass_shop{
                     break;
             }
         }
+    }
+
+    event_custom_app_launch(){
+        let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SERVICE_INQUIRY, 100, popup_style, null, ()=>{
+                service_inquiry_popup = new Service_inquiry_for_custom_app_launch('.popup_service_inquiry');});
     }
 
 
