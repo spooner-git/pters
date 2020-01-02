@@ -347,6 +347,60 @@ const PROGRAM_CATEGORY = {
 };
 
 
+const TEXT = {
+    //메뉴들
+    menu:{KR:"전체", EN:"Menu", JP:"メニュー"},
+    home:{KR:"홈", EN:"Home", JP:"ホーム"},
+    schedule:{KR:"일정", EN:"Schedule", JP:"カレンダー"},
+    member:{KR:"회원", EN:"Member", JP:"会員"},
+    lecture:{KR:"수업", EN:"Lecture", JP:"授業"},
+    ticket:{KR:"수강권", EN:"Ticket", JP:"受講券"},
+    statistics:{KR:"통계", EN:"Statistics", JP:"統計"},
+    attend_check:{KR:"출석 체크", EN:"Attend check", JP:"セルフ出席チェックモード"},
+    notification:{KR:"알림", EN:"Notification", JP:"通知"},
+    settings:{KR:"설정", EN:"Settings", JP:"設定"},
+    service:{KR:"서비스", EN:"Service", JP:"サービス"},
+    work_time:{KR:"업무 시간", EN:"Working time", JP:"業務時間"},
+    auto_complete:{KR:"자동 완료", EN:"Auto Complete", JP:"自動完了"},
+    member_reserve:{KR:"회원 예약", EN:"Member Reserve", JP:"会員の予約"},
+    attend_mode:{KR:"출석 체크 모드", EN:"Attend Mode", JP:"セルフ出席チェックモード設定"},
+    notice:{KR:"공지 사항", EN:"Notice", JP:"お知らせ"},
+    inquiry:{KR:"이용 문의", EN:"Inquiry", JP:"お問い合わせ"},
+    help:{KR:"도움말", EN:"Help", JP:"ヘルプ"},
+    purchase_pters_pass:{KR:"PTERS패스 구매", EN:"Buy PTERS Pass", JP:"PTERSパース購買"},
+
+    //공통
+    close:{KR:"닫기", EN:"Close", JP:"閉じる"},
+    done:{KR:"완료", EN:"Done", JP:"完了"},
+    save:{KR:"저장", EN:"Save", JP:"保存"},
+    registration:{KR:"등록", EN:"Add", JP:"登録"},
+
+    //홈
+    change:{KR:"변경", EN:"Change", JP:"変更"},
+    today_plans:{KR:"오늘의 일정", EN:"Today's Plan", JP:"今日の日程"},
+    hide:{KR:"접기", EN:"Hide", JP:"隠す"},
+    show:{KR:"펼치기", EN:"Show", JP:"表記"},
+    expiration_alert:{KR:"종료 임박 회원", EN:"Contract Expiration", JP:"終了が近い会員"},
+    sales_of_this_month:{KR:"이번달 매출", EN:"Sales of this month", JP:"今月の売上"},
+
+    //일정
+    monthly_calendar:{KR:"월간 달력", EN:"Monthly Calendar", JP:"月間"},
+    weekly_calendar:{KR:"주간 달력", EN:"Weekly Calendar", JP:"週間"},
+    repeat_schedule_list:{KR:"반복 일정 리스트", EN:"Repeat schedule list", JP:"繰り返いしリスト"},
+    am:{KR:"오전", EN:"AM", JP:"午前"},
+    pm:{KR:"오후", EN:"PM", JP:"午後"},
+
+    new_schedule:{KR:"새로운 일정", EN:"New schedule", JP:"日程追加"},
+    date:{KR:"일자", EN:"Date", JP:"日付"},
+    time:{KR:"시간", EN:"Time", JP:"時刻"},
+    repeat:{KR:"반복", EN:"Repeat", JP:"繰り返し"},
+    memo:{KR:"메모", EN:"Memo", JP:"メモ―"},
+    
+
+
+};
+
+
 const payment_agreement = {
     caution:{
         KR:
