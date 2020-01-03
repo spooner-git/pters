@@ -5,7 +5,6 @@
 	z-index: 10;
 	width: 100%;
 	top: 0;
-	/* text-align: center; */
 }
 #member_content_wrap{
 	top:unset;
@@ -17,6 +16,7 @@
 	padding-bottom:56px;
 	box-sizing: border-box;
 }
+
 	.member_upper_box{
 		position: relative;
 		height: 60px;
