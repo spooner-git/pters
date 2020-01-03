@@ -415,7 +415,7 @@
     // input_adjust_location_for_android();
     pc_keyboard_event();
 
-    // func_set_webkit_overflow_scrolling('#root_content');
+    func_set_webkit_overflow_scrolling('#root_content');
     
     // $root_content.css('height', `calc(100% - 56px)`);
     // $root_content.scroll(function(){
@@ -566,9 +566,7 @@
         pass_inspector.init();
         // current_page = page;
         current_page_text = page;
-
-        //TEST 20200103 주석처리함 다시 살릴것
-        // $('#debug_toolbar').hide();
+        $('#debug_toolbar').hide();
 
         try{
             $(`.nav_img .nav_svg`).each(function(e){
