@@ -56,8 +56,7 @@ const POPUP_FROM_RIGHT = 1;
 const POPUP_FROM_BOTTOM = 2;
 const POPUP_FROM_TOP = 3;
 const POPUP_FROM_PAGE = 4;
-const POPUP_FROM_PAGE_70 = 5;
-const POPUP_FROM_PAGE_50 = 6;
+const POPUP_FROM_BASIC = 5;
 
 const SHORT = 'short';
 const LONG = 'long';
