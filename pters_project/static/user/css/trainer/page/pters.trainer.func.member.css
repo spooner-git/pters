@@ -1,12 +1,12 @@
-/* #member_display_panel{
+#member_display_panel{
 	position: sticky;
 	position: -webkit-sticky;
 	height: auto;
 	z-index: 10;
 	width: 100%;
 	top: 0;
-} */
-/* #member_content_wrap{
+}
+#member_content_wrap{
 	top:unset;
 	left:unset;
 	background-color:unset;
@@ -15,22 +15,8 @@
 	padding-top:6px; 
 	padding-bottom:56px;
 	box-sizing: border-box;
-} */
-#member_display_panel{
-	position: sticky;
-	position: -webkit-sticky;
-	top: 0;
-	z-index: 10;
 }
-#member_content_wrap{
-	top:0;
-	/* background-color:unset;
-	position: absolute;;
-	min-height:calc(100% - 68px); 
-	padding-top:6px; 
-	padding-bottom:56px;
-	box-sizing: border-box; */
-}
+
 	.member_upper_box{
 		position: relative;
 		height: 60px;

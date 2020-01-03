@@ -213,7 +213,7 @@ class Member {
             html_temp.push(`<div style="font-size:14px;padding:16px;">등록된 회원이 없습니다.</div>`);
         }
 
-        document.querySelector('#member_list').innerHTML = html_temp.join("");
+        document.querySelector('#member_content_wrap').innerHTML = html_temp.join("");
     }
 
     dom_row_google_adsense(){
@@ -377,10 +377,8 @@ class Member {
                                     `
                 ,
                 initial_page:` <div>
-                                    <div id="member_content_wrap" class="pages">
-                                        <div id="member_display_panel"></div>
-                                        <div id="member_list"></div>
-                                    </div>
+                                    <div id="member_display_panel"></div>
+                                    <div id="member_content_wrap" class="pages"></div>
                                 </div>`
             }
         );
