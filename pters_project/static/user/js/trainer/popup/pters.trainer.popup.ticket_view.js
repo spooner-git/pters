@@ -1,6 +1,7 @@
 class Ticket_view{
     constructor(install_target, ticket_id, instance, readonly){
         this.target = {install: install_target, toolbox:'section_ticket_view_toolbox', content:'section_ticket_view_content'};
+        this.data_sending_now = false;
         this.instance = instance;
         this.ticket_id = ticket_id;
         this.readonly = readonly;
@@ -705,8 +706,6 @@ class Ticket_view{
                     "ticket_day_schedule_enable":this.data.ticket_day_schedule_enable  //일일 수강 제한 횟수
         };
 
-        console.log(data)
-
         Ticket_func.update(data, ()=>{
             let lecture_to_be_update = this.func_update_lecture();
             for(let i=0; i<lecture_to_be_update.add.length; i++){
@@ -757,6 +756,64 @@ class Ticket_view{
 
     upper_right_menu(){
         let user_option = {
+            cpy:{text:"복제", callback:()=>{
+                    let auth_inspect = pass_inspector.ticket_create();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `${auth_inspect.limit_type}`;
+                        this.init();
+                        show_error_message(message);
+                        return false;
+                    }
+
+                    if(this.data_sending_now == true){
+                        return false;
+                    }else if(this.data_sending_now == false){
+                        this.data_sending_now = true;
+                    }
+
+                    let inspect = pass_inspector.ticket();
+                    if(inspect.barrier == BLOCKED){
+                        this.data_sending_now = false;
+                        let message = `[${inspect.limit_type}] 이용자께서는 수강권을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다.
+                                        <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까??</p>`;
+                        show_user_confirm (message, ()=>{
+                            layer_popup.all_close_layer_popup();
+                            sideGoPopup("pters_pass_main");
+                        });
+
+                        return false;
+                    }
+                    show_user_confirm(`이 수강권의 정보와 같은 수강권을 <br>복제하여 생성합니다.`, ()=>{
+                        let data = {
+                                    "ticket_name":this.data.name+' - 복제',
+                                    "lecture_id_list[]":this.data.lecture_id,
+                                    "ticket_effective_days":this.data.ticket_effective_days,
+                                    "ticket_reg_count":this.data.count,
+                                    "ticket_price":this.data.price,
+                                    "ticket_note":this.data.memo,
+                                    "ticket_week_schedule_enable":this.data.ticket_week_schedule_enable, //주간 수강 제한 횟수
+                                    "ticket_day_schedule_enable":this.data.ticket_day_schedule_enable  //일일 수강 제한 횟수
+                        };
+                        
+                        Ticket_func.create(data, ()=>{
+                            this.data_sending_now = false;
+                            // layer_popup.close_layer_popup();
+                            if(this.callback != undefined){
+                                this.callback();
+                            }
+                            try{
+                                current_page.init();
+                            }catch(e){}
+                            try{
+                                ticket_list_popup.init();
+                            }catch(e){}
+                        }, ()=>{this.data_sending_now = false;});
+                        layer_popup.close_layer_popup(); //confirm 팝업 닫기
+                        layer_popup.close_layer_popup(); //옵션 선택 팝업 닫기
+                        layer_popup.close_layer_popup(); //ticket_view 팝업 닫기
+                    });
+                }
+            },
             activate:{text:"활성화", callback:()=>{
                     let auth_inspect = pass_inspector.ticket_update();
                     if(auth_inspect.barrier == BLOCKED){
