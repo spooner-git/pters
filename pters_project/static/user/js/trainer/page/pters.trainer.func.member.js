@@ -376,10 +376,10 @@ class Member {
                                     </div>
                                     `
                 ,
-                initial_page:` <div>
+                initial_page:` 
                                     <div id="member_display_panel"></div>
                                     <div id="member_content_wrap" class="pages"></div>
-                                </div>`
+                                `
             }
         );
     }
