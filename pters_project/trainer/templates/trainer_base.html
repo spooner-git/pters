@@ -76,7 +76,7 @@
 
 {% block navbar %}
 {% endblock %}
-<div id="debug_toolbar" style="position: fixed;;top:0;font-size:13px;background:#fe4e65;background-color:#fe4e65;color:#ffffff;width:100%;left:0;z-index:1500"></div>
+<div id="debug_toolbar" style="position: fixed;top:0;font-size:13px;background:#fe4e65;background-color:#fe4e65;color:#ffffff;width:100%;left:0;z-index:1500">test</div>
 
 <div id="base">
     <section id="section_side">
@@ -566,7 +566,9 @@
         pass_inspector.init();
         // current_page = page;
         current_page_text = page;
-        $('#debug_toolbar').hide();
+
+        //TEST 20200103 주석처리함 다시 살릴것
+        // $('#debug_toolbar').hide();
 
         try{
             $(`.nav_img .nav_svg`).each(function(e){
