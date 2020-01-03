@@ -3639,7 +3639,7 @@ class GetTicketEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                    'ticket_effective_days': ticket_info.effective_days,
                                                    'ticket_price': ticket_info.price,
                                                    'ticket_reg_count': ticket_info.reg_count,
-                                                   'ticket_month_schedule_enable': ticket_tb.month_schedule_enable,
+                                                   'ticket_month_schedule_enable': ticket_info.month_schedule_enable,
                                                    'ticket_week_schedule_enable': ticket_info.week_schedule_enable,
                                                    'ticket_day_schedule_enable': ticket_info.day_schedule_enable,
                                                    'ticket_lecture_list': [],
