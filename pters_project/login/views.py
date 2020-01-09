@@ -294,13 +294,14 @@ def logout_trainer(request):
     # token = request.session.get('push_token', '')
     device_id = request.session.get('device_id', 'pc')
     error = None
+    logout(request)
     if device_id == 'pc':
         token_data = PushInfoTb.objects.filter(member_id=request.user.id, device_id=device_id)
         token_data.delete()
+        request.session['device_info'] = 'web'
+    else:
+        request.session['device_info'] = 'app'
 
-    logout(request)
-
-    logger.info('device_id::'+str(device_id))
     # logger.info('device_info::'+str(request.session['device_info']))
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
@@ -1027,8 +1028,10 @@ class DeletePushTokenView(View):
             token_data = PushInfoTb.objects.filter(device_id=device_id, use=USE)
             if len(token_data) > 0:
                 token_data.delete()
+            request.session['device_id'] = device_id
             request.session['device_info'] = 'app'
         else:
+            request.session['device_id'] = device_id
             request.session['device_info'] = 'web'
 
         return render(request, self.template_name, {'token_check': True})
