@@ -32,6 +32,7 @@
 	border: var(--border-article);
 	border-radius: 5px;
 	margin-bottom: 15px;
+	max-width: 400px;
 	/* cursor: pointer; */
 }
 .popup_setting_calendar .select_wrap img{
