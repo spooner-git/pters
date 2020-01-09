@@ -168,7 +168,7 @@ class Home {
         let id = "home_current_date";
         let title = `${this.current_year}${TEXT.unit.year[language]} ${this.current_month}${TEXT.unit.month[language]} ${this.current_date}${TEXT.unit.date[language]} (${DAYNAME_KR[this.current_day]})`;
         let icon = DELETE;
-        let icon_r_visible = HIDE;
+        let icon_r_visible = NONE;
         let icon_r_text = ``;
         let style = {"font-size":"15px", "font-weight":"bold"};
         let onclick = ()=>{
