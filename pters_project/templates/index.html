@@ -814,6 +814,11 @@
                 }
             }
         }
+        else{
+            if(device_info == 'app'){
+                $('#download_img_ios, #download_img_android').hide();
+            }
+        }
         var val = location.href.substr(
             location.href.lastIndexOf('=') + 1
         );
