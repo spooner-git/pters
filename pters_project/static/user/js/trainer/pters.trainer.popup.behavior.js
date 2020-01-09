@@ -5,6 +5,7 @@ let layer_popup = (function (){
     let popup_array = [];
     let windowHeight = window.innerHeight;
     
+    let now_opening = false;
 
     function func_open_layer_popup (popup_name, popup_size, animation_type){
         // $('.content_page').css('overflow-y', 'hidden');
@@ -102,6 +103,12 @@ let layer_popup = (function (){
     return {
         "open_layer_popup":function(call_method, popup_name, popup_size, animation_type, data, callback){
             // if(func_prevent_double_click_set()) return;
+            console.log(now_opening);
+            if(now_opening == true){
+                return;
+            }
+            now_opening = true;
+            setTimeout(()=>{now_opening = false;}, 300);
 
             if(call_method == POPUP_AJAX_CALL){
                 func_get_popup_ajax(popup_name, data, ()=>{
@@ -151,10 +158,16 @@ let layer_popup = (function (){
         },
 
         "close_layer_popup": function (popup_size) {
+            if(now_opening == true){
+                return;
+            }
             let popup_data = func_close_layer_popup(popup_size);
             this.animation_set(CLOSE, popup_data);
         },
         "all_close_layer_popup": function () {
+            if(now_opening == true){
+                return;
+            }
             let popup_data = func_all_close_layer_popup();
             this.animation_set(CLOSE, popup_data);
         },
@@ -275,13 +288,7 @@ function func_set_popup_position ($popup_selector, animation_type, popup_size){
             }
             break;
         case POPUP_FROM_PAGE:
-            break;
-        case POPUP_FROM_PAGE_50:
-            width = 50;
-            break;
-        case POPUP_FROM_PAGE_70:
-            width = 70;
-            break;   
+            break; 
     }
 
     $popup_selector.css({
@@ -302,7 +309,7 @@ function func_set_open_popup_animation ($popup_selector, animation_type, popup_s
     }
 
     let animation_info = "";
-    if(animation_type != POPUP_FROM_PAGE && animation_type != POPUP_FROM_PAGE_70 && animation_type != POPUP_FROM_PAGE_50){
+    if(animation_type != POPUP_FROM_PAGE){
         animation_info = "transform 0.3s ease-in-out";
     }
     let translate_x = 0;
@@ -323,10 +330,6 @@ function func_set_open_popup_animation ($popup_selector, animation_type, popup_s
             break;
         case POPUP_FROM_PAGE:
             break;
-        case POPUP_FROM_PAGE_70:
-            break;
-        case POPUP_FROM_PAGE_50:
-            break;
     }
     
     $popup_selector.css({
@@ -344,7 +347,7 @@ function func_set_close_popup_animation ($popup_selector, animation_type){
     }
 
     let animation_info = "";
-    if(animation_type != POPUP_FROM_PAGE && animation_type != POPUP_FROM_PAGE_70 && animation_type != POPUP_FROM_PAGE_50){
+    if(animation_type != POPUP_FROM_PAGE){
         animation_info = "transform 0.3s ease-in-out";
     }
     let translate_x = 0;
@@ -365,14 +368,6 @@ function func_set_close_popup_animation ($popup_selector, animation_type){
             //안드로이드 크롬이 하단 브라우저 영역을 숨기면서 windowHeight가 늘어나서, 밑에 숨어있던 팝업이 보이는 현상 해결 (60은 navbar 높이)
             break;
         case POPUP_FROM_PAGE:
-            translate_x = -windowWidth;
-            translate_y = -windowHeight;
-            break;
-        case POPUP_FROM_PAGE_70:
-            translate_x = -windowWidth;
-            translate_y = -windowHeight;
-            break;
-        case POPUP_FROM_PAGE_50:
             translate_x = -windowWidth;
             translate_y = -windowHeight;
             break;
