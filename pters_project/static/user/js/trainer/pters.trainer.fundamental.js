@@ -2,16 +2,17 @@ function func_set_webkit_overflow_scrolling(target_selector, top_menu_effect_iph
     if(os == IOS){
         let $selector = $(target_selector);
 
-        // $(document).off('touchstart', target_selector).on('touchstart', target_selector, function(e){
-        //     console.log(target_selector)
-        //     e.stopPropagation();
-        //     if($selector.scrollTop() == 0){
-        //         $selector.scrollTop(1);
-        //     }
-        // });
+        if(target_selector != '#root_content'){
+            $(target_selector).off('touchstart').on('touchstart', function(e){
+                e.stopPropagation();
+                if($selector.scrollTop() == 0){
+                    e.stopPropagation();
+                    $selector.scrollTop(1);
+                }
+            });
+        }
 
         $(target_selector).off('scroll').on('scroll', function(e){
-
             e.stopPropagation();
             const popupHeight = $selector.height();
             const scrollHeight = $selector.prop('scrollHeight');
