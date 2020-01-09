@@ -243,9 +243,12 @@ input:disabled{
 }
 
 .select_lecture_row .cell_lecture_color .lecture_color_bar{
-	width: 16px;
+	/* width: 16px;
 	height: 16px;
-	border-radius: 8px;
+	border-radius: 8px; */
+	width: 10px;
+	height:27px;
+	border-radius: 5px;
 	display: inline-block;
 	vertical-align: middle;
 }
