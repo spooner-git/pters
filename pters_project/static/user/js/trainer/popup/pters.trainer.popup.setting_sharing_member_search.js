@@ -183,7 +183,7 @@ class Setting_sharing_member_search {
         let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let style = {"border":"var(--border-article)"};
+        let style = {"border":"var(--border-article)", "padding":"12px"};
         let disabled = false;
         let onfocusout = (data)=>{
             this.data.search_id = data;
