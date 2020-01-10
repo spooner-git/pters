@@ -771,6 +771,7 @@ class Member_view{
 
         let options_padding_top_bottom = 16;
         // let button_height = 8 + 8 + 52;
+        let button_height = 52;
         let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
         let root_content_height = $root_content.height();
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
