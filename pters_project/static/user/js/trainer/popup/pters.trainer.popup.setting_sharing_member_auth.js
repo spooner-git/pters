@@ -262,7 +262,9 @@ class Setting_sharing_member_auth{
 
             }},
             disconnect:{text:"공유 해제", callback:()=>{
-                let message = `정말 ${this.member_name}님과 현재 프로그램 공유를 해제 하시겠습니까?`;
+                let message = {
+                    title:`정말 ${this.member_name}님과 현재 프로그램 공유를 해제 하시겠습니까?`
+                };
                 show_user_confirm (message, ()=>{
                     this.shared_status = AUTH_TYPE_DELETE;
                     this.send_data();
@@ -275,7 +277,8 @@ class Setting_sharing_member_auth{
             delete user_option["request"];
         }
         let options_padding_top_bottom = 16;
-        let button_height = 8 + 8 + 52;
+        // let button_height = 8 + 8 + 52;
+        let button_height = 52;
         let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
         let root_content_height = $root_content.height();
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
@@ -391,7 +394,7 @@ class Setting_sharing_member_auth{
         Setting_sharing_member_auth_func.update(data, ()=>{
             this.data_sending_now = false;
             // this.set_initial_data();
-            show_error_message('변경 내용이 저장되었습니다.');
+            show_error_message({title:'변경 내용이 저장되었습니다.'});
             // this.render_content();
             layer_popup.close_layer_popup();
             setting_sharing_popup.init();
@@ -423,7 +426,7 @@ class Setting_sharing_member_auth_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -443,7 +446,7 @@ class Setting_sharing_member_auth_func{
                     error_callback();
                 }
                 console.log('server error');
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
             }
         });
     }
@@ -466,7 +469,7 @@ class Setting_sharing_member_auth_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -486,7 +489,7 @@ class Setting_sharing_member_auth_func{
                     error_callback();
                 }
                 console.log('server error');
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
             }
         });
     }

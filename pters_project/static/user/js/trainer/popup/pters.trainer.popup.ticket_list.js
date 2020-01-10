@@ -170,7 +170,8 @@ class Ticket_list {
         user_option += `}`;
 
         let options_padding_top_bottom = 16;
-        let button_height = 8 + 8 + 52;
+        // let button_height = 8 + 8 + 52;
+        let button_height = 52;
         let layer_popup_height = options_padding_top_bottom + button_height + 52*user_options_array.length;
         let root_content_height = $root_content.height();
 
@@ -215,7 +216,7 @@ class Ticket_list {
         let auth_inspect = pass_inspector.ticket_read();
         if(auth_inspect.barrier == BLOCKED){
             let message = `${auth_inspect.limit_type}`;
-            show_error_message(message);
+            show_error_message({title:message});
             return false;
         }
 
@@ -292,7 +293,7 @@ class Ticket_list {
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }

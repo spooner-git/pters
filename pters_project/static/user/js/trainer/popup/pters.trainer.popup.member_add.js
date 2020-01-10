@@ -347,7 +347,7 @@ class Member_add{
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             //행을 클릭했을때 실행할 내용
             if(this.data_from_external != null){ //재등록
-                show_error_message("재등록 화면에서는 기본정보를 수정할 수 없습니다.");
+                show_error_message({title:"재등록 화면에서는 기본정보를 수정할 수 없습니다."});
                 return false;
             }
 
@@ -388,7 +388,7 @@ class Member_add{
         let style = this.data.sex == null ? {"color":"var(--font-inactive)"} : null;
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             if(this.data_from_external != null){
-                show_error_message("재등록 화면에서는 기본정보를 수정할 수 없습니다.");
+                show_error_message({title:"재등록 화면에서는 기본정보를 수정할 수 없습니다."});
                 return false;
             }
 
@@ -397,7 +397,8 @@ class Member_add{
                                 female:{text:"여성", callback:()=>{this.sex = "W";layer_popup.close_layer_popup();}}
             };
             let options_padding_top_bottom = 16;
-            let button_height = 8 + 8 + 52;
+            // let button_height = 8 + 8 + 52;
+            let button_height = 52;
             let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
             let root_content_height = $root_content.height();
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
@@ -554,7 +555,7 @@ class Member_add{
 
         let button_week_2 = CComponent.button ("button_week_2", "+ 7일", button_style, ()=>{
             if(this.data.start_date == null){
-                show_error_message("시작 일자를 먼저 선택해주세요.");
+                show_error_message({title:"시작 일자를 먼저 선택해주세요."});
                 return;
             }
 
@@ -576,7 +577,7 @@ class Member_add{
 
         let button_month_1 = CComponent.button ("button_month_1", "+ 30일", button_style, ()=>{
             if(this.data.start_date == null){
-                show_error_message("시작 일자를 먼저 선택해주세요.");
+                show_error_message({title:"시작 일자를 먼저 선택해주세요."});
                 return;
             }
             // let start_date = DateRobot.to_yyyymmdd(this.data.start_date.year, this.data.start_date.month, this.data.start_date.date);
@@ -598,7 +599,7 @@ class Member_add{
 
         let button_year_1 = CComponent.button ("button_year_1", "+ 1년", button_style, ()=>{
             if(this.data.start_date == null){
-                show_error_message("시작 일자를 먼저 선택해주세요.");
+                show_error_message({title:"시작 일자를 먼저 선택해주세요."});
                 return;
             }
             // let start_date = DateRobot.to_yyyymmdd(this.data.start_date.year, this.data.start_date.month, this.data.start_date.date);
@@ -620,7 +621,7 @@ class Member_add{
 
         let button_no_duration = CComponent.button ("button_no_duration", "소진 시", button_style, ()=>{
             if(this.data.start_date == null){
-                show_error_message("시작 일자를 먼저 선택해주세요.");
+                show_error_message({title:"시작 일자를 먼저 선택해주세요."});
                 return;
             }
             
@@ -798,8 +799,11 @@ class Member_add{
         let inspect = pass_inspector.member(recontract, this.data.member_id);
         if(inspect.barrier == BLOCKED){
             this.data_sending_now = false;
-            let message = `[${inspect.limit_type}] 이용자께서는 회원을 최대 ${inspect.limit_num}명까지 등록하실 수 있습니다.
-                            <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까??</p>`;
+            let message = {
+                title:'회원 등록을 완료하지 못했습니다.',
+                comment:`[${inspect.limit_type}] 이용자께서는 회원을 최대 ${inspect.limit_num}명까지 등록하실 수 있습니다.
+                        <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까??</p>`
+            }
             show_user_confirm (message, ()=>{
                 layer_popup.all_close_layer_popup();
                 sideGoPopup("pters_pass_main");
@@ -878,20 +882,20 @@ class Member_add{
         let error_info = check_registration_form(forms);
 
         if(error_info != ''){
-            show_error_message(error_info);
+            show_error_message({title:error_info});
             return false;
         }
         else{
             if(this.data.start_date == null){
-                show_error_message('시작일을 입력 해주세요.');
+                show_error_message({title:'시작일을 입력 해주세요.'});
                 return false;
             }
             if(this.data.end_date == null){
-                show_error_message('종료일을 입력 해주세요.');
+                show_error_message({title:'종료일을 입력 해주세요.'});
                 return false;
             }
             if(this.data.ticket_id.length == 0){
-                show_error_message('등록할 수강권을 선택 해주세요.');
+                show_error_message({title:'등록할 수강권을 선택 해주세요.'});
                 return false;
             }
             return true;

@@ -169,7 +169,6 @@ class Pters_pass_main{
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP, 100, popup_style, null, ()=>{
                 pters_pass_shop_popup = new Pters_pass_shop('.popup_pters_pass_shop', PASS_PURCHASE);
             });
-            // show_error_message("상품을 준비 중 입니다.");
                 
         });
         let html = row;
@@ -188,7 +187,6 @@ class Pters_pass_main{
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP, 100, popup_style, null, ()=>{
                 pters_pass_shop_popup = new Pters_pass_shop('.popup_pters_pass_shop', PASS_CHANGE);
             });
-            // show_error_message("상품을 준비 중 입니다.");
 
         });
         let html = row;
@@ -244,7 +242,8 @@ class Pters_pass_main{
                     }}
                 };
             let options_padding_top_bottom = 16;
-            let button_height = 8 + 8 + 52;
+            // let button_height = 8 + 8 + 52;
+            let button_height = 52;
             let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
             let root_content_height = $root_content.height();
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
@@ -311,7 +310,7 @@ class Pters_pass_main{
         
         // Pters_pass_func.update(data, ()=>{
         //     this.set_initial_data();
-        //     show_error_message('변경 내용이 저장되었습니다.');
+        //     show_error_message({title:'변경 내용이 저장되었습니다.'});
         //     // this.render_content();
         // });
     }
@@ -347,7 +346,7 @@ class Pters_pass_func{
                 }else {
                     msg = '결제 정보 변경이 완료되었습니다.';
                 }
-                show_error_message(msg);
+                show_error_message({title:msg});
                 layer_popup.close_layer_popup();
             },
 
@@ -405,7 +404,7 @@ class Pters_pass_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -426,7 +425,7 @@ class Pters_pass_func{
                     error_callback();
                 }
                 console.log('server error');
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
             }
         });
     }
@@ -461,7 +460,7 @@ class Pters_pass_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -480,7 +479,7 @@ class Pters_pass_func{
                     error_callback();
                 }
                 console.log('server error');
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
             }
         });
     }
@@ -540,10 +539,10 @@ class Pters_pass_func{
                             if (jsondata.messageArray.length > 0) {
                                 msg = '결제에 실패했습니다.';
                                 msg += ' : ' + jsondata.messageArray;
-                                show_error_message(msg);
+                                show_error_message({title:msg});
                                 return false;
                             }
-                            show_error_message(msg);
+                            show_error_message({title:msg});
 
                             location.href = url_move;
 
@@ -555,14 +554,14 @@ class Pters_pass_func{
 
                         error: function () {
                             console.log('server error');
-                            show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                            show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                         }
                     });
 
                 } else {
                     msg = '결제에 실패했습니다.';
                     msg += ' : ' + rsp.error_msg;
-                    show_error_message(msg);
+                    show_error_message({title:msg});
                     // location.href = "/payment/";
                 }
             });
@@ -593,7 +592,7 @@ class Pters_pass_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -670,7 +669,7 @@ class Pters_pass_func{
                         if (jsondata.messageArray.length > 0) {
                             msg = '결제 정보 변경에 실패했습니다.';
                             msg += '에러내용 : ' + jsondata.messageArray;
-                            show_error_message(msg);
+                            show_error_message({title:msg});
                         } else {
                             $.ajax({
                                 url: "/payment/update_period_billing/", // 서비스 웹서버
@@ -694,7 +693,7 @@ class Pters_pass_func{
                                     } else {
                                         msg = '결제 정보 변경이 완료되었습니다.';
                                     }
-                                    show_error_message(msg);
+                                    show_error_message({title:msg});
                                     layer_popup.close_layer_popup();
                                     window.location.reload(true);
                                 },
@@ -733,7 +732,7 @@ class Pters_pass_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -752,7 +751,7 @@ class Pters_pass_func{
                     error_callback();
                 }
                 console.log('server error');
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
             }
         });
     }

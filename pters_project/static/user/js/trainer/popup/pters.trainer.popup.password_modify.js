@@ -172,33 +172,33 @@ class Password_modify{
         // let error_info = check_registration_form(forms);
 
         // if(error_info != ''){
-        //     show_error_message(error_info);
+        //     show_error_message({title:error_info});
         //     return false;
         // }
         // else{
             let self = this;
             function send(){
                 if(self.data.old == null){
-                    show_error_message('기존 비밀번호를 입력 해주세요.');
+                    show_error_message({title:'기존 비밀번호를 입력 해주세요.'});
                     return false;
                 }
                 if(self.data.new == null){
-                    show_error_message('새로운 비밀번호를 입력 해주세요.');
+                    show_error_message({title:'새로운 비밀번호를 입력 해주세요.'});
                     return false;
                 }
                 if(self.data.new_re == null){
-                    show_error_message('새로운 비밀번호 확인을 입력 해주세요.');
+                    show_error_message({title:'새로운 비밀번호 확인을 입력 해주세요.'});
                     return false;
                 }
             }
             function input(){
                 if(self.data.new_re != self.data.new && self.data.new_re != null){
-                    show_error_message('새로운 비밀번호와 새로운 비밀번호 확인이 맞지 않습니다.');
+                    show_error_message({title:'새로운 비밀번호와 새로운 비밀번호 확인이 맞지 않습니다.'});
                     return false;
                 }
                 if(self.data.new != null && self.data.old != null){
                     if(self.data.new == self.data.old){
-                        show_error_message('새로운 비밀번호는 기존 비밀번호와 같을 수 없습니다.');
+                        show_error_message({title:'새로운 비밀번호는 기존 비밀번호와 같을 수 없습니다.'});
                         return false;
                     }
                 }
@@ -262,7 +262,7 @@ class Password_modify_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -276,7 +276,7 @@ class Password_modify_func{
                 if(error_callback != undefined){
                     error_callback();
                 }
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                 // location.reload();
             }
         });

@@ -417,10 +417,14 @@ class Pters_pass_shop{
 
         if(pass_purchase_change == PASS_CHANGE){
             if(this.data.current.merchant_uid[0] == ""){
-                show_error_message('다음 결제일까지 변경이 불가능합니다.');
+                show_error_message({title:'다음 결제일까지 변경이 불가능합니다.'});
                 return false;
             }
-            show_user_confirm ('PTERS 패스 상품을 즉시 변경하시겠습니까? <br/> 변경하시면 다음 결제일까지 변경이 불가능합니다.', ()=>{
+            let message = {
+                title:`PTERS 패스 상품을 즉시 변경하시겠습니까?`,
+                comment:`변경 시 다음 결제일까지 변경이 불가능합니다.`
+            };
+            show_user_confirm (message, ()=>{
                 // 정기 결제 + 미래 예약 대기인 경우
                 let date = new Date();
                 let user_id = home.data.user_id;
@@ -493,7 +497,7 @@ class Pters_pass_shop{
         
         // Pters_pass_func.update(data, ()=>{
         //     this.set_initial_data();
-        //     show_error_message('변경 내용이 저장되었습니다.');
+        //     show_error_message({title:'변경 내용이 저장되었습니다.'});
         //     // this.render_content();
         // });
     }
@@ -555,7 +559,7 @@ class Pters_pass_shop{
                 }else {
                     msg = '결제 정보 변경이 완료되었습니다.';
                 }
-                show_error_message(msg);
+                show_error_message({title:msg});
                 layer_popup.close_layer_popup();
                 setTimeout(()=>{
                     window.location.reload(true);

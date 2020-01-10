@@ -161,9 +161,9 @@ class Member_schedule_history{
                                                                 layer_popup.close_layer_popup();
                                                                 Plan_daily_record_func.write_artice(schedule_id, schedule_name, ()=>{
                                                                     this.init();
-                                                                    // show_error_message(`[${schedule_name}] 일지 변경사항이 저장 되었습니다.`);
+                                                                    // show_error_message({title:`[${schedule_name}] 일지 변경사항이 저장 되었습니다.`});
                                                                 }, ()=>{
-                                                                    show_error_message(`<span style="color:var(--font-highlight)">일지 변경사항 저장에 실패 하였습니다.</span>`);
+                                                                    show_error_message({title:`<span style="color:var(--font-highlight)">일지 변경사항 저장에 실패 하였습니다.</span>`});
                                                                 });
                         }},
                         absence:{text:"결석", callback:()=>{Plan_func.status({"schedule_id":schedule_id, "state_cd":SCHEDULE_ABSENCE}, ()=>{
@@ -231,7 +231,8 @@ class Member_schedule_history{
                                                         });layer_popup.close_layer_popup();}}
                     };
                     let options_padding_top_bottom = 16;
-                    let button_height = 8 + 8 + 52;
+                    // let button_height = 8 + 8 + 52;
+                    let button_height = 52;
                     let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
                     let root_content_height = $root_content.height();
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
@@ -298,9 +299,9 @@ class Member_schedule_history{
                                             layer_popup.close_layer_popup();
                                             Plan_daily_record_func.write_artice(schedule_id, schedule_name, ()=>{
                                                 this.init();
-                                                // show_error_message(`[${schedule_name}] 일지 변경사항이 저장 되었습니다.`);
+                                                // show_error_message({title:`[${schedule_name}] 일지 변경사항이 저장 되었습니다.`});
                                             }, ()=>{
-                                                show_error_message(`<span style="color:var(--font-highlight)">일지 변경사항 저장에 실패 하였습니다.</span>`);
+                                                show_error_message({title:`<span style="color:var(--font-highlight)">일지 변경사항 저장에 실패 하였습니다.</span>`});
                                             });
                     }},
                     absence:{text:"결석", callback:()=>{Plan_func.status({"schedule_id":schedule_id, "state_cd":SCHEDULE_ABSENCE}, ()=>{
@@ -368,7 +369,8 @@ class Member_schedule_history{
                                                     });layer_popup.close_layer_popup();}}
                 };
                 let options_padding_top_bottom = 16;
-                let button_height = 8 + 8 + 52;
+                // let button_height = 8 + 8 + 52;
+                let button_height = 52;
                 let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
                 let root_content_height = $root_content.height();
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
@@ -436,9 +438,9 @@ class Member_schedule_history{
                                                                 layer_popup.close_layer_popup();
                                                                 Plan_daily_record_func.write_artice(schedule_id, schedule_name, ()=>{
                                                                     this.init();
-                                                                    // show_error_message(`[${schedule_name}] 일지 변경사항이 저장 되었습니다.`);
+                                                                    // show_error_message({title:`[${schedule_name}] 일지 변경사항이 저장 되었습니다.`});
                                                                 }, ()=>{
-                                                                    show_error_message(`<span style="color:var(--font-highlight)">일지 변경사항 저장에 실패 하였습니다.</span>`);
+                                                                    show_error_message({title:`<span style="color:var(--font-highlight)">일지 변경사항 저장에 실패 하였습니다.</span>`});
                                                                 });
                         }},
                         absence:{text:"결석", callback:()=>{Plan_func.status({"schedule_id":schedule_id, "state_cd":SCHEDULE_ABSENCE}, ()=>{
@@ -506,7 +508,8 @@ class Member_schedule_history{
                                                         });layer_popup.close_layer_popup();}}
                     };
                     let options_padding_top_bottom = 16;
-                    let button_height = 8 + 8 + 52;
+                    // let button_height = 8 + 8 + 52;
+                    let button_height = 52;
                     let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
                     let root_content_height = $root_content.height();
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
@@ -575,7 +578,8 @@ class Member_schedule_history{
             by_monthly:{text:"월별 정렬", callback:()=>{this.sort_val = SORT_SCHEDULE_MONTHLY;this.init();layer_popup.close_layer_popup();}}
         };
         let options_padding_top_bottom = 16;
-        let button_height = 8 + 8 + 52;
+        // let button_height = 8 + 8 + 52;
+        let button_height = 52;
         let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
         let root_content_height = $root_content.height();
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{

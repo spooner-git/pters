@@ -176,7 +176,7 @@ class Program_add{
         let upper_category = this.category.code[0];
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             if(upper_category == undefined){
-                show_error_message(TEXT.word.please_select_field[language]);
+                show_error_message({title:TEXT.word.please_select_field[language]});
                 return false;
             }
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
@@ -208,11 +208,14 @@ class Program_add{
             // };
             // let go_to_shop_button = `<div>${CComponent.button (id, title, style, onclick)}</div>`;
             
-            // show_error_message(`[${inspect.limit_type}] 이용자께서는 프로그램을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다.${go_to_shop_button}`);
+            // show_error_message({title:`[${inspect.limit_type}] 이용자께서는 프로그램을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다.${go_to_shop_button}`});
 
             this.data_sending_now = false;
-            let message = `[${inspect.limit_type}] 이용자께서는 프로그램을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다.
-                            <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까??</p>`;
+            let message = {
+                title:"프로그램 등록을 완료하지 못했습니다.",
+                comment:`[${inspect.limit_type}] 이용자께서는 프로그램을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다.
+                        <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까??</p>`
+            };
             show_user_confirm (message, ()=>{
                 layer_popup.all_close_layer_popup();
                 sideGoPopup("pters_pass_main");
@@ -247,16 +250,16 @@ class Program_add{
         let error_info = check_registration_form(forms);
         console.log(error_info);
         if(error_info != ''){
-            show_error_message(error_info);
+            show_error_message({title:error_info});
             return false;
         }
         else{
             if(this.data.program_category_code.length==0){
-                show_error_message(TEXT.word.please_select_field[language]);
+                show_error_message({title:TEXT.word.please_select_field[language]});
                 return false;
             }
             if(this.data.program_category_sub_code.length==0){
-                show_error_message(TEXT.word.please_select_detail_field[language]);
+                show_error_message({title:TEXT.word.please_select_detail_field[language]});
                 return false;
             }
             return true;

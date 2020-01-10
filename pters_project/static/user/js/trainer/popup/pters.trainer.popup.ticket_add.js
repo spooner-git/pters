@@ -266,7 +266,7 @@ class Ticket_add{
             if(auth_inspect.barrier == BLOCKED){
                 let message = `${auth_inspect.limit_type}`;
                 this.init();
-                show_error_message(message);
+                show_error_message({title:message});
                 return false;
             }
 
@@ -331,7 +331,7 @@ class Ticket_add{
             if(auth_inspect.barrier == BLOCKED){
                 let message = `${auth_inspect.limit_type}`;
                 this.init();
-                show_error_message(message);
+                show_error_message({title:message});
                 return false;
             }
 
@@ -399,7 +399,7 @@ class Ticket_add{
             if(auth_inspect.barrier == BLOCKED){
                 let message = `${auth_inspect.limit_type}`;
                 this.init();
-                show_error_message(message);
+                show_error_message({title:message});
                 return false;
             }
 
@@ -526,7 +526,7 @@ class Ticket_add{
         if(auth_inspect.barrier == BLOCKED){
             let message = `${auth_inspect.limit_type}`;
             this.init();
-            show_error_message(message);
+            show_error_message({title:message});
             return false;
         }
         
@@ -538,20 +538,12 @@ class Ticket_add{
 
         let inspect = pass_inspector.ticket();
         if(inspect.barrier == BLOCKED){
-            // let id = "go_to_shop";
-            // let title = "패스 구매";
-            // let style = {"display":"inline-block", "background-color":"var(--bg-highlight)", "border-radius":"2px", "margin-top":"15px"};
-            // let onclick = ()=>{
-            //     layer_popup.all_close_layer_popup();
-            //     sideGoPopup("pters_pass_main");
-            // };
-            // let go_to_shop_button = `<div>${CComponent.button (id, title, style, onclick)}</div>`;
-
-            // show_error_message(`[${inspect.limit_type}] 이용자께서는 수강권을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다.${go_to_shop_button}`);
-
             this.data_sending_now = false;
-            let message = `[${inspect.limit_type}] 이용자께서는 수강권을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다.
-                            <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까??</p>`;
+            let message = {
+                title:`수강권 생성을 완료하지 못했습니다.`,
+                comment:`[${inspect.limit_type}] 이용자께서는 수강권을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다.
+                        <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까??</p>`
+            }
             show_user_confirm (message, ()=>{
                 layer_popup.all_close_layer_popup();
                 sideGoPopup("pters_pass_main");
@@ -598,7 +590,7 @@ class Ticket_add{
         update_check_registration_form(forms);
         let error_info = check_registration_form(forms);
         if(error_info != ''){
-            show_error_message(error_info);
+            show_error_message({title:error_info});
             return false;
         }
         else{

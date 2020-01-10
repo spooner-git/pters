@@ -408,7 +408,8 @@ class Member_view{
                         }}
                     };
                 let options_padding_top_bottom = 16;
-                let button_height = 8 + 8 + 52;
+                // let button_height = 8 + 8 + 52;
+                let button_height = 52;
                 let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
                 let root_content_height = $root_content.height();
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
@@ -427,7 +428,8 @@ class Member_view{
                         }}
                     };
                 let options_padding_top_bottom = 16;
-                let button_height = 8 + 8 + 52;
+                // let button_height = 8 + 8 + 52;
+                let button_height = 52;
                 let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
                 let root_content_height = $root_content.height();
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
@@ -446,7 +448,8 @@ class Member_view{
                         }}
                     };
                 let options_padding_top_bottom = 16;
-                let button_height = 8 + 8 + 52;
+                // let button_height = 8 + 8 + 52;
+                let button_height = 52;
                 let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
                 let root_content_height = $root_content.height();
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
@@ -519,7 +522,7 @@ class Member_view{
             //행을 클릭했을때 실행할 내용
 
             if(disabled == true){
-                show_error_message("수강 회원님께서 PTERS에 직접 접속하신 이후로는 <br> 타인이 정보를 수정할 수 없습니다.");
+                show_error_message({title:"수강 회원님께서 PTERS에 직접 접속하신 이후로는 <br> 타인이 정보를 수정할 수 없습니다."});
                 return false;
             }
             let root_content_height = $root_content.height();
@@ -558,7 +561,7 @@ class Member_view{
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
 
             if(disabled == true){
-                show_error_message("수강 회원님께서 PTERS에 직접 접속하신 이후로는 <br> 타인이 정보를 수정할 수 없습니다.");
+                show_error_message({title:"수강 회원님께서 PTERS에 직접 접속하신 이후로는 <br> 타인이 정보를 수정할 수 없습니다."});
                 return false;
             }
 
@@ -573,7 +576,8 @@ class Member_view{
             };
 
             let options_padding_top_bottom = 16;
-            let button_height = 8 + 8 + 52;
+            // let button_height = 8 + 8 + 52;
+            let button_height = 52;
             let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
             let root_content_height = $root_content.height();
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
@@ -688,7 +692,7 @@ class Member_view{
             view:{text:"사진 보기", callback:()=>{
                     layer_popup.close_layer_popup();
                     let profile_img = `<img src="${this.data.profile_img}" style="width:100%;">`;
-                    show_error_message(profile_img);
+                    show_error_message({title:profile_img});
                 }
             },
             change:{text:"프로필 사진 변경", callback:()=>{
@@ -696,7 +700,7 @@ class Member_view{
                     let auth_inspect = pass_inspector.member_update();
                     if(auth_inspect.barrier == BLOCKED){
                         let message = `${auth_inspect.limit_type}`;
-                        show_error_message(message);
+                        show_error_message({title:message});
                         return false;
                     }
 
@@ -712,7 +716,7 @@ class Member_view{
                     let auth_inspect = pass_inspector.member_update();
                     if(auth_inspect.barrier == BLOCKED){
                         let message = `${auth_inspect.limit_type}`;
-                        show_error_message(message);
+                        show_error_message({title:message});
                         return false;
                     }
 
@@ -735,7 +739,7 @@ class Member_view{
                             let jsondata = JSON.parse(data);
                             check_app_version(jsondata.app_version);
                             if(jsondata.messageArray.length>0){
-                                show_error_message(jsondata.messageArray);
+                                show_error_message({title:jsondata.messageArray});
                                 return false;
                             }
                             try{
@@ -752,7 +756,7 @@ class Member_view{
 
                         error:function(){
                             //alert('통신이 불안정합니다.');
-                            show_error_message('통신이 불안정합니다.');
+                            show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                         }
                     });
                     
@@ -766,7 +770,7 @@ class Member_view{
         }
 
         let options_padding_top_bottom = 16;
-        let button_height = 8 + 8 + 52;
+        // let button_height = 8 + 8 + 52;
         let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
         let root_content_height = $root_content.height();
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
@@ -778,7 +782,7 @@ class Member_view{
         let auth_inspect = pass_inspector.member_update();
         if(auth_inspect.barrier == BLOCKED){
             let message = `${auth_inspect.limit_type}`;
-            show_error_message(message);
+            show_error_message({title:message});
             this.set_initial_data();
             return false;
         }
@@ -809,7 +813,7 @@ class Member_view{
                 let message = `${inspect.limit_type}`;
                 layer_popup.close_layer_popup();
                 this.clear();
-                show_error_message(message);
+                show_error_message({title:message});
                 return false;
             }
             
@@ -818,7 +822,8 @@ class Member_view{
                 cancel:{text:"아무것도 변경하지 않음", callback:()=>{ layer_popup.close_layer_popup();layer_popup.close_layer_popup();this.clear();}}
             };
             let options_padding_top_bottom = 16;
-            let button_height = 8 + 8 + 52;
+            // let button_height = 8 + 8 + 52;
+            let button_height = 52;
             let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
             let root_content_height = $root_content.height();
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
@@ -831,21 +836,8 @@ class Member_view{
 
     upper_right_menu(){
         let user_option = {
-            
-            // deactivate:{text:"비활성화", callback:()=>{
-            //         show_user_confirm(`"${this.data.name}" 님을 비활성화 하시겠습니까? <br> 비활성화 탭에서 확인할 수 있습니다.`, ()=>{
-            //             alert('작업중');
-                        
-            //         });
-            //     }
-            // },
-            // activate:{text:"활성화", callback:()=>{
-            //         show_user_confirm(`"${this.data.name}" 님을 다시 활성화 하시겠습니까?`, ()=>{
-            //             alert('작업중');
-            //         });
-            //     }
-            // },
             recontract:{text:"재등록", callback:()=>{
+                    console.log("재등록")
                     layer_popup.close_layer_popup();
                     let member_add_initial_data = {member_id: this.member_id};
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_ADD, 100, POPUP_FROM_BOTTOM, null, ()=>{
@@ -869,11 +861,15 @@ class Member_view{
                 }
             },
             delete:{text:"회원 삭제", callback:()=>{
-                    show_user_confirm(`"${this.data.name}" 님 정보를 완전 삭제 하시겠습니까? <br> 다시 복구할 수 없습니다. <br> <span style="color:var(--font-highlight);">통계에서도 정보가 삭제되어 반영됩니다.</span>`, ()=>{
+                    let message = {
+                        title:`"${this.data.name}" 님 정보를 완전 삭제 하시겠습니까?`,
+                        comment:`다시 복구할 수 없습니다. <br> <span style="color:var(--font-highlight);">통계에서도 정보가 삭제되어 반영됩니다.</span>`
+                    }
+                    show_user_confirm(message, ()=>{
                         let auth_inspect = pass_inspector.member_delete();
                         if(auth_inspect.barrier == BLOCKED){
                             let message = `${auth_inspect.limit_type}`;
-                            show_error_message(message);
+                            show_error_message({title:message});
                             layer_popup.close_layer_popup();
                             return false;
                         }
@@ -889,7 +885,8 @@ class Member_view{
             }
         };
         let options_padding_top_bottom = 16;
-        let button_height = 8 + 8 + 52;
+        // let button_height = 8 + 8 + 52;
+        let button_height = 52;
         let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
         let root_content_height = $root_content.height();
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
@@ -904,7 +901,7 @@ class Member_view{
         let error_info = check_registration_form(forms);
         console.log(error_info);
         if(error_info != ''){
-            show_error_message(error_info);
+            show_error_message({title:error_info});
             return false;
         }
         else{
@@ -1101,7 +1098,7 @@ class Member_simple_view{
     dom_row_toolbox(){
         let text_button_style = {"color":"var(--font-highlight)", "font-size":"13px", "font-weight":"500", "padding":"10px 0"};
         let text_button = CComponent.text_button ("detail_user_info", "더보기", text_button_style, ()=>{
-            show_user_confirm(`작업중이던 항목을 모두 닫고 회원 메뉴로 이동합니다.`, ()=>{
+            show_user_confirm({title:`작업중이던 항목을 모두 닫고 회원 메뉴로 이동합니다.`}, ()=>{
                 layer_popup.all_close_layer_popup();
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_VIEW, 100, popup_style, {'member_id':this.member_id}, ()=>{
@@ -1211,7 +1208,8 @@ class Member_simple_view{
                 tel:{text:`전화 걸기`, callback:()=>{location.href=`tel:${this.data.phone}`;layer_popup.close_layer_popup();}},
             };
             let options_padding_top_bottom = 16;
-            let button_height = 8 + 8 + 52;
+            // let button_height = 8 + 8 + 52;
+            let button_height = 52;
             let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
             let root_content_height = $root_content.height();
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{

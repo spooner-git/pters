@@ -175,8 +175,11 @@ class Member_ticket_modify{
                     let inspect = pass_inspector.member("recontract", this.data.member_id);
                     if(inspect.barrier == BLOCKED){
                         this.data_sending_now = false;
-                        let message = `[${inspect.limit_type}] 이용자께서는 회원을 최대 ${inspect.limit_num}명까지 등록하실 수 있습니다.
-                                        <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까??</p>`;
+                        let message = {
+                            title:'수강권 재개를 완료하지 못했습니다.',
+                            comment:`[${inspect.limit_type}] 이용자께서는 회원을 최대 ${inspect.limit_num}명까지 등록하실 수 있습니다.
+                                    <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까??</p>`
+                        }
                         show_user_confirm (message, ()=>{
                             layer_popup.all_close_layer_popup();
                             sideGoPopup("pters_pass_main");
@@ -231,7 +234,8 @@ class Member_ticket_modify{
             }
 
             let options_padding_top_bottom = 16;
-            let button_height = 8 + 8 + 52;
+            // let button_height = 8 + 8 + 52;
+            let button_height = 52;
             let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
             let root_content_height = $root_content.height();
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
@@ -658,7 +662,7 @@ class Member_ticket_modify{
         update_check_registration_form(forms);
         let error_info = check_registration_form(forms);
         if(error_info != ''){
-            show_error_message(error_info);
+            show_error_message({title:error_info});
             return false;
         }
         else{
