@@ -542,7 +542,7 @@ class Ticket_add{
             let message = {
                 title:`수강권 생성을 완료하지 못했습니다.`,
                 comment:`[${inspect.limit_type}] 이용자께서는 수강권을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다.
-                        <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까??</p>`
+                        <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까?</p>`
             }
             show_user_confirm (message, ()=>{
                 layer_popup.all_close_layer_popup();
