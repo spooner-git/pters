@@ -165,6 +165,7 @@
     background-color: var(--bg-for-only-shade);
     opacity:0.5;
     display: none;
+    transition: 0.3s;
 }
 
 #root_content{
