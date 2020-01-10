@@ -182,9 +182,10 @@ class Service_helper {
     }
 
     close(){
-        let message = `<span style="display:block;font-weight:bold;font-size:15px;margin:0;margin-bottom:8px;">튜토리얼을 종료 하시겠습니까?</span>
-                        언제든 다시 볼 수 있습니다.
-                       <span style="display:block;color:var(--font-highlight);margin:0;">( 전체 메뉴 내 도움말 )</span>`;
+        let message = {
+            title:`튜토리얼을 종료 하시겠습니까?`,
+            comment:`언제든 다시 볼 수 있습니다.`
+        };
         show_user_confirm (message, ()=>{
             layer_popup.close_layer_popup(); //컨펌 팝업 닫기
             layer_popup.close_layer_popup(); //튜토리얼 닫기

@@ -308,7 +308,7 @@ class Setting_reserve{
         let auth_inspect = pass_inspector.setting_update();
         if(auth_inspect.barrier == BLOCKED){
             let message = `${auth_inspect.limit_type}`;
-            show_error_message(message);
+            show_error_message({title:message});
             return false;
         }
         
@@ -332,7 +332,7 @@ class Setting_reserve{
         Setting_reserve_func.update(data, ()=>{
             this.data_sending_now = false;
             this.set_initial_data();
-            show_error_message('변경 내용이 저장되었습니다.');
+            show_error_message({title:'변경 내용이 저장되었습니다.'});
             // this.render_content();
         }, ()=>{this.data_sending_now = false;});
     }
@@ -363,7 +363,7 @@ class Setting_reserve_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -383,7 +383,7 @@ class Setting_reserve_func{
                     error_callback();
                 }
                 console.log('server error');
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
             }
         });
     }
@@ -405,7 +405,7 @@ class Setting_reserve_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -425,7 +425,7 @@ class Setting_reserve_func{
                     error_callback();
                 }
                 console.log('server error');
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
             }
         });
     }

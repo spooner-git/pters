@@ -128,7 +128,7 @@ class Pters_pass_shop_agreement{
             : {"height":"40px", "line-height":"40px", "padding":"0", "font-size":"14px", "font-weight":"500", "background-color":"var(--bg-highlight)", "color":"var(--font-invisible)"};
         let onclick = ()=>{
             if(this.data.agreement == OFF){
-                show_error_message("약관 동의 후 결제를 진행 할 수 있습니다.");
+                show_error_message({title:"약관 동의 후 결제를 진행 할 수 있습니다."});
             }else{
                 this.data.page = 2;
                 this.render();
@@ -174,7 +174,7 @@ class Pters_pass_shop_agreement{
             : {"height":"40px", "line-height":"40px", "padding":"0", "font-size":"14px", "font-weight":"500", "background-color":"var(--bg-highlight)", "color":"var(--font-invisible)"};
         let onclick = ()=>{
             if(this.data.pay_method.card == OFF){
-                show_error_message("결제 수단을 선택 해주세요.");
+                show_error_message({title:"결제 수단을 선택 해주세요."});
             }else{
                 //결제 다날 띄우기
                 layer_popup.close_layer_popup();
@@ -225,7 +225,7 @@ class Pters_pass_shop_agreement{
             }
 
             // 이용권 결제 confirm ok 하는 경우 결제 수행
-            show_user_confirm (confirm_message, ()=>{
+            show_user_confirm ({title:confirm_message}, ()=>{
                 // 정기 결제 + 미래 예약 대기인 경우
                 if(payment_date != data.next_start_date[0]){
                     if(payment_type_cd == PERIOD){
@@ -278,7 +278,7 @@ class Pters_pass_shop_agreement{
         
         // Pters_pass_func.update(data, ()=>{
         //     this.set_initial_data();
-        //     show_error_message('변경 내용이 저장되었습니다.');
+        //     show_error_message({title:'변경 내용이 저장되었습니다.'});
         //     // this.render_content();
         // });
     }

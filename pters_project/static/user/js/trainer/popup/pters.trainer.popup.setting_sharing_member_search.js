@@ -116,7 +116,7 @@ class Setting_sharing_member_search {
         }
         let onclick = ()=>{
             if(this.data.search_id == null){
-                show_error_message("검색 조건을 입력해주세요.");
+                show_error_message({title:"검색 조건을 입력해주세요."});
                 return false;
             }
             this.render_loading_image();
@@ -140,7 +140,7 @@ class Setting_sharing_member_search {
         }
         let onclick = ()=>{
             if(this.data.selected_member_id == null){
-                show_error_message('강사를 선택해주세요.');
+                show_error_message({title:'강사를 선택해주세요.'});
                 return false;
             }
             layer_popup.close_layer_popup();
@@ -161,7 +161,7 @@ class Setting_sharing_member_search {
         let style = {"background-color":"var(--bg-main)", "height":"48px", "line-height":"48px", "margin-top":"10px", 'border':"var(--border-article)"};
         let onclick = ()=>{
             if(this.data.search_id == null){
-                show_error_message("검색 조건을 입력해주세요.");
+                show_error_message({title:"검색 조건을 입력해주세요."});
                 return false;
             }
             this.render_loading_image();
@@ -277,7 +277,7 @@ class sharing_member_search_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -291,7 +291,7 @@ class sharing_member_search_func{
                 if(error_callback != undefined){
                     error_callback();
                 }
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                 // location.reload();
             }
         });

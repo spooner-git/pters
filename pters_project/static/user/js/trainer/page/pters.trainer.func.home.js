@@ -200,7 +200,7 @@ class Home {
                 let inspect = pass_inspector.program_read();
                 if(inspect.barrier == BLOCKED){
                     let message = `${inspect.limit_type}`;
-                    show_error_message(message);
+                    show_error_message({title:message});
                     return false;
                 }
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
@@ -368,7 +368,7 @@ class Home {
                 let inspect = pass_inspector.member_read();
                 if(inspect.barrier == BLOCKED){
                     let message = `${inspect.limit_type}`;
-                    show_error_message(message);
+                    show_error_message({title:message});
                     return false;
                 }
 
@@ -428,7 +428,7 @@ class Home {
             let inspect = pass_inspector.statistics_read();
             if(inspect.barrier == BLOCKED){
                 let message = `${inspect.limit_type}`;
-                show_error_message(message);
+                show_error_message({title:message});
                 return false;
             }
             
@@ -468,7 +468,7 @@ class Home {
         let inspect = pass_inspector.schedule_read();
         if(inspect.barrier == BLOCKED){
             let message = `${inspect.limit_type}`;
-            show_error_message(message);
+            show_error_message({title:message});
             return false;
         }
 
@@ -529,7 +529,7 @@ class Home_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -544,7 +544,7 @@ class Home_func{
                 if(error_callback != undefined){
                     error_callback();
                 }
-                show_error_message(TEXT.message.ajax_error[language]);
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                 location.reload();
             }
         });

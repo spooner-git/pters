@@ -209,10 +209,10 @@ class Member_ticket_refund{
         if(this.data.member_ticket_id == null){
             return false;
         }else if(this.data.refund_price == null){
-            show_error_message("환불 금액을 입력해주세요");
+            show_error_message({title:"환불 금액을 입력해주세요"});
             return false;
         }else if(this.data.refund_price > this.data.member_ticket_price){
-            show_error_message("환불금액은 등록금액보다 클 수 없습니다.");
+            show_error_message({title:"환불금액은 등록금액보다 클 수 없습니다."});
             this.data.refund_price = null;
             this.render_content();
             return false;
@@ -224,7 +224,7 @@ class Member_ticket_refund{
         update_check_registration_form(forms);
         let error_info = check_registration_form(forms);
         if(error_info != ''){
-            show_error_message(error_info);
+            show_error_message({title:error_info});
             return false;
         }
         else{

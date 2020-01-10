@@ -160,7 +160,10 @@ class Setting_shared{
     }
 
     event_disconnect(){
-        let message = `현재 프로그램의 공유 연결을 해제합니다. <br>다시 연결하려면 프로그램 소유자에게 요청 해야합니다.`;
+        let message = {
+            title:`현재 프로그램의 공유 연결을 해제합니다.`,
+            comment:`다시 연결하려면 프로그램 소유자에게 요청 해야합니다.`
+        };
         show_user_confirm (message, ()=>{
             let data = {"class_id": this.program_id};
             Setting_shared_func.disconnect(data, ()=>{
@@ -202,7 +205,7 @@ class Setting_shared_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -222,7 +225,7 @@ class Setting_shared_func{
                     error_callback();
                 }
                 console.log('server error');
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
             }
         });
     }
@@ -244,7 +247,7 @@ class Setting_shared_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -264,7 +267,7 @@ class Setting_shared_func{
                     error_callback();
                 }
                 console.log('server error');
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
             }
         });
     }
@@ -289,7 +292,7 @@ class Setting_shared_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -309,7 +312,7 @@ class Setting_shared_func{
                     error_callback();
                 }
                 console.log('server error');
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
             }
         });
         

@@ -584,7 +584,7 @@
                 auth_inspect = pass_inspector.schedule_read();
                 if(auth_inspect.barrier == BLOCKED){
                     let message = `${auth_inspect.limit_type}`;
-                    show_error_message(message);
+                    show_error_message({title:message});
                     return false;
                 }
 
@@ -595,7 +595,7 @@
                 auth_inspect = pass_inspector.ticket_read();
                 if(auth_inspect.barrier == BLOCKED){
                     let message = `${auth_inspect.limit_type}`;
-                    show_error_message(message);
+                    show_error_message({title:message});
                     return false;
                 }
 
@@ -606,7 +606,7 @@
                 auth_inspect = pass_inspector.lecture_read();
                 if(auth_inspect.barrier == BLOCKED){
                     let message = `${auth_inspect.limit_type}`;
-                    show_error_message(message);
+                    show_error_message({title:message});
                     return false;
                 }
 
@@ -617,7 +617,7 @@
                 auth_inspect = pass_inspector.member_read();
                 if(auth_inspect.barrier == BLOCKED){
                     let message = `${auth_inspect.limit_type}`;
-                    show_error_message(message);
+                    show_error_message({title:message});
                     return false;
                 }
 
@@ -711,7 +711,7 @@
                     auth_inspect = pass_inspector.ticket_read();
                     if(auth_inspect.barrier == BLOCKED){
                         let message = `${auth_inspect.limit_type}`;
-                        show_error_message(message);
+                        show_error_message({title:message});
                         return false;
                     }
 
@@ -724,7 +724,7 @@
                     auth_inspect = pass_inspector.lecture_read();
                     if(auth_inspect.barrier == BLOCKED){
                         let message = `${auth_inspect.limit_type}`;
-                        show_error_message(message);
+                        show_error_message({title:message});
                         return false;
                     }
 
@@ -737,7 +737,7 @@
                     auth_inspect = pass_inspector.program_read();
                     if(auth_inspect.barrier == BLOCKED){
                         let message = `${auth_inspect.limit_type}`;
-                        show_error_message(message);
+                        show_error_message({title:message});
                         return false;
                     }
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PROGRAM_LIST, 100, POPUP_FROM_RIGHT, null, ()=>{
@@ -749,7 +749,7 @@
                     auth_inspect = pass_inspector.setting_read();
                     if(auth_inspect.barrier == BLOCKED){
                         let message = `${auth_inspect.limit_type}`;
-                        show_error_message(message);
+                        show_error_message({title:message});
                         return false;
                     }
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_CALENDAR, 100, POPUP_FROM_RIGHT, null, ()=>{
@@ -761,7 +761,7 @@
                     auth_inspect = pass_inspector.setting_read();
                     if(auth_inspect.barrier == BLOCKED){
                         let message = `${auth_inspect.limit_type}`;
-                        show_error_message(message);
+                        show_error_message({title:message});
                         return false;
                     }
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_WORKTIME, 100, POPUP_FROM_RIGHT, null, ()=>{
@@ -773,7 +773,7 @@
                     auth_inspect = pass_inspector.setting_read();
                     if(auth_inspect.barrier == BLOCKED){
                         let message = `${auth_inspect.limit_type}`;
-                        show_error_message(message);
+                        show_error_message({title:message});
                         return false;
                     }
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_AUTOCOMPLETE, 100, POPUP_FROM_RIGHT, null, ()=>{
@@ -785,7 +785,7 @@
                     auth_inspect = pass_inspector.setting_read();
                     if(auth_inspect.barrier == BLOCKED){
                         let message = `${auth_inspect.limit_type}`;
-                        show_error_message(message);
+                        show_error_message({title:message});
                         return false;
                     }
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_RESERVE, 100, POPUP_FROM_RIGHT, null, ()=>{
@@ -797,7 +797,7 @@
                     auth_inspect = pass_inspector.setting_read();
                     if(auth_inspect.barrier == BLOCKED){
                         let message = `${auth_inspect.limit_type}`;
-                        show_error_message(message);
+                        show_error_message({title:message});
                         return false;
                     }
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_ALARM, 100, POPUP_FROM_RIGHT, null, ()=>{
@@ -809,7 +809,7 @@
                     auth_inspect = pass_inspector.setting_read();
                     if(auth_inspect.barrier == BLOCKED){
                         let message = `${auth_inspect.limit_type}`;
-                        show_error_message(message);
+                        show_error_message({title:message});
                         return false;
                     }
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_ATTENDMODE, 100, POPUP_FROM_RIGHT, null, ()=>{
@@ -821,7 +821,7 @@
                     auth_inspect = pass_inspector.setting_read();
                     if(auth_inspect.barrier == BLOCKED){
                         let message = `${auth_inspect.limit_type}`;
-                        show_error_message(message);
+                        show_error_message({title:message});
                         return false;
                     }
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_THEME, 100, POPUP_FROM_RIGHT, null, ()=>{
@@ -833,7 +833,7 @@
                     auth_inspect = pass_inspector.setting_read();
                     if(auth_inspect.barrier == BLOCKED){
                         let message = `${auth_inspect.limit_type}`;
-                        show_error_message(message);
+                        show_error_message({title:message});
                         return false;
                     }
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_MENU_ACCESS, 100, POPUP_FROM_RIGHT, null, ()=>{
@@ -869,7 +869,7 @@
                     let auth_inspect = pass_inspector.statistics_read();
                     if(auth_inspect.barrier == BLOCKED){
                         let message = `${auth_inspect.limit_type}`;
-                        show_error_message(message);
+                        show_error_message({title:message});
                         return false;
                     }
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_STATISTICS, 100, POPUP_FROM_RIGHT, null, ()=>{

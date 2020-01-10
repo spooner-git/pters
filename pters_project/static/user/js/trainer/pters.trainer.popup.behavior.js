@@ -103,7 +103,6 @@ let layer_popup = (function (){
     return {
         "open_layer_popup":function(call_method, popup_name, popup_size, animation_type, data, callback){
             // if(func_prevent_double_click_set()) return;
-            console.log(now_opening);
             if(now_opening == true){
                 return;
             }
@@ -161,6 +160,7 @@ let layer_popup = (function (){
             if(now_opening == true){
                 return;
             }
+
             let popup_data = func_close_layer_popup(popup_size);
             this.animation_set(CLOSE, popup_data);
         },
@@ -168,6 +168,7 @@ let layer_popup = (function (){
             if(now_opening == true){
                 return;
             }
+
             let popup_data = func_all_close_layer_popup();
             this.animation_set(CLOSE, popup_data);
         },
@@ -401,11 +402,14 @@ function func_set_shade (popup_array_length){
  */
 function func_set_popup_basic (popup_name, data){
     let $popup = $(`.${popup_name}`);
-    if(data != undefined && data.popup_comment!=undefined){
-        $popup.find('.wrapper_popup_basic_comment').html(`<div>${data.popup_comment}</div>`);
+    // if(data != undefined && data.popup_comment!=undefined && data.popup_title!=undefined){
+    if(data != undefined){
+        $popup.find('.wrapper_popup_basic_comment').html(`<div>
+                                                            <p class="popup_title" style="display:${data.popup_title==undefined ? 'none': ''}">${data.popup_title}</p>
+                                                            <p class="popup_comment" style="display:${data.popup_comment==undefined ? 'none': ''}">${data.popup_comment}</p>
+                                                        </div>`);
     }
     if(data != undefined && data.onclick_function!=undefined){
-        // $popup.find('.popup_basic_confirm').attr('onclick', data.onclick_function);
         $popup.find('.popup_basic_confirm').off('click').click(function(){
             data.onclick_function();
         });
@@ -416,8 +420,8 @@ function show_error_message (message){
     layer_popup.open_layer_popup(POPUP_BASIC,
                                  'popup_basic_user_confirm',
                                  POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
-                                 {'popup_title':'',
-                                  'popup_comment':`${message}`,
+                                 {'popup_title':message.title,
+                                  'popup_comment':message.comment,
                                   'onclick_function':()=>{layer_popup.close_layer_popup(POPUP_SIZE_WINDOW);}});
 }
 
@@ -425,7 +429,7 @@ function show_user_confirm (message, callback){
     layer_popup.open_layer_popup(POPUP_BASIC,
                                  'popup_basic_user_select',
                                  POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
-                                 {'popup_title':'',
-                                  'popup_comment':`${message}`,
+                                 {'popup_title':message.title,
+                                  'popup_comment':message.comment,
                                   'onclick_function':()=>{callback();}});
 }

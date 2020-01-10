@@ -148,7 +148,7 @@ class Service_inquiry_menu {
         };
 
         Service_inquiry_menu_func.create(data, ()=>{
-            show_error_message("문의를 접수했습니다.");
+            show_error_message({title:"문의를 접수했습니다."});
             this.init_data();
             Service_inquiry_menu.render_content();
             Service_inquiry_menu_func.read((data)=>{
@@ -189,7 +189,7 @@ class Service_inquiry_menu_func {
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -203,7 +203,7 @@ class Service_inquiry_menu_func {
                 if(error_callback != undefined){
                     error_callback();
                 }
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                 // location.reload();
             }
         });
@@ -224,7 +224,7 @@ class Service_inquiry_menu_func {
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -261,7 +261,7 @@ class Service_inquiry_menu_func {
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }

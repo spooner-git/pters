@@ -219,7 +219,7 @@ class Member_attend{
                             color:{pencil:"#ffffff", paper:"#282828"},
                             border:0,
                             callback:(data)=>{
-                                // show_error_message(`<img src="${data}" style="width:100%;filter:invert(1)">`);
+                                // show_error_message({title:`<img src="${data}" style="width:100%;filter:invert(1)">`});
                                 callback();
                                 this.data[id].image = data;
                                 this.render();

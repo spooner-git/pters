@@ -121,7 +121,7 @@ class TwoTimeSelector{
             end_time_list.push(TimeRobot.add_time(start_time.split(':')[0], start_time.split(':')[1], 0, zz).complete);
             end_time_diff_list.push(zz);
             if(zz > 1440){
-                show_error_message("Classic selector - Error - 80");
+                show_error_message({title:"Classic selector - Error - 80"});
                 break;
             }
         }
@@ -273,7 +273,7 @@ class TwoTimeSelector{
                 }
                 // if(snap > self.hour_scroll_snapped){
                 //     self.hour2_scroll.scrollTo(0, self.hour_scroll_snapped, 0, IScroll.utils.ease.bounce);
-                //     show_error_message('종료 시각이 시작 시각보다 빠릅니다.')
+                //     show_error_message({title:'종료 시각이 시작 시각보다 빠릅니다.'})
                 // }else{
                 //     self.hour2_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
                 // }
@@ -336,13 +336,13 @@ class TwoTimeSelector{
         let result = this.get_selected_data();
 
         if(result.start == undefined || result.start == ''){
-            show_error_message('시작 시각 입력을 다시 해주세요.')
+            show_error_message({title:'시작 시각 입력을 다시 해주세요.'})
         }
         else if(result.end == undefined || result.end == ''){
-            show_error_message('종료 시각 입력을 다시 해주세요.')
+            show_error_message({title:'종료 시각 입력을 다시 해주세요.'})
         }
         else{
-            show_error_message('시작:' + result.start + ' ~ ' + '종료:'+ result.end)
+            show_error_message({title:'시작:' + result.start + ' ~ ' + '종료:'+ result.end})
         }
     }
 
@@ -723,15 +723,15 @@ class DateSelector{
         let date_text = date.text();
 
         if(year_text == undefined || year_text == ''){
-            show_error_message('[연도]를 다시 선택 해주세요.');
+            show_error_message({title:'[연도]를 다시 선택 해주세요.'});
         }
         else if(month_text == undefined || month_text == ''){
-            show_error_message('[월]을 다시 선택 해주세요.');
+            show_error_message({title:'[월]을 다시 선택 해주세요.'});
         }else if(date_text == undefined || date_text == ''){
-            show_error_message('[일자]를 다시 선택 해주세요.');
+            show_error_message({title:'[일자]를 다시 선택 해주세요.'});
         }
         else{
-            show_error_message(`${year_text}년 ${month_text}월 ${date_text}일`);
+            show_error_message({title:`${year_text}년 ${month_text}월 ${date_text}일`});
         }
     }
 
@@ -1181,15 +1181,15 @@ class TwoDateSelector{
         let month_text2 = month2.text();
 
         if(year_text == undefined || year_text == ''){
-            show_error_message('[연도]를 다시 선택 해주세요.');
+            show_error_message({title:'[연도]를 다시 선택 해주세요.'});
         }
         else if(month_text == undefined || month_text == ''){
-            show_error_message('[월]을 다시 선택 해주세요.');
+            show_error_message({title:'[월]을 다시 선택 해주세요.'});
         }else if(date_text == undefined || date_text == ''){
-            show_error_message('[일자]를 다시 선택 해주세요.');
+            show_error_message({title:'[일자]를 다시 선택 해주세요.'});
         }
         else{
-            show_error_message(`${year_text}년 ${month_text}월 - ${year_text2}년 ${month_text2}월`);
+            show_error_message({title:`${year_text}년 ${month_text}월 - ${year_text2}년 ${month_text2}월`});
         }
     }
 
@@ -1602,7 +1602,7 @@ class TimeSelector{
 
             let time_compare = TimeRobot.compare(selected_time_data_form, min_time_data_form); // >= 일경우 true;
             if(time_compare == false){
-                // show_error_message('종료시간은 시작시간보다 작을 수 없습니다.');
+                // show_error_message({title:'종료시간은 시작시간보다 작을 수 없습니다.'});
                 return false;
             }
         }
@@ -1612,7 +1612,7 @@ class TimeSelector{
     upper_right_button(){
         let minimum_check = this.check_minimum_time();
         if(minimum_check == false){
-            show_error_message('종료 시각은 시작 시각보다 작을 수 없습니다.');
+            show_error_message({title:'종료 시각은 시작 시각보다 작을 수 없습니다.'});
             return false;
         }
 
@@ -1984,7 +1984,7 @@ class TimeSelector2{
     upper_right_button(){
         let minimum_check = this.check_minimum_time();
         if(minimum_check != true){
-            show_error_message(minimum_check.message);
+            show_error_message({title:minimum_check.message});
             return false;
         }
 
@@ -2354,7 +2354,7 @@ class TimeSelector3{
 
             let time_compare = TimeRobot.compare(selected_time_data_form, min_time_data_form); // > 일경우 true;
             if(time_compare == false){
-                // show_error_message('종료시간은 시작시간보다 작을 수 없습니다.');
+                // show_error_message({title:'종료시간은 시작시간보다 작을 수 없습니다.'});
                 return {message:"종료시간은 시작시간보다 작을 수 없습니다."};
             }
         }else{
@@ -2370,7 +2370,7 @@ class TimeSelector3{
     upper_right_button(){
         let minimum_check = this.check_minimum_time();
         if(minimum_check != true){
-            show_error_message(minimum_check.message);
+            show_error_message({title:minimum_check.message});
             return false;
         }
 
@@ -3041,7 +3041,8 @@ class MemberSelector{
                                     }};
                                     
                                     let options_padding_top_bottom = 16;
-                                    let button_height = 8 + 8 + 52;
+                                    // let button_height = 8 + 8 + 52;
+                                    let button_height = 52;
                                     // let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
                                     let layer_popup_height = options_padding_top_bottom + 52*Object.keys(user_option).length;
                                     let root_content_height = $root_content.height();
@@ -3525,7 +3526,7 @@ class DatePickerSelector_backup{
                             this.option.callback_when_set(this.store); 
                             layer_popup.close_layer_popup();
                         }else{
-                            show_error_message('종료일은 시작일보다 빠를수 없습니다.');
+                            show_error_message({title:'종료일은 시작일보다 빠를수 없습니다.'});
                         }
                     });
                     date_cache++;
@@ -3804,7 +3805,7 @@ class DatePickerSelector{
                             this.option.callback_when_set(this.store); 
                             layer_popup.close_layer_popup();
                         }else{
-                            show_error_message('종료일은 시작일보다 빠를수 없습니다.');
+                            show_error_message({title:'종료일은 시작일보다 빠를수 없습니다.'});
                         }
                     });
                     date_cache++;
@@ -3988,11 +3989,11 @@ class RepeatSelector{
             this.data.repeat_end = {year:null, month:null, date:null};
         }else{
             if(this.data.day.length == 0){
-                show_error_message("반복 요일을 선택 해주세요.");
+                show_error_message({title:"반복 요일을 선택 해주세요."});
                 return false;
             }
             if(this.data.repeat_end.year == null){
-                show_error_message("반복 종료일을 선택 해주세요.");
+                show_error_message({title:"반복 종료일을 선택 해주세요."});
                 return false;
             }
         }
@@ -4583,7 +4584,7 @@ class PasswordInput{
         let combined_data = {password : `${this.data.password_digit_1}${this.data.password_digit_2}${this.data.password_digit_3}${this.data.password_digit_4}`};
         console.log(combined_data.password, this.original_data, "여기")
         if(combined_data.password != this.original_data){
-            show_error_message("비밀번호가 맞지 않습니다.");
+            show_error_message({title:"비밀번호가 맞지 않습니다."});
             return;
         }
         this.callback();
@@ -4789,14 +4790,14 @@ class BoardWriter{
             callbacks:{
                 onImageUpload: function(files) {
                     if(board_writer.data.category_selected['type'].text.length == 0){
-                        show_error_message('게시글 분류부터 선택해주세요.');
+                        show_error_message({title:'게시글 분류부터 선택해주세요.'});
                         return false;
                     }
                     // upload image to server and create imgNode...
                     let img_error_flag = false;
                     for (let i = files.length - 1; i >= 0; i--) {
                         if(files[i].size > 10485760){
-                            show_error_message('이미지는 최대 10mb까지 업로드 가능합니다.');
+                            show_error_message({title:'이미지는 최대 10mb까지 업로드 가능합니다.'});
                             img_error_flag = true;
                             break;
                         }
@@ -4846,7 +4847,7 @@ class BoardWriter{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined) {
                     if (data.messageArray.length > 0) {
-                        show_error_message(data.messageArray);
+                        show_error_message({title:data.messageArray});
                         return false;
                     }
                 }
@@ -4858,8 +4859,7 @@ class BoardWriter{
             },
 
             error:function(){
-                //alert('통신이 불안정합니다.');
-                show_error_message('통신이 불안정합니다.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
             }
         });
     }
@@ -4879,11 +4879,11 @@ class BoardWriter{
         this.data.content = content_value;
 
         if(this.data.title == null){
-            show_error_message("제목을 입력해주세요.");
+            show_error_message({title:"제목을 입력해주세요."});
             return false;
         }
         if(this.data.content.length <= 1 && this.data.visibility.content != HIDE){
-            show_error_message("내용을 입력해주세요.");
+            show_error_message({title:"내용을 입력해주세요."});
             return false;
         }
         if(this.data.category.length > 0){
@@ -4894,7 +4894,7 @@ class BoardWriter{
                 }
             }
             if(selected_value_ok == false){
-                show_error_message("카테고리를 선택해주세요.")
+                show_error_message({title:"카테고리를 선택해주세요."})
                 return false;
             }
         }
@@ -5103,18 +5103,18 @@ class BoardWriter_for_daily_record{
             callbacks:{
                 onImageUpload: function(files) {
                     if(pass_inspector.data.auth_ads.limit_type == "무료"){
-                        show_error_message("피터스 패스 이용 고객께서만 이미지를 첨부 하실 수 있습니다.");
+                        show_error_message({title:"피터스 패스 이용 고객께서만 이미지를 첨부 하실 수 있습니다."});
                         return false;
                     }
                     // if(board_writer.data.category_selected['type'].text.length == 0){
-                    //     show_error_message('게시글 분류부터 선택해주세요.');
+                    //     show_error_message({title:'게시글 분류부터 선택해주세요.'});
                     //     return false;
                     // }
                     // upload image to server and create imgNode...
                     let img_error_flag = false;
                     for (let i = files.length - 1; i >= 0; i--) {
                         if(files[i].size > 10485760){
-                            show_error_message('이미지는 최대 10mb까지 업로드 가능합니다.');
+                            show_error_message({title:'이미지는 최대 10mb까지 업로드 가능합니다.'});
                             img_error_flag = true;
                             break;
                         }
@@ -5167,7 +5167,7 @@ class BoardWriter_for_daily_record{
                     check_app_version(data.app_version);
                     if(data.messageArray != undefined) {
                         if (data.messageArray.length > 0) {
-                            show_error_message(data.messageArray);
+                            show_error_message({title:data.messageArray});
                             return false;
                         }
                     }
@@ -5180,8 +5180,7 @@ class BoardWriter_for_daily_record{
                 },
 
                 error:function(){
-                    //alert('통신이 불안정합니다.');
-                    show_error_message('통신이 불안정합니다.');
+                    show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                 }
             });
         });
@@ -5278,11 +5277,11 @@ class BoardWriter_for_daily_record{
         this.data.content = content_value;
 
         if(this.data.title == null){
-            show_error_message("제목을 입력해주세요.");
+            show_error_message({title:"제목을 입력해주세요."});
             return false;
         }
         if(this.data.content.length <= 1 && this.data.visibility.content != HIDE){
-            show_error_message("내용을 입력해주세요.");
+            show_error_message({title:"내용을 입력해주세요."});
             return false;
         }
         if(this.data.category.length > 0){
@@ -5293,14 +5292,14 @@ class BoardWriter_for_daily_record{
                 }
             }
             if(selected_value_ok == false){
-                show_error_message("카테고리를 선택해주세요.");
+                show_error_message({title:"카테고리를 선택해주세요."});
                 return false;
             }
         }
 
         if(this.data.content.match(/<img/g) != null){
             if(this.data.content.match(/img/g).length > 2){
-                show_error_message("이미지는 2장만 첨부 가능합니다.");
+                show_error_message({title:"이미지는 2장만 첨부 가능합니다."});
                 return false;
             }
         }

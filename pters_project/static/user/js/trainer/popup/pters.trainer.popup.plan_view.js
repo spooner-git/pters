@@ -327,15 +327,15 @@ class Plan_view{
                 daily_record:{text:"일지", callback:()=>{
                     layer_popup.close_layer_popup();
                     Plan_daily_record_func.write_artice(this.data.member_schedule_id[0], this.data.member_name[0], ()=>{
-                        show_error_message(`[${this.data.member_name[0]}] 일지 변경사항이 저장 되었습니다.`);
+                        show_error_message({title:`[${this.data.member_name[0]}] 일지 변경사항이 저장 되었습니다.`});
                     }, ()=>{
-                        show_error_message(`<span style="color:var(--font-highlight)">일지 변경사항 저장에 실패 하였습니다.</span>`);
+                        show_error_message({title:`<span style="color:var(--font-highlight)">일지 변경사항 저장에 실패 하였습니다.</span>`});
                     });
                 }},
                 sign_image:{text:"출석 서명 확인", callback:()=>{
                     layer_popup.close_layer_popup();
                     show_error_message(
-                        `<img src="https://s3.ap-northeast-2.amazonaws.com/pters-image-master/${this.data.member_schedule_id[0]}.png" style="width:100%;filter:var(--transform-invert);" onerror="this.onerror=null;this.src='/static/common/icon/icon_no_signature.png'">`
+                        {title:`<img src="https://s3.ap-northeast-2.amazonaws.com/pters-image-master/${this.data.member_schedule_id[0]}.png" style="width:100%;filter:var(--transform-invert);" onerror="this.onerror=null;this.src='/static/common/icon/icon_no_signature.png'">`}
                     );
                 }},
                 schedule_history:{text:"일정 이력", callback:()=>{
@@ -355,7 +355,8 @@ class Plan_view{
             }
 
             let options_padding_top_bottom = 16;
-            let button_height = 8 + 8 + 52;
+            // let button_height = 8 + 8 + 52;
+            let button_height = 52;
             let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
             let root_content_height = $root_content.height();
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
@@ -457,15 +458,15 @@ class Plan_view{
                         daily_record:{text:"일지", callback:()=>{
                             layer_popup.close_layer_popup();
                             Plan_daily_record_func.write_artice(member_schedule_id, member_name, ()=>{
-                                show_error_message(`[${member_name}] 일지 변경사항이 저장 되었습니다.`);
+                                show_error_message({title:`[${member_name}] 일지 변경사항이 저장 되었습니다.`});
                             }, ()=>{
-                                show_error_message(`<span style="color:var(--font-highlight)">일지 변경사항 저장에 실패 하였습니다.</span>`);
+                                show_error_message({title:`<span style="color:var(--font-highlight)">일지 변경사항 저장에 실패 하였습니다.</span>`});
                             }); 
                         }},
                         sign_image:{text:"출석 서명 확인", callback:()=>{
                             layer_popup.close_layer_popup();
                             show_error_message(
-                                `<img src="https://s3.ap-northeast-2.amazonaws.com/pters-image-master/${member_schedule_id}.png" style="width:100%;filter:var(--transform-invert);" onerror="this.onerror=null;this.src='/static/common/icon/icon_no_signature.png'">`
+                                {title:`<img src="https://s3.ap-northeast-2.amazonaws.com/pters-image-master/${member_schedule_id}.png" style="width:100%;filter:var(--transform-invert);" onerror="this.onerror=null;this.src='/static/common/icon/icon_no_signature.png'">`}
                             );
                         }},
                         schedule_history:{text:"일정 이력", callback:()=>{
@@ -484,7 +485,8 @@ class Plan_view{
                     }
 
                     let options_padding_top_bottom = 16;
-                    let button_height = 8 + 8 + 52;
+                    // let button_height = 8 + 8 + 52;
+                    let button_height = 52;
                     let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
                     let root_content_height = $root_content.height();
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
@@ -754,12 +756,12 @@ class Plan_view{
 
     upper_right_menu(number){
         let user_option = [
-            ()=>{ show_user_confirm(`정말 ${this.data.schedule_type != "0" ? this.data.lecture_name : 'OFF'} 일정을 취소하시겠습니까?`, ()=>{
+            ()=>{ show_user_confirm({title:`정말 ${this.data.schedule_type != "0" ? this.data.lecture_name : 'OFF'} 일정을 취소하시겠습니까?`}, ()=>{
                     let inspect = pass_inspector.schedule_delete();
                     if(inspect.barrier == BLOCKED){
                         let message = `${inspect.limit_type}`;
                         layer_popup.close_layer_popup();
-                        show_error_message(message);
+                        show_error_message({title:message});
                         return false;
                     }
                     
@@ -897,7 +899,7 @@ class Plan_view{
                 let message = `${inspect.limit_type}`;
                 layer_popup.close_layer_popup();
                 this.clear();
-                show_error_message(message);
+                show_error_message({title:message});
                 return false;
             }
             
@@ -906,7 +908,8 @@ class Plan_view{
                 cancel:{text:"아무것도 변경하지 않음", callback:()=>{ layer_popup.close_layer_popup();layer_popup.close_layer_popup();this.clear();}}
             };
             let options_padding_top_bottom = 16;
-            let button_height = 8 + 8 + 52;
+            // let button_height = 8 + 8 + 52;
+            let button_height = 52;
             let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
             let root_content_height = $root_content.height();
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
@@ -921,7 +924,7 @@ class Plan_view{
         let start_dt = DateRobot.to_yyyymmdd(this.data.date.year, this.data.date.month, this.data.date.date) + ' ' + this.data.start_time;
         let end_dt = DateRobot.to_yyyymmdd(this.data.date.year, this.data.date.month, this.data.date.date) + ' ' + this.data.end_time;
         if(start_dt == end_dt){
-            show_error_message("종료 시간을 다시 선택해주세요.");
+            show_error_message({title:"종료 시간을 다시 선택해주세요."});
             return false;
         }
 

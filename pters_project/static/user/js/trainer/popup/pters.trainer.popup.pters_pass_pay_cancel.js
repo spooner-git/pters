@@ -152,7 +152,7 @@ class Pters_pass_pay_cancel{
             : {"height":"40px", "line-height":"40px", "padding":"0", "font-size":"14px", "font-weight":"500", "background-color":"var(--bg-highlight)", "color":"var(--font-invisible)"};
         let onclick = ()=>{
             if(this.data.cancel_type == null){
-                show_error_message("해지 사유를 선택해주세요.");
+                show_error_message({title:"해지 사유를 선택해주세요."});
             }else{
                 // alert("해지 신청 실행");
                 this.event_excute();
@@ -169,7 +169,7 @@ class Pters_pass_pay_cancel{
             let cancel_reason = this.data.cancel_reason;
             let callback = ()=>{
                 layer_popup.close_layer_popup();
-                show_error_message("신청 다음 달 부터 정기 결제가 종료됩니다.");
+                show_error_message({title:"신청 다음 달 부터 정기 결제가 종료됩니다."});
                 pters_pass_main_popup.init();
             };
             Pters_pass_func.request_payment_close(customer_uid, cancel_type, cancel_reason, callback);

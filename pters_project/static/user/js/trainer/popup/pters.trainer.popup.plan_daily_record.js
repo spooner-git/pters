@@ -221,7 +221,7 @@ class Plan_daily_record_func{
                                     "contents":data_written.content, "is_member_view":data_written.is_member_view};
                             Plan_daily_record_func.create(data, ()=>{
                                 if(i == schedule_id_array.length - 1){
-                                    show_error_message("일괄 일지 등록이 정상적으로 완료 되었습니다.")
+                                    show_error_message({title:"일괄 일지 등록이 정상적으로 완료 되었습니다."})
                                     if(callback != undefined){
                                         callback();
                                     }
@@ -314,10 +314,10 @@ class Plan_daily_record_func{
     }
 
     static delete_article(schedule_id, schedule_name, callback, error_callback){
-        show_user_confirm(`정말 [${schedule_name}] 일지를 삭제 하시겠습니까?`, ()=>{
+        show_user_confirm({title:`정말 [${schedule_name}] 일지를 삭제 하시겠습니까?`}, ()=>{
             layer_popup.close_layer_popup();
             Plan_daily_record_func.delete({"schedule_id":schedule_id}, ()=>{
-                show_error_message("정상적으로 일지가 삭제 되었습니다.");
+                show_error_message({title:"정상적으로 일지가 삭제 되었습니다."});
                 if(callback != undefined){
                     callback();
                 }
@@ -348,7 +348,7 @@ class Plan_daily_record_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -368,7 +368,7 @@ class Plan_daily_record_func{
                     error_callback();
                 }
                 console.log('server error');
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생 \n 잠시후 다시 시도해주세요.'});
             }
         });
     }
@@ -392,7 +392,7 @@ class Plan_daily_record_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -412,7 +412,7 @@ class Plan_daily_record_func{
                     error_callback();
                 }
                 console.log('server error');
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생 \n 잠시후 다시 시도해주세요.'});
             }
         });
     }
@@ -436,7 +436,7 @@ class Plan_daily_record_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -456,7 +456,7 @@ class Plan_daily_record_func{
                     error_callback();
                 }
                 console.log('server error');
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
             }
         });
     }
@@ -480,7 +480,7 @@ class Plan_daily_record_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -500,7 +500,7 @@ class Plan_daily_record_func{
                     error_callback();
                 }
                 console.log('server error');
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
             }
         });
     }
@@ -524,7 +524,7 @@ class Plan_daily_record_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -544,7 +544,7 @@ class Plan_daily_record_func{
                     error_callback();
                 }
                 console.log('server error');
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
             }
         });
     }
@@ -569,7 +569,7 @@ class Plan_daily_record_func{
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
                         console.log(data.messageArray)
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -589,7 +589,7 @@ class Plan_daily_record_func{
                     error_callback();
                 }
                 console.log('server error');
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
             }
         });
     }

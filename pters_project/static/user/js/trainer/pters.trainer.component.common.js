@@ -247,7 +247,7 @@ class CComponent{
             $(document).off('click', `#select_ticket_row_${ticket_id}`).on('click', `#select_ticket_row_${ticket_id}`, function(e){
                 if(!$(this).find('.cell_ticket_selected').hasClass('ticket_selected')){
                     if($(`.str_${location} .ticket_selected`).length >= multiple_select){
-                        show_error_message(`${multiple_select} 개까지 선택할 수 있습니다.`);
+                        show_error_message({title:`${multiple_select} 개까지 선택할 수 있습니다.`});
                         return false;
                     }
                     $(this).find('.cell_ticket_selected').addClass('ticket_selected');
@@ -294,7 +294,7 @@ class CComponent{
             $(document).off('click', `#select_lecture_row_${lecture_id}`).on('click', `#select_lecture_row_${lecture_id}`, function(e){
                 if(!$(this).find('.cell_lecture_selected').hasClass('lecture_selected')){
                     if($(`.slr_${location} .lecture_selected`).length >= multiple_select){
-                        show_error_message(`${multiple_select} 개까지 선택할 수 있습니다.`);
+                        show_error_message({title:`${multiple_select} 개까지 선택할 수 있습니다.`});
                         return false;
                     }
                     // $(this).find('.cell_lecture_selected img').addClass('lecture_selected');
@@ -358,7 +358,7 @@ class CComponent{
                 let member_select_count = $(`.smr_${location} .member_selected`).length;
                 if(!$(this).find('.cell_member_selected').hasClass('member_selected')){
                     if($(`.smr_${location} .member_selected`).length >= multiple_select){
-                        show_error_message(`${multiple_select} 명까지 선택할 수 있습니다.`);
+                        show_error_message({title:`${multiple_select} 명까지 선택할 수 있습니다.`});
                         return false;
                     }
                     $(this).find('.cell_member_selected').addClass('member_selected');
@@ -410,7 +410,7 @@ class CComponent{
             $(document).off('click', `#select_color_row_${color_bg_code_without_sharp}`).on('click', `#select_color_row_${color_bg_code_without_sharp}`, function(e){
                 if(!$(this).find('.cell_color_selected').hasClass('color_selected')){
                     if($(`.scr_${location} .color_selected`).length >= multiple_select){
-                        show_error_message(`${multiple_select} 개까지 선택할 수 있습니다.`);
+                        show_error_message({title:`${multiple_select} 개까지 선택할 수 있습니다.`});
                         return false;
                     }
                     // $(this).find('.cell_color_selected img').addClass('color_selected');
@@ -459,7 +459,7 @@ class CComponent{
             $(document).off('click', `#select_row_${id}`).on('click', `#select_row_${id}`, function(e){
                 if(!$(this).find('.cell_select_selected').hasClass('option_selected')){
                     if($(`.sr_${location} .option_selected`).length >= multiple_select){
-                        show_error_message(`${multiple_select} 개까지 선택할 수 있습니다.`);
+                        show_error_message({title:`${multiple_select} 개까지 선택할 수 있습니다.`});
                         return false;
                     }
                     // $(this).find('.cell_select_selected img').addClass('option_selected');
@@ -1426,7 +1426,7 @@ class LimitChar{
         var temp = $(selector).val();
         if(limit.test(temp)){
             $(selector).val(temp.replace(limit, ""));
-            show_error_message("숫자만 입력하실 수 있습니다.");
+            show_error_message({title:"숫자만 입력하실 수 있습니다."});
         }
     }
 
@@ -1435,7 +1435,7 @@ class LimitChar{
         var temp = $(selector).val();
         if(limit.test(temp)){
             $(selector).val(temp.replace(limit, ""));
-            show_error_message("- 와 _ 를 제외한 특수문자는 입력하실 수 없습니다.");
+            show_error_message({title:"- 와 _ 를 제외한 특수문자는 입력하실 수 없습니다."});
         }
     }
 }
