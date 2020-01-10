@@ -4,8 +4,6 @@
 let layer_popup = (function (){
     let popup_array = [];
     let windowHeight = window.innerHeight;
-    
-    let now_opening = false;
 
     function func_open_layer_popup (popup_name, popup_size, animation_type){
         // $('.content_page').css('overflow-y', 'hidden');
@@ -103,11 +101,6 @@ let layer_popup = (function (){
     return {
         "open_layer_popup":function(call_method, popup_name, popup_size, animation_type, data, callback){
             // if(func_prevent_double_click_set()) return;
-            if(now_opening == true){
-                return;
-            }
-            now_opening = true;
-            setTimeout(()=>{now_opening = false;}, 300);
 
             if(call_method == POPUP_AJAX_CALL){
                 func_get_popup_ajax(popup_name, data, ()=>{
@@ -157,18 +150,10 @@ let layer_popup = (function (){
         },
 
         "close_layer_popup": function (popup_size) {
-            if(now_opening == true){
-                return;
-            }
-
             let popup_data = func_close_layer_popup(popup_size);
             this.animation_set(CLOSE, popup_data);
         },
         "all_close_layer_popup": function () {
-            if(now_opening == true){
-                return;
-            }
-
             let popup_data = func_all_close_layer_popup();
             this.animation_set(CLOSE, popup_data);
         },

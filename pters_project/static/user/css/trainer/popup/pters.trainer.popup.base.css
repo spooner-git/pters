@@ -29,12 +29,18 @@
             position: sticky;
             position: -webkit-sticky;
             top: 0;
-            background-color: var(--bg-main);
+            /* background-color: var(--bg-main); */
             box-sizing: border-box;
             border-bottom: var(--border-article);
             position: fixed;
             width: 100%;
             z-index: 2;
+        }
+        @media(min-width:650px){
+            .popup_mobile .wrapper_top{
+                border-top-right-radius: 10px;
+                border-top-left-radius: 10px;
+            }
         }
             .popup_mobile .wrapper_top .logo_pters{
                 width: 80px;

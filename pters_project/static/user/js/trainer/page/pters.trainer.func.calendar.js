@@ -1495,8 +1495,12 @@ class Calendar {
                                                 ${CComponent.text_button ("calendar_week_next", CImg.arrow_left("", {"width":"28px", "vertical-align":"top", "transform":"rotate(180deg)"}), null, ()=>{this.move_week('next');})}
                                             </div>
                                             <div class="cal_tools_wrap">
-                                                <div class="go_today" onclick="${this.instance}.go_week()">${CImg.today()}</div>
-                                                <div class="add_plan" onclick="${this.instance}.add_plan_button()">${CImg.plus()}</div>
+                                                <div class="go_today" onclick="event.stopPropagation();${this.instance}.go_week()">
+                                                    ${CImg.today()}
+                                                </div>
+                                                <div class="add_plan" onclick="event.stopPropagation();${this.instance}.add_plan_button()">
+                                                    ${CImg.plus()}
+                                                </div>
                                             </div>
                                         </div>
                                         `             
