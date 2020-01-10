@@ -551,7 +551,8 @@ class Member_add{
     }
 
     dom_row_end_date_simple_input_machine(){
-        let button_style = {"flex":"1 1 0", "padding":"10px 8px", "color":"var(--font-sub-dark)"};
+        // let button_style = {"flex":"1 1 0", "padding":"10px 8px", "color":"var(--font-sub-normal)"};
+        let button_style = {"flex":"1 1 0", "padding":"6px 0px", "color":"var(--font-sub-normal)", "background-color":"var(--bg-light)", "border-radius":"3px"};
 
         let button_week_2 = CComponent.button ("button_week_2", "+ 7일", button_style, ()=>{
             if(this.data.start_date == null){
@@ -637,8 +638,10 @@ class Member_add{
             this.render_content();
         });
         
-        let wrapper_style = "display:flex;padding:0px 0 0px 20px;font-size:12px;";
-        let divider_style = "flex-basis:1px;height:20px;margin-top:10px;background-color:var(--bg-light);display:none;";
+        // let wrapper_style = "display:flex;padding:0px 0 0px 20px;font-size:12px;";
+        // let divider_style = "flex-basis:1px;height:20px;margin-top:10px;background-color:var(--bg-light);display:none;";
+        let wrapper_style = "display:flex;padding:0px 0 0px 40px;font-size:12px;";
+        let divider_style = "flex-basis:8px;height:20px;margin-top:10px;background-color:var(--bg-invisible);";
         let html = `<div style="${wrapper_style}">
                         ${button_week_2} <div style="${divider_style}"></div>
                         ${button_month_1} <div style="${divider_style}"></div>
@@ -680,7 +683,8 @@ class Member_add{
     }
 
     dom_row_count_simple_input_machine(){
-        let button_style = {"flex":"1 1 0", "padding":"10px 8px", "color":"var(--font-sub-dark)"};
+        // let button_style = {"flex":"1 1 0", "padding":"10px 8px", "color":"var(--font-sub-normal)"};
+        let button_style = {"flex":"1 1 0", "padding":"6px 0px", "color":"var(--font-sub-normal)", "background-color":"var(--bg-light)", "border-radius":"3px"};
 
         let button_limitless = CComponent.button ("button_limitless", "무제한", button_style, ()=>{ this.data.ticket_reg_count[0] = 99999;this.render_content(); });
         let button_50 = CComponent.button ("button_50c", "+ 50회", button_style, ()=>{ this.data.ticket_reg_count[0] = Number(this.data.ticket_reg_count[0]) + 50;this.render_content(); });
@@ -688,8 +692,10 @@ class Member_add{
         let button_1 = CComponent.button ("button_1c", "+ 1회", button_style, ()=>{ this.data.ticket_reg_count[0] = Number(this.data.ticket_reg_count[0]) + 1;this.render_content(); });
         let button_delete = CComponent.button ("button_delete_c", "지우기", button_style, ()=>{ this.data.ticket_reg_count[0] = null;this.render_content(); });
         
-        let wrapper_style = "display:flex;padding:0px 0 0px 20px;font-size:12px;";
-        let divider_style = "flex-basis:1px;height:20px;margin-top:10px;background-color:var(--bg-light);display:none;";
+        // let wrapper_style = "display:flex;padding:0px 0 0px 20px;font-size:12px;";
+        // let divider_style = "flex-basis:1px;height:20px;margin-top:10px;background-color:var(--bg-light);display:none;";
+        let wrapper_style = "display:flex;padding:0px 0 0px 40px;font-size:12px;";
+        let divider_style = "flex-basis:8px;height:20px;margin-top:10px;background-color:var(--bg-invisible);";
         let html = `<div style="${wrapper_style}">
                         ${button_1} <div style="${divider_style}"></div>
                         ${button_10} <div style="${divider_style}"></div>
@@ -726,7 +732,8 @@ class Member_add{
     }
 
     dom_row_price_simple_input_machine(){
-        let button_style = {"flex":"1 1 0", "padding":"10px 8px", "color":"var(--font-sub-dark)"};
+        // let button_style = {"flex":"1 1 0", "padding":"10px 8px", "color":"var(--font-sub-normal)"};
+        let button_style = {"flex":"1 1 0", "padding":"6px 0px", "color":"var(--font-sub-normal)", "background-color":"var(--bg-light)", "border-radius":"3px"};
 
         let button_100 = CComponent.button ("button_100", "+ 100만", button_style, ()=>{ this.data.ticket_price = Number(this.data.ticket_price) + 1000000;this.render_content(); });
         let button_50 = CComponent.button ("button_50", "+ 50만", button_style, ()=>{ this.data.ticket_price = Number(this.data.ticket_price) + 500000;this.render_content(); });
@@ -734,8 +741,10 @@ class Member_add{
         let button_1 = CComponent.button ("button_1", "+ 1만", button_style, ()=>{ this.data.ticket_price = Number(this.data.ticket_price) + 10000;this.render_content(); });
         let button_delete = CComponent.button ("button_delete", "지우기", button_style, ()=>{ this.data.ticket_price = [null];this.render_content(); });
         
-        let wrapper_style = "display:flex;padding:0px 0 0px 20px;font-size:12px;";
-        let divider_style = "flex-basis:1px;height:20px;margin-top:10px;background-color:var(--bg-light);display:none;";
+        // let wrapper_style = "display:flex;padding:0px 0 0px 20px;font-size:12px;";
+        // let divider_style = "flex-basis:1px;height:20px;margin-top:10px;background-color:var(--bg-light);display:none;";
+        let wrapper_style = "display:flex;padding:0px 0 0px 40px;font-size:12px;";
+        let divider_style = "flex-basis:8px;height:20px;margin-top:10px;background-color:var(--bg-invisible);";
         let html = `<div style="${wrapper_style}">
                         ${button_100} <div style="${divider_style}"></div>
                         ${button_50} <div style="${divider_style}"></div>
