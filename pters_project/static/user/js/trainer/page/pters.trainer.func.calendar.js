@@ -1495,10 +1495,10 @@ class Calendar {
                                                 ${CComponent.text_button ("calendar_week_next", CImg.arrow_left("", {"width":"28px", "vertical-align":"top", "transform":"rotate(180deg)"}), null, ()=>{this.move_week('next');})}
                                             </div>
                                             <div class="cal_tools_wrap">
-                                                <div class="go_today" onclick="event.stopPropagation();${this.instance}.go_week()">
+                                                <div class="go_today" onclick="${this.instance}.go_week()">
                                                     ${CImg.today()}
                                                 </div>
-                                                <div class="add_plan" onclick="event.stopPropagation();${this.instance}.add_plan_button()">
+                                                <div class="add_plan" onclick="${this.instance}.add_plan_button()">
                                                     ${CImg.plus()}
                                                 </div>
                                             </div>
@@ -1552,6 +1552,7 @@ class Calendar {
             });
 
             selector_body.off('touchmove').on('touchmove', (e) => {
+                e.stopPropagation();
                 tm = e.originalEvent.touches[0].clientX;
                 tmy = e.originalEvent.touches[0].clientY;
 
@@ -1561,7 +1562,7 @@ class Calendar {
 
                 if( Math.abs(ts - tm) > Math.abs(tsy - tmy)){
                     if(swiper_x == false){
-                        $('#root_content').on('touchmove', (e) => {
+                        $('#root_content').off('touchmove').on('touchmove', (e) => {
                             if(e.cancelable){
                                 e.preventDefault();
                                 e.stopPropagation();
