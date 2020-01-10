@@ -23,12 +23,12 @@
     height: auto;
     min-height: 65px;
     /* 아래  .wrapper_popup_basic_comment > p 주석처리랑 쌍으로 묶임, 아래 주석지우면 height 65px로 */
-
+    
     display: table;
     width: 100%;
-    
 }
-.wrapper_popup_basic_comment > p{
+
+.wrapper_popup_basic_comment > div{
     margin: 0;
     width:  100%;
     /* padding: 0 15px; */
@@ -40,6 +40,18 @@
     transform: translate(-50%, -50%); */
     display: table-cell;
     vertical-align: middle;
+    word-break: keep-all;
+}
+
+.wrapper_popup_basic_comment > div > .popup_title{
+    margin: 0;
+    font-size: 14px;
+}
+.wrapper_popup_basic_comment > div > .popup_comment{
+    margin-bottom: 0;
+    /* margin-top: 10px; */
+    font-size: 12.5px;
+    font-weight: normal;
 }
 
 .wrapper_popup_basic_buttons{

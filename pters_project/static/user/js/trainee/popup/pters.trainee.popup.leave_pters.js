@@ -153,7 +153,7 @@ class Leave_pters{
             : {"height":"40px", "line-height":"40px", "padding":"0", "font-size":"14px", "font-weight":"500", "background-color":"var(--bg-highlight)", "color":"var(--font-invisible)"};
         let onclick = ()=>{
             if(this.data.cancel_type == null){
-                show_error_message("사유를 선택해주세요.");
+                show_error_message({title:"사유를 선택해주세요."});
             }else{
                 this.event_excute();
             }
@@ -218,7 +218,7 @@ class Leave_pters_func{
                 // check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -235,7 +235,7 @@ class Leave_pters_func{
             //통신 실패시 처리
             error:function (){
                 console.log('server error');
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
             }
         });
     }

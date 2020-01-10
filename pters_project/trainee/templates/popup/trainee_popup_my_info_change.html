@@ -93,7 +93,7 @@
         function func_send_my_info_change(){
             let tel_validation = func_check_tel_format_validity();
             if(tel_validation == false){
-                show_error_message('전화번호는 숫자만 입력해주세요.');
+                show_error_message({title:'전화번호는 숫자만 입력해주세요.'});
                 return false;
             }
 
@@ -114,10 +114,10 @@
                     let error_message = jsondata.messageArray;
                     if(error_message.length > 0){
                         layer_popup.close_layer_popup();
-                        show_error_message(error_message[0]);
+                        show_error_message({title:error_message[0]});
                     }else{
                         layer_popup.close_layer_popup();
-                        show_error_message("정보를 변경했습니다.");
+                        show_error_message({title:"정보를 변경했습니다."});
                         location.reload(true);
                     }
                     
@@ -174,7 +174,7 @@
                     $('#id_activation_confirm_button').css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2', 'pointer-events':'none'});
                     $id_activation_code.attr('data-valid', 'true');
                     $('#activation_timer').text("");
-                    show_error_message('휴대폰 번호가 변경되었습니다.');
+                    show_error_message({title:'휴대폰 번호가 변경되었습니다.'});
                     location.reload(true);
                 }
             },

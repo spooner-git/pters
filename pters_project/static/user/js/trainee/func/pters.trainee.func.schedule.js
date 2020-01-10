@@ -34,7 +34,7 @@ function func_schedule(data, call_method, type){
 
                 if(error_message.length>0){
                     layer_popup.close_layer_popup();
-                    show_error_message(error_message[0]);
+                    show_error_message({title:error_message[0]});
                 }else{
                     // if(jsondata.push_class_id.length>0){
                     //     for(var i=0; i<jsondata.push_class_id.length; i++) {
