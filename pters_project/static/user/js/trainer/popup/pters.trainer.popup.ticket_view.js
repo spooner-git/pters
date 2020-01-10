@@ -787,7 +787,7 @@ class Ticket_view{
 
                     //     return false;
                     // }
-                    show_user_confirm({title:"복제", comment:`이 수강권의 정보와 같은 수강권을 <br>복제하여 생성합니다.`}, ()=>{
+                    show_user_confirm({title:"이 수강권의 복제 수강권을 생성하시겠습니까?"}, ()=>{
                         let auth_inspect = pass_inspector.ticket_create();
                         if(auth_inspect.barrier == BLOCKED){
                             let message = `${auth_inspect.limit_type}`;
