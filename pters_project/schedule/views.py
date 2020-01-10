@@ -92,8 +92,9 @@ def check_schedule_logic(request):
         lecture_info = schedule_input_form.get_lecture_info()
         member_list = schedule_input_form.get_member_list(class_id)
 
-        if len(member_list) == 0:
-            error = '회원을 선택해주세요.'
+        if lecture_info is not None and lecture_info.lecture_type_cd == LECTURE_TYPE_ONE_TO_ONE:
+            if len(member_list) == 0:
+                error = '회원을 선택해주세요.'
 
         if error is None:
             # 그룹 레슨이거나 개인 레슨인 경우
