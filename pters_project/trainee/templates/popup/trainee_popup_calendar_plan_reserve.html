@@ -142,7 +142,7 @@
                 if(!compare_time(cancel_enable_time, select_time)){
                     func_schedule($('#form_plan_add').serialize(), CALL_AJAX, ADD);
                 }else{
-                    show_user_confirm(`예약 취소가 불가능한 시간입니다.<br/> 정말 등록하시겠습니까?`, ()=>{
+                    show_user_confirm({title:`예약 취소가 불가능한 시간입니다.`,comment:`정말 등록하시겠습니까?`}, ()=>{
                                             func_schedule(`'${$('#form_plan_add').serialize()}'`, `${CALL_AJAX}`, `${ADD}`);
                                             });
 

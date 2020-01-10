@@ -230,7 +230,7 @@ class Mypage_photo_update{
 
     send_data(){
         let data = {"photo": this.data.src};
-        show_user_confirm(`<img src="${this.data.src}" style="width:100%;border-radius:50%;">`,  ()=>{
+        show_user_confirm({title:`<img src="${this.data.src}" style="width:100%;border-radius:50%;">`},  ()=>{
                             let form_data = new FormData();
                             form_data.append('profile_img_file', this.data.file);
                             $.ajax({

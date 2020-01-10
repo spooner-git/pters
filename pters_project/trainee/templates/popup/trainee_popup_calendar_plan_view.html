@@ -86,7 +86,7 @@
 
                         {% if schedule_info.state_cd != 'PE' and schedule_info.state_cd != 'PC' %}
                             <div class="obj_table_cell_x2 obj_button_gen obj_font_bg_coral_trans"
-                                 onclick="show_user_confirm(`정말 취소하시겠습니까?`, ()=>{
+                                 onclick="show_user_confirm({title:`정말 취소하시겠습니까?`}, ()=>{
                                             func_schedule({'schedule_id':'{{ schedule_info.schedule_id }}'}, `${CALL_AJAX}`, `${DELETE}`);
                                             });">취소하기</div>
                         {% endif %}
