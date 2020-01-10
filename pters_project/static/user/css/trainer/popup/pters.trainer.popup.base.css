@@ -29,7 +29,7 @@
             position: sticky;
             position: -webkit-sticky;
             top: 0;
-            /* background-color: var(--bg-main); */
+            background-color: var(--bg-main);
             box-sizing: border-box;
             border-bottom: var(--border-article);
             position: fixed;
