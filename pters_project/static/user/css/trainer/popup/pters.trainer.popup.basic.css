@@ -33,7 +33,7 @@
     margin: 0;
     width:  100%;
     /* padding: 0 15px; */
-    padding: 25px 15px;
+    padding: 25px 10px;
     box-sizing: border-box;
     /* position: absolute;
     top: 50%;
@@ -47,6 +47,7 @@
 .wrapper_popup_basic_comment > div > .popup_title{
     margin: 0;
     font-size: 14px;
+    font-weight: bold;
 }
 .wrapper_popup_basic_comment > div > .popup_comment{
     margin-bottom: 0;
