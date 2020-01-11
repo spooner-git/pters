@@ -1067,7 +1067,9 @@ class Calendar {
                             
 
                             return `<div data-scheduleid="${plan.schedule_id}" onclick="event.stopPropagation();${onclick}" class="calendar_schedule_display_week ${long_touch_active} ${go_behind}" 
-                                        style="${styles}" ontouchstart="${this.instance}.longtouchstart(this, ()=>{})" ontouchend="${this.instance}.longtouchend(event)">
+                                        style="${styles}" ontouchstart="
+                                        
+                                        ${this.instance}.longtouchstart(this, ()=>{})" ontouchend="event.stopPropagation();${this.instance}.longtouchend(event)">
                                         ${plan_name}
                                     </div>`;
                         })
@@ -1519,7 +1521,7 @@ class Calendar {
                                   </div>
                                   `
                 ,
-                "initial_page":`<div id="${this.subtargetHTML}_"><div id="cal_display_panel"><span></span></div><div id="${this.subtargetHTML}"><div id="page${this.current_page_num}" class="pages" style="left:0px;"></div></div></div>`
+                "initial_page":`<div id="${this.subtargetHTML}"><div id="cal_display_panel"><span></span></div><div id="page${this.current_page_num}" class="pages" style="left:0px;"></div>.</div>`
             }
         );
     }
@@ -1551,8 +1553,11 @@ class Calendar {
                 tsy = e.originalEvent.touches[0].clientY;
             });
 
+            $('#cal_display_panel').off('touchmove').on('touchmove', (e)=>{
+                e.stopPropagation();
+            });
+
             selector_body.off('touchmove').on('touchmove', (e) => {
-                console.log(e)
                 // e.stopPropagation();
                 tm = e.originalEvent.touches[0].clientX;
                 tmy = e.originalEvent.touches[0].clientY;
