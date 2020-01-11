@@ -121,6 +121,12 @@ const TICKET_PAY_METHOD = {
     "CASH+TRANS":"현금 + 계좌 이체"
 };
 
+// 일지 공개 타입
+const DAILY_RECORD_OPEN_TYPE = {
+    0:"나만 보기", 
+    1:"수강 회원님과 공유"
+};
+
 /* 정렬 관련된 값 */
 const SORT_MEMBER_NAME = 0;
 const SORT_REMAIN_COUNT = 1;

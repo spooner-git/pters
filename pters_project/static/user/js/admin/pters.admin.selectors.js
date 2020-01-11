@@ -4521,7 +4521,9 @@ class BoardWriter{
             visibility:{
                 title:SHOW,
                 content:SHOW
-            }
+            },
+            upper_html:null,
+            placeholder:"내용을 입력해주세요."
         };
         // this.init();
         this.set_initial_data();
@@ -4649,7 +4651,8 @@ class BoardWriter{
         let icon_r_visible = SHOW;
         let icon_r_text = this.data.category_selected[category_id].text.length == 0 ? '' : this.data.category_selected[category_id].text;
         // let style = {"display":"inline-block", 'padding':"16px", "padding-right":"0", "width":"43%", "min-width":"170px", "max-width":"208px", "font-size":"14px"};
-        let style = {"display":"inline-block", 'padding':"16px", "padding-right":"0", "width":"43%", "min-width":"300px", "max-width":"320px", "font-size":"14px"};
+        // let style = {"display":"inline-block", 'padding':"16px", "padding-right":"0", "width":"43%", "min-width":"300px", "max-width":"320px", "font-size":"14px"};
+        let style = {"display":"inline-block", 'padding':"16px", "padding-right":"0", "width":`${ this.data.category.length > 1 ? "50%" : "100%"}`, "height":"56px", "font-size":"14px", "box-sizing":"border-box"};
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             let title = category_title;
             let install_target = "#wrapper_box_custom_select";
@@ -4687,7 +4690,7 @@ class BoardWriter{
             minHeight: 150,
             maxHeight:summer_note_textarea_height,
             fontSizes:['12', '14', '16'],
-            placeholder: "내용을 입력해주세요.",
+            placeholder: this.data.placeholder,
             tabsize: 2,
             lang: 'ko-KR',
             toolbar: [
@@ -4729,8 +4732,9 @@ class BoardWriter{
         if(this.data.content == "" || this.data.content == null){
             this.data.content = " "
         }
-
-        $(`#board_writer_content_input`).summernote('code', this.data.content);
+        if(this.data.content != " "){
+            $(`#board_writer_content_input`).summernote('code', this.data.content);
+        }
         $('.note-editable').blur();
     }
 

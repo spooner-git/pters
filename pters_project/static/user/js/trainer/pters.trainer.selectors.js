@@ -4607,7 +4607,13 @@ class BoardWriter{
             ],
             category_selected:{
                 
-            }
+            },
+            visibility:{
+                title:SHOW,
+                content:SHOW
+            },
+            upper_html:null,
+            placeholder:"내용을 입력해주세요."
         };
         // this.init();
         this.set_initial_data();
@@ -4735,7 +4741,8 @@ class BoardWriter{
         let icon_r_visible = SHOW;
         let icon_r_text = this.data.category_selected[category_id].text.length == 0 ? '' : this.data.category_selected[category_id].text;
         // let style = {"display":"inline-block", 'padding':"16px", "padding-right":"0", "width":"43%", "min-width":"170px", "max-width":"208px", "font-size":"14px"};
-        let style = {"display":"inline-block", 'padding':"16px", "padding-right":"0", "width":"43%", "min-width":"300px", "max-width":"320px", "font-size":"14px"};
+        // let style = {"display":"inline-block", 'padding':"16px", "padding-right":"0", "width":"43%", "min-width":"300px", "max-width":"320px", "font-size":"14px"};
+        let style = {"display":"inline-block", 'padding':"16px", "padding-right":"0", "width":`${ this.data.category.length > 1 ? "50%" : "100%"}`, "height":"56px", "font-size":"14px", "box-sizing":"border-box"};
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             let title = category_title;
             let install_target = "#wrapper_box_custom_select";
@@ -4773,7 +4780,7 @@ class BoardWriter{
             minHeight: 150,
             maxHeight:summer_note_textarea_height,
             fontSizes:['12', '14', '16'],
-            placeholder: "내용을 입력해주세요.",
+            placeholder: this.data.placeholder,
             tabsize: 2,
             lang: 'ko-KR',
             toolbar: [
@@ -4815,8 +4822,9 @@ class BoardWriter{
         if(this.data.content == "" || this.data.content == null){
             this.data.content = " "
         }
-
-        $(`#board_writer_content_input`).summernote('code', this.data.content);
+        if(this.data.content != " "){
+            $(`#board_writer_content_input`).summernote('code', this.data.content);
+        }
         $('.note-editable').blur();
     }
 
@@ -4920,8 +4928,13 @@ class BoardWriter_for_daily_record{
             category_selected:{
                 
             },
+            visibility:{
+                title:SHOW,
+                content:SHOW
+            },
+            upper_html:null,
+            placeholder:"내용을 입력해주세요.",
             schedule_id:null,
-            is_member_view:false,
             images: {}
         };
         // this.init();
@@ -4955,7 +4968,7 @@ class BoardWriter_for_daily_record{
         let top_right = `<span class="icon_right"  onclick="${this.target.instance}.upper_right_menu();">
                             <span style="color:var(--font-highlight);font-weight: 500;">저장</span>
                         </span>`;
-        let content =   `<section id="${this.target.upper_html}" style="height:100px;overflow:auto;">${this.data.upper_html != null ? this.data.upper_html : ""}</section>`+
+        let content =   `<section id="${this.target.upper_html}" style="height:100px;overflow:auto;${this.data.upper_html == null ? "display:none;" : ""}">${this.data.upper_html != null ? this.data.upper_html : ""}</section>`+
                         `<section id="${this.target.category_selector}">${this.dom_assembly_category()}</section>`+
                         `<section id="${this.target.content_writer}">${this.dom_content_assembly()}</section>`;
         
@@ -5050,7 +5063,8 @@ class BoardWriter_for_daily_record{
         let icon_r_visible = SHOW;
         let icon_r_text = this.data.category_selected[category_id].text.length == 0 ? '' : this.data.category_selected[category_id].text;
         // let style = {"display":"inline-block", 'padding':"16px", "padding-right":"0", "width":"43%", "min-width":"170px", "max-width":"208px", "font-size":"14px"};
-        let style = {"display":"inline-block", 'padding':"16px", "padding-right":"0", "width":"43%", "min-width":"300px", "max-width":"320px", "font-size":"14px"};
+        // let style = {"display":"inline-block", 'padding':"16px", "padding-right":"0", "width":"43%", "min-width":"300px", "max-width":"320px", "font-size":"14px"};
+        let style = {"display":"inline-block", 'padding':"16px", "padding-right":"0", "width":`${ this.data.category.length > 1 ? "50%" : "100%"}`, "height":"56px", "font-size":"14px", "box-sizing":"border-box"};
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             let title = category_title;
             let install_target = "#wrapper_box_custom_select";
@@ -5088,14 +5102,14 @@ class BoardWriter_for_daily_record{
             maxHeight: os == IOS ? summer_note_textarea_height : "",
             // height:1500,
             fontSizes:['12', '14', '16'],
-            placeholder: "내용을 입력해주세요.",
+            placeholder: this.data.placeholder,
             tabsize: 2,
             lang: 'ko-KR',
             toolbar: [
-                ['style', ['bold', 'underline']],
-                ['color', ['color']],
+                // ['style', ['bold', 'underline']],
+                // ['color', ['color']],
                 ['insert', ['picture', 'video']],
-                ['para', ['paragraph']],
+                // ['para', ['paragraph']],
             ],
             focus: false,
             // fontSize: 14,
@@ -5130,10 +5144,11 @@ class BoardWriter_for_daily_record{
             },
         });
         if(this.data.content == "" || this.data.content == null){
-            this.data.content = " "
+            this.data.content = " ";
         }
-
-        $(`#board_writer_content_input`).summernote('code', this.data.content);
+        if(this.data.content != " "){
+            $(`#board_writer_content_input`).summernote('code', this.data.content);
+        }
         $('.note-editable').blur();
     }
 

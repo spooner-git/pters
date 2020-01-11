@@ -187,15 +187,24 @@ class Plan_daily_record_func{
                                 : "" }
                             </div>
                         </div>`;
+        let placeholder_text = `내용을 입력해주세요.<br>
+                                일지 작성 대상: ${schedule_name_array.join(", ")}<br>
+                                이미지는 자동 리사이즈 되며, 최대 2장 첨부 가능합니다.`;
         let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_WRITER, 100, popup_style, null, ()=>{
                 let external_data = {   
                                     title:"",
                                     content:"",
                                     schedule_id:null,
-                                    is_member_view: 1,
                                     visibility:{title:HIDE},
-                                    upper_html:upperhtml
+                                    // upper_html:upperhtml,
+                                    category:[
+                                        {id:"open", title:"공유", data: {text:[DAILY_RECORD_OPEN_TYPE[0], DAILY_RECORD_OPEN_TYPE[1]], value:[0, 1]} }
+                                    ],
+                                    category_selected:{
+                                        open:{text:[DAILY_RECORD_OPEN_TYPE[0]], value:[0]}
+                                    },
+                                    placeholder:placeholder_text
                 };
 
                 board_writer = new BoardWriter_for_daily_record(`일괄 일지 작성`, '.popup_board_writer', 'board_writer', external_data, (data_written)=>{
@@ -218,7 +227,7 @@ class Plan_daily_record_func{
                         //원래 작성되었던 글을 지운다. (이미지를 서버에서 날리기 위해)
                         Plan_daily_record_func.delete({"schedule_id":schedule_id_array[i]}, ()=>{
                             let data = {"schedule_id":schedule_id_array[i], "img_list":JSON.stringify(images_uploaded), "title":"",
-                                    "contents":data_written.content, "is_member_view":data_written.is_member_view};
+                                    "contents":data_written.content, "is_member_view":data_written.category_selected.open.value[0]};
                             Plan_daily_record_func.create(data, ()=>{
                                 if(i == schedule_id_array.length - 1){
                                     show_error_message({title:"일괄 일지 등록이 정상적으로 완료 되었습니다."})
@@ -247,18 +256,28 @@ class Plan_daily_record_func{
                                 : "" }
                             </div>
                         </div>`;
+        let placeholder_text = `내용을 입력해주세요.<br>
+                                이미지는 자동 리사이즈 되어 업로드 되며, 최대 2장까지 첨부 가능합니다.`;
         let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_WRITER, 100, popup_style, null, ()=>{
             Plan_daily_record_func.read({"schedule_id":schedule_id}, (data)=>{
+                let prev_text_open = data.daily_record_is_member_view != undefined ? DAILY_RECORD_OPEN_TYPE[data.daily_record_is_member_view] : DAILY_RECORD_OPEN_TYPE[0];
+                let prev_value_open = data.daily_record_is_member_view != undefined ? data.daily_record_is_member_view : 0;
                 let content = Object.keys(data).length == 0 ? "" : data.daily_record_contents;
                 let img_list = Object.keys(data).length == 0 ? null : data.daily_record_img_list;
                 let external_data = {   
                                     title:"",
                                     content:content,
                                     schedule_id:schedule_id,
-                                    is_member_view: 1,
                                     visibility:{title:HIDE},
-                                    upper_html:upperhtml
+                                    // upper_html:upperhtml,
+                                    category:[
+                                        {id:"open", title:"공유", data: {text:[DAILY_RECORD_OPEN_TYPE[0], DAILY_RECORD_OPEN_TYPE[1]], value:[0, 1]} }
+                                    ],
+                                    category_selected:{
+                                        open:{text:[prev_text_open], value:[prev_value_open]}
+                                    },
+                                    placeholder:placeholder_text
                 };
 
                 board_writer = new BoardWriter_for_daily_record(`${schedule_name} 일지 작성`, '.popup_board_writer', 'board_writer', external_data, (data_written)=>{
@@ -279,7 +298,8 @@ class Plan_daily_record_func{
 
                     //작성한 글을 서버 저장한다.
                     let data = {"schedule_id":data_written.schedule_id, "img_list":JSON.stringify(images_uploaded), "title":"",
-                                "contents":data_written.content, "is_member_view":data_written.is_member_view};
+                                "contents":data_written.content, "is_member_view":data_written.category_selected.open.value[0]};
+                                console.log(data);
                     Plan_daily_record_func.create(data, ()=>{
                         // this.init();
                         if(callback != undefined){
