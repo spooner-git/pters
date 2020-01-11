@@ -60,9 +60,9 @@ let layer_popup = (function (){
             
             //팝업이 옆으로 닫히는 애니메이션이 종료된후 해당 팝업의 html을 지운다.
             let delay_time = 250;
-            if(popup_size == POPUP_SIZE_WINDOW){
-                delay_time = 0;
-            }
+            // if(popup_size == POPUP_SIZE_WINDOW){
+            //     delay_time = 0;
+            // }
             setTimeout(function(){
                 $popup_selector.css({"z-index":0});
                 $(`#${popup_data.popup_name}`).remove();
