@@ -274,6 +274,8 @@ function func_set_popup_position ($popup_selector, animation_type, popup_size){
             }
             break;
         case POPUP_FROM_PAGE:
+            translate_x = 0;
+            translate_y = 0;
             break; 
     }
 
@@ -295,9 +297,9 @@ function func_set_open_popup_animation ($popup_selector, animation_type, popup_s
     }
 
     let animation_info = "";
-    if(animation_type != POPUP_FROM_PAGE){
+    // if(animation_type != POPUP_FROM_PAGE){
         animation_info = "transform 0.3s ease-in-out";
-    }
+    // }
     let translate_x = 0;
     let translate_y = 0;
     let popup_size_x = popup_size * windowWidth / 100;
@@ -317,11 +319,18 @@ function func_set_open_popup_animation ($popup_selector, animation_type, popup_s
         case POPUP_FROM_PAGE:
             break;
     }
-    
+    // alert(animation_info);
     $popup_selector.css({
         "transform": `translate(${translate_x}px, ${translate_y}px)`,
-        "transition": `${animation_info}`, "visibility":"visible"
+        "transition": `${animation_info}`
     });
+    if(animation_type==POPUP_FROM_PAGE){
+        $popup_selector.fadeIn(300);
+    }
+    else{
+        $popup_selector.css({"visibility":"visible"});
+    }
+
 }
 
 function func_set_close_popup_animation ($popup_selector, animation_type){
@@ -333,9 +342,9 @@ function func_set_close_popup_animation ($popup_selector, animation_type){
     }
 
     let animation_info = "";
-    if(animation_type != POPUP_FROM_PAGE){
+    // if(animation_type != POPUP_FROM_PAGE){
         animation_info = "transform 0.3s ease-in-out";
-    }
+    // }
     let translate_x = 0;
     let translate_y = 0;
     switch (animation_type) {
@@ -354,17 +363,22 @@ function func_set_close_popup_animation ($popup_selector, animation_type){
             //안드로이드 크롬이 하단 브라우저 영역을 숨기면서 windowHeight가 늘어나서, 밑에 숨어있던 팝업이 보이는 현상 해결 (60은 navbar 높이)
             break;
         case POPUP_FROM_PAGE:
-            translate_x = -windowWidth;
-            translate_y = -windowHeight;
+            // translate_x = -windowWidth;
+            // translate_y = -windowHeight;
             break;
     }
-    $popup_selector.css({
-        "transform": `translate(${translate_x}px, ${translate_y}px)`,
-        "transition": `${animation_info}`
-    });
-    setTimeout(()=>{
-        $popup_selector.css({"visibility":"hidden"});
-    }, 300);
+    if(animation_type==POPUP_FROM_PAGE){
+        $popup_selector.fadeOut(300);
+    }
+    else{
+        $popup_selector.css({
+            "transform": `translate(${translate_x}px, ${translate_y}px)`,
+            "transition": `${animation_info}`
+        });
+        setTimeout(()=>{
+            $popup_selector.css({"visibility":"hidden"});
+        }, 300);
+    }
 }
 
 function func_set_shade (popup_array_length){
