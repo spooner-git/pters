@@ -1519,7 +1519,7 @@ class Calendar {
                                   </div>
                                   `
                 ,
-                "initial_page":`<div id="${this.subtargetHTML}"><div id="cal_display_panel"><span></span></div><div id="page${this.current_page_num}" class="pages" style="left:0px;"></div></div>`
+                "initial_page":`<div id="${this.subtargetHTML}_"><div id="cal_display_panel"><span></span></div><div id="${this.subtargetHTML}"><div id="page${this.current_page_num}" class="pages" style="left:0px;"></div></div></div>`
             }
         );
     }
@@ -1552,7 +1552,8 @@ class Calendar {
             });
 
             selector_body.off('touchmove').on('touchmove', (e) => {
-                e.stopPropagation();
+                console.log(e)
+                // e.stopPropagation();
                 tm = e.originalEvent.touches[0].clientX;
                 tmy = e.originalEvent.touches[0].clientY;
 
