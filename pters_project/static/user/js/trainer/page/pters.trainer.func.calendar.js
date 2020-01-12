@@ -1122,6 +1122,7 @@ class Calendar {
     }
 
     display_user_click (event, year, month, date){
+        // event.stopPropagation();
         
         $('.week_indicator').remove();
 
@@ -1566,15 +1567,13 @@ class Calendar {
 
                 if( Math.abs(ts - tm) > Math.abs(tsy - tmy)){
                     if(swiper_x == false){
-                        $('#root_content').off('touchmove').on('touchmove', (e) => {
+                        // 스와이프 하는 동안 상하 스크롤을 방지
+                        $('#root_content').on('touchmove', (e) => {
                             if(e.cancelable){
                                 e.preventDefault();
                                 e.stopPropagation();
                                 return false;
                             }
-                            // e.preventDefault();
-                            // e.stopPropagation();
-                            // return false;
                         });
                         swiper_x = true;
                     }
@@ -1598,7 +1597,7 @@ class Calendar {
 
             //아이폰에서 touchmove를 threshold보다 작게했을때 상하스크롤이 locking되는 현상 방지
             selector_body.off("touchend").on("touchend", (e) => {
-
+                // e.stopPropagation();
                 if(swiper_x == true){
                     $('#root_content').off('touchmove');
                     swiper_x = false;
