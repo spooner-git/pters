@@ -1067,9 +1067,7 @@ class Calendar {
                             
 
                             return `<div data-scheduleid="${plan.schedule_id}" onclick="event.stopPropagation();${onclick}" class="calendar_schedule_display_week ${long_touch_active} ${go_behind}" 
-                                        style="${styles}" ontouchstart="
-                                        
-                                        ${this.instance}.longtouchstart(this, ()=>{})" ontouchend="event.stopPropagation();${this.instance}.longtouchend(event)">
+                                        style="${styles}" ontouchstart="event.stopPropagation();${this.instance}.longtouchstart(this, ()=>{})" ontouchend="event.stopPropagation();${this.instance}.longtouchend(event)">
                                         ${plan_name}
                                     </div>`;
                         })
