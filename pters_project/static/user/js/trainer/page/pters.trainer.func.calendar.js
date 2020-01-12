@@ -1535,13 +1535,16 @@ class Calendar {
         let click_body = `${input_target_html}, ${input_target_html} .calendar_schedule_display_week`;
         let x_threshold;
         let y_threshold;
+        let vertical_scroll_lock_sensitivity;
         let swiper_x = false;
         if(this.cal_type == "week"){
             x_threshold = 80;
             y_threshold = 200;
+            vertical_scroll_lock_sensitivity = 10;
         }else if(this.cal_type == "month"){
             x_threshold = 80;
             y_threshold = 200;
+            vertical_scroll_lock_sensitivity = 10;
         }
 
         switch(onoff){
@@ -1566,6 +1569,9 @@ class Calendar {
                 this.touch_timer = 0;
 
                 if( Math.abs(ts - tm) > Math.abs(tsy - tmy)){
+                    if(Math.abs(ts - tm) <= vertical_scroll_lock_sensitivity){
+                        return;
+                    }
                     if(swiper_x == false){
                         // 스와이프 하는 동안 상하 스크롤을 방지
                         $('#root_content').on('touchmove', (e) => {
