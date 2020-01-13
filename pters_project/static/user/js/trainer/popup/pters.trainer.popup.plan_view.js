@@ -278,19 +278,23 @@ class Plan_view{
         if(this.data.schedule_type != 2){ //0: OFF, 1: 개인, 2:그룹
             display = 'none';
         }
+        let hide_when_off = "";
+        if(this.data.schedule_type == 0){
+            hide_when_off = "none";
+        }
         
         let html;
         if(this.time_selector == CLASSIC){
             html =  `<div class="obj_input_box_full" style="display:${display}; border:0;">`+ CComponent.dom_tag('회원') + member_select_row + member_list_row+'</div>' +
                         '<div class="obj_input_box_full">' +  CComponent.dom_tag('일자') + date_select_row +
                                                         CComponent.dom_tag('진행시간') + classic_time_selector + '</div>' +
-                        '<div class="obj_input_box_full">'+ CComponent.dom_tag('메모 <span style="color:var(--font-highlight)">(회원님께 공유되는 메모입니다.)</span>') + memo_select_row + '</div>' +
+                        '<div class="obj_input_box_full">'+ CComponent.dom_tag(`메모 <span style="color:var(--font-highlight);display:${hide_when_off}">(회원님께 공유되는 메모입니다.)</span>`) + memo_select_row + '</div>' +
                         '<div class="obj_input_box_full" style="padding:18px;">' + reg_mod_info + '<div>';
         }else{
             html =  `<div class="obj_input_box_full" style="display:${display}; border:0;">`+ CComponent.dom_tag('회원') + member_select_row + member_list_row+'</div>' +
                         '<div class="obj_input_box_full">' +  CComponent.dom_tag('일자') + date_select_row +
                                                         CComponent.dom_tag('진행시간') + start_time_select_row + end_time_select_row + '</div>' +
-                        '<div class="obj_input_box_full">'+ CComponent.dom_tag('메모 <span style="color:var(--font-highlight)">(회원님께 공유되는 메모입니다.)</span>') + memo_select_row + '</div>' +
+                        '<div class="obj_input_box_full">'+ CComponent.dom_tag(`메모 <span style="color:var(--font-highlight);display:${hide_when_off}">(회원님께 공유되는 메모입니다.)</span>`) + memo_select_row + '</div>' +
                         '<div class="obj_input_box_full" style="padding:18px;">' + reg_mod_info + '<div>';
         }
 
