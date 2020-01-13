@@ -713,12 +713,13 @@ class Plan_view{
         let html = CComponent.create_input_textarea_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, (input_data)=>{
             let user_input_data = input_data;
             this.memo = user_input_data;
-            let data_to_send = {"schedule_id": this.schedule_id, "add_memo":this.memo};
-            let url_update_memo = '/schedule/update_memo_schedule/';
-            Plan_func.update(url_update_memo, data_to_send, ()=>{
-                this.init();
-                this.if_user_changed_any_information = true;
-            });
+            this.if_user_changed_any_information = true;
+            // let data_to_send = {"schedule_id": this.schedule_id, "add_memo":this.memo};
+            // let url_update_memo = '/schedule/update_memo_schedule/';
+            // Plan_func.update(url_update_memo, data_to_send, ()=>{
+            //     this.init();
+            //     this.if_user_changed_any_information = true;
+            // });
         }, pattern, pattern_message, required);
         return html;
     }
@@ -937,12 +938,16 @@ class Plan_view{
         }
 
         let data_to_send = {"schedule_ids[]":schedule_ids, "start_dt":start_dt, "end_dt":end_dt};
-
+        let data_to_send_for_memo_update = {"schedule_id": this.schedule_id, "add_memo":this.memo};
         let url = '/schedule/update_schedule/';
-        Plan_func.update(url, data_to_send, ()=>{
-            try{
-                current_page.init();
-            }catch(e){}
+        let url_update_memo = '/schedule/update_memo_schedule/';
+        
+        Plan_func.update(url_update_memo, data_to_send_for_memo_update, ()=>{
+            Plan_func.update(url, data_to_send, ()=>{
+                try{
+                    current_page.init();
+                }catch(e){}
+            });
         });
         
     }
