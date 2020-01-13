@@ -863,8 +863,8 @@ class Member_view{
             },
             delete:{text:"회원 삭제", callback:()=>{
                     let message = {
-                        title:`"${this.data.name}" 님 정보를 완전 삭제 하시겠습니까?`,
-                        comment:`다시 복구할 수 없습니다. <br> <span style="color:var(--font-highlight);">통계에서도 정보가 삭제되어 반영됩니다.</span>`
+                        title:`"${this.data.name}" <br>회원 정보를 삭제 하시겠습니까?`,
+                        comment:`다시 복구할 수 없습니다. <br> <span style="color:var(--font-highlight);">매출 통계에서도 정보가 삭제됩니다.</span>`
                     }
                     show_user_confirm(message, ()=>{
                         let auth_inspect = pass_inspector.member_delete();

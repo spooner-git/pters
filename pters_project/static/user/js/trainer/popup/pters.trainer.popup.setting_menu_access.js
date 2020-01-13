@@ -229,7 +229,7 @@ class Setting_menu_access{
                                 this.render_content();
                             });
         let icon = power == ON ? CImg.lock("", {"vertical-align":"middle", "margin-bottom":"3px", "width":"20px"}) : CImg.unlock("", {"vertical-align":"middle", "margin-bottom":"3px", "width":"20px"});
-        let title = `${icon} 출석체크 모드 종료 시 비밀번호 입력`;
+        let title = `${icon} 실시간 출석 체크 종료`;
         let title_row = CComponent.text_button ("statistics_lock_toggle", title, {"font-size":"14px", "font-weight":"500", "letter-spacing":"-0.8px"}, ()=>{});
         let html = `<article class="setting_menu_lock_wrapper obj_input_box_full">
                         <div style="display:table;width:100%;">
