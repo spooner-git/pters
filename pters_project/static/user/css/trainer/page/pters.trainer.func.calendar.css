@@ -168,9 +168,9 @@
 	height: 28px;
 	border-radius: 14px;
 	z-index: -1;
-	top:50%;
+	/* top:50%; */
 	left: 50%;
-	transform: translate(-50%, -50%);
+	transform: translateX(-50%);
 	background: #ffe8eb;
 }
 .no_border{
