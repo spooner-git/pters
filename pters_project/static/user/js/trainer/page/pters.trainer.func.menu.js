@@ -196,7 +196,7 @@ class Menu {
 
     dom_menu_attendmode(){
         let id = 'menu_attendmode';
-        let title = '출석 체크';
+        let title = '실시간 출석 체크';
         let icon = CImg.attend_check();
         let icon_r_visible = NONE;
         let icon_r_text = "";
@@ -274,7 +274,7 @@ class Menu {
 
     dom_menu_setting_attendmode(){
         let id = 'menu_setting_attendmode';
-        let title = '출석 체크 모드 설정';
+        let title = '실시간 출석 체크 설정';
         let icon = CImg.setting_attend_check();
         let icon_r_visible = NONE;
         let icon_r_text = "";
