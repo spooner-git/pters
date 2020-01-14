@@ -14,6 +14,7 @@ class MemberTicketTb(TimeStampedModel):
     # class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE)  # Field name made lowercase.
     member = models.ForeignKey(MemberTb, on_delete=models.CASCADE)  # Field name made lowercase.
     ticket_tb = models.ForeignKey("trainer.TicketTb", on_delete=models.CASCADE, db_column='package_tb_id', null=True)
+    pay_method = models.CharField(db_column='PAY_METHOD', max_length=45, blank=True, default='')
     member_ticket_reg_count = models.IntegerField(db_column='LECTURE_REG_COUNT', default=0)
     member_ticket_rem_count = models.IntegerField(db_column='LECTURE_REM_COUNT', default=0)
     member_ticket_avail_count = models.IntegerField(db_column='LECTURE_AVAIL_COUNT', default=0)

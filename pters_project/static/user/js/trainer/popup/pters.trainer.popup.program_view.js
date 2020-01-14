@@ -179,7 +179,7 @@ class Program_view{
         let upper_category = this.category.code[0];
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             if(upper_category == undefined){
-                show_error_message('상위 분야를 먼저 선택해주세요');
+                show_error_message({title:'상위 분야를 먼저 선택해주세요'});
                 return false;
             }
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
@@ -221,16 +221,16 @@ class Program_view{
         let error_info = check_registration_form(forms);
         console.log(error_info);
         if(error_info != ''){
-            show_error_message(error_info);
+            show_error_message({title:error_info});
             return false;
         }
         else{
             if(this.data.program_category_code.length==0){
-                show_error_message('분야를 선택해주세요.');
+                show_error_message({title:'분야를 선택해주세요.'});
                 return false;
             }
             if(this.data.program_category_sub_code.length==0){
-                show_error_message('상세 분야를 선택해주세요.');
+                show_error_message({title:'상세 분야를 선택해주세요.'});
                 return false;
             }
             return true;
@@ -239,39 +239,19 @@ class Program_view{
 
     upper_right_menu(){
         if(this.data.program_selected == PROGRAM_SELECTED){
-            show_error_message('선택되어 있는 프로그램은 삭제할 수 없습니다.<br>다른 프로그램으로 이동 후 삭제가 가능합니다.')
+            show_error_message({title:'선택되어 있는 프로그램은 삭제할 수 없습니다.', comment:'다른 프로그램으로 이동 후 삭제가 가능합니다.'});
             return false;
         } 
-        show_user_confirm(`"${this.data.program_name}" 프로그램을 삭제 하시겠습니까? <br> 모든 정보가 삭제되며 복구할 수 없습니다.`, ()=>{
+        let message = {
+            title:`"${this.data.program_name}" 프로그램을 삭제 하시겠습니까?`,
+            comment:"모든 정보가 삭제되며 복구할 수 없습니다."
+        };
+        show_user_confirm(message, ()=>{
             layer_popup.close_layer_popup(); // 확인 팝업 닫기
             Program_func.delete({"class_id":this.data.program_id}, ()=>{
                 program_list_popup.init();
                 layer_popup.close_layer_popup(); // 프로그램 정보 팝업 닫기 -> 즉, 프로그램 리스트 팝업으로 나가기
             });
         });
-
-        // let user_option = {
-        //     delete:{text:"프로그램 삭제", callback:()=>{
-        //             if(this.data.program_selected == PROGRAM_SELECTED){
-        //                 show_error_message('선택되어 있는 프로그램은 삭제할 수 없습니다.<br>다른 프로그램으로 이동 후 삭제가 가능합니다.')
-        //                 return false;
-        //             } 
-        //             show_user_confirm(`"${this.data.program_name}" 프로그램을 삭제 하시겠습니까? <br> 모든 정보가 삭제되며 복구할 수 없습니다.`, ()=>{
-        //                 layer_popup.close_layer_popup(); // 옵션 셀렉터 팝업 닫기
-        //                 layer_popup.close_layer_popup(); // 확인 팝업 닫기
-        //                 Program_func.delete({"class_id":this.data.program_id}, ()=>{
-        //                     program_list_popup.init();
-        //                     layer_popup.close_layer_popup(); // 프로그램 정보 팝업 닫기 -> 즉, 프로그램 리스트 팝업으로 나가기
-        //                 });
-        //             });
-        //         }
-        //     }
-        // };
-        // let options_padding_top_bottom = 16;
-        // let button_height = 8 + 8 + 52;
-        // let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
-        // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/windowHeight, POPUP_FROM_BOTTOM, null, ()=>{
-        //     option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
-        // });
     }
 }

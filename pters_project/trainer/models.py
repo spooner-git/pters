@@ -4,9 +4,10 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 
-from configs.const import LECTURE_TYPE_ONE_TO_ONE
+from configs.const import LECTURE_TYPE_ONE_TO_ONE, LECTURE_MEMBER_NUM_VIEW_ENABLE
 from configs.models import TimeStampedModel
 from login.models import MemberTb, CommonCdTb
+from payment.models import FunctionAuthTb
 from trainee.models import MemberTicketTb
 
 
@@ -170,6 +171,7 @@ class LectureTb(TimeStampedModel):
     end_font_color_cd = models.CharField(db_column='END_FONT_COLOR_CD', max_length=20, default='#282828')
     state_cd = models.CharField(db_column='STATE_CD', max_length=10, blank=True, null=True)
     member_num = models.IntegerField(db_column='MEMBER_NUM', default=2)  # Field name made lowercase.
+    # member_num_view_flag = models.IntegerField(db_column='MEMBER_NUM_VIEW_FLAG', default=LECTURE_MEMBER_NUM_VIEW_ENABLE)
     lecture_type_cd = models.CharField(db_column='GROUP_TYPE_CD', max_length=20, blank=True, null=True,
                                        default=LECTURE_TYPE_ONE_TO_ONE)
     name = models.CharField(db_column='NAME', max_length=255, blank=True, null=True, default='')
@@ -201,6 +203,7 @@ class TicketTb(TimeStampedModel):
     ticket_type_cd = models.CharField(db_column='PACKAGE_TYPE_CD', max_length=20, blank=True, null=True, default='')
     effective_days = models.IntegerField(db_column='EFFECTIVE_DAYS', default=30)
     price = models.IntegerField(db_column='PRICE', default=0)
+    month_schedule_enable = models.IntegerField(db_column='MONTH_SCHEDULE_ENABLE', default=31)
     week_schedule_enable = models.IntegerField(db_column='WEEK_SCHEDULE_ENABLE', default=7)
     day_schedule_enable = models.IntegerField(db_column='DAY_SCHEDULE_ENABLE', default=1)
     reg_count = models.IntegerField(db_column='REG_COUNT', default=0)
@@ -284,3 +287,17 @@ class SettingTb(TimeStampedModel):
     class Meta:
         managed = False
         db_table = 'SETTING_TB'
+
+
+class ProgramAuthTb(TimeStampedModel):
+    product_function_auth_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    function_auth_tb = models.ForeignKey(FunctionAuthTb, on_delete=models.CASCADE, null=True)
+    auth_type_cd = models.CharField(db_column='AUTH_TYPE_CD', max_length=45, blank=True, null=True)
+    enable_flag = models.IntegerField(db_column='ENABLE_FLAG', default=1)
+    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'PROGRAM_AUTH_TB'

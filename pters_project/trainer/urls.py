@@ -161,6 +161,23 @@ urlpatterns = [
     # 강좌 정보 선택 처리
     url(r'^select_program_processing/$', views.select_program_processing_logic, name='select_program_processing'),
 
+    # 강사 검색 기능
+    url(r'^search_trainer_info/$', views.SearchTrainerInfoView.as_view(), name='search_trainer_info'),
+    # 프로그램 공유 기능
+    url(r'^update_share_program_info/$', views.update_share_program_info_logic, name='update_share_program_info'),
+    # 프로그램 공유 내역 조회
+    url(r'^get_share_program_data/$', views.GetShareProgramDataViewAjax.as_view(), name='get_share_program_data'),
+
+    # 프로그램 공유 연결 안된 정보 조회
+    url(r'^get_trainer_program_connection_list/$', views.GetTrainerProgramConnectionListView.as_view(),
+        name='get_trainer_program_connection_list'),
+    # 프로그램 공유 수락/거절 기능
+    url(r'^update_trainer_program_connection_info/$', views.update_trainer_program_connection_info_logic,
+        name='update_trainer_program_connection_info'),
+    # 프로그램 공유 해제 기능
+    url(r'^delete_trainer_program_connection/$', views.delete_trainer_program_connection_logic,
+        name='delete_trainer_program_connection'),
+
 
     # 배경 이미지 설정 기능 #################################################################################################
     # 배경 이미지 타입 코드 조회
@@ -183,16 +200,16 @@ urlpatterns = [
     url(r'^update_trainer_info/$', views.update_trainer_info_logic, name='update_trainer_info'),
     # 푸시 Setting 수정
     url(r'^update_setting_push/$', views.update_setting_push_logic, name='update_setting_push'),
+
     # 일반 설정 관련 Setting 수정
     url(r'^update_setting_calendar_setting/$', views.update_setting_calendar_setting_logic,
         name='update_setting_calendar_setting'),
+
     url(r'^update_setting_work_time/$', views.update_setting_work_time_logic, name='update_setting_work_time'),
     url(r'^update_setting_auto_complete/$', views.update_setting_auto_complete_logic,
         name='update_setting_auto_complete'),
     # 출석체크 모드 Setting 수정
     url(r'^update_attend_mode_setting/$', views.update_attend_mode_setting_logic, name='update_attend_mode_setting'),
-
-
 
     # 예약관련 Setting 수정
     url(r'^update_setting_reserve/$', views.update_setting_reserve_logic, name='update_setting_reserve'),
@@ -204,12 +221,14 @@ urlpatterns = [
     # 사용자 앱 view 관련 Setting 수정
     url(r'^update_setting_theme/$', views.update_setting_theme_logic, name='update_setting_theme'),
 
+
     # 사용자 앱 view 관련 Setting 수정
     url(r'^update_setting_access_lock/$', views.update_setting_access_lock_logic,
         name='update_setting_access_lock'),
 
     # Setting 정보 가져오기
     url(r'^get_trainer_setting_data/$', views.GetTrainerSettingDataView.as_view(), name='get_trainer_setting_data'),
+    url(r'^get_program_auth_data/$', views.GetProgramAuthDataView.as_view(), name='get_program_auth_data'),
     url(r'^get_trainer_auth_data/$', views.GetTrainerAuthDataView.as_view(), name='get_trainer_auth_data'),
 
 

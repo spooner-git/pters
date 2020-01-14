@@ -144,7 +144,7 @@ function pters_month_calendar(calendar_name, calendar_options){
                     dateCellsToJoin.push(`<div class="obj_table_cell_x7"></div>`);
                 }else{
                     dateCellsToJoin.push(`<div class="obj_table_cell_x7" data-date="${data_date}"
-                                               id="calendar_cell_${data_date}" onclick="show_error_message('예약이 불가능한 날짜입니다.')">
+                                               id="calendar_cell_${data_date}" onclick="show_error_message({title:'예약이 불가능한 날짜입니다.'})">
                                                <div id="calendar_lecture_plan_cell_${data_date}" class="lecture_plan_indicator"></div>
                                                <div class="calendar_date_number ${font_color}">${date_cache}</div>
                                                <div id="calendar_plan_cell_${data_date}" class="plan_cell" style="height:${design_options["height_week_row"]-6-20-1}px"></div>
@@ -343,7 +343,7 @@ function pters_month_calendar(calendar_name, calendar_options){
             success:function (data){
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray);
+                        show_error_message({title:data.messageArray});
                         return false;
                     }
                 }
@@ -357,7 +357,7 @@ function pters_month_calendar(calendar_name, calendar_options){
             },
 
             error:function (){
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                 // location.reload();
             }
         });

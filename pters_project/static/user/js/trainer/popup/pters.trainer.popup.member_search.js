@@ -114,7 +114,7 @@ class Member_search {
         }
         let onclick = ()=>{
             if(this.data.search_id == null){
-                show_error_message("검색 조건을 입력해주세요.");
+                show_error_message({title:"검색 조건을 입력해주세요."});
                 return false;
             }
             this.render_loading_image();
@@ -138,7 +138,7 @@ class Member_search {
         }
         let onclick = ()=>{
             if(this.data.selected_member_id == null){
-                show_error_message('회원을 선택해주세요.');
+                show_error_message({title:'회원을 선택해주세요.'});
                 return false;
             }
             layer_popup.close_layer_popup();
@@ -157,7 +157,7 @@ class Member_search {
         let style = {"background-color":"var(--bg-main)", "height":"48px", "line-height":"48px", "margin-top":"10px", 'border':"var(--border-article)"};
         let onclick = ()=>{
             if(this.data.search_id == null){
-                show_error_message("검색 조건을 입력해주세요.");
+                show_error_message({title:"검색 조건을 입력해주세요."});
                 return false;
             }
             this.render_loading_image();
@@ -179,7 +179,7 @@ class Member_search {
         let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let style = {"border":"var(--border-article)"};
+        let style = {"border":"var(--border-article)", "padding":"12px"};
         let disabled = false;
         let onfocusout = (data)=>{
             this.data.search_id = data;

@@ -60,6 +60,7 @@
     <script type="text/javascript" src="https://service.iamport.kr/js/iamport.payment-1.1.5.js"></script>
 
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.const.js" %}></script>
+    <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.text.js" %}></script>
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.fundamental.js" %}></script>
 
     {% block local_css %}
@@ -338,9 +339,10 @@
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_attendmode.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_theme.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_menu_access.js" %}></script>
-<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_supervisor.js" %}></script>
-<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_supervisor_member_search.js" %}></script>
-<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_supervisor_member_auth.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_sharing.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_sharing_member_search.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_sharing_member_auth.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_shared.js" %}></script>
 
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.service_notice.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.service_inquiry.js" %}></script>
@@ -376,6 +378,11 @@
     var session_app_version = `{{ APP_VERSION }}`;
     var user_username = '{{ request.user.username }}';
     var setting_theme = '{{ request.session.setting_theme }}';
+
+    // MY_PROGRAM = 0 / SHARED_PROGRAM = 1
+    var shared_program_flag = '{{ request.session.shared_program_flag }}';
+    var language = "KOR";
+
     //기기종류 판단
     const varUA = navigator.userAgent.toLowerCase();
     let device = PC;
@@ -416,27 +423,13 @@
     pc_keyboard_event();
 
     func_set_webkit_overflow_scrolling('#root_content');
-    
-    // $root_content.css('height', `calc(100% - 56px)`);
-    // $root_content.scroll(function(){
-    //     let scroll_loc = $(this).scrollTop();
-    //     let element_height = $(this).innerHeight();
-    //     let scroll_height = $(this).prop('scrollHeight');
-   
-    //     let scroll_loc_percent = 100*(scroll_loc)/(scroll_height-element_height);
-    //     if( scroll_loc_percent > 10 && scroll_loc_percent > 90){
-    //         nav_bar('off');
-    //     }else{
-    //         nav_bar('on');
-    //     }
-    // });
 
     //팝업이 떠있을때, 팝업을 스크롤하면, 뒤의 root_content 항목이 스크롤되서 위치에서 벗어난 현상 해결
     // $(document).on('touchstart', '.popup_mobile', function(){
     //     $('#root_content').css({'overflow-y':'hidden'})
     // });
 
-    // $(document).on('touchend, touchcancel', '.popup_mobile', function(){
+    // $(document).on('touchend', '.popup_mobile', function(){
     //     $('#root_content').css({'overflow-y':'auto'})
     // });
 
@@ -516,9 +509,10 @@
     var setting_attendmode_popup;
     var setting_theme_popup;
     var setting_menu_access_popup;
-    var setting_supervisor_popup;
-    var setting_supervisor_member_search_popup;
-    var setting_supervisor_member_auth_popup;
+    var setting_sharing_popup;
+    var setting_sharing_member_search_popup;
+    var setting_sharing_member_auth_popup;
+    var setting_shared_popup;
     
     var service_notice_popup;
     var service_inquiry_menu_popup;
@@ -568,26 +562,7 @@
         current_page_text = page;
         $('#debug_toolbar').hide();
 
-        try{
-            $(`.nav_img .nav_svg`).each(function(e){
-               $(this).css('fill', 'var(--img-main)')
-            });
-            $(`#${page} .nav_img .nav_svg`).css('fill', 'var(--img-highlight)')
-
-            $(`.side_menu_item .nav_svg`).each(function(e){
-               $(this).css('fill', 'var(--img-main)')
-            });
-            $(`#side_${page} .nav_svg`).css('fill', 'var(--fundamental-white)')
-        }
-        catch(e){
-
-        }
-        try{
-            $('.side_menu_selected').removeClass('side_menu_selected');
-            $(`#side_${page}`).addClass('side_menu_selected');
-        }catch(e){
-
-        }
+        
         try{
             //메뉴 이동시 팝업이 열려있으면 모두 닫고 이동
             $('#root_content').scrollTop(0);
@@ -598,24 +573,53 @@
             console.log(e);
         }
 
+        let auth_inspect;
         switch(page){
             case 'home':
                 current_page = home;
                 home.init();
             break;
             case 'calendar':
+                auth_inspect = pass_inspector.schedule_read();
+                if(auth_inspect.barrier == BLOCKED){
+                    let message = `${auth_inspect.limit_type}`;
+                    show_error_message({title:message});
+                    return false;
+                }
+
                 current_page = calendar;
                 calendar.init_new();
             break;
             case 'ticket_page_type':
+                auth_inspect = pass_inspector.ticket_read();
+                if(auth_inspect.barrier == BLOCKED){
+                    let message = `${auth_inspect.limit_type}`;
+                    show_error_message({title:message});
+                    return false;
+                }
+
                 current_page = ticket;
                 ticket.init();
             break;
             case 'lecture_page_type':
+                auth_inspect = pass_inspector.lecture_read();
+                if(auth_inspect.barrier == BLOCKED){
+                    let message = `${auth_inspect.limit_type}`;
+                    show_error_message({title:message});
+                    return false;
+                }
+
                 current_page = lecture;
                 lecture.init();
             break;
             case 'member':
+                auth_inspect = pass_inspector.member_read();
+                if(auth_inspect.barrier == BLOCKED){
+                    let message = `${auth_inspect.limit_type}`;
+                    show_error_message({title:message});
+                    return false;
+                }
+
                 current_page = member;
                 member.init();
             break;
@@ -640,6 +644,26 @@
             break;
         }
         
+        try{
+            $(`.nav_img .nav_svg`).each(function(e){
+               $(this).css('fill', 'var(--img-main)')
+            });
+            $(`#${page} .nav_img .nav_svg`).css('fill', 'var(--img-highlight)')
+
+            $(`.side_menu_item .nav_svg`).each(function(e){
+               $(this).css('fill', 'var(--img-main)')
+            });
+            $(`#side_${page} .nav_svg`).css('fill', 'var(--fundamental-white)')
+        }
+        catch(e){
+
+        }
+        try{
+            $('.side_menu_selected').removeClass('side_menu_selected');
+            $(`#side_${page}`).addClass('side_menu_selected');
+        }catch(e){
+
+        }
     }
 
     //PC사이드 메뉴 토글
@@ -679,78 +703,152 @@
         $('#debug_toolbar').hide();
 
         let open;
-
+        let auth_inspect
         switch(page){
             case 'ticket':
                 open = ()=>{
+                    auth_inspect = pass_inspector.ticket_read();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `${auth_inspect.limit_type}`;
+                        show_error_message({title:message});
+                        return false;
+                    }
+
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_LIST, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     ticket_list_popup = new Ticket_list('.popup_ticket_list', 'ticket_list_popup')});
                     }
             break;
             case 'lecture':
                 open = ()=>{
+                    auth_inspect = pass_inspector.lecture_read();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `${auth_inspect.limit_type}`;
+                        show_error_message({title:message});
+                        return false;
+                    }
+
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_LIST, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     lecture_list_popup = new Lecture_list('.popup_lecture_list', 'lecture_list_popup')});
                     }
             break;
             case 'program':
                 open = ()=>{
+                    auth_inspect = pass_inspector.program_read();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `${auth_inspect.limit_type}`;
+                        show_error_message({title:message});
+                        return false;
+                    }
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PROGRAM_LIST, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     program_list_popup = new Program_list('.popup_program_list')});
                 }
             break;
             case 'setting_calendar':
                 open = ()=>{
+                    auth_inspect = pass_inspector.setting_read();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `${auth_inspect.limit_type}`;
+                        show_error_message({title:message});
+                        return false;
+                    }
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_CALENDAR, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     setting_calendar_popup = new Setting_calendar('.popup_setting_calendar')});
                     }
             break;
             case 'setting_worktime':
                 open = ()=>{
+                    auth_inspect = pass_inspector.setting_read();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `${auth_inspect.limit_type}`;
+                        show_error_message({title:message});
+                        return false;
+                    }
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_WORKTIME, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     setting_worktime_popup = new Setting_worktime('.popup_setting_worktime')});
                 }
             break;
             case 'setting_autocomplete':
                 open = ()=>{
+                    auth_inspect = pass_inspector.setting_read();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `${auth_inspect.limit_type}`;
+                        show_error_message({title:message});
+                        return false;
+                    }
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_AUTOCOMPLETE, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     setting_autocomplete_popup = new Setting_autocomplete('.popup_setting_autocomplete')});
                     }
             break;
             case 'setting_reserve':
                 open = ()=>{
+                    auth_inspect = pass_inspector.setting_read();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `${auth_inspect.limit_type}`;
+                        show_error_message({title:message});
+                        return false;
+                    }
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_RESERVE, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     setting_reserve_popup = new Setting_reserve('.popup_setting_reserve')});
                     }
             break;
             case 'setting_alarm':
                 open = ()=>{
+                    auth_inspect = pass_inspector.setting_read();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `${auth_inspect.limit_type}`;
+                        show_error_message({title:message});
+                        return false;
+                    }
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_ALARM, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     setting_alarm_popup = new Setting_alarm('.popup_setting_alarm')});
                 }
             break;
             case 'setting_attendmode':
                 open = ()=>{
+                    auth_inspect = pass_inspector.setting_read();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `${auth_inspect.limit_type}`;
+                        show_error_message({title:message});
+                        return false;
+                    }
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_ATTENDMODE, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     setting_attendmode_popup = new Setting_attendmode('.popup_setting_attendmode')});
                     }
             break;
             case 'setting_theme':
                 open = ()=>{
+                    auth_inspect = pass_inspector.setting_read();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `${auth_inspect.limit_type}`;
+                        show_error_message({title:message});
+                        return false;
+                    }
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_THEME, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     setting_theme_popup = new Setting_theme('.popup_setting_theme')});
                     }
             break;
             case 'setting_menu_access':
                 open = ()=>{
+                    auth_inspect = pass_inspector.setting_read();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `${auth_inspect.limit_type}`;
+                        show_error_message({title:message});
+                        return false;
+                    }
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_MENU_ACCESS, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     setting_menu_access_popup = new Setting_menu_access('.popup_setting_menu_access')});
                     }
             break;
-            case 'setting_supervisor':
+            case 'setting_sharing':
                 open = ()=>{
-                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_SUPERVISOR, 100, POPUP_FROM_RIGHT, null, ()=>{
-                                                    setting_supervisor_popup = new Setting_supervisor('.popup_setting_supervisor')});
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_SHARING, 100, POPUP_FROM_RIGHT, null, ()=>{
+                                                    setting_sharing_popup = new Setting_sharing('.popup_setting_sharing')});
+                    }
+            break;
+            case 'setting_shared':
+                open = ()=>{
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_SHARED, 100, POPUP_FROM_RIGHT, null, ()=>{
+                                                    setting_shared_popup = new Setting_shared('.popup_setting_shared')});
                     }
             break;
             case 'service_notice':
@@ -767,6 +865,12 @@
             break;
             case 'statistics':
                 open = ()=>{
+                    let auth_inspect = pass_inspector.statistics_read();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `${auth_inspect.limit_type}`;
+                        show_error_message({title:message});
+                        return false;
+                    }
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_STATISTICS, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                 statistics_popup = new Statistics('.popup_statistics');
                     });
@@ -828,10 +932,10 @@
     
 
     //튜토리얼을 본적이 없으면 튜토리얼을 띄우기
-    // let tutorial_view = localStorage.getItem("tutorial_view");
-    // if(tutorial_view != "1"){
-    //     sideGoPopup("helper");
-    // }
+    let tutorial_view = localStorage.getItem("tutorial_view");
+    if(tutorial_view != "1"){
+        sideGoPopup("helper");
+    }
 
     //새로운 알림이 있을때 알림 아이콘에 표시해주기
     function are_there_new_alarm(){

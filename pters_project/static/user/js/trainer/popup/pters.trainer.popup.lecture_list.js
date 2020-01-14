@@ -112,9 +112,8 @@ class Lecture_list {
             let lecture_class_hour = data.lecture_minute;
             let lecture_ing_bg_color = data.lecture_ing_color_cd;
 
-            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
-            let onclick = `layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_LECTURE_VIEW}', 100, ${popup_style}, {'lecture_id':${lecture_id}}, ()=>{
-                lecture_view_popup = new Lecture_view('.popup_lecture_view', ${lecture_id}, 'lecture_view_popup');});`;
+            
+            let onclick = `lecture_list_popup.event_view_lecture(${lecture_id})`;
             let html = `<article class="lecture_wrapper" data-text="${lecture_name}" data-lectureid="${lecture_id}" onclick="${onclick}" style="color:${this.list_status_type == "ing" ? "" : 'var(--font-inactive)'}">
                             <div>
                                 <div class="lecture_data_l">
@@ -139,6 +138,20 @@ class Lecture_list {
         return html_temp.join("");
     }
 
+    event_view_lecture(lecture_id){
+        let auth_inspect = pass_inspector.lecture_read();
+        if(auth_inspect.barrier == BLOCKED){
+            let message = `${auth_inspect.limit_type}`;
+            show_error_message({title:message});
+            return false;
+        }
+
+        let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_VIEW, 100, popup_style, {'lecture_id':lecture_id}, ()=>{
+            lecture_view_popup = new Lecture_view('.popup_lecture_view', lecture_id, 'lecture_view_popup');
+        });
+    }
+
     dom_row_toolbox(){
 
         // 계속 추가되더라도 동적으로 처리하기 위해 작성 - hkkim 20191001
@@ -157,7 +170,8 @@ class Lecture_list {
         user_option += `}`;
 
         let options_padding_top_bottom = 16;
-        let button_height = 8 + 8 + 52;
+        // let button_height = 8 + 8 + 52;
+        let button_height = 52;
         let layer_popup_height = options_padding_top_bottom + button_height + 52*user_options_array.length;
         let root_content_height = $root_content.height();
 
@@ -268,7 +282,7 @@ class Lecture_list {
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }

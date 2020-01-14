@@ -73,7 +73,7 @@ class Program_add{
     render(){
         let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();program_add_popup.clear();">${CImg.x()}</span>`;
         let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right" onclick="program_add_popup.upper_right_menu()"><span style="color:var(--font-highlight);font-weight: 500;">등록</span></span>`;
+        let top_right = `<span class="icon_right" onclick="program_add_popup.upper_right_menu()"><span style="color:var(--font-highlight);font-weight: 500;">${TEXT.word.registration[language]}</span></span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
         
@@ -101,14 +101,14 @@ class Program_add{
         let program_category_select_row = this.dom_row_program_category();
         let program_category_sub_select_row = this.dom_row_program_category_sub();
 
-        let html =  '<div class="obj_input_box_full">' +  CComponent.dom_tag('프로그램명') + program_name_input_row + '</div>' + 
-                    '<div class="obj_input_box_full">'+  CComponent.dom_tag('분야') + program_category_select_row + program_category_sub_select_row + '</div>';
+        let html =  '<div class="obj_input_box_full">' +  CComponent.dom_tag(TEXT.word.program_name[language]) + program_name_input_row + '</div>' + 
+                    '<div class="obj_input_box_full">'+  CComponent.dom_tag(TEXT.word.field[language]) + program_category_select_row + program_category_sub_select_row + '</div>';
 
         return html;
     }
 
     dom_row_toolbox(){
-        let title = "새로운 프로그램";
+        let title = TEXT.word.new_program[language];
         let html = `
         <div class="program_add_upper_box" style="">
             <div style="display:inline-block;">
@@ -125,7 +125,7 @@ class Program_add{
     dom_row_program_name(){
         let id = 'program_name_input';
         let title = this.name == null ? "" : this.name;
-        let placeholder = '프로그램명*';
+        let placeholder = `${TEXT.word.program_name[language]}*`;
         let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
@@ -143,7 +143,7 @@ class Program_add{
 
     dom_row_program_category(){
         let id = 'program_category_select';
-        let title = this.category.name.length == 0 ? "분야*" : this.category.name;
+        let title = this.category.name.length == 0 ? `${TEXT.word.field[language]}*` : this.category.name;
         let icon = NONE;
         let icon_r_visible = SHOW;
         let icon_r_text = "";
@@ -167,7 +167,7 @@ class Program_add{
 
     dom_row_program_category_sub(){
         let id = 'program_category_sub_select';
-        let title = this.category_sub.name.length == 0 ? "상세 분야*" : this.category_sub.name;
+        let title = this.category_sub.name.length == 0 ? `${TEXT.word.sub_field[language]}*` : this.category_sub.name;
         let icon = NONE;
         let icon_r_visible = SHOW;
         let icon_r_text = "";
@@ -176,7 +176,7 @@ class Program_add{
         let upper_category = this.category.code[0];
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             if(upper_category == undefined){
-                show_error_message('상위 분야를 먼저 선택해주세요');
+                show_error_message({title:TEXT.word.please_select_field[language]});
                 return false;
             }
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
@@ -208,11 +208,14 @@ class Program_add{
             // };
             // let go_to_shop_button = `<div>${CComponent.button (id, title, style, onclick)}</div>`;
             
-            // show_error_message(`[${inspect.limit_type}] 이용자께서는 프로그램을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다.${go_to_shop_button}`);
+            // show_error_message({title:`[${inspect.limit_type}] 이용자께서는 프로그램을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다.${go_to_shop_button}`});
 
             this.data_sending_now = false;
-            let message = `[${inspect.limit_type}] 이용자께서는 프로그램을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다.
-                            <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까??</p>`;
+            let message = {
+                title:"프로그램 등록을 완료하지 못했습니다.",
+                comment:`[${inspect.limit_type}] 이용자께서는 프로그램을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다.
+                        <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까?</p>`
+            };
             show_user_confirm (message, ()=>{
                 layer_popup.all_close_layer_popup();
                 sideGoPopup("pters_pass_main");
@@ -247,16 +250,16 @@ class Program_add{
         let error_info = check_registration_form(forms);
         console.log(error_info);
         if(error_info != ''){
-            show_error_message(error_info);
+            show_error_message({title:error_info});
             return false;
         }
         else{
             if(this.data.program_category_code.length==0){
-                show_error_message('분야를 선택해주세요.');
+                show_error_message({title:TEXT.word.please_select_field[language]});
                 return false;
             }
             if(this.data.program_category_sub_code.length==0){
-                show_error_message('상세 분야를 선택해주세요.');
+                show_error_message({title:TEXT.word.please_select_detail_field[language]});
                 return false;
             }
             return true;

@@ -121,7 +121,7 @@ class TwoTimeSelector{
             end_time_list.push(TimeRobot.add_time(start_time.split(':')[0], start_time.split(':')[1], 0, zz).complete);
             end_time_diff_list.push(zz);
             if(zz > 1440){
-                show_error_message("Classic selector - Error - 80");
+                show_error_message({title:"Classic selector - Error - 80"});
                 break;
             }
         }
@@ -273,7 +273,7 @@ class TwoTimeSelector{
                 }
                 // if(snap > self.hour_scroll_snapped){
                 //     self.hour2_scroll.scrollTo(0, self.hour_scroll_snapped, 0, IScroll.utils.ease.bounce);
-                //     show_error_message('종료 시각이 시작 시각보다 빠릅니다.')
+                //     show_error_message({title:'종료 시각이 시작 시각보다 빠릅니다.'})
                 // }else{
                 //     self.hour2_scroll.scrollTo(0, snap, 0, IScroll.utils.ease.bounce);
                 // }
@@ -336,13 +336,13 @@ class TwoTimeSelector{
         let result = this.get_selected_data();
 
         if(result.start == undefined || result.start == ''){
-            show_error_message('시작 시각 입력을 다시 해주세요.')
+            show_error_message({title:'시작 시각 입력을 다시 해주세요.'})
         }
         else if(result.end == undefined || result.end == ''){
-            show_error_message('종료 시각 입력을 다시 해주세요.')
+            show_error_message({title:'종료 시각 입력을 다시 해주세요.'})
         }
         else{
-            show_error_message('시작:' + result.start + ' ~ ' + '종료:'+ result.end)
+            show_error_message({title:'시작:' + result.start + ' ~ ' + '종료:'+ result.end})
         }
     }
 
@@ -723,15 +723,15 @@ class DateSelector{
         let date_text = date.text();
 
         if(year_text == undefined || year_text == ''){
-            show_error_message('[연도]를 다시 선택 해주세요.');
+            show_error_message({title:'[연도]를 다시 선택 해주세요.'});
         }
         else if(month_text == undefined || month_text == ''){
-            show_error_message('[월]을 다시 선택 해주세요.');
+            show_error_message({title:'[월]을 다시 선택 해주세요.'});
         }else if(date_text == undefined || date_text == ''){
-            show_error_message('[일자]를 다시 선택 해주세요.');
+            show_error_message({title:'[일자]를 다시 선택 해주세요.'});
         }
         else{
-            show_error_message(`${year_text}년 ${month_text}월 ${date_text}일`);
+            show_error_message({title:`${year_text}년 ${month_text}월 ${date_text}일`});
         }
     }
 
@@ -1181,15 +1181,15 @@ class TwoDateSelector{
         let month_text2 = month2.text();
 
         if(year_text == undefined || year_text == ''){
-            show_error_message('[연도]를 다시 선택 해주세요.');
+            show_error_message({title:'[연도]를 다시 선택 해주세요.'});
         }
         else if(month_text == undefined || month_text == ''){
-            show_error_message('[월]을 다시 선택 해주세요.');
+            show_error_message({title:'[월]을 다시 선택 해주세요.'});
         }else if(date_text == undefined || date_text == ''){
-            show_error_message('[일자]를 다시 선택 해주세요.');
+            show_error_message({title:'[일자]를 다시 선택 해주세요.'});
         }
         else{
-            show_error_message(`${year_text}년 ${month_text}월 - ${year_text2}년 ${month_text2}월`);
+            show_error_message({title:`${year_text}년 ${month_text}월 - ${year_text2}년 ${month_text2}월`});
         }
     }
 
@@ -1602,7 +1602,7 @@ class TimeSelector{
 
             let time_compare = TimeRobot.compare(selected_time_data_form, min_time_data_form); // >= 일경우 true;
             if(time_compare == false){
-                // show_error_message('종료시간은 시작시간보다 작을 수 없습니다.');
+                // show_error_message({title:'종료시간은 시작시간보다 작을 수 없습니다.'});
                 return false;
             }
         }
@@ -1612,7 +1612,7 @@ class TimeSelector{
     upper_right_button(){
         let minimum_check = this.check_minimum_time();
         if(minimum_check == false){
-            show_error_message('종료 시각은 시작 시각보다 작을 수 없습니다.');
+            show_error_message({title:'종료 시각은 시작 시각보다 작을 수 없습니다.'});
             return false;
         }
 
@@ -1984,7 +1984,7 @@ class TimeSelector2{
     upper_right_button(){
         let minimum_check = this.check_minimum_time();
         if(minimum_check != true){
-            show_error_message(minimum_check.message);
+            show_error_message({title:minimum_check.message});
             return false;
         }
 
@@ -2354,7 +2354,7 @@ class TimeSelector3{
 
             let time_compare = TimeRobot.compare(selected_time_data_form, min_time_data_form); // > 일경우 true;
             if(time_compare == false){
-                // show_error_message('종료시간은 시작시간보다 작을 수 없습니다.');
+                // show_error_message({title:'종료시간은 시작시간보다 작을 수 없습니다.'});
                 return {message:"종료시간은 시작시간보다 작을 수 없습니다."};
             }
         }else{
@@ -2370,7 +2370,7 @@ class TimeSelector3{
     upper_right_button(){
         let minimum_check = this.check_minimum_time();
         if(minimum_check != true){
-            show_error_message(minimum_check.message);
+            show_error_message({title:minimum_check.message});
             return false;
         }
 
@@ -2661,6 +2661,7 @@ class TicketSelector{
         if(length == 0){
             html_to_join.push(CComponent.no_data_row('수업 목록이 비어있습니다.'));
         }
+
         for(let i=0; i<length; i++){
             let data = this.received_data[i];
             let ticket_id = data.ticket_id;
@@ -2982,6 +2983,7 @@ class MemberSelector{
             let member_id = data.member_id;
             let member_name = data.member_name;
             // let member_rem_count = data.member_ticket_rem_count;
+            let member_reg_count = data.member_ticket_reg_count;
             let member_avail_count = data.member_ticket_avail_count;
             let member_expiry = data.end_date;
             let member_fix_state_cd = data.member_fix_state_cd;
@@ -3000,7 +3002,7 @@ class MemberSelector{
             //     checked = 0;
             // }
             let html = CComponent.select_member_row (
-                this.multiple_select, checked, this.unique_instance, member_id, member_name, member_avail_count, member_expiry, member_fix_state_cd, member_profile_url, this.appendix.disable_zero_avail_count, (add_or_substract)=>{
+                this.multiple_select, checked, this.unique_instance, member_id, member_name, member_reg_count, member_avail_count, member_expiry, member_fix_state_cd, member_profile_url, this.appendix.disable_zero_avail_count, (add_or_substract)=>{
                     if(this.appendix.lecture_id != null){
                         let member_id_list = this.received_data_lecture_member.map((el)=>{return el.member_id;});
                         if(member_id_list.indexOf(member_id) == -1){ // 선택한 회원이 수업 리스트의 회원이 아니라면 (전체회원에서 선택했다면)
@@ -3039,7 +3041,8 @@ class MemberSelector{
                                     }};
                                     
                                     let options_padding_top_bottom = 16;
-                                    let button_height = 8 + 8 + 52;
+                                    // let button_height = 8 + 8 + 52;
+                                    let button_height = 52;
                                     // let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
                                     let layer_popup_height = options_padding_top_bottom + 52*Object.keys(user_option).length;
                                     let root_content_height = $root_content.height();
@@ -3148,6 +3151,7 @@ class MemberSelector{
             let member_id = data.member_id;
             let member_name = data.member_name;
             // let member_rem_count = data.member_ticket_rem_count;
+            let member_reg_count = data.member_ticket_reg_count;
             let member_avail_count = data.member_ticket_avail_count;
             let member_expiry = data.end_date;
             let member_fix_state_cd = data.member_fix_state_cd;
@@ -3160,7 +3164,7 @@ class MemberSelector{
             //     checked = 0;
             // }
             let html = CComponent.select_member_row (
-                this.multiple_select, checked, this.unique_instance, member_id, member_name, member_avail_count, member_expiry, member_fix_state_cd, member_profile_url, this.appendix.disable_zero_avail_count, (add_or_substract)=>{
+                this.multiple_select, checked, this.unique_instance, member_id, member_name, member_reg_count, member_avail_count, member_expiry, member_fix_state_cd, member_profile_url, this.appendix.disable_zero_avail_count, (add_or_substract)=>{
                     
                     if(add_or_substract == "add"){
                         this.data.id.push(member_id);
@@ -3522,7 +3526,7 @@ class DatePickerSelector_backup{
                             this.option.callback_when_set(this.store); 
                             layer_popup.close_layer_popup();
                         }else{
-                            show_error_message('종료일은 시작일보다 빠를수 없습니다.');
+                            show_error_message({title:'종료일은 시작일보다 빠를수 없습니다.'});
                         }
                     });
                     date_cache++;
@@ -3797,11 +3801,11 @@ class DatePickerSelector{
                     $(document).off('click', `#calendar_cell_${data_date}`).on('click', `#calendar_cell_${data_date}`, ()=>{
                         if(date_compare != true){
                             let date = Number(data_date.split('-')[2]);
-                            this.dataset = {data:{year:reference_date_year, month:reference_date_month, date}};
+                            this.dataset = {data:{year:reference_date_year, month:reference_date_month, date:date}};
                             this.option.callback_when_set(this.store); 
                             layer_popup.close_layer_popup();
                         }else{
-                            show_error_message('종료일은 시작일보다 빠를수 없습니다.');
+                            show_error_message({title:'종료일은 시작일보다 빠를수 없습니다.'});
                         }
                     });
                     date_cache++;
@@ -3985,11 +3989,11 @@ class RepeatSelector{
             this.data.repeat_end = {year:null, month:null, date:null};
         }else{
             if(this.data.day.length == 0){
-                show_error_message("반복 요일을 선택 해주세요.");
+                show_error_message({title:"반복 요일을 선택 해주세요."});
                 return false;
             }
             if(this.data.repeat_end.year == null){
-                show_error_message("반복 종료일을 선택 해주세요.");
+                show_error_message({title:"반복 종료일을 선택 해주세요."});
                 return false;
             }
         }
@@ -4580,7 +4584,7 @@ class PasswordInput{
         let combined_data = {password : `${this.data.password_digit_1}${this.data.password_digit_2}${this.data.password_digit_3}${this.data.password_digit_4}`};
         console.log(combined_data.password, this.original_data, "여기")
         if(combined_data.password != this.original_data){
-            show_error_message("비밀번호가 맞지 않습니다.");
+            show_error_message({title:"비밀번호가 맞지 않습니다."});
             return;
         }
         this.callback();
@@ -4603,7 +4607,13 @@ class BoardWriter{
             ],
             category_selected:{
                 
-            }
+            },
+            visibility:{
+                title:SHOW,
+                content:SHOW
+            },
+            upper_html:null,
+            placeholder:"내용을 입력해주세요."
         };
         // this.init();
         this.set_initial_data();
@@ -4731,7 +4741,8 @@ class BoardWriter{
         let icon_r_visible = SHOW;
         let icon_r_text = this.data.category_selected[category_id].text.length == 0 ? '' : this.data.category_selected[category_id].text;
         // let style = {"display":"inline-block", 'padding':"16px", "padding-right":"0", "width":"43%", "min-width":"170px", "max-width":"208px", "font-size":"14px"};
-        let style = {"display":"inline-block", 'padding':"16px", "padding-right":"0", "width":"43%", "min-width":"300px", "max-width":"320px", "font-size":"14px"};
+        // let style = {"display":"inline-block", 'padding':"16px", "padding-right":"0", "width":"43%", "min-width":"300px", "max-width":"320px", "font-size":"14px"};
+        let style = {"display":"inline-block", 'padding':"16px", "padding-right":"0", "width":`${ this.data.category.length > 1 ? "50%" : "100%"}`, "height":"56px", "font-size":"14px", "box-sizing":"border-box"};
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             let title = category_title;
             let install_target = "#wrapper_box_custom_select";
@@ -4769,7 +4780,7 @@ class BoardWriter{
             minHeight: 150,
             maxHeight:summer_note_textarea_height,
             fontSizes:['12', '14', '16'],
-            placeholder: "내용을 입력해주세요.",
+            placeholder: this.data.placeholder,
             tabsize: 2,
             lang: 'ko-KR',
             toolbar: [
@@ -4786,14 +4797,14 @@ class BoardWriter{
             callbacks:{
                 onImageUpload: function(files) {
                     if(board_writer.data.category_selected['type'].text.length == 0){
-                        show_error_message('게시글 분류부터 선택해주세요.');
+                        show_error_message({title:'게시글 분류부터 선택해주세요.'});
                         return false;
                     }
                     // upload image to server and create imgNode...
                     let img_error_flag = false;
                     for (let i = files.length - 1; i >= 0; i--) {
                         if(files[i].size > 10485760){
-                            show_error_message('이미지는 최대 10mb까지 업로드 가능합니다.');
+                            show_error_message({title:'이미지는 최대 10mb까지 업로드 가능합니다.'});
                             img_error_flag = true;
                             break;
                         }
@@ -4811,8 +4822,9 @@ class BoardWriter{
         if(this.data.content == "" || this.data.content == null){
             this.data.content = " "
         }
-
-        $(`#board_writer_content_input`).summernote('code', this.data.content);
+        if(this.data.content != " "){
+            $(`#board_writer_content_input`).summernote('code', this.data.content);
+        }
         $('.note-editable').blur();
     }
 
@@ -4843,7 +4855,7 @@ class BoardWriter{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined) {
                     if (data.messageArray.length > 0) {
-                        show_error_message(data.messageArray);
+                        show_error_message({title:data.messageArray});
                         return false;
                     }
                 }
@@ -4855,8 +4867,7 @@ class BoardWriter{
             },
 
             error:function(){
-                //alert('통신이 불안정합니다.');
-                show_error_message('통신이 불안정합니다.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
             }
         });
     }
@@ -4876,11 +4887,11 @@ class BoardWriter{
         this.data.content = content_value;
 
         if(this.data.title == null){
-            show_error_message("제목을 입력해주세요.");
+            show_error_message({title:"제목을 입력해주세요."});
             return false;
         }
         if(this.data.content.length <= 1 && this.data.visibility.content != HIDE){
-            show_error_message("내용을 입력해주세요.");
+            show_error_message({title:"내용을 입력해주세요."});
             return false;
         }
         if(this.data.category.length > 0){
@@ -4891,7 +4902,7 @@ class BoardWriter{
                 }
             }
             if(selected_value_ok == false){
-                show_error_message("카테고리를 선택해주세요.")
+                show_error_message({title:"카테고리를 선택해주세요."})
                 return false;
             }
         }
@@ -4917,8 +4928,13 @@ class BoardWriter_for_daily_record{
             category_selected:{
                 
             },
+            visibility:{
+                title:SHOW,
+                content:SHOW
+            },
+            upper_html:null,
+            placeholder:"내용을 입력해주세요.",
             schedule_id:null,
-            is_member_view:false,
             images: {}
         };
         // this.init();
@@ -4952,7 +4968,7 @@ class BoardWriter_for_daily_record{
         let top_right = `<span class="icon_right"  onclick="${this.target.instance}.upper_right_menu();">
                             <span style="color:var(--font-highlight);font-weight: 500;">저장</span>
                         </span>`;
-        let content =   `<section id="${this.target.upper_html}" style="height:100px;overflow:auto;">${this.data.upper_html != null ? this.data.upper_html : ""}</section>`+
+        let content =   `<section id="${this.target.upper_html}" style="height:100px;overflow:auto;${this.data.upper_html == null ? "display:none;" : ""}">${this.data.upper_html != null ? this.data.upper_html : ""}</section>`+
                         `<section id="${this.target.category_selector}">${this.dom_assembly_category()}</section>`+
                         `<section id="${this.target.content_writer}">${this.dom_content_assembly()}</section>`;
         
@@ -5047,7 +5063,8 @@ class BoardWriter_for_daily_record{
         let icon_r_visible = SHOW;
         let icon_r_text = this.data.category_selected[category_id].text.length == 0 ? '' : this.data.category_selected[category_id].text;
         // let style = {"display":"inline-block", 'padding':"16px", "padding-right":"0", "width":"43%", "min-width":"170px", "max-width":"208px", "font-size":"14px"};
-        let style = {"display":"inline-block", 'padding':"16px", "padding-right":"0", "width":"43%", "min-width":"300px", "max-width":"320px", "font-size":"14px"};
+        // let style = {"display":"inline-block", 'padding':"16px", "padding-right":"0", "width":"43%", "min-width":"300px", "max-width":"320px", "font-size":"14px"};
+        let style = {"display":"inline-block", 'padding':"16px", "padding-right":"0", "width":`${ this.data.category.length > 1 ? "50%" : "100%"}`, "height":"56px", "font-size":"14px", "box-sizing":"border-box"};
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             let title = category_title;
             let install_target = "#wrapper_box_custom_select";
@@ -5085,14 +5102,14 @@ class BoardWriter_for_daily_record{
             maxHeight: os == IOS ? summer_note_textarea_height : "",
             // height:1500,
             fontSizes:['12', '14', '16'],
-            placeholder: "내용을 입력해주세요.",
+            placeholder: this.data.placeholder,
             tabsize: 2,
             lang: 'ko-KR',
             toolbar: [
-                ['style', ['bold', 'underline']],
-                ['color', ['color']],
+                // ['style', ['bold', 'underline']],
+                // ['color', ['color']],
                 ['insert', ['picture', 'video']],
-                ['para', ['paragraph']],
+                // ['para', ['paragraph']],
             ],
             focus: false,
             // fontSize: 14,
@@ -5100,18 +5117,18 @@ class BoardWriter_for_daily_record{
             callbacks:{
                 onImageUpload: function(files) {
                     if(pass_inspector.data.auth_ads.limit_type == "무료"){
-                        show_error_message("피터스 패스 이용 고객께서만 이미지를 첨부 하실 수 있습니다.");
+                        show_error_message({title:"피터스 패스 이용 고객께서만 이미지를 첨부 하실 수 있습니다."});
                         return false;
                     }
                     // if(board_writer.data.category_selected['type'].text.length == 0){
-                    //     show_error_message('게시글 분류부터 선택해주세요.');
+                    //     show_error_message({title:'게시글 분류부터 선택해주세요.'});
                     //     return false;
                     // }
                     // upload image to server and create imgNode...
                     let img_error_flag = false;
                     for (let i = files.length - 1; i >= 0; i--) {
                         if(files[i].size > 10485760){
-                            show_error_message('이미지는 최대 10mb까지 업로드 가능합니다.');
+                            show_error_message({title:'이미지는 최대 10mb까지 업로드 가능합니다.'});
                             img_error_flag = true;
                             break;
                         }
@@ -5127,10 +5144,11 @@ class BoardWriter_for_daily_record{
             },
         });
         if(this.data.content == "" || this.data.content == null){
-            this.data.content = " "
+            this.data.content = " ";
         }
-
-        $(`#board_writer_content_input`).summernote('code', this.data.content);
+        if(this.data.content != " "){
+            $(`#board_writer_content_input`).summernote('code', this.data.content);
+        }
         $('.note-editable').blur();
     }
 
@@ -5164,7 +5182,7 @@ class BoardWriter_for_daily_record{
                     check_app_version(data.app_version);
                     if(data.messageArray != undefined) {
                         if (data.messageArray.length > 0) {
-                            show_error_message(data.messageArray);
+                            show_error_message({title:data.messageArray});
                             return false;
                         }
                     }
@@ -5177,8 +5195,7 @@ class BoardWriter_for_daily_record{
                 },
 
                 error:function(){
-                    //alert('통신이 불안정합니다.');
-                    show_error_message('통신이 불안정합니다.');
+                    show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                 }
             });
         });
@@ -5275,11 +5292,11 @@ class BoardWriter_for_daily_record{
         this.data.content = content_value;
 
         if(this.data.title == null){
-            show_error_message("제목을 입력해주세요.");
+            show_error_message({title:"제목을 입력해주세요."});
             return false;
         }
         if(this.data.content.length <= 1 && this.data.visibility.content != HIDE){
-            show_error_message("내용을 입력해주세요.");
+            show_error_message({title:"내용을 입력해주세요."});
             return false;
         }
         if(this.data.category.length > 0){
@@ -5290,14 +5307,14 @@ class BoardWriter_for_daily_record{
                 }
             }
             if(selected_value_ok == false){
-                show_error_message("카테고리를 선택해주세요.");
+                show_error_message({title:"카테고리를 선택해주세요."});
                 return false;
             }
         }
 
         if(this.data.content.match(/<img/g) != null){
             if(this.data.content.match(/img/g).length > 2){
-                show_error_message("이미지는 2장만 첨부 가능합니다.");
+                show_error_message({title:"이미지는 2장만 첨부 가능합니다."});
                 return false;
             }
         }

@@ -116,11 +116,11 @@
             $('#id_inquire_body').val(content);
 
             if(type.val() == ""){
-                show_error_message('문의 타입을 선택해주세요.');
+                show_error_message({title:'문의 타입을 선택해주세요.'});
                 return false;
             }
             if(body.val() == ""){
-                show_error_message('문의 내용을 작성해주세요.');
+                show_error_message({title:'문의 내용을 작성해주세요.'});
                 return false;
             }
             return true;

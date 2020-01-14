@@ -229,7 +229,7 @@ class Setting_menu_access{
                                 this.render_content();
                             });
         let icon = power == ON ? CImg.lock("", {"vertical-align":"middle", "margin-bottom":"3px", "width":"20px"}) : CImg.unlock("", {"vertical-align":"middle", "margin-bottom":"3px", "width":"20px"});
-        let title = `${icon} 출석체크 모드 종료 시 비밀번호 입력`;
+        let title = `${icon} 실시간 출석 체크 종료`;
         let title_row = CComponent.text_button ("statistics_lock_toggle", title, {"font-size":"14px", "font-weight":"500", "letter-spacing":"-0.8px"}, ()=>{});
         let html = `<article class="setting_menu_lock_wrapper obj_input_box_full">
                         <div style="display:table;width:100%;">
@@ -324,6 +324,13 @@ class Setting_menu_access{
     }
 
     send_data(){
+        let auth_inspect = pass_inspector.setting_update();
+        if(auth_inspect.barrier == BLOCKED){
+            let message = `${auth_inspect.limit_type}`;
+            show_error_message({title:message});
+            return false;
+        }
+        
         Setting_menu_access_func.locked_menu(()=>{
             if(this.data_sending_now == true){
                 return false;
@@ -340,7 +347,7 @@ class Setting_menu_access{
             Setting_menu_access_func.update(data, ()=>{
                 this.data_sending_now = false;
                 this.set_initial_data();
-                show_error_message('변경 내용이 저장되었습니다.');
+                show_error_message({title:'변경 내용이 저장되었습니다.'});
                 // this.render_content();
             }, ()=>{this.data_sending_now = false;});
         });
@@ -374,7 +381,7 @@ class Setting_menu_access_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -394,7 +401,7 @@ class Setting_menu_access_func{
                     error_callback();
                 }
                 console.log('server error');
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
             }
         });
     }
@@ -416,7 +423,7 @@ class Setting_menu_access_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -436,7 +443,7 @@ class Setting_menu_access_func{
                     error_callback();
                 }
                 console.log('server error');
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
             }
         });
     }

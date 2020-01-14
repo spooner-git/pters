@@ -4,6 +4,8 @@ class Alarm {
         this.targetHTML = targetHTML;
         this.instance = instance;
 
+        this.sharing_invite = {};
+
         this.data;
         this.paging = 0;
 
@@ -20,14 +22,18 @@ class Alarm {
 
 
         this.render_upper_box();
-        Alarm_func.read((jsondata) => {
-            // this.render_list(jsondata);
-            this.data = this.dom_list(jsondata);
-            this.render_list(this.data);
-            this.render_upper_box();
-            $root_content.scrollTop(1);
-            this.new_alarms_id_cache = [];
-        });
+        Setting_shared_func.read_request((data)=>{
+            this.sharing_invite = data;
+            Alarm_func.read((jsondata) => {
+                // this.render_list(jsondata);
+                this.data = this.dom_list(jsondata);
+                this.render_list(this.data);
+                this.render_upper_box();
+                $root_content.scrollTop(1);
+                this.new_alarms_id_cache = [];
+            });
+        }, ()=>{});
+        
     }
 
 
@@ -79,6 +85,7 @@ class Alarm {
                 
                 let data = jsondata[date][i];
                 let alarm_id = data.alarm_id;
+                let alarm_reg_member = data.reg_member_name;
                 let alarm_from = data.alarm_from_member_name;
                 let alarm_to = data.alarm_to_member_name;
                 let alarm_what = data.alarm_info;
@@ -110,7 +117,7 @@ class Alarm {
                                 <div class="alarm_data_b">
                                     <div></div>
                                     <div>
-                                        <span>${alarm_from}님이 ${alarm_to != "" ? alarm_to+'님의' :''} ${alarm_what}을 ${alarm_how} 했습니다.</span>
+                                        <span>${alarm_reg_member}님이 ${alarm_to != "" ? alarm_to+'님의' :''} ${alarm_what}을 ${alarm_how} 했습니다.</span>
                                         <div style="margin-top:3px;">
                                             ${alarm_detail}
                                         </div>
@@ -120,6 +127,13 @@ class Alarm {
                 html_temp.push(html);
             }
         }
+
+        if(Object.keys(this.sharing_invite).length > 0){
+            html_temp.unshift(
+                this.dom_row_program_share_invited(this.sharing_invite)
+            );
+        }
+
         if(html_temp.length == 0){
             html_temp.push(`<article class="alarm_wrapper">   
                                 <div>
@@ -141,26 +155,82 @@ class Alarm {
         return pass_inspector.data.auth_ads.limit_num != 0 ? html : "";
     }
 
+
+    dom_row_program_share_invited(invited_programs){
+
+        let html_to_join = [];
+
+        for(let program in invited_programs){
+            let data = invited_programs[program];
+            let program_name = data.program_name;
+            let invitor_name = data.member_info.member_name;
+            let invitor_user_id = data.member_info.member_user_id;
+
+
+            let onclick_accept = ()=>{
+                let message = {title:`${program_name} 프로그램 공유 참가 요청`, comment:'수락 하시겠습니까?'};
+                show_user_confirm (message, ()=>{
+                    Setting_shared_func.send_accept({"class_id":program, "program_connection_check":1}, ()=>{
+                        layer_popup.close_layer_popup();
+                        show_error_message({title:"프로그램 메뉴에서 공유 프로그램을 확인할 수 있습니다."});
+                        this.init();
+                    }, ()=>{});
+                });
+                
+            };
+
+            let onclick_decline =()=>{
+                let message = {title:`${program_name} 프로그램 공유 참가 요청`, comment:'<span style="color:red;">거절</span> 하시겠습니까?'};
+                show_user_confirm (message, ()=>{
+                    Setting_shared_func.send_accept({"class_id":program, "program_connection_check":2}, ()=>{
+                        layer_popup.close_layer_popup();
+                        show_error_message({title:"거절 되었습니다."});
+                        this.init();
+                    }, ()=>{});
+                });
+            };
+
+            let button_style = {"line-height":"35px", "font-size":"14px", "font-weight":"500", "background-color":"var(--bg-light)", "border-radius":"3px"};
+
+            let comp = `<div style="padding:20px 20px 15px 20px;box-shadow:var(--box-shadow-article);border:var(--border-article);">
+                            <div style="padding:5px 0 20px 0;font-size:14px;font-weight:bold;">${invitor_name} (${invitor_user_id}) 님께서 "${program_name}" 프로그램에 공유 참가 요청을 보내셨습니다.</div>
+                            <div style="display:flex;">
+                                <div style="flex:1 1 0;padding:3px;">${CComponent.button (`share_invited_${program}_decline`, "거절", button_style, onclick_decline)}</div>
+                                <div style="flex:1 1 0;padding:3px;">${CComponent.button (`share_invited_${program}_accept`, "수락", button_style, onclick_accept)}</div>
+                            </div>
+                        </div>`;
+            html_to_join.push(comp);
+        }
+
+        let html = html_to_join.join("");
+        return html;
+    }
+
+
+
     are_there_new_alarm(callback){
         let READ = 1;
         let UNREAD = 0;
-
-        Alarm_func.read((data)=>{
-            for(let date in data){
-                let length = data[date].length;
-                for(let i=0; i<length; i++){
-                    let read_check = data[date][i].read_check;
-                    let alarm_id = data[date][i].alarm_id;
-                    if(read_check == UNREAD){
-                        this.new_alarms_id_cache.push(alarm_id);
+        Setting_shared_func.read_request((invited)=>{
+            let invited_length = Object.keys(invited).length;
+            Alarm_func.read((data)=>{
+                for(let date in data){
+                    let length = data[date].length;
+                    for(let i=0; i<length; i++){
+                        let read_check = data[date][i].read_check;
+                        let alarm_id = data[date][i].alarm_id;
+                        if(read_check == UNREAD){
+                            this.new_alarms_id_cache.push(alarm_id);
+                        }
                     }
                 }
-            }
-            // if(this.new_alarms_id_cache.length > 0){
-            //     return false;
-            // }
-            callback(this.new_alarms_id_cache.length);
+                // if(this.new_alarms_id_cache.length > 0){
+                //     return false;
+                // }
+                callback(this.new_alarms_id_cache.length + invited_length);
+            });
         });
+            
     }
 
     static_component (){
@@ -196,7 +266,7 @@ class Alarm_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }

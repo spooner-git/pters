@@ -13,6 +13,11 @@ logger = logging.getLogger(__name__)
 static_url_cache = {}
 
 
+@register.filter
+def replace_str(value):
+    return value.replace("\'", "\"")
+
+
 @register.simple_tag
 def static_url(file_name):
     # value = static_url_cache.get(file_name)

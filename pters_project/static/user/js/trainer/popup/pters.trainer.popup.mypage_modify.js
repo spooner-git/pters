@@ -224,10 +224,10 @@ class Mypage_modify{
             let data = {'token':'', 'phone':this.auth_phone.phone};
             Phone_auth_func.request_auth_number(data, (jsondata)=>{
                     if(jsondata.messageArray.length > 0){
-                        show_error_message(jsondata.messageArray);
+                        show_error_message({title:jsondata.messageArray});
                         return false;
                     }
-                    show_error_message("인증번호를 확인해주세요.");
+                    show_error_message({title:"인증번호를 확인해주세요."});
                     this.auth_phone.valid_time_count = 180;
                     this.auth_phone.request_status = true;
                     this.render_content();
@@ -257,11 +257,11 @@ class Mypage_modify{
             let data = {'user_activation_code': this.auth_phone.number_get, 'phone': this.auth_phone.phone};
             Phone_auth_func.send_auth_number(data, (data)=>{
                 if(data.messageArray.length > 0){
-                    show_error_message(data.messageArray);
+                    show_error_message({title:data.messageArray});
                 }else{
                     clearInterval(this.auth_phone.valid_time_count_func);
                     $('#activation_timer').text('');
-                    show_error_message("휴대폰 번호가 변경되었습니다");
+                    show_error_message({title:"휴대폰 번호가 변경되었습니다"});
                 }
             });
         };
@@ -318,20 +318,20 @@ class Mypage_modify{
         // let error_info = check_registration_form(forms);
 
         // if(error_info != ''){
-        //     show_error_message(error_info);
+        //     show_error_message({title:error_info});
         //     return false;
         // }
         // else{
             if(this.data.name == null){
-                show_error_message('이름을 입력 해주세요.');
+                show_error_message({title:'이름을 입력 해주세요.'});
                 return false;
             }
             // if(this.auth_phone.phone == null){
-            //     show_error_message('휴대폰 번호를 입력 해주세요.');
+            //     show_error_message({title:'휴대폰 번호를 입력 해주세요.'});
             //     return false;
             // }
             // if(this.data.email == null){
-            //     show_error_message('이메일을 선택 해주세요.');
+            //     show_error_message({title:'이메일을 선택 해주세요.'});
             //     return false;
             // }
             return true;

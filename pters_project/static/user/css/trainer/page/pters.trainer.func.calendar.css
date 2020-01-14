@@ -87,7 +87,6 @@
 	transition: 0.2s ease-in-out;
 	background-color: var(--bg-main);
 	z-index: 1;
-	padding-bottom: 56px;
 }
 
 .week_upper_float_tool{
@@ -169,9 +168,9 @@
 	height: 28px;
 	border-radius: 14px;
 	z-index: -1;
-	top:50%;
+	/* top:50%; */
 	left: 50%;
-	transform: translate(-50%, -50%);
+	transform: translateX(-50%);
 	background: #ffe8eb;
 }
 .no_border{
@@ -340,7 +339,7 @@
 	position: absolute;
 	height: 1px;
 	left: 100%;
-	z-index: 3;
+	z-index: 0;
 	opacity: 0.5;
 	background-color:var(--bg-highlight);
 }

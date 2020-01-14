@@ -131,8 +131,7 @@ class Ticket_list {
                 ticket_lectures_included_name_html.push(html);
             }
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
-            let onclick = `layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_TICKET_VIEW}', 100, ${popup_style}, {'ticket_id':${ticket_id}}, ()=>{
-                ticket_view_popup = new Ticket_view('.popup_ticket_view', ${ticket_id}, 'ticket_view_popup');});`;
+            let onclick = `ticket_list_popup.event_view_ticket(${ticket_id})`;
             let html = `<article class="ticket_wrapper" data-text="${ticket_name}" data-ticketid="${ticket_id}" onclick="${onclick}" style="opacity:${this.list_status_type == "ing" ? "1" : '0.6'}">
                             <div class="ticket_data_u">
                                 <div class="ticket_name">
@@ -171,7 +170,8 @@ class Ticket_list {
         user_option += `}`;
 
         let options_padding_top_bottom = 16;
-        let button_height = 8 + 8 + 52;
+        // let button_height = 8 + 8 + 52;
+        let button_height = 52;
         let layer_popup_height = options_padding_top_bottom + button_height + 52*user_options_array.length;
         let root_content_height = $root_content.height();
 
@@ -210,6 +210,20 @@ class Ticket_list {
         }
         
         document.querySelector('.search_bar').innerHTML = html;
+    }
+
+    event_view_ticket(ticket_id){
+        let auth_inspect = pass_inspector.ticket_read();
+        if(auth_inspect.barrier == BLOCKED){
+            let message = `${auth_inspect.limit_type}`;
+            show_error_message({title:message});
+            return false;
+        }
+
+        let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_VIEW, 100, popup_style, {'ticket_id':ticket_id}, ()=>{
+            ticket_view_popup = new Ticket_view('.popup_ticket_view', ticket_id, 'ticket_view_popup');
+        });
     }
 
     search_tool_visible (event, self){
@@ -279,7 +293,7 @@ class Ticket_list {
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }

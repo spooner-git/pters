@@ -8,9 +8,9 @@
 }
 
 .popup_plan_view .popup_toolbox{
-	/* position: sticky;
-	position: -webkit-sticky; */
-	position: relative;
+	position: sticky;
+	position: -webkit-sticky;
+	/* position: relative; */
 	top: 0;
 	padding: 4px 16px 20px 60px;
 	border-radius: unset;

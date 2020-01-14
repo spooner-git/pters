@@ -580,11 +580,11 @@ class Statistics{
                             let date_2 = `${selected_data.data2.year}-${selected_data.data2.month}`;
                             let diff_month = DateRobot.diff_month(date_1, date_2);
                             if(diff_month < 0){
-                                show_error_message("검색 종료일은 시작일보다 빠를 수 없습니다.");
+                                show_error_message({title:"검색 종료일은 시작일보다 빠를 수 없습니다."});
                                 return false;
                             }
                             if(diff_month > 11){
-                                show_error_message("최대 12개월 단위로 조회가 가능합니다.");
+                                show_error_message({title:"최대 12개월 단위로 조회가 가능합니다."});
                                 return false;
                             }
                             if(this.pass_inspect(date_1, date_2) == false){
@@ -602,7 +602,8 @@ class Statistics{
             }
         };
         let options_padding_top_bottom = 16;
-        let button_height = 8 + 8 + 52;
+        // let button_height = 8 + 8 + 52;
+        let button_height = 52;
         let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
         let root_content_height = $root_content.height();
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
@@ -632,19 +633,11 @@ class Statistics{
     pass_inspect(date1, date2){
         let inspect = pass_inspector.statistics(date1, date2);
         if(inspect.barrier == BLOCKED){
-            // let id = "go_to_shop";
-            // let title = "패스 구매";
-            // let style = {"display":"inline-block", "background-color":"var(--bg-highlight)", "border-radius":"2px", "margin-top":"15px"};
-            // let onclick = ()=>{
-            //     layer_popup.all_close_layer_popup();
-            //     sideGoPopup("pters_pass_main");
-            // };
-            // let go_to_shop_button = `<div>${CComponent.button (id, title, style, onclick)}</div>`;
-
-            // show_error_message(`[${inspect.limit_type}] 이용자께서는 최대 ${inspect.limit_num}개월 단위로 조회 하실 수 있습니다.${go_to_shop_button}`);
-
-            let message = `[${inspect.limit_type}] 이용자께서는 최대 ${inspect.limit_num}개월 단위로 조회 하실 수 있습니다.
-                            <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까??</p>`;
+            let message = {
+                title:`기간 설정을 완료하지 못했습니다.`,
+                comment:`[${inspect.limit_type}] 이용자께서는 최대 ${inspect.limit_num}개월 단위로 조회 하실 수 있습니다.
+                        <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까?</p>`
+            }
             show_user_confirm (message, ()=>{
                 layer_popup.all_close_layer_popup();
                 sideGoPopup("pters_pass_main");
@@ -693,7 +686,7 @@ class Statistics_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray);
+                        show_error_message({title:data.messageArray});
                         return false;
                     }
                 }
@@ -737,7 +730,7 @@ class Statistics_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -757,7 +750,7 @@ class Statistics_func{
                     error_callback();
                 }
                 console.log('server error');
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
             }
         });
     }
@@ -782,7 +775,7 @@ class Statistics_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -802,7 +795,7 @@ class Statistics_func{
                     error_callback();
                 }
                 console.log('server error');
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
             }
         });
     }

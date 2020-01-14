@@ -5,6 +5,9 @@ class Member_schedule_history{
         this.callback = callback;
         this.received_data;
         this.data = null;
+        this.settings = {
+            sign_use:OFF
+        };
         this.sort_val = SORT_MEMBER_TICKET;
         this.init();
 
@@ -152,15 +155,15 @@ class Member_schedule_history{
                 let attend_status = data.state_cd;
                 let memo = data.note;
                 let daily_record_id = data.daily_record_id;
-                html = CComponent.schedule_history_row (numbering, schedule_id, date, schedule_name, attend_status, memo, daily_record_id, ()=>{
+                html = CComponent.schedule_history_row (numbering, schedule_id, date, schedule_name, attend_status, memo, daily_record_id, this.settings.sign_use, ()=>{
                     let user_option = {
                         daily_record:{text:"일지", callback:()=>{
                                                                 layer_popup.close_layer_popup();
                                                                 Plan_daily_record_func.write_artice(schedule_id, schedule_name, ()=>{
                                                                     this.init();
-                                                                    // show_error_message(`[${schedule_name}] 일지 변경사항이 저장 되었습니다.`);
+                                                                    // show_error_message({title:`[${schedule_name}] 일지 변경사항이 저장 되었습니다.`});
                                                                 }, ()=>{
-                                                                    show_error_message(`<span style="color:var(--font-highlight)">일지 변경사항 저장에 실패 하였습니다.</span>`);
+                                                                    show_error_message({title:`<span style="color:var(--font-highlight)">일지 변경사항 저장에 실패 하였습니다.</span>`});
                                                                 });
                         }},
                         absence:{text:"결석", callback:()=>{Plan_func.status({"schedule_id":schedule_id, "state_cd":SCHEDULE_ABSENCE}, ()=>{
@@ -177,19 +180,42 @@ class Member_schedule_history{
                                                                 
                                                             });
                                                             layer_popup.close_layer_popup();}},
-                        attend:{text:"출석", callback:()=>{Plan_func.status({"schedule_id":schedule_id, "state_cd":SCHEDULE_FINISH}, ()=>{
-                                                                this.init();
-                                                                try{
-                                                                    member_view_popup.init();
-                                                                }catch(e){}
-                                                                try{
-                                                                    plan_view_popup.init();
-                                                                }catch(e){}
-                                                                try{
-                                                                    current_page.init();
-                                                                }catch(e){}
+                        attend:{text:"출석", callback:()=>{
+                                                            if(this.settings.sign_use == ON){
+                                                                this.open_drawing_board((image)=>{ //출석시 사인 입력 옵션 활성화시
+                                                                    let send_data = {"schedule_id":schedule_id, "state_cd":SCHEDULE_FINISH, "upload_file":image};
+                                                                    Plan_func.status(send_data, ()=>{
+                                                                        Plan_func.upload_sign(send_data, ()=>{
+                                                                            this.init();
+                                                                            try{
+                                                                                member_view_popup.init();
+                                                                            }catch(e){}
+                                                                            try{
+                                                                                plan_view_popup.init();
+                                                                            }catch(e){}
+                                                                            try{
+                                                                                current_page.init();
+                                                                            }catch(e){}
+                                                                        });
+                                                                    });
+                                                                    layer_popup.close_layer_popup();
+                                                                });
+                                                            }else{
+                                                                Plan_func.status({"schedule_id":schedule_id, "state_cd":SCHEDULE_FINISH}, ()=>{
+                                                                    this.init();
+                                                                    try{
+                                                                        member_view_popup.init();
+                                                                    }catch(e){}
+                                                                    try{
+                                                                        plan_view_popup.init();
+                                                                    }catch(e){}
+                                                                    try{
+                                                                        current_page.init();
+                                                                    }catch(e){}
 
-                                                            });layer_popup.close_layer_popup();}},
+                                                                });layer_popup.close_layer_popup();
+                                                            }
+                                                        }},
                         cancel:{text:"일정 취소", callback:()=>{Plan_func.delete({"schedule_id":schedule_id}, ()=>{
                                                             this.init();
                                                             try{
@@ -205,7 +231,8 @@ class Member_schedule_history{
                                                         });layer_popup.close_layer_popup();}}
                     };
                     let options_padding_top_bottom = 16;
-                    let button_height = 8 + 8 + 52;
+                    // let button_height = 8 + 8 + 52;
+                    let button_height = 52;
                     let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
                     let root_content_height = $root_content.height();
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
@@ -234,9 +261,9 @@ class Member_schedule_history{
                                         <div id="member_schedule_history_ticket_${i+1}" style="padding:15px 10px;background-color:var(--bg-light);font-size:14px;font-weight:bold;">
                                             <div>${ticket_name} <span style="color:${TICKET_STATUS_COLOR[ticket_status]};font-size:12px;font-weight:500">(${TICKET_STATUS[ticket_status]})</span> <span style="float:right;">${expand_button}</span></div>
                                             <div style="font-size:12px;color:var(--font-main);font-weight:500;">
-                                                등록 <span style="font-weight:bold;">${ticket_reg_count}</span>회 / 
-                                                잔여 <span style="font-weight:bold;">${ticket_rem_count}</span>회 / 
-                                                예약가능 <span style="font-weight:bold;">${ticket_avail_count}</span>회</div>
+                                                등록 <span style="font-weight:bold;">${ticket_reg_count == 99999 ? "무제한" : ticket_reg_count + '회'}</span> / 
+                                                잔여 <span style="font-weight:bold;">${ticket_reg_count == 99999 ? "무제한" : ticket_rem_count + '회'}</span> / 
+                                                예약가능 <span style="font-weight:bold;">${ticket_reg_count == 99999 ? "무제한" : ticket_avail_count + '회'}</span></div>
                                             <div style="font-size:12px;color:var(--font-main);font-weight:500;">${ticket_start_date} - ${ticket_end_date}</div>
                                         </div>
                                         <div id="member_schedule_history_${i+1}_list" data-expand="${expand_status}" style="display:${expand_style};">
@@ -272,9 +299,9 @@ class Member_schedule_history{
                                             layer_popup.close_layer_popup();
                                             Plan_daily_record_func.write_artice(schedule_id, schedule_name, ()=>{
                                                 this.init();
-                                                // show_error_message(`[${schedule_name}] 일지 변경사항이 저장 되었습니다.`);
+                                                // show_error_message({title:`[${schedule_name}] 일지 변경사항이 저장 되었습니다.`});
                                             }, ()=>{
-                                                show_error_message(`<span style="color:var(--font-highlight)">일지 변경사항 저장에 실패 하였습니다.</span>`);
+                                                show_error_message({title:`<span style="color:var(--font-highlight)">일지 변경사항 저장에 실패 하였습니다.</span>`});
                                             });
                     }},
                     absence:{text:"결석", callback:()=>{Plan_func.status({"schedule_id":schedule_id, "state_cd":SCHEDULE_ABSENCE}, ()=>{
@@ -291,19 +318,42 @@ class Member_schedule_history{
                                                             
                                                         });
                                                         layer_popup.close_layer_popup();}},
-                    attend:{text:"출석", callback:()=>{Plan_func.status({"schedule_id":schedule_id, "state_cd":SCHEDULE_FINISH}, ()=>{
-                                                            this.init();
-                                                            try{
-                                                                member_view_popup.init();
-                                                            }catch(e){}
-                                                            try{
-                                                                plan_view_popup.init();
-                                                            }catch(e){}
-                                                            try{
-                                                                current_page.init();
-                                                            }catch(e){}
+                    attend:{text:"출석", callback:()=>{
+                                                        if(this.settings.sign_use == ON){
+                                                            this.open_drawing_board((image)=>{ //출석시 사인 입력 옵션 활성화시
+                                                                let send_data = {"schedule_id":schedule_id, "state_cd":SCHEDULE_FINISH, "upload_file":image};
+                                                                Plan_func.status(send_data, ()=>{
+                                                                    Plan_func.upload_sign(send_data, ()=>{
+                                                                        this.init();
+                                                                        try{
+                                                                            member_view_popup.init();
+                                                                        }catch(e){}
+                                                                        try{
+                                                                            plan_view_popup.init();
+                                                                        }catch(e){}
+                                                                        try{
+                                                                            current_page.init();
+                                                                        }catch(e){}
+                                                                    });
+                                                                });
+                                                                layer_popup.close_layer_popup();
+                                                            });
+                                                        }else{
+                                                            Plan_func.status({"schedule_id":schedule_id, "state_cd":SCHEDULE_FINISH}, ()=>{
+                                                                this.init();
+                                                                try{
+                                                                    member_view_popup.init();
+                                                                }catch(e){}
+                                                                try{
+                                                                    plan_view_popup.init();
+                                                                }catch(e){}
+                                                                try{
+                                                                    current_page.init();
+                                                                }catch(e){}
 
-                                                        });layer_popup.close_layer_popup();}},
+                                                            });layer_popup.close_layer_popup();
+                                                        }
+                                                    }},
                     cancel:{text:"일정 취소", callback:()=>{Plan_func.delete({"schedule_id":schedule_id}, ()=>{
                                                         this.init();
                                                         try{
@@ -319,14 +369,15 @@ class Member_schedule_history{
                                                     });layer_popup.close_layer_popup();}}
                 };
                 let options_padding_top_bottom = 16;
-                let button_height = 8 + 8 + 52;
+                // let button_height = 8 + 8 + 52;
+                let button_height = 52;
                 let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
                 let root_content_height = $root_content.height();
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
                     option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
                 });
             };
-            let row = CComponent.schedule_history_row (numbering, schedule_id, date, schedule_name, attend_status, memo, daily_record_id, onclick);
+            let row = CComponent.schedule_history_row (numbering, schedule_id, date, schedule_name, attend_status, memo, daily_record_id, this.settings.sign_use, onclick);
             html_to_join.push(row);
         }
         if(html_to_join.length == 0){
@@ -381,15 +432,15 @@ class Member_schedule_history{
                 let attend_status = data.state_cd;
                 let memo = data.note;
                 let daily_record_id = data.daily_record_id;
-                html = CComponent.schedule_history_row (numbering, schedule_id, date, schedule_name, attend_status, memo, daily_record_id, ()=>{
+                html = CComponent.schedule_history_row (numbering, schedule_id, date, schedule_name, attend_status, memo, daily_record_id, this.settings.sign_use, ()=>{
                     let user_option = {
                         daily_record:{text:"일지", callback:()=>{
                                                                 layer_popup.close_layer_popup();
                                                                 Plan_daily_record_func.write_artice(schedule_id, schedule_name, ()=>{
                                                                     this.init();
-                                                                    // show_error_message(`[${schedule_name}] 일지 변경사항이 저장 되었습니다.`);
+                                                                    // show_error_message({title:`[${schedule_name}] 일지 변경사항이 저장 되었습니다.`});
                                                                 }, ()=>{
-                                                                    show_error_message(`<span style="color:var(--font-highlight)">일지 변경사항 저장에 실패 하였습니다.</span>`);
+                                                                    show_error_message({title:`<span style="color:var(--font-highlight)">일지 변경사항 저장에 실패 하였습니다.</span>`});
                                                                 });
                         }},
                         absence:{text:"결석", callback:()=>{Plan_func.status({"schedule_id":schedule_id, "state_cd":SCHEDULE_ABSENCE}, ()=>{
@@ -406,19 +457,42 @@ class Member_schedule_history{
 
                                                             });
                                                             layer_popup.close_layer_popup();}},
-                        attend:{text:"출석", callback:()=>{Plan_func.status({"schedule_id":schedule_id, "state_cd":SCHEDULE_FINISH}, ()=>{
-                                                                this.init();
-                                                                try{
-                                                                    member_view_popup.init();
-                                                                }catch(e){}
-                                                                try{
-                                                                    plan_view_popup.init();
-                                                                }catch(e){}
-                                                                try{
-                                                                    current_page.init();
-                                                                }catch(e){}
-
-                                                            });layer_popup.close_layer_popup();}},
+                        attend:{text:"출석", callback:()=>{
+                                                            if(this.settings.sign_use == ON){
+                                                                this.open_drawing_board((image)=>{ //출석시 사인 입력 옵션 활성화시
+                                                                    let send_data = {"schedule_id":schedule_id, "state_cd":SCHEDULE_FINISH, "upload_file":image};
+                                                                    Plan_func.status(send_data, ()=>{
+                                                                        Plan_func.upload_sign(send_data, ()=>{
+                                                                            this.init();
+                                                                            try{
+                                                                                member_view_popup.init();
+                                                                            }catch(e){}
+                                                                            try{
+                                                                                plan_view_popup.init();
+                                                                            }catch(e){}
+                                                                            try{
+                                                                                current_page.init();
+                                                                            }catch(e){}
+                                                                        });
+                                                                    });
+                                                                    layer_popup.close_layer_popup();
+                                                                });
+                                                            }else{
+                                                                Plan_func.status({"schedule_id":schedule_id, "state_cd":SCHEDULE_FINISH}, ()=>{
+                                                                    this.init();
+                                                                    try{
+                                                                        member_view_popup.init();
+                                                                    }catch(e){}
+                                                                    try{
+                                                                        plan_view_popup.init();
+                                                                    }catch(e){}
+                                                                    try{
+                                                                        current_page.init();
+                                                                    }catch(e){}
+    
+                                                                });layer_popup.close_layer_popup();
+                                                            }
+                                                        }},
                         cancel:{text:"일정 취소", callback:()=>{Plan_func.delete({"schedule_id":schedule_id}, ()=>{
                                                             this.init();
                                                             try{
@@ -434,7 +508,8 @@ class Member_schedule_history{
                                                         });layer_popup.close_layer_popup();}}
                     };
                     let options_padding_top_bottom = 16;
-                    let button_height = 8 + 8 + 52;
+                    // let button_height = 8 + 8 + 52;
+                    let button_height = 52;
                     let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
                     let root_content_height = $root_content.height();
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
@@ -477,6 +552,25 @@ class Member_schedule_history{
 
         return html_to_join.join('');
     }
+
+    open_drawing_board(callback){
+        //사인창 열기
+        let root_content_height = $root_content.height();
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_DRAWING_BOARD, 100*315/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
+            let data = {    title:"일정 완료 서명",
+                            description:"완료 서명을 입력해주세요.",
+                            width: $root_content.width() <= 500 ? $root_content.width() : 500,
+                            height:250,
+                            color:{pencil:"#ffffff", paper:"#282828"},
+                            border:0,
+                            callback:(data)=>{
+                                callback(data);
+                            }
+                        };
+            drawing_board = new DrawingBoard('#wrapper_box_drawing_board', "drawing_board", data);
+        });
+    }
+
     switch_type(){
         let user_option = {
             by_ticket:{text:"수강권별 정렬", callback:()=>{this.sort_val = SORT_MEMBER_TICKET;this.init();layer_popup.close_layer_popup();}},
@@ -484,7 +578,8 @@ class Member_schedule_history{
             by_monthly:{text:"월별 정렬", callback:()=>{this.sort_val = SORT_SCHEDULE_MONTHLY;this.init();layer_popup.close_layer_popup();}}
         };
         let options_padding_top_bottom = 16;
-        let button_height = 8 + 8 + 52;
+        // let button_height = 8 + 8 + 52;
+        let button_height = 52;
         let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
         let root_content_height = $root_content.height();
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
@@ -493,11 +588,15 @@ class Member_schedule_history{
     }
 
     request_list (callback){
-        let send_data = {"member_id": this.member_id, "sort_val": this.sort_val};
-        Member_func.read_schedule_list_by_ticket(send_data, (data)=>{
-            this.received_data = data;
-            callback();
+        Setting_calendar_func.read((settings)=>{
+            this.settings.sign_use = settings.setting_schedule_sign_enable;
+            let send_data = {"member_id": this.member_id, "sort_val": this.sort_val};
+            Member_func.read_schedule_list_by_ticket(send_data, (data)=>{
+                this.received_data = data;
+                callback();
+            });
         });
+        
     }
 
     upper_right_menu(){

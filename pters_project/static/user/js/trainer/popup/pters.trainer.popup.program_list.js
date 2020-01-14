@@ -68,9 +68,13 @@ class Program_list{
     }
     
     dom_assembly_content(){
-        let html_selected_current_program = [CComponent.dom_tag("선택된 프로그램", {"padding":"5px 20px", "font-weight":"bold", "color":"var(--font-highlight)"})];
-        let html_temp = [CComponent.dom_tag('등록된 프로그램', {"padding":"5px 20px", "font-weight":"bold", "color":"var(--font-sub-normal)"})];
+        let html_selected_current_program = [];
+        let html_shared_program = [];
+        let html_temp = [];
         let length = this.data.program_data.length;
+
+        let shared_program_count = 0;
+        let not_selected_program_count = 0;
         for (let i=0; i<length; i++){
             let data = this.data.program_data[i];
             let name = data.program_subject_type_name;
@@ -78,17 +82,20 @@ class Program_list{
             let member_num = data.program_total_member_num;
             let status = data.program_state_cd;
             let selected = data.program_selected;
+            let shared = data.shared_program_flag;
+            let sharing_member_num = data.share_member_num;
             let category_code = data.program_upper_subject_cd != "" ? data.program_upper_subject_cd : "ETC";
             let category_sub_name = PROGRAM_CATEGORY[category_code].sub_category[data.program_subject_cd].name;
             let category_sub_code = data.program_subject_cd;
 
-            let html = `<article class="program_wrapper" data-program_id="${id}" onclick="program_list_popup.event_program_click(${id}, '${name}', '${category_code}', '${category_sub_code}', '${selected}');">
+            let html = `<article class="program_wrapper" data-program_id="${id}" onclick="program_list_popup.event_program_click(${id}, '${name}', '${category_code}', '${category_sub_code}', '${selected}', '${shared}');">
                             <div class="program_data_u">
                                 <div>
                                     <span>${name}</span>
+                                    ${sharing_member_num > 0 ? '<span style="font-size:12px;">'+CImg.share("",{"vertical-align":"middle", "width":"20px", "margin-bottom":"3px", "margin-left":"5px"}) + +sharing_member_num+'</span>' :""}
                                 </div>
                                 <div>
-                                    <span>${member_num} 명</span>
+                                    <span>${member_num} ${TEXT.unit.person[language]}</span>
                                 </div>
                             </div>                
                             <div class="program_data_b">
@@ -97,18 +104,57 @@ class Program_list{
                         </article>`;
             if(selected == PROGRAM_SELECTED){
                 html_selected_current_program.push(html);
+            }
+            
+            if(shared == ON){
+                html_shared_program.push(html);
+                shared_program_count++;
+                continue;
             }else{
                 html_temp.push(html);
+                not_selected_program_count++;
             }
         }
-        
-        let html = html_selected_current_program.join("") + `<div style="margin-top:20px;"></div>` + html_temp.join("");
+
+        html_selected_current_program.unshift(CComponent.dom_tag(TEXT.word.selected_program[language], {"padding":"5px 20px", "font-weight":"bold", "color":"var(--font-highlight)"}));
+        html_shared_program.unshift(CComponent.dom_tag(`${TEXT.word.shared_program[language]} (${shared_program_count})`, {"padding":"5px 20px", "font-weight":"bold", "color":"var(--font-sub-normal)"}));
+        html_temp.unshift(CComponent.dom_tag(`${TEXT.word.my_program[language]} (${not_selected_program_count})`, {"padding":"5px 20px", "font-weight":"bold", "color":"var(--font-sub-normal)"}));
+
+        if(html_shared_program.length == 1){
+            html_shared_program.push(this.introduce("shared"));
+        }
+
+        let assembly_selected_program = html_selected_current_program.join("") + `<div style="margin-top:20px;"></div>`;
+        let assembly_shared_program = html_shared_program.join("") + `<div style="margin-top:20px;"></div>`;
+        let assembly_reg_program = html_temp.join("") + `<div style="margin-top:20px;"></div>`;
+
+        let html =  assembly_selected_program +
+                    assembly_reg_program +
+                    assembly_shared_program;
+                    
 
         return html;
     }
 
+    introduce(type){
+        let text;
+        switch(type){
+            case "shared":
+                text = `<article class='program_wrapper'>
+                            <p style='font-size:11px;padding:0 5px;margin:0'>${TEXT.word.no_shared_programs[language]}</p>
+                        </article>`;
+            break;
+            case "sharing":
+                text = `<article class='program_wrapper'>
+                            <p style='font-size:11px;padding:0 5px;margin:0'>${TEXT.word.sharing_my_programs[language]}</p>
+                        </article>`;
+            break;
+        }
+        return text;
+    }
+
     dom_row_toolbox(){
-        let title = "프로그램";
+        let title = TEXT.word.program[language];
         let html = `
         <div class="lecture_view_upper_box" style="">
             <div style="display:inline-block;">
@@ -121,13 +167,13 @@ class Program_list{
         return html;
     }
 
-    event_program_click(id, name, category, category_sub, selected){
+    event_program_click(id, name, category, category_sub, selected, shared){
         let user_option = {
-            goto:{text:"프로그램 이동", callback:()=>{ 
+            goto:{text:`${TEXT.word.program[language]} ${TEXT.word.move[language]}`, callback:()=>{ 
                     window.location.href=`/trainer/select_program_processing/?class_id=${id}&next_page=/trainer/`; 
                 }
             },
-            edit:{text:"편집", callback:()=>{
+            edit:{text:TEXT.word.edit[language], callback:()=>{
                     layer_popup.close_layer_popup();
                     let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PROGRAM_VIEW, 100, popup_style, null, ()=>{
@@ -141,10 +187,30 @@ class Program_list{
                         program_view_popup = new Program_view('.popup_program_view', external_data);
                     });
                 }
+            },
+            sharing:{text:`${TEXT.word.program[language]} ${TEXT.word.share[language]}`, callback:()=>{ 
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_SHARING, 100, POPUP_FROM_RIGHT, null, ()=>{
+                        setting_sharing_popup = new Setting_sharing('.popup_setting_sharing', {program_id:id});});
+                }
+            },
+            shared:{text:`${TEXT.word.program[language]} ${TEXT.word.share[language]} ${TEXT.word.auth[language]}`, callback:()=>{ 
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_SHARED, 100, POPUP_FROM_RIGHT, null, ()=>{
+                        setting_shared_popup = new Setting_shared('.popup_setting_shared', {program_id:id});});
+                }
             }
         };
+        if(shared == ON){
+            delete user_option["edit"];
+            delete user_option["sharing"];
+        }else{
+            delete user_option["shared"];
+        }
+        // if(selected == "NOT_SELECTED"){
+        //     delete user_option["sharing"];
+        // }
         let options_padding_top_bottom = 16;
-        let button_height = 8 + 8 + 52;
+        // let button_height = 8 + 8 + 52;
+        let button_height = 52;
         let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
         let root_content_height = $root_content.height();
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
@@ -181,7 +247,7 @@ class Program_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -201,7 +267,7 @@ class Program_func{
                     error_callback();
                 }
                 console.log('server error');
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
             }
         });
     }
@@ -226,7 +292,7 @@ class Program_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -246,6 +312,7 @@ class Program_func{
                     error_callback();
                 }
                 console.log('server error');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
             }
         });
     }
@@ -270,7 +337,7 @@ class Program_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -290,7 +357,7 @@ class Program_func{
                     error_callback();
                 }
                 console.log('server error');
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
             }
         });
     }
@@ -315,7 +382,7 @@ class Program_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -335,7 +402,7 @@ class Program_func{
                     error_callback();
                 }
                 console.log('server error');
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
             }
         });
     }

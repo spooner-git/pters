@@ -8,6 +8,7 @@
         /* position: fixed; */
         transform: translate(100%, 0%);
         top: 0;
+        /*display: none;*/
         visibility: hidden;
         position: fixed;
         /* position: fixed; */
@@ -35,6 +36,12 @@
             position: fixed;
             width: 100%;
             z-index: 2;
+        }
+        @media(min-width:650px){
+            .popup_mobile .wrapper_top{
+                border-top-right-radius: 10px;
+                border-top-left-radius: 10px;
+            }
         }
             .popup_mobile .wrapper_top .logo_pters{
                 width: 80px;
