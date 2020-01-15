@@ -165,6 +165,18 @@
     background-color: var(--bg-for-only-shade);
     opacity:0.5;
     display: none;
+    transition: 0.3s;
+}
+#shade_for_popup_preventing_touch{
+    position: absolute;
+    top:0;
+    left:0;
+    height:100%;
+    width:100%;
+    background-color: transparent;
+    /* opacity:0.1;
+    background-color: red; */
+    display: none;
 }
 
 #root_content{

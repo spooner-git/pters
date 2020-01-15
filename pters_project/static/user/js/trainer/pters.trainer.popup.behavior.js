@@ -171,7 +171,7 @@ let layer_popup = (function (){
                 else if(option==CLOSE){
                     func_set_close_popup_animation($popup_selector, popup_data.animation_type);
                 }
-                func_set_shade(popup_array.length);
+                func_set_shade(popup_array.length, option);
             }
         },
 
@@ -381,12 +381,22 @@ function func_set_close_popup_animation ($popup_selector, animation_type){
     }
 }
 
-function func_set_shade (popup_array_length){
+function func_set_shade (popup_array_length, open_or_close){
     if(popup_array_length > 0){
         $('#shade_for_popup_basic').css({"display":'block', "z-index":100*popup_array_length-50});
+        if(open_or_close == OPEN){
+            $('#shade_for_popup_preventing_touch').css({"display":'block', "z-index":100*popup_array_length-50-1});
+        }else if(open_or_close == CLOSE){
+            setTimeout(()=>{
+                $('#shade_for_popup_preventing_touch').css({"display":'block', "z-index":100*popup_array_length-50-1});
+            }, 300);
+        }  
     }
     else{
         $('#shade_for_popup_basic').css({"display":'none', "z-index":0});
+        setTimeout(()=>{
+            $('#shade_for_popup_preventing_touch').css({"display":'none', "z-index":0});
+        }, 400);
     }
 }
 
