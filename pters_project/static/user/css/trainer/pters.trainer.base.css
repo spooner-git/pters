@@ -165,7 +165,7 @@
     background-color: var(--bg-for-only-shade);
     opacity:0.5;
     display: none;
-    transition: 0.3s;
+    /* transition: 0.1s; */
 }
 #shade_for_popup_preventing_touch{
     position: absolute;
