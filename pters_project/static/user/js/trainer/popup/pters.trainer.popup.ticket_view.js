@@ -342,7 +342,7 @@ class Ticket_view{
         let unit = '회';
         let id = 'ticket_count_view';
         let title = this.data.count == null ? '' : UnitRobot.numberWithCommas(this.data.count) + unit;
-        let placeholder = '미입력시 0회';
+        let placeholder = '0 회';
         let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
@@ -415,7 +415,7 @@ class Ticket_view{
         let unit = '원';
         let id = 'ticket_price_view';
         let title = this.data.price == null ? '' : UnitRobot.numberWithCommas(this.data.price) + unit;
-        let placeholder = '미입력시 0원';
+        let placeholder = '0 원';
         let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
@@ -485,7 +485,7 @@ class Ticket_view{
         let unit = '일';
         let id = 'ticket_ticket_effective_days_view';
         let title = this.data.ticket_effective_days == null ? '' : UnitRobot.numberWithCommas(this.data.ticket_effective_days) + unit;
-        let placeholder = '미입력시 0일';
+        let placeholder = '0 일';
         let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
@@ -561,7 +561,7 @@ class Ticket_view{
         if(this.data.ticket_day_schedule_enable == 99999){
             title = "제한 없음";
         }
-        let placeholder = `미입력시 '없음'`;
+        let placeholder = `제한 없음`;
         let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
@@ -593,7 +593,7 @@ class Ticket_view{
         if(this.data.ticket_week_schedule_enable == 99999){
             title = "제한 없음";
         }
-        let placeholder = `미입력시 '없음'`;
+        let placeholder = `제한 없음`;
         let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
