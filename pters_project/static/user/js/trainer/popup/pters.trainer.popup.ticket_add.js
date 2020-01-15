@@ -151,11 +151,11 @@ class Ticket_add{
         let html =  '<div class="obj_input_box_full">' + CComponent.dom_tag('수강권명') + name + '</div>' +
                     '<div class="obj_input_box_full">' + CComponent.dom_tag('수업 구성') + lecture + lecture_list + '</div>' +
                     '<div class="obj_input_box_full">' + 
-                        CComponent.dom_tag('횟수') + 
+                        CComponent.dom_tag('기본 횟수') + 
                         count + `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>` +
-                        CComponent.dom_tag('유효기간') + 
+                        CComponent.dom_tag('기본 유효기간') + 
                         period + `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>` +
-                        CComponent.dom_tag('가격') + 
+                        CComponent.dom_tag('기본 가격') + 
                         price + 
                     '</div>' +
                     '<div class="obj_input_box_full">' + 

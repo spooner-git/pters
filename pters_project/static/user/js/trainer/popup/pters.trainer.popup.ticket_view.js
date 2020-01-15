@@ -196,9 +196,9 @@ class Ticket_view{
 
         let lecture_list_assembly = '<div class="obj_input_box_full">'+CComponent.dom_tag('수업 구성')+lecture+lecture_list+'</div>';
         let ticket_basic_info_assembly = '<div class="obj_input_box_full">'+
-                                                CComponent.dom_tag('횟수') +  basic_count +  `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>` +
-                                                CComponent.dom_tag('유효 기간') +  basic_period +  `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>` +
-                                                CComponent.dom_tag('가격') + basic_price + 
+                                                CComponent.dom_tag('기본 횟수') +  basic_count +  `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>` +
+                                                CComponent.dom_tag('기본 유효 기간') +  basic_period +  `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>` +
+                                                CComponent.dom_tag('기본 가격') + basic_price + 
                                         '</div>';
         let ticket_additional_setting_assembly = '<div class="obj_input_box_full">'+
                                                         CComponent.dom_tag('하루 최대 예약 횟수') +  max_reserve_number_daily +  `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>` +
