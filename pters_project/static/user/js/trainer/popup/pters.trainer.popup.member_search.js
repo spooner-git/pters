@@ -82,7 +82,8 @@ class Member_search {
         let content = search_input;
         let button = this.step == 0 ? search_button : reg_button + reset_button;
         if(this.step == 1 || this.step == 2){
-            content = search_input + member_list;
+            // content = search_input + member_list;
+            content = member_list;
         }
 
         let assembled = 
@@ -246,6 +247,8 @@ class Member_search {
 
         if(html_to_join.length == 0){
             html_to_join.push('<p style="font-size:14px;font-weight:500;color:var(--font-sub-normal);">검색된 결과가 없습니다.</p>');
+        }else{
+            html_to_join.unshift(`<p style="font-size:14px;font-weight:500;color:var(--font-sub-normal);">"${this.data.search_id}"의 검색 결과 (${html_to_join.length} 건)</p>`);
         }
         
 
