@@ -247,7 +247,7 @@ class Ticket_add{
         let unit = '회';
         let id = 'ticket_count_view';
         let title = this.data.count == null ? '' : UnitRobot.numberWithCommas(this.data.count) + unit;
-        let placeholder = '횟수';
+        let placeholder = '미입력시 0회';
         let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
@@ -320,7 +320,7 @@ class Ticket_add{
         let unit = '원';
         let id = 'ticket_price_view';
         let title = this.data.price == null ? '' : UnitRobot.numberWithCommas(this.data.price) + unit;
-        let placeholder = '가격';
+        let placeholder = '미입력시 0원';
         let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
@@ -388,7 +388,7 @@ class Ticket_add{
         let unit = '일';
         let id = 'ticket_ticket_effective_days_view';
         let title = this.data.ticket_effective_days == null ? '' : UnitRobot.numberWithCommas(this.data.ticket_effective_days) + unit;
-        let placeholder = '유효 기간';
+        let placeholder = '미입력시 0일';
         let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
@@ -569,9 +569,9 @@ class Ticket_add{
         let data = {
                     "ticket_name":this.data.name,
                     "lecture_id_list[]":this.data.lecture_id,
-                    "ticket_effective_days":this.data.ticket_effective_days,
-                    "ticket_reg_count":this.data.count,
-                    "ticket_price":this.data.price,
+                    "ticket_effective_days":this.data.ticket_effective_days == null ? 0 :this.data.ticket_effective_days,
+                    "ticket_reg_count":this.data.count == null ? 0 : this.data.count,
+                    "ticket_price":this.data.price == null ? 0 : this.data.price,
                     "ticket_note":this.data.memo,
                     "ticket_week_schedule_enable":this.data.ticket_week_schedule_enable == null ? 99999 : this.data.ticket_week_schedule_enable, //주간 수강 제한 횟수
                     "ticket_day_schedule_enable":this.data.ticket_day_schedule_enable == null ? 99999 : this.data.ticket_day_schedule_enable  //일일 수강 제한 횟수
