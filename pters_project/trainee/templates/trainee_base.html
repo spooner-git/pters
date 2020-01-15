@@ -85,6 +85,7 @@
                 <div class="nav_trainee_menu_box_l">
                     <a href="{% url 'trainee:trainee_main' %}"><div id="nav_btn_home">홈</div></a>
                     <a href="{% url 'trainee:trainee_calendar' %}"><div id="nav_btn_plan">일정</div></a>
+                    <!-- <a href="{% url 'trainee:trainee_alarm' %}"><div id="nav_btn_message">메세지</div></a> -->
                     <a href="{% url 'trainee:trainee_alarm' %}"><div id="nav_btn_alarm">알림
                             <div style="
                                 display: none;
@@ -158,6 +159,7 @@
         <script type="text/javascript" src={% static_url "user/js/trainee/func/pters.trainee.func.option.inspector.js" %}></script>
         <script type="text/javascript" src={% static_url "user/js/trainee/pters.trainee.fundamental.js" %}></script>
         <script type="text/javascript" src={% static_url "user/js/trainee/pters.trainee.popup.behavior.js" %}></script>
+        <!-- <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.popup.behavior.js" %}></script> -->
         <script type="text/javascript">
 
             $("nav > .nav_trainee_menu_box_l > a").click(function(){
