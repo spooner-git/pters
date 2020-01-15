@@ -1941,7 +1941,7 @@ def add_member_ticket_info_logic(request):
     member_id = request.POST.get('member_id')
     contents = request.POST.get('contents', '')
     counts = request.POST.get('counts')
-    price = request.POST.get('price')
+    price = request.POST.get('price', '')
     start_date = request.POST.get('start_date')
     end_date = request.POST.get('end_date')
     ticket_id = request.POST.get('ticket_id', '')
@@ -1973,7 +1973,6 @@ def add_member_ticket_info_logic(request):
 
     if ticket_id == '':
         error = '수강권을 선택해 주세요.'
-
 
     if error is None:
         try:
@@ -3019,11 +3018,11 @@ def add_ticket_info_logic(request):
     class_id = request.session.get('class_id', '')
     ticket_name = request.POST.get('ticket_name')
     ticket_note = request.POST.get('ticket_note')
-    ticket_effective_days = request.POST.get('ticket_effective_days', 30)
+    ticket_effective_days = request.POST.get('ticket_effective_days', 0)
     ticket_price = request.POST.get('ticket_price', 0)
-    ticket_month_schedule_enable = request.POST.get('ticket_month_schedule_enable', 31)
-    ticket_week_schedule_enable = request.POST.get('ticket_week_schedule_enable', 7)
-    ticket_day_schedule_enable = request.POST.get('ticket_day_schedule_enable', 1)
+    ticket_month_schedule_enable = request.POST.get('ticket_month_schedule_enable', 99999)
+    ticket_week_schedule_enable = request.POST.get('ticket_week_schedule_enable', 99999)
+    ticket_day_schedule_enable = request.POST.get('ticket_day_schedule_enable', 99999)
     ticket_reg_count = request.POST.get('ticket_reg_count', 0)
     lecture_id_list = request.POST.getlist('lecture_id_list[]', '')
     error = None
