@@ -459,7 +459,7 @@ class Ticket_add{
         let unit = '회';
         let id = 'reserve_limit_number_daily';
         let title = this.data.ticket_day_schedule_enable == null ? '' : UnitRobot.numberWithCommas(this.data.ticket_day_schedule_enable) + unit;
-        let placeholder = `미입력시 '없음'`;
+        let placeholder = `미입력시 '제한 없음'`;
         let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
@@ -487,7 +487,7 @@ class Ticket_add{
         let unit = '회';
         let id = 'reserve_limit_number_weekly';
         let title = this.data.ticket_week_schedule_enable == null ? '' : UnitRobot.numberWithCommas(this.data.ticket_week_schedule_enable) + unit;
-        let placeholder = `미입력시 '없음'`;
+        let placeholder = `미입력시 '제한 없음'`;
         let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
@@ -552,7 +552,7 @@ class Ticket_add{
                 title:`수강권 생성을 완료하지 못했습니다.`,
                 comment:`[${inspect.limit_type}] 이용자께서는 수강권을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다.
                         <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까?</p>`
-            }
+            };
             show_user_confirm (message, ()=>{
                 layer_popup.all_close_layer_popup();
                 sideGoPopup("pters_pass_main");
@@ -573,13 +573,15 @@ class Ticket_add{
                     "ticket_reg_count":this.data.count,
                     "ticket_price":this.data.price,
                     "ticket_note":this.data.memo,
-                    "ticket_week_schedule_enable":this.data.ticket_week_schedule_enable, //주간 수강 제한 횟수
-                    "ticket_day_schedule_enable":this.data.ticket_day_schedule_enable  //일일 수강 제한 횟수
+                    "ticket_week_schedule_enable":this.data.ticket_week_schedule_enable == null ? 99999 : this.data.ticket_week_schedule_enable, //주간 수강 제한 횟수
+                    "ticket_day_schedule_enable":this.data.ticket_day_schedule_enable == null ? 99999 : this.data.ticket_day_schedule_enable  //일일 수강 제한 횟수
         };
         
         Ticket_func.create(data, ()=>{
             this.data_sending_now = false;
             // layer_popup.close_layer_popup();
+            layer_popup.close_layer_popup();
+            ticket_add_popup.clear();
             if(this.callback != undefined){
                 this.callback();
             }
@@ -590,8 +592,8 @@ class Ticket_add{
                 ticket_list_popup.init();
             }catch(e){}
         }, ()=>{this.data_sending_now = false;});
-        layer_popup.close_layer_popup();
-        ticket_add_popup.clear();
+        // layer_popup.close_layer_popup();
+        // ticket_add_popup.clear();
     }
 
     check_before_send(){

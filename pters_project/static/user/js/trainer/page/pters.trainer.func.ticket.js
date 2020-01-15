@@ -386,6 +386,9 @@ class Ticket_func{
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
                         show_error_message({title:data.messageArray[0]});
+                        if(error_callback != undefined){
+                            error_callback();
+                        }
                         return false;
                     }
                 }
@@ -431,6 +434,9 @@ class Ticket_func{
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
                         show_error_message({title:data.messageArray[0]});
+                        if(error_callback != undefined){
+                            error_callback();
+                        }
                         return false;
                     }
                 }
@@ -476,6 +482,9 @@ class Ticket_func{
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
                         show_error_message({title:data.messageArray[0]});
+                        if(error_callback != undefined){
+                            error_callback();
+                        }
                         return false;
                     }
                 }
@@ -521,6 +530,9 @@ class Ticket_func{
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
                         show_error_message({title:data.messageArray[0]});
+                        if(error_callback != undefined){
+                            error_callback();
+                        }
                         return false;
                     }
                 }
@@ -566,6 +578,9 @@ class Ticket_func{
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
                         show_error_message({title:data.messageArray[0]});
+                        if(error_callback != undefined){
+                            error_callback();
+                        }
                         return false;
                     }
                 }
@@ -610,6 +625,9 @@ class Ticket_func{
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
                         show_error_message({title:data.messageArray[0]});
+                        if(error_callback != undefined){
+                            error_callback();
+                        }
                         return false;
                     }
                 }
@@ -661,6 +679,9 @@ class Ticket_func{
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
                         show_error_message({title:data.messageArray[0]});
+                        if(error_callback != undefined){
+                            error_callback();
+                        }
                         return false;
                     }
                 }

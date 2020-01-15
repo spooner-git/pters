@@ -558,6 +558,9 @@ class Ticket_view{
         let unit = '회';
         let id = 'reserve_limit_number_daily';
         let title = this.data.ticket_day_schedule_enable == null ? '' : UnitRobot.numberWithCommas(this.data.ticket_day_schedule_enable) + unit;
+        if(this.data.ticket_day_schedule_enable == 99999){
+            title = "제한 없음";
+        }
         let placeholder = `미입력시 '없음'`;
         let icon = NONE;
         let icon_r_visible = HIDE;
@@ -587,6 +590,9 @@ class Ticket_view{
         let unit = '회';
         let id = 'reserve_limit_number_weekly';
         let title = this.data.ticket_week_schedule_enable == null ? '' : UnitRobot.numberWithCommas(this.data.ticket_week_schedule_enable) + unit;
+        if(this.data.ticket_week_schedule_enable == 99999){
+            title = "제한 없음";
+        }
         let placeholder = `미입력시 '없음'`;
         let icon = NONE;
         let icon_r_visible = HIDE;
@@ -711,8 +717,8 @@ class Ticket_view{
                     "ticket_reg_count":this.data.count,
                     "ticket_price":this.data.price,
                     "ticket_note":this.data.memo,
-                    "ticket_week_schedule_enable":this.data.ticket_week_schedule_enable, //주간 수강 제한 횟수
-                    "ticket_day_schedule_enable":this.data.ticket_day_schedule_enable  //일일 수강 제한 횟수
+                    "ticket_week_schedule_enable":this.data.ticket_week_schedule_enable == null ? 99999 : this.data.ticket_week_schedule_enable, //주간 수강 제한 횟수
+                    "ticket_day_schedule_enable":this.data.ticket_day_schedule_enable == null ? 99999 : this.data.ticket_day_schedule_enable //일일 수강 제한 횟수
         };
 
         Ticket_func.update(data, ()=>{
