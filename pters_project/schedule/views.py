@@ -819,7 +819,7 @@ def update_memo_schedule_logic(request):
             lecture_schedule_data.update(note=note)
 
         schedule_info.note = note
-        schedule_info.mod_member_id = requst.user.id
+        schedule_info.mod_member_id = request.user.id
         schedule_info.save()
 
     if error is not None:
