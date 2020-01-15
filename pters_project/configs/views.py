@@ -373,17 +373,15 @@ def get_function_auth_type_cd(request):
                                                                                             member_id=request.user.id)
 
             for function_info in function_list:
-                auth_info = {}
                 if function_info.auth_type_cd is None:
                     function_auth_type_cd_name = str(function_info.function_auth_tb.function_auth_type_cd)
                 else:
                     function_auth_type_cd_name = str(function_info.function_auth_tb.function_auth_type_cd) \
                                                  + str(function_info.auth_type_cd)
-                if function_info.auth_type_cd != '_crate':
-                    request.session['auth_info'][function_auth_type_cd_name]['active'] = function_info.enable_flag
-                    if str(function_info.enable_flag) == '0':
-                        request.session['auth_info'][function_auth_type_cd_name]['limit_num'] = function_info.enable_flag
-                    request.session['auth_info'][function_auth_type_cd_name]['limit_type'] = str('공유 프로그램')
+                request.session['auth_info'][function_auth_type_cd_name]['active'] = function_info.enable_flag
+                if str(function_info.enable_flag) == '0':
+                    request.session['auth_info'][function_auth_type_cd_name]['limit_num'] = function_info.enable_flag
+                request.session['auth_info'][function_auth_type_cd_name]['limit_type'] = str('공유 프로그램')
 
 
 def get_background_url(request):
