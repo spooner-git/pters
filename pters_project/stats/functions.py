@@ -19,7 +19,6 @@ def get_sales_data(class_id, month_first_day, finish_date):
         error = '시작 날짜를 선택해주세요.'
     if finish_date is None or finish_date == '':
         error = '종료 날짜를 선택해주세요.'
-
     if error is None:
         while finish_date >= month_first_day:
             price = 0
@@ -42,7 +41,6 @@ def get_sales_data(class_id, month_first_day, finish_date):
 
             if next_month == 1:
                 next_month_first_day = next_month_first_day.replace(year=next_year)
-
             # 이번달 마지막날 구하기
             month_last_day = next_month_first_day - datetime.timedelta(days=1)
             # 이달의 결제 정보 가져오기
@@ -52,7 +50,6 @@ def get_sales_data(class_id, month_first_day, finish_date):
                      & Q(member_ticket_tb__start_date__lte=month_last_day),
                      class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__use=USE,
                      use=USE).order_by('member_ticket_tb__start_date', 'member_ticket_tb__reg_dt')
-
             for price_info in price_data:
                 # 회원의 재등록 여부 확인을 위한 로직
                 try:
@@ -75,7 +72,6 @@ def get_sales_data(class_id, month_first_day, finish_date):
                     new_reg_price += price_info.member_ticket_tb.price
 
                 price += price_info.member_ticket_tb.price
-
             # 환불 정보 가져오기
             refund_price_data = ClassMemberTicketTb.objects.select_related('member_ticket_tb').filter(
                 Q(member_ticket_tb__refund_date__gte=month_first_day)
@@ -89,7 +85,6 @@ def get_sales_data(class_id, month_first_day, finish_date):
                 else:
                     all_refund_price += refund_price_info.member_ticket_tb.refund_price
                 refund_price += refund_price_info.member_ticket_tb.refund_price
-
             month_price_info = {'month': str(month_first_day.date()),
                                 'price': price,
                                 'refund_price': refund_price,
@@ -102,7 +97,6 @@ def get_sales_data(class_id, month_first_day, finish_date):
 
             month_first_day = next_month_first_day
             counter += 1
-
     context = {'error': error, 'month_price_data': month_price_list}
 
     return context
