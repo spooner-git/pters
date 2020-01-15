@@ -109,9 +109,9 @@ class Member_search {
         let id = "dom_row_search_button";
         let title = "검색";
         let style = {"background-color":"var(--bg-highlight)", "color":"var(--font-invisible)", "height":"50px", "line-height":"50px"};
-        if(this.data.search_id == null){
-            style = {"background-color":"var(--bg-sub-dark)", "color":"var(--font-invisible)", "height":"50px", "line-height":"50px"};
-        }
+        // if(this.data.search_id == null){
+        //     style = {"background-color":"var(--bg-sub-dark)", "color":"var(--font-invisible)", "height":"50px", "line-height":"50px"};
+        // }
         let onclick = ()=>{
             if(this.data.search_id == null){
                 show_error_message({title:"검색 조건을 입력해주세요."});
@@ -151,22 +151,45 @@ class Member_search {
         return html;
     }
 
+    // dom_row_reset_button(){
+    //     let id = "dom_row_reset_button";
+    //     let title = "재검색";
+    //     let style = {"background-color":"var(--bg-main)", "height":"48px", "line-height":"48px", "margin-top":"10px", 'border':"var(--border-article)"};
+    //     let onclick = ()=>{
+    //         if(this.data.search_id == null){
+    //             show_error_message({title:"검색 조건을 입력해주세요."});
+    //             return false;
+    //         }
+    //         this.render_loading_image();
+    //         let data = {"search_val":this.data.search_id};
+    //         Member_func.search(data, (data)=>{
+    //             this.data.searched_data = data.member_list;
+    //             this.step = 1;
+    //             this.render_content();
+    //         });
+    //     };
+    //     let html = CComponent.button (id, title, style, onclick);
+    //     return html;
+    // }
+
     dom_row_reset_button(){
         let id = "dom_row_reset_button";
-        let title = "재검색";
+        let title = "뒤로";
         let style = {"background-color":"var(--bg-main)", "height":"48px", "line-height":"48px", "margin-top":"10px", 'border':"var(--border-article)"};
         let onclick = ()=>{
-            if(this.data.search_id == null){
-                show_error_message({title:"검색 조건을 입력해주세요."});
-                return false;
-            }
-            this.render_loading_image();
-            let data = {"search_val":this.data.search_id};
-            Member_func.search(data, (data)=>{
-                this.data.searched_data = data.member_list;
-                this.step = 1;
-                this.render_content();
-            });
+            // if(this.data.search_id == null){
+            //     show_error_message({title:"검색 조건을 입력해주세요."});
+            //     return false;
+            // }
+            // this.render_loading_image();
+            // let data = {"search_val":this.data.search_id};
+            // sharing_member_search_func.search(data, (data)=>{
+            //     this.data.searched_data = data.member_list;
+            //     this.step = 1;
+            //     this.render_content();
+            // });
+            this.clear_data();
+            this.render_content();
         };
         let html = CComponent.button (id, title, style, onclick);
         return html;
