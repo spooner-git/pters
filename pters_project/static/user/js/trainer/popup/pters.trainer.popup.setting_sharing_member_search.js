@@ -187,7 +187,7 @@ class Setting_sharing_member_search {
         let disabled = false;
         let onfocusout = (data)=>{
             this.data.search_id = data;
-            this.render_content();
+            // this.render_content();
         };
         let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+.,@一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{1,20}";
         let pattern_message = ". , + - _ @ 제외 특수문자는 입력 불가";
