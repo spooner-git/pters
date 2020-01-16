@@ -1468,13 +1468,11 @@ class Calendar {
                                                     <div class="swap_cal">${CImg.arrow_expand()}</div>
                                                 </div>
                                             </div>
-                                            <div class="cal_pc_tools_wrap">
-                                                ${CComponent.text_button ("calendar_month_prev", CImg.arrow_left("", {"width":"28px", "vertical-align":"top"}), null, ()=>{this.move_month('prev');})}
-                                                ${CComponent.text_button ("calendar_month_next", CImg.arrow_left("", {"width":"28px", "vertical-align":"top", "transform":"rotate(180deg)"}), null, ()=>{this.move_month('next');})}
-                                            </div>
-                                            <div class="cal_tools_wrap">
-                                                <div class="go_today" onclick="${this.instance}.go_month()">${CImg.today()}</div>
-                                                <div class="add_plan" onclick="${this.instance}.add_plan_button()">${CImg.plus()}</div>
+                                            <div class="cal_tools_wrap_parent">
+                                                <div class="cal_pc_tools_wrap" onclick="${this.instance}.move_month('prev')">${CImg.arrow_left("", {"width":"28px", "vertical-align":"middle", "margin-bottom":"4px", "transform":"rotate(90deg)"})}</div>
+                                                <div class="cal_pc_tools_wrap" onclick="${this.instance}.move_month('next')">${CImg.arrow_left("", {"width":"28px", "vertical-align":"middle", "margin-bottom":"4px", "transform":"rotate(270deg)"})}</div>
+                                                <div class="go_today" onclick="${this.instance}.go_month()">${CImg.today("", {"width":"28px", "vertical-align":"middle", "margin-bottom":"4px"})}</div>
+                                                <div class="add_plan" onclick="${this.instance}.add_plan_button()">${CImg.plus("", {"width":"28px", "vertical-align":"middle", "margin-bottom":"4px"})}</div>
                                             </div>
                                         </div>
                                         `
@@ -1491,17 +1489,11 @@ class Calendar {
                                                     <div class="swap_cal">${CImg.arrow_expand()}</div>
                                                 </div>
                                             </div>
-                                            <div class="cal_pc_tools_wrap">
-                                                ${CComponent.text_button ("calendar_week_prev", CImg.arrow_left("", {"width":"28px", "vertical-align":"top"}), null, ()=>{this.move_week('prev');})}
-                                                ${CComponent.text_button ("calendar_week_next", CImg.arrow_left("", {"width":"28px", "vertical-align":"top", "transform":"rotate(180deg)"}), null, ()=>{this.move_week('next');})}
-                                            </div>
-                                            <div class="cal_tools_wrap">
-                                                <div class="go_today" onclick="${this.instance}.go_week()">
-                                                    ${CImg.today()}
-                                                </div>
-                                                <div class="add_plan" onclick="${this.instance}.add_plan_button()">
-                                                    ${CImg.plus()}
-                                                </div>
+                                            <div class="cal_tools_wrap_parent">
+                                                <div class="cal_pc_tools_wrap" onclick="${this.instance}.move_week('prev')">${CImg.arrow_expand("", {"width":"28px", "vertical-align":"middle", "margin-bottom":"4px", "transform":"rotate(90deg)"})}</div>
+                                                <div class="cal_pc_tools_wrap" onclick="${this.instance}.move_week('next')">${CImg.arrow_expand("", {"width":"28px", "vertical-align":"middle", "margin-bottom":"4px", "transform":"rotate(270deg)"})}</div>
+                                                <div class="go_today" onclick="${this.instance}.go_week()">${CImg.today("", {"width":"28px", "vertical-align":"middle", "margin-bottom":"4px"})}</div>
+                                                <div class="add_plan" onclick="${this.instance}.add_plan_button()">${CImg.plus("", {"width":"28px", "vertical-align":"middle", "margin-bottom":"4px"})}</div>
                                             </div>
                                         </div>
                                         `             
