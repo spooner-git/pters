@@ -400,10 +400,13 @@ class Member_view{
             onclick = ()=>{
                 let user_option = {
                         connect:{text:"연결 해제", callback:()=>{
-                            layer_popup.close_layer_popup();
-                            let data = {"member_id":this.member_id, "member_auth_cd":AUTH_TYPE_DELETE};
-                            Member_func.connection(data, ()=>{
-                                this.set_initial_data();
+                            show_user_confirm ({title:`정말 연결을 해제하시겠습니까?`}, ()=>{
+                                layer_popup.close_layer_popup();
+                                layer_popup.close_layer_popup();
+                                let data = {"member_id":this.member_id, "member_auth_cd":AUTH_TYPE_DELETE};
+                                Member_func.connection(data, ()=>{
+                                    this.set_initial_data();
+                                });
                             });
                         }}
                     };
@@ -420,10 +423,13 @@ class Member_view{
             onclick = ()=>{
                 let user_option = {
                         connect:{text:"연결 요청 취소", callback:()=>{
-                            layer_popup.close_layer_popup();
-                            let data = {"member_id":this.member_id, "member_auth_cd":AUTH_TYPE_DELETE};
-                            Member_func.connection(data, ()=>{
-                                this.set_initial_data();
+                            show_user_confirm ({title:`연결 요청을 취소하겠습니까?`}, ()=>{
+                                layer_popup.close_layer_popup();
+                                layer_popup.close_layer_popup();
+                                let data = {"member_id":this.member_id, "member_auth_cd":AUTH_TYPE_DELETE};
+                                Member_func.connection(data, ()=>{
+                                    this.set_initial_data();
+                                });
                             });
                         }}
                     };
@@ -440,10 +446,13 @@ class Member_view{
             onclick = ()=>{
                 let user_option = {
                         connect:{text:"연결 요청", callback:()=>{
-                            layer_popup.close_layer_popup();
-                            let data = {"member_id":this.member_id, "member_auth_cd":AUTH_TYPE_VIEW};
-                            Member_func.connection(data, ()=>{
-                                this.set_initial_data();
+                            show_user_confirm ({title:`연결 요청을 보내시겠습니까?`}, ()=>{
+                                layer_popup.close_layer_popup();
+                                layer_popup.close_layer_popup();
+                                let data = {"member_id":this.member_id, "member_auth_cd":AUTH_TYPE_VIEW};
+                                Member_func.connection(data, ()=>{
+                                    this.set_initial_data();
+                                });
                             });
                         }}
                     };
@@ -838,7 +847,6 @@ class Member_view{
     upper_right_menu(){
         let user_option = {
             recontract:{text:"재등록", callback:()=>{
-                    console.log("재등록")
                     layer_popup.close_layer_popup();
                     let member_add_initial_data = {member_id: this.member_id};
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_ADD, 100, POPUP_FROM_BOTTOM, null, ()=>{
