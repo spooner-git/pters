@@ -18,7 +18,7 @@ class Setting_alarm_personal{
 
     set_initial_data (){
         Setting_alarm_personal_func.read((data)=>{
-            this.data.push_to_member = data.setting_to_trainee_lesson_alarm_personal;
+            this.data.push_to_me = data.setting_from_trainee_lesson_alarm;
             this.render_content();
         });
         func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
