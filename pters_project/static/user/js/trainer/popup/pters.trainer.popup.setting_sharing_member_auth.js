@@ -257,32 +257,41 @@ class Setting_sharing_member_auth{
     }
 
     event_select_shared_status(){
-        let user_option = {
-            request:{text:"공유 초대", callback:()=>{
+        // let user_option = {
+        //     request:{text:"공유 초대", callback:()=>{
 
-            }},
-            disconnect:{text:"공유 해제", callback:()=>{
-                let message = {
-                    title:`정말 ${this.member_name}님과 현재 프로그램 공유를 해제 하시겠습니까?`
-                };
-                show_user_confirm (message, ()=>{
-                    this.shared_status = AUTH_TYPE_DELETE;
-                    this.send_data();
-                    layer_popup.close_layer_popup(); //옵션 셀렉터 닫기
-                    layer_popup.close_layer_popup(); //권한 설정창 닫기
-                });
-            }},
+        //     }},
+        //     disconnect:{text:"공유 해제", callback:()=>{
+        //         let message = {
+        //             title:`정말 ${this.member_name}님과 현재 프로그램 공유를 해제 하시겠습니까?`
+        //         };
+        //         show_user_confirm (message, ()=>{
+        //             this.shared_status = AUTH_TYPE_DELETE;
+        //             this.send_data();
+        //             layer_popup.close_layer_popup(); //옵션 셀렉터 닫기
+        //             layer_popup.close_layer_popup(); //권한 설정창 닫기
+        //         });
+        //     }},
+        // };
+        // if(this.shared_status == AUTH_TYPE_VIEW || this.shared_status == AUTH_TYPE_WAIT){
+        //     delete user_option["request"];
+        // }
+        // let options_padding_top_bottom = 16;
+        // // let button_height = 8 + 8 + 52;
+        // let button_height = 52;
+        // let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
+        // let root_content_height = $root_content.height();
+        // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
+        //     option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+        // });
+        let message = {
+            title:`정말 ${this.member_name}님과 현재 프로그램 공유를 해제 하시겠습니까?`
         };
-        if(this.shared_status == AUTH_TYPE_VIEW || this.shared_status == AUTH_TYPE_WAIT){
-            delete user_option["request"];
-        }
-        let options_padding_top_bottom = 16;
-        // let button_height = 8 + 8 + 52;
-        let button_height = 52;
-        let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
-        let root_content_height = $root_content.height();
-        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
-            option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+        show_user_confirm (message, ()=>{
+            this.shared_status = AUTH_TYPE_DELETE;
+            this.send_data();
+            layer_popup.close_layer_popup(); //옵션 셀렉터 닫기
+            layer_popup.close_layer_popup(); //권한 설정창 닫기
         });
     }
 
