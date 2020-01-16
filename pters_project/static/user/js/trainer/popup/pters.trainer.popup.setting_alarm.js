@@ -5,7 +5,8 @@ class Setting_alarm{
 
         this.data = {
             push_to_member: OFF,
-            push_to_me: OFF
+            push_to_me: OFF,
+            push_to_shared_trainer: OFF
         };
 
         this.init();
@@ -21,6 +22,7 @@ class Setting_alarm{
         Setting_alarm_func.read((data)=>{
             this.data.push_to_me = data.setting_from_trainee_lesson_alarm;
             this.data.push_to_member = data.setting_to_trainee_lesson_alarm;
+            this.data.push_to_shared_trainer = data.setting_to_shared_trainer_lesson_alarm;
             this.render_content();
         });
         func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
@@ -117,6 +119,23 @@ class Setting_alarm{
                     </article>`;
         return html;
     }
+    dom_row_push_to_share_trainer(){
+        let id = `push_to_shared_trainer`;
+        let power = this.data.push_to_shared_trainer;
+        let style = null;
+        let push_to_me_toggle = CComponent.toggle_button (id, power, style, (data)=>{
+                                this.data.push_to_shared_trainer = data; // ON or OFF
+                                this.render_content();
+                            });
+        let title_row = CComponent.text_button ("ntd", '(공유 강사에게) 일정 변경 알림', {"font-size":"15px", "font-weight":"500", "letter-spacing":"-0.8px"}, ()=>{});
+        let html = `<article class="obj_input_box_full">
+                        <div style="display:table;width:100%;">
+                            <div style="display:table-cell;width:auto;vertical-align:middle">${title_row}</div>
+                            <div style="display:table-cell;width:50px;vertical-align:middle">${push_to_me_toggle}</div>
+                        </div>
+                    </article>`;
+        return html;
+    }
 
     art_data(start_time, end_time){
         let merged;
@@ -153,7 +172,8 @@ class Setting_alarm{
 
         let data = {
             "setting_to_trainee_lesson_alarm":this.data.push_to_member,
-            "setting_from_trainee_lesson_alarm":this.data.push_to_me
+            "setting_from_trainee_lesson_alarm":this.data.push_to_me,
+            "setting_to_shared_trainer_lesson_alarm":this.data.push_to_shared_trainer,
         };
         
         Setting_alarm_func.update(data, ()=>{
