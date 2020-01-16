@@ -4128,6 +4128,38 @@ class GetShareProgramDataViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         return JsonResponse(member_program_auth_list, json_dumps_params={'ensure_ascii': True})
 
 
+class GetSharedProgramDataViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        class_id = self.request.GET.get('class_id', '')
+        error = None
+        member_program_auth_list = collections.OrderedDict()
+
+        if class_id is None or class_id == '':
+            error = '오류가 발생했습니다.'
+
+        if error is None:
+            program_auth_data = ProgramAuthTb.objects.select_related('class_tb', 'member',
+                                                                     'function_auth_tb').filter(class_tb_id=class_id,
+                                                                                                member_id=request.user.id,
+                                                                                                use=USE)
+
+            for program_auth_info in program_auth_data:
+                if program_auth_info.auth_type_cd is None:
+                    function_auth_type_cd_name = str(program_auth_info.function_auth_tb.function_auth_type_cd)
+                else:
+                    function_auth_type_cd_name = str(program_auth_info.function_auth_tb.function_auth_type_cd) \
+                                                 + str(program_auth_info.auth_type_cd)
+
+                member_program_auth_list[function_auth_type_cd_name] \
+                    = program_auth_info.enable_flag
+
+        if error is not None:
+            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+            messages.error(request, error)
+        return JsonResponse(member_program_auth_list, json_dumps_params={'ensure_ascii': True})
+
+
 def update_trainer_program_connection_info_logic(request):
 
     class_id = request.POST.get('class_id', '')
