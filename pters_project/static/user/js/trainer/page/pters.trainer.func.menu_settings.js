@@ -301,7 +301,7 @@ class Menu_settings {
     dom_menu_theme(){
         let id = 'menu_setting_theme';
         let title = '테마';
-        let icon = CImg.arrow_expand();
+        let icon = CImg.theme();
         let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
