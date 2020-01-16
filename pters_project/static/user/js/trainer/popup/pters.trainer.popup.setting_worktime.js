@@ -111,7 +111,8 @@ class Setting_worktime{
     render(){
         let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();setting_worktime_popup.clear();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right" onclick="setting_worktime_popup.upper_right_menu();">${CImg.confirm()}</span>`;
+        // let top_right = `<span class="icon_right" onclick="setting_worktime_popup.upper_right_menu();">${CImg.confirm()}</span>`;
+        let top_right = `<span class="icon_right" onclick="setting_worktime_popup.upper_right_menu();"><span style="color:var(--font-highlight);font-weight: 500;">저장</span></span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
         
@@ -423,7 +424,7 @@ class Setting_worktime{
         Setting_worktime_func.update(data, ()=>{
             this.data_sending_now = false;
             this.set_initial_data();
-            show_error_message({title:'변경 내용이 저장되었습니다.'});
+            show_error_message({title:'설정이 저장되었습니다.'});
         }, ()=>{this.data_sending_now = false;});
     }
 

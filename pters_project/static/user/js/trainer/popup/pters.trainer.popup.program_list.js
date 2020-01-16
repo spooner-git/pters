@@ -189,11 +189,13 @@ class Program_list{
                 }
             },
             sharing:{text:`${TEXT.word.program[language]} ${TEXT.word.share[language]}`, callback:()=>{ 
+                    layer_popup.close_layer_popup();
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_SHARING, 100, POPUP_FROM_RIGHT, null, ()=>{
                         setting_sharing_popup = new Setting_sharing('.popup_setting_sharing', {program_id:id});});
                 }
             },
             shared:{text:`${TEXT.word.program[language]} ${TEXT.word.share[language]} ${TEXT.word.auth[language]}`, callback:()=>{ 
+                    layer_popup.close_layer_popup();
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_SHARED, 100, POPUP_FROM_RIGHT, null, ()=>{
                         setting_shared_popup = new Setting_shared('.popup_setting_shared', {program_id:id});});
                 }

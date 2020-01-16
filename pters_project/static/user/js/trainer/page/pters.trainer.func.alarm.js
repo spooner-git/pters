@@ -48,7 +48,7 @@ class Alarm {
         document.getElementById('alarm_display_panel').innerHTML = component.alarm_upper_box;
     }
 
-    //회원 리스트를 렌더링
+    //리스트를 렌더링
     render_list (data){
         if(current_page_text != this.page_name){
             return false;
