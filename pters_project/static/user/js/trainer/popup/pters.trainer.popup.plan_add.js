@@ -695,50 +695,71 @@ class Plan_add{
         
         //en_dis_type 0: off일정, 1:레슨일정
         //duplication_enable_flag 0: 중복불허 1:중복허용
-        if(this.data.repeat.power == OFF){
-            let inspect_date = DateRobot.to_yyyymmdd(this.data.date.year, this.data.date.month, this.data.date.date);
-            let pass_inspect = this.pass_inspect(inspect_date);
-            if(pass_inspect == false){
-                this.data_sending_now = false;
-                return false;
-            }
+        let data_transfer = ()=>{
+            if(this.data.repeat.power == OFF){
+                let inspect_date = DateRobot.to_yyyymmdd(this.data.date.year, this.data.date.month, this.data.date.date);
+                let pass_inspect = this.pass_inspect(inspect_date);
+                if(pass_inspect == false){
+                    this.data_sending_now = false;
+                    return false;
+                }
 
-            let url ='/schedule/add_schedule/';
-            // let url = '/schedule/check_schedule/';
-            layer_popup.close_layer_popup();
-            Plan_func.create(url, data, ()=>{
-                this.data_sending_now = false;
-                // layer_popup.close_layer_popup();
-                try{
-                    current_page.init();
-                }catch(e){}
-            }, ()=>{this.data_sending_now = false;});
-            
-        }else if(this.data.repeat.power == ON){
-            let inspect_date = DateRobot.to_yyyymmdd(this.data.repeat.repeat_end.year, this.data.repeat.repeat_end.month, this.data.repeat.repeat_end.date);
-            let pass_inspect = this.pass_inspect(inspect_date);
-            if(pass_inspect == false){
-                data_sending_now = false;
-                return false;
-            }
-
-            let url = '/schedule/add_repeat_schedule/';
-            let confirm_url = '/schedule/add_repeat_schedule_confirm/';
-            
-            layer_popup.close_layer_popup();
-            Plan_func.create(url, data, (received)=>{
-                let repeat_schedule_id = received.repeat_schedule_id;
-                let repeat_confirm = 1;
-                let confirm_data = {"repeat_schedule_id":repeat_schedule_id, "repeat_confirm":repeat_confirm, "member_ids":this.data.member_id};
-                Plan_func.create(confirm_url, confirm_data, ()=>{
+                let url ='/schedule/add_schedule/';
+                // let url = '/schedule/check_schedule/';
+                layer_popup.close_layer_popup();
+                Plan_func.create(url, data, ()=>{
                     this.data_sending_now = false;
                     // layer_popup.close_layer_popup();
                     try{
                         current_page.init();
                     }catch(e){}
                 }, ()=>{this.data_sending_now = false;});
-            }, ()=>{this.data_sending_now = false;});
-        }   
+                
+            }else if(this.data.repeat.power == ON){
+                let inspect_date = DateRobot.to_yyyymmdd(this.data.repeat.repeat_end.year, this.data.repeat.repeat_end.month, this.data.repeat.repeat_end.date);
+                let pass_inspect = this.pass_inspect(inspect_date);
+                if(pass_inspect == false){
+                    data_sending_now = false;
+                    return false;
+                }
+
+                let url = '/schedule/add_repeat_schedule/';
+                let confirm_url = '/schedule/add_repeat_schedule_confirm/';
+                
+                layer_popup.close_layer_popup();
+                Plan_func.create(url, data, (received)=>{
+                    let repeat_schedule_id = received.repeat_schedule_id;
+                    let repeat_confirm = 1;
+                    let confirm_data = {"repeat_schedule_id":repeat_schedule_id, "repeat_confirm":repeat_confirm, "member_ids":this.data.member_id};
+                    Plan_func.create(confirm_url, confirm_data, ()=>{
+                        this.data_sending_now = false;
+                        // layer_popup.close_layer_popup();
+                        try{
+                            current_page.init();
+                        }catch(e){}
+                    }, ()=>{this.data_sending_now = false;});
+                }, ()=>{this.data_sending_now = false;});
+            }   
+        };
+
+        Plan_func.check('/schedule/check_schedule/', data, 
+        (received)=>{
+            let message = received.schedule_info_message;
+            if(message != undefined){
+                if(message.length > 0){
+                    this.data_sending_now = false; 
+                    let confirm_message = {title:message, comment:"<span style='color:var(--font-highlight);'>무시하고 등록 하시겠습니까?</span>"};
+                    show_user_confirm (confirm_message, ()=>{
+                        layer_popup.close_layer_popup();
+                        data_transfer();
+                    });
+                }
+            }else{
+                data_transfer();
+            }
+        },()=>{
+            this.data_sending_now = false; 
+        });
     }
 
     check_duplicate_plan_exist(callback){
