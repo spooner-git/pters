@@ -168,6 +168,9 @@ urlpatterns = [
     # 프로그램 공유 내역 조회
     url(r'^get_share_program_data/$', views.GetShareProgramDataViewAjax.as_view(), name='get_share_program_data'),
 
+    # 나에게 프로그램 공유 권한 내역 조회
+    url(r'^get_shared_program_data/$', views.GetSharedProgramDataViewAjax.as_view(), name='get_share_program_data'),
+
     # 프로그램 공유 연결 안된 정보 조회
     url(r'^get_trainer_program_connection_list/$', views.GetTrainerProgramConnectionListView.as_view(),
         name='get_trainer_program_connection_list'),
