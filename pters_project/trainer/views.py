@@ -4062,6 +4062,7 @@ def update_share_program_info_logic(request):
 
                     program_auth_info.enable_flag = enable_flag
                     program_auth_info.save()
+
             else:
                 try:
                     program_auth_info = ProgramAuthTb.objects.get(class_tb_id=class_id, member_id=trainer_id,
@@ -4629,16 +4630,20 @@ def update_trainer_info_logic(request):
 def update_setting_push_logic(request):
     setting_to_trainee_lesson_alarm = request.POST.get('setting_to_trainee_lesson_alarm', '0')
     setting_from_trainee_lesson_alarm = request.POST.get('setting_from_trainee_lesson_alarm', '1')
+    setting_to_shared_trainer_lesson_alarm = request.POST.get('setting_to_shared_trainer_lesson_alarm', '1')
     class_id = request.session.get('class_id', '')
 
-    setting_type_cd_data = ['LT_PUS_TO_TRAINEE_LESSON_ALARM', 'LT_PUS_FROM_TRAINEE_LESSON_ALARM']
-    setting_info_data = [setting_to_trainee_lesson_alarm, setting_from_trainee_lesson_alarm]
+    setting_type_cd_data = ['LT_PUS_TO_TRAINEE_LESSON_ALARM', 'LT_PUS_FROM_TRAINEE_LESSON_ALARM',
+                            'LT_PUS_TO_SHARED_TRAINER_LESSON_ALARM']
+    setting_info_data = [setting_to_trainee_lesson_alarm, setting_from_trainee_lesson_alarm,
+                         setting_to_shared_trainer_lesson_alarm]
 
     error = update_program_setting_data(class_id, setting_type_cd_data, setting_info_data)
 
     if error is None:
         request.session['setting_to_trainee_lesson_alarm'] = int(setting_to_trainee_lesson_alarm)
         request.session['setting_from_trainee_lesson_alarm'] = int(setting_from_trainee_lesson_alarm)
+        request.session['setting_to_shared_trainer_lesson_alarm'] = int(setting_to_shared_trainer_lesson_alarm)
     else:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
