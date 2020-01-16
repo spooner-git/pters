@@ -11,7 +11,7 @@
 	/* text-align: center; */
 }
 	.cal_upper_box{
-		position: relative;
+		/* position: relative; */
 		height: 28px;
 		line-height: 28px;
 		/* background-color: var(--bg-main); */
@@ -20,6 +20,24 @@
 		padding-right: 0;
 		box-sizing: border-box;
 		display: flex;
+	}
+	.cal_tools_wrap_parent{
+		display: table;
+		position: absolute;
+		right: 0;
+		top: 0;
+		width: 200px;
+		height: 100%;
+	}
+	@media(max-width:700px) and (min-width:651px){
+		.cal_tools_wrap_parent{
+			width: 150px;
+		}
+	}
+	.cal_tools_wrap_parent > div{
+		display: table-cell;
+		vertical-align: middle;
+		text-align: center;
 	}
 	.cal_tools_wrap{
 		height: 100%;
@@ -53,7 +71,8 @@
 	}
 	@media(max-width:650px){
 		.cal_pc_tools_wrap{
-			display: none;
+			/* display: none; */
+			visibility: hidden;
 		}
 	}
 	.cal_upper_box > .cal_date_display{
