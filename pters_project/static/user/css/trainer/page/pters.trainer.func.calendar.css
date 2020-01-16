@@ -80,6 +80,7 @@
 	.display_week{
 		/* font-size: 18px; */
 	}
+	
 .pages{
 	position: absolute;
 	top: 60px;
@@ -87,6 +88,7 @@
 	transition: 0.2s ease-in-out;
 	background-color: var(--bg-main);
 	z-index: 1;
+	padding-bottom: 56px;
 }
 
 .week_upper_float_tool{
