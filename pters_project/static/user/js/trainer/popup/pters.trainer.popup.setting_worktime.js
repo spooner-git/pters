@@ -424,7 +424,7 @@ class Setting_worktime{
         Setting_worktime_func.update(data, ()=>{
             this.data_sending_now = false;
             this.set_initial_data();
-            show_error_message({title:'변경 내용이 저장되었습니다.'});
+            show_error_message({title:'설정이 저장되었습니다.'});
         }, ()=>{this.data_sending_now = false;});
     }
 
