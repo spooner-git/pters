@@ -4062,6 +4062,7 @@ def update_share_program_info_logic(request):
 
                     program_auth_info.enable_flag = enable_flag
                     program_auth_info.save()
+
             else:
                 try:
                     program_auth_info = ProgramAuthTb.objects.get(class_tb_id=class_id, member_id=trainer_id,

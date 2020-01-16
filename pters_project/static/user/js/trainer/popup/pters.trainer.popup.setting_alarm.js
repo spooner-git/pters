@@ -64,8 +64,9 @@ class Setting_alarm{
     dom_assembly_content(){
         let row_push_to_member = this.dom_row_push_to_member();
         let row_push_to_me = this.dom_row_push_to_me();
+        let row_push_to_shared_trainer = this.dom_row_push_to_share_trainer();
 
-        let html = row_push_to_member + row_push_to_me;
+        let html = row_push_to_member + row_push_to_me + row_push_to_shared_trainer;
 
         return html;
     }

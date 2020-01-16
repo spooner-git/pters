@@ -59,32 +59,32 @@ class Setting_sharing_member_auth{
         Setting_sharing_member_auth_func.read({"class_id": this.program_id}, (data)=>{
             let my_auth = data[this.member_db_id];
             console.log(my_auth);
-            this.data.schedule.create = my_auth.auth_plan_create != undefined ? my_auth.auth_plan_create : null;
-            this.data.schedule.read = my_auth.auth_plan_read != undefined ? my_auth.auth_plan_read : null;
-            this.data.schedule.update = my_auth.auth_plan_update != undefined ? my_auth.auth_plan_update : null;
-            this.data.schedule.delete = my_auth.auth_plan_delete != undefined ? my_auth.auth_plan_delete : null ;
+            this.data.schedule.create = my_auth.auth_plan_create != undefined ? my_auth.auth_plan_create : OFF;
+            this.data.schedule.read = my_auth.auth_plan_read != undefined ? my_auth.auth_plan_read : OFF;
+            this.data.schedule.update = my_auth.auth_plan_update != undefined ? my_auth.auth_plan_update : OFF;
+            this.data.schedule.delete = my_auth.auth_plan_delete != undefined ? my_auth.auth_plan_delete : OFF;
 
-            this.data.member.create = my_auth.auth_member_create != undefined ? my_auth.auth_member_create : null;
-            this.data.member.read = my_auth.auth_member_read != undefined ? my_auth.auth_member_read : null;
-            this.data.member.update = my_auth.auth_member_update != undefined ? my_auth.auth_member_update : null;
-            this.data.member.delete = my_auth.auth_member_delete != undefined ? my_auth.auth_member_delete : null;
+            this.data.member.create = my_auth.auth_member_create != undefined ? my_auth.auth_member_create : OFF;
+            this.data.member.read = my_auth.auth_member_read != undefined ? my_auth.auth_member_read : OFF;
+            this.data.member.update = my_auth.auth_member_update != undefined ? my_auth.auth_member_update : OFF;
+            this.data.member.delete = my_auth.auth_member_delete != undefined ? my_auth.auth_member_delete : OFF;
 
-            this.data.lecture.create = my_auth.auth_group_create != undefined ? my_auth.auth_group_create : null;
-            this.data.lecture.read = my_auth.auth_group_read != undefined ? my_auth.auth_group_read : null;
-            this.data.lecture.update = my_auth.auth_group_update != undefined ? my_auth.auth_group_update : null;
-            this.data.lecture.delete = my_auth.auth_group_delete != undefined ? my_auth.auth_group_delete : null;
+            this.data.lecture.create = my_auth.auth_group_create != undefined ? my_auth.auth_group_create : OFF;
+            this.data.lecture.read = my_auth.auth_group_read != undefined ? my_auth.auth_group_read : OFF;
+            this.data.lecture.update = my_auth.auth_group_update != undefined ? my_auth.auth_group_update : OFF;
+            this.data.lecture.delete = my_auth.auth_group_delete != undefined ? my_auth.auth_group_delete : OFF;
 
-            this.data.ticket.create = my_auth.auth_package_create != undefined ? my_auth.auth_package_create : null;
-            this.data.ticket.read = my_auth.auth_package_read != undefined ? my_auth.auth_package_read : null;
-            this.data.ticket.update = my_auth.auth_package_update != undefined ? my_auth.auth_package_update : null;
-            this.data.ticket.delete = my_auth.auth_package_delete != undefined ? my_auth.auth_package_delete : null;
+            this.data.ticket.create = my_auth.auth_package_create != undefined ? my_auth.auth_package_create : OFF;
+            this.data.ticket.read = my_auth.auth_package_read != undefined ? my_auth.auth_package_read : OFF;
+            this.data.ticket.update = my_auth.auth_package_update != undefined ? my_auth.auth_package_update : OFF;
+            this.data.ticket.delete = my_auth.auth_package_delete != undefined ? my_auth.auth_package_delete : OFF;
 
-            this.data.statistics.read = my_auth.auth_analytics_read != undefined ? my_auth.auth_analytics_read : null;
+            this.data.statistics.read = my_auth.auth_analytics_read != undefined ? my_auth.auth_analytics_read : OFF;
 
-            this.data.setting.create = my_auth.auth_setting_create != undefined ? my_auth.auth_setting_create : null;
-            this.data.setting.read = my_auth.auth_setting_read != undefined ? my_auth.auth_setting_read : null;
-            this.data.setting.update = my_auth.auth_setting_update != undefined ? my_auth.auth_setting_update : null;
-            this.data.setting.delete = my_auth.auth_setting_delete != undefined ? my_auth.auth_setting_delete : null;
+            this.data.setting.create = my_auth.auth_setting_create != undefined ? my_auth.auth_setting_create : OFF;
+            this.data.setting.read = my_auth.auth_setting_read != undefined ? my_auth.auth_setting_read : OFF;
+            this.data.setting.update = my_auth.auth_setting_update != undefined ? my_auth.auth_setting_update : OFF;
+            this.data.setting.delete = my_auth.auth_setting_delete != undefined ? my_auth.auth_setting_delete : OFF;
 
             this.shared_status = my_auth.member_info.auth_cd;
 
