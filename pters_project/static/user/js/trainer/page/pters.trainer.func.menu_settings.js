@@ -62,10 +62,8 @@ class Menu_settings {
 
         let dom_tag_style = {"font-size":"13px", "color":"var(--font-sub-normal)", "padding-left":"0", "margin-bottom":"8px"};
 
-        let share = shared_program_flag == 0 ? this.dom_menu_setting_sharing() : this.dom_menu_setting_shared();
-
-        let assembly = 
-                       CComponent.dom_tag('설정', dom_tag_style) + 
+        let assembly_sharing = 
+                       CComponent.dom_tag('프로그램 설정', dom_tag_style) + 
                         // share + 
                         this.dom_menu_setting_calendar() + 
                         this.dom_menu_setting_worktime() + 
@@ -75,7 +73,25 @@ class Menu_settings {
                         this.dom_menu_attendmode() + 
                         this.dom_menu_setting_attendmode() +
                         this.dom_menu_setting_menu_access() +
+                        CComponent.dom_tag('개인 설정', dom_tag_style) + 
                         this.dom_menu_theme();
+        let assembly_shared = 
+                        CComponent.dom_tag('프로그램 설정', dom_tag_style) + 
+                        // share + 
+                        this.dom_menu_setting_calendar() + 
+                        this.dom_menu_setting_worktime() + 
+                        this.dom_menu_setting_autocomplete() +
+                        this.dom_menu_setting_reserve() + 
+                        this.dom_menu_setting_alarm() + 
+                        this.dom_menu_attendmode() + 
+                        this.dom_menu_setting_attendmode() +
+                        this.dom_menu_setting_menu_access() +
+                        CComponent.dom_tag('개인 설정', dom_tag_style) + 
+                        this.dom_menu_setting_alarm_personal() + 
+                        this.dom_menu_theme();
+
+        let assembly = shared_program_flag == 0 ? assembly_sharing : assembly_shared;
+
         return assembly;
     }
 
@@ -252,6 +268,19 @@ class Menu_settings {
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             sideGoPopup("setting_alarm");
+        });
+        return html;
+    }
+
+    dom_menu_setting_alarm_personal(){
+        let id = 'menu_setting_alarm_personal';
+        let title = '알림';
+        let icon = CImg.setting_notification();
+        let icon_r_visible = NONE;
+        let icon_r_text = "";
+        let style = {"font-size":"17px", "padding":"13px 0"};
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            sideGoPopup("setting_alarm_personal");
         });
         return html;
     }

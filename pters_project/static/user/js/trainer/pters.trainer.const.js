@@ -213,6 +213,7 @@ const POPUP_ADDRESS_SETTING_WORKTIME = 'popup_setting_worktime';
 const POPUP_ADDRESS_SETTING_AUTOCOMPLETE = 'popup_setting_autocomplete';
 const POPUP_ADDRESS_SETTING_RESERVE = 'popup_setting_reserve';
 const POPUP_ADDRESS_SETTING_ALARM = 'popup_setting_alarm';
+const POPUP_ADDRESS_SETTING_ALARM_PERSONAL = 'popup_setting_alarm_personal';
 const POPUP_ADDRESS_SETTING_ATTENDMODE = 'popup_setting_attendmode';
 const POPUP_ADDRESS_SETTING_THEME = 'popup_setting_theme';
 const POPUP_ADDRESS_SETTING_MENU_ACCESS = 'popup_setting_menu_access';

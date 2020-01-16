@@ -1,0 +1,28 @@
+
+.popup_setting_alarm_personal{
+	/* -webkit-overflow-scrolling: touch; */
+}
+
+.popup_setting_alarm_personal .obj_box_full{
+	padding: 15px 20px;
+	border: 0;
+}
+
+.popup_setting_alarm_personal .obj_input_box_full{
+	padding: 15px 20px;
+	border: 0;
+}
+
+.popup_setting_alarm_personal .popup_toolbox{
+	/* position: sticky;
+	position: -webkit-sticky; */
+	position: relative;
+	top: 0;
+	padding: 8px 16px 24px 20px;
+	border-bottom: var(--border-article);
+	z-index: 1;
+}
+
+.popup_setting_alarm_personal .popup_content{
+	/* padding-top: 20px; */
+}
