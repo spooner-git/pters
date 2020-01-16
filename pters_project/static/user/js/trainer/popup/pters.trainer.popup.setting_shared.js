@@ -4,19 +4,22 @@ class Setting_shared{
         this.data_sending_now = false;
 
         this.program_id = external_data.program_id;
-        this.data = pass_inspector.data;
+        this.data;
 
         this.init();
     }
 
  
     init(){
-        this.render();
-        // this.set_initial_data();
+        // this.render();
+        this.set_initial_data();
     }
 
     set_initial_data (){
-
+        Setting_shared_func.read({"class_id":this.program_id}, (data)=>{
+            this.data = data;
+            this.render();
+        });
     }
 
     clear(){
@@ -62,27 +65,27 @@ class Setting_shared{
         // let member_user_id = indiv_auth_data.member_info.member_user_id;
         // let member_db_id = indiv_auth_data.member_info.member_id;
 
-        let auth_plan_create = data.auth_plan_create.active == 1 ? "등록" : null;
-        let auth_plan_read = data.auth_plan_read.active == 1 ? "조회" :  null;
-        let auth_plan_update = data.auth_plan_update.active == 1 ? "수정" :  null;
-        let auth_plan_delete = data.auth_plan_delete.active == 1 ? "삭제" :  null;
+        let auth_plan_create = data.auth_plan_create == 1 ? "등록" : null;
+        let auth_plan_read = data.auth_plan_read == 1 ? "조회" :  null;
+        let auth_plan_update = data.auth_plan_update == 1 ? "수정" :  null;
+        let auth_plan_delete = data.auth_plan_delete == 1 ? "삭제" :  null;
 
-        let auth_member_create = data.auth_member_create.active == 1 ? "등록" :  null;
-        let auth_member_read = data.auth_member_read.active == 1 ? "조회" :  null;
-        let auth_member_update = data.auth_member_update.active == 1 ? "수정" :  null;
-        let auth_member_delete = data.auth_member_delete.active == 1 ? "삭제" :  null;
+        let auth_member_create = data.auth_member_create == 1 ? "등록" :  null;
+        let auth_member_read = data.auth_member_read == 1 ? "조회" :  null;
+        let auth_member_update = data.auth_member_update == 1 ? "수정" :  null;
+        let auth_member_delete = data.auth_member_delete == 1 ? "삭제" :  null;
 
-        let auth_lecture_create = data.auth_group_create.active == 1 ? "등록" :  null;
-        let auth_lecture_read = data.auth_group_read.active == 1 ? "조회" :  null;
-        let auth_lecture_update = data.auth_group_update.active == 1 ? "수정" :  null;
-        let auth_lecture_delete = data.auth_group_delete.active == 1 ? "삭제" :  null;
+        let auth_lecture_create = data.auth_group_create == 1 ? "등록" :  null;
+        let auth_lecture_read = data.auth_group_read == 1 ? "조회" :  null;
+        let auth_lecture_update = data.auth_group_update == 1 ? "수정" :  null;
+        let auth_lecture_delete = data.auth_group_delete == 1 ? "삭제" :  null;
 
-        let auth_ticket_create = data.auth_package_create.active == 1 ? "등록" :  null;
-        let auth_ticket_read = data.auth_package_read.active == 1 ? "조회" :  null;
-        let auth_ticket_update = data.auth_package_update.active == 1 ? "수정" :  null;
-        let auth_ticket_delete = data.auth_package_delete.active == 1 ? "삭제" :  null;
+        let auth_ticket_create = data.auth_package_create == 1 ? "등록" :  null;
+        let auth_ticket_read = data.auth_package_read == 1 ? "조회" :  null;
+        let auth_ticket_update = data.auth_package_update == 1 ? "수정" :  null;
+        let auth_ticket_delete = data.auth_package_delete == 1 ? "삭제" :  null;
 
-        let auth_statistics_read = data.auth_analytics_read.active == 1 ? "조회" :  null;
+        let auth_statistics_read = data.auth_analytics_read == 1 ? "조회" :  null;
 
         let schedule_auth = [auth_plan_create, auth_plan_read, auth_plan_update, auth_plan_delete].filter((el)=>{ if(el == null){return false} return true }).map((el)=>{return el});
         let member_auth = [auth_member_create, auth_member_read, auth_member_update, auth_member_delete].filter((el)=>{ if(el == null){return false} return true }).map((el)=>{return el});
@@ -316,6 +319,52 @@ class Setting_shared_func{
             }
         });
         
+    }
+
+    static read(data, callback, error_callback){
+        $.ajax({
+            url:"/trainer/get_shared_program_data/",
+            type:'GET',
+            data:data,
+            dataType : 'JSON',
+    
+            beforeSend:function(xhr, settings){
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+    
+            //통신성공시 처리
+            success:function (data){
+                check_app_version(data.app_version);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message({title:data.messageArray[0]});
+                        if(error_callback != undefined){
+                            error_callback();
+                        }
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(data);
+                }
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function (){
+
+            },
+    
+            //통신 실패시 처리
+            error:function (){
+                if(error_callback != undefined){
+                    error_callback();
+                }
+                console.log('server error');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
+            }
+        });
     }
 }
 
