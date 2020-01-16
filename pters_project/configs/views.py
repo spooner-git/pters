@@ -258,6 +258,7 @@ def func_setting_data_update(request, group):
         request.session['setting_schedule_auto_finish'] = context['setting_schedule_auto_finish']
         request.session['setting_member_ticket_auto_finish'] = context['setting_member_ticket_auto_finish']
         request.session['setting_to_trainee_lesson_alarm'] = context['setting_to_trainee_lesson_alarm']
+        request.session['setting_to_shared_trainer_lesson_alarm'] = context['setting_to_shared_trainer_lesson_alarm']
         request.session['setting_from_trainee_lesson_alarm'] = context['setting_from_trainee_lesson_alarm']
         request.session['setting_language'] = context['setting_language']
         request.session['setting_admin_password'] = context['setting_admin_password']

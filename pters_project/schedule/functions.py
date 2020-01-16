@@ -15,12 +15,12 @@ from django.utils import timezone
 from configs import settings
 from configs.const import REPEAT_TYPE_2WEAK, ON_SCHEDULE_TYPE, USE, UN_USE, SCHEDULE_DUPLICATION_DISABLE, \
     STATE_CD_ABSENCE, STATE_CD_FINISH, STATE_CD_IN_PROGRESS, STATE_CD_NOT_PROGRESS, LECTURE_TYPE_ONE_TO_ONE, \
-    AUTH_TYPE_VIEW, GROUP_SCHEDULE, OFF_SCHEDULE
+    AUTH_TYPE_VIEW, GROUP_SCHEDULE, OFF_SCHEDULE, FROM_TRAINEE_LESSON_ALARM_ON
 from configs.settings import DEBUG
 from login.models import PushInfoTb
 from trainee.models import MemberTicketTb
 from trainer.functions import func_update_lecture_member_fix_status_cd
-from trainer.models import MemberClassTb, ClassMemberTicketTb, LectureTb, TicketLectureTb
+from trainer.models import MemberClassTb, ClassMemberTicketTb, LectureTb, TicketLectureTb, SettingTb
 from .models import ScheduleTb, RepeatScheduleTb, DeleteScheduleTb, DeleteRepeatScheduleTb, HolidayTb, DailyRecordTb
 
 if DEBUG is False:
@@ -600,42 +600,14 @@ def func_send_push_trainee(class_id, title, message):
                                                                                   auth_cd=AUTH_TYPE_VIEW, use=USE)
         for member_class_info in member_class_data:
 
-            token_data = PushInfoTb.objects.filter(member_id=member_class_info.member_id, use=USE)
-            for token_info in token_data:
-                if token_info.device_id != 'pc':
-                    token_info.badge_counter += 1
-                    token_info.save()
-                instance_id = token_info.token
-                badge_counter = token_info.badge_counter
-                check_async = False
-                if DEBUG is False:
-                    check_async = True
-                    # from configs.celery import CELERY_WORKING
-                    # try:
-                    #     if CELERY_WORKING:
-                    #         check_async = True
-                    #     else:
-                    #         check_async = False
-                    # except OperationalError:
-                    #     check_async = False
+            try:
+                setting_data = SettingTb.objects.get(member_id=member_class_info.member_id, class_tb_id=class_id,
+                                                     setting_type_cd='LT_PUS_FROM_TRAINEE_LESSON_ALARM')
+                lt_pus_from_trainee_lesson_alarm = int(setting_data.setting_info)
+            except ObjectDoesNotExist:
+                lt_pus_from_trainee_lesson_alarm = FROM_TRAINEE_LESSON_ALARM_ON
 
-                if check_async:
-                    error = task_send_fire_base_push.delay(instance_id, title, message, badge_counter)
-                else:
-                    error = send_fire_base_push(instance_id, title, message, badge_counter)
-
-    return error
-
-
-# 강사 -> 강사 push 메시지 전달
-def func_send_push_trainer_trainer(class_id, title, message, member_id):
-    error = None
-    if class_id is not None and class_id != '':
-
-        member_class_data = MemberClassTb.objects.select_related('member').filter(class_tb_id=class_id,
-                                                                                  auth_cd=AUTH_TYPE_VIEW, use=USE)
-        for member_class_info in member_class_data:
-            if str(member_id) != str(member_class_info.member_id):
+            if str(lt_pus_from_trainee_lesson_alarm) == str(FROM_TRAINEE_LESSON_ALARM_ON):
                 token_data = PushInfoTb.objects.filter(member_id=member_class_info.member_id, use=USE)
                 for token_info in token_data:
                     if token_info.device_id != 'pc':
@@ -659,6 +631,50 @@ def func_send_push_trainer_trainer(class_id, title, message, member_id):
                         error = task_send_fire_base_push.delay(instance_id, title, message, badge_counter)
                     else:
                         error = send_fire_base_push(instance_id, title, message, badge_counter)
+
+    return error
+
+
+# 강사 -> 강사 push 메시지 전달
+def func_send_push_trainer_trainer(class_id, title, message, member_id):
+    error = None
+    if class_id is not None and class_id != '':
+
+        member_class_data = MemberClassTb.objects.select_related('member').filter(class_tb_id=class_id,
+                                                                                  auth_cd=AUTH_TYPE_VIEW, use=USE)
+        for member_class_info in member_class_data:
+            if str(member_id) != str(member_class_info.member_id):
+                try:
+                    setting_data = SettingTb.objects.get(member_id=member_class_info.member_id, class_tb_id=class_id,
+                                                         setting_type_cd='LT_PUS_FROM_TRAINEE_LESSON_ALARM')
+                    lt_pus_from_trainee_lesson_alarm = int(setting_data.setting_info)
+                except ObjectDoesNotExist:
+                    lt_pus_from_trainee_lesson_alarm = FROM_TRAINEE_LESSON_ALARM_ON
+
+                if str(lt_pus_from_trainee_lesson_alarm) == str(FROM_TRAINEE_LESSON_ALARM_ON):
+                    token_data = PushInfoTb.objects.filter(member_id=member_class_info.member_id, use=USE)
+                    for token_info in token_data:
+                        if token_info.device_id != 'pc':
+                            token_info.badge_counter += 1
+                            token_info.save()
+                        instance_id = token_info.token
+                        badge_counter = token_info.badge_counter
+                        check_async = False
+                        if DEBUG is False:
+                            check_async = True
+                            # from configs.celery import CELERY_WORKING
+                            # try:
+                            #     if CELERY_WORKING:
+                            #         check_async = True
+                            #     else:
+                            #         check_async = False
+                            # except OperationalError:
+                            #     check_async = False
+
+                        if check_async:
+                            error = task_send_fire_base_push.delay(instance_id, title, message, badge_counter)
+                        else:
+                            error = send_fire_base_push(instance_id, title, message, badge_counter)
 
     return error
 

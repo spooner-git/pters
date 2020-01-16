@@ -62,20 +62,21 @@ class Menu_settings {
 
         let dom_tag_style = {"font-size":"13px", "color":"var(--font-sub-normal)", "padding-left":"0", "margin-bottom":"8px"};
 
-        let assembly_sharing = 
-                       CComponent.dom_tag('프로그램 설정', dom_tag_style) + 
-                        // share + 
-                        this.dom_menu_setting_calendar() + 
-                        this.dom_menu_setting_worktime() + 
-                        this.dom_menu_setting_autocomplete() +
-                        this.dom_menu_setting_reserve() + 
-                        this.dom_menu_setting_alarm() + 
-                        this.dom_menu_attendmode() + 
-                        this.dom_menu_setting_attendmode() +
-                        this.dom_menu_setting_menu_access() +
-                        CComponent.dom_tag('개인 설정', dom_tag_style) + 
-                        this.dom_menu_theme();
-        let assembly_shared = 
+        // let assembly_sharing =
+        //                CComponent.dom_tag('프로그램 설정', dom_tag_style) +
+        //                 // share +
+        //                 this.dom_menu_setting_calendar() +
+        //                 this.dom_menu_setting_worktime() +
+        //                 this.dom_menu_setting_autocomplete() +
+        //                 this.dom_menu_setting_reserve() +
+        //                 this.dom_menu_setting_alarm() +
+        //                 this.dom_menu_attendmode() +
+        //                 this.dom_menu_setting_attendmode() +
+        //                 this.dom_menu_setting_menu_access() +
+        //                 CComponent.dom_tag('개인 설정', dom_tag_style) +
+        //                 this.dom_menu_theme();
+        // let assembly_shared =
+        let assembly =
                         CComponent.dom_tag('프로그램 설정', dom_tag_style) + 
                         // share + 
                         this.dom_menu_setting_calendar() + 
@@ -90,7 +91,7 @@ class Menu_settings {
                         this.dom_menu_setting_alarm_personal() + 
                         this.dom_menu_theme();
 
-        let assembly = shared_program_flag == 0 ? assembly_sharing : assembly_shared;
+        // let assembly = shared_program_flag == 0 ? assembly_sharing : assembly_shared;
 
         return assembly;
     }

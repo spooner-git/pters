@@ -73,18 +73,19 @@ class Menu {
                                 this.dom_menu_ticket() + 
                                 this.dom_menu_statistics() + 
                                 this.dom_menu_attendmode();
-        let sub_assembly_setting_sharing =    
-                                CComponent.dom_tag('프로그램 설정', dom_tag_style) +
-                                this.dom_menu_setting_calendar() + 
-                                this.dom_menu_setting_worktime() + 
-                                this.dom_menu_setting_autocomplete() +
-                                this.dom_menu_setting_reserve() + 
-                                this.dom_menu_setting_alarm() + 
-                                this.dom_menu_setting_attendmode() +
-                                this.dom_menu_setting_menu_access() +
-                                CComponent.dom_tag('개인 설정', dom_tag_style) + 
-                                this.dom_menu_theme();
-        let sub_assembly_setting_shared =    
+        // let sub_assembly_setting_sharing =
+        //                         CComponent.dom_tag('프로그램 설정', dom_tag_style) +
+        //                         this.dom_menu_setting_calendar() +
+        //                         this.dom_menu_setting_worktime() +
+        //                         this.dom_menu_setting_autocomplete() +
+        //                         this.dom_menu_setting_reserve() +
+        //                         this.dom_menu_setting_alarm() +
+        //                         this.dom_menu_setting_attendmode() +
+        //                         this.dom_menu_setting_menu_access() +
+        //                         CComponent.dom_tag('개인 설정', dom_tag_style) +
+        //                         this.dom_menu_theme();
+        // let sub_assembly_setting_shared =
+        let sub_assembly_setting =
                                 CComponent.dom_tag('프로그램 설정', dom_tag_style) +
                                 this.dom_menu_setting_calendar() + 
                                 this.dom_menu_setting_worktime() + 
@@ -96,7 +97,7 @@ class Menu {
                                 CComponent.dom_tag('개인 설정', dom_tag_style) + 
                                 this.dom_menu_setting_alarm_personal() + 
                                 this.dom_menu_theme();
-        let sub_assembly_setting = shared_program_flag == 0 ? sub_assembly_setting_sharing : sub_assembly_setting_shared;
+        // let sub_assembly_setting = shared_program_flag == 0 ? sub_assembly_setting_sharing : sub_assembly_setting_shared;
         let sub_assembly_service = 
                                 CComponent.dom_tag('서비스', dom_tag_style) + 
                                 this.dom_menu_pters_pass() + 

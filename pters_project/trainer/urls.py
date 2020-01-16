@@ -201,8 +201,11 @@ urlpatterns = [
     url(r'^get_trainer_info/$', views.GetTrainerInfoView.as_view(), name='get_trainer_info'),
     # 강사 정보 수정
     url(r'^update_trainer_info/$', views.update_trainer_info_logic, name='update_trainer_info'),
-    # 푸시 Setting 수정
+    # 푸시 - to 외부 Setting 수정
     url(r'^update_setting_push/$', views.update_setting_push_logic, name='update_setting_push'),
+
+    # 푸시 - to 나에게 Setting 수정
+    url(r'^update_setting_push_to_me/$', views.update_setting_push_to_me_logic, name='update_setting_push_to_me'),
 
     # 일반 설정 관련 Setting 수정
     url(r'^update_setting_calendar_setting/$', views.update_setting_calendar_setting_logic,

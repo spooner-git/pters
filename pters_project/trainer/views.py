@@ -55,7 +55,7 @@ from .functions import func_get_trainer_setting_list, \
     func_check_member_connection_info, func_get_member_lecture_list, \
     func_get_member_ticket_list, func_get_lecture_info, func_add_member_ticket_info, func_get_ticket_info, \
     func_delete_member_ticket_info, func_update_lecture_member_fix_status_cd, update_user_setting_data, \
-    update_program_setting_data, func_get_member_ticket_info, func_get_trainer_info
+    update_program_setting_data, func_get_member_ticket_info, func_get_trainer_info, update_alarm_setting_data
 from .models import ClassMemberTicketTb, LectureTb, ClassTb, MemberClassTb, BackgroundImgTb, \
     SettingTb, TicketTb, TicketLectureTb, CenterTrainerTb, LectureMemberTb, ProgramAuthTb
 
@@ -4629,21 +4629,36 @@ def update_trainer_info_logic(request):
 # 강사 예약허용시간 setting 업데이트 api
 def update_setting_push_logic(request):
     setting_to_trainee_lesson_alarm = request.POST.get('setting_to_trainee_lesson_alarm', '0')
-    setting_from_trainee_lesson_alarm = request.POST.get('setting_from_trainee_lesson_alarm', '1')
-    setting_to_shared_trainer_lesson_alarm = request.POST.get('setting_to_shared_trainer_lesson_alarm', '1')
+    setting_to_shared_trainer_lesson_alarm = request.POST.get('setting_to_shared_trainer_lesson_alarm', '0')
     class_id = request.session.get('class_id', '')
 
-    setting_type_cd_data = ['LT_PUS_TO_TRAINEE_LESSON_ALARM', 'LT_PUS_FROM_TRAINEE_LESSON_ALARM',
-                            'LT_PUS_TO_SHARED_TRAINER_LESSON_ALARM']
-    setting_info_data = [setting_to_trainee_lesson_alarm, setting_from_trainee_lesson_alarm,
-                         setting_to_shared_trainer_lesson_alarm]
+    setting_type_cd_data = ['LT_PUS_TO_TRAINEE_LESSON_ALARM', 'LT_PUS_TO_SHARED_TRAINER_LESSON_ALARM']
+    setting_info_data = [setting_to_trainee_lesson_alarm, setting_to_shared_trainer_lesson_alarm]
 
     error = update_program_setting_data(class_id, setting_type_cd_data, setting_info_data)
 
     if error is None:
         request.session['setting_to_trainee_lesson_alarm'] = int(setting_to_trainee_lesson_alarm)
-        request.session['setting_from_trainee_lesson_alarm'] = int(setting_from_trainee_lesson_alarm)
         request.session['setting_to_shared_trainer_lesson_alarm'] = int(setting_to_shared_trainer_lesson_alarm)
+    else:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
+# 강사 예약허용시간 setting 업데이트 api
+def update_setting_push_to_me_logic(request):
+    setting_from_trainee_lesson_alarm = request.POST.get('setting_from_trainee_lesson_alarm', '1')
+    class_id = request.session.get('class_id', '')
+
+    setting_type_cd_data = ['LT_PUS_FROM_TRAINEE_LESSON_ALARM']
+    setting_info_data = [setting_from_trainee_lesson_alarm]
+
+    error = update_alarm_setting_data(class_id, request.user.id, setting_type_cd_data, setting_info_data)
+
+    if error is None:
+        request.session['setting_from_trainee_lesson_alarm'] = int(setting_from_trainee_lesson_alarm)
     else:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)

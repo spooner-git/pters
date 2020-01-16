@@ -4,7 +4,6 @@ class Setting_alarm_personal{
         this.data_sending_now = false;
 
         this.data = {
-            push_to_member: OFF,
             push_to_me: OFF
         };
 
@@ -19,7 +18,6 @@ class Setting_alarm_personal{
 
     set_initial_data (){
         Setting_alarm_personal_func.read((data)=>{
-            this.data.push_to_me = data.setting_from_trainee_lesson_alarm_personal;
             this.data.push_to_member = data.setting_to_trainee_lesson_alarm_personal;
             this.render_content();
         });
@@ -154,7 +152,6 @@ class Setting_alarm_personal{
         }
 
         let data = {
-            "setting_to_trainee_lesson_alarm_personal":this.data.push_to_member,
             "setting_from_trainee_lesson_alarm_personal":this.data.push_to_me
         };
         
@@ -175,7 +172,7 @@ class Setting_alarm_personal_func{
     static update(data, callback, error_callback){
         //업무 시간 설정
         $.ajax({
-            url:"/trainer/update_setting_push/",
+            url:"/trainer/update_setting_push_to_me/",
             type:'POST',
             data: data,
             dataType : 'html',

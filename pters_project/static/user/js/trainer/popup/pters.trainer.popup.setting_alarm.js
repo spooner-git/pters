@@ -5,7 +5,6 @@ class Setting_alarm{
 
         this.data = {
             push_to_member: OFF,
-            push_to_me: OFF,
             push_to_shared_trainer: OFF
         };
 
@@ -20,7 +19,6 @@ class Setting_alarm{
 
     set_initial_data (){
         Setting_alarm_func.read((data)=>{
-            this.data.push_to_me = data.setting_from_trainee_lesson_alarm;
             this.data.push_to_member = data.setting_to_trainee_lesson_alarm;
             this.data.push_to_shared_trainer = data.setting_to_shared_trainer_lesson_alarm;
             this.render_content();
@@ -63,10 +61,9 @@ class Setting_alarm{
     
     dom_assembly_content(){
         let row_push_to_member = this.dom_row_push_to_member();
-        let row_push_to_me = this.dom_row_push_to_me();
         let row_push_to_shared_trainer = this.dom_row_push_to_share_trainer();
 
-        let html = row_push_to_member + row_push_to_me + row_push_to_shared_trainer;
+        let html = row_push_to_member + row_push_to_shared_trainer;
 
         return html;
     }
@@ -104,23 +101,6 @@ class Setting_alarm{
         return html;
     }
 
-    dom_row_push_to_me(){
-        let id = `push_to_me`;
-        let power = this.data.push_to_me;
-        let style = null;
-        let push_to_me_toggle = CComponent.toggle_button (id, power, style, (data)=>{
-                                this.data.push_to_me = data; // ON or OFF
-                                this.render_content();
-                            });
-        let title_row = CComponent.text_button ("ntd", '(나에게) 일정 변경 알림', {"font-size":"15px", "font-weight":"500", "letter-spacing":"-0.8px"}, ()=>{});
-        let html = `<article class="obj_input_box_full">
-                        <div style="display:table;width:100%;">
-                            <div style="display:table-cell;width:auto;vertical-align:middle">${title_row}</div>
-                            <div style="display:table-cell;width:50px;vertical-align:middle">${push_to_me_toggle}</div>
-                        </div>
-                    </article>`;
-        return html;
-    }
     dom_row_push_to_share_trainer(){
         let id = `push_to_shared_trainer`;
         let power = this.data.push_to_shared_trainer;
@@ -174,7 +154,6 @@ class Setting_alarm{
 
         let data = {
             "setting_to_trainee_lesson_alarm":this.data.push_to_member,
-            "setting_from_trainee_lesson_alarm":this.data.push_to_me,
             "setting_to_shared_trainer_lesson_alarm":this.data.push_to_shared_trainer,
         };
         

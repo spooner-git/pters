@@ -493,26 +493,26 @@ def add_trainee_schedule_logic(request):
         # class_info.schedule_check = 1
         # class_info.save()
 
-        try:
-            setting_data = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_id,
-                                                 setting_type_cd='LT_PUS_FROM_TRAINEE_LESSON_ALARM')
-            lt_pus_from_trainee_lesson_alarm = int(setting_data.setting_info)
-        except ObjectDoesNotExist:
-            lt_pus_from_trainee_lesson_alarm = FROM_TRAINEE_LESSON_ALARM_ON
+        # try:
+        #     setting_data = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_id,
+        #                                          setting_type_cd='LT_PUS_FROM_TRAINEE_LESSON_ALARM')
+        #     lt_pus_from_trainee_lesson_alarm = int(setting_data.setting_info)
+        # except ObjectDoesNotExist:
+        #     lt_pus_from_trainee_lesson_alarm = FROM_TRAINEE_LESSON_ALARM_ON
+        #
+        # if str(lt_pus_from_trainee_lesson_alarm) == str(FROM_TRAINEE_LESSON_ALARM_ON):
+        push_info_schedule_start_date = str(start_date).split(':')
 
-        if str(lt_pus_from_trainee_lesson_alarm) == str(FROM_TRAINEE_LESSON_ALARM_ON):
-            push_info_schedule_start_date = str(start_date).split(':')
+        push_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
+        lecture_name = '개인 수업'
+        if lecture_schedule_id != '' and lecture_schedule_id is not None:
+            lecture_name = schedule_info.get_lecture_name()
 
-            push_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
-            lecture_name = '개인 수업'
-            if lecture_schedule_id != '' and lecture_schedule_id is not None:
-                lecture_name = schedule_info.get_lecture_name()
-
-            func_send_push_trainee(class_id, class_type_name + ' - 수업 알림',
-                                   request.user.first_name + '님이 '
-                                   + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
-                                   + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                                   + ' [' + lecture_name + '] 수업을 예약했습니다')
+        func_send_push_trainee(class_id, class_type_name + ' - 수업 알림',
+                               request.user.first_name + '님이 '
+                               + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
+                               + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
+                               + ' [' + lecture_name + '] 수업을 예약했습니다')
     else:
         logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)

@@ -13,7 +13,8 @@ from django.db.models.expressions import RawSQL
 from configs.const import USE, UN_USE, AUTO_FINISH_OFF, FROM_TRAINEE_LESSON_ALARM_ON, \
     TO_TRAINEE_LESSON_ALARM_OFF, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, STATE_CD_IN_PROGRESS, STATE_CD_FINISH,\
     STATE_CD_ABSENCE, AUTH_TYPE_DELETE, STATE_CD_NOT_PROGRESS, SHOW, CALENDAR_TIME_SELECTOR_BASIC, \
-    LECTURE_TYPE_ONE_TO_ONE, ING_MEMBER_TRUE, ING_MEMBER_FALSE
+    LECTURE_TYPE_ONE_TO_ONE, ING_MEMBER_TRUE, ING_MEMBER_FALSE, FROM_TRAINEE_LESSON_ALARM_OFF, \
+    TO_SHARED_TRAINER_LESSON_ALARM_OFF
 
 from login.models import MemberTb
 from schedule.models import ScheduleTb, RepeatScheduleTb
@@ -699,6 +700,7 @@ def func_get_trainer_setting_list(context, user_id, class_id, class_hour):
     lt_member_ticket_auto_finish = AUTO_FINISH_OFF
     lt_lan_01 = 'KOR'
     lt_pus_to_trainee_lesson_alarm = TO_TRAINEE_LESSON_ALARM_OFF
+    setting_to_shared_trainer_lesson_alarm = TO_SHARED_TRAINER_LESSON_ALARM_OFF
     lt_pus_from_trainee_lesson_alarm = FROM_TRAINEE_LESSON_ALARM_ON
     setting_admin_password = '0000'
     setting_attend_class_prev_display_time = 0
@@ -753,8 +755,11 @@ def func_get_trainer_setting_list(context, user_id, class_id, class_hour):
             lt_lan_01 = setting_info.setting_info
         if setting_info.setting_type_cd == 'LT_PUS_TO_TRAINEE_LESSON_ALARM':
             lt_pus_to_trainee_lesson_alarm = int(setting_info.setting_info)
+        if setting_info.setting_type_cd == 'LT_PUS_TO_SHARED_TRAINER_LESSON_ALARM':
+            setting_to_shared_trainer_lesson_alarm = int(setting_info.setting_info)
         if setting_info.setting_type_cd == 'LT_PUS_FROM_TRAINEE_LESSON_ALARM':
-            lt_pus_from_trainee_lesson_alarm = int(setting_info.setting_info)
+            if str(user_id) == setting_info.member_id:
+                lt_pus_from_trainee_lesson_alarm = int(setting_info.setting_info)
         if setting_info.setting_type_cd == 'LT_ADMIN_PASSWORD':
             setting_admin_password = setting_info.setting_info
         if setting_info.setting_type_cd == 'LT_ATTEND_CLASS_PREV_DISPLAY_TIME':
@@ -830,6 +835,7 @@ def func_get_trainer_setting_list(context, user_id, class_id, class_hour):
     context['setting_schedule_auto_finish'] = lt_schedule_auto_finish
     context['setting_member_ticket_auto_finish'] = lt_member_ticket_auto_finish
     context['setting_to_trainee_lesson_alarm'] = lt_pus_to_trainee_lesson_alarm
+    context['setting_to_shared_trainer_lesson_alarm'] = setting_to_shared_trainer_lesson_alarm
     context['setting_from_trainee_lesson_alarm'] = lt_pus_from_trainee_lesson_alarm
     context['setting_admin_password'] = setting_admin_password
     context['setting_language'] = lt_lan_01
@@ -1060,6 +1066,35 @@ def update_program_setting_data(class_id, setting_type_cd_data, setting_info_dat
                 except ObjectDoesNotExist:
                     setting_data = SettingTb(class_tb_id=class_id, setting_type_cd=setting_type_cd_info, use=USE)
                 setting_data.member_id = None
+                setting_data.setting_info = setting_info_data[idx]
+                setting_data.save()
+
+    except ValueError:
+        error = '등록 값에 문제가 있습니다.'
+    except IntegrityError:
+        error = '등록 값에 문제가 있습니다.'
+    except TypeError:
+        error = '등록 값에 문제가 있습니다.'
+    except ValidationError:
+        error = '등록 값에 문제가 있습니다.'
+    except InternalError:
+        error = '등록 값에 문제가 있습니다.'
+
+    return error
+
+def update_alarm_setting_data(class_id, member_id, setting_type_cd_data, setting_info_data):
+
+    error = None
+    try:
+        with transaction.atomic():
+
+            for idx, setting_type_cd_info in enumerate(setting_type_cd_data):
+                try:
+                    setting_data = SettingTb.objects.get(class_tb_id=class_id, member_id=member_id,
+                                                         setting_type_cd=setting_type_cd_info)
+                except ObjectDoesNotExist:
+                    setting_data = SettingTb(class_tb_id=class_id, setting_type_cd=setting_type_cd_info, use=USE)
+                setting_data.member_id = member_id
                 setting_data.setting_info = setting_info_data[idx]
                 setting_data.save()
 
