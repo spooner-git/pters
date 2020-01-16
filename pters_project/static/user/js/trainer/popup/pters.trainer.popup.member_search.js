@@ -229,10 +229,15 @@ class Member_search {
 
             };
             let radio_button = CComponent.radio_button (`radio_dom_row_member_list`, checked, style_radio, onclick_radio);
-
+            // <div style="flex-basis:70px;background-image:url('${data.member_profile_url}');background-size:contain;background-repeat:no-repeat;">
             let html = `<article style="display: flex;height: 40px;line-height: 40px;padding: 10px 0;" id="member_searched_${data.member_id}">
-                            <div style="flex-basis:70px;background-image:url('${data.member_profile_url}');background-size:contain;background-repeat:no-repeat;"></div>
-                            <div style="flex:1 0 0;">${data.member_name} <span style="font-size:12px;color:var(--font-sub-normal)">(${data.member_phone})</span></div>
+                            <div style="flex-basis:55px;">
+                                <div style="background-image:url('${data.member_profile_url}');background-size:contain;background-repeat:no-repeat;border-radius:50%;width:40px;height:40px;"></div>
+                            </div>
+                            <div style="flex:1 0 0;">
+                                <div style="line-height:20px;">${data.member_name}</div> 
+                                <div style="line-height:20px;font-size:12px;color:var(--font-sub-normal)">(ID: ${data.member_user_id}, TEL:${data.member_phone})</div>
+                            </div>
                             <div style="flex-basis:50px;text-align:right;">${radio_button}</div>
                         </article>`;
             
