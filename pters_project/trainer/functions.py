@@ -679,7 +679,7 @@ def func_delete_member_ticket_info(user_id, class_id, member_ticket_id):
 
 
 # 강사의 셋팅 정보 가져오기
-def func_get_trainer_setting_list(context, user_id, class_id, class_hour):
+def func_get_trainer_setting_list(context, trainer_id, class_id, user_id):
     today = datetime.date.today()
     lt_res_01 = '00:00-24:00'
     lt_res_02 = 0

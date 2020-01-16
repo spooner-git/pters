@@ -1358,8 +1358,8 @@ class PushSettingView(LoginRequiredMixin, AccessTestMixin, View):
         context = {}
         # context = super(PushSettingView, self).get_context_data(**kwargs)
         class_id = request.session.get('class_id', '')
-        class_hour = request.session.get('class_hour')
-        context = func_get_trainer_setting_list(context, request.user.id, class_id, class_hour)
+        # class_hour = request.session.get('class_hour')
+        context = func_get_trainer_setting_list(context, request.user.id, class_id, request.user.id)
 
         return render(request, self.template_name, context)
 
