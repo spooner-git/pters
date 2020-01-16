@@ -184,7 +184,9 @@ class Plan_add{
         }
         if(end_time_hour >= work_time_end){
             end_time_min = 0;
+            end_time_hour = work_time_end;
         }
+
         if(end_time_hour < start_time.hour){
             end_time_hour = work_time_end;
             end_time_min = 0;
