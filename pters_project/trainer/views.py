@@ -4102,7 +4102,6 @@ class GetShareProgramDataViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         if error is None:
             program_auth_data = ProgramAuthTb.objects.select_related('class_tb', 'member',
                                                                      'function_auth_tb').filter(class_tb_id=class_id,
-                                                                                                member_id=request.user.id,
                                                                                                 use=USE)
 
             for program_auth_info in program_auth_data:
@@ -4142,6 +4141,7 @@ class GetSharedProgramDataViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         if error is None:
             program_auth_data = ProgramAuthTb.objects.select_related('class_tb', 'member',
                                                                      'function_auth_tb').filter(class_tb_id=class_id,
+                                                                                                member_id=request.user.id,
                                                                                                 use=USE)
 
             for program_auth_info in program_auth_data:
@@ -4151,15 +4151,7 @@ class GetSharedProgramDataViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                     function_auth_type_cd_name = str(program_auth_info.function_auth_tb.function_auth_type_cd) \
                                                  + str(program_auth_info.auth_type_cd)
 
-                try:
-                    member_program_auth_list[program_auth_info.member_id]
-                except KeyError:
-                    member_program_auth_list[program_auth_info.member_id] = {}
-                    member_result = func_get_trainer_info(class_id, program_auth_info.member_id)
-                    member_program_auth_list[program_auth_info.member_id]['member_info'] \
-                        = member_result['member_info']
-
-                member_program_auth_list[program_auth_info.member_id][function_auth_type_cd_name] \
+                member_program_auth_list[function_auth_type_cd_name] \
                     = program_auth_info.enable_flag
 
         if error is not None:
