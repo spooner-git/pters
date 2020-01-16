@@ -4029,7 +4029,7 @@ def update_share_program_info_logic(request):
             class_member_info = MemberClassTb.objects.select_related(
                 'class_tb', 'member').get(class_tb_id=class_id, member_id=trainer_id, use=USE)
             class_member_info.auth_cd = auth_cd
-            class_member_info.mod_member_id=request.user.id
+            class_member_info.mod_member_id = request.user.id
             class_member_info.save()
         except ObjectDoesNotExist:
             class_member_info = MemberClassTb(class_tb_id=class_id, member_id=trainer_id, auth_cd=auth_cd,
@@ -4226,7 +4226,7 @@ def delete_trainer_program_connection_logic(request):
     error = None
     if class_id == '':
         error = '프로그램 정보를 불러오지 못했습니다.[0]'
-
+    print('test111')
     if error is None:
         # 선택한 프로그램의 연결 대기중인 수강권 전부 삭제
         member_program_data = MemberClassTb.objects.select_related(

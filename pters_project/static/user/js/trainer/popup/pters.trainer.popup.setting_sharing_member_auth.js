@@ -359,9 +359,9 @@ class Setting_sharing_member_auth{
             this.data_sending_now = true;
         }
         let auth_cd = this.shared_status;
-        if(this.shared_status==AUTH_TYPE_DELETE){
-            auth_cd = AUTH_TYPE_WAIT;
-        }
+        // if(this.shared_status==AUTH_TYPE_DELETE){
+        //     auth_cd = AUTH_TYPE_WAIT;
+        // }
         let data = {
             "class_id":this.program_id,
             "trainer_id": this.member_db_id,
