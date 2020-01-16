@@ -758,7 +758,7 @@ def func_get_trainer_setting_list(context, user_id, class_id, class_hour):
         if setting_info.setting_type_cd == 'LT_PUS_TO_SHARED_TRAINER_LESSON_ALARM':
             setting_to_shared_trainer_lesson_alarm = int(setting_info.setting_info)
         if setting_info.setting_type_cd == 'LT_PUS_FROM_TRAINEE_LESSON_ALARM':
-            if str(user_id) == setting_info.member_id:
+            if str(user_id) == str(setting_info.member_id):
                 lt_pus_from_trainee_lesson_alarm = int(setting_info.setting_info)
         if setting_info.setting_type_cd == 'LT_ADMIN_PASSWORD':
             setting_admin_password = setting_info.setting_info
@@ -1082,6 +1082,7 @@ def update_program_setting_data(class_id, setting_type_cd_data, setting_info_dat
 
     return error
 
+
 def update_alarm_setting_data(class_id, member_id, setting_type_cd_data, setting_info_data):
 
     error = None
@@ -1093,7 +1094,8 @@ def update_alarm_setting_data(class_id, member_id, setting_type_cd_data, setting
                     setting_data = SettingTb.objects.get(class_tb_id=class_id, member_id=member_id,
                                                          setting_type_cd=setting_type_cd_info)
                 except ObjectDoesNotExist:
-                    setting_data = SettingTb(class_tb_id=class_id, setting_type_cd=setting_type_cd_info, use=USE)
+                    setting_data = SettingTb(class_tb_id=class_id, member_id=member_id,
+                                             setting_type_cd=setting_type_cd_info, use=USE)
                 setting_data.member_id = member_id
                 setting_data.setting_info = setting_info_data[idx]
                 setting_data.save()

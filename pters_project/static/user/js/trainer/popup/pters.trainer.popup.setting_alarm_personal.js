@@ -152,7 +152,7 @@ class Setting_alarm_personal{
         }
 
         let data = {
-            "setting_from_trainee_lesson_alarm_personal":this.data.push_to_me
+            "setting_from_trainee_lesson_alarm":this.data.push_to_me
         };
         
         Setting_alarm_personal_func.update(data, ()=>{
