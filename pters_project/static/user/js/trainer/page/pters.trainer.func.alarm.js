@@ -168,7 +168,7 @@ class Alarm {
 
 
             let onclick_accept = ()=>{
-                let message = {title:`${program_name} 프로그램 공유 참가 요청`, comment:'수락 하시겠습니까?'};
+                let message = {title:`"${program_name}"<br>프로그램 공유 참가 요청`, comment:'수락 하시겠습니까?'};
                 show_user_confirm (message, ()=>{
                     Setting_shared_func.send_accept({"class_id":program, "program_connection_check":1}, ()=>{
                         layer_popup.close_layer_popup();
@@ -180,7 +180,7 @@ class Alarm {
             };
 
             let onclick_decline =()=>{
-                let message = {title:`${program_name} 프로그램 공유 참가 요청`, comment:'<span style="color:red;">거절</span> 하시겠습니까?'};
+                let message = {title:`"${program_name}"<br>프로그램 공유 참가 요청`, comment:'<span style="color:red;">거절</span> 하시겠습니까?'};
                 show_user_confirm (message, ()=>{
                     Setting_shared_func.send_accept({"class_id":program, "program_connection_check":2}, ()=>{
                         layer_popup.close_layer_popup();

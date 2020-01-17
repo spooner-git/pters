@@ -291,7 +291,7 @@ class Setting_sharing_member_auth{
             this.shared_status = AUTH_TYPE_DELETE;
             this.send_data();
             layer_popup.close_layer_popup(); //옵션 셀렉터 닫기
-            layer_popup.close_layer_popup(); //권한 설정창 닫기
+            // layer_popup.close_layer_popup(); //권한 설정창 닫기
         });
     }
 
@@ -407,6 +407,7 @@ class Setting_sharing_member_auth{
             // this.render_content();
             layer_popup.close_layer_popup();
             setting_sharing_popup.init();
+            program_list_popup.init();
         }, ()=>{this.data_sending_now = false;});
     }
 
