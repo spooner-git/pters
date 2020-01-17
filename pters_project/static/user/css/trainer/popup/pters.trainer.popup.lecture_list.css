@@ -201,6 +201,8 @@
 	-webkit-appearance: none;
 	border: var(--border-article-dark);
 	border-radius: 2px;
+	padding: 0 10px;
+	box-sizing: border-box;
 }
 
 #lecture_display_panel .search_bar{
@@ -219,4 +221,6 @@
 	-webkit-appearance: none;
 	border: var(--border-article-dark);
 	border-radius: 2px;
+	padding: 0 10px;
+	box-sizing: border-box;
 }

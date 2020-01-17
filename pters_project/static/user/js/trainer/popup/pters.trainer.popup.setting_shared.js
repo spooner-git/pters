@@ -164,13 +164,30 @@ class Setting_shared{
 
     event_disconnect(){
         let message = {
-            title:`현재 프로그램의 공유 연결을 해제합니다.`,
+            title:`프로그램의 공유 연결을 해제합니다.`,
             comment:`다시 연결하려면 프로그램 소유자에게 요청 해야합니다.`
         };
         show_user_confirm (message, ()=>{
             let data = {"class_id": this.program_id};
             Setting_shared_func.disconnect(data, ()=>{
                 location.href = "/trainer/";
+
+                // let current_selected_program_id;
+                // program_list_popup.data.program_data.forEach((el)=>{
+                //     if(el.program_selected == PROGRAM_SELECTED){
+                //         current_selected_program_id = el.program_id;
+                //     }
+                // });
+                
+                // if(current_selected_program_id == this.program_id){
+                //     location.href = "/trainer/";
+                // }else{
+                //     layer_popup.close_layer_popup(); // Confirm 팝업 닫기
+                //     layer_popup.close_layer_popup(); // 공유 권한 보는 창 닫기
+                //     program_list_popup.init();
+                // }
+
+                
             }, ()=>{});
         });
         

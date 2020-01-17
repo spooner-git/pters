@@ -4227,7 +4227,6 @@ def delete_trainer_program_connection_logic(request):
     error = None
     if class_id == '':
         error = '프로그램 정보를 불러오지 못했습니다.[0]'
-    print('test111')
     if error is None:
         # 선택한 프로그램의 연결 대기중인 수강권 전부 삭제
         member_program_data = MemberClassTb.objects.select_related(

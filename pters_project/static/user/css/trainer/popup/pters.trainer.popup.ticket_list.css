@@ -213,6 +213,8 @@
 	height: 35px;
 	border: var(--border-article-dark);
 	border-radius: 2px;
+	padding: 0 10px;
+	box-sizing: border-box;
 }
 
 #ticket_display_panel .search_bar{
@@ -231,4 +233,6 @@
 	-webkit-appearance: none;
 	border: var(--border-article-dark);
 	border-radius: 2px;
+	padding: 0 10px;
+	box-sizing: border-box;
 }
