@@ -832,12 +832,12 @@
             break;
             case 'setting_theme':
                 open = ()=>{
-                    auth_inspect = pass_inspector.setting_read();
-                    if(auth_inspect.barrier == BLOCKED){
-                        let message = `${auth_inspect.limit_type}`;
-                        show_error_message({title:message});
-                        return false;
-                    }
+                    // auth_inspect = pass_inspector.setting_read();
+                    // if(auth_inspect.barrier == BLOCKED){
+                    //     let message = `${auth_inspect.limit_type}`;
+                    //     show_error_message({title:message});
+                    //     return false;
+                    // }
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_THEME, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     setting_theme_popup = new Setting_theme('.popup_setting_theme')});
                     }
