@@ -84,6 +84,14 @@ function pc_keyboard_event(){
             layer_popup.close_layer_popup();
         }
     });
+
+    //input에서 Enter키 눌렀을때 focusout 되도록
+    $(document).on('keypress', 'input', function(e){
+        if (e.charCode == 13) {
+            e.preventDefault();
+            $('input').blur();
+        }
+    });
 }
 
 function resize_textarea(obj) {

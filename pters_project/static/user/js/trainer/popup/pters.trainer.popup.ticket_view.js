@@ -176,7 +176,16 @@ class Ticket_view{
     }
 
     render_content(){
+        document.getElementById(this.target.toolbox).innerHTML = this.dom_assembly_toolbox();
+        document.querySelector(`${this.target.install} .wrapper_top`).innerHTML = PopupBase.wrapper_top(this.dom_wrapper_top().left, this.dom_wrapper_top().center, this.dom_wrapper_top().right);
         document.getElementById(this.target.content).innerHTML = this.dom_assembly_content();
+    }
+
+    dom_wrapper_top(){
+        let top_left = `<span class="icon_left" onclick="ticket_view_popup.upper_left_menu();">${CImg.arrow_left()}</span>`;
+        let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
+        let top_right = `<span class="icon_right" onclick="ticket_view_popup.upper_right_menu();">${CImg.more()}</span>`;
+        return {left: top_left, center:top_center, right:top_right};
     }
 
     dom_assembly_toolbox(){

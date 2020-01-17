@@ -284,8 +284,10 @@ class Member_view{
         let top_left = `<span class="icon_left" onclick="member_view_popup.upper_left_menu();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
         let top_right = `<span class="icon_right" onclick="member_view_popup.upper_right_menu();">${CImg.more()}</span>`;
-        let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
-                        <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
+        let content =   `<form id="${this.form_id}">
+                            <section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
+                            <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>
+                        </form>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
 
@@ -300,7 +302,16 @@ class Member_view{
     }
 
     render_content(){
+        document.getElementById(this.target.toolbox).innerHTML = this.dom_assembly_toolbox();
+        document.querySelector(`${this.target.install} .wrapper_top`).innerHTML = PopupBase.wrapper_top(this.dom_wrapper_top().left, this.dom_wrapper_top().center, this.dom_wrapper_top().right);
         document.getElementById(this.target.content).innerHTML = this.dom_assembly_content();
+    }
+
+    dom_wrapper_top(){
+        let top_left = `<span class="icon_left" onclick="member_view_popup.upper_left_menu();">${CImg.arrow_left()}</span>`;
+        let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
+        let top_right = `<span class="icon_right" onclick="member_view_popup.upper_right_menu();">${CImg.more()}</span>`;
+        return {left: top_left, center:top_center, right:top_right};
     }
 
     dom_assembly_toolbox(){
@@ -893,11 +904,13 @@ class Member_view{
                 }
             }
         };
+
         let options_padding_top_bottom = 16;
         // let button_height = 8 + 8 + 52;
         let button_height = 52;
         let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
         let root_content_height = $root_content.height();
+
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
             option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
         });

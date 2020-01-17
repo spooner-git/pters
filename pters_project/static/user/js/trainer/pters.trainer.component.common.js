@@ -620,8 +620,6 @@ class CComponent{
         return html;
     }
 
-    
-
     static no_data_row(text, style){
         let html = `<li class="no_data_row" style="${CComponent.data_to_style_code(style)}">
                         <div class="obj_table_raw">

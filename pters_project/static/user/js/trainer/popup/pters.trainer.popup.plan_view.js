@@ -255,9 +255,22 @@ class Plan_view{
     render_toolbox(){
         document.getElementById(this.target.toolbox).innerHTML = this.dom_assembly_toolbox();
     }
-
+    
     render_content(){
+        document.getElementById(this.target.toolbox).innerHTML = this.dom_assembly_toolbox();
+        document.querySelector(`${this.target.install} .wrapper_top`).innerHTML = PopupBase.wrapper_top(this.dom_wrapper_top().left, this.dom_wrapper_top().center, this.dom_wrapper_top().right);
         document.getElementById(this.target.content).innerHTML = this.dom_assembly_content();
+    }
+
+    dom_wrapper_top(){
+        let top_left = `<span class="icon_left" onclick="plan_view_popup.upper_left_menu();">${CImg.arrow_left(["#5c5859"])}</span>`;
+        let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
+        let top_right = `<span class="icon_right">    
+                            ${CImg.memo(["#5c5859"], this.data.schedule_type == 0 ? {"display":"none"} : null, `plan_view_popup.upper_right_menu(2)`)}
+                            ${CImg.attend_check(["#5c5859"], this.data.schedule_type == 0 ? {"display":"none"} : null, `plan_view_popup.upper_right_menu(1)`)}
+                            ${CImg.delete(["#5c5859"], null, `plan_view_popup.upper_right_menu(0)`)}
+                        </span>`;
+        return {left: top_left, center:top_center, right:top_right};
     }
 
 

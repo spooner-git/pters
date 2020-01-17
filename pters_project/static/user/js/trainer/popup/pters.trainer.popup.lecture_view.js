@@ -160,7 +160,16 @@ class Lecture_view{
     }
 
     render_content(){
+        document.getElementById(this.target.toolbox).innerHTML = this.dom_assembly_toolbox();
+        document.querySelector(`${this.target.install} .wrapper_top`).innerHTML = PopupBase.wrapper_top(this.dom_wrapper_top().left, this.dom_wrapper_top().center, this.dom_wrapper_top().right);
         document.getElementById(this.target.content).innerHTML = this.dom_assembly_content();
+    }
+
+    dom_wrapper_top(){
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();lecture_view_popup.clear();">${CImg.arrow_left()}</span>`;
+        let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
+        let top_right = `<span class="icon_right" ${this.data.capacity == 1 && this.data.lecture_type_cd == LECTURE_TYPE_ONE_TO_ONE ? 'style="display:none"' : '' } onclick="lecture_view_popup.upper_right_menu();">${CImg.more()}</span>`;
+        return {left: top_left, center:top_center, right:top_right};
     }
 
     dom_assembly_toolbox(){
@@ -307,7 +316,7 @@ class Lecture_view{
             this.capacity = user_input_data;
             setTimeout(()=>{
                 this.dom_row_option_select_capacity();
-            }, 250);
+            }, 300);
             //안드로이드 키보드가 올라오면서 옵션셀렉터 위치가 상단으로 밀리리 때문에, 키보드가 사라질때 까지 기다렸다가 실행한다.
             
             // this.send_data();
