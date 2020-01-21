@@ -646,19 +646,19 @@ def delete_trainee_schedule_logic(request):
                          use=USE)
         log_data.save()
 
-        try:
-            setting_data = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_id,
-                                                 setting_type_cd='LT_PUS_FROM_TRAINEE_LESSON_ALARM')
-            lt_pus_from_trainee_lesson_alarm = int(setting_data.setting_info)
-        except ObjectDoesNotExist:
-            lt_pus_from_trainee_lesson_alarm = FROM_TRAINEE_LESSON_ALARM_ON
-        if str(lt_pus_from_trainee_lesson_alarm) == str(FROM_TRAINEE_LESSON_ALARM_ON):
-            func_send_push_trainee(class_id,
-                                   class_type_name + ' - 수업 알림',
-                                   request.user.first_name + '님이 '
-                                   + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
-                                   + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                                   + ' ['+lecture_name + '] 수업을 예약 취소했습니다.')
+        # try:
+        #     setting_data = SettingTb.objects.get(class_tb_id=class_id,
+        #                                          setting_type_cd='LT_PUS_FROM_TRAINEE_LESSON_ALARM')
+        #     lt_pus_from_trainee_lesson_alarm = int(setting_data.setting_info)
+        # except ObjectDoesNotExist:
+        #     lt_pus_from_trainee_lesson_alarm = FROM_TRAINEE_LESSON_ALARM_ON
+        # if str(lt_pus_from_trainee_lesson_alarm) == str(FROM_TRAINEE_LESSON_ALARM_ON):
+        func_send_push_trainee(class_id,
+                               class_type_name + ' - 수업 알림',
+                               request.user.first_name + '님이 '
+                               + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
+                               + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
+                               + ' ['+lecture_name + '] 수업을 예약 취소했습니다.')
 
     else:
         logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)

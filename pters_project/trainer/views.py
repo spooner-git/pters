@@ -1064,7 +1064,7 @@ class AttendModeView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         setting_schedule_auto_finish = 0
         current_time = timezone.now()
         check_setting_counter = 0
-        setting_data = SettingTb.objects.filter(member_id=self.request.user.id, class_tb_id=class_id, use=USE)
+        setting_data = SettingTb.objects.filter(class_tb_id=class_id, use=USE)
 
         for setting_info in setting_data:
             if setting_info.setting_type_cd == 'LT_ADMIN_PASSWORD':
@@ -5274,7 +5274,7 @@ def update_attend_mode_setting_logic(request):
 
     return render(request, 'ajax/trainer_error_ajax.html')
 
-#
+
 def check_admin_password_logic(request):
     setting_admin_password = request.POST.get('setting_admin_password', '')
     class_id = request.session.get('class_id', '')
@@ -5282,7 +5282,7 @@ def check_admin_password_logic(request):
     error = None
 
     try:
-        admin_password = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id,
+        admin_password = SettingTb.objects.get(class_tb_id=class_id,
                                                setting_type_cd='LT_ADMIN_PASSWORD').setting_info
     except ObjectDoesNotExist:
         admin_password = '0000'
@@ -5306,7 +5306,7 @@ class GetAttendModeScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateVie
         setting_attend_class_prev_display_time = 0
         setting_attend_class_after_display_time = 0
         current_time = timezone.now()
-        setting_data = SettingTb.objects.filter(member_id=self.request.user.id, class_tb_id=class_id, use=USE)
+        setting_data = SettingTb.objects.filter(class_tb_id=class_id, use=USE)
 
         for setting_info in setting_data:
             if setting_info.setting_type_cd == 'LT_ATTEND_CLASS_PREV_DISPLAY_TIME':
