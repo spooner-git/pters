@@ -1458,7 +1458,7 @@ function limit_char_auto_correction(event){
     let title = event.attributes['title'].value;
     event.value = event.value.replace(limit, "");
     if(event.value.length < Number(min_length)) {
-        event.attributes['data-error-message'].value = title+' : 입력해주세요.';
+        event.attributes['data-error-message'].value = title+' : '+Number(min_length)+'자 이상 입력해주세요.';
         event.attributes['data-valid'].value = 'false';
     }else{
         event.attributes['data-error-message'].value = '';

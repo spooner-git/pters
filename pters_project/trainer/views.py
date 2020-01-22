@@ -860,8 +860,10 @@ def update_member_info_logic(request):
         except ObjectDoesNotExist:
             error = '회원 ID를 확인해 주세요.'
     if error is None:
-        if member.user.is_active or str(request.user.id) != str(member.reg_info):
+        if member.user.is_active:
             error = '회원 정보를 수정할수 없습니다.'
+        if str(request.user.id) != str(member.reg_info):
+            error = '다른 강사가 등록한 회원은 수정할수 없습니다.'
     if error is None:
         try:
             with transaction.atomic():
