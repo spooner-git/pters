@@ -1462,10 +1462,16 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, View):
 
         today = datetime.date.today()
         three_days_ago = today - datetime.timedelta(days=3)
+        ordered_alarm_dict = collections.OrderedDict()
         alarm_data = LogTb.objects.filter(class_tb_id=class_id, reg_dt__gte=three_days_ago,
                                           use=USE).order_by('-reg_dt')
 
-        ordered_alarm_dict = collections.OrderedDict()
+        query = "select count(B.ID) from QA_COMMENT_TB as B where B.QA_TB_ID = `QA_TB`.`ID` and B.READ=0 and B.USE=1"
+
+        ordered_alarm_dict['check_qa_comment'] = QATb.objects.filter(
+            member_id=request.user.id, status_type_cd='QA_COMPLETE',
+            use=USE).annotate(qa_comment=RawSQL(query, [])).filter(qa_comment__gt=0).count()
+
         if error is None:
             temp_alarm_date = None
             date_alarm_list = []

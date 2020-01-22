@@ -13,6 +13,7 @@ from django.utils import timezone
 from django.views import View
 from django.views.generic import TemplateView, RedirectView
 
+from board.models import QATb
 from configs import settings
 from configs.views import AccessTestMixin, func_setting_data_update
 from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, DEL_SCHEDULE, USE, UN_USE, FROM_TRAINEE_LESSON_ALARM_ON, \
@@ -1085,6 +1086,12 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                 class_tb_id=class_id, member_ticket_tb__member_id=self.request.user.id, reg_dt__gte=three_days_ago,
                 use=USE).order_by('-reg_dt')
 
+            query = "select count(B.ID) from QA_COMMENT_TB as B where B.QA_TB_ID = `QA_TB`.`ID` and B.READ=0 and B.USE=1"
+
+            context['check_qa_comment'] = QATb.objects.filter(
+                member_id=self.request.user.id, status_type_cd='QA_COMPLETE',
+                use=USE).annotate(qa_comment=RawSQL(query, [])).filter(qa_comment__gt=0).count()
+
         if error is None:
             for log_info in log_data:
                 if log_info.member_read == 0:
@@ -1157,6 +1164,13 @@ class AlarmViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                         log_data |= LogTb.objects.filter(member_ticket_tb_id=member_ticket_info.member_ticket_id,
                                                          use=USE).order_by('-reg_dt')
                 log_data.order_by('-reg_dt')
+
+        if error is None:
+            query = "select count(B.ID) from QA_COMMENT_TB as B where B.QA_TB_ID = `QA_TB`.`ID` and B.READ=0 and B.USE=1"
+
+            context['check_qa_comment'] = QATb.objects.filter(
+                member_id=self.request.user.id, status_type_cd='QA_COMPLETE',
+                use=USE).annotate(qa_comment=RawSQL(query, [])).filter(qa_comment__gt=0).count()
 
         if error is None:
             for log_info in log_data:
