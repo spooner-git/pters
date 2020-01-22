@@ -100,6 +100,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                             and class_tb_selected is None:
                         class_tb_selected = class_member_ticket_info.class_tb
                         class_member_ticket_id_select = class_member_ticket_info.member_ticket_tb_id
+
                     if class_tb_comp is not None:
                         if str(class_tb_comp.class_id) != str(class_member_ticket_info.class_tb_id):
                             class_tb_comp = class_member_ticket_info.class_tb
@@ -114,6 +115,8 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
 
                 if class_counter > 1:
                     # self.url = '/trainee/member_ticket_select/'
+                    if class_tb_selected is None:
+                        class_tb_selected = class_tb_comp
                     request.session['trainer_id'] = class_tb_selected.member_id
                     request.session['trainer_name'] = class_tb_selected.member.name
                     request.session['class_id'] = class_tb_selected.class_id
