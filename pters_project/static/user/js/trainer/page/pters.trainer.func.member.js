@@ -713,7 +713,7 @@ class Member_func{
         });
     }
 
-    static update(data, callback, error_callback){
+    static update(data, callback, error_callback, success_error_callback){
         //데이터 형태 {"member_id":"", "first_name":"", "phone":"", "sex":"", "birthday":""};
         $.ajax({
             url:'/trainer/update_member_info/',

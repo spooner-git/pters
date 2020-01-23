@@ -799,7 +799,7 @@ class Member_view{
         });
     }
 
-    send_data(){
+    send_data(success_callback){
         let auth_inspect = pass_inspector.member_update();
         if(auth_inspect.barrier == BLOCKED){
             let message = `${auth_inspect.limit_type}`;
@@ -821,6 +821,9 @@ class Member_view{
         };
         Member_func.update(data, ()=>{
             this.set_initial_data();
+            if(success_callback != undefined){
+                success_callback();
+            }
             try{
                 current_page.init();
             }catch(e){}
@@ -839,7 +842,7 @@ class Member_view{
             }
             
             let user_option = {
-                confirm:{text:"변경사항 적용", callback:()=>{this.send_data();layer_popup.close_layer_popup();layer_popup.close_layer_popup();this.clear();}},
+                confirm:{text:"변경사항 적용", callback:()=>{this.send_data(()=>{layer_popup.close_layer_popup();layer_popup.close_layer_popup();this.clear();});}},
                 cancel:{text:"아무것도 변경하지 않음", callback:()=>{ layer_popup.close_layer_popup();layer_popup.close_layer_popup();this.clear();}}
             };
             let options_padding_top_bottom = 16;
