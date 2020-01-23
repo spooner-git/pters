@@ -397,7 +397,7 @@ class Ticket_add{
         let pattern = "[0-9]{0,4}";
         let pattern_message = "";
         let required = "";
-        if(this.data.ticket_effective_days == -1){
+        if(this.data.ticket_effective_days == 99999){
             title = "소진 시까지";
         }
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
@@ -434,10 +434,10 @@ class Ticket_add{
         // let button_style = {"flex":"1 1 0", "padding":"10px 8px", "color":"var(--font-sub-normal)"};
         let button_style = {"flex":"1 1 0", "padding":"6px 0px", "color":"var(--font-sub-normal)", "background-color":"var(--bg-light)", "border-radius":"3px"};
 
-        let button_limitless_d = CComponent.button ("button_limitless_d", "소진 시", button_style, ()=>{this.data.ticket_effective_days = -1;this.render_content(); });
-        let button_10 = CComponent.button ("button_10d", "+ 10일", button_style, ()=>{if(this.data.ticket_effective_days == -1){this.data.ticket_effective_days = null;} this.data.ticket_effective_days = Number(this.data.ticket_effective_days) + 10;this.render_content(); });
-        let button_7 = CComponent.button ("button_7d", "+ 7일", button_style, ()=>{if(this.data.ticket_effective_days == -1){this.data.ticket_effective_days = null;} this.data.ticket_effective_days = Number(this.data.ticket_effective_days) + 7;this.render_content(); });
-        let button_1 = CComponent.button ("button_1d", "+ 1일", button_style, ()=>{if(this.data.ticket_effective_days == -1){this.data.ticket_effective_days = null;} this.data.ticket_effective_days = Number(this.data.ticket_effective_days) + 1;this.render_content(); });
+        let button_limitless_d = CComponent.button ("button_limitless_d", "소진 시", button_style, ()=>{this.data.ticket_effective_days = 99999;this.render_content(); });
+        let button_10 = CComponent.button ("button_10d", "+ 10일", button_style, ()=>{if(this.data.ticket_effective_days == 99999){this.data.ticket_effective_days = null;} this.data.ticket_effective_days = Number(this.data.ticket_effective_days) + 10;this.render_content(); });
+        let button_7 = CComponent.button ("button_7d", "+ 7일", button_style, ()=>{if(this.data.ticket_effective_days == 99999){this.data.ticket_effective_days = null;} this.data.ticket_effective_days = Number(this.data.ticket_effective_days) + 7;this.render_content(); });
+        let button_1 = CComponent.button ("button_1d", "+ 1일", button_style, ()=>{if(this.data.ticket_effective_days == 99999){this.data.ticket_effective_days = null;} this.data.ticket_effective_days = Number(this.data.ticket_effective_days) + 1;this.render_content(); });
         let button_delete = CComponent.button ("button_delete_d", "지우기", button_style, ()=>{ this.data.ticket_effective_days = null;this.render_content(); });
         
         // let wrapper_style = "display:flex;padding:0px 0 0px 20px;font-size:12px;";
