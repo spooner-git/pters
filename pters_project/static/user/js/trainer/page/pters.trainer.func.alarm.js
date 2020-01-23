@@ -128,11 +128,19 @@ class Alarm {
             }
         }
 
+        if(jsondata.check_qa_comment > 0){
+            html_temp.unshift(
+                this.dom_row_qna_unread(jsondata.check_qa_comment)
+            );
+        }
+
         if(Object.keys(this.sharing_invite).length > 0){
             html_temp.unshift(
                 this.dom_row_program_share_invited(this.sharing_invite)
             );
         }
+
+        
 
         if(html_temp.length == 0){
             html_temp.push(`<article class="alarm_wrapper">   
@@ -154,7 +162,6 @@ class Alarm {
 
         return pass_inspector.data.auth_ads.limit_num != 0 ? html : "";
     }
-
 
     dom_row_program_share_invited(invited_programs){
 
@@ -206,6 +213,12 @@ class Alarm {
         return html;
     }
 
+    dom_row_qna_unread(unread_number){
+        let comp = `<div style="padding:20px 20px 15px 20px;box-shadow:var(--box-shadow-article);border:var(--border-article);">
+                            <div style="padding:5px 0;font-size:14px;font-weight:bold;">답변이 등록된 읽지 않은 문의가 ${unread_number}건 있습니다.</div>
+                        </div>`;
+        return comp;
+    }
 
 
     are_there_new_alarm(callback){
@@ -224,10 +237,11 @@ class Alarm {
                         }
                     }
                 }
+                let qna_unread_length = Number(data.check_qa_comment);
                 // if(this.new_alarms_id_cache.length > 0){
                 //     return false;
                 // }
-                callback(this.new_alarms_id_cache.length + invited_length);
+                callback(this.new_alarms_id_cache.length + invited_length + qna_unread_length);
             });
         });
             
