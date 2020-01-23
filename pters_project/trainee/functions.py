@@ -596,8 +596,7 @@ def func_get_trainee_reserve_schedule_list(context, class_id, user_id, lecture_i
         # 강사 업무 시간
         lt_work_time_avail = ['', '', '', '', '', '', '']
 
-        setting_data = SettingTb.objects.filter(member_id=class_info.member_id,
-                                                class_tb_id=class_info.class_id,
+        setting_data = SettingTb.objects.filter(class_tb_id=class_info.class_id,
                                                 use=USE).exclude(Q(setting_type_cd='LT_RES_01') |
                                                                  Q(setting_type_cd='LT_RES_03') |
                                                                  Q(setting_type_cd='LT_RES_05') |
@@ -732,7 +731,6 @@ def func_check_select_date_reserve_setting(class_id, trainer_id, select_date):
         setting_data = SettingTb.objects.filter(Q(setting_type_cd='LT_RES_01') |
                                                 Q(setting_type_cd='LT_RES_03') |
                                                 Q(setting_type_cd='LT_RES_05'),
-                                                member_id=trainer_id,
                                                 class_tb_id=class_id, use=USE)
 
         for setting_info in setting_data:
@@ -805,8 +803,7 @@ def func_check_select_time_reserve_setting(class_id, trainer_id, start_date, end
         # 강사 업무 시간
         lt_work_time_avail = ['', '', '', '', '', '', '']
 
-        setting_data = SettingTb.objects.filter(member_id=trainer_id,
-                                                class_tb_id=class_id,
+        setting_data = SettingTb.objects.filter(class_tb_id=class_id,
                                                 use=USE).exclude(Q(setting_type_cd='LT_RES_01') |
                                                                  Q(setting_type_cd='LT_RES_03') |
                                                                  Q(setting_type_cd='LT_RES_05'))

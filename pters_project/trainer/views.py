@@ -860,8 +860,10 @@ def update_member_info_logic(request):
         except ObjectDoesNotExist:
             error = '회원 ID를 확인해 주세요.'
     if error is None:
-        if member.user.is_active or str(request.user.id) != str(member.reg_info):
+        if member.user.is_active:
             error = '회원 정보를 수정할수 없습니다.'
+        if str(request.user.id) != str(member.reg_info):
+            error = '다른 강사가 등록한 회원은 수정할수 없습니다.'
     if error is None:
         try:
             with transaction.atomic():
@@ -1064,7 +1066,7 @@ class AttendModeView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         setting_schedule_auto_finish = 0
         current_time = timezone.now()
         check_setting_counter = 0
-        setting_data = SettingTb.objects.filter(member_id=self.request.user.id, class_tb_id=class_id, use=USE)
+        setting_data = SettingTb.objects.filter(class_tb_id=class_id, use=USE)
 
         for setting_info in setting_data:
             if setting_info.setting_type_cd == 'LT_ADMIN_PASSWORD':
@@ -1460,10 +1462,16 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, View):
 
         today = datetime.date.today()
         three_days_ago = today - datetime.timedelta(days=3)
+        ordered_alarm_dict = collections.OrderedDict()
         alarm_data = LogTb.objects.filter(class_tb_id=class_id, reg_dt__gte=three_days_ago,
                                           use=USE).order_by('-reg_dt')
 
-        ordered_alarm_dict = collections.OrderedDict()
+        query = "select count(B.ID) from QA_COMMENT_TB as B where B.QA_TB_ID = `QA_TB`.`ID` and B.READ=0 and B.USE=1"
+
+        ordered_alarm_dict['check_qa_comment'] = QATb.objects.filter(
+            member_id=request.user.id, status_type_cd='QA_COMPLETE',
+            use=USE).annotate(qa_comment=RawSQL(query, [])).filter(qa_comment__gt=0).count()
+
         if error is None:
             temp_alarm_date = None
             date_alarm_list = []
@@ -5274,7 +5282,7 @@ def update_attend_mode_setting_logic(request):
 
     return render(request, 'ajax/trainer_error_ajax.html')
 
-#
+
 def check_admin_password_logic(request):
     setting_admin_password = request.POST.get('setting_admin_password', '')
     class_id = request.session.get('class_id', '')
@@ -5282,7 +5290,7 @@ def check_admin_password_logic(request):
     error = None
 
     try:
-        admin_password = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id,
+        admin_password = SettingTb.objects.get(class_tb_id=class_id,
                                                setting_type_cd='LT_ADMIN_PASSWORD').setting_info
     except ObjectDoesNotExist:
         admin_password = '0000'
@@ -5306,7 +5314,7 @@ class GetAttendModeScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateVie
         setting_attend_class_prev_display_time = 0
         setting_attend_class_after_display_time = 0
         current_time = timezone.now()
-        setting_data = SettingTb.objects.filter(member_id=self.request.user.id, class_tb_id=class_id, use=USE)
+        setting_data = SettingTb.objects.filter(class_tb_id=class_id, use=USE)
 
         for setting_info in setting_data:
             if setting_info.setting_type_cd == 'LT_ATTEND_CLASS_PREV_DISPLAY_TIME':

@@ -63,9 +63,11 @@
                         </div>
 
                         {% if schedule_info.daily_record_tb_id %}
+                            {% if schedule_info.daily_record_tb.is_member_view %}
                             <div class="obj_button_gen obj_font_bg_trans_pink obj_font_size_11_weight_500" style="float:right;width:80px;" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_plan_daily_record', 90, POPUP_FROM_BOTTOM, {'schedule_id':'{{ schedule_info.schedule_id }}'})">
                                 일지 확인
                             </div>
+                            {% endif %}
                         {% endif %}
                     {% else %}
                         <div class="obj_table_cell_x2 obj_font_size_11_weight_normal obj_font_color_light_black">
@@ -91,9 +93,11 @@
                                             });">취소하기</div>
                         {% endif %}
                         {% if schedule_info.daily_record_tb_id %}
-                        <div class="obj_button_gen obj_font_bg_trans_pink obj_font_size_11_weight_500" style="width:80px; margin-right:5px;" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_plan_daily_record', 90, POPUP_FROM_BOTTOM, {'schedule_id':'{{ schedule_info.schedule_id }}'})">
-                            일지 확인
-                        </div>
+                            {% if schedule_info.daily_record_tb.is_member_view %}
+                                <div class="obj_button_gen obj_font_bg_trans_pink obj_font_size_11_weight_500" style="width:80px; margin-right:5px;" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_plan_daily_record', 90, POPUP_FROM_BOTTOM, {'schedule_id':'{{ schedule_info.schedule_id }}'})">
+                                    일지 확인
+                                </div>
+                            {% endif %}
                         {% endif %}
                     {% endif %}
                 </div>

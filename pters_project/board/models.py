@@ -28,6 +28,7 @@ class QACommentTb(TimeStampedModel):
     upper_qa_comment_tb_id = models.CharField(db_column='UPPER_QA_COMMENT_TB_ID', max_length=20, blank=True, default='')
     title = models.CharField(db_column='TITLE', max_length=255, blank=True, default='')
     contents = models.CharField(db_column='CONTENTS', max_length=3000, blank=True, default='')
+    read = models.IntegerField(db_column='READ', default=1)  # Field name made lowercase.)
     use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
 
     class Meta:

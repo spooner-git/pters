@@ -13,6 +13,7 @@ from django.utils import timezone
 from django.views import View
 from django.views.generic import TemplateView, RedirectView
 
+from board.models import QATb
 from configs import settings
 from configs.views import AccessTestMixin, func_setting_data_update
 from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, DEL_SCHEDULE, USE, UN_USE, FROM_TRAINEE_LESSON_ALARM_ON, \
@@ -100,6 +101,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                             and class_tb_selected is None:
                         class_tb_selected = class_member_ticket_info.class_tb
                         class_member_ticket_id_select = class_member_ticket_info.member_ticket_tb_id
+
                     if class_tb_comp is not None:
                         if str(class_tb_comp.class_id) != str(class_member_ticket_info.class_tb_id):
                             class_tb_comp = class_member_ticket_info.class_tb
@@ -114,6 +116,8 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
 
                 if class_counter > 1:
                     # self.url = '/trainee/member_ticket_select/'
+                    if class_tb_selected is None:
+                        class_tb_selected = class_tb_comp
                     request.session['trainer_id'] = class_tb_selected.member_id
                     request.session['trainer_name'] = class_tb_selected.member.name
                     request.session['class_id'] = class_tb_selected.class_id
@@ -646,19 +650,19 @@ def delete_trainee_schedule_logic(request):
                          use=USE)
         log_data.save()
 
-        try:
-            setting_data = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_id,
-                                                 setting_type_cd='LT_PUS_FROM_TRAINEE_LESSON_ALARM')
-            lt_pus_from_trainee_lesson_alarm = int(setting_data.setting_info)
-        except ObjectDoesNotExist:
-            lt_pus_from_trainee_lesson_alarm = FROM_TRAINEE_LESSON_ALARM_ON
-        if str(lt_pus_from_trainee_lesson_alarm) == str(FROM_TRAINEE_LESSON_ALARM_ON):
-            func_send_push_trainee(class_id,
-                                   class_type_name + ' - 수업 알림',
-                                   request.user.first_name + '님이 '
-                                   + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
-                                   + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                                   + ' ['+lecture_name + '] 수업을 예약 취소했습니다.')
+        # try:
+        #     setting_data = SettingTb.objects.get(class_tb_id=class_id,
+        #                                          setting_type_cd='LT_PUS_FROM_TRAINEE_LESSON_ALARM')
+        #     lt_pus_from_trainee_lesson_alarm = int(setting_data.setting_info)
+        # except ObjectDoesNotExist:
+        #     lt_pus_from_trainee_lesson_alarm = FROM_TRAINEE_LESSON_ALARM_ON
+        # if str(lt_pus_from_trainee_lesson_alarm) == str(FROM_TRAINEE_LESSON_ALARM_ON):
+        func_send_push_trainee(class_id,
+                               class_type_name + ' - 수업 알림',
+                               request.user.first_name + '님이 '
+                               + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
+                               + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
+                               + ' ['+lecture_name + '] 수업을 예약 취소했습니다.')
 
     else:
         logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
@@ -1082,6 +1086,12 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                 class_tb_id=class_id, member_ticket_tb__member_id=self.request.user.id, reg_dt__gte=three_days_ago,
                 use=USE).order_by('-reg_dt')
 
+            query = "select count(B.ID) from QA_COMMENT_TB as B where B.QA_TB_ID = `QA_TB`.`ID` and B.READ=0 and B.USE=1"
+
+            context['check_qa_comment'] = QATb.objects.filter(
+                member_id=self.request.user.id, status_type_cd='QA_COMPLETE',
+                use=USE).annotate(qa_comment=RawSQL(query, [])).filter(qa_comment__gt=0).count()
+
         if error is None:
             for log_info in log_data:
                 if log_info.member_read == 0:
@@ -1154,6 +1164,13 @@ class AlarmViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                         log_data |= LogTb.objects.filter(member_ticket_tb_id=member_ticket_info.member_ticket_id,
                                                          use=USE).order_by('-reg_dt')
                 log_data.order_by('-reg_dt')
+
+        if error is None:
+            query = "select count(B.ID) from QA_COMMENT_TB as B where B.QA_TB_ID = `QA_TB`.`ID` and B.READ=0 and B.USE=1"
+
+            context['check_qa_comment'] = QATb.objects.filter(
+                member_id=self.request.user.id, status_type_cd='QA_COMPLETE',
+                use=USE).annotate(qa_comment=RawSQL(query, [])).filter(qa_comment__gt=0).count()
 
         if error is None:
             for log_info in log_data:
