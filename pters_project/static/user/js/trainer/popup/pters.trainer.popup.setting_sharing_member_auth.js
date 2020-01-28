@@ -128,7 +128,8 @@ class Setting_sharing_member_auth{
     }
     
     dom_assembly_content(){
-        let shared_status_button = this.shared_status == AUTH_TYPE_WAIT ? "" : this.dom_button_shared_status();
+        // let shared_status_button = this.shared_status == AUTH_TYPE_WAIT ? "" : this.dom_button_shared_status();
+        let shared_status_button = this.dom_button_shared_status();
         let schedule = this.dom_sub_assembly_schedule();
         let member = this.dom_sub_assembly_member();
         let lecture = this.dom_sub_assembly_lecture();
@@ -249,6 +250,9 @@ class Setting_sharing_member_auth{
     dom_button_shared_status(){
         let id = null;
         let title = "공유 해제";
+        if(this.current_shared_status == AUTH_TYPE_WAIT){
+            title = "공유 취소";
+        }
         let style = {"font-size":"13px", "font-weight":"500", "background-color":"var(--bg-highlight)", "color":"var(--fundamental-white)", "line-height":"40px"};
         let onclick = ()=>{
             this.event_select_shared_status();
