@@ -669,6 +669,7 @@ class Member_add{
         
         if(title == 99999){
             title = "무제한";
+            required = "";
         }
 
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, input_disabled, (input_data)=>{
@@ -852,6 +853,8 @@ class Member_add{
             "price":this.data.ticket_price[0],
             "pay_method":this.data.pay_method.value[0]
         };
+
+        console.log(data_for_new)
 
         if(this.data_from_external == null){ //신규 회원 등록
             Member_func.create_pre(data_for_new, (received)=>{
