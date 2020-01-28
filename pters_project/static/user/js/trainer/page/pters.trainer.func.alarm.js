@@ -227,6 +227,7 @@ class Alarm {
         Setting_shared_func.read_request((invited)=>{
             let invited_length = Object.keys(invited).length;
             Alarm_func.read((data)=>{
+                console.log(data)
                 for(let date in data){
                     let length = data[date].length;
                     for(let i=0; i<length; i++){
