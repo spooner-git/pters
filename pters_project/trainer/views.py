@@ -4265,6 +4265,13 @@ def delete_trainer_program_connection_logic(request):
     return render(request, 'ajax/trainer_error_ajax.html')
 
 
+def refresh_trainer_page_logic(request):
+
+    request.session['class_id'] = None
+
+    return redirect('/')
+
+
 class GetTrainerProgramConnectionListView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
     def get(self, request):

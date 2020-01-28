@@ -181,6 +181,8 @@ urlpatterns = [
     url(r'^delete_trainer_program_connection/$', views.delete_trainer_program_connection_logic,
         name='delete_trainer_program_connection'),
 
+    url(r'^refresh_trainer_page/$', views.refresh_trainer_page_logic, name='refresh_trainer_page'),
+
 
     # 배경 이미지 설정 기능 #################################################################################################
     # 배경 이미지 타입 코드 조회

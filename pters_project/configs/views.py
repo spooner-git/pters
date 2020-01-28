@@ -16,7 +16,7 @@ from django.views.generic import TemplateView, RedirectView
 
 from configs import settings
 from configs.const import USE, STATE_CD_NOT_PROGRESS, ON_SCHEDULE_TYPE, AUTO_FINISH_ON, STATE_CD_FINISH, \
-    STATE_CD_ABSENCE, AUTO_ABSENCE_ON, AUTO_CANCEL_ON, UN_USE, AUTO_FINISH_OFF
+    STATE_CD_ABSENCE, AUTO_ABSENCE_ON, AUTO_CANCEL_ON, UN_USE, AUTO_FINISH_OFF, AUTH_TYPE_VIEW
 from board.models import QATb
 from configs.functions import func_delete_profile_image_logic, func_upload_profile_image_logic
 from login.models import PushInfoTb, MemberTb
@@ -24,7 +24,7 @@ from payment.models import ProductFunctionAuthTb, PaymentInfoTb
 from schedule.functions import func_refresh_member_ticket_count
 from schedule.models import ScheduleTb, DeleteScheduleTb
 from trainer.functions import func_get_trainer_setting_list
-from trainer.models import ClassTb, SettingTb, BackgroundImgTb, ProgramAuthTb
+from trainer.models import ClassTb, SettingTb, BackgroundImgTb, ProgramAuthTb, MemberClassTb
 
 logger = logging.getLogger(__name__)
 
@@ -107,6 +107,7 @@ class AccessTestMixin(UserPassesTestMixin):
         self.login_url = '/'
         group_name = self.request.session.get('group_name', '')
         session_app_version = self.request.session.get('APP_VERSION', '')
+        class_id = self.request.session.get('class_id', '')
         if session_app_version == '' or session_app_version is None:
             self.request.session['APP_VERSION'] = settings.APP_VERSION
 
@@ -136,6 +137,7 @@ class AccessTestMixin(UserPassesTestMixin):
                     # get_function_auth_type_cd(self.request)
                     update_finish_schedule_data(self.request)
                     test_result = True
+
             if url[1] == 'center':
                 if group_name == 'center':
                     test_result = True
