@@ -906,7 +906,7 @@ class Calendar {
                 
                 if(`${_year[i]}-${_month[i]}-${_date[i]}` == this.today){
                     today_marking = `<div class="today_marking" style="${month_or_week == "week" ? 'top:-4px;' : 'top:-2px; width:20px; height:20px; border-radius:12px;'}"></div>`;
-                    today_text_style = 'color:var(--font-highlight);font-weight:bold;';
+                    today_text_style = 'color:var(--font-highlight-sub);font-weight:bold;';
                 }
 
                 let this_date_yyyymmdd = DateRobot.to_yyyymmdd(_year[i], _month[i], _date[i]);
