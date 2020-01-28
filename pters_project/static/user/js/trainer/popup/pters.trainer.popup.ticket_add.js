@@ -22,6 +22,7 @@ class Ticket_add{
                 lecture_id:[],
                 lecture_name:[],
                 lecture_max:[],
+                lecture_color:[],
                 lecture_state_cd:[],
                 lecture_type_cd:[],
                 ticket_effective_days:null,
@@ -56,11 +57,12 @@ class Ticket_add{
         this.data.lecture_max = data.max;
         this.data.lecture_state_cd = data.state_cd;
         this.data.lecture_type_cd = data.type_cd;
+        this.data.lecture_color = data.color;
         this.render_content();
     }
 
     get lecture(){
-        return {id:this.data.lecture_id, name:this.data.lecture_name, max:this.data.lecture_max, state_cd:this.data.lecture_state_cd, type_cd:this.data.lecture_type_cd};
+        return {id:this.data.lecture_id, name:this.data.lecture_name, max:this.data.lecture_max, state_cd:this.data.lecture_state_cd, type_cd:this.data.lecture_type_cd, color:this.data.lecture_color};
     }
 
     set period(text){
@@ -225,7 +227,8 @@ class Ticket_add{
         
         for(let i=0; i<length; i++){
             let lecture_id = this.data.lecture_id[i];
-            let lecture_name = this.data.lecture_name[i];
+            let lecture_color = this.data.lecture_color[i];
+            let lecture_name = `<div style="display:inline-block;width: 4px;height:16px;border-radius:6px;background-color:${lecture_color};margin-right:12px;vertical-align:middle;"></div>` + this.data.lecture_name[i];
             let icon_button_style = {"padding":"3px 1%", "width":"30%", "overflow":"hidden", "text-overflow":"ellipsis", "white-space":"nowrap", "font-size":"15px", "font-weight":"500"};
             let icon = NONE;
             html_to_join.push(

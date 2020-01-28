@@ -25,6 +25,7 @@ class Plan_add{
             lecture_id:[],
             lecture_name:[],
             lecture_max_num:[],
+            lecture_color:[],
             lecture_state_cd:[],
             lecture_type_cd:[],
             member_id:[],
@@ -63,12 +64,13 @@ class Plan_add{
         this.data.lecture_max_num = data.max;
         this.data.lecture_state_cd = data.state_cd;
         this.data.lecture_type_cd = data.type_cd;
+        this.data.lecture_color = data.color;
         this.member = {id:[], name: []}; //수업을 선택했기 때문에, 회원란을 모두 비워준다.
         this.render_content();
     }
 
     get lecture(){
-        return {id:this.data.lecture_id, name:this.data.lecture_name, max:this.data.lecture_max_num, state_cd:this.data.lecture_state_cd, type_cd:this.data.lecture_type_cd};
+        return {id:this.data.lecture_id, name:this.data.lecture_name, max:this.data.lecture_max_num, state_cd:this.data.lecture_state_cd, type_cd:this.data.lecture_type_cd, color:this.data.lecture_color};
     }
 
 

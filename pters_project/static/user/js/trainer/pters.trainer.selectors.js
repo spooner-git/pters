@@ -2765,7 +2765,8 @@ class LectureSelector{
             name: this.target_instance.lecture.name.slice(),
             state_cd: this.target_instance.lecture.state_cd.slice(),
             max: this.target_instance.lecture.max.slice(),
-            type_cd: this.target_instance.lecture.type_cd.slice()
+            type_cd: this.target_instance.lecture.type_cd.slice(),
+            color: this.target_instance.lecture.color.slice()
         };
         this.init();
     }
@@ -2819,23 +2820,27 @@ class LectureSelector{
                         this.data.max.push(lecture_max_num);
                         // this.data.state_cd.push(lecture_state_cd);
                         this.data.type_cd.push(lecture_type_cd);
+                        this.data.color.push(lecture_color_code);
                     }else if(add_or_substract == "substract"){
                         this.data.id.splice(this.data.id.indexOf(lecture_id), 1);
                         this.data.name.splice(this.data.id.indexOf(lecture_id), 1); // 이름으로 찾기 x, 고유한 ID로
                         this.data.max.splice(this.data.id.indexOf(lecture_id), 1); // 이름으로 찾기 x, 고유한 ID로
                         this.data.state_cd.splice(this.data.id.indexOf(lecture_id), 1); // 이름으로 찾기 x, 고유한 ID로
                         this.data.type_cd.splice(this.data.id.indexOf(lecture_id), 1); // 이름으로 찾기 x, 고유한 ID로
+                        this.data.color.splice(this.data.id.indexOf(lecture_id), 1);
                     }else if(add_or_substract == "add_single"){
                         this.data.id = [];
                         this.data.name = [];
                         this.data.max = [];
                         this.data.state_cd = [];
                         this.data.type_cd = [];
+                        this.data.color = [];
                         this.data.id.push(lecture_id);
                         this.data.name.push(lecture_name);
                         this.data.max.push(lecture_max_num);
                         // this.data.state_cd.push(lecture_state_cd);
                         this.data.type_cd.push(lecture_type_cd);
+                        this.data.color.push(lecture_color_code);
                     }
 
                     // this.target_instance.lecture = this.data;
