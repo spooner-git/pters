@@ -1496,6 +1496,7 @@ class Calendar {
                                                 <div class="add_plan" onclick="${this.instance}.add_plan_button()">${CImg.plus("", {"width":"28px", "vertical-align":"middle", "margin-bottom":"4px"})}</div>
                                             </div>
                                         </div>
+                                         
                                         `             
                 ,
                 "week_cal_upper_box_date_tool":`
