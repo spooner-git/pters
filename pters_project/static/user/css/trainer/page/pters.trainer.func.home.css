@@ -51,15 +51,14 @@
 }
 
 @media(min-width:800px){
-	#home_content_wrap{
+	/* #home_content_wrap{
 		columns: 2;
 	}
 	#home_content_wrap .contents{
 		display: inline-block;
 		width: 100%;
-		/* margin-top: 12px; */
 		margin-bottom: 12px;
-	}
+	} */
 }
 
 #home_content_wrap .my_pters_pass_wrapper{
