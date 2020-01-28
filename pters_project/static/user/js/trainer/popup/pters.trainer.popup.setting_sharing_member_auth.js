@@ -6,6 +6,7 @@ class Setting_sharing_member_auth{
         this.member_name = this.external_data.member_name;
         this.member_db_id = this.external_data.db_id;
         this.shared_status = this.external_data.shared_status;
+        this.current_shared_status = this.external_data.shared_status;
         this.program_id = this.external_data.program_id;
 
         this.data = {
@@ -87,7 +88,7 @@ class Setting_sharing_member_auth{
             this.data.setting.delete = my_auth.auth_setting_delete != undefined ? my_auth.auth_setting_delete : OFF;
 
             this.shared_status = my_auth.member_info.auth_cd;
-
+            this.current_shared_status = my_auth.member_info.auth_cd;
             this.render();
             func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
         });
@@ -368,9 +369,9 @@ class Setting_sharing_member_auth{
             this.data_sending_now = true;
         }
         let auth_cd = this.shared_status;
-        // if(this.shared_status==AUTH_TYPE_DELETE){
-        //     auth_cd = AUTH_TYPE_WAIT;
-        // }
+        if(this.current_shared_status==AUTH_TYPE_DELETE){
+            auth_cd = AUTH_TYPE_WAIT;
+        }
         let data = {
             "class_id":this.program_id,
             "trainer_id": this.member_db_id,
@@ -408,6 +409,7 @@ class Setting_sharing_member_auth{
             layer_popup.close_layer_popup();
             setting_sharing_popup.init();
             program_list_popup.init();
+            this.current_shared_status = auth_cd;
         }, ()=>{this.data_sending_now = false;});
     }
 
