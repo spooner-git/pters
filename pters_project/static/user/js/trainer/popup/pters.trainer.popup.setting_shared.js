@@ -61,6 +61,7 @@ class Setting_shared{
     }
 
     dom_row_shared_members(data){
+        console.log(data);
         // let member_name = indiv_auth_data.member_info.member_name;
         // let member_user_id = indiv_auth_data.member_info.member_user_id;
         // let member_db_id = indiv_auth_data.member_info.member_id;
@@ -87,11 +88,15 @@ class Setting_shared{
 
         let auth_statistics_read = data.auth_analytics_read == 1 ? "조회" :  null;
 
+        let auth_settings_read = data.auth_setting_read == 1 ? "조회" :  null;
+        let auth_settings_update = data.auth_setting_update == 1 ? "수정" :  null;
+
         let schedule_auth = [auth_plan_create, auth_plan_read, auth_plan_update, auth_plan_delete].filter((el)=>{ if(el == null){return false} return true }).map((el)=>{return el});
         let member_auth = [auth_member_create, auth_member_read, auth_member_update, auth_member_delete].filter((el)=>{ if(el == null){return false} return true }).map((el)=>{return el});
         let lecture_auth = [auth_lecture_create, auth_lecture_read, auth_lecture_update, auth_lecture_delete].filter((el)=>{ if(el == null){return false} return true }).map((el)=>{return el});
         let ticket_auth = [auth_ticket_create, auth_ticket_read, auth_ticket_update, auth_ticket_delete].filter((el)=>{ if(el == null){return false} return true }).map((el)=>{return el});
         let statistics_auth = [auth_statistics_read].filter((el)=>{ if(el == null){return false} return true }).map((el)=>{return el});
+        let setting_auth = [auth_settings_read, auth_settings_update].filter((el)=>{ if(el == null){return false} return true }).map((el)=>{return el});
 
         let auth_schedule = `<div class="shared_member_auth" style="${schedule_auth.length == 0 ? "display:none" : ""}">
                                 <div class="auth_title">일정</div>
@@ -123,6 +128,12 @@ class Setting_shared{
                                     ${statistics_auth.join("/")}
                                 </div>
                             </div>`;
+        let auth_settings = `<div class="shared_member_auth" style="${setting_auth.length == 0 ? "display:none" : ""}">
+                                <div class="auth_title">설정</div>
+                                <div class="auth_setting">
+                                    ${setting_auth.join("/")}
+                                </div>
+                            </div>`;
 
         let html = `<article class="obj_input_box_full">
                         
@@ -132,6 +143,7 @@ class Setting_shared{
                             ${auth_lecture == null ? "" : auth_lecture}
                             ${auth_ticket == null ? "" : auth_ticket}
                             ${auth_statistics == null ? "" : auth_statistics}
+                            ${auth_settings == null ? "" : auth_settings}
                         </div>                 
                     </article>`;
 
