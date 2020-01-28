@@ -79,7 +79,7 @@
                                     {% endif %}
                                 {% endif %}
                             {% else %}
-                                <div class="obj_table_cell_x2 obj_font_size_11_weight_normal obj_font_color_light_black">
+                                <div class="obj_table_cell_x2 obj_font_size_11_weight_normal obj_font_color_light_black" style="padding-right:5px">
                                     {% if next_schedule_info.state_cd == 'PE' %}
                                         <span class="obj_font_size_11_weight_500 obj_font_color_coral">
                                             출석 처리된 수업입니다.
@@ -95,20 +95,21 @@
                                     {% endif %}
 
                                 </div>
-
-                                {% if next_schedule_info.state_cd != 'PE' and next_schedule_info.state_cd != 'PC' %}
-                                    <div class="obj_table_cell_x2 obj_button_gen obj_font_bg_coral_trans"
-                                         onclick="show_user_confirm({title:`정말 취소하시겠습니까?`}, ()=>{
-                                            func_schedule({'schedule_id':'{{ next_schedule_info.schedule_id }}'}, `${CALL_AJAX}`, `${DELETE}`);
-                                            });">취소하기</div>
-                                {% endif %}
-                                {% if next_schedule_info.daily_record_tb_id %}
-                                    {% if next_schedule_info.daily_record_tb.is_member_view %}
-                                    <div class="obj_button_gen obj_font_bg_trans_pink obj_font_size_11_weight_500" style="margin-right:5px;" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_plan_daily_record', 90, POPUP_FROM_BOTTOM, {'schedule_id':'{{ next_schedule_info.schedule_id }}'})">
-                                        일지 확인
-                                    </div>
+                                <div style="display:flex;float:right">
+                                    {% if next_schedule_info.state_cd != 'PE' and next_schedule_info.state_cd != 'PC' %}
+                                        <div class="obj_table_cell_x2 obj_button_gen obj_font_bg_coral_trans"
+                                            onclick="show_user_confirm({title:`정말 취소하시겠습니까?`}, ()=>{
+                                                func_schedule({'schedule_id':'{{ next_schedule_info.schedule_id }}'}, `${CALL_AJAX}`, `${DELETE}`);
+                                                });" style="margin-right:5px;flex:1 1 0;max-width:67px">취소하기</div>
                                     {% endif %}
-                                {% endif %}
+                                    {% if next_schedule_info.daily_record_tb_id %}
+                                        {% if next_schedule_info.daily_record_tb.is_member_view %}
+                                        <div class="obj_button_gen obj_font_bg_trans_pink obj_font_size_11_weight_500" style="flex:1 1 0;max-width:67px" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_plan_daily_record', 90, POPUP_FROM_BOTTOM, {'schedule_id':'{{ next_schedule_info.schedule_id }}'})">
+                                            일지 확인
+                                        </div>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
                             {% endif %}
                         </div>
                     {% else %}
