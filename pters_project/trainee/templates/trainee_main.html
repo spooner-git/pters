@@ -73,7 +73,7 @@
 
                                 {% if next_schedule_info.daily_record_tb_id %}
                                     {% if next_schedule_info.daily_record_tb.is_member_view %}
-                                    <div class="obj_button_gen obj_font_bg_trans_pink obj_font_size_11_weight_500" style="float:right;width:80px;" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_plan_daily_record', 90, POPUP_FROM_BOTTOM, {'schedule_id':'{{ next_schedule_info.schedule_id }}'})">
+                                    <div class="obj_button_gen obj_font_bg_trans_pink obj_font_size_11_weight_500" style="float:right;" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_plan_daily_record', 90, POPUP_FROM_BOTTOM, {'schedule_id':'{{ next_schedule_info.schedule_id }}'})">
                                         일지 확인
                                     </div>
                                     {% endif %}
@@ -104,7 +104,7 @@
                                 {% endif %}
                                 {% if next_schedule_info.daily_record_tb_id %}
                                     {% if next_schedule_info.daily_record_tb.is_member_view %}
-                                    <div class="obj_button_gen obj_font_bg_trans_pink obj_font_size_11_weight_500" style="width:80px; margin-right:5px;" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_plan_daily_record', 90, POPUP_FROM_BOTTOM, {'schedule_id':'{{ next_schedule_info.schedule_id }}'})">
+                                    <div class="obj_button_gen obj_font_bg_trans_pink obj_font_size_11_weight_500" style="margin-right:5px;" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_plan_daily_record', 90, POPUP_FROM_BOTTOM, {'schedule_id':'{{ next_schedule_info.schedule_id }}'})">
                                         일지 확인
                                     </div>
                                     {% endif %}
