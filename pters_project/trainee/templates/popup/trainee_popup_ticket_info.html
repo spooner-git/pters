@@ -72,8 +72,20 @@
                             {{ member_ticket_info.member_ticket_tb.end_date | date:"Y.m.d(l)"|cut:"요일"  }}
                         {% endif %}
                     </div>
-                    <div class="wrapper_my_history_detail_member_ticket_reg_count obj_table_cell_x7">{{ member_ticket_info.member_ticket_tb.member_ticket_reg_count }}</div>
-                    <div class="wrapper_my_history_detail_member_ticket_rem_count obj_table_cell_x7">{{ member_ticket_info.member_ticket_tb.member_ticket_rem_count }}</div>
+                    <div class="wrapper_my_history_detail_member_ticket_reg_count obj_table_cell_x7">
+                        {% if member_ticket_info.member_ticket_tb.member_ticket_reg_count >= 99999 %}
+                            무제한
+                        {% else %}
+                            {{ member_ticket_info.member_ticket_tb.member_ticket_reg_count }}
+                        {% endif %}
+                    </div>
+                    <div class="wrapper_my_history_detail_member_ticket_rem_count obj_table_cell_x7">
+                        {% if member_ticket_info.member_ticket_tb.member_ticket_reg_count >= 99999 %}
+                            무제한
+                        {% else %}
+                            {{ member_ticket_info.member_ticket_tb.member_ticket_rem_count }}
+                        {% endif %}
+                    </div>
                     <div class="wrapper_my_history_detail_member_ticket_price obj_table_cell_x7">{{ member_ticket_info.member_ticket_tb.price | intcomma }}원</div>
                     <div class="wrapper_my_history_detail_member_ticket_status obj_table_cell_x7">{{ member_ticket_info.status }}</div>
                 </div>

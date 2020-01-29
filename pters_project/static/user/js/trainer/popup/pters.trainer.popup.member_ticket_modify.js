@@ -478,7 +478,7 @@ class Member_ticket_modify{
         let pattern_message = "";
         let required = "";
 
-        if(this.data.reg_count == 99999){
+        if(this.data.reg_count >= 99999){
             title = "무제한";
         }
 

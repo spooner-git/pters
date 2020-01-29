@@ -335,7 +335,7 @@ class CComponent{
                                     ${member_name}
                                 </div>
                                 <div class="cell_member_info">
-                                    예약가능 ${member_reg_count == 99999 ? "제한없음" : member_avail_count + '회'} / ${member_expiry} 까지
+                                    예약가능 ${member_reg_count >= 99999 ? "제한없음" : member_avail_count + '회'} / ${member_expiry} 까지
                                 </div>
                             </div>
                             <div style="display:table-cell; line-height:35px; float:right;">
@@ -605,9 +605,9 @@ class CComponent{
                         <div class="obj_table_raw table_memo_info">
                             <div class="cell_ticket_num"></div>
                             <div class="cell_ticket_info">
-                                등록 ${reg_count == 99999 ? "제한없음" : reg_count + '회'} /
-                                잔여 ${reg_count == 99999 ? "제한없음" : remain_count + '회'} / 
-                                예약가능 ${reg_count == 99999 ? "제한없음" : avail_count + '회'}</div>
+                                등록 ${reg_count >= 99999 ? "제한없음" : reg_count + '회'} /
+                                잔여 ${reg_count >= 99999 ? "제한없음" : remain_count + '회'} / 
+                                예약가능 ${reg_count >= 99999 ? "제한없음" : avail_count + '회'}</div>
                         </div>
                         <div class="obj_table_raw table_memo_info" style="color:#ff7184;">
                             <div class="cell_ticket_num"></div>

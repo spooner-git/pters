@@ -1518,15 +1518,18 @@ class PopupCalendarPlanReserveView(LoginRequiredMixin, AccessTestMixin, Template
             # member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
 
             lecture_member_ticket_avail_count = 0
+            lecture_member_ticket_reg_count = 0
             for class_member_ticket_info in class_member_ticket_data:
-                lecture_member_ticket_avail_count \
-                    += class_member_ticket_info.member_ticket_tb.member_ticket_avail_count
+                lecture_member_ticket_avail_count += class_member_ticket_info.member_ticket_tb.member_ticket_avail_count
+                lecture_member_ticket_reg_count += class_member_ticket_info.member_ticket_tb.member_ticket_reg_count
+            lecture_schedule_info.lecture_member_ticket_reg_count = lecture_member_ticket_reg_count
             lecture_schedule_info.lecture_member_ticket_avail_count = lecture_member_ticket_avail_count
 
             if lecture_id_list.count(lecture_schedule_info.lecture_tb.lecture_id) == 0:
                 lecture_id_list.append(lecture_schedule_info.lecture_tb.lecture_id)
                 lecture_info = {'lecture_id': lecture_schedule_info.lecture_tb.lecture_id,
                                 'lecture_name': lecture_schedule_info.lecture_tb.name,
+                                'lecture_member_ticket_reg_count': lecture_member_ticket_reg_count,
                                 'lecture_member_ticket_avail_count': lecture_member_ticket_avail_count}
                 lecture_data.append(lecture_info)
         context['lecture_data'] = lecture_data

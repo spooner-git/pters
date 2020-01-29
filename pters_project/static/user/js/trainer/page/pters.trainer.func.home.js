@@ -343,7 +343,7 @@ class Home {
             }
             let rem_info = `${TEXT.word.rem[language]} ${rem_count}${TEXT.unit.count[language]}`;
 
-            if(reg_count == 99999){
+            if(reg_count >= 99999){
                 rem_info = TEXT.word.count_limitless[language];
             }
 
