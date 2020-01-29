@@ -91,7 +91,6 @@ class Setting_sharing_member_auth{
                 this.shared_status = my_auth.member_info.auth_cd;
                 this.current_shared_status = my_auth.member_info.auth_cd;
             }
-            console.log("????:"+this.current_shared_status);
             this.render();
             func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
         });
@@ -297,8 +296,9 @@ class Setting_sharing_member_auth{
         let message = {
             title:title_message
         };
+        this.shared_status = AUTH_TYPE_DELETE;
         show_user_confirm (message, ()=>{
-            this.shared_status = AUTH_TYPE_DELETE;
+            // this.shared_status = AUTH_TYPE_DELETE;
             this.send_data();
             layer_popup.close_layer_popup(); //옵션 셀렉터 닫기
             // layer_popup.close_layer_popup(); //권한 설정창 닫기
@@ -378,9 +378,11 @@ class Setting_sharing_member_auth{
             this.data_sending_now = true;
         }
         let auth_cd = this.shared_status;
-        if(this.current_shared_status==AUTH_TYPE_DELETE){
-            auth_cd = AUTH_TYPE_WAIT;
-        }
+        console.log(this.shared_status);
+        console.log(this.current_shared_status);
+        // if(this.current_shared_status==AUTH_TYPE_DELETE){
+        //     auth_cd = AUTH_TYPE_WAIT;
+        // }
         let data = {
             "class_id":this.program_id,
             "trainer_id": this.member_db_id,
@@ -423,6 +425,9 @@ class Setting_sharing_member_auth{
     }
 
     upper_right_menu(){
+        if(this.shared_status == AUTH_TYPE_DELETE){
+            this.shared_status = AUTH_TYPE_WAIT;
+        }
         this.send_data();
     }
 }
