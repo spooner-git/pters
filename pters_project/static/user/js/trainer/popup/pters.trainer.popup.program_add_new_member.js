@@ -311,6 +311,20 @@ class Program_func{
                         return false;
                     }
                 }
+                let select_check = false;
+                for(let i=0; i<data.program_data.length; i++){
+                    if(data.program_data[i].program_selected == PROGRAM_SELECTED){
+                        select_check = true;
+                    }
+                }
+                if(!select_check){
+                    let message = {
+                        title:`프로그램의 공유 연결 해제 되었습니다.`,
+                        comment:`다시 연결하려면 프로그램 소유자에게 요청 해야합니다.`
+                    };
+                    show_error_message (message);
+                    location.href = '/trainer/refresh_trainer_page/';
+                }
                 if(callback != undefined){
                     callback(data);
                 }

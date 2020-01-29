@@ -4219,7 +4219,7 @@ def update_trainer_program_connection_info_logic(request):
                              class_tb_id=class_info.class_id,
                              log_info=class_info.member.name + ' 님의 \''
                                       + class_info.get_class_type_cd_name()+'\' 프로그램',
-                             log_how='공유 완료',
+                             log_how='공유 신청 수락',
                              log_detail='', use=USE)
             log_data.save()
 

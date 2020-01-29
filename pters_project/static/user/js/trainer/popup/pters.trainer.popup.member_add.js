@@ -127,7 +127,7 @@ class Member_add{
             this.data.start_date_text = DateRobot.to_text(this.data.start_date.year, this.data.start_date.month, this.data.start_date.date, SHORT); 
         }
         //종료일자를 수강권의 기본 유효기간 만큼 시작일자에 더한 날짜로
-        if(this.data.ticket_effective_days == -1){ //수강권 유효날짜가 -1 (소진시까지)
+        if(this.data.ticket_effective_days == 99999){ //수강권 유효날짜가 -1 (소진시까지)
             this.data.end_date = {year:9999, month:12, date:31};
             this.data.end_date_text = "소진 시까지";
         }else{
