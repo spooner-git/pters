@@ -90,7 +90,8 @@
 	}
 	.popup_lecture_ticket_info .wrapper_my_ticket_detail_count_info{
 		display: inline-block;
-		width: 50px;
+		width: auto;
+		min-width:50px;
 		height: auto;
 	}
 
