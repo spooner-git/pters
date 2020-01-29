@@ -6,7 +6,7 @@ class Setting_sharing_member_auth{
         this.member_name = this.external_data.member_name;
         this.member_db_id = this.external_data.db_id;
         this.shared_status = this.external_data.shared_status;
-        this.current_shared_status = this.external_data.shared_status;
+        this.current_shared_status = null;
         this.program_id = this.external_data.program_id;
 
         this.data = {
@@ -60,35 +60,37 @@ class Setting_sharing_member_auth{
         Setting_sharing_member_auth_func.read({"class_id": this.program_id}, (data)=>{
             let my_auth = data[this.member_db_id];
             console.log(my_auth);
-            this.data.schedule.create = my_auth.auth_plan_create != undefined ? my_auth.auth_plan_create : OFF;
-            this.data.schedule.read = my_auth.auth_plan_read != undefined ? my_auth.auth_plan_read : OFF;
-            this.data.schedule.update = my_auth.auth_plan_update != undefined ? my_auth.auth_plan_update : OFF;
-            this.data.schedule.delete = my_auth.auth_plan_delete != undefined ? my_auth.auth_plan_delete : OFF;
+            if(my_auth != undefined){
+                this.data.schedule.create = my_auth.auth_plan_create != undefined ? my_auth.auth_plan_create : OFF;
+                this.data.schedule.read = my_auth.auth_plan_read != undefined ? my_auth.auth_plan_read : OFF;
+                this.data.schedule.update = my_auth.auth_plan_update != undefined ? my_auth.auth_plan_update : OFF;
+                this.data.schedule.delete = my_auth.auth_plan_delete != undefined ? my_auth.auth_plan_delete : OFF;
 
-            this.data.member.create = my_auth.auth_member_create != undefined ? my_auth.auth_member_create : OFF;
-            this.data.member.read = my_auth.auth_member_read != undefined ? my_auth.auth_member_read : OFF;
-            this.data.member.update = my_auth.auth_member_update != undefined ? my_auth.auth_member_update : OFF;
-            this.data.member.delete = my_auth.auth_member_delete != undefined ? my_auth.auth_member_delete : OFF;
+                this.data.member.create = my_auth.auth_member_create != undefined ? my_auth.auth_member_create : OFF;
+                this.data.member.read = my_auth.auth_member_read != undefined ? my_auth.auth_member_read : OFF;
+                this.data.member.update = my_auth.auth_member_update != undefined ? my_auth.auth_member_update : OFF;
+                this.data.member.delete = my_auth.auth_member_delete != undefined ? my_auth.auth_member_delete : OFF;
 
-            this.data.lecture.create = my_auth.auth_group_create != undefined ? my_auth.auth_group_create : OFF;
-            this.data.lecture.read = my_auth.auth_group_read != undefined ? my_auth.auth_group_read : OFF;
-            this.data.lecture.update = my_auth.auth_group_update != undefined ? my_auth.auth_group_update : OFF;
-            this.data.lecture.delete = my_auth.auth_group_delete != undefined ? my_auth.auth_group_delete : OFF;
+                this.data.lecture.create = my_auth.auth_group_create != undefined ? my_auth.auth_group_create : OFF;
+                this.data.lecture.read = my_auth.auth_group_read != undefined ? my_auth.auth_group_read : OFF;
+                this.data.lecture.update = my_auth.auth_group_update != undefined ? my_auth.auth_group_update : OFF;
+                this.data.lecture.delete = my_auth.auth_group_delete != undefined ? my_auth.auth_group_delete : OFF;
 
-            this.data.ticket.create = my_auth.auth_package_create != undefined ? my_auth.auth_package_create : OFF;
-            this.data.ticket.read = my_auth.auth_package_read != undefined ? my_auth.auth_package_read : OFF;
-            this.data.ticket.update = my_auth.auth_package_update != undefined ? my_auth.auth_package_update : OFF;
-            this.data.ticket.delete = my_auth.auth_package_delete != undefined ? my_auth.auth_package_delete : OFF;
+                this.data.ticket.create = my_auth.auth_package_create != undefined ? my_auth.auth_package_create : OFF;
+                this.data.ticket.read = my_auth.auth_package_read != undefined ? my_auth.auth_package_read : OFF;
+                this.data.ticket.update = my_auth.auth_package_update != undefined ? my_auth.auth_package_update : OFF;
+                this.data.ticket.delete = my_auth.auth_package_delete != undefined ? my_auth.auth_package_delete : OFF;
 
-            this.data.statistics.read = my_auth.auth_analytics_read != undefined ? my_auth.auth_analytics_read : OFF;
+                this.data.statistics.read = my_auth.auth_analytics_read != undefined ? my_auth.auth_analytics_read : OFF;
 
-            this.data.setting.create = my_auth.auth_setting_create != undefined ? my_auth.auth_setting_create : OFF;
-            this.data.setting.read = my_auth.auth_setting_read != undefined ? my_auth.auth_setting_read : OFF;
-            this.data.setting.update = my_auth.auth_setting_update != undefined ? my_auth.auth_setting_update : OFF;
-            this.data.setting.delete = my_auth.auth_setting_delete != undefined ? my_auth.auth_setting_delete : OFF;
+                this.data.setting.create = my_auth.auth_setting_create != undefined ? my_auth.auth_setting_create : OFF;
+                this.data.setting.read = my_auth.auth_setting_read != undefined ? my_auth.auth_setting_read : OFF;
+                this.data.setting.update = my_auth.auth_setting_update != undefined ? my_auth.auth_setting_update : OFF;
+                this.data.setting.delete = my_auth.auth_setting_delete != undefined ? my_auth.auth_setting_delete : OFF;
 
-            this.shared_status = my_auth.member_info.auth_cd;
-            this.current_shared_status = my_auth.member_info.auth_cd;
+                this.shared_status = my_auth.member_info.auth_cd;
+                this.current_shared_status = my_auth.member_info.auth_cd;
+            }
             this.render();
             func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
         });
@@ -128,8 +130,7 @@ class Setting_sharing_member_auth{
     }
     
     dom_assembly_content(){
-        // let shared_status_button = this.shared_status == AUTH_TYPE_WAIT ? "" : this.dom_button_shared_status();
-        let shared_status_button = this.dom_button_shared_status();
+        let shared_status_button = this.current_shared_status == null ? "" : this.dom_button_shared_status();
         let schedule = this.dom_sub_assembly_schedule();
         let member = this.dom_sub_assembly_member();
         let lecture = this.dom_sub_assembly_lecture();
@@ -253,15 +254,18 @@ class Setting_sharing_member_auth{
         if(this.current_shared_status == AUTH_TYPE_WAIT){
             title = "공유 취소";
         }
+        else if(this.current_shared_status == AUTH_TYPE_DELETE){
+            title = "공유 내역 삭제"
+        }
         let style = {"font-size":"13px", "font-weight":"500", "background-color":"var(--bg-highlight)", "color":"var(--fundamental-white)", "line-height":"40px"};
         let onclick = ()=>{
-            this.event_select_shared_status();
+            this.event_select_shared_status(`정말 ${this.member_name}님과 현재 프로그램을 ${title} 하시겠습니까?`);
         };
         let html = CComponent.button (id, title, style, onclick);
         return html;
     }
 
-    event_select_shared_status(){
+    event_select_shared_status(title_message){
         // let user_option = {
         //     request:{text:"공유 초대", callback:()=>{
 
@@ -290,10 +294,11 @@ class Setting_sharing_member_auth{
         //     option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
         // });
         let message = {
-            title:`정말 ${this.member_name}님과 현재 프로그램 공유를 해제 하시겠습니까?`
+            title:title_message
         };
+        this.shared_status = AUTH_TYPE_DELETE;
         show_user_confirm (message, ()=>{
-            this.shared_status = AUTH_TYPE_DELETE;
+            // this.shared_status = AUTH_TYPE_DELETE;
             this.send_data();
             layer_popup.close_layer_popup(); //옵션 셀렉터 닫기
             // layer_popup.close_layer_popup(); //권한 설정창 닫기
@@ -373,9 +378,11 @@ class Setting_sharing_member_auth{
             this.data_sending_now = true;
         }
         let auth_cd = this.shared_status;
-        if(this.current_shared_status==AUTH_TYPE_DELETE){
-            auth_cd = AUTH_TYPE_WAIT;
-        }
+        console.log(this.shared_status);
+        console.log(this.current_shared_status);
+        // if(this.current_shared_status==AUTH_TYPE_DELETE){
+        //     auth_cd = AUTH_TYPE_WAIT;
+        // }
         let data = {
             "class_id":this.program_id,
             "trainer_id": this.member_db_id,
@@ -418,6 +425,9 @@ class Setting_sharing_member_auth{
     }
 
     upper_right_menu(){
+        if(this.shared_status == AUTH_TYPE_DELETE){
+            this.shared_status = AUTH_TYPE_WAIT;
+        }
         this.send_data();
     }
 }

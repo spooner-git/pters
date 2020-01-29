@@ -309,9 +309,8 @@ class Program_func{
                         title:`프로그램의 공유 연결 해제 되었습니다.`,
                         comment:`다시 연결하려면 프로그램 소유자에게 요청 해야합니다.`
                     };
-                    show_user_confirm (message, ()=> {
-                        location.href = '/trainer/refresh_trainer_page/';
-                    });
+                    show_error_message (message);
+                    location.href = '/trainer/refresh_trainer_page/';
                 }
                 if(callback != undefined){
                     callback(data);
