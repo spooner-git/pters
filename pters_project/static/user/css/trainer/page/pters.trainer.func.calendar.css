@@ -1,25 +1,46 @@
 #cal_display_panel{
 	position: absolute;
-	/* height: 102px; */
 	height: auto;
 	z-index: 10;
 	width: 100%;
-	padding-top: 20px;
-	padding-bottom: 12px;
-	/* background-color: var(--bg-main); */
 	background-color: var(--root-content-bg-color);
-	/* text-align: center; */
 }
+/* #cal_display_panel{
+	position: sticky;
+	position: -webkit-sticky;
+	top: 0;
+	height: auto;
+	z-index: 10;
+	width: 100%;
+	background-color: var(--root-content-bg-color);
+} */
 	.cal_upper_box{
 		position: relative;
-		height: 28px;
+		height: 60px;
 		line-height: 28px;
 		/* background-color: var(--bg-main); */
 		background-color: var(--root-content-bg-color);
-		padding: 0 16px;
-		padding-right: 0;
+		padding: 20px 16px 12px;
 		box-sizing: border-box;
 		display: flex;
+	}
+	.cal_tools_wrap_parent{
+		display: table;
+		position: absolute;
+		right: 0;
+		top: 0;
+		width: 200px;
+		height: 100%;
+	}
+	@media(max-width:700px) and (min-width:651px){
+		.cal_tools_wrap_parent{
+			width: 150px;
+		}
+	}
+	.cal_tools_wrap_parent > div{
+		display: table-cell;
+		vertical-align: middle;
+		text-align: center;
 	}
 	.cal_tools_wrap{
 		height: 100%;
@@ -53,7 +74,8 @@
 	}
 	@media(max-width:650px){
 		.cal_pc_tools_wrap{
-			display: none;
+			/* display: none; */
+			visibility: hidden;
 		}
 	}
 	.cal_upper_box > .cal_date_display{
@@ -80,6 +102,7 @@
 	.display_week{
 		/* font-size: 18px; */
 	}
+	
 .pages{
 	position: absolute;
 	top: 60px;
@@ -169,9 +192,9 @@
 	height: 28px;
 	border-radius: 14px;
 	z-index: -1;
-	top:50%;
+	/* top:50%; */
 	left: 50%;
-	transform: translate(-50%, -50%);
+	transform: translateX(-50%);
 	background: #ffe8eb;
 }
 .no_border{
@@ -340,7 +363,7 @@
 	position: absolute;
 	height: 1px;
 	left: 100%;
-	z-index: 3;
+	z-index: 0;
 	opacity: 0.5;
 	background-color:var(--bg-highlight);
 }

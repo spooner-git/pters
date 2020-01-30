@@ -53,7 +53,16 @@ class Plan_view{
             lecture_state_cd: null,
             schedule_type:null,
 
-            duplicate_plan_when_add:[]
+            duplicate_plan_when_add:[],
+
+            reg_member_id:null,
+            reg_member_name:null,
+            reg_date:null,
+            mod_date:null
+        };
+
+        this.settings = {
+            sign_use: OFF
         };
 
         this.work_time = {start_hour:0, end_hour:24};
@@ -133,6 +142,11 @@ class Plan_view{
                 this.work_time = calendar.calc_worktime_display(data);
                 this.render();
             });
+
+            Setting_calendar_func.read((settings)=>{
+                this.settings.sign_use = settings.setting_schedule_sign_enable;
+            });
+
             Lecture_func.read({"lecture_id": this.data.lecture_id}, (data)=>{
                 this.lecture_minute = data.lecture_minute;
             });
@@ -169,6 +183,12 @@ class Plan_view{
         this.data.lecture_state_cd = data.schedule_info[0].state_cd;
         this.data.memo = data.schedule_info[0].note;
         this.data.schedule_type = data.schedule_info[0].schedule_type;
+
+        this.data.reg_member_id = data.schedule_info[0].reg_member_id;
+        this.data.reg_member_name = data.schedule_info[0].reg_member_name;
+        this.data.reg_date = data.schedule_info[0].reg_dt;
+        this.data.mod_date = data.schedule_info[0].mod_dt;
+
     }
 
     calc_end_time_by_start_time(start_time_, lecture_minute, work_time_end){
@@ -180,7 +200,9 @@ class Plan_view{
         }
         if(end_time_hour >= work_time_end){
             end_time_min = 0;
+            end_time_hour = work_time_end;
         }
+
         if(end_time_hour < start_time.hour){
             end_time_hour = work_time_end;
             end_time_min = 0;
@@ -233,9 +255,22 @@ class Plan_view{
     render_toolbox(){
         document.getElementById(this.target.toolbox).innerHTML = this.dom_assembly_toolbox();
     }
-
+    
     render_content(){
+        document.getElementById(this.target.toolbox).innerHTML = this.dom_assembly_toolbox();
+        document.querySelector(`${this.target.install} .wrapper_top`).innerHTML = PopupBase.wrapper_top(this.dom_wrapper_top().left, this.dom_wrapper_top().center, this.dom_wrapper_top().right);
         document.getElementById(this.target.content).innerHTML = this.dom_assembly_content();
+    }
+
+    dom_wrapper_top(){
+        let top_left = `<span class="icon_left" onclick="plan_view_popup.upper_left_menu();">${CImg.arrow_left(["#5c5859"])}</span>`;
+        let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
+        let top_right = `<span class="icon_right">    
+                            ${CImg.memo(["#5c5859"], this.data.schedule_type == 0 ? {"display":"none"} : null, `plan_view_popup.upper_right_menu(2)`)}
+                            ${CImg.attend_check(["#5c5859"], this.data.schedule_type == 0 ? {"display":"none"} : null, `plan_view_popup.upper_right_menu(1)`)}
+                            ${CImg.delete(["#5c5859"], null, `plan_view_popup.upper_right_menu(0)`)}
+                        </span>`;
+        return {left: top_left, center:top_center, right:top_right};
     }
 
 
@@ -252,10 +287,15 @@ class Plan_view{
         let end_time_select_row = this.dom_row_end_time_select();
         let classic_time_selector = this.dom_row_classic_time_selector();
         let memo_select_row = this.dom_row_memo_select();
+        let reg_mod_info = this.dom_row_reg_mod_date();
 
         let display = "";
         if(this.data.schedule_type != 2){ //0: OFF, 1: 개인, 2:그룹
             display = 'none';
+        }
+        let hide_when_off = "";
+        if(this.data.schedule_type == 0){
+            hide_when_off = "none";
         }
         
         let html;
@@ -263,12 +303,14 @@ class Plan_view{
             html =  `<div class="obj_input_box_full" style="display:${display}; border:0;">`+ CComponent.dom_tag('회원') + member_select_row + member_list_row+'</div>' +
                         '<div class="obj_input_box_full">' +  CComponent.dom_tag('일자') + date_select_row +
                                                         CComponent.dom_tag('진행시간') + classic_time_selector + '</div>' +
-                        '<div class="obj_input_box_full">'+ CComponent.dom_tag('메모 <span style="color:var(--font-highlight)">(회원님께 공유되는 메모입니다.)</span>') + memo_select_row + '</div>';
+                        '<div class="obj_input_box_full">'+ CComponent.dom_tag(`메모 <span style="color:var(--font-highlight);display:${hide_when_off}">(회원님께 공유되는 메모입니다.)</span>`) + memo_select_row + '</div>' +
+                        '<div class="obj_input_box_full" style="padding:18px;">' + reg_mod_info + '<div>';
         }else{
             html =  `<div class="obj_input_box_full" style="display:${display}; border:0;">`+ CComponent.dom_tag('회원') + member_select_row + member_list_row+'</div>' +
                         '<div class="obj_input_box_full">' +  CComponent.dom_tag('일자') + date_select_row +
                                                         CComponent.dom_tag('진행시간') + start_time_select_row + end_time_select_row + '</div>' +
-                        '<div class="obj_input_box_full">'+ CComponent.dom_tag('메모 <span style="color:var(--font-highlight)">(회원님께 공유되는 메모입니다.)</span>') + memo_select_row + '</div>';
+                        '<div class="obj_input_box_full">'+ CComponent.dom_tag(`메모 <span style="color:var(--font-highlight);display:${hide_when_off}">(회원님께 공유되는 메모입니다.)</span>`) + memo_select_row + '</div>' +
+                        '<div class="obj_input_box_full" style="padding:18px;">' + reg_mod_info + '<div>';
         }
 
         return html;
@@ -304,15 +346,15 @@ class Plan_view{
                 daily_record:{text:"일지", callback:()=>{
                     layer_popup.close_layer_popup();
                     Plan_daily_record_func.write_artice(this.data.member_schedule_id[0], this.data.member_name[0], ()=>{
-                        show_error_message(`[${this.data.member_name[0]}] 일지 변경사항이 저장 되었습니다.`);
+                        show_error_message({title:`[${this.data.member_name[0]}] 일지 변경사항이 저장 되었습니다.`});
                     }, ()=>{
-                        show_error_message(`<span style="color:var(--font-highlight)">일지 변경사항 저장에 실패 하였습니다.</span>`);
+                        show_error_message({title:`<span style="color:var(--font-highlight)">일지 변경사항 저장에 실패 하였습니다.</span>`});
                     });
                 }},
                 sign_image:{text:"출석 서명 확인", callback:()=>{
                     layer_popup.close_layer_popup();
                     show_error_message(
-                        `<img src="https://s3.ap-northeast-2.amazonaws.com/pters-image-master/${this.data.member_schedule_id[0]}.png" style="width:100%;filter:var(--transform-invert);" onerror="this.onerror=null;this.src='/static/common/icon/icon_no_signature.png'">`
+                        {title:`<img src="https://s3.ap-northeast-2.amazonaws.com/pters-image-master/${this.data.member_schedule_id[0]}.png" style="width:100%;filter:var(--transform-invert);" onerror="this.onerror=null;this.src='/static/common/icon/icon_no_signature.png'">`}
                     );
                 }},
                 schedule_history:{text:"일정 이력", callback:()=>{
@@ -327,9 +369,13 @@ class Plan_view{
             if(this.data.member_schedule_state[0] != SCHEDULE_FINISH){
                 delete user_option.sign_image;
             }
+            if(this.settings.sign_use == OFF){
+                delete user_option.sign_image;
+            }
 
             let options_padding_top_bottom = 16;
-            let button_height = 8 + 8 + 52;
+            // let button_height = 8 + 8 + 52;
+            let button_height = 52;
             let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
             let root_content_height = $root_content.height();
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
@@ -431,15 +477,15 @@ class Plan_view{
                         daily_record:{text:"일지", callback:()=>{
                             layer_popup.close_layer_popup();
                             Plan_daily_record_func.write_artice(member_schedule_id, member_name, ()=>{
-                                show_error_message(`[${member_name}] 일지 변경사항이 저장 되었습니다.`);
+                                show_error_message({title:`[${member_name}] 일지 변경사항이 저장 되었습니다.`});
                             }, ()=>{
-                                show_error_message(`<span style="color:var(--font-highlight)">일지 변경사항 저장에 실패 하였습니다.</span>`);
+                                show_error_message({title:`<span style="color:var(--font-highlight)">일지 변경사항 저장에 실패 하였습니다.</span>`});
                             }); 
                         }},
                         sign_image:{text:"출석 서명 확인", callback:()=>{
                             layer_popup.close_layer_popup();
                             show_error_message(
-                                `<img src="https://s3.ap-northeast-2.amazonaws.com/pters-image-master/${member_schedule_id}.png" style="width:100%;filter:var(--transform-invert);" onerror="this.onerror=null;this.src='/static/common/icon/icon_no_signature.png'">`
+                                {title:`<img src="https://s3.ap-northeast-2.amazonaws.com/pters-image-master/${member_schedule_id}.png" style="width:100%;filter:var(--transform-invert);" onerror="this.onerror=null;this.src='/static/common/icon/icon_no_signature.png'">`}
                             );
                         }},
                         schedule_history:{text:"일정 이력", callback:()=>{
@@ -453,9 +499,13 @@ class Plan_view{
                     if(state != SCHEDULE_FINISH){
                         delete user_option.sign_image;
                     }
+                    if(this.settings.sign_use == OFF){
+                        delete user_option.sign_image;
+                    }
 
                     let options_padding_top_bottom = 16;
-                    let button_height = 8 + 8 + 52;
+                    // let button_height = 8 + 8 + 52;
+                    let button_height = 52;
                     let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
                     let root_content_height = $root_content.height();
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
@@ -682,13 +732,37 @@ class Plan_view{
         let html = CComponent.create_input_textarea_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, (input_data)=>{
             let user_input_data = input_data;
             this.memo = user_input_data;
-            let data_to_send = {"schedule_id": this.schedule_id, "add_memo":this.memo};
-            let url_update_memo = '/schedule/update_memo_schedule/';
-            Plan_func.update(url_update_memo, data_to_send, ()=>{
-                this.init();
-                this.if_user_changed_any_information = true;
-            });
+            this.if_user_changed_any_information = true;
+            // let data_to_send = {"schedule_id": this.schedule_id, "add_memo":this.memo};
+            // let url_update_memo = '/schedule/update_memo_schedule/';
+            // Plan_func.update(url_update_memo, data_to_send, ()=>{
+            //     this.init();
+            //     this.if_user_changed_any_information = true;
+            // });
         }, pattern, pattern_message, required);
+        return html;
+    }
+
+    dom_row_reg_mod_date(){
+        // let icon_button_style = {"display":"block", "padding":0, "font-size":"12px"};
+        let style = {"font-size":"12px", "height":"25px", "line-height":"25px", "padding":"0"};
+
+        let member_name = this.data.reg_member_name;
+        let reg_date = DateRobot.to_text(this.data.reg_date.split(" ")[0]) + ' ' +
+                            TimeRobot.to_text(this.data.reg_date.split(" ")[1]);
+        let mod_date = DateRobot.to_text(this.data.mod_date.split(" ")[0]) + ' ' +
+                            TimeRobot.to_text(this.data.mod_date.split(" ")[1]);
+
+        let reg_date_text = reg_date == mod_date ? reg_date + ' - ' + member_name : reg_date;
+        let mod_date_text = mod_date + ' - ' + member_name;
+
+        let html1 = CComponent.create_row('reg_date_view', `등록: ${reg_date_text}`, NONE, NONE, "", style, ()=>{});
+        let html2 = CComponent.create_row('mod_date_view', `수정: ${mod_date_text}`, NONE, NONE, "", style, ()=>{});
+
+        let html = html1 + html2;
+        if(reg_date_text == mod_date_text){
+            html = html1;
+        }
         return html;
     }
 
@@ -702,7 +776,15 @@ class Plan_view{
 
     upper_right_menu(number){
         let user_option = [
-            ()=>{ show_user_confirm(`정말 ${this.data.schedule_type != "0" ? this.data.lecture_name : 'OFF'} 일정을 취소하시겠습니까?`, ()=>{
+            ()=>{ show_user_confirm({title:`정말 ${this.data.schedule_type != "0" ? this.data.lecture_name : 'OFF'} 일정을 취소하시겠습니까?`}, ()=>{
+                    let inspect = pass_inspector.schedule_delete();
+                    if(inspect.barrier == BLOCKED){
+                        let message = `${inspect.limit_type}`;
+                        layer_popup.close_layer_popup();
+                        show_error_message({title:message});
+                        return false;
+                    }
+                    
                     Plan_func.delete({"schedule_id":this.schedule_id}, ()=>{
                         try{
                             current_page.init();
@@ -824,7 +906,7 @@ class Plan_view{
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PLAN_DAILY_RECORD, 100, popup_style, null, ()=>{
                     plan_daily_record_popup = new Plan_daily_record('.popup_plan_daily_record', this.schedule_id, ()=>{});
                 });
-            }  
+            }
         ];
 
         user_option[number]();
@@ -832,15 +914,22 @@ class Plan_view{
 
     upper_left_menu(){
         if(this.if_user_changed_any_information == true){
-            // if(this.send_data() == false){
-            //     return false;
-            // }
+            let inspect = pass_inspector.schedule_update();
+            if(inspect.barrier == BLOCKED){
+                let message = `${inspect.limit_type}`;
+                layer_popup.close_layer_popup();
+                this.clear();
+                show_error_message({title:message});
+                return false;
+            }
+            
             let user_option = {
                 confirm:{text:"변경사항 적용", callback:()=>{this.send_data();layer_popup.close_layer_popup();layer_popup.close_layer_popup();this.clear();}},
                 cancel:{text:"아무것도 변경하지 않음", callback:()=>{ layer_popup.close_layer_popup();layer_popup.close_layer_popup();this.clear();}}
             };
             let options_padding_top_bottom = 16;
-            let button_height = 8 + 8 + 52;
+            // let button_height = 8 + 8 + 52;
+            let button_height = 52;
             let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
             let root_content_height = $root_content.height();
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
@@ -855,7 +944,7 @@ class Plan_view{
         let start_dt = DateRobot.to_yyyymmdd(this.data.date.year, this.data.date.month, this.data.date.date) + ' ' + this.data.start_time;
         let end_dt = DateRobot.to_yyyymmdd(this.data.date.year, this.data.date.month, this.data.date.date) + ' ' + this.data.end_time;
         if(start_dt == end_dt){
-            show_error_message("종료 시간을 다시 선택해주세요.");
+            show_error_message({title:"종료 시간을 다시 선택해주세요."});
             return false;
         }
 
@@ -868,12 +957,16 @@ class Plan_view{
         }
 
         let data_to_send = {"schedule_ids[]":schedule_ids, "start_dt":start_dt, "end_dt":end_dt};
-
+        let data_to_send_for_memo_update = {"schedule_id": this.schedule_id, "add_memo":this.memo};
         let url = '/schedule/update_schedule/';
-        Plan_func.update(url, data_to_send, ()=>{
-            try{
-                current_page.init();
-            }catch(e){}
+        let url_update_memo = '/schedule/update_memo_schedule/';
+        
+        Plan_func.update(url_update_memo, data_to_send_for_memo_update, ()=>{
+            Plan_func.update(url, data_to_send, ()=>{
+                try{
+                    current_page.init();
+                }catch(e){}
+            });
         });
         
     }

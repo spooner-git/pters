@@ -182,7 +182,8 @@ class Ticket{
         user_option += `}`;
 
         let options_padding_top_bottom = 16;
-        let button_height = 8 + 8 + 52;
+        // let button_height = 8 + 8 + 52;
+        let button_height = 52;
         let layer_popup_height = options_padding_top_bottom + button_height + 52*user_options_array.length;
         let root_content_height = $root_content.height();
 
@@ -307,7 +308,7 @@ class Ticket{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -384,7 +385,10 @@ class Ticket_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
+                        if(error_callback != undefined){
+                            error_callback();
+                        }
                         return false;
                     }
                 }
@@ -398,7 +402,7 @@ class Ticket_func{
                 if(error_callback != undefined){
                     error_callback();
                 }
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                 location.reload();
             }
         });
@@ -429,7 +433,10 @@ class Ticket_func{
                 // let data = JSON.parse(data_);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
+                        if(error_callback != undefined){
+                            error_callback();
+                        }
                         return false;
                     }
                 }
@@ -443,7 +450,7 @@ class Ticket_func{
                 if(error_callback != undefined){
                     error_callback();
                 }
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                 location.reload();
             }
         });
@@ -474,7 +481,10 @@ class Ticket_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
+                        if(error_callback != undefined){
+                            error_callback();
+                        }
                         return false;
                     }
                 }
@@ -488,7 +498,7 @@ class Ticket_func{
                 if(error_callback != undefined){
                     error_callback();
                 }
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                 location.reload();
             }
         });
@@ -519,7 +529,10 @@ class Ticket_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
+                        if(error_callback != undefined){
+                            error_callback();
+                        }
                         return false;
                     }
                 }
@@ -533,7 +546,7 @@ class Ticket_func{
                 if(error_callback != undefined){
                     error_callback();
                 }
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                 location.reload();
             }
         });
@@ -564,7 +577,10 @@ class Ticket_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
+                        if(error_callback != undefined){
+                            error_callback();
+                        }
                         return false;
                     }
                 }
@@ -578,7 +594,7 @@ class Ticket_func{
                 if(error_callback != undefined){
                     error_callback();
                 }
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                 location.reload();
             }
         });
@@ -608,7 +624,10 @@ class Ticket_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
+                        if(error_callback != undefined){
+                            error_callback();
+                        }
                         return false;
                     }
                 }
@@ -622,7 +641,7 @@ class Ticket_func{
                 if(error_callback != undefined){
                     error_callback();
                 }
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                 location.reload();
             }
         });
@@ -659,7 +678,10 @@ class Ticket_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
+                        if(error_callback != undefined){
+                            error_callback();
+                        }
                         return false;
                     }
                 }
@@ -673,7 +695,7 @@ class Ticket_func{
                 if(error_callback != undefined){
                     error_callback();
                 }
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                 location.reload();
             }
         });

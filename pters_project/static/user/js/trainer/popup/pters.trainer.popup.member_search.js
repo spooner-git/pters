@@ -82,7 +82,8 @@ class Member_search {
         let content = search_input;
         let button = this.step == 0 ? search_button : reg_button + reset_button;
         if(this.step == 1 || this.step == 2){
-            content = search_input + member_list;
+            // content = search_input + member_list;
+            content = member_list;
         }
 
         let assembled = 
@@ -109,12 +110,12 @@ class Member_search {
         let id = "dom_row_search_button";
         let title = "검색";
         let style = {"background-color":"var(--bg-highlight)", "color":"var(--font-invisible)", "height":"50px", "line-height":"50px"};
-        if(this.data.search_id == null){
-            style = {"background-color":"var(--bg-sub-dark)", "color":"var(--font-invisible)", "height":"50px", "line-height":"50px"};
-        }
+        // if(this.data.search_id == null){
+        //     style = {"background-color":"var(--bg-sub-dark)", "color":"var(--font-invisible)", "height":"50px", "line-height":"50px"};
+        // }
         let onclick = ()=>{
             if(this.data.search_id == null){
-                show_error_message("검색 조건을 입력해주세요.");
+                show_error_message({title:"검색 조건을 입력해주세요."});
                 return false;
             }
             this.render_loading_image();
@@ -138,7 +139,7 @@ class Member_search {
         }
         let onclick = ()=>{
             if(this.data.selected_member_id == null){
-                show_error_message('회원을 선택해주세요.');
+                show_error_message({title:'회원을 선택해주세요.'});
                 return false;
             }
             layer_popup.close_layer_popup();
@@ -151,22 +152,45 @@ class Member_search {
         return html;
     }
 
+    // dom_row_reset_button(){
+    //     let id = "dom_row_reset_button";
+    //     let title = "재검색";
+    //     let style = {"background-color":"var(--bg-main)", "height":"48px", "line-height":"48px", "margin-top":"10px", 'border':"var(--border-article)"};
+    //     let onclick = ()=>{
+    //         if(this.data.search_id == null){
+    //             show_error_message({title:"검색 조건을 입력해주세요."});
+    //             return false;
+    //         }
+    //         this.render_loading_image();
+    //         let data = {"search_val":this.data.search_id};
+    //         Member_func.search(data, (data)=>{
+    //             this.data.searched_data = data.member_list;
+    //             this.step = 1;
+    //             this.render_content();
+    //         });
+    //     };
+    //     let html = CComponent.button (id, title, style, onclick);
+    //     return html;
+    // }
+
     dom_row_reset_button(){
         let id = "dom_row_reset_button";
-        let title = "재검색";
+        let title = "뒤로";
         let style = {"background-color":"var(--bg-main)", "height":"48px", "line-height":"48px", "margin-top":"10px", 'border':"var(--border-article)"};
         let onclick = ()=>{
-            if(this.data.search_id == null){
-                show_error_message("검색 조건을 입력해주세요.");
-                return false;
-            }
-            this.render_loading_image();
-            let data = {"search_val":this.data.search_id};
-            Member_func.search(data, (data)=>{
-                this.data.searched_data = data.member_list;
-                this.step = 1;
-                this.render_content();
-            });
+            // if(this.data.search_id == null){
+            //     show_error_message({title:"검색 조건을 입력해주세요."});
+            //     return false;
+            // }
+            // this.render_loading_image();
+            // let data = {"search_val":this.data.search_id};
+            // sharing_member_search_func.search(data, (data)=>{
+            //     this.data.searched_data = data.member_list;
+            //     this.step = 1;
+            //     this.render_content();
+            // });
+            this.clear_data();
+            this.render_content();
         };
         let html = CComponent.button (id, title, style, onclick);
         return html;
@@ -179,11 +203,11 @@ class Member_search {
         let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let style = {"border":"var(--border-article)"};
+        let style = {"border":"var(--border-article)", "padding":"12px"};
         let disabled = false;
         let onfocusout = (data)=>{
             this.data.search_id = data;
-            this.render_content();
+            // this.render_content();
         };
         let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+.,@一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{1,20}";
         let pattern_message = ". , + - _ @ 제외 특수문자는 입력 불가";
@@ -205,10 +229,15 @@ class Member_search {
 
             };
             let radio_button = CComponent.radio_button (`radio_dom_row_member_list`, checked, style_radio, onclick_radio);
-
+            // <div style="flex-basis:70px;background-image:url('${data.member_profile_url}');background-size:contain;background-repeat:no-repeat;">
             let html = `<article style="display: flex;height: 40px;line-height: 40px;padding: 10px 0;" id="member_searched_${data.member_id}">
-                            <div style="flex-basis:70px;background-image:url('${data.member_profile_url}');background-size:contain;background-repeat:no-repeat;"></div>
-                            <div style="flex:1 0 0;">${data.member_name} <span style="font-size:12px;color:var(--font-sub-normal)">(${data.member_phone})</span></div>
+                            <div style="flex-basis:55px;">
+                                <div style="background-image:url('${data.member_profile_url}');background-size:contain;background-repeat:no-repeat;border-radius:50%;width:40px;height:40px;"></div>
+                            </div>
+                            <div style="flex:1 0 0;">
+                                <div style="line-height:20px;">${data.member_name}</div> 
+                                <div style="line-height:20px;font-size:12px;color:var(--font-sub-normal)">(ID: ${data.member_user_id}, TEL:${data.member_phone})</div>
+                            </div>
                             <div style="flex-basis:50px;text-align:right;">${radio_button}</div>
                         </article>`;
             
@@ -223,6 +252,8 @@ class Member_search {
 
         if(html_to_join.length == 0){
             html_to_join.push('<p style="font-size:14px;font-weight:500;color:var(--font-sub-normal);">검색된 결과가 없습니다.</p>');
+        }else{
+            html_to_join.unshift(`<p style="font-size:14px;font-weight:500;color:var(--font-sub-normal);">"${this.data.search_id}"의 검색 결과 (${html_to_join.length} 건)</p>`);
         }
         
 

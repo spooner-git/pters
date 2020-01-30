@@ -38,7 +38,8 @@
     }
     .obj_box_popup_topper{
         height: auto;
-        background-color: #ff3b44;
+        /* background-color: #ff3b44; */
+        background-image: linear-gradient(to right,#ea0e0ed4,#ff6d6d);
         border-radius: 8px 8px 0px 0px;
         box-shadow: 0 0 15px 0 rgba(131, 131, 131, 0.25);
         padding-top: 20px;

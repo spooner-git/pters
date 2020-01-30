@@ -16,7 +16,7 @@ from django.views.generic import TemplateView, RedirectView
 
 from configs import settings
 from configs.const import USE, STATE_CD_NOT_PROGRESS, ON_SCHEDULE_TYPE, AUTO_FINISH_ON, STATE_CD_FINISH, \
-    STATE_CD_ABSENCE, AUTO_ABSENCE_ON, AUTO_CANCEL_ON, UN_USE, AUTO_FINISH_OFF
+    STATE_CD_ABSENCE, AUTO_ABSENCE_ON, AUTO_CANCEL_ON, UN_USE, AUTO_FINISH_OFF, AUTH_TYPE_VIEW
 from board.models import QATb
 from configs.functions import func_delete_profile_image_logic, func_upload_profile_image_logic
 from login.models import PushInfoTb, MemberTb
@@ -24,7 +24,7 @@ from payment.models import ProductFunctionAuthTb, PaymentInfoTb
 from schedule.functions import func_refresh_member_ticket_count
 from schedule.models import ScheduleTb, DeleteScheduleTb
 from trainer.functions import func_get_trainer_setting_list
-from trainer.models import ClassTb, SettingTb, BackgroundImgTb
+from trainer.models import ClassTb, SettingTb, BackgroundImgTb, ProgramAuthTb, MemberClassTb
 
 logger = logging.getLogger(__name__)
 
@@ -107,6 +107,7 @@ class AccessTestMixin(UserPassesTestMixin):
         self.login_url = '/'
         group_name = self.request.session.get('group_name', '')
         session_app_version = self.request.session.get('APP_VERSION', '')
+        class_id = self.request.session.get('class_id', '')
         if session_app_version == '' or session_app_version is None:
             self.request.session['APP_VERSION'] = settings.APP_VERSION
 
@@ -126,16 +127,17 @@ class AccessTestMixin(UserPassesTestMixin):
         if error is None:
             if url[1] == 'trainee':
                 if group_name == 'trainee':
-                    func_setting_data_update(self.request, group_name)
-                    get_function_auth_type_cd(self.request)
+                    # func_setting_data_update(self.request, group_name)
+                    # get_function_auth_type_cd(self.request)
                     update_finish_schedule_data(self.request)
                     test_result = True
             if url[1] == 'trainer':
                 if group_name == 'trainer':
-                    func_setting_data_update(self.request, group_name)
-                    get_function_auth_type_cd(self.request)
+                    # func_setting_data_update(self.request, group_name)
+                    # get_function_auth_type_cd(self.request)
                     update_finish_schedule_data(self.request)
                     test_result = True
+
             if url[1] == 'center':
                 if group_name == 'center':
                     test_result = True
@@ -207,7 +209,7 @@ def func_setting_data_update(request, group):
     else:
         request.session['device_info'] = 'app'
 
-    if class_id != '':
+    if class_id != '' and class_id is not None:
         question_counts = QATb.objects.filter(member_id=request.user.id, status_type_cd='QA_COMPLETE',
                                               read=0, use=USE).count()
         request.session['question_counts'] = question_counts
@@ -234,9 +236,11 @@ def func_setting_data_update(request, group):
             request.session['class_hour'] = class_info.class_hour
             request.session['class_type_code'] = class_info.subject_cd
             request.session['class_type_name'] = class_info.get_class_type_cd_name()
+            if str(class_info.member_id) != str(request.user.id):
+                request.session['class_type_name'] += ' - ' + class_info.member.name
             request.session['class_center_name'] = class_info.get_center_name()
-
-        context = func_get_trainer_setting_list(context, trainer_id, class_id, class_info.class_hour)
+            request.session['trainer_name'] = class_info.member.name
+        context = func_get_trainer_setting_list(context, trainer_id, class_id, request.user.id)
         request.session['setting_member_reserve_time_available'] = context['setting_member_reserve_time_available']
         request.session['setting_member_reserve_prohibition'] = context['setting_member_reserve_prohibition']
 
@@ -256,6 +260,7 @@ def func_setting_data_update(request, group):
         request.session['setting_schedule_auto_finish'] = context['setting_schedule_auto_finish']
         request.session['setting_member_ticket_auto_finish'] = context['setting_member_ticket_auto_finish']
         request.session['setting_to_trainee_lesson_alarm'] = context['setting_to_trainee_lesson_alarm']
+        request.session['setting_to_shared_trainer_lesson_alarm'] = context['setting_to_shared_trainer_lesson_alarm']
         request.session['setting_from_trainee_lesson_alarm'] = context['setting_from_trainee_lesson_alarm']
         request.session['setting_language'] = context['setting_language']
         request.session['setting_admin_password'] = context['setting_admin_password']
@@ -269,6 +274,9 @@ def func_setting_data_update(request, group):
         request.session['one_to_one_lecture_time_duration'] = context['one_to_one_lecture_time_duration']
         request.session['setting_trainer_statistics_lock'] = context['setting_trainer_statistics_lock']
         request.session['setting_trainer_attend_mode_out_lock'] = context['setting_trainer_attend_mode_out_lock']
+
+        request.session['setting_member_lecture_max_num_view_available'] = context['setting_member_lecture_max_num_view_available']
+        request.session['setting_schedule_sign_enable'] = context['setting_schedule_sign_enable']
         if group == 'trainee':
             try:
                 setting_data = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_LAN_01')
@@ -290,15 +298,16 @@ def func_setting_data_update(request, group):
 def get_function_auth_type_cd(request):
     today = datetime.date.today()
     class_id = request.session.get('class_id', '')
+    # trainer_id = request.user.id
     trainer_id = request.session.get('trainer_id', '')
-    if trainer_id is None or trainer_id == '':
-        if class_id is not None and class_id != '':
-            try:
-                class_info = ClassTb.objects.get(class_id=class_id)
-                trainer_id = class_info.member_id
-                request.session['trainer_id'] = trainer_id
-            except ObjectDoesNotExist:
-                trainer_id = ''
+    # if trainer_id is None or trainer_id == '':
+    if class_id is not None and class_id != '':
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+            trainer_id = class_info.member_id
+            request.session['trainer_id'] = trainer_id
+        except ObjectDoesNotExist:
+            trainer_id = ''
 
     if trainer_id != '' and trainer_id is not None:
         payment_data = PaymentInfoTb.objects.filter(member_id=trainer_id, status='paid',
@@ -361,6 +370,21 @@ def get_function_auth_type_cd(request):
                 auth_info['limit_num'] = function_info.counts
                 auth_info['limit_type'] = str(function_info.product_tb.name)
                 request.session['auth_info'][function_auth_type_cd_name] = auth_info
+
+        if str(trainer_id) != str(request.user.id):
+            function_list = ProgramAuthTb.objects.select_related('function_auth_tb').filter(class_tb_id=class_id,
+                                                                                            member_id=request.user.id)
+
+            for function_info in function_list:
+                if function_info.auth_type_cd is None:
+                    function_auth_type_cd_name = str(function_info.function_auth_tb.function_auth_type_cd)
+                else:
+                    function_auth_type_cd_name = str(function_info.function_auth_tb.function_auth_type_cd) \
+                                                 + str(function_info.auth_type_cd)
+                request.session['auth_info'][function_auth_type_cd_name]['active'] = function_info.enable_flag
+                if str(function_info.enable_flag) == '0':
+                    request.session['auth_info'][function_auth_type_cd_name]['limit_num'] = function_info.enable_flag
+                request.session['auth_info'][function_auth_type_cd_name]['limit_type'] = str('공유 프로그램')
 
 
 def get_background_url(request):

@@ -6,7 +6,6 @@ var mypage_photo_update_popup;
 function update_trainee_profile_photo(){
     let user_option = {
     change:{text:"프로필 사진 변경", callback:()=>{
-            // show_error_message("기능을 준비중 입니다.");
             layer_popup.close_layer_popup();
             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_mypage_photo_update', 100, POPUP_FROM_RIGHT, null, ()=>{
                 mypage_photo_update_popup = new Mypage_photo_update('.popup_mypage_photo_update', 'mypage_photo_update_popup');
@@ -14,7 +13,6 @@ function update_trainee_profile_photo(){
         }
     },
     delete:{text:"프로필 사진 삭제", callback:()=>{
-                // show_error_message("기능을 준비중 입니다.");
                 $.ajax({
                     url: '/delete_profile_img/',
                     dataType : 'html',
@@ -30,7 +28,7 @@ function update_trainee_profile_photo(){
                     success:function(data){
                         let jsondata = $.parseJSON(data);
                         if(jsondata.messageArray.length>0){
-                            show_error_message(jsondata.messageArray);
+                            show_error_message({title:jsondata.messageArray});
                         }
                         try{
                             location.reload();
@@ -45,7 +43,7 @@ function update_trainee_profile_photo(){
 
                     error:function(){
                         //alert('통신이 불안정합니다.');
-                        show_error_message('통신이 불안정합니다.');
+                        show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                     }
                 });
                 layer_popup.close_layer_popup();
@@ -232,7 +230,7 @@ class Mypage_photo_update{
 
     send_data(){
         let data = {"photo": this.data.src};
-        show_user_confirm(`<img src="${this.data.src}" style="width:100%;border-radius:50%;">`,  ()=>{
+        show_user_confirm({title:`<img src="${this.data.src}" style="width:100%;border-radius:50%;">`},  ()=>{
                             let form_data = new FormData();
                             form_data.append('profile_img_file', this.data.file);
                             $.ajax({
@@ -255,7 +253,7 @@ class Mypage_photo_update{
                                     let jsondata = $.parseJSON(data);
                                     if(jsondata.messageArray.length>0){
                                         //alert(jsondata.messageArray);
-                                        show_error_message(jsondata.messageArray);
+                                        show_error_message({title:jsondata.messageArray});
                                     }
                                     layer_popup.close_layer_popup(); // confirm 팝업 닫기
                                     layer_popup.close_layer_popup(); // 사진 조절 팝업 닫기
@@ -272,7 +270,7 @@ class Mypage_photo_update{
 
                                 error:function(){
                                     //alert('통신이 불안정합니다.');
-                                    show_error_message('통신이 불안정합니다.');
+                                    show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                                 }
                             });
                         });

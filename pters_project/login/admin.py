@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import CommonCdTb, PushInfoTb, LogTb, MemberTb, SnsInfoTb
+from .models import CommonCdTb, PushInfoTb, LogTb, MemberTb, SnsInfoTb, MemberOutInfoTb
 
 
 # Register your models here.
@@ -17,6 +17,28 @@ class MemberTbAdmin(admin.ModelAdmin):
             group_data = ''
         else:
             group_data = obj.user.groups.filter(user=obj.user)
+            for group_info in group_data:
+                if group_name == '':
+                    group_name = group_info.name
+                else:
+                    group_name += '/' + group_info.name
+
+        return group_name
+    get_user_group.short_description = 'Group'
+
+
+@admin.register(MemberOutInfoTb)
+class MemberOutInfoTbAdmin(admin.ModelAdmin):
+    list_display = ('member_out_info_id', 'get_user_group', 'member', 'out_type', 'out_reason',
+                    'reg_dt', 'mod_dt', 'use')
+    search_fields = ['name']
+
+    def get_user_group(self, obj):
+        group_name = ''
+        if obj.member.user is None:
+            group_data = ''
+        else:
+            group_data = obj.member.user.groups.filter(user=obj.member.user)
             for group_info in group_data:
                 if group_name == '':
                     group_name = group_info.name

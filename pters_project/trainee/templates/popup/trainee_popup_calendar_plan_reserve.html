@@ -43,7 +43,7 @@
                     <div class="obj_table_raw wrapper_ticket_info">
                         <div class="wrapper_ticket_icon_personal obj_table_cell_x3"><img src="/static/common/icon/member_icon_person_black.png"></div>
                         <div class="wrapper_ticket_name obj_table_cell_x3 obj_font_size_15_weight_normal ">개인 수업</div>
-                        <div class="wrapper_ticket_reserve_avail_count obj_table_cell_x3 obj_font_size_12_weight_normal">(예약 가능:{{ member_ticket_avail_count }}  번)</div>
+                        <div class="wrapper_ticket_reserve_avail_count obj_table_cell_x3 obj_font_size_12_weight_normal">(예약 가능: {% if member_ticket_reg_count >= 99999 %}무제한{% else %}{{ member_ticket_avail_count }}  번{% endif %})</div>
                     </div>
                     <div class="wrapper_reserve_form_data">
                         <div class="obj_table_raw">
@@ -71,14 +71,14 @@
                         <div class="obj_table_raw wrapper_ticket_info">
                             <div class="wrapper_ticket_icon_personal obj_table_cell_x3"><img src="/static/common/icon/member_icon_people_black.png"></div>
                             <div class="wrapper_ticket_name obj_table_cell_x3 obj_font_size_15_weight_normal ">{{ lecture_info.lecture_name }}</div>
-                            <div class="wrapper_ticket_reserve_avail_count obj_table_cell_x3 obj_font_size_12_weight_normal">(예약 가능: {{ lecture_info.lecture_member_ticket_avail_count }} 번)</div>
+                            <div class="wrapper_ticket_reserve_avail_count obj_table_cell_x3 obj_font_size_12_weight_normal">(예약 가능: {% if lecture_info.lecture_member_ticket_reg_count >= 99999 %}무제한{% else %}{{ lecture_info.lecture_member_ticket_avail_count }} 번{% endif %})</div>
                         </div>
                         <div class="wrapper_reserve_form_data">
                             <div class="func_radio_wrap wrapper_lecture_reserve_select">
                                 {% for lecture_schedule_info in lecture_schedule_data %}
                                     {% if lecture_info.lecture_id == lecture_schedule_info.lecture_tb.lecture_id %}
                                         <div class="func_radio_element obj_font_size_14_weight_500" data-lecture-schedule-id="{{ lecture_schedule_info.schedule_id }}" data-date="{{ select_date | date:'Y-m-d' }}" data-start-time="{{ lecture_schedule_info.start_dt | date:'H:i'}}" data-end-time="{{ lecture_schedule_info.end_dt | date:'H:i'}}">
-                                            <div class="func_radio_element_title">{{ lecture_schedule_info.start_dt | date:'H:i'}} ~ {{ lecture_schedule_info.end_dt | date:'H:i'}}  ({{ lecture_schedule_info.lecture_current_member_num }}/{{ lecture_schedule_info.lecture_tb.member_num }}명)</div>
+                                            <div class="func_radio_element_title">{{ lecture_schedule_info.start_dt | date:'H:i'}} ~ {{ lecture_schedule_info.end_dt | date:'H:i'}} {% if request.session.setting_member_lecture_max_num_view_available == '1' %} ({{ lecture_schedule_info.lecture_current_member_num }}/{{ lecture_schedule_info.lecture_tb.member_num }}명) {% endif %}</div>
                                             <div class="func_radio_element_button"><div class="func_radio_element_button_outer"><div class="func_radio_element_button_inner"></div></div></div>
                                         </div>
                                     {% endif %}
@@ -142,7 +142,7 @@
                 if(!compare_time(cancel_enable_time, select_time)){
                     func_schedule($('#form_plan_add').serialize(), CALL_AJAX, ADD);
                 }else{
-                    show_user_confirm(`예약 취소가 불가능한 시간입니다.<br/> 정말 등록하시겠습니까?`, ()=>{
+                    show_user_confirm({title:`예약 취소가 불가능한 시간입니다.`,comment:`정말 등록하시겠습니까?`}, ()=>{
                                             func_schedule(`'${$('#form_plan_add').serialize()}'`, `${CALL_AJAX}`, `${ADD}`);
                                             });
 

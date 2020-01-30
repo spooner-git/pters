@@ -44,6 +44,7 @@ class CComponent{
 
 
         $(document).off('click', `#c_r_${id}`).on('click', `#c_r_${id}`, function(e){
+            e.stopPropagation();
             onclick();
         });
         return html;
@@ -73,7 +74,7 @@ class CComponent{
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} >
                                 ${icon_r_text}
-                                ${CImg.arrow_right()}
+                                ${CImg.arrow_right("", {"vertical-align":"middle"})}
                             </div>
                         </div>
                     </li>`;
@@ -116,7 +117,7 @@ class CComponent{
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} >
                                 ${icon_r_text}
-                                ${CImg.arrow_right()}
+                                ${CImg.arrow_right("", {"vertical-align":"middle"})}
                             </div>
                         </div>
                     </li>`;
@@ -246,7 +247,7 @@ class CComponent{
             $(document).off('click', `#select_ticket_row_${ticket_id}`).on('click', `#select_ticket_row_${ticket_id}`, function(e){
                 if(!$(this).find('.cell_ticket_selected').hasClass('ticket_selected')){
                     if($(`.str_${location} .ticket_selected`).length >= multiple_select){
-                        show_error_message(`${multiple_select} 개까지 선택할 수 있습니다.`);
+                        show_error_message({title:`${multiple_select} 개까지 선택할 수 있습니다.`});
                         return false;
                     }
                     $(this).find('.cell_ticket_selected').addClass('ticket_selected');
@@ -293,7 +294,7 @@ class CComponent{
             $(document).off('click', `#select_lecture_row_${lecture_id}`).on('click', `#select_lecture_row_${lecture_id}`, function(e){
                 if(!$(this).find('.cell_lecture_selected').hasClass('lecture_selected')){
                     if($(`.slr_${location} .lecture_selected`).length >= multiple_select){
-                        show_error_message(`${multiple_select} 개까지 선택할 수 있습니다.`);
+                        show_error_message({title:`${multiple_select} 개까지 선택할 수 있습니다.`});
                         return false;
                     }
                     // $(this).find('.cell_lecture_selected img').addClass('lecture_selected');
@@ -318,7 +319,7 @@ class CComponent{
     }
 
     //회원 선택 팝업에 사용되는 행
-    static select_member_row (multiple_select, checked, location, member_id, member_name, member_avail_count, member_expiry, member_fix_state_cd, member_profile_url, disable_zero_avail_count, onclick){
+    static select_member_row (multiple_select, checked, location, member_id, member_name, member_reg_count, member_avail_count, member_expiry, member_fix_state_cd, member_profile_url, disable_zero_avail_count, onclick){
         let fix_member_check = '';
         if(member_fix_state_cd==FIX){
             fix_member_check = '고정회원';
@@ -334,7 +335,7 @@ class CComponent{
                                     ${member_name}
                                 </div>
                                 <div class="cell_member_info">
-                                    예약가능 ${member_avail_count}회 / ${member_expiry} 까지
+                                    예약가능 ${member_reg_count >= 99999 ? "제한없음" : member_avail_count + '회'} / ${member_expiry} 까지
                                 </div>
                             </div>
                             <div style="display:table-cell; line-height:35px; float:right;">
@@ -357,7 +358,7 @@ class CComponent{
                 let member_select_count = $(`.smr_${location} .member_selected`).length;
                 if(!$(this).find('.cell_member_selected').hasClass('member_selected')){
                     if($(`.smr_${location} .member_selected`).length >= multiple_select){
-                        show_error_message(`${multiple_select} 명까지 선택할 수 있습니다.`);
+                        show_error_message({title:`${multiple_select} 명까지 선택할 수 있습니다.`});
                         return false;
                     }
                     $(this).find('.cell_member_selected').addClass('member_selected');
@@ -409,7 +410,7 @@ class CComponent{
             $(document).off('click', `#select_color_row_${color_bg_code_without_sharp}`).on('click', `#select_color_row_${color_bg_code_without_sharp}`, function(e){
                 if(!$(this).find('.cell_color_selected').hasClass('color_selected')){
                     if($(`.scr_${location} .color_selected`).length >= multiple_select){
-                        show_error_message(`${multiple_select} 개까지 선택할 수 있습니다.`);
+                        show_error_message({title:`${multiple_select} 개까지 선택할 수 있습니다.`});
                         return false;
                     }
                     // $(this).find('.cell_color_selected img').addClass('color_selected');
@@ -458,7 +459,7 @@ class CComponent{
             $(document).off('click', `#select_row_${id}`).on('click', `#select_row_${id}`, function(e){
                 if(!$(this).find('.cell_select_selected').hasClass('option_selected')){
                     if($(`.sr_${location} .option_selected`).length >= multiple_select){
-                        show_error_message(`${multiple_select} 개까지 선택할 수 있습니다.`);
+                        show_error_message({title:`${multiple_select} 개까지 선택할 수 있습니다.`});
                         return false;
                     }
                     // $(this).find('.cell_select_selected img').addClass('option_selected');
@@ -535,7 +536,7 @@ class CComponent{
     }
 
     //회원의 일정 이력에 사용되는 행
-    static schedule_history_row (numbering, schedule_id, date, schedule_name, attend_status, memo, daily_record_id, callback){
+    static schedule_history_row (numbering, schedule_id, date, schedule_name, attend_status, memo, daily_record_id, sign_use, callback){
         let sign_image = `<img src="https://s3.ap-northeast-2.amazonaws.com/pters-image-master/${schedule_id}.png" style="width:100%;max-height:44px;filter:var(--transform-invert);" onerror="this.onerror=null;this.src='/static/common/icon/icon_no_signature.png'">`;
         let tag_daily_record = daily_record_id == null ? "" : "<div style='display:inline-block;font-size:10px;padding:0 2px;border:1px solid var(--font-main);border-radius:5px;margin-left:3px;'>일지</div>";
         let html = `<li class="schedule_history_row" id="schedule_history_row_${schedule_id}">`;
@@ -545,18 +546,26 @@ class CComponent{
                         <div class="cell_schedule_attend"></div>
                     </div>`;
         let raw_2 = `<div class="obj_table_raw table_date_info">
-                        <div class="cell_schedule_num" style="color:${SCHEDULE_STATUS_COLOR[attend_status]}">${SCHEDULE_STATUS[attend_status]}</div>
+                        <div class="cell_schedule_num" style="${sign_use == ON ? "" : "display:none;"};color:${SCHEDULE_STATUS_COLOR[attend_status]}">${SCHEDULE_STATUS[attend_status]}</div>
                         <div class="cell_schedule_info">${date}</div>
                     </div>`;
         let raw_3 = `<div class="obj_table_raw table_memo_info">
                         <div class="cell_schedule_num"></div>
                         <div class="cell_schedule_info">${memo}</div>
                     </div>`;
-        html += 
-                `<div style="display:flex;">
-                    <div style="flex:1 1 0;">${raw_1} ${raw_2}</div>
-                    <div style="flex-basis:80px;text-align:right;">${attend_status == SCHEDULE_FINISH ? sign_image : ''}</div>
-                </div>`;
+
+        let sub_assemble = `<div style="display:flex;">
+                                <div style="flex:1 1 0;">${raw_1} ${raw_2}</div>
+                                <div style="flex-basis:80px;text-align:right;">${attend_status == SCHEDULE_FINISH ? sign_image : ""}</div>
+                            </div>`;
+        if(sign_use == OFF){
+            sub_assemble = `<div style="display:flex;">
+                                <div style="flex:1 1 0;">${raw_1} ${raw_2}</div>
+                                <div style="flex-basis:80px;text-align:right;"><span style="color:${SCHEDULE_STATUS_COLOR[attend_status]}">${SCHEDULE_STATUS[attend_status]}</span></div>
+                            </div>`;
+        }
+
+        html += sub_assemble;
         if(memo != ''){
             html += raw_3;
         }
@@ -568,7 +577,7 @@ class CComponent{
     }
 
     //회원의 수강권 이력에 사용되는 행
-    static ticket_history_row (numbering, ticket_id, date, ticket_name, ticket_price, ticket_refund_price, reg_count, remain_count, avail_count, status_code, note, onclick){
+    static ticket_history_row (numbering, ticket_id, date, ticket_name, ticket_pay_method, ticket_price, ticket_refund_price, reg_count, remain_count, avail_count, status_code, note, onclick){
         let status_color = "";
         if(status_code == "IP"){
             status_color = "green";
@@ -583,7 +592,11 @@ class CComponent{
                         </div>
                         <div class="obj_table_raw table_date_info">
                             <div class="cell_ticket_num"></div>
-                            <div class="cell_ticket_info">등록금액: ${ticket_price} ${status_code == "RF" ? ' 환불금액: -' + ticket_refund_price : ""}</div>
+                            <div class="cell_ticket_info">등록 금액: ${ticket_price}원 ${status_code == "RF" ? ' / 환불금액: -' + ticket_refund_price +'원' : ""}</div>
+                        </div>
+                        <div class="obj_table_raw table_date_info">
+                            <div class="cell_ticket_num"></div>
+                            <div class="cell_ticket_info">지불 방법: ${ticket_pay_method}</div>
                         </div>
                         <div class="obj_table_raw table_date_info">
                             <div class="cell_ticket_num"></div>
@@ -591,7 +604,10 @@ class CComponent{
                         </div>
                         <div class="obj_table_raw table_memo_info">
                             <div class="cell_ticket_num"></div>
-                            <div class="cell_ticket_info">등록 ${reg_count} 회 / 잔여 ${remain_count} / 예약가능 ${avail_count}</div>
+                            <div class="cell_ticket_info">
+                                등록 ${reg_count >= 99999 ? "제한없음" : reg_count + '회'} /
+                                잔여 ${reg_count >= 99999 ? "제한없음" : remain_count + '회'} / 
+                                예약가능 ${reg_count >= 99999 ? "제한없음" : avail_count + '회'}</div>
                         </div>
                         <div class="obj_table_raw table_memo_info" style="color:#ff7184;">
                             <div class="cell_ticket_num"></div>
@@ -603,8 +619,6 @@ class CComponent{
         });
         return html;
     }
-
-    
 
     static no_data_row(text, style){
         let html = `<li class="no_data_row" style="${CComponent.data_to_style_code(style)}">
@@ -1060,6 +1074,18 @@ class CImg{
         return svg;
     }
 
+    static theme(svg_color, style, onclick){
+        if(svg_color == undefined){
+            svg_color = [];
+        }
+        let svg = ` <svg style="${CComponent.data_to_style_code(style)}" ${CImg.data_to_onclick_event(onclick)} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path fill="${CImg.data_to_svg_color(svg_color[0], "var(--img-main)")}" d="M10 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h5v2h2V1h-2v2zm0 15H5l5-6v6zm9-15h-5v2h5v13l-5-6v9h5c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
+                    </svg>
+                    `;
+        return svg;
+    }
+
     static notice(svg_color, style, onclick){
         if(svg_color == undefined){
             svg_color = [];
@@ -1332,7 +1358,7 @@ class CImg{
         return svg;
     }
 
-    static supervisor(svg_color, style, onclick){
+    static share(svg_color, style, onclick){
         if(svg_color == undefined){
             svg_color = [];
         }
@@ -1410,7 +1436,7 @@ class LimitChar{
         var temp = $(selector).val();
         if(limit.test(temp)){
             $(selector).val(temp.replace(limit, ""));
-            show_error_message("숫자만 입력하실 수 있습니다.");
+            show_error_message({title:"숫자만 입력하실 수 있습니다."});
         }
     }
 
@@ -1419,7 +1445,7 @@ class LimitChar{
         var temp = $(selector).val();
         if(limit.test(temp)){
             $(selector).val(temp.replace(limit, ""));
-            show_error_message("- 와 _ 를 제외한 특수문자는 입력하실 수 없습니다.");
+            show_error_message({title:"- 와 _ 를 제외한 특수문자는 입력하실 수 없습니다."});
         }
     }
 }
@@ -1432,7 +1458,7 @@ function limit_char_auto_correction(event){
     let title = event.attributes['title'].value;
     event.value = event.value.replace(limit, "");
     if(event.value.length < Number(min_length)) {
-        event.attributes['data-error-message'].value = title+' : 입력해주세요.';
+        event.attributes['data-error-message'].value = title+' : '+Number(min_length)+'자 이상 입력해주세요.';
         event.attributes['data-valid'].value = 'false';
     }else{
         event.attributes['data-error-message'].value = '';

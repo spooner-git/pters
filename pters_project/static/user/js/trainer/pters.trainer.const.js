@@ -7,6 +7,7 @@ const ALL_CLOSE = "all_close";
 const STATE_IN_PROGRESS = "IP";
 const STATE_END_PROGRESS = "PE";
 
+
 const ON = 1;
 const OFF = 0;
 
@@ -23,6 +24,8 @@ const CONNECTED = 2;
 const AUTH_TYPE_VIEW = 'VIEW';
 const AUTH_TYPE_DELETE = 'DELETE';
 const AUTH_TYPE_WAIT = 'WAIT';
+
+const AUTH_TYPE_TEXT = {'VIEW':"공유 중", "DELETE":"공유 해제됨", "WAIT":"공유 수락 대기"};
 
 const PROGRAM_SELECT = 0;
 const PROGRAM_LECTURE_CONNECT_ACCEPT = 1;
@@ -53,8 +56,7 @@ const POPUP_FROM_RIGHT = 1;
 const POPUP_FROM_BOTTOM = 2;
 const POPUP_FROM_TOP = 3;
 const POPUP_FROM_PAGE = 4;
-const POPUP_FROM_PAGE_70 = 5;
-const POPUP_FROM_PAGE_50 = 6;
+const POPUP_FROM_BASIC = 5;
 
 const SHORT = 'short';
 const LONG = 'long';
@@ -103,6 +105,27 @@ const AUTOCOMPLETE_CANCEL = 3;
 
 const FIX = 'FIX';
 
+/* 2019-12-20-hkkim */
+const LECTURE_MEMBER_NUM_VIEW_DISABLE = 0;
+const LECTURE_MEMBER_NUM_VIEW_ENABLE = 0;
+const MY_PROGRAM = 0;
+const SHARED_PROGRAM = 1;
+
+const TICKET_PAY_METHOD = {
+    "NONE":"선택 안함",
+    "CASH":"현금",
+    "CARD":"카드",
+    "TRANS":"계좌이체",
+    "CASH+CARD":"현금 + 카드",
+    "CARD+TRANS":"카드 + 계좌 이체",
+    "CASH+TRANS":"현금 + 계좌 이체"
+};
+
+// 일지 공개 타입
+const DAILY_RECORD_OPEN_TYPE = {
+    0:"나만 보기", 
+    1:"수강 회원님과 공유"
+};
 
 /* 정렬 관련된 값 */
 const SORT_MEMBER_NAME = 0;
@@ -190,12 +213,14 @@ const POPUP_ADDRESS_SETTING_WORKTIME = 'popup_setting_worktime';
 const POPUP_ADDRESS_SETTING_AUTOCOMPLETE = 'popup_setting_autocomplete';
 const POPUP_ADDRESS_SETTING_RESERVE = 'popup_setting_reserve';
 const POPUP_ADDRESS_SETTING_ALARM = 'popup_setting_alarm';
+const POPUP_ADDRESS_SETTING_ALARM_PERSONAL = 'popup_setting_alarm_personal';
 const POPUP_ADDRESS_SETTING_ATTENDMODE = 'popup_setting_attendmode';
 const POPUP_ADDRESS_SETTING_THEME = 'popup_setting_theme';
 const POPUP_ADDRESS_SETTING_MENU_ACCESS = 'popup_setting_menu_access';
-const POPUP_ADDRESS_SETTING_SUPERVISOR = 'popup_setting_supervisor';
-const POPUP_ADDRESS_SETTING_SUPERVISOR_MEMBER_SEARCH = 'popup_setting_supervisor_member_search';
-const POPUP_ADDRESS_SETTING_SUPERVISOR_MEMBER_AUTH = 'popup_setting_supervisor_member_auth';
+const POPUP_ADDRESS_SETTING_SHARING = 'popup_setting_sharing';
+const POPUP_ADDRESS_SETTING_SHARING_MEMBER_SEARCH = 'popup_setting_sharing_member_search';
+const POPUP_ADDRESS_SETTING_SHARING_MEMBER_AUTH = 'popup_setting_sharing_member_auth';
+const POPUP_ADDRESS_SETTING_SHARED = 'popup_setting_shared';
 
 const POPUP_ADDRESS_SERVICE_NOTICE = 'popup_service_notice';
 const POPUP_ADDRESS_SERVICE_INQUIRY_MENU = 'popup_service_inquiry_menu';
@@ -280,7 +305,6 @@ const LECTURE_TYPE_NORMAL = 'NORMAL';
 
 
 
-
 //프로그램 리스트
 const PROGRAM_CATEGORY = {
     TR:{name:"운동", 
@@ -329,59 +353,58 @@ const PROGRAM_CATEGORY = {
 };
 
 
+// const TEXT = {
+//     //메뉴들
+//     menu:{KR:"전체", EN:"Menu", JP:"メニュー"},
+//     home:{KR:"홈", EN:"Home", JP:"ホーム"},
+//     schedule:{KR:"일정", EN:"Schedule", JP:"カレンダー"},
+//     member:{KR:"회원", EN:"Member", JP:"会員"},
+//     lecture:{KR:"수업", EN:"Lecture", JP:"授業"},
+//     ticket:{KR:"수강권", EN:"Ticket", JP:"受講券"},
+//     statistics:{KR:"통계", EN:"Statistics", JP:"統計"},
+//     attend_check:{KR:"출석 체크", EN:"Attend check", JP:"セルフ出席チェックモード"},
+//     notification:{KR:"알림", EN:"Notification", JP:"通知"},
+//     settings:{KR:"설정", EN:"Settings", JP:"設定"},
+//     service:{KR:"서비스", EN:"Service", JP:"サービス"},
+//     work_time:{KR:"업무 시간", EN:"Working time", JP:"業務時間"},
+//     auto_complete:{KR:"자동 완료", EN:"Auto Complete", JP:"自動完了"},
+//     member_reserve:{KR:"회원 예약", EN:"Member Reserve", JP:"会員の予約"},
+//     attend_mode:{KR:"출석 체크 모드", EN:"Attend Mode", JP:"セルフ出席チェックモード設定"},
+//     notice:{KR:"공지 사항", EN:"Notice", JP:"お知らせ"},
+//     inquiry:{KR:"이용 문의", EN:"Inquiry", JP:"お問い合わせ"},
+//     help:{KR:"도움말", EN:"Help", JP:"ヘルプ"},
+//     purchase_pters_pass:{KR:"PTERS패스 구매", EN:"Buy PTERS Pass", JP:"PTERSパース購買"},
 
-const TEXT = {
-    //메뉴들
-    menu:{KR:"전체", EN:"Menu", JP:"メニュー"},
-    home:{KR:"홈", EN:"Home", JP:"ホーム"},
-    schedule:{KR:"일정", EN:"Schedule", JP:"カレンダー"},
-    member:{KR:"회원", EN:"Member", JP:"会員"},
-    lecture:{KR:"수업", EN:"Lecture", JP:"授業"},
-    ticket:{KR:"수강권", EN:"Ticket", JP:"受講券"},
-    statistics:{KR:"통계", EN:"Statistics", JP:"統計"},
-    attend_check:{KR:"출석 체크", EN:"Attend check", JP:"セルフ出席チェックモード"},
-    notification:{KR:"알림", EN:"Notification", JP:"通知"},
-    settings:{KR:"설정", EN:"Settings", JP:"設定"},
-    service:{KR:"서비스", EN:"Service", JP:"サービス"},
-    work_time:{KR:"업무 시간", EN:"Working time", JP:"業務時間"},
-    auto_complete:{KR:"자동 완료", EN:"Auto Complete", JP:"自動完了"},
-    member_reserve:{KR:"회원 예약", EN:"Member Reserve", JP:"会員の予約"},
-    attend_mode:{KR:"출석 체크 모드", EN:"Attend Mode", JP:"セルフ出席チェックモード設定"},
-    notice:{KR:"공지 사항", EN:"Notice", JP:"お知らせ"},
-    inquiry:{KR:"이용 문의", EN:"Inquiry", JP:"お問い合わせ"},
-    help:{KR:"도움말", EN:"Help", JP:"ヘルプ"},
-    purchase_pters_pass:{KR:"PTERS패스 구매", EN:"Buy PTERS Pass", JP:"PTERSパース購買"},
+//     //공통
+//     close:{KR:"닫기", EN:"Close", JP:"閉じる"},
+//     done:{KR:"완료", EN:"Done", JP:"完了"},
+//     save:{KR:"저장", EN:"Save", JP:"保存"},
+//     registration:{KR:"등록", EN:"Add", JP:"登録"},
 
-    //공통
-    close:{KR:"닫기", EN:"Close", JP:"閉じる"},
-    done:{KR:"완료", EN:"Done", JP:"完了"},
-    save:{KR:"저장", EN:"Save", JP:"保存"},
-    registration:{KR:"등록", EN:"Add", JP:"登録"},
+//     //홈
+//     change:{KR:"변경", EN:"Change", JP:"変更"},
+//     today_plans:{KR:"오늘의 일정", EN:"Today's Plan", JP:"今日の日程"},
+//     hide:{KR:"접기", EN:"Hide", JP:"隠す"},
+//     show:{KR:"펼치기", EN:"Show", JP:"表記"},
+//     expiration_alert:{KR:"종료 임박 회원", EN:"Contract Expiration", JP:"終了が近い会員"},
+//     sales_of_this_month:{KR:"이번달 매출", EN:"Sales of this month", JP:"今月の売上"},
 
-    //홈
-    change:{KR:"변경", EN:"Change", JP:"変更"},
-    today_plans:{KR:"오늘의 일정", EN:"Today's Plan", JP:"今日の日程"},
-    hide:{KR:"접기", EN:"Hide", JP:"隠す"},
-    show:{KR:"펼치기", EN:"Show", JP:"表記"},
-    expiration_alert:{KR:"종료 임박 회원", EN:"Contract Expiration", JP:"終了が近い会員"},
-    sales_of_this_month:{KR:"이번달 매출", EN:"Sales of this month", JP:"今月の売上"},
+//     //일정
+//     monthly_calendar:{KR:"월간 달력", EN:"Monthly Calendar", JP:"月間"},
+//     weekly_calendar:{KR:"주간 달력", EN:"Weekly Calendar", JP:"週間"},
+//     repeat_schedule_list:{KR:"반복 일정 리스트", EN:"Repeat schedule list", JP:"繰り返いしリスト"},
+//     am:{KR:"오전", EN:"AM", JP:"午前"},
+//     pm:{KR:"오후", EN:"PM", JP:"午後"},
 
-    //일정
-    monthly_calendar:{KR:"월간 달력", EN:"Monthly Calendar", JP:"月間"},
-    weekly_calendar:{KR:"주간 달력", EN:"Weekly Calendar", JP:"週間"},
-    repeat_schedule_list:{KR:"반복 일정 리스트", EN:"Repeat schedule list", JP:"繰り返いしリスト"},
-    am:{KR:"오전", EN:"AM", JP:"午前"},
-    pm:{KR:"오후", EN:"PM", JP:"午後"},
-
-    new_schedule:{KR:"새로운 일정", EN:"New schedule", JP:"日程追加"},
-    date:{KR:"일자", EN:"Date", JP:"日付"},
-    time:{KR:"시간", EN:"Time", JP:"時刻"},
-    repeat:{KR:"반복", EN:"Repeat", JP:"繰り返し"},
-    memo:{KR:"메모", EN:"Memo", JP:"メモ―"},
+//     new_schedule:{KR:"새로운 일정", EN:"New schedule", JP:"日程追加"},
+//     date:{KR:"일자", EN:"Date", JP:"日付"},
+//     time:{KR:"시간", EN:"Time", JP:"時刻"},
+//     repeat:{KR:"반복", EN:"Repeat", JP:"繰り返し"},
+//     memo:{KR:"메모", EN:"Memo", JP:"メモ―"},
     
 
 
-};
+// };
 
 
 const payment_agreement = {

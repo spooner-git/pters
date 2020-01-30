@@ -37,12 +37,23 @@ class Home {
             return false;
         }
 
+        this.set_current_date();
+
         let component = this.static_component();
         document.querySelector(this.targetHTML).innerHTML = component.initial_page;
 
         this.render_loading_image();
         this.render_upper_box();
         this.render_content();
+    }
+
+    set_current_date(){
+        let d = new Date();
+        this.current_year = d.getFullYear();
+        this.current_month = d.getMonth()+1;
+        this.current_date = d.getDate();
+        this.current_day = d.getDay();
+        this.today = DateRobot.to_yyyymmdd(this.current_year, this.current_month, this.current_date);
     }
 
     //상단을 렌더링
@@ -63,7 +74,7 @@ class Home {
         document.querySelector("#home_content_wrap").innerHTML = 
             `<div style="position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);text-align:center;">
                 <img src="/static/common/loading.svg">
-                <div style="font-size:12px;color:var(--font-sub-normal);word-break:keep-all">사용자 데이터를 불러오고 있습니다.</div>
+                <div style="font-size:12px;color:var(--font-sub-normal);word-break:keep-all">${TEXT.message.loading[language]}</div>
             </div>`;
     }
 
@@ -155,9 +166,9 @@ class Home {
     dom_row_current_date(){
 
         let id = "home_current_date";
-        let title = `${this.current_year}년 ${this.current_month}월 ${this.current_date}일 (${DAYNAME_KR[this.current_day]})`;
+        let title = `${this.current_year}${TEXT.unit.year[language]} ${this.current_month}${TEXT.unit.month[language]} ${this.current_date}${TEXT.unit.date[language]} (${DAYNAME_KR[this.current_day]})`;
         let icon = DELETE;
-        let icon_r_visible = HIDE;
+        let icon_r_visible = NONE;
         let icon_r_text = ``;
         let style = {"font-size":"15px", "font-weight":"bold"};
         let onclick = ()=>{
@@ -183,9 +194,15 @@ class Home {
             let title = programs[i].program_subject_type_name;
             let icon = DELETE;
             let icon_r_visible = HIDE;
-            let icon_r_text = `변경 ${CImg.arrow_right(["var(--img-sub1)"], {"vertical-align":"middle"})}`;
+            let icon_r_text = `${TEXT.word.change[language]} ${CImg.arrow_right(["var(--img-sub1)"], {"vertical-align":"middle"})}`;
             let style = {"font-size":"15px", "font-weight":"bold"};
             let onclick = ()=>{
+                let inspect = pass_inspector.program_read();
+                if(inspect.barrier == BLOCKED){
+                    let message = `${inspect.limit_type}`;
+                    show_error_message({title:message});
+                    return false;
+                }
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PROGRAM_LIST, 100, popup_style, null, ()=>{
                     program_list_popup = new Program_list('.popup_program_list');});
@@ -207,7 +224,7 @@ class Home {
 
 
         let id = "home_my_pters_pass";
-        let title = "이용 중인 PTERS 패스";
+        let title = TEXT.word.my_using_pters_pass[language];
         let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text = `${pass_inspector.data.auth_member_create.limit_type} ${CImg.arrow_right(["var(--img-sub1)"], {"vertical-align":"middle"})}`;
@@ -251,7 +268,7 @@ class Home {
             let type = plans[i].schedule_type;
             let participants = plans[i].lecture_current_member_num + '/' + plans[i].lecture_max_member_num;
             if(type == 1){
-                participants = "개인";   
+                participants = TEXT.word.private[language];   
             }
             let lecture_color = plans[i].lecture_ing_color_cd;
             let dom = `<article class="today_plan_wrapper" onclick="${this.instance}.popup_plan_view(${plans[i].schedule_id})" ${status != SCHEDULE_NOT_FINISH ? "style='opacity:0.7'":""}>
@@ -265,7 +282,7 @@ class Home {
         
         if(html_to_join.length == 0){
             html_to_join.push(`<article class="today_plan_wrapper">
-                                    <span style="font-size:13px;">오늘 일정이 없습니다.</span>
+                                    <span style="font-size:13px;">${TEXT.word.today_no_plans[language]}</span>
                                 </article>`);
         }
 
@@ -289,7 +306,7 @@ class Home {
         
 
         let section_title = `<article class="today_plan_wrapper" style="font-weight:bold;font-size:15px;letter-spacing: -0.7px;display:block;">
-                                <span style="margin-right:5px;">오늘의 일정</span> <span style="color:var(--font-highlight);font-size:17px;"> ${length-off_plan_number}</span>
+                                <span style="margin-right:5px;">${TEXT.word.today_plans[language]}</span> <span style="color:var(--font-highlight);font-size:17px;"> ${length-off_plan_number}</span>
                                 ${length > 0 ? expand_button : ""}
                             </article>`;
      
@@ -307,6 +324,7 @@ class Home {
             let end_date = data.current_member_data[i].end_date;
             let diff_date = DateRobot.diff_date(end_date, this.today);
             let rem_count = data.current_member_data[i].member_ticket_rem_count;
+            let reg_count = data.current_member_data[i].member_ticket_reg_count;
             if(diff_date > 7 && rem_count > 3){
                 passed_number++;
                 continue;
@@ -314,16 +332,20 @@ class Home {
             let member_id = data.current_member_data[i].member_id;
             let end_info;
 
-            let date_limit_text = diff_date + '일 남음';
+            let date_limit_text = diff_date + ` ${TEXT.unit.date_text[language]} ${TEXT.word.date_left[language]}`;
             let date_info =  date_limit_text;
             if(end_date == "9999-12-31"){
-                date_limit_text = "소진시 까지";
+                date_limit_text = TEXT.word.date_limitless[language];
                 date_info = date_limit_text;
             }
             if(diff_date < 0){
-                date_info = Math.abs(diff_date) + ' 일 지남';
+                date_info = Math.abs(diff_date) + ` ${TEXT.unit.date_text[language]} ${TEXT.word.date_passed[language]}`;
             }
-            let rem_info = `잔여 ${rem_count}회`;
+            let rem_info = `${TEXT.word.rem[language]} ${rem_count}${TEXT.unit.count[language]}`;
+
+            if(reg_count >= 99999){
+                rem_info = TEXT.word.count_limitless[language];
+            }
 
             if(rem_count <= 3){
                 rem_info = `<span style='color:#ff0022;'>${rem_info}</span>`;
@@ -343,6 +365,13 @@ class Home {
             let icon_r_text = `<span style="font-size:12px;font-weight:500;letter-spacing:-0.5px;">${end_info}</span>`;
             let style = {"font-size":"14px", "padding":"12px 0"};
             let onclick = ()=>{
+                let inspect = pass_inspector.member_read();
+                if(inspect.barrier == BLOCKED){
+                    let message = `${inspect.limit_type}`;
+                    show_error_message({title:message});
+                    return false;
+                }
+
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_VIEW, 100, popup_style, null, ()=>{
                     member_view_popup = new Member_view('.popup_member_view', member_id, 'member_view_popup');});
@@ -357,8 +386,8 @@ class Home {
 
         let id = "home_end_alert_expand_button";
         let title = this.view.end_alert == OPEN 
-            ? '접기 ' +  CImg.arrow_expand(["var(--img-sub1)"], {"transform":"rotate(180deg)", "width":"17px", "vertical-align":"middle", "margin-bottom":"2px"}) 
-            : '펼치기 ' + CImg.arrow_expand(["var(--img-sub1)"], {"width":"17px", "vertical-align":"middle", "margin-bottom":"2px"});
+            ? TEXT.word.hide[language] +  CImg.arrow_expand(["var(--img-sub1)"], {"transform":"rotate(180deg)", "width":"17px", "vertical-align":"middle", "margin-bottom":"2px"}) 
+            : TEXT.word.show[language] + CImg.arrow_expand(["var(--img-sub1)"], {"width":"17px", "vertical-align":"middle", "margin-bottom":"2px"});
         let style = {"float":"right", "padding":"0", "font-size":"12px", "font-weight":"500", "color":"var(--font-sub-normal)"};
         let onclick = ()=>{
             if(this.view.end_alert == OPEN){
@@ -374,7 +403,7 @@ class Home {
         let expand_button = CComponent.text_button (id, title, style, onclick);
 
         let section_title =  `<article class="today_plan_wrapper" style="font-weight:bold;font-size:15px;letter-spacing: -0.7px;display:block;">
-                                <span style="margin-right:5px;">종료 임박 회원</span> 
+                                <span style="margin-right:5px;">${TEXT.word.expiration_alert[language]}</span> 
                                 <span style="color:var(--font-highlight);font-size:17px;"> ${length-passed_number}</span>
                                 ${length-passed_number > 0 ? expand_button : ""}
                             </article>`;
@@ -387,15 +416,22 @@ class Home {
         let html_to_join = [];
 
         let id = "home_sales_summary";
-        let title = "이번달 매출";
+        let title = TEXT.word.sales_of_this_month[language];
         let icon = DELETE;
         let icon_r_visible = HIDE;
-        let icon_r_text = `${UnitRobot.numberWithCommas(Number(data.price[0]) - Number(data.refund_price[0]))} 원 ${CImg.arrow_right(["var(--img-sub1)"], {"vertical-align":"middle"})}`;
+        let icon_r_text = `${UnitRobot.numberWithCommas(Number(data.price[0]) - Number(data.refund_price[0]))} ${TEXT.unit.money[language]} ${CImg.arrow_right(["var(--img-sub1)"], {"vertical-align":"middle"})}`;
         if(data_lock == ON){
             icon_r_text = `${CImg.lock(["var(--img-sub1)"], {"vertical-align":"middle"})} ${CImg.arrow_right(["var(--img-sub1)"], {"vertical-align":"middle"})}`;
         }
         let style = {"font-size":"15px", "font-weight":"bold"};
         let onclick = ()=>{
+            let inspect = pass_inspector.statistics_read();
+            if(inspect.barrier == BLOCKED){
+                let message = `${inspect.limit_type}`;
+                show_error_message({title:message});
+                return false;
+            }
+            
             if(data_lock == ON){
                 Setting_menu_access_func.locked_menu(()=>{
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_STATISTICS, 100, POPUP_FROM_RIGHT, null, ()=>{
@@ -429,6 +465,13 @@ class Home {
     }
 
     popup_plan_view(schedule_id){
+        let inspect = pass_inspector.schedule_read();
+        if(inspect.barrier == BLOCKED){
+            let message = `${inspect.limit_type}`;
+            show_error_message({title:message});
+            return false;
+        }
+
         let user_selected_plan = {schedule_id:schedule_id, date:{year:this.current_year, month:this.current_month, date:this.current_date}};
         let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PLAN_VIEW, 100, popup_style, null, ()=>{
@@ -486,7 +529,7 @@ class Home_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -501,7 +544,7 @@ class Home_func{
                 if(error_callback != undefined){
                     error_callback();
                 }
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                 location.reload();
             }
         });

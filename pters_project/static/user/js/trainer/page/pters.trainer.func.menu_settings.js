@@ -62,9 +62,23 @@ class Menu_settings {
 
         let dom_tag_style = {"font-size":"13px", "color":"var(--font-sub-normal)", "padding-left":"0", "margin-bottom":"8px"};
 
-        let assembly = 
-                       CComponent.dom_tag('설정', dom_tag_style) + 
-                        // this.dom_menu_setting_supervisor() + 
+        // let assembly_sharing =
+        //                CComponent.dom_tag('프로그램 설정', dom_tag_style) +
+        //                 // share +
+        //                 this.dom_menu_setting_calendar() +
+        //                 this.dom_menu_setting_worktime() +
+        //                 this.dom_menu_setting_autocomplete() +
+        //                 this.dom_menu_setting_reserve() +
+        //                 this.dom_menu_setting_alarm() +
+        //                 this.dom_menu_attendmode() +
+        //                 this.dom_menu_setting_attendmode() +
+        //                 this.dom_menu_setting_menu_access() +
+        //                 CComponent.dom_tag('개인 설정', dom_tag_style) +
+        //                 this.dom_menu_theme();
+        // let assembly_shared =
+        let assembly =
+                        CComponent.dom_tag('프로그램 설정', dom_tag_style) + 
+                        // share + 
                         this.dom_menu_setting_calendar() + 
                         this.dom_menu_setting_worktime() + 
                         this.dom_menu_setting_autocomplete() +
@@ -73,7 +87,12 @@ class Menu_settings {
                         this.dom_menu_attendmode() + 
                         this.dom_menu_setting_attendmode() +
                         this.dom_menu_setting_menu_access() +
+                        CComponent.dom_tag('개인 설정', dom_tag_style) + 
+                        this.dom_menu_setting_alarm_personal() + 
                         this.dom_menu_theme();
+
+        // let assembly = shared_program_flag == 0 ? assembly_sharing : assembly_shared;
+
         return assembly;
     }
 
@@ -178,7 +197,7 @@ class Menu_settings {
 
     dom_menu_attendmode(){
         let id = 'menu_attendmode';
-        let title = '출석 체크';
+        let title = '실시간 출석 체크';
         let icon = CImg.attend_check();
         let icon_r_visible = NONE;
         let icon_r_text = "";
@@ -254,9 +273,22 @@ class Menu_settings {
         return html;
     }
 
+    dom_menu_setting_alarm_personal(){
+        let id = 'menu_setting_alarm_personal';
+        let title = '알림';
+        let icon = CImg.setting_notification();
+        let icon_r_visible = NONE;
+        let icon_r_text = "";
+        let style = {"font-size":"17px", "padding":"13px 0"};
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            sideGoPopup("setting_alarm_personal");
+        });
+        return html;
+    }
+
     dom_menu_setting_attendmode(){
         let id = 'menu_setting_attendmode';
-        let title = '출석 체크 모드 설정';
+        let title = '실시간 출석 체크 설정';
         let icon = CImg.setting_attend_check();
         let icon_r_visible = NONE;
         let icon_r_text = "";
@@ -270,7 +302,7 @@ class Menu_settings {
     dom_menu_theme(){
         let id = 'menu_setting_theme';
         let title = '테마';
-        let icon = CImg.arrow_expand();
+        let icon = CImg.theme();
         let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
@@ -293,15 +325,28 @@ class Menu_settings {
         return html;
     }
 
-    dom_menu_setting_supervisor(){
-        let id = 'menu_setting_supervisor';
-        let title = '관리자 (공유???)';
-        let icon = CImg.supervisor();
+    dom_menu_setting_sharing(){
+        let id = 'menu_setting_sharing';
+        let title = '프로그램 공유';
+        let icon = CImg.share();
         let icon_r_visible = NONE;
         let icon_r_text = "";
-        let style = {"font-size":"17px", "padding":"13px 0"};
+        let style = {"color":"red", "font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            sideGoPopup("setting_supervisor");
+            sideGoPopup("setting_sharing");
+        });
+        return html;
+    }
+
+    dom_menu_setting_shared(){
+        let id = 'menu_setting_shared';
+        let title = '프로그램 공유';
+        let icon = CImg.share();
+        let icon_r_visible = NONE;
+        let icon_r_text = "";
+        let style = {"color":"red", "font-size":"17px", "padding":"13px 0"};
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            sideGoPopup("setting_shared");
         });
         return html;
     }

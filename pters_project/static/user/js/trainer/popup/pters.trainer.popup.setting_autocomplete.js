@@ -44,7 +44,8 @@ class Setting_autocomplete{
     render(){
         let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();setting_autocomplete_popup.clear();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right" onclick="setting_autocomplete_popup.upper_right_menu();">${CImg.confirm()}</span>`;
+        // let top_right = `<span class="icon_right" onclick="setting_autocomplete_popup.upper_right_menu();">${CImg.confirm()}</span>`;
+        let top_right = `<span class="icon_right" onclick="setting_autocomplete_popup.upper_right_menu();"><span style="color:var(--font-highlight);font-weight: 500;">저장</span></span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
         
@@ -232,6 +233,13 @@ class Setting_autocomplete{
     }
 
     send_data(){
+        let auth_inspect = pass_inspector.setting_update();
+        if(auth_inspect.barrier == BLOCKED){
+            let message = `${auth_inspect.limit_type}`;
+            show_error_message({title:message});
+            return false;
+        }
+        
         if(this.data_sending_now == true){
             return false;
         }else if(this.data_sending_now == false){
@@ -246,7 +254,7 @@ class Setting_autocomplete{
         Setting_autocomplete_func.update(data, ()=>{
             this.data_sending_now = false;
             this.set_initial_data();
-            show_error_message('변경 내용이 저장되었습니다.');
+            show_error_message({title:'설정이 저장되었습니다.'});
             // this.render_content();
         }, ()=>{this.data_sending_now = false;});
     }
@@ -277,7 +285,7 @@ class Setting_autocomplete_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -297,7 +305,7 @@ class Setting_autocomplete_func{
                     error_callback();
                 }
                 console.log('server error');
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
             }
         });
     }
@@ -319,7 +327,7 @@ class Setting_autocomplete_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -339,7 +347,7 @@ class Setting_autocomplete_func{
                     error_callback();
                 }
                 console.log('server error');
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
             }
         });
     }

@@ -25,6 +25,7 @@ class Plan_add{
             lecture_id:[],
             lecture_name:[],
             lecture_max_num:[],
+            lecture_color:[],
             lecture_state_cd:[],
             lecture_type_cd:[],
             member_id:[],
@@ -63,12 +64,13 @@ class Plan_add{
         this.data.lecture_max_num = data.max;
         this.data.lecture_state_cd = data.state_cd;
         this.data.lecture_type_cd = data.type_cd;
+        this.data.lecture_color = data.color;
         this.member = {id:[], name: []}; //수업을 선택했기 때문에, 회원란을 모두 비워준다.
         this.render_content();
     }
 
     get lecture(){
-        return {id:this.data.lecture_id, name:this.data.lecture_name, max:this.data.lecture_max_num, state_cd:this.data.lecture_state_cd, type_cd:this.data.lecture_type_cd};
+        return {id:this.data.lecture_id, name:this.data.lecture_name, max:this.data.lecture_max_num, state_cd:this.data.lecture_state_cd, type_cd:this.data.lecture_type_cd, color:this.data.lecture_color};
     }
 
 
@@ -184,7 +186,9 @@ class Plan_add{
         }
         if(end_time_hour >= work_time_end){
             end_time_min = 0;
+            end_time_hour = work_time_end;
         }
+
         if(end_time_hour < start_time.hour){
             end_time_hour = work_time_end;
             end_time_min = 0;
@@ -264,7 +268,7 @@ class Plan_add{
                                                     CComponent.dom_tag('일자') + date_select_row + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>' +
                                                     CComponent.dom_tag('진행 시간') + classic_time_selector +'<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>' +
                                                     CComponent.dom_tag('반복') + repeat_select_row + '</div>' +
-                    '<div class="obj_input_box_full">'+  CComponent.dom_tag('메모 <span style="color:var(--font-highlight)">(회원님께 공유되는 메모입니다.)</span>') + memo_select_row + '</div>';
+                    '<div class="obj_input_box_full">'+  CComponent.dom_tag(`메모 <span style="color:var(--font-highlight);display:${display}">(회원님께 공유되는 메모입니다.)</span>`) + memo_select_row + '</div>';
         }else if(this.time_selector == BASIC){
             html =  `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('수업') + lecture_select_row + '</div>' +
                     `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('회원') + member_select_row+'</div>' +
@@ -272,7 +276,7 @@ class Plan_add{
                                                     CComponent.dom_tag('일자') + date_select_row + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>' +
                                                     CComponent.dom_tag('진행 시간') + start_time_select_row + end_time_select_row  +'<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>' +
                                                     CComponent.dom_tag('반복') + repeat_select_row + '</div>' +
-                    '<div class="obj_input_box_full">'+  CComponent.dom_tag('메모 <span style="color:var(--font-highlight)">(회원님께 공유되는 메모입니다.)</span>') + memo_select_row + '</div>';
+                    '<div class="obj_input_box_full">'+  CComponent.dom_tag(`메모 <span style="color:var(--font-highlight);display:${display}">(회원님께 공유되는 메모입니다.)</span>`) + memo_select_row + '</div>';
         }
         
         return html;
@@ -332,8 +336,8 @@ class Plan_add{
                             }
                         }
                         if(omitted_fixed_member_name.length > 0){
-                            show_error_message(`예약 횟수가 없는 고정회원 ${omitted_fixed_member_name.length}명 
-                                            (${omitted_fixed_member_name.join(" ,")})은 제외 되었습니다.`);
+                            show_error_message({title:`예약 횟수가 없는 고정회원 ${omitted_fixed_member_name.length}명 
+                                            (${omitted_fixed_member_name.join(" ,")})은 제외 되었습니다.`});
                         }
                         
                         let end_time_calc = this.calc_end_time_by_start_time(this.data.start_time, this.lecture_minute, this.work_time.end_hour);
@@ -365,7 +369,7 @@ class Plan_add{
                     });
                 });
             }else{
-                show_error_message('수업을 먼저 선택해주세요.');
+                show_error_message({title:'수업을 먼저 선택해주세요.'});
             }
         });
         return html;
@@ -463,7 +467,7 @@ class Plan_add{
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ //data : 직전 셋팅값
             //행을 클릭했을때 실행할 내용
             if(this.data.start_time == null){
-                show_error_message('시작 시각을 먼저 선택해주세요');
+                show_error_message({title:'시작 시각을 먼저 선택해주세요'});
                 return false;
             }
             let root_content_height = $root_content.height();
@@ -524,7 +528,7 @@ class Plan_add{
 
                 let user_option = {myname:'time', title:'시간 선택', work_time:this.work_time, class_hour:this.lecture_minute, initial:initial_time, callback_when_set:(object)=>{
                     if(this.data.date == null){
-                        show_error_message("날짜를 먼저 선택해주세요.");
+                        show_error_message({title:"날짜를 먼저 선택해주세요."});
                         this.render_content();
                         return;
                     }
@@ -557,7 +561,7 @@ class Plan_add{
                 let time_data = calendar.latest_received_data[selected_date];
                 let user_option = {myname:'time', title:'시간 선택', work_time:this.work_time, class_hour:this.lecture_minute, initial:TimeRobot.hm_to_hhmm(this.data.start_time).complete, callback_when_set:(object)=>{
                     if(this.data.date == null){
-                        show_error_message("날짜를 먼저 선택해주세요.");
+                        show_error_message({title:"날짜를 먼저 선택해주세요."});
                         this.render_content();
                         return;
                     }
@@ -657,6 +661,14 @@ class Plan_add{
     }
 
     send_data(){
+        let auth_inspect = pass_inspector.schedule_create();
+        if(auth_inspect.barrier == BLOCKED){
+            let message = `${auth_inspect.limit_type}`;
+            layer_popup.close_layer_popup();
+            show_error_message({title:message});
+            return false;
+        }
+
         if(this.check_before_send() == false){
             return false;
         }
@@ -687,49 +699,71 @@ class Plan_add{
         
         //en_dis_type 0: off일정, 1:레슨일정
         //duplication_enable_flag 0: 중복불허 1:중복허용
-        if(this.data.repeat.power == OFF){
-            let inspect_date = DateRobot.to_yyyymmdd(this.data.date.year, this.data.date.month, this.data.date.date);
-            let pass_inspect = this.pass_inspect(inspect_date);
-            if(pass_inspect == false){
-                this.data_sending_now = false;
-                return false;
-            }
+        let data_transfer = ()=>{
+            if(this.data.repeat.power == OFF){
+                let inspect_date = DateRobot.to_yyyymmdd(this.data.date.year, this.data.date.month, this.data.date.date);
+                let pass_inspect = this.pass_inspect(inspect_date);
+                if(pass_inspect == false){
+                    this.data_sending_now = false;
+                    return false;
+                }
 
-            let url ='/schedule/add_schedule/';
-            layer_popup.close_layer_popup();
-            Plan_func.create(url, data, ()=>{
-                this.data_sending_now = false;
-                // layer_popup.close_layer_popup();
-                try{
-                    current_page.init();
-                }catch(e){}
-            }, ()=>{this.data_sending_now = false;});
-            
-        }else if(this.data.repeat.power == ON){
-            let inspect_date = DateRobot.to_yyyymmdd(this.data.repeat.repeat_end.year, this.data.repeat.repeat_end.month, this.data.repeat.repeat_end.date);
-            let pass_inspect = this.pass_inspect(inspect_date);
-            if(pass_inspect == false){
-                data_sending_now = false;
-                return false;
-            }
-
-            let url = '/schedule/add_repeat_schedule/';
-            let confirm_url = '/schedule/add_repeat_schedule_confirm/';
-            
-            layer_popup.close_layer_popup();
-            Plan_func.create(url, data, (received)=>{
-                let repeat_schedule_id = received.repeat_schedule_id;
-                let repeat_confirm = 1;
-                let confirm_data = {"repeat_schedule_id":repeat_schedule_id, "repeat_confirm":repeat_confirm, "member_ids":this.data.member_id};
-                Plan_func.create(confirm_url, confirm_data, ()=>{
+                let url ='/schedule/add_schedule/';
+                // let url = '/schedule/check_schedule/';
+                layer_popup.close_layer_popup();
+                Plan_func.create(url, data, ()=>{
                     this.data_sending_now = false;
                     // layer_popup.close_layer_popup();
                     try{
                         current_page.init();
                     }catch(e){}
                 }, ()=>{this.data_sending_now = false;});
-            }, ()=>{this.data_sending_now = false;});
-        }   
+                
+            }else if(this.data.repeat.power == ON){
+                let inspect_date = DateRobot.to_yyyymmdd(this.data.repeat.repeat_end.year, this.data.repeat.repeat_end.month, this.data.repeat.repeat_end.date);
+                let pass_inspect = this.pass_inspect(inspect_date);
+                if(pass_inspect == false){
+                    data_sending_now = false;
+                    return false;
+                }
+
+                let url = '/schedule/add_repeat_schedule/';
+                let confirm_url = '/schedule/add_repeat_schedule_confirm/';
+                
+                layer_popup.close_layer_popup();
+                Plan_func.create(url, data, (received)=>{
+                    let repeat_schedule_id = received.repeat_schedule_id;
+                    let repeat_confirm = 1;
+                    let confirm_data = {"repeat_schedule_id":repeat_schedule_id, "repeat_confirm":repeat_confirm, "member_ids":this.data.member_id};
+                    Plan_func.create(confirm_url, confirm_data, ()=>{
+                        this.data_sending_now = false;
+                        // layer_popup.close_layer_popup();
+                        try{
+                            current_page.init();
+                        }catch(e){}
+                    }, ()=>{this.data_sending_now = false;});
+                }, ()=>{this.data_sending_now = false;});
+            }   
+        };
+
+        Plan_func.check('/schedule/check_schedule/', data, 
+        (received)=>{
+            let message = received.schedule_info_message;
+            if(message != undefined){
+                if(message.length > 0){
+                    this.data_sending_now = false; 
+                    let confirm_message = {title:message, comment:"<span style='color:var(--font-highlight);'>무시하고 등록 하시겠습니까?</span>"};
+                    show_user_confirm (confirm_message, ()=>{
+                        layer_popup.close_layer_popup();
+                        data_transfer();
+                    });
+                }
+            }else{
+                data_transfer();
+            }
+        },()=>{
+            this.data_sending_now = false; 
+        });
     }
 
     check_duplicate_plan_exist(callback){
@@ -801,41 +835,41 @@ class Plan_add{
         let error_info = check_registration_form(forms);
 
         if(error_info != ''){
-            show_error_message(error_info);
+            show_error_message({title:error_info});
             return false;
         }
         else{
             if(this.list_type == 'lesson'){
                 if(this.data.lecture_name.length == 0){
-                    show_error_message('수업을 선택 해주세요.');
+                    show_error_message({title:'수업을 선택 해주세요.'});
                     return false;
                 }
                 if(this.data.lecture_type_cd[0] == LECTURE_TYPE_ONE_TO_ONE){
                     if(this.data.member_name.length == 0){
-                        show_error_message('회원을 선택 해주세요.');
+                        show_error_message({title:'회원을 선택 해주세요.'});
                         return false;
                     }
                 }
             }
             if(this.data.date_text == null){
-                show_error_message('날짜를 선택 해주세요.');
+                show_error_message({title:'날짜를 선택 해주세요.'});
                 return false;
             }
             if(this.data.start_time_text == null){
-                show_error_message('시작 시각을 선택 해주세요.');
+                show_error_message({title:'시작 시각을 선택 해주세요.'});
                 return false;
             }
             if(this.data.end_time_text == null){
-                show_error_message('종료 시각을 선택 해주세요.');
+                show_error_message({title:'종료 시각을 선택 해주세요.'});
                 return false;
             }
             if(this.data.repeat.power == ON){
                 if(this.data.repeat.day.length == 0){
-                    show_error_message('반복일정 요일을 선택 해주세요.');
+                    show_error_message({title:'반복일정 요일을 선택 해주세요.'});
                     return false;
                 }
                 if(this.data.repeat.repeat_end.date==null){
-                    show_error_message('반복일정 종료일을 선택 해주세요.');
+                    show_error_message({title:'반복일정 종료일을 선택 해주세요.'});
                     return false;
                 }
             }
@@ -856,7 +890,7 @@ class Plan_add{
 
     //     let inspect = pass_inspector.schedule(selected_date);
     //     if(inspect.barrier == BLOCKED){
-    //         show_error_message(`[${inspect.limit_type}] 이용자께서는 오늘 기준 전/후 ${inspect.limit_num}일간 일정 관리 하실 수 있습니다.${go_to_shop_button}`);
+    //         show_error_message({title:`[${inspect.limit_type}] 이용자께서는 오늘 기준 전/후 ${inspect.limit_num}일간 일정 관리 하실 수 있습니다.${go_to_shop_button}`});
     //         return false;
     //     }
     // }
@@ -864,8 +898,11 @@ class Plan_add{
     pass_inspect(selected_date){
         let inspect = pass_inspector.schedule(selected_date);
         if(inspect.barrier == BLOCKED){
-            let message = `[${inspect.limit_type}] 이용자께서는 오늘 기준 전/후 ${inspect.limit_num}일간 일정 관리 하실 수 있습니다.
-                            <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까??</p>`;
+            let message = {
+                title:"일정 등록을 완료하지 못했습니다.",
+                comment:`[${inspect.limit_type}] 이용자께서는 오늘 기준 전/후 ${inspect.limit_num}일간 일정 관리 하실 수 있습니다.
+                        <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까?</p>`
+            }
             show_user_confirm (message, ()=>{
                 layer_popup.close_layer_popup();
                 sideGoPopup("pters_pass_main");

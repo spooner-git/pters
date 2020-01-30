@@ -20,6 +20,7 @@
     --font-base: #1e1d1d;
     --font-invisible: #ffffff;
     --font-highlight: #fe4e65;
+    --font-highlight-sub: #694efe;
     --font-red: #ff0022;
     --font-main: #3b3b3b;
     --font-sub-dark: #5c5859;
@@ -65,14 +66,15 @@
     --page-contentwrap-bg-color: #1e1e1e;
 
     /* img */
-    --img-main: #858282;
-    --img-sub1: #d6d2d2;
+    --img-main: #d6d2d2;
+    --img-sub1: #858282;
     --img-highlight: #fe4e65;
 
     /* Font */
     --font-base: #ffffff;
     --font-invisible: #1e1e1e;
     --font-highlight: #fe4e65;
+    --font-highlight-sub: #694efe;
     --font-red: #ff0022;
     --font-main: #ffffff;
     --font-sub-dark: #f5f2f3;
@@ -126,6 +128,7 @@
     --font-base: #ffffff;
     --font-invisible: #1e1e1e;
     --font-highlight: #fe4e65;
+    --font-highlight-sub: #694efe;
     --font-red: #ff0022;
     --font-main: #efeff1;
     --font-sub-dark: #f5f2f3;
@@ -164,6 +167,18 @@
     width:100%;
     background-color: var(--bg-for-only-shade);
     opacity:0.5;
+    display: none;
+    /* transition: 0.1s; */
+}
+#shade_for_popup_preventing_touch{
+    position: absolute;
+    top:0;
+    left:0;
+    height:100%;
+    width:100%;
+    background-color: transparent;
+    /* opacity:0.1;
+    background-color: red; */
     display: none;
 }
 

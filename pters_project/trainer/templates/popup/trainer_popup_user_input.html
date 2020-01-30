@@ -119,10 +119,15 @@
         top: 0;
         z-index: 1500;
         width: 100%;
+
+        text-align: right;
+    }
+    .note-btn-group>.note-btn:first-child, .note-btn-group>.note-btn-group:first-child{
+        margin-right: 15px;
     }
 
     .note-editor.note-frame .note-editing-area .note-editable{
-        background-color: var(--bg-light);
+        background-color: var(--bg-main);
         color: var(--font-main);
 
         user-select: auto !important;
@@ -132,6 +137,9 @@
     }
     .note-editor .note-editing-area p{
         color: var(--font-main);
+    }
+    .note-editor.note-frame .note-placeholder{
+        font-size: 14px;
     }
 </style>
 

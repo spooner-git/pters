@@ -32,7 +32,8 @@ class RepeatScheduleTb(TimeStampedModel):
     time_duration = models.CharField(db_column='TIME_DURATION', max_length=20, blank=True, default='')
     state_cd = models.CharField(db_column='STATE_CD', max_length=10, blank=True, null=True, default='')
     en_dis_type = models.CharField(db_column='EN_DIS_TYPE', max_length=10, blank=True, null=True, default='')
-    reg_member = models.ForeignKey(MemberTb, on_delete=models.SET_NULL, null=True)  # Field name made lowercase.
+    reg_member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, null=True)
+    mod_member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, related_name='MOD_MEMBER_ID', null=True)
 
     class Meta:
         managed = False
@@ -82,7 +83,8 @@ class ScheduleTb(TimeStampedModel):
     end_color_cd = models.CharField(db_column='END_COLOR_CD', max_length=20, default='#d2d1cf')
     ing_font_color_cd = models.CharField(db_column='ING_FONT_COLOR_CD', max_length=20, default='#282828')
     end_font_color_cd = models.CharField(db_column='END_FONT_COLOR_CD', max_length=20, default='#282828')
-    reg_member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    reg_member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, null=True)
+    mod_member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, related_name='LAST_MOD_MEMBER_ID', null=True)
     use = models.IntegerField(db_column='USE', default=USE)  # Field name made lowercase.
 
     class Meta:

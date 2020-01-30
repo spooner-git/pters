@@ -160,7 +160,16 @@ class Lecture_view{
     }
 
     render_content(){
+        document.getElementById(this.target.toolbox).innerHTML = this.dom_assembly_toolbox();
+        document.querySelector(`${this.target.install} .wrapper_top`).innerHTML = PopupBase.wrapper_top(this.dom_wrapper_top().left, this.dom_wrapper_top().center, this.dom_wrapper_top().right);
         document.getElementById(this.target.content).innerHTML = this.dom_assembly_content();
+    }
+
+    dom_wrapper_top(){
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();lecture_view_popup.clear();">${CImg.arrow_left()}</span>`;
+        let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
+        let top_right = `<span class="icon_right" ${this.data.capacity == 1 && this.data.lecture_type_cd == LECTURE_TYPE_ONE_TO_ONE ? 'style="display:none"' : '' } onclick="lecture_view_popup.upper_right_menu();">${CImg.more()}</span>`;
+        return {left: top_left, center:top_center, right:top_right};
     }
 
     dom_assembly_toolbox(){
@@ -216,6 +225,14 @@ class Lecture_view{
         let pattern_message = "+ - _ :()[] 제외 특수문자는 입력 불가";
         let required = "required";
         let sub_html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
+            let auth_inspect = pass_inspector.lecture_update();
+            if(auth_inspect.barrier == BLOCKED){
+                let message = `${auth_inspect.limit_type}`;
+                this.init();
+                show_error_message({title:message});
+                return false;
+            }
+
             let user_input_data = input_data;
             this.name = user_input_data;
             this.send_data();
@@ -252,6 +269,14 @@ class Lecture_view{
             icon_r_text = CComponent.text_button ('lecture_fixed_member_select', `고정 회원(${this.data.fixed_member_id.length})`, null, ()=>{
                 //고정 인원 선택
                 if(this.data.capacity != null){
+                    let auth_inspect = pass_inspector.lecture_update();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `${auth_inspect.limit_type}`;
+                        this.init();
+                        show_error_message({title:message});
+                        return false;
+                    }
+
                     let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SELECT, 100, popup_style, null, ()=>{
                         member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.capacity, {'lecture_id':this.lecture_id, "title":"고정 회원 선택"}, (set_data)=>{
@@ -260,7 +285,7 @@ class Lecture_view{
                         });
                     });
                 }else{
-                    show_error_message('정원을 먼저 입력해주세요.');
+                    show_error_message({title:'정원을 먼저 입력해주세요.'});
                 }
             });
             disabled = false;
@@ -268,6 +293,14 @@ class Lecture_view{
             icon_r_visible = SHOW;
         }
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
+            let auth_inspect = pass_inspector.lecture_update();
+            if(auth_inspect.barrier == BLOCKED){
+                let message = `${auth_inspect.limit_type}`;
+                this.init();
+                show_error_message({title:message});
+                return false;
+            }
+
             if(input_data != '' && input_data != null){
                 input_data = Number(input_data);
             }
@@ -276,14 +309,14 @@ class Lecture_view{
                 user_input_data = this.data.capacity;
             }
             if(user_input_data < this.data.fixed_member_id.length){
-                show_error_message("수정하려는 정원보다 고정회원 수가 더 많습니다.");
+                show_error_message({title:"수정하려는 정원보다 고정회원 수가 더 많습니다."});
                 this.render_content();
                 return;
             }
             this.capacity = user_input_data;
             setTimeout(()=>{
                 this.dom_row_option_select_capacity();
-            }, 250);
+            }, 300);
             //안드로이드 키보드가 올라오면서 옵션셀렉터 위치가 상단으로 밀리리 때문에, 키보드가 사라질때 까지 기다렸다가 실행한다.
             
             // this.send_data();
@@ -298,7 +331,8 @@ class Lecture_view{
             cancel:{text:"변경 취소", callback:()=>{layer_popup.close_layer_popup();this.init();layer_popup.enable_shade_click_close();}}
         };
         let options_padding_top_bottom = 16;
-        let button_height = 8 + 8 + 52;
+        // let button_height = 8 + 8 + 52;
+        let button_height = 52;
         // let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
         let layer_popup_height = options_padding_top_bottom + 52*Object.keys(user_option).length;
         let root_content_height = $root_content.height();
@@ -319,13 +353,21 @@ class Lecture_view{
         let style = null;
         let disabled = false;
         let onfocusout = (user_input_data)=>{
+            let auth_inspect = pass_inspector.lecture_update();
+            if(auth_inspect.barrier == BLOCKED){
+                let message = `${auth_inspect.limit_type}`;
+                this.init();
+                show_error_message({title:message});
+                return false;
+            }
+
             if(Number(user_input_data)%5 != 0){
-                show_error_message("기본 수업 시간은 5분 단위로 입력해주세요.");
+                show_error_message({title:"기본 수업 시간은 5분 단위로 입력해주세요."});
                 this.render_content();
                 return false;
             }
             if(Number(user_input_data) <= 0){
-                show_error_message("기본 수업 시간은 0분 보다 크게 설정해주세요.");
+                show_error_message({title:"기본 수업 시간은 0분 보다 크게 설정해주세요."});
                 this.render_content();
                 return false;
             }
@@ -347,6 +389,14 @@ class Lecture_view{
         let icon_r_text = "";
         let style = null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
+            // let auth_inspect = pass_inspector.lecture_update();
+            // if(auth_inspect.barrier == BLOCKED){
+            //     let message = `${auth_inspect.limit_type}`;
+            //     this.init();
+            //     show_error_message({title:message});
+            //     return false;
+            // }
+
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_COLOR_SELECT, 100, popup_style, null, ()=>{
                 color_select = new ColorSelector('#wrapper_box_color_select', this, 1, (set_data)=>{
@@ -395,6 +445,14 @@ class Lecture_view{
             }
             html_to_join.push(
                 CComponent.text_button(ticket_id, ticket_name, style, ()=>{
+                    let auth_inspect = pass_inspector.ticket_read();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `${auth_inspect.limit_type}`;
+                        this.init();
+                        show_error_message({title:message});
+                        return false;
+                    }
+                    
                     let root_content_height = $root_content.height();
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_SIMPLE_VIEW, 100*(251/root_content_height), POPUP_FROM_BOTTOM, {'ticket_id':ticket_id}, ()=>{
                         ticket_simple_view_popup = new Ticket_simple_view('.popup_ticket_simple_view', ticket_id, 'ticket_simple_view_popup');
@@ -428,7 +486,7 @@ class Lecture_view{
                     });
                 });
             }else{
-                show_error_message('정원을 먼저 입력해주세요.');
+                show_error_message({title:'정원을 먼저 입력해주세요.'});
             }
         });
         return html;
@@ -437,7 +495,6 @@ class Lecture_view{
     dom_row_member_list (){
         let length = this.data.member.length;
         let html_to_join = [];
-        let root_content_height = $root_content.height();
         for(let i=0; i<length; i++){
             let member_id = this.data.member[i].member_id;
             let member_name = this.data.member[i].member_name;
@@ -452,11 +509,7 @@ class Lecture_view{
 
             let member_img = '<div style="display: table-cell; width:40px; vertical-align:bottom;"><img src="'+member_profile_url+'" style="width:30px; height:30px; border-radius: 50%;"></div>';
             html_to_join.push(
-                `<div style="display:table;width:100%;" onclick="
-                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SIMPLE_VIEW, 100*(400/${root_content_height}), POPUP_FROM_BOTTOM, {'member_id':${member_id}},()=>{
-                            member_simple_view_popup = new Member_simple_view('.popup_member_simple_view', ${member_id}, 'member_simple_view_popup');
-                            //회원 간단 정보 팝업 열기
-                    });">
+                `<div style="display:table;width:100%;" onclick="lecture_view_popup.event_member_view(${member_id})">
                     ${member_img}
                     <div style="display: table-cell; width:60%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${member_button}</div>
                     <div style="display: table-cell; line-height: 44px; float:right;">${member_fix_indicator}</div>
@@ -466,6 +519,20 @@ class Lecture_view{
         let html = `${html_to_join.join('')}`;
 
         return html;
+    }
+
+    event_member_view(member_id){
+        let auth_inspect = pass_inspector.member_read();
+        if(auth_inspect.barrier == BLOCKED){
+            let message = `${auth_inspect.limit_type}`;
+            this.init();
+            show_error_message({title:message});
+            return false;
+        }
+        let root_content_height = $root_content.height();
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SIMPLE_VIEW, 100*(400/root_content_height), POPUP_FROM_BOTTOM, {'member_id':member_id},()=>{
+            member_simple_view_popup = new Member_simple_view('.popup_member_simple_view', member_id, 'member_simple_view_popup');
+        });
     }
 
     send_data(){
@@ -502,26 +569,27 @@ class Lecture_view{
     upper_right_menu(){
         let user_option = {
             activate:{text:"활성화", callback:()=>{
-                    show_user_confirm(`"${this.data.name}" <br> 수업을 활성화 하시겠습니까? <br> 활성화 탭에서 다시 확인할 수 있습니다.`, ()=>{
+                    let auth_inspect = pass_inspector.lecture_update();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `${auth_inspect.limit_type}`;
+                        this.init();
+                        show_error_message({title:message});
+                        return false;
+                    }
+                    let message = {
+                                    title:`"${this.data.name}" 수업을 활성화 하시겠습니까?`,
+                                    comment:'활성화 탭에서 다시 확인할 수 있습니다.'
+                    }
+                    show_user_confirm(message, ()=>{
                         let inspect = pass_inspector.lecture();
                         if(inspect.barrier == BLOCKED){
-                            // let id = "go_to_shop";
-                            // let title = "패스 구매";
-                            // let style = {"display":"inline-block", "background-color":"var(--bg-highlight)", "border-radius":"2px", "margin-top":"15px"};
-                            // let onclick = ()=>{
-                            //     layer_popup.all_close_layer_popup();
-                            //     sideGoPopup("pters_pass_main");
-                            // };
-                            // let go_to_shop_button = `<div>${CComponent.button (id, title, style, onclick)}</div>`;
-
-                            // layer_popup.close_layer_popup(); //confirm팝업 닫기
-                            // show_error_message(`[${inspect.limit_type}] 이용자께서는 진행중 수업을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다. 
-                            //                     <br> 수업 활성화에 실패했습니다.${go_to_shop_button}`);
 
                             layer_popup.close_layer_popup(); //confirm팝업 닫기
-                            let message = `[${inspect.limit_type}] 이용자께서는 진행중 수업을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다. 
-                                            <br> 수업 활성화에 실패했습니다.
-                                            <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까??</p>`;
+                            let message = {
+                                title:'수업을 활성화 하지 못했습니다.',
+                                comment:`[${inspect.limit_type}] 이용자께서는 진행중 수업을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다. 
+                                        <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까?</p>`
+                            }
                             show_user_confirm (message, ()=>{
                                 layer_popup.all_close_layer_popup();
                                 sideGoPopup("pters_pass_main");
@@ -547,12 +615,22 @@ class Lecture_view{
                 }   
             },
             deactivate:{text:"비활성화", callback:()=>{
-                    show_user_confirm(`"${this.data.name}" <br> 수업을 비활성화 하시겠습니까? <br> 비활성화 탭에서 다시 활성화 할 수 있습니다.<br><br>
-                                                            <img src="/static/common/icon/icon_stopmark.png" style="width:25px;"><br>
-                                                            <span style="color:var(--font-highlight); font-size:12px;">
-                                                            이 수업으로 일정을 등록 할 수 없게 됩니다.<br>
-                                                            과거 일정은 완료 처리, 미래 일정은 삭제됩니다. <br>
-                                                            이 수업 하나만 포함하는 수강권은 비활성화 됩니다.`, ()=>{
+                    let auth_inspect = pass_inspector.lecture_update();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `${auth_inspect.limit_type}`;
+                        this.init();
+                        show_error_message({title:message});
+                        return false;
+                    }
+                    let message = {
+                        title:`"${this.data.name}" <br>수업을 비활성화 하시겠습니까?`,
+                        comment:`<img src="/static/common/icon/icon_stopmark.png" style="width:25px;"><br>
+                                <span style="color:var(--font-highlight); font-size:12px;">
+                                이 수업으로 일정을 등록 할 수 없게 됩니다.<br>
+                                과거 일정은 완료 처리, 미래 일정은 삭제됩니다. <br>
+                                이 수업 하나만 포함하는 수강권은 자동 비활성화 됩니다.</span>`
+                    }
+                    show_user_confirm(message, ()=>{
                         Lecture_func.status({"lecture_id":this.lecture_id, "state_cd":STATE_END_PROGRESS}, ()=>{
                             try{
                                 current_page.init();
@@ -569,9 +647,20 @@ class Lecture_view{
                 }   
             },
             delete:{text:"삭제", callback:()=>{
-                    show_user_confirm(`"${this.data.name}" <br> 수업을 영구 삭제 하시겠습니까? <br> 데이터를 복구할 수 없습니다.<br><br>
-                                                            <img src="/static/common/icon/icon_stopmark.png" style="width:25px;"><br>
-                                                            <span style="color:var(--font-highlight); font-size:12px;">이 수업을 포함하는 수강권에서 수업이 삭제됩니다.</span>`, ()=>{
+                    let auth_inspect = pass_inspector.lecture_delete();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `${auth_inspect.limit_type}`;
+                        this.init();
+                        show_error_message({title:message});
+                        return false;
+                    }
+                    let message = {
+                        title:`"${this.data.name}" <br> 수업을 영구 삭제 하시겠습니까?`,
+                        comment:`데이터를 복구할 수 없습니다.<br><br>
+                                <img src="/static/common/icon/icon_stopmark.png" style="width:25px;"><br>
+                                <span style="color:var(--font-highlight); font-size:12px;">이 수업을 포함하는 수강권에서 수업이 삭제됩니다.</span>`
+                    }
+                    show_user_confirm(message, ()=>{
                         Lecture_func.delete({"lecture_id":this.lecture_id}, ()=>{
                             try{
                                 current_page.init();
@@ -632,17 +721,18 @@ class Lecture_view{
         let error_info = check_registration_form(forms);
         console.log(error_info);
         if(error_info != ''){
-            show_error_message(error_info);
+            show_error_message({title:error_info});
             return false;
         }
         else{
             if(this.data.capacity <= 1 && this.data.lecture_type_cd != LECTURE_TYPE_ONE_TO_ONE){
-                show_error_message('정원은 2명보다 크게 설정해주세요.');
+                show_error_message({title:'정원은 2명보다 크게 설정해주세요.'});
                 return false;
             }
             return true;
         }
     }
+
 }
 
 class Lecture_simple_view{
@@ -743,7 +833,7 @@ class Lecture_simple_view{
     dom_row_toolbox(){
         let text_button_style = {"color":"var(--font-highlight)", "font-size":"13px", "font-weight":"500", "padding":"10px 0"};
         let text_button = CComponent.text_button ("detail_lecture_info", "더보기", text_button_style, ()=>{
-            show_user_confirm(`작업중이던 항목을 모두 닫고 수업 메뉴로 이동합니다.`, ()=>{
+            show_user_confirm({title:`작업중이던 항목을 모두 닫고 수업 메뉴로 이동합니다.`}, ()=>{
                 layer_popup.all_close_layer_popup();
                 if($(window).width() > 650){
                     sideGoPage("lecture_page_type");

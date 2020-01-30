@@ -137,5 +137,7 @@ class GetQACommentDataView(LoginRequiredMixin, View):
                                     'qa_comment_mod_dt': str(qa_comment_info.mod_dt),
                                     'qa_comment_reg_dt': str(qa_comment_info.reg_dt),
                                     'qa_comment_use': qa_comment_info.use})
+            qa_comment_info.read = 1
+            qa_comment_info.save()
 
         return JsonResponse({'qa_comment_data': qa_comment_list}, json_dumps_params={'ensure_ascii': True})

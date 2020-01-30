@@ -596,7 +596,8 @@ class Calendar {
             }},
         };
         let options_padding_top_bottom = 16;
-        let button_height = 8 + 8 + 52;
+        // let button_height = 8 + 8 + 52;
+        let button_height = 52;
         let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
         let root_content_height = $root_content.height();
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
@@ -904,8 +905,8 @@ class Calendar {
                 
                 
                 if(`${_year[i]}-${_month[i]}-${_date[i]}` == this.today){
-                    today_marking = `<div class="today_marking" style="${month_or_week == "week" ? '' : 'top:7%; width:20px; height:20px; border-radius:12px;'}"></div>`;
-                    today_text_style = 'color:var(--font-highlight);font-weight:bold;';
+                    today_marking = `<div class="today_marking" style="${month_or_week == "week" ? 'top:-4px;' : 'top:-2px; width:20px; height:20px; border-radius:12px;'}"></div>`;
+                    today_text_style = 'color:var(--font-highlight-sub);font-weight:bold;';
                 }
 
                 let this_date_yyyymmdd = DateRobot.to_yyyymmdd(_year[i], _month[i], _date[i]);
@@ -1066,7 +1067,7 @@ class Calendar {
                             
 
                             return `<div data-scheduleid="${plan.schedule_id}" onclick="event.stopPropagation();${onclick}" class="calendar_schedule_display_week ${long_touch_active} ${go_behind}" 
-                                        style="${styles}" ontouchstart="${this.instance}.longtouchstart(this, ()=>{})" ontouchend="${this.instance}.longtouchend(event)">
+                                        style="${styles}" ontouchstart="event.stopPropagation();${this.instance}.longtouchstart(this, ()=>{})" ontouchend="event.stopPropagation();${this.instance}.longtouchend(event)">
                                         ${plan_name}
                                     </div>`;
                         })
@@ -1087,31 +1088,31 @@ class Calendar {
                                         <div id="current_time_indicator" style="width:1024px;"><div></div></div>
                                         ${ (this.worktime.map( (t) => { return `<article><span>${TimeRobot.to_text(t, 0, 'short')}</span></article>`; } )).join('') }
                                     </div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[0]},${_month[0]},${_date[0]})" class="_week_row_1 week_row" ${this.dayoff.indexOf(0) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[0]},${_month[0]},${_date[0]})" class="_week_row_1 week_row" style="${ _year[0]+'-'+_month[0]+'-'+_date[0] == this.today ? "background-color:#fe4e6518" : ""}">
                                         ${work_time_dom[0] == undefined ? "" : work_time_dom[0]}
                                         ${schedules.length > 0 ?  schedules[0].join('') : ""}
                                     </div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[1]},${_month[1]},${_date[1]})" class="_week_row_2 week_row" ${this.dayoff.indexOf(1) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[1]},${_month[1]},${_date[1]})" class="_week_row_2 week_row" style="${ _year[1]+'-'+_month[1]+'-'+_date[1] == this.today ? "background-color:#fe4e6518" : ""}">
                                         ${work_time_dom[1] == undefined ? "" : work_time_dom[1]}
                                         ${schedules.length > 0 ?  schedules[1].join('') : ""}
                                     </div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[2]},${_month[2]},${_date[2]})" class="_week_row_3 week_row" ${this.dayoff.indexOf(2) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[2]},${_month[2]},${_date[2]})" class="_week_row_3 week_row" style="${ _year[2]+'-'+_month[2]+'-'+_date[2] == this.today ? "background-color:#fe4e6518" : ""}">
                                         ${work_time_dom[2] == undefined ? "" : work_time_dom[2]}
                                         ${schedules.length > 0 ?  schedules[2].join('') : ""}
                                     </div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[3]},${_month[3]},${_date[3]})" class="_week_row_4 week_row" ${this.dayoff.indexOf(3) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[3]},${_month[3]},${_date[3]})" class="_week_row_4 week_row" style="${ _year[3]+'-'+_month[3]+'-'+_date[3] == this.today ? "background-color:#fe4e6518" : ""}">
                                         ${work_time_dom[3] == undefined ? "" : work_time_dom[3]}
                                         ${schedules.length > 0 ?  schedules[3].join('') : ""}
                                     </div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[4]},${_month[4]},${_date[4]})" class="_week_row_5 week_row" ${this.dayoff.indexOf(4) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[4]},${_month[4]},${_date[4]})" class="_week_row_5 week_row" style="${ _year[4]+'-'+_month[4]+'-'+_date[4] == this.today ? "background-color:#fe4e6518" : ""}">
                                         ${work_time_dom[4] == undefined ? "" : work_time_dom[4]}
                                         ${schedules.length > 0 ?  schedules[4].join('') : ""}
                                     </div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[5]},${_month[5]},${_date[5]})" class="_week_row_6 week_row" ${this.dayoff.indexOf(5) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[5]},${_month[5]},${_date[5]})" class="_week_row_6 week_row" style="${ _year[5]+'-'+_month[5]+'-'+_date[5] == this.today ? "background-color:#fe4e6518" : ""}">
                                         ${work_time_dom[5] == undefined ? "" : work_time_dom[5]}
                                         ${schedules.length > 0 ?  schedules[5].join('') : ""}
                                     </div>
-                                    <div onclick="${this.instance}.display_user_click(event, ${_year[6]},${_month[6]},${_date[6]})" class="_week_row_7 week_row" ${this.dayoff.indexOf(6) != -1  && this.dayoff_hide == 1? "style=display:none": ""}>
+                                    <div onclick="${this.instance}.display_user_click(event, ${_year[6]},${_month[6]},${_date[6]})" class="_week_row_7 week_row" style="${ _year[6]+'-'+_month[6]+'-'+_date[6] == this.today ? "background-color:#fe4e6518" : ""}">
                                         ${work_time_dom[6] == undefined ? "" : work_time_dom[6]}
                                         ${schedules.length > 0 ?  schedules[6].join('') : ""}
                                     </div>
@@ -1121,6 +1122,7 @@ class Calendar {
     }
 
     display_user_click (event, year, month, date){
+        // event.stopPropagation();
         
         $('.week_indicator').remove();
 
@@ -1257,6 +1259,13 @@ class Calendar {
         this.user_data.user_selected_plan.date.year = year;
         this.user_data.user_selected_plan.date.month = month;
         this.user_data.user_selected_plan.date.date = date;
+        let inspect = pass_inspector.schedule_read();
+        
+        if(inspect.barrier == BLOCKED){
+            let message = `${inspect.limit_type}`;
+            show_error_message({title:message});
+            return false;
+        }
         let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PLAN_VIEW, 100, popup_style, {'schedule_id':schedule_id}, ()=>{
             plan_view_popup = new Plan_view('.popup_plan_view', this.user_data.user_selected_plan, "plan_view_popup");
@@ -1424,7 +1433,7 @@ class Calendar {
                 console.log(data);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray);
+                        show_error_message({title:data.messageArray});
                         return false;
                     }
                 }
@@ -1459,13 +1468,11 @@ class Calendar {
                                                     <div class="swap_cal">${CImg.arrow_expand()}</div>
                                                 </div>
                                             </div>
-                                            <div class="cal_pc_tools_wrap">
-                                                ${CComponent.text_button ("calendar_month_prev", CImg.arrow_left("", {"width":"28px", "vertical-align":"top"}), null, ()=>{this.move_month('prev');})}
-                                                ${CComponent.text_button ("calendar_month_next", CImg.arrow_left("", {"width":"28px", "vertical-align":"top", "transform":"rotate(180deg)"}), null, ()=>{this.move_month('next');})}
-                                            </div>
-                                            <div class="cal_tools_wrap">
-                                                <div class="go_today" onclick="${this.instance}.go_month()">${CImg.today()}</div>
-                                                <div class="add_plan" onclick="${this.instance}.add_plan_button()">${CImg.plus()}</div>
+                                            <div class="cal_tools_wrap_parent">
+                                                <div class="cal_pc_tools_wrap" onclick="${this.instance}.move_month('prev')">${CImg.arrow_left("", {"width":"28px", "vertical-align":"middle", "margin-bottom":"4px", "transform":"rotate(90deg)"})}</div>
+                                                <div class="cal_pc_tools_wrap" onclick="${this.instance}.move_month('next')">${CImg.arrow_left("", {"width":"28px", "vertical-align":"middle", "margin-bottom":"4px", "transform":"rotate(270deg)"})}</div>
+                                                <div class="go_today" onclick="${this.instance}.go_month()">${CImg.today("", {"width":"28px", "vertical-align":"middle", "margin-bottom":"4px"})}</div>
+                                                <div class="add_plan" onclick="${this.instance}.add_plan_button()">${CImg.plus("", {"width":"28px", "vertical-align":"middle", "margin-bottom":"4px"})}</div>
                                             </div>
                                         </div>
                                         `
@@ -1482,15 +1489,14 @@ class Calendar {
                                                     <div class="swap_cal">${CImg.arrow_expand()}</div>
                                                 </div>
                                             </div>
-                                            <div class="cal_pc_tools_wrap">
-                                                ${CComponent.text_button ("calendar_week_prev", CImg.arrow_left("", {"width":"28px", "vertical-align":"top"}), null, ()=>{this.move_week('prev');})}
-                                                ${CComponent.text_button ("calendar_week_next", CImg.arrow_left("", {"width":"28px", "vertical-align":"top", "transform":"rotate(180deg)"}), null, ()=>{this.move_week('next');})}
-                                            </div>
-                                            <div class="cal_tools_wrap">
-                                                <div class="go_today" onclick="${this.instance}.go_week()">${CImg.today()}</div>
-                                                <div class="add_plan" onclick="${this.instance}.add_plan_button()">${CImg.plus()}</div>
+                                            <div class="cal_tools_wrap_parent">
+                                                <div class="cal_pc_tools_wrap" onclick="${this.instance}.move_week('prev')">${CImg.arrow_expand("", {"width":"28px", "vertical-align":"middle", "margin-bottom":"4px", "transform":"rotate(90deg)"})}</div>
+                                                <div class="cal_pc_tools_wrap" onclick="${this.instance}.move_week('next')">${CImg.arrow_expand("", {"width":"28px", "vertical-align":"middle", "margin-bottom":"4px", "transform":"rotate(270deg)"})}</div>
+                                                <div class="go_today" onclick="${this.instance}.go_week()">${CImg.today("", {"width":"28px", "vertical-align":"middle", "margin-bottom":"4px"})}</div>
+                                                <div class="add_plan" onclick="${this.instance}.add_plan_button()">${CImg.plus("", {"width":"28px", "vertical-align":"middle", "margin-bottom":"4px"})}</div>
                                             </div>
                                         </div>
+                                         
                                         `             
                 ,
                 "week_cal_upper_box_date_tool":`
@@ -1507,7 +1513,7 @@ class Calendar {
                                   </div>
                                   `
                 ,
-                "initial_page":`<div id="${this.subtargetHTML}"><div id="cal_display_panel"><span></span></div><div id="page${this.current_page_num}" class="pages" style="left:0px;"></div></div>`
+                "initial_page":`<div id="${this.subtargetHTML}"><div id="cal_display_panel"><span></span></div><div id="page${this.current_page_num}" class="pages" style="left:0px;"></div>.</div>`
             }
         );
     }
@@ -1522,13 +1528,16 @@ class Calendar {
         let click_body = `${input_target_html}, ${input_target_html} .calendar_schedule_display_week`;
         let x_threshold;
         let y_threshold;
+        let vertical_scroll_lock_sensitivity;
         let swiper_x = false;
         if(this.cal_type == "week"){
             x_threshold = 80;
             y_threshold = 200;
+            vertical_scroll_lock_sensitivity = 10;
         }else if(this.cal_type == "month"){
             x_threshold = 80;
             y_threshold = 200;
+            vertical_scroll_lock_sensitivity = 10;
         }
 
         switch(onoff){
@@ -1539,7 +1548,12 @@ class Calendar {
                 tsy = e.originalEvent.touches[0].clientY;
             });
 
+            $('#cal_display_panel').off('touchmove').on('touchmove', (e)=>{
+                e.stopPropagation();
+            });
+
             selector_body.off('touchmove').on('touchmove', (e) => {
+                // e.stopPropagation();
                 tm = e.originalEvent.touches[0].clientX;
                 tmy = e.originalEvent.touches[0].clientY;
 
@@ -1548,16 +1562,17 @@ class Calendar {
                 this.touch_timer = 0;
 
                 if( Math.abs(ts - tm) > Math.abs(tsy - tmy)){
+                    if(Math.abs(ts - tm) <= vertical_scroll_lock_sensitivity){
+                        return;
+                    }
                     if(swiper_x == false){
+                        // 스와이프 하는 동안 상하 스크롤을 방지
                         $('#root_content').on('touchmove', (e) => {
                             if(e.cancelable){
                                 e.preventDefault();
                                 e.stopPropagation();
                                 return false;
                             }
-                            // e.preventDefault();
-                            // e.stopPropagation();
-                            // return false;
                         });
                         swiper_x = true;
                     }
@@ -1581,7 +1596,7 @@ class Calendar {
 
             //아이폰에서 touchmove를 threshold보다 작게했을때 상하스크롤이 locking되는 현상 방지
             selector_body.off("touchend").on("touchend", (e) => {
-
+                // e.stopPropagation();
                 if(swiper_x == true){
                     $('#root_content').off('touchmove');
                     swiper_x = false;
@@ -1591,6 +1606,7 @@ class Calendar {
 
         case "off":
             selector_body.off("touchstart").off("touchend").off('touchmove');
+            $('#root_content').off('touchmove');
             break;
         }
     }
@@ -1643,6 +1659,54 @@ class Calendar {
 
 
 class Plan_func{
+    static check (url, data, callback, error_callback){
+        // check_schedule
+        
+        $.ajax({
+            url : url,
+            type:'POST',
+            data: data,
+            dataType : 'JSON',
+    
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+    
+            //보내기후 팝업창 닫기
+            complete:function(){
+                
+            },
+    
+            //통신성공시 처리
+            success:function(data){
+                check_app_version(data.app_version);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message({title:data.messageArray});
+                        if(error_callback != undefined){
+                            error_callback();
+                        }
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(data);
+                }
+            },
+    
+            //통신 실패시 처리
+            error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
+                // location.reload();
+            }
+        });
+    }
+
     static create(url, data, callback, error_callback){
         //데이터 형태 {"member_id":"", "contents":"", "counts":"", "price":"", "start_date":"", "end_date":"", "class_id":"", "package_id":""};
         let async = true;
@@ -1671,9 +1735,10 @@ class Plan_func{
             //통신성공시 처리
             success:function(data){
                 check_app_version(data.app_version);
+                console.log(data);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray);
+                        show_error_message({title:data.messageArray});
                         return false;
                     }
                 }
@@ -1688,7 +1753,7 @@ class Plan_func{
                 if(error_callback != undefined){
                     error_callback();
                 }
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                 // location.reload();
             }
         });
@@ -1713,7 +1778,7 @@ class Plan_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray);
+                        show_error_message({title:data.messageArray});
                         return false;
                     }
                 }
@@ -1731,7 +1796,7 @@ class Plan_func{
                 if(error_callback != undefined){
                     error_callback();
                 }
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                 // location.reload();
             }
         });
@@ -1752,7 +1817,7 @@ class Plan_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray);
+                        show_error_message({title:data.messageArray});
                         return false;
                     }
                 }
@@ -1770,7 +1835,7 @@ class Plan_func{
                 if(error_callback != undefined){
                     error_callback();
                 }
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                 // location.reload();
             }
         });
@@ -1795,7 +1860,7 @@ class Plan_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray);
+                        show_error_message({title:data.messageArray});
                         return false;
                     }
                 }
@@ -1813,7 +1878,7 @@ class Plan_func{
                 if(error_callback != undefined){
                     error_callback();
                 }
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                 // location.reload();
             }
         });
@@ -1848,7 +1913,7 @@ class Plan_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray);
+                        show_error_message({title:data.messageArray});
                         return false;
                     }
                 }
@@ -1863,7 +1928,7 @@ class Plan_func{
                 if(error_callback != undefined){
                     error_callback();
                 }
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                 // location.reload();
             }
         });
@@ -1897,7 +1962,7 @@ class Plan_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray);
+                        show_error_message({title:data.messageArray});
                         return false;
                     }
                 }
@@ -1911,7 +1976,7 @@ class Plan_func{
                 if(error_callback != undefined){
                     error_callback();
                 }
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                 // location.reload();
             }
         });
@@ -1946,7 +2011,7 @@ class Plan_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray);
+                        show_error_message({title:data.messageArray});
                         return false;
                     }
                 }
@@ -1961,7 +2026,7 @@ class Plan_func{
                 if(error_callback != undefined){
                     error_callback();
                 }
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                 // location.reload();
             }
         });
@@ -1981,7 +2046,7 @@ class Plan_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray);
+                        show_error_message({title:data.messageArray});
                         return false;
                     }
                 }
@@ -1998,7 +2063,7 @@ class Plan_func{
                 if(error_callback != undefined){
                     error_callback();
                 }
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                 // location.reload();
             }
         });
@@ -2027,7 +2092,7 @@ class Plan_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray);
+                        show_error_message({title:data.messageArray});
                         return false;
                     }
                 }
@@ -2042,7 +2107,7 @@ class Plan_func{
                 if(error_callback != undefined){
                     error_callback();
                 }
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                 // location.reload();
             }
         });
@@ -2072,7 +2137,7 @@ class Plan_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray);
+                        show_error_message({title:data.messageArray});
                         return false;
                     }
                 }
@@ -2086,15 +2151,12 @@ class Plan_func{
                 if(error_callback != undefined){
                     error_callback();
                 }
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                 // location.reload();
             }
         });
     }
 }
-
-
-
 
 
 // 중복일정 관련 함수 - 겹치지 않는 큰 일정으로 만들기

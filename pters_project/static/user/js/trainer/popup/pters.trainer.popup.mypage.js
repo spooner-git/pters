@@ -169,7 +169,7 @@ class Mypage{
         let title = "PTERS 패스";
         let icon = DELETE;
         let icon_r_visible = SHOW;
-        let icon_r_text = `${pass_inspector.data.auth_plan_create.limit_type}`;
+        let icon_r_text = `${pass_inspector.trainer_data.auth_plan_create.limit_type}`;
         let style = null;
         let onclick = ()=>{
             sideGoPopup('pters_pass_main');
@@ -250,7 +250,6 @@ class Mypage{
     event_edit_photo(){
         let user_option = {
             change:{text:"프로필 사진 변경", callback:()=>{
-                    // show_error_message("기능을 준비중입니다.");
                     layer_popup.close_layer_popup();
                     let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MYPAGE_PHOTO_UPDATE, 100, popup_style, null, ()=>{
@@ -259,7 +258,6 @@ class Mypage{
                 }
             },
             delete:{text:"프로필 사진 삭제", callback:()=>{
-                    // show_error_message("기능을 준비중입니다.");
                     $.ajax({
                         url: '/delete_profile_img/',
                         dataType : 'html',
@@ -276,7 +274,7 @@ class Mypage{
                             let jsondata = JSON.parse(data);
                             check_app_version(jsondata.app_version);
                             if(jsondata.messageArray.length>0){
-                                show_error_message(jsondata.messageArray);
+                                show_error_message({title:jsondata.messageArray});
                                 return false;
                             }
                             try{
@@ -293,8 +291,7 @@ class Mypage{
                         },
 
                         error:function(){
-                            //alert('통신이 불안정합니다.');
-                            show_error_message('통신이 불안정합니다.');
+                            show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                         }
                     });
                     layer_popup.close_layer_popup();
@@ -302,7 +299,8 @@ class Mypage{
             }
         };
         let options_padding_top_bottom = 16;
-        let button_height = 8 + 8 + 52;
+        // let button_height = 8 + 8 + 52;
+        let button_height = 52;
         let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
         let root_content_height = $root_content.height();
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
@@ -317,7 +315,7 @@ class Mypage{
         };
         Mypage_func.update(data, ()=>{
             this.set_initial_data();
-            show_error_message('변경 내용이 저장되었습니다.');
+            show_error_message({title:'변경 내용이 저장되었습니다.'});
             // this.render_content();
         });
     }
@@ -349,7 +347,7 @@ class Mypage_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -368,8 +366,7 @@ class Mypage_func{
                 if(error_callback != undefined){
                     error_callback();
                 }
-                console.log('server error');
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
             }
         });
     }
@@ -391,7 +388,7 @@ class Mypage_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -411,7 +408,7 @@ class Mypage_func{
                     error_callback();
                 }
                 console.log('server error');
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
             }
         });
     }

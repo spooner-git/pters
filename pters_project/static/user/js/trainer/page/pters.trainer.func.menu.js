@@ -62,32 +62,55 @@ class Menu {
 
         let dom_tag_style = {"font-size":"13px", "color":"var(--font-sub-normal)", "padding-left":"0", "margin-bottom":"8px"};
 
+        // let share = shared_program_flag == 0 ? this.dom_menu_setting_sharing() : this.dom_menu_setting_shared();
+
+        let sub_assembly_menu = 
+                                CComponent.dom_tag('운영', dom_tag_style) + 
+                                this.dom_menu_program() + 
+                                this.dom_menu_calendar() + 
+                                this.dom_menu_member() + 
+                                this.dom_menu_lecture() +
+                                this.dom_menu_ticket() + 
+                                this.dom_menu_statistics() + 
+                                this.dom_menu_attendmode();
+        // let sub_assembly_setting_sharing =
+        //                         CComponent.dom_tag('프로그램 설정', dom_tag_style) +
+        //                         this.dom_menu_setting_calendar() +
+        //                         this.dom_menu_setting_worktime() +
+        //                         this.dom_menu_setting_autocomplete() +
+        //                         this.dom_menu_setting_reserve() +
+        //                         this.dom_menu_setting_alarm() +
+        //                         this.dom_menu_setting_attendmode() +
+        //                         this.dom_menu_setting_menu_access() +
+        //                         CComponent.dom_tag('개인 설정', dom_tag_style) +
+        //                         this.dom_menu_theme();
+        // let sub_assembly_setting_shared =
+        let sub_assembly_setting =
+                                CComponent.dom_tag('프로그램 설정', dom_tag_style) +
+                                this.dom_menu_setting_calendar() + 
+                                this.dom_menu_setting_worktime() + 
+                                this.dom_menu_setting_autocomplete() +
+                                this.dom_menu_setting_reserve() + 
+                                this.dom_menu_setting_alarm() + 
+                                this.dom_menu_setting_attendmode() +
+                                this.dom_menu_setting_menu_access() +
+                                CComponent.dom_tag('개인 설정', dom_tag_style) + 
+                                this.dom_menu_setting_alarm_personal() + 
+                                this.dom_menu_theme();
+        // let sub_assembly_setting = shared_program_flag == 0 ? sub_assembly_setting_sharing : sub_assembly_setting_shared;
+        let sub_assembly_service = 
+                                CComponent.dom_tag('서비스', dom_tag_style) + 
+                                this.dom_menu_pters_pass() + 
+                                this.dom_menu_service_notice() + 
+                                this.dom_menu_service_faq() +
+                                this.dom_menu_service_inquiry() +
+                                this.dom_menu_service_about_us()
+                                + this.dom_menu_service_help();
+
         let assembly = this.dom_who_i_am() + 
-                       CComponent.dom_tag('운영', dom_tag_style) + 
-                        this.dom_menu_program() + 
-                        this.dom_menu_calendar() + 
-                        this.dom_menu_member() + 
-                        this.dom_menu_lecture() +
-                        this.dom_menu_ticket() + 
-                        this.dom_menu_statistics() + 
-                        this.dom_menu_attendmode() + 
-                       CComponent.dom_tag('설정', dom_tag_style) +
-                        // this.dom_menu_setting_supervisor() +  
-                        this.dom_menu_setting_calendar() + 
-                        this.dom_menu_setting_worktime() + 
-                        this.dom_menu_setting_autocomplete() +
-                        this.dom_menu_setting_reserve() + 
-                        this.dom_menu_setting_alarm() + 
-                        this.dom_menu_setting_attendmode() +
-                        this.dom_menu_setting_menu_access() +
-                        this.dom_menu_theme() +
-                       CComponent.dom_tag('서비스', dom_tag_style) + 
-                        this.dom_menu_pters_pass() + 
-                        this.dom_menu_service_notice() + 
-                        this.dom_menu_service_faq() +
-                        this.dom_menu_service_inquiry() +
-                        this.dom_menu_service_about_us();
-                        // + this.dom_menu_service_help();
+                        sub_assembly_menu + 
+                        sub_assembly_setting +
+                        sub_assembly_service;
           
         return assembly;
     }
@@ -194,7 +217,7 @@ class Menu {
 
     dom_menu_attendmode(){
         let id = 'menu_attendmode';
-        let title = '출석 체크';
+        let title = '실시간 출석 체크';
         let icon = CImg.attend_check();
         let icon_r_visible = NONE;
         let icon_r_text = "";
@@ -270,9 +293,22 @@ class Menu {
         return html;
     }
 
+    dom_menu_setting_alarm_personal(){
+        let id = 'menu_setting_alarm_personal';
+        let title = '알림';
+        let icon = CImg.setting_notification();
+        let icon_r_visible = NONE;
+        let icon_r_text = "";
+        let style = {"font-size":"17px", "padding":"13px 0"};
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            sideGoPopup("setting_alarm_personal");
+        });
+        return html;
+    }
+
     dom_menu_setting_attendmode(){
         let id = 'menu_setting_attendmode';
-        let title = '출석 체크 모드 설정';
+        let title = '실시간 출석 체크 설정';
         let icon = CImg.setting_attend_check();
         let icon_r_visible = NONE;
         let icon_r_text = "";
@@ -286,7 +322,7 @@ class Menu {
     dom_menu_theme(){
         let id = 'menu_setting_theme';
         let title = '테마';
-        let icon = CImg.arrow_expand();
+        let icon = CImg.theme();
         let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
@@ -309,15 +345,28 @@ class Menu {
         return html;
     }
 
-    dom_menu_setting_supervisor(){
-        let id = 'menu_setting_supervisor';
-        let title = '관리자 (공유??) - 본섭에 업로드 X';
-        let icon = CImg.supervisor();
+    dom_menu_setting_sharing(){
+        let id = 'menu_setting_sharing';
+        let title = '프로그램 공유';
+        let icon = CImg.share();
         let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"color":"red", "font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            sideGoPopup("setting_supervisor");
+            sideGoPopup("setting_sharing");
+        });
+        return html;
+    }
+
+    dom_menu_setting_shared(){
+        let id = 'menu_setting_shared';
+        let title = '프로그램 공유';
+        let icon = CImg.share();
+        let icon_r_visible = NONE;
+        let icon_r_text = "";
+        let style = {"color":"red", "font-size":"17px", "padding":"13px 0"};
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            sideGoPopup("setting_shared");
         });
         return html;
     }
@@ -437,7 +486,7 @@ class Setting_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -457,7 +506,7 @@ class Setting_func{
                     error_callback();
                 }
                 console.log('server error');
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
             }
         });
     }

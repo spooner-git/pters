@@ -182,7 +182,7 @@ class Member_view_photo_update{
 
     send_data(){
         let data = {"photo": this.data.src};
-        show_user_confirm(`<img src="${this.data.src}" style="width:100%;border-radius:50%;">`,  ()=>{
+        show_user_confirm({title:`<img src="${this.data.src}" style="width:100%;border-radius:50%;">`},  ()=>{
                             let form_data = new FormData();
                             form_data.append('profile_img_file', this.data.file);
                             form_data.append('member_id', this.data.member_id);
@@ -207,7 +207,7 @@ class Member_view_photo_update{
                                     let jsondata = JSON.parse(data);
                                     check_app_version(data.app_version);
                                     if(jsondata.messageArray.length>0){
-                                        show_error_message(jsondata.messageArray);
+                                        show_error_message({title:jsondata.messageArray});
                                         return false;
                                     }
 
@@ -227,8 +227,7 @@ class Member_view_photo_update{
                                 },
 
                                 error:function(){
-                                    //alert('통신이 불안정합니다.');
-                                    show_error_message('통신이 불안정합니다.');
+                                    show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                                 }
                             });
                         });

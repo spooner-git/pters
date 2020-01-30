@@ -1,3 +1,5 @@
+    {% load static_url %}
+    {% autoescape off %}
 {
 
       "product_id" :
@@ -42,7 +44,10 @@
       ["{{ payment_info.buyer_name }}"],
       "mod_dt" :
       ["{{ payment_info.mod_dt }}"],
-
+      "auth_info" :
+       [{{ auth_info }}],
     "messageArray" :
     [{% for message in messages %}"{% if message.tags == "error" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}]
 }
+
+    {% endautoescape %}

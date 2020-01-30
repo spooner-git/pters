@@ -5,7 +5,7 @@ class Setting_alarm{
 
         this.data = {
             push_to_member: OFF,
-            push_to_me: OFF
+            push_to_shared_trainer: OFF
         };
 
         this.init();
@@ -19,8 +19,8 @@ class Setting_alarm{
 
     set_initial_data (){
         Setting_alarm_func.read((data)=>{
-            this.data.push_to_me = data.setting_from_trainee_lesson_alarm;
             this.data.push_to_member = data.setting_to_trainee_lesson_alarm;
+            this.data.push_to_shared_trainer = data.setting_to_shared_trainer_lesson_alarm;
             this.render_content();
         });
         func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
@@ -35,7 +35,8 @@ class Setting_alarm{
     render(){
         let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();setting_alarm_popup.clear();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right" onclick="setting_alarm_popup.upper_right_menu();">${CImg.confirm()}</span>`;
+        // let top_right = `<span class="icon_right" onclick="setting_alarm_popup.upper_right_menu();">${CImg.confirm()}</span>`;
+        let top_right = `<span class="icon_right" onclick="setting_alarm_popup.upper_right_menu();"><span style="color:var(--font-highlight);font-weight: 500;">저장</span></span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
         
@@ -60,9 +61,9 @@ class Setting_alarm{
     
     dom_assembly_content(){
         let row_push_to_member = this.dom_row_push_to_member();
-        let row_push_to_me = this.dom_row_push_to_me();
+        let row_push_to_shared_trainer = this.dom_row_push_to_share_trainer();
 
-        let html = row_push_to_member + row_push_to_me;
+        let html = row_push_to_member + row_push_to_shared_trainer;
 
         return html;
     }
@@ -100,15 +101,15 @@ class Setting_alarm{
         return html;
     }
 
-    dom_row_push_to_me(){
-        let id = `push_to_me`;
-        let power = this.data.push_to_me;
+    dom_row_push_to_share_trainer(){
+        let id = `push_to_shared_trainer`;
+        let power = this.data.push_to_shared_trainer;
         let style = null;
         let push_to_me_toggle = CComponent.toggle_button (id, power, style, (data)=>{
-                                this.data.push_to_me = data; // ON or OFF
+                                this.data.push_to_shared_trainer = data; // ON or OFF
                                 this.render_content();
                             });
-        let title_row = CComponent.text_button ("ntd", '(나에게) 일정 변경 알림', {"font-size":"15px", "font-weight":"500", "letter-spacing":"-0.8px"}, ()=>{});
+        let title_row = CComponent.text_button ("ntd", '(공유 강사에게) 일정 변경 알림', {"font-size":"15px", "font-weight":"500", "letter-spacing":"-0.8px"}, ()=>{});
         let html = `<article class="obj_input_box_full">
                         <div style="display:table;width:100%;">
                             <div style="display:table-cell;width:auto;vertical-align:middle">${title_row}</div>
@@ -138,6 +139,13 @@ class Setting_alarm{
     }
 
     send_data(){
+        let auth_inspect = pass_inspector.setting_update();
+        if(auth_inspect.barrier == BLOCKED){
+            let message = `${auth_inspect.limit_type}`;
+            show_error_message({title:message});
+            return false;
+        }
+
         if(this.data_sending_now == true){
             return false;
         }else if(this.data_sending_now == false){
@@ -146,13 +154,13 @@ class Setting_alarm{
 
         let data = {
             "setting_to_trainee_lesson_alarm":this.data.push_to_member,
-            "setting_from_trainee_lesson_alarm":this.data.push_to_me
+            "setting_to_shared_trainer_lesson_alarm":this.data.push_to_shared_trainer,
         };
         
         Setting_alarm_func.update(data, ()=>{
             this.data_sending_now = false;
             this.set_initial_data();
-            show_error_message('변경 내용이 저장되었습니다.');
+            show_error_message({title:'설정이 저장되었습니다.'});
             // this.render_content();
         }, ()=>{this.data_sending_now = false;});
     }
@@ -183,7 +191,7 @@ class Setting_alarm_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -203,7 +211,7 @@ class Setting_alarm_func{
                     error_callback();
                 }
                 console.log('server error');
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
             }
         });
     }
@@ -225,7 +233,7 @@ class Setting_alarm_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -245,7 +253,7 @@ class Setting_alarm_func{
                     error_callback();
                 }
                 console.log('server error');
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
             }
         });
     }

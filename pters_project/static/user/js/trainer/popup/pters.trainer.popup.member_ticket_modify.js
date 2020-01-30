@@ -27,6 +27,7 @@ class Member_ticket_modify{
             end_date_text:null,
             reg_count: null,
             price:null,
+            pay_method:{value:[], text:[]},
             status:null,
             note:null,
             refund_date:null,
@@ -38,6 +39,12 @@ class Member_ticket_modify{
             let date_start_array = {"SUN":0, "MON":1};
             this.date_start = date_start_array[data.setting_week_start_date];
         });
+
+        this.simple_input = {
+            count : OFF,
+            price : OFF,
+            period : OFF
+        };
 
         //팝업의 날짜, 시간등의 입력란을 미리 외부에서 온 데이터로 채워서 보여준다.
        
@@ -57,6 +64,7 @@ class Member_ticket_modify{
                 this.data[item] = this.external_data[item];
             }
         }
+        this.data.pay_method = {value:[this.external_data.pay_method], text:[TICKET_PAY_METHOD[this.external_data.pay_method]]};
         this.render();
     }
 
@@ -109,6 +117,8 @@ class Member_ticket_modify{
                     `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>`;
         let price  = CComponent.dom_tag('가격') + this.dom_row_price_input() + 
                     `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>`;
+        let pay_method = CComponent.dom_tag("지불 방법") + this.dom_row_ticket_pay_method_select() +
+                    `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>`;
         let note = CComponent.dom_tag('특이사항') + this.dom_row_note_input();
 
         // if(this.data.refund_date == null || this.data.refund_price == null){
@@ -126,6 +136,7 @@ class Member_ticket_modify{
                 + start
                 + end
                 + price
+                + pay_method
                 + note +
             '</div>';
 
@@ -161,6 +172,22 @@ class Member_ticket_modify{
                     layer_popup.close_layer_popup();}
                 },
                 resume:{text:"재개", callback:()=>{
+                    let inspect = pass_inspector.member("recontract", this.data.member_id);
+                    if(inspect.barrier == BLOCKED){
+                        this.data_sending_now = false;
+                        let message = {
+                            title:'수강권 재개를 완료하지 못했습니다.',
+                            comment:`[${inspect.limit_type}] 이용자께서는 회원을 최대 ${inspect.limit_num}명까지 등록하실 수 있습니다.
+                                    <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까?</p>`
+                        }
+                        show_user_confirm (message, ()=>{
+                            layer_popup.all_close_layer_popup();
+                            sideGoPopup("pters_pass_main");
+                        });
+
+                        return false;
+                    }
+
                     Member_func.ticket_status({"member_ticket_id":this.data.member_ticket_id, "state_cd":"IP", "refund_price":"", "refund_date":""}, ()=>{
                         this.data.status = "IP";
                         this.render_content();
@@ -207,7 +234,8 @@ class Member_ticket_modify{
             }
 
             let options_padding_top_bottom = 16;
-            let button_height = 8 + 8 + 52;
+            // let button_height = 8 + 8 + 52;
+            let button_height = 52;
             let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
             let root_content_height = $root_content.height();
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
@@ -290,7 +318,8 @@ class Member_ticket_modify{
     }
 
     dom_row_end_date_simple_input_machine(){
-        let button_style = {"flex":"1 1 0", "padding":"10px 8px", "color":"var(--font-sub-dark)"};
+        // let button_style = {"flex":"1 1 0", "padding":"10px 8px", "color":"var(--font-sub-normal)"};
+        let button_style = {"flex":"1 1 0", "padding":"6px 0px", "color":"var(--font-sub-normal)", "background-color":"var(--bg-light)", "border-radius":"3px"};
 
         let button_week_2 = CComponent.button ("button_week_2", "+ 7일", button_style, ()=>{
 
@@ -362,8 +391,10 @@ class Member_ticket_modify{
             this.render_content();
         });
         
-        let wrapper_style = "display:flex;padding:0px 0 0px 20px;font-size:12px;";
-        let divider_style = "flex-basis:1px;height:20px;margin-top:10px;background-color:var(--bg-light);display:none;";
+        // let wrapper_style = "display:flex;padding:0px 0 0px 20px;font-size:12px;";
+        // let divider_style = "flex-basis:1px;height:20px;margin-top:10px;background-color:var(--bg-light);display:none;";
+        let wrapper_style = "display:flex;padding:0px 0 0px 40px;font-size:12px;";
+        let divider_style = "flex-basis:8px;height:20px;margin-top:10px;background-color:var(--bg-invisible);";
         let html = `<div style="${wrapper_style}">
                         ${button_week_2} <div style="${divider_style}"></div>
                         ${button_month_1} <div style="${divider_style}"></div>
@@ -446,11 +477,53 @@ class Member_ticket_modify{
         let pattern = "[0-9]{0,15}";
         let pattern_message = "";
         let required = "";
+
+        if(this.data.reg_count >= 99999){
+            title = "무제한";
+        }
+
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;
             this.data.reg_count = user_input_data;
 
         }, pattern, pattern_message, required);
+
+        $(document).off('click', `#c_i_n_r_${id}`).on('click', `#c_i_n_r_${id}`, ()=>{
+            if(this.simple_input.count == OFF){
+                this.simple_input.count = ON;
+                this.render_content();
+            }
+        });
+
+        if(this.simple_input.count == ON){
+            html = html + this.dom_row_count_simple_input_machine();
+        }
+
+        return html;
+    }
+
+    dom_row_count_simple_input_machine(){
+        // let button_style = {"flex":"1 1 0", "padding":"10px 8px", "color":"var(--font-sub-normal)"};
+        let button_style = {"flex":"1 1 0", "padding":"6px 0px", "color":"var(--font-sub-normal)", "background-color":"var(--bg-light)", "border-radius":"3px"};
+
+        let button_limitless = CComponent.button ("button_limitless", "무제한", button_style, ()=>{ this.data.reg_count = 99999; this.render_content(); });
+        let button_50 = CComponent.button ("button_50c", "+ 50회", button_style, ()=>{ this.data.reg_count = Number(this.data.reg_count) + 50;this.render_content(); });
+        let button_10 = CComponent.button ("button_10c", "+ 10회", button_style, ()=>{ this.data.reg_count = Number(this.data.reg_count) + 10;this.render_content(); });
+        let button_1 = CComponent.button ("button_1c", "+ 1회", button_style, ()=>{ this.data.reg_count = Number(this.data.reg_count) + 1;this.render_content(); });
+        let button_delete = CComponent.button ("button_delete_c", "지우기", button_style, ()=>{ this.data.reg_count = null;this.render_content(); });
+        
+        // let wrapper_style = "display:flex;padding:0px 0 0px 20px;font-size:12px;";
+        // let divider_style = "flex-basis:1px;height:20px;margin-top:10px;background-color:var(--bg-light);display:none;";
+        let wrapper_style = "display:flex;padding:0px 0 0px 40px;font-size:12px;";
+        let divider_style = "flex-basis:8px;height:20px;margin-top:10px;background-color:var(--bg-invisible);";
+        let html = `<div style="${wrapper_style}">
+                        ${button_1} <div style="${divider_style}"></div>
+                        ${button_10} <div style="${divider_style}"></div>
+                        ${button_50} <div style="${divider_style}"></div>
+                        ${button_limitless} <div style="${divider_style}"></div>
+                        ${button_delete}
+                    </div>`;
+
         return html;
     }
 
@@ -472,7 +545,73 @@ class Member_ticket_modify{
             this.data.price = user_input_data;
             this.render_content();
         }, pattern, pattern_message, required);
+
+        $(document).off('click', `#c_i_n_r_${id}`).on('click', `#c_i_n_r_${id}`, (e)=>{
+            if(this.simple_input.price == OFF){
+                this.simple_input.price = ON;
+                this.render_content();
+            }
+        });
+
+        if(this.simple_input.price == ON){
+            html = html + this.dom_row_price_simple_input_machine();
+        }
+
         return html;
+    }
+
+    dom_row_price_simple_input_machine(){
+        // let button_style = {"flex":"1 1 0", "padding":"10px 8px", "color":"var(--font-sub-normal)"};
+        let button_style = {"flex":"1 1 0", "padding":"6px 0px", "color":"var(--font-sub-normal)", "background-color":"var(--bg-light)", "border-radius":"3px"};
+
+        let button_100 = CComponent.button ("button_100", "+ 100만", button_style, ()=>{ this.data.price = Number(this.data.price) + 1000000;this.render_content(); });
+        let button_50 = CComponent.button ("button_50", "+ 50만", button_style, ()=>{ this.data.price = Number(this.data.price) + 500000;this.render_content(); });
+        let button_10 = CComponent.button ("button_10", "+ 10만", button_style, ()=>{ this.data.price = Number(this.data.price) + 100000;this.render_content(); });
+        let button_1 = CComponent.button ("button_1", "+ 1만", button_style, ()=>{ this.data.price = Number(this.data.price) + 10000;this.render_content(); });
+        let button_delete = CComponent.button ("button_delete", "지우기", button_style, ()=>{ this.data.price = null;this.render_content(); });
+        
+        // let wrapper_style = "display:flex;padding:0px 0 0px 20px;font-size:12px;";
+        // let divider_style = "flex-basis:1px;height:20px;margin-top:10px;background-color:var(--bg-light);display:none;";
+        let wrapper_style = "display:flex;padding:0px 0 0px 40px;font-size:12px;";
+        let divider_style = "flex-basis:8px;height:20px;margin-top:10px;background-color:var(--bg-invisible);";
+        let html = `<div style="${wrapper_style}">
+                        ${button_100} <div style="${divider_style}"></div>
+                        ${button_50} <div style="${divider_style}"></div>
+                        ${button_10} <div style="${divider_style}"></div>
+                        ${button_1} <div style="${divider_style}"></div>
+                        ${button_delete}
+                    </div>`;
+
+        return html;
+    }
+
+    dom_row_ticket_pay_method_select(){
+        let option_data = {
+            value:["NONE", "CASH", "CARD", "TRANS", "CASH+CARD", "CARD+TRANS", "CASH+TRANS"],
+            text:["선택 안함", "현금", "카드", "계좌이체", "현금 + 카드", "카드 + 계좌 이체", "현금 + 계좌 이체"]
+        };
+        
+        let id = 'input_ticket_pay_method_select';
+        let title = this.data.pay_method.value[0] == "NONE" ? '지불 방법' : this.data.pay_method.text[0];
+        let icon = NONE;
+        let icon_r_visible = SHOW;
+        let icon_r_text = "";
+        let style = this.data.pay_method.value[0] == "NONE" ? {"color":"var(--font-inactive)"} : null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
+            let title = "지불 방법";
+            let install_target = "#wrapper_box_custom_select";
+            let multiple_select = 1;
+            let data = option_data;
+            let selected_data = this.data.pay_method;
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, popup_style, null, ()=>{
+                custom_selector = new CustomSelector(title, install_target, multiple_select, data, selected_data, (set_data)=>{
+                    this.data.pay_method = set_data;
+                    this.render_content();
+                });
+            });
+        });
+        return html;  
     }
 
     dom_row_note_input(){
@@ -507,7 +646,9 @@ class Member_ticket_modify{
         let data = {"member_ticket_id":this.data.member_ticket_id, "note":this.data.note, 
                     "start_date":start_date, "end_date":end_date, 
                     "price":this.data.price, "refund_price":this.data.refund_price, 
-                    "refund_date":this.data.refund_date == "None" ? "" : refund_date, "member_ticket_reg_count":this.data.reg_count};
+                    "refund_date":this.data.refund_date == "None" ? "" : refund_date, "member_ticket_reg_count":this.data.reg_count,
+                    "pay_method":this.data.pay_method.value[0]
+                };
         Member_func.ticket_update(data, ()=>{
             layer_popup.close_layer_popup();
             this.set_initial_data();
@@ -530,7 +671,7 @@ class Member_ticket_modify{
         update_check_registration_form(forms);
         let error_info = check_registration_form(forms);
         if(error_info != ''){
-            show_error_message(error_info);
+            show_error_message({title:error_info});
             return false;
         }
         else{

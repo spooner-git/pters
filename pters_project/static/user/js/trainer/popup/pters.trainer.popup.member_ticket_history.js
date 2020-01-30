@@ -77,6 +77,7 @@ class Member_ticket_history{
             let ticket_end_date = data.member_ticket_end_date;
             let reg_count = data.member_ticket_reg_count;
             let ticket_price = data.member_ticket_price;
+            let ticket_pay_method = data.member_ticket_pay_method;
             let ticket_refund_price = data.member_ticket_refund_price;
             let remain_count = data.member_ticket_rem_count;
             let avail_count = data.member_ticket_avail_count;
@@ -93,18 +94,18 @@ class Member_ticket_history{
             let onclick = ()=>{
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_TICKET_MODIFY, 100, popup_style, null, ()=>{
-                    let data = {"member_name":this.member_name, "member_ticket_id":member_ticket_id, "member_ticket_name":ticket_name, 
+                    let data = {"member_id":this.member_id, "member_name":this.member_name, "member_ticket_id":member_ticket_id, "member_ticket_name":ticket_name, 
                                 "start_date": DateRobot.to_split(ticket_start_date), "start_date_text": DateRobot.to_text(ticket_start_date, "", "", SHORT),
                                 "end_date": DateRobot.to_split(ticket_end_date), "end_date_text": ticket_end_date == "9999-12-31" ? "소진 시까지" : DateRobot.to_text(ticket_end_date, "", "", SHORT),
                                 "reg_count":reg_count, "price":ticket_price, "status":status_code,
                                 "refund_date":refund_date == null ? null : DateRobot.to_split(refund_date), 
                                 "refund_date_text": refund_date == null? null : DateRobot.to_text(refund_date, "", "", SHORT),
-                                "refund_price":refund_price, "note":note};
+                                "refund_price":refund_price, "note":note, "pay_method":ticket_pay_method};
                     member_ticket_modify = new Member_ticket_modify('.popup_member_ticket_modify', data, 'member_ticket_modify');
                 });
             };
 
-            html = CComponent.ticket_history_row (numbering, member_ticket_id, date, ticket_name, UnitRobot.numberWithCommas(ticket_price), UnitRobot.numberWithCommas(ticket_refund_price), reg_count, remain_count, avail_count, status_code, note, onclick);
+            html = CComponent.ticket_history_row (numbering, member_ticket_id, date, ticket_name, TICKET_PAY_METHOD[ticket_pay_method], UnitRobot.numberWithCommas(ticket_price), UnitRobot.numberWithCommas(ticket_refund_price), reg_count, remain_count, avail_count, status_code, note, onclick);
 
             html_to_join.push(html);
         }

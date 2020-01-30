@@ -40,6 +40,7 @@
 	padding-bottom:56px;
 }
 
+
 #home_content_wrap .contents{
 	border-radius: 4px;
 	box-shadow: var(--box-shadow-article);
@@ -47,6 +48,17 @@
 	background-color: var(--bg-article);
 	margin-bottom: 12px;
 	padding: 4px 0;
+}
+
+@media(min-width:800px){
+	/* #home_content_wrap{
+		columns: 2;
+	}
+	#home_content_wrap .contents{
+		display: inline-block;
+		width: 100%;
+		margin-bottom: 12px;
+	} */
 }
 
 #home_content_wrap .my_pters_pass_wrapper{

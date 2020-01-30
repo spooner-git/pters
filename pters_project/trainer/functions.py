@@ -13,12 +13,13 @@ from django.db.models.expressions import RawSQL
 from configs.const import USE, UN_USE, AUTO_FINISH_OFF, FROM_TRAINEE_LESSON_ALARM_ON, \
     TO_TRAINEE_LESSON_ALARM_OFF, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, STATE_CD_IN_PROGRESS, STATE_CD_FINISH,\
     STATE_CD_ABSENCE, AUTH_TYPE_DELETE, STATE_CD_NOT_PROGRESS, SHOW, CALENDAR_TIME_SELECTOR_BASIC, \
-    LECTURE_TYPE_ONE_TO_ONE
+    LECTURE_TYPE_ONE_TO_ONE, ING_MEMBER_TRUE, ING_MEMBER_FALSE, FROM_TRAINEE_LESSON_ALARM_OFF, \
+    TO_SHARED_TRAINER_LESSON_ALARM_OFF
 
 from login.models import MemberTb
 from schedule.models import ScheduleTb, RepeatScheduleTb
 from trainee.models import MemberTicketTb
-from .models import ClassMemberTicketTb, LectureTb, SettingTb, TicketLectureTb, TicketTb, LectureMemberTb
+from .models import ClassMemberTicketTb, LectureTb, SettingTb, TicketLectureTb, TicketTb, LectureMemberTb, MemberClassTb
 from configs import settings
 
 # 전체 회원 id 정보 가져오기
@@ -110,6 +111,19 @@ def func_get_member_end_list(class_id, user_id, keyword):
     return func_get_member_from_member_ticket_list(all_member_ticket_list, None, user_id)
 
 
+# 진행중 회원 여부 확인
+def func_get_member_ing_check(class_id, member_id):
+
+    all_member_ticket_list = ClassMemberTicketTb.objects.select_related(
+        'member_ticket_tb__ticket_tb',
+        'member_ticket_tb__member__user'
+    ).filter(class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__member_id=member_id,
+             member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+             member_ticket_tb__use=USE, use=USE).order_by('member_ticket_tb__member_id', 'member_ticket_tb__end_date')
+
+    return len(all_member_ticket_list)
+
+
 # 회원 리스트 가져오기
 def func_get_member_from_member_ticket_list(all_member_ticket_list, lecture_id, user_id):
     ordered_member_dict = collections.OrderedDict()
@@ -193,6 +207,45 @@ def func_get_member_from_member_ticket_list(all_member_ticket_list, lecture_id, 
     return member_list
 
 
+def func_get_trainer_info(class_id, member_id):
+    member_info = {}
+    error = None
+    member = None
+
+    try:
+        member = MemberTb.objects.get(member_id=member_id)
+    except ObjectDoesNotExist:
+        error = '회원 ID를 확인해 주세요.'
+
+    if error is None:
+        auth_cd = func_check_trainer_connection_info(class_id, member_id)
+        # 연결이 안되어 있는 경우 회원 정보 표시 안함
+        if str(auth_cd) != str(AUTH_TYPE_VIEW):
+            member.sex = ''
+            member.birthday_dt = ''
+            if member.phone is None or member.phone == '':
+                member.phone = ''
+            else:
+                member.phone = '*******' + member.phone[7:]
+            member.user.email = ''
+            member.profile_url = '/static/common/icon/icon_account.png'
+        if member.profile_url is None or member.profile_url == '':
+            member.profile_url = '/static/common/icon/icon_account.png'
+
+        member_info = {'member_id': str(member.member_id),
+                       'member_user_id': member.user.username,
+                       'member_name': member.name,
+                       'member_phone': str(member.phone),
+                       'member_email': str(member.user.email),
+                       'member_sex': str(member.sex),
+                       'member_birthday_dt': str(member.birthday_dt),
+                       'member_profile_url': member.profile_url,
+                       'auth_cd': auth_cd
+                       }
+
+    return {'member_info': member_info, 'error': error}
+
+
 def func_get_member_info(class_id, user_id, member_id):
     member_info = {}
     error = None
@@ -219,6 +272,12 @@ def func_get_member_info(class_id, user_id, member_id):
         if member.profile_url is None or member.profile_url == '':
             member.profile_url = '/static/common/icon/icon_account.png'
 
+        ing_member_check = func_get_member_ing_check(class_id, member_id)
+        if ing_member_check > 0:
+            ing_member_check = ING_MEMBER_TRUE
+        else:
+            ing_member_check = ING_MEMBER_FALSE
+
         member_info = {'member_id': str(member.member_id),
                        'member_user_id': member.user.username,
                        'member_name': member.name,
@@ -228,7 +287,8 @@ def func_get_member_info(class_id, user_id, member_id):
                        'member_birthday_dt': str(member.birthday_dt),
                        'member_connection_check': connection_check,
                        'member_is_active': str(member.user.is_active),
-                       'member_profile_url': member.profile_url
+                       'member_profile_url': member.profile_url,
+                       'ing_member_check': ing_member_check
                        }
 
     return {'member_info': member_info, 'error': error}
@@ -254,6 +314,24 @@ def func_check_member_connection_info(class_id, member_id):
     else:
         if wait_lecture_count > 0:
             connection_check = 1
+
+    return connection_check
+
+
+def func_check_trainer_connection_info(class_id, trainer_id):
+    connection_check = AUTH_TYPE_DELETE
+
+    view_lecture_count = MemberClassTb.objects.select_related(
+        'class_tb', 'member').filter(class_tb_id=class_id, member_id=trainer_id, auth_cd=AUTH_TYPE_VIEW,
+                                     use=USE).count()
+    wait_lecture_count = MemberClassTb.objects.select_related(
+        'class_tb', 'member').filter(class_tb_id=class_id, member_id=trainer_id, auth_cd=AUTH_TYPE_WAIT,
+                                     use=USE).count()
+    if view_lecture_count > 0:
+        connection_check = AUTH_TYPE_VIEW
+    else:
+        if wait_lecture_count > 0:
+            connection_check = AUTH_TYPE_WAIT
 
     return connection_check
 
@@ -285,6 +363,7 @@ def func_get_member_lecture_list(class_id, member_id):
                             'lecture_name': lecture_tb.name,
                             'lecture_note': lecture_tb.note,
                             'lecture_max_num': lecture_tb.member_num,
+                            # 'lecture_max_member_num_view_flag': lecture_tb.member_num_view_flag,
                             'lecture_minute': lecture_tb.lecture_minute
                             }
             member_lecture_list[str(lecture_tb.lecture_id)] = lecture_info
@@ -361,11 +440,15 @@ def func_get_member_ticket_info(class_id, member_ticket_id):
                               'member_ticket_start_date': str(member_ticket_tb.start_date),
                               'member_ticket_end_date': str(member_ticket_tb.end_date),
                               'member_ticket_price': member_ticket_tb.price,
+                              'member_ticket_pay_method': member_ticket_tb.pay_method,
                               'member_ticket_refund_date': str(member_ticket_tb.refund_date),
                               'member_ticket_refund_price': member_ticket_tb.refund_price,
                               'member_ticket_note': str(member_ticket_tb.note),
                               'ticket_id': ticket_id,
                               'ticket_effective_days': ticket_tb.effective_days,
+                              'ticket_month_schedule_enable': str(ticket_tb.month_schedule_enable),
+                              'ticket_week_schedule_enable': str(ticket_tb.week_schedule_enable),
+                              'ticket_day_schedule_enable': str(ticket_tb.day_schedule_enable),
                               'ticket_state_cd': ticket_tb.state_cd,
                               'ticket_lecture_list':
                                   ticket_data_dict[ticket_id]['ticket_lecture_list'],
@@ -455,12 +538,16 @@ def func_get_member_ticket_list(class_id, member_id):
                               'member_ticket_start_date': str(member_ticket_tb.start_date),
                               'member_ticket_end_date': str(member_ticket_tb.end_date),
                               'member_ticket_price': member_ticket_tb.price,
+                              'member_ticket_pay_method': member_ticket_tb.pay_method,
                               'member_ticket_refund_date': str(member_ticket_tb.refund_date),
                               'member_ticket_refund_price': member_ticket_tb.refund_price,
                               'member_ticket_note': str(member_ticket_tb.note),
                               'member_ticket_reg_dt': str(member_ticket_tb.reg_dt),
                               'ticket_id': ticket_id,
                               'ticket_effective_days': ticket_tb.effective_days,
+                              'ticket_month_schedule_enable': str(ticket_tb.month_schedule_enable),
+                              'ticket_week_schedule_enable': str(ticket_tb.week_schedule_enable),
+                              'ticket_day_schedule_enable': str(ticket_tb.day_schedule_enable),
                               'ticket_state_cd': ticket_tb.state_cd,
                               'ticket_lecture_list':
                                   ticket_data_dict[ticket_id]['ticket_lecture_list'],
@@ -482,7 +569,7 @@ def func_get_member_ticket_list(class_id, member_id):
 
 
 # 회원의 수강권 추가하기
-def func_add_member_ticket_info(user_id, class_id, ticket_id, counts, price,
+def func_add_member_ticket_info(user_id, class_id, ticket_id, counts, price, pay_method,
                                 start_date, end_date, contents, member_id):
     error = None
     member = None
@@ -505,7 +592,7 @@ def func_add_member_ticket_info(user_id, class_id, ticket_id, counts, price,
             if member_ticket_counts > 0:
                 auth_cd = AUTH_TYPE_VIEW
 
-            member_ticket_info = MemberTicketTb(member_id=member_id, ticket_tb_id=ticket_id,
+            member_ticket_info = MemberTicketTb(member_id=member_id, ticket_tb_id=ticket_id, pay_method=pay_method,
                                                 member_ticket_reg_count=counts, member_ticket_rem_count=counts,
                                                 member_ticket_avail_count=counts, price=price, option_cd='DC',
                                                 state_cd=STATE_CD_IN_PROGRESS, start_date=start_date, end_date=end_date,
@@ -592,7 +679,7 @@ def func_delete_member_ticket_info(user_id, class_id, member_ticket_id):
 
 
 # 강사의 셋팅 정보 가져오기
-def func_get_trainer_setting_list(context, user_id, class_id, class_hour):
+def func_get_trainer_setting_list(context, trainer_id, class_id, user_id):
     today = datetime.date.today()
     lt_res_01 = '00:00-24:00'
     lt_res_02 = 0
@@ -613,6 +700,7 @@ def func_get_trainer_setting_list(context, user_id, class_id, class_hour):
     lt_member_ticket_auto_finish = AUTO_FINISH_OFF
     lt_lan_01 = 'KOR'
     lt_pus_to_trainee_lesson_alarm = TO_TRAINEE_LESSON_ALARM_OFF
+    setting_to_shared_trainer_lesson_alarm = TO_SHARED_TRAINER_LESSON_ALARM_OFF
     lt_pus_from_trainee_lesson_alarm = FROM_TRAINEE_LESSON_ALARM_ON
     setting_admin_password = '0000'
     setting_attend_class_prev_display_time = 0
@@ -620,11 +708,13 @@ def func_get_trainer_setting_list(context, user_id, class_id, class_hour):
     avail_date_list = []
     setting_week_start_date = 'SUN'
     setting_holiday_hide = SHOW
-    setting_data = SettingTb.objects.filter(member_id=user_id, class_tb_id=class_id, use=USE)
+    setting_data = SettingTb.objects.filter(class_tb_id=class_id, use=USE)
     setting_calendar_basic_select_time = 60
     setting_calendar_time_selector_type = CALENDAR_TIME_SELECTOR_BASIC
     setting_trainer_statistics_lock = UN_USE
     setting_trainer_attend_mode_out_lock = UN_USE
+    setting_member_lecture_max_num_view_available = USE
+    setting_schedule_sign_enable = USE
 
     for setting_info in setting_data:
         if setting_info.setting_type_cd == 'LT_RES_01':
@@ -665,8 +755,11 @@ def func_get_trainer_setting_list(context, user_id, class_id, class_hour):
             lt_lan_01 = setting_info.setting_info
         if setting_info.setting_type_cd == 'LT_PUS_TO_TRAINEE_LESSON_ALARM':
             lt_pus_to_trainee_lesson_alarm = int(setting_info.setting_info)
+        if setting_info.setting_type_cd == 'LT_PUS_TO_SHARED_TRAINER_LESSON_ALARM':
+            setting_to_shared_trainer_lesson_alarm = int(setting_info.setting_info)
         if setting_info.setting_type_cd == 'LT_PUS_FROM_TRAINEE_LESSON_ALARM':
-            lt_pus_from_trainee_lesson_alarm = int(setting_info.setting_info)
+            if str(user_id) == str(setting_info.member_id):
+                lt_pus_from_trainee_lesson_alarm = int(setting_info.setting_info)
         if setting_info.setting_type_cd == 'LT_ADMIN_PASSWORD':
             setting_admin_password = setting_info.setting_info
         if setting_info.setting_type_cd == 'LT_ATTEND_CLASS_PREV_DISPLAY_TIME':
@@ -685,6 +778,11 @@ def func_get_trainer_setting_list(context, user_id, class_id, class_hour):
             setting_trainer_statistics_lock = setting_info.setting_info
         if setting_info.setting_type_cd == 'ATTEND_MODE_OUT_LOCK':
             setting_trainer_attend_mode_out_lock = setting_info.setting_info
+        if setting_info.setting_type_cd == 'LT_RES_MEMBER_LECTURE_MAX_NUM_VIEW':
+            setting_member_lecture_max_num_view_available = setting_info.setting_info
+        if setting_info.setting_type_cd == 'SCHEDULE_SIGN_ENABLE':
+            setting_schedule_sign_enable = setting_info.setting_info
+
     try:
         lecture_info = LectureTb.objects.get(class_tb_id=class_id, lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, use=USE)
         one_to_one_lecture_time_duration = lecture_info.lecture_minute
@@ -737,6 +835,7 @@ def func_get_trainer_setting_list(context, user_id, class_id, class_hour):
     context['setting_schedule_auto_finish'] = lt_schedule_auto_finish
     context['setting_member_ticket_auto_finish'] = lt_member_ticket_auto_finish
     context['setting_to_trainee_lesson_alarm'] = lt_pus_to_trainee_lesson_alarm
+    context['setting_to_shared_trainer_lesson_alarm'] = setting_to_shared_trainer_lesson_alarm
     context['setting_from_trainee_lesson_alarm'] = lt_pus_from_trainee_lesson_alarm
     context['setting_admin_password'] = setting_admin_password
     context['setting_language'] = lt_lan_01
@@ -748,6 +847,8 @@ def func_get_trainer_setting_list(context, user_id, class_id, class_hour):
     context['setting_calendar_time_selector_type'] = setting_calendar_time_selector_type
     context['setting_trainer_statistics_lock'] = setting_trainer_statistics_lock
     context['setting_trainer_attend_mode_out_lock'] = setting_trainer_attend_mode_out_lock
+    context['setting_member_lecture_max_num_view_available'] = setting_member_lecture_max_num_view_available
+    context['setting_schedule_sign_enable'] = setting_schedule_sign_enable
     return context
 
 
@@ -821,9 +922,10 @@ def func_get_ticket_info(class_id, ticket_id, user_id):
                        'ticket_state_cd': ticket_tb.state_cd,
                        'ticket_effective_days': ticket_tb.effective_days,
                        'ticket_price': ticket_tb.price,
+                       'ticket_reg_count': ticket_tb.reg_count,
+                       'ticket_month_schedule_enable': ticket_tb.month_schedule_enable,
                        'ticket_week_schedule_enable': ticket_tb.week_schedule_enable,
                        'ticket_day_schedule_enable': ticket_tb.day_schedule_enable,
-                       'ticket_reg_count': ticket_tb.reg_count,
                        'ticket_reg_dt': str(ticket_tb.reg_dt),
                        'ticket_mod_dt': str(ticket_tb.mod_dt),
                        'ticket_lecture_list': ticket_lecture_list,
@@ -888,6 +990,7 @@ def func_get_lecture_info(class_id, lecture_id, user_id):
     if lecture_tb is not None:
         lecture_info = {'lecture_id': str(lecture_id), 'lecture_name': lecture_tb.name, 'lecture_note': lecture_tb.note,
                         'lecture_state_cd': lecture_tb.state_cd, 'lecture_max_num': lecture_tb.member_num,
+                        # 'lecture_max_member_num_view_flag': lecture_tb.member_num_view_flag,
                         'lecture_reg_dt': str(lecture_tb.reg_dt), 'lecture_mod_dt': str(lecture_tb.mod_dt),
                         'lecture_ticket_list': lecture_ticket_list,
                         'lecture_ticket_state_cd_list': lecture_ticket_state_cd_list,
@@ -920,7 +1023,7 @@ def func_update_lecture_member_fix_status_cd(class_id, member_id):
     return error
 
 
-def update_setting_data(class_id, user_id, setting_type_cd_data, setting_info_data):
+def update_user_setting_data(user_id, setting_type_cd_data, setting_info_data):
 
     error = None
     try:
@@ -928,12 +1031,72 @@ def update_setting_data(class_id, user_id, setting_type_cd_data, setting_info_da
 
             for idx, setting_type_cd_info in enumerate(setting_type_cd_data):
                 try:
-                    setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id,
+                    setting_data = SettingTb.objects.get(member_id=user_id,
                                                          setting_type_cd=setting_type_cd_info)
                 except ObjectDoesNotExist:
-                    setting_data = SettingTb(member_id=user_id,
-                                             class_tb_id=class_id, setting_type_cd=setting_type_cd_info, use=USE)
+                    setting_data = SettingTb(member_id=user_id, setting_type_cd=setting_type_cd_info, use=USE)
 
+                setting_data.setting_info = setting_info_data[idx]
+                setting_data.save()
+
+    except ValueError:
+        error = '등록 값에 문제가 있습니다.'
+    except IntegrityError:
+        error = '등록 값에 문제가 있습니다.'
+    except TypeError:
+        error = '등록 값에 문제가 있습니다.'
+    except ValidationError:
+        error = '등록 값에 문제가 있습니다.'
+    except InternalError:
+        error = '등록 값에 문제가 있습니다.'
+
+    return error
+
+
+def update_program_setting_data(class_id, setting_type_cd_data, setting_info_data):
+
+    error = None
+    try:
+        with transaction.atomic():
+
+            for idx, setting_type_cd_info in enumerate(setting_type_cd_data):
+                try:
+                    setting_data = SettingTb.objects.get(class_tb_id=class_id,
+                                                         setting_type_cd=setting_type_cd_info)
+                except ObjectDoesNotExist:
+                    setting_data = SettingTb(class_tb_id=class_id, setting_type_cd=setting_type_cd_info, use=USE)
+                setting_data.member_id = None
+                setting_data.setting_info = setting_info_data[idx]
+                setting_data.save()
+
+    except ValueError:
+        error = '등록 값에 문제가 있습니다.'
+    except IntegrityError:
+        error = '등록 값에 문제가 있습니다.'
+    except TypeError:
+        error = '등록 값에 문제가 있습니다.'
+    except ValidationError:
+        error = '등록 값에 문제가 있습니다.'
+    except InternalError:
+        error = '등록 값에 문제가 있습니다.'
+
+    return error
+
+
+def update_alarm_setting_data(class_id, member_id, setting_type_cd_data, setting_info_data):
+
+    error = None
+    try:
+        with transaction.atomic():
+
+            for idx, setting_type_cd_info in enumerate(setting_type_cd_data):
+                try:
+                    setting_data = SettingTb.objects.get(class_tb_id=class_id, member_id=member_id,
+                                                         setting_type_cd=setting_type_cd_info)
+                except ObjectDoesNotExist:
+                    setting_data = SettingTb(class_tb_id=class_id, member_id=member_id,
+                                             setting_type_cd=setting_type_cd_info, use=USE)
+                setting_data.member_id = member_id
                 setting_data.setting_info = setting_info_data[idx]
                 setting_data.save()
 

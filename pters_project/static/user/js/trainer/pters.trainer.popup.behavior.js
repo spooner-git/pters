@@ -4,7 +4,6 @@
 let layer_popup = (function (){
     let popup_array = [];
     let windowHeight = window.innerHeight;
-    
 
     function func_open_layer_popup (popup_name, popup_size, animation_type){
         // $('.content_page').css('overflow-y', 'hidden');
@@ -61,9 +60,9 @@ let layer_popup = (function (){
             
             //팝업이 옆으로 닫히는 애니메이션이 종료된후 해당 팝업의 html을 지운다.
             let delay_time = 250;
-            if(popup_size == POPUP_SIZE_WINDOW){
-                delay_time = 0;
-            }
+            // if(popup_size == POPUP_SIZE_WINDOW){
+            //     delay_time = 0;
+            // }
             setTimeout(function(){
                 $popup_selector.css({"z-index":0});
                 $(`#${popup_data.popup_name}`).remove();
@@ -172,7 +171,7 @@ let layer_popup = (function (){
                 else if(option==CLOSE){
                     func_set_close_popup_animation($popup_selector, popup_data.animation_type);
                 }
-                func_set_shade(popup_array.length);
+                func_set_shade(popup_array.length, option);
             }
         },
 
@@ -275,13 +274,9 @@ function func_set_popup_position ($popup_selector, animation_type, popup_size){
             }
             break;
         case POPUP_FROM_PAGE:
-            break;
-        case POPUP_FROM_PAGE_50:
-            width = 50;
-            break;
-        case POPUP_FROM_PAGE_70:
-            width = 70;
-            break;   
+            translate_x = 0;
+            translate_y = 0;
+            break; 
     }
 
     $popup_selector.css({
@@ -302,9 +297,9 @@ function func_set_open_popup_animation ($popup_selector, animation_type, popup_s
     }
 
     let animation_info = "";
-    if(animation_type != POPUP_FROM_PAGE && animation_type != POPUP_FROM_PAGE_70 && animation_type != POPUP_FROM_PAGE_50){
+    // if(animation_type != POPUP_FROM_PAGE){
         animation_info = "transform 0.3s ease-in-out";
-    }
+    // }
     let translate_x = 0;
     let translate_y = 0;
     let popup_size_x = popup_size * windowWidth / 100;
@@ -323,16 +318,19 @@ function func_set_open_popup_animation ($popup_selector, animation_type, popup_s
             break;
         case POPUP_FROM_PAGE:
             break;
-        case POPUP_FROM_PAGE_70:
-            break;
-        case POPUP_FROM_PAGE_50:
-            break;
     }
-    
+    // alert(animation_info);
     $popup_selector.css({
         "transform": `translate(${translate_x}px, ${translate_y}px)`,
-        "transition": `${animation_info}`, "visibility":"visible"
+        "transition": `${animation_info}`
     });
+    if(animation_type==POPUP_FROM_PAGE){
+        $popup_selector.fadeIn(300);
+    }
+    else{
+        $popup_selector.css({"visibility":"visible"});
+    }
+
 }
 
 function func_set_close_popup_animation ($popup_selector, animation_type){
@@ -344,9 +342,9 @@ function func_set_close_popup_animation ($popup_selector, animation_type){
     }
 
     let animation_info = "";
-    if(animation_type != POPUP_FROM_PAGE && animation_type != POPUP_FROM_PAGE_70 && animation_type != POPUP_FROM_PAGE_50){
+    // if(animation_type != POPUP_FROM_PAGE){
         animation_info = "transform 0.3s ease-in-out";
-    }
+    // }
     let translate_x = 0;
     let translate_y = 0;
     switch (animation_type) {
@@ -365,33 +363,40 @@ function func_set_close_popup_animation ($popup_selector, animation_type){
             //안드로이드 크롬이 하단 브라우저 영역을 숨기면서 windowHeight가 늘어나서, 밑에 숨어있던 팝업이 보이는 현상 해결 (60은 navbar 높이)
             break;
         case POPUP_FROM_PAGE:
-            translate_x = -windowWidth;
-            translate_y = -windowHeight;
-            break;
-        case POPUP_FROM_PAGE_70:
-            translate_x = -windowWidth;
-            translate_y = -windowHeight;
-            break;
-        case POPUP_FROM_PAGE_50:
-            translate_x = -windowWidth;
-            translate_y = -windowHeight;
+            // translate_x = -windowWidth;
+            // translate_y = -windowHeight;
             break;
     }
-    $popup_selector.css({
-        "transform": `translate(${translate_x}px, ${translate_y}px)`,
-        "transition": `${animation_info}`
-    });
-    setTimeout(()=>{
-        $popup_selector.css({"visibility":"hidden"});
-    }, 300);
+    if(animation_type==POPUP_FROM_PAGE){
+        $popup_selector.fadeOut(300);
+    }
+    else{
+        $popup_selector.css({
+            "transform": `translate(${translate_x}px, ${translate_y}px)`,
+            "transition": `${animation_info}`
+        });
+        setTimeout(()=>{
+            $popup_selector.css({"visibility":"hidden"});
+        }, 300);
+    }
 }
 
-function func_set_shade (popup_array_length){
+function func_set_shade (popup_array_length, open_or_close){
     if(popup_array_length > 0){
         $('#shade_for_popup_basic').css({"display":'block', "z-index":100*popup_array_length-50});
+        if(open_or_close == OPEN){
+            $('#shade_for_popup_preventing_touch').css({"display":'block', "z-index":100*popup_array_length-50-1});
+        }else if(open_or_close == CLOSE){
+            setTimeout(()=>{
+                $('#shade_for_popup_preventing_touch').css({"display":'block', "z-index":100*popup_array_length-50-1});
+            }, 300);
+        }  
     }
     else{
         $('#shade_for_popup_basic').css({"display":'none', "z-index":0});
+        setTimeout(()=>{
+            $('#shade_for_popup_preventing_touch').css({"display":'none', "z-index":0});
+        }, 400);
     }
 }
 
@@ -406,11 +411,14 @@ function func_set_shade (popup_array_length){
  */
 function func_set_popup_basic (popup_name, data){
     let $popup = $(`.${popup_name}`);
-    if(data != undefined && data.popup_comment!=undefined){
-        $popup.find('.wrapper_popup_basic_comment').html(`<div>${data.popup_comment}</div>`);
+    // if(data != undefined && data.popup_comment!=undefined && data.popup_title!=undefined){
+    if(data != undefined){
+        $popup.find('.wrapper_popup_basic_comment').html(`<div>
+                                                            <p class="popup_title" style="display:${data.popup_title==undefined ? 'none': ''}">${data.popup_title}</p>
+                                                            <p class="popup_comment" style="display:${data.popup_comment==undefined ? 'none': ''}">${data.popup_comment}</p>
+                                                        </div>`);
     }
     if(data != undefined && data.onclick_function!=undefined){
-        // $popup.find('.popup_basic_confirm').attr('onclick', data.onclick_function);
         $popup.find('.popup_basic_confirm').off('click').click(function(){
             data.onclick_function();
         });
@@ -421,8 +429,8 @@ function show_error_message (message){
     layer_popup.open_layer_popup(POPUP_BASIC,
                                  'popup_basic_user_confirm',
                                  POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
-                                 {'popup_title':'',
-                                  'popup_comment':`${message}`,
+                                 {'popup_title':message.title,
+                                  'popup_comment':message.comment,
                                   'onclick_function':()=>{layer_popup.close_layer_popup(POPUP_SIZE_WINDOW);}});
 }
 
@@ -430,7 +438,7 @@ function show_user_confirm (message, callback){
     layer_popup.open_layer_popup(POPUP_BASIC,
                                  'popup_basic_user_select',
                                  POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
-                                 {'popup_title':'',
-                                  'popup_comment':`${message}`,
+                                 {'popup_title':message.title,
+                                  'popup_comment':message.comment,
                                   'onclick_function':()=>{callback();}});
 }

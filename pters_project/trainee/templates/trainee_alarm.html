@@ -94,7 +94,7 @@
             // layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_user_select', POPUP_SIZE_WINDOW, POPUP_FROM_PAGE,
             //                              {'popup_title':'', 'popup_comment':'정말 취소하시겠습니까?',
             //                              'onclick_function':`func_program_select('{{ class_info.class_tb_id }}', '${PROGRAM_LECTURE_CONNECT_DELETE}')`});
-            show_user_confirm ("정말 취소하시겠습니까", ()=>{
+            show_user_confirm ({title:"정말 취소하시겠습니까"}, ()=>{
                 func_program_select(class_tb_id, PROGRAM_LECTURE_CONNECT_DELETE)
             })
         }

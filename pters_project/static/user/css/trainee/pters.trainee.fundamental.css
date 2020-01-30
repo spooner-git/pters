@@ -143,8 +143,7 @@
         left: 50%;
         transform: translateX(-50%);
         background-color: #ff3b44;
-        /*background-image: linear-gradient(to right,#ea0e0e,#d60404);*/
-        /*background-image: linear-gradient(to right,#0eca68,#00bf5f);*/
+        background-image: linear-gradient(to right,#ea0e0ed4,#ff6d6d);
         box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.25);
         z-index: 1;
 
@@ -170,6 +169,7 @@
         left: 20px;
     }
         .nav_trainee_menu_box_l > a > div{
+            position: relative;
             min-width: 35px;
             margin-right: 15px;
         }
@@ -294,7 +294,7 @@
             width: auto;
         }
         .wrapper_box_next_plan .wrapper_cancel_notice .obj_button_gen{
-            width: 90px;
+            width: 67px;
             float: right;
         }
 

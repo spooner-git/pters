@@ -1,19 +1,38 @@
 class PopupBase{
     static base(top_left, top_center, top_right, content, bottom){
-
-
         let html = `
                     <div class="wrapper_top">
-                        ${top_left}
-                        ${top_center}
-                        ${top_right}
+                        ${PopupBase.wrapper_top(top_left, top_center, top_right)}
                     </div>
                     <div class="wrapper_middle">
-                        ${content}
+                        ${PopupBase.wrapper_middle(content)}
                     </div>
                     <div class="wrapper_bottom">
-                        ${bottom}
+                        ${PopupBase.wrapper_bottom(bottom)}
                     </div>
+                    `;
+        return html;
+    }
+
+    static wrapper_top(top_left, top_center, top_right){
+        let html = `
+                    ${top_left}
+                    ${top_center}
+                    ${top_right}
+                `;
+        return html;
+    }
+
+    static wrapper_middle(content){
+        let html = `
+                        ${content}
+                    `;
+        return html;
+    }
+
+    static wrapper_bottom(bottom){
+        let html = `
+                        ${bottom}
                     `;
         return html;
     }

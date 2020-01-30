@@ -195,12 +195,12 @@ class Lecture_add{
         let disabled = false;
         let onfocusout = (user_input_data)=>{
             if(Number(user_input_data)%5 != 0){
-                show_error_message("기본 수업 시간은 5분 단위로 입력해주세요.");
+                show_error_message({title:"기본 수업 시간은 5분 단위로 입력해주세요."});
                 this.render_content();
                 return false;
             }
             if(Number(user_input_data) <= 0){
-                show_error_message("기본 수업 시간은 0분 보다 크게 설정해주세요.");
+                show_error_message({title:"기본 수업 시간은 0분 보다 크게 설정해주세요."});
                 this.render_content();
                 return false;
             }
@@ -253,7 +253,7 @@ class Lecture_add{
                     });
                 });
             }else{
-                show_error_message('정원을 먼저 입력해주세요.');
+                show_error_message({title:'정원을 먼저 입력해주세요.'});
             }
         });
         return html;
@@ -335,20 +335,11 @@ class Lecture_add{
     send_date_create_ticket_at_the_same_time(lecture_id){
         let inspect = pass_inspector.ticket();
         if(inspect.barrier == BLOCKED){
-            // let id = "go_to_shop";
-            // let title = "패스 구매";
-            // let style = {"display":"inline-block", "background-color":"var(--bg-highlight)", "border-radius":"2px", "margin-top":"15px"};
-            // let onclick = ()=>{
-            //     layer_popup.all_close_layer_popup();
-            //     sideGoPopup("pters_pass_main");
-            // };
-            // let go_to_shop_button = `<div>${CComponent.button (id, title, style, onclick)}</div>`;
-            // show_error_message(`[${inspect.limit_type}] 이용자께서는 수강권을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다. 
-            //                     <br> 같은 이름으로 수강권 생성에 실패했습니다.${go_to_shop_button}`);
-
-            let message = `[${inspect.limit_type}] 이용자께서는 수강권을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다. 
-                            <br> 같은 이름으로 수강권 생성에 실패했습니다.
-                            <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까??</p>`;
+            let message = {
+                            title:'같은 이름 수강권을 생성하지 못했습니다.', 
+                            comment:`[${inspect.limit_type}] 이용자께서는 수강권을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다. 
+                                    <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까?</p>`
+                            };
             show_user_confirm (message, ()=>{
                 layer_popup.all_close_layer_popup();
                 sideGoPopup("pters_pass_main");
@@ -374,6 +365,14 @@ class Lecture_add{
     }
 
     send_data(){
+        let auth_inspect = pass_inspector.lecture_create();
+        if(auth_inspect.barrier == BLOCKED){
+            let message = `${auth_inspect.limit_type}`;
+            this.init();
+            show_error_message({title:message});
+            return false;
+        }
+
         if(this.data_sending_now == true){
             return false;
         }else if(this.data_sending_now == false){
@@ -382,19 +381,12 @@ class Lecture_add{
         
         let inspect = pass_inspector.lecture();
         if(inspect.barrier == BLOCKED){
-            // let id = "go_to_shop";
-            // let title = "패스 구매";
-            // let style = {"display":"inline-block", "background-color":"var(--bg-highlight)", "border-radius":"2px", "margin-top":"15px"};
-            // let onclick = ()=>{
-            //     layer_popup.all_close_layer_popup();
-            //     sideGoPopup("pters_pass_main");
-            // };
-            // let go_to_shop_button = `<div>${CComponent.button (id, title, style, onclick)}</div>`;
-            // show_error_message(`[${inspect.limit_type}] 이용자께서는 수업을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다.${go_to_shop_button}`);
-
             this.data_sending_now = false;
-            let message = `[${inspect.limit_type}] 이용자께서는 수업을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다.
-                            <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까??</p>`;
+            let message = {
+                            title:`수업 생성을 완료하지 못하였습니다.`,
+                            comment:`[${inspect.limit_type}] 이용자께서는 수업을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다.
+                                    <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까?</p>`
+            }
             show_user_confirm (message, ()=>{
                 layer_popup.all_close_layer_popup();
                 sideGoPopup("pters_pass_main");
@@ -449,16 +441,16 @@ class Lecture_add{
         update_check_registration_form(forms);
         let error_info = check_registration_form(forms);
         if(error_info != ''){
-            show_error_message(error_info);
+            show_error_message({title:error_info});
             return false;
         }
         else{
             if(this.data.capacity <= 1){
-                show_error_message('정원은 2명보다 크게 설정해주세요.');
+                show_error_message({title:'정원은 2명보다 크게 설정해주세요.'});
                 return false;
             }
             if(this.data.lecture_minute == null){
-                show_error_message("기본 수업 시간을 입력해주세요.");
+                show_error_message({title:"기본 수업 시간을 입력해주세요."});
                 return false;
             }
             return true;

@@ -7,6 +7,7 @@ class Setting_calendar{
             start_day:null,
             calendar_time_input_type: BASIC,
             calendar_basic_select_time:{value:[], text:[]},
+            sing_use:OFF
         };
 
         this.data_for_selector = {
@@ -28,6 +29,7 @@ class Setting_calendar{
         Setting_calendar_func.read((data)=>{
             this.data.start_day = data.setting_week_start_date;
             this.data.calendar_time_input_type = Number(data.setting_calendar_time_selector_type);
+            this.data.sing_use = data.setting_schedule_sign_enable;
             let current_calendar_basic_select_time = Number(data.setting_calendar_basic_select_time);
 
             //수업 기본 시간
@@ -48,7 +50,8 @@ class Setting_calendar{
     render(){
         let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();setting_calendar_popup.clear();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right" onclick="setting_calendar_popup.upper_right_menu();">${CImg.confirm()}</span>`;
+        // let top_right = `<span class="icon_right" onclick="setting_calendar_popup.upper_right_menu();">${CImg.confirm()}</span>`;
+        let top_right = `<span class="icon_right" onclick="setting_calendar_popup.upper_right_menu();"><span style="color:var(--font-highlight);font-weight: 500;">저장</span></span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
         
@@ -80,6 +83,10 @@ class Setting_calendar{
                         "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>달력 클릭/OFF 일정 클릭시 선택되는 기본 시간입니다.</span>" +
                     '</article>' +
                     '<article class="obj_input_box_full">' +
+                        this.dom_row_sign_use() + 
+                        "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>출석 처리 시 서명을 입력받을 수 있습니다.</span>" +
+                    '</article>' +
+                    '<article class="obj_input_box_full">' +
                         this.dom_row_calendar_title() +
                         this.dom_row_calendar_time_input_type_new() + 
                         this.dom_row_calendar_time_input_type_classic() +
@@ -109,7 +116,8 @@ class Setting_calendar{
                 }}
             };
             let options_padding_top_bottom = 16;
-            let button_height = 8 + 8 + 52;
+            // let button_height = 8 + 8 + 52;
+            let button_height = 52;
             let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
             let root_content_height = $root_content.height();
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
@@ -151,6 +159,24 @@ class Setting_calendar{
                         ${row}
                     </article>
                     `;
+        return html;
+    }
+
+    dom_row_sign_use(){
+        let id = `sign_use`;
+        let power = this.data.sing_use;
+        let style = null;
+        let sing_use_toggle = CComponent.toggle_button (id, power, style, (data)=>{
+                                this.data.sing_use = data; // ON or OFF
+                                this.render_content();
+                            });
+        let title_row = CComponent.text_button ("sing_use_text", '출석 시 서명 입력', {"font-size":"15px", "font-weight":"500", "letter-spacing":"-0.8px"}, ()=>{});
+        let html = `
+                    <div style="display:table;width:100%;">
+                        <div style="display:table-cell;width:auto;vertical-align:middle">${title_row}</div>
+                        <div style="display:table-cell;width:50px;vertical-align:middle">${sing_use_toggle}</div>
+                    </div>
+                   `;
         return html;
     }
 
@@ -232,6 +258,13 @@ class Setting_calendar{
     }
 
     send_data(){
+        let auth_inspect = pass_inspector.setting_update();
+        if(auth_inspect.barrier == BLOCKED){
+            let message = `${auth_inspect.limit_type}`;
+            show_error_message({title:message});
+            return false;
+        }
+        
         if(this.data_sending_now == true){
             return false;
         }else if(this.data_sending_now == false){
@@ -240,12 +273,13 @@ class Setting_calendar{
         let data = {
             "setting_week_start_date":this.data.start_day,
             "setting_calendar_time_selector_type":this.data.calendar_time_input_type,
-            "setting_calendar_basic_select_time":this.data.calendar_basic_select_time.value[0]
+            "setting_calendar_basic_select_time":this.data.calendar_basic_select_time.value[0],
+            "setting_schedule_sign_enable": this.data.sing_use
         };
         Setting_calendar_func.update(data, ()=>{
             this.data_sending_now = false;
             this.set_initial_data();
-            show_error_message('변경 내용이 저장되었습니다.');
+            show_error_message({title:'설정이 저장되었습니다.'});
         }, ()=>{this.data_sending_now = false;});
     }
 
@@ -275,7 +309,7 @@ class Setting_calendar_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -295,7 +329,7 @@ class Setting_calendar_func{
                     error_callback();
                 }
                 console.log('server error');
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
             }
         });
     }
@@ -317,7 +351,7 @@ class Setting_calendar_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -337,7 +371,7 @@ class Setting_calendar_func{
                     error_callback();
                 }
                 console.log('server error');
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
             }
         });
     }

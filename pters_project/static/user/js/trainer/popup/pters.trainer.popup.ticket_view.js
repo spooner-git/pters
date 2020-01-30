@@ -1,10 +1,13 @@
 class Ticket_view{
     constructor(install_target, ticket_id, instance, readonly){
         this.target = {install: install_target, toolbox:'section_ticket_view_toolbox', content:'section_ticket_view_content'};
+        this.data_sending_now = false;
         this.instance = instance;
         this.ticket_id = ticket_id;
         this.readonly = readonly;
         this.form_id = 'id_ticket_view_form';
+
+        this.if_user_changed_any_information = false;
 
         let d = new Date();
         this.dates = {
@@ -44,6 +47,12 @@ class Ticket_view{
             member_profile_url:[]
         };
 
+        this.simple_input = {
+            count : OFF,
+            price : OFF,
+            period : OFF
+        };
+
         this.init();
         this.set_initial_data();
     }
@@ -63,11 +72,12 @@ class Ticket_view{
         this.data.lecture_max = data.max;
         this.data.lecture_state_cd = data.state_cd;
         this.data.lecture_type_cd = data.type_cd;
+        this.data.lecture_color = data.color;
         this.render_content();
     }
 
     get lecture(){
-        return {id:this.data.lecture_id, name:this.data.lecture_name, max:this.data.lecture_max, state_cd:this.data.lecture_state_cd, type_cd:this.data.lecture_type_cd};
+        return {id:this.data.lecture_id, name:this.data.lecture_name, max:this.data.lecture_max, state_cd:this.data.lecture_state_cd, type_cd:this.data.lecture_type_cd, color:this.data.lecture_color};
     }
 
     set period(text){
@@ -149,7 +159,7 @@ class Ticket_view{
     }
 
     render(){
-        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();ticket_view_popup.clear();">${CImg.arrow_left()}</span>`;
+        let top_left = `<span class="icon_left" onclick="ticket_view_popup.upper_left_menu();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
         let top_right = `<span class="icon_right" onclick="ticket_view_popup.upper_right_menu();">${CImg.more()}</span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
@@ -167,7 +177,16 @@ class Ticket_view{
     }
 
     render_content(){
+        document.getElementById(this.target.toolbox).innerHTML = this.dom_assembly_toolbox();
+        document.querySelector(`${this.target.install} .wrapper_top`).innerHTML = PopupBase.wrapper_top(this.dom_wrapper_top().left, this.dom_wrapper_top().center, this.dom_wrapper_top().right);
         document.getElementById(this.target.content).innerHTML = this.dom_assembly_content();
+    }
+
+    dom_wrapper_top(){
+        let top_left = `<span class="icon_left" onclick="ticket_view_popup.upper_left_menu();">${CImg.arrow_left()}</span>`;
+        let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
+        let top_right = `<span class="icon_right" onclick="ticket_view_popup.upper_right_menu();">${CImg.more()}</span>`;
+        return {left: top_left, center:top_center, right:top_right};
     }
 
     dom_assembly_toolbox(){
@@ -177,11 +196,24 @@ class Ticket_view{
     dom_assembly_content(){
         let lecture = this.dom_row_lecture_select();
         let lecture_list = this.dom_row_lecture_select_list();
+        let basic_count = this.dom_row_ticket_count_input();
+        let basic_price = this.dom_row_ticket_price_input();
+        let basic_period = this.dom_row_ticket_period_input();
         let memo = this.dom_row_ticket_memo_input();
-        // let member = this.dom_row_member();
+        let max_reserve_number_daily = this.dom_row_reserve_limit_number_daily();
+        let max_reserve_number_weekly = this.dom_row_reserve_limit_number_weekly();
         let member_list = this.dom_row_member_list();
 
         let lecture_list_assembly = '<div class="obj_input_box_full">'+CComponent.dom_tag('수업 구성')+lecture+lecture_list+'</div>';
+        let ticket_basic_info_assembly = '<div class="obj_input_box_full">'+
+                                                CComponent.dom_tag('기본 횟수') +  basic_count +  `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>` +
+                                                CComponent.dom_tag('기본 유효 기간') +  basic_period +  `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>` +
+                                                CComponent.dom_tag('기본 가격') + basic_price + 
+                                        '</div>';
+        let ticket_additional_setting_assembly = '<div class="obj_input_box_full">'+
+                                                        CComponent.dom_tag('하루 최대 예약 횟수') +  max_reserve_number_daily +  `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>` +
+                                                        CComponent.dom_tag('주간 최대 예약 횟수') +  max_reserve_number_weekly + 
+                                                '</div>';
         let ticket_memo_assembly = '<div class="obj_input_box_full">'+CComponent.dom_tag('설명')+memo+ '</div>';
         let ticket_member_list_assembly = '<div class="obj_input_box_full" style="padding-top:16px;">'+CComponent.dom_tag(`수강권 보유 회원 (${this.data.member_id.length} 명)`, 
                                             {"font-size":"13px", "font-weight":"bold", "letter-spacing":"-0.6px", "padding":"0", "padding-bottom":"8px", "color":"var(--font-sub-normal)", "height":"20px"}) + 
@@ -195,6 +227,8 @@ class Ticket_view{
 
         let html =  lecture_list_assembly +
                     ticket_memo_assembly +
+                    ticket_basic_info_assembly +
+                    ticket_additional_setting_assembly +
                     ticket_member_list_assembly;
         return html;
     }
@@ -215,6 +249,14 @@ class Ticket_view{
         let pattern_message = "+ - _ : ()[] 제외 특수문자는 입력 불가";
         let required = "required";
         let sub_html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
+            let auth_inspect = pass_inspector.ticket_update();
+            if(auth_inspect.barrier == BLOCKED){
+                let message = `${auth_inspect.limit_type}`;
+                this.init();
+                show_error_message({title:message});
+                return false;
+            }
+
             let user_input_data = input_data;
             this.name = user_input_data;
             this.send_data();
@@ -249,11 +291,20 @@ class Ticket_view{
         });
         let style = null;
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            let auth_inspect = pass_inspector.ticket_update();
+            if(auth_inspect.barrier == BLOCKED){
+                let message = `${auth_inspect.limit_type}`;
+                this.init();
+                show_error_message({title:message});
+                return false;
+            }
+
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SELECT, 100, popup_style, null, ()=>{
                 lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 999, {'title':'수업'}, (set_data)=>{
                     this.lecture = set_data; //타겟에 선택된 데이터를 set
-                    this.send_data();
+                    // this.send_data(); wait_here_testing
+                    this.if_user_changed_any_information = true;
                 });
             });
         });
@@ -271,12 +322,19 @@ class Ticket_view{
             let lecture_color = this.data.lecture_color[i];
             let text_decoration = (lecture_state_cd == STATE_END_PROGRESS ? 'color:var(--font-domtag); text-decoration:line-through;' : '');
             let icon_button_style = {"display":"block", "padding":"0", "padding-left":"10px", "font-size":"15px",
-                                     "font-weight":"500", "height":"50px", "line-height":"50px", "overflow":"hidden", "text-overflow":"ellipsis", "white-space":"nowrap"};
+                                     "font-weight":"500", "height":"40px", "line-height":"40px", "overflow":"hidden", "text-overflow":"ellipsis", "white-space":"nowrap"};
 
             let lecture_name_set = `<div style="display:inline-block;width: 4px;height:16px;border-radius:6px;background-color:${lecture_color};margin-right:12px;vertical-align:middle;"></div>
                                     <span style="${text_decoration};vertical-align:middle;">${lecture_name}</span>`;
             html_to_join.push(
                 CComponent.icon_button (lecture_id, lecture_name_set, NONE, icon_button_style, ()=>{
+                    let auth_inspect = pass_inspector.lecture_read();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `${auth_inspect.limit_type}`;
+                        this.init();
+                        show_error_message({title:message});
+                        return false;
+                    }
                     let root_content_height = $root_content.height();
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SIMPLE_VIEW, 100*(247/root_content_height), POPUP_FROM_BOTTOM, {'lecture_id':lecture_id}, ()=>{
                         lecture_simple_view_popup = new Lecture_simple_view('.popup_lecture_simple_view', lecture_id, 'lecture_simple_view_popup');
@@ -293,52 +351,286 @@ class Ticket_view{
     dom_row_ticket_count_input(){
         let unit = '회';
         let id = 'ticket_count_view';
-        let title = this.data.count == null ? '' : this.data.count+unit;
-        let placeholder = '횟수';
+        let title = this.data.count == null ? '' : UnitRobot.numberWithCommas(this.data.count) + unit;
+        let placeholder = '0 회';
         let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
-        let disabled = true;
+        let disabled = false;
         let pattern = "[0-9]{0,4}";
         let pattern_message = "";
         let required = "";
+        if(this.data.count >= 99999){
+            title = "무제한";
+        }
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
+            let auth_inspect = pass_inspector.ticket_update();
+            if(auth_inspect.barrier == BLOCKED){
+                let message = `${auth_inspect.limit_type}`;
+                this.init();
+                show_error_message({title:message});
+                return false;
+            }
+
             if(input_data != '' && input_data != null){
                 input_data = Number(input_data);
             }
             let user_input_data = input_data;
             this.count = user_input_data;
+            // this.send_data(); wait_here_testing
+            this.if_user_changed_any_information = true;
         }, pattern, pattern_message, required);
+
+        $(document).off('click', `#c_i_n_r_${id}`).on('click', `#c_i_n_r_${id}`, ()=>{
+            if(this.simple_input.count == OFF){
+                this.simple_input.count = ON;
+                this.render_content();
+            }
+        });
+
+        if(this.simple_input.count == ON){
+            html = html + this.dom_row_count_simple_input_machine();
+        }
+
+        return html;
+    }
+
+    dom_row_count_simple_input_machine(){
+        // let button_style = {"flex":"1 1 0", "padding":"10px 8px", "color":"var(--font-sub-normal)"};
+        let button_style = {"flex":"1 1 0", "padding":"6px 0px", "color":"var(--font-sub-normal)", "background-color":"var(--bg-light)", "border-radius":"3px"};
+
+        let button_limitless = CComponent.button ("button_limitless", "무제한", button_style, ()=>{ this.data.count = 99999;this.render_content(); this.if_user_changed_any_information = true;});
+        let button_50 = CComponent.button ("button_50c", "+ 50회", button_style, ()=>{if(this.data.count >= 99999){this.data.count = null;} this.data.count = Number(this.data.count) + 50;this.render_content(); this.if_user_changed_any_information = true;});
+        let button_10 = CComponent.button ("button_10c", "+ 10회", button_style, ()=>{if(this.data.count >= 99999){this.data.count = null;}  this.data.count = Number(this.data.count) + 10;this.render_content(); this.if_user_changed_any_information = true;});
+        let button_1 = CComponent.button ("button_1c", "+ 1회", button_style, ()=>{if(this.data.count >= 99999){this.data.count = null;}  this.data.count = Number(this.data.count) + 1;this.render_content(); this.if_user_changed_any_information = true;});
+        let button_delete = CComponent.button ("button_delete_c", "지우기", button_style, ()=>{ this.data.count = null;this.render_content(); this.if_user_changed_any_information = true;});
+        
+        // let wrapper_style = "display:flex;padding:0px 0 0px 20px;font-size:12px;";
+        // let divider_style = "flex-basis:1px;height:20px;margin-top:10px;background-color:var(--bg-light);display:none;";
+        let wrapper_style = "display:flex;padding:0px 0 0px 40px;font-size:12px;";
+        let divider_style = "flex-basis:8px;height:20px;margin-top:10px;background-color:var(--bg-invisible);";
+        let html = `<div style="${wrapper_style}">
+                        ${button_1} <div style="${divider_style}"></div>
+                        ${button_10} <div style="${divider_style}"></div>
+                        ${button_50} <div style="${divider_style}"></div>
+                        ${button_limitless} <div style="${divider_style}"></div>
+                        ${button_delete}
+                    </div>`;
+
         return html;
     }
 
     dom_row_ticket_price_input(){
         let unit = '원';
         let id = 'ticket_price_view';
-        let title = this.data.price == null ? '' : this.data.price+unit;
-        let placeholder = '가격';
+        let title = this.data.price == null ? '' : UnitRobot.numberWithCommas(this.data.price) + unit;
+        let placeholder = '0 원';
         let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
-        let disabled = true;
+        let disabled = false;
         let pattern = "[0-9]{0,8}";
         let pattern_message = "";
         let required = "";
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
+            let auth_inspect = pass_inspector.ticket_update();
+            if(auth_inspect.barrier == BLOCKED){
+                let message = `${auth_inspect.limit_type}`;
+                this.init();
+                show_error_message({title:message});
+                return false;
+            }
+
             if(input_data != '' && input_data != null){
                 input_data = Number(input_data);
             }
             let user_input_data = input_data;
             this.price = user_input_data;
+            // this.send_data(); wait_here_testing
+            this.if_user_changed_any_information = true;
         }, pattern, pattern_message, required);
+
+        $(document).off('click', `#c_i_n_r_${id}`).on('click', `#c_i_n_r_${id}`, ()=>{
+            if(this.simple_input.price == OFF){
+                this.simple_input.price = ON;
+                this.render_content();
+            }
+        });
+
+        if(this.simple_input.price == ON){
+            html = html + this.dom_row_price_simple_input_machine();
+        }
+
+        return html;
+    }
+
+    dom_row_price_simple_input_machine(){
+        // let button_style = {"flex":"1 1 0", "padding":"10px 8px", "color":"var(--font-sub-normal)"};
+        let button_style = {"flex":"1 1 0", "padding":"6px 0px", "color":"var(--font-sub-normal)", "background-color":"var(--bg-light)", "border-radius":"3px"};
+
+        let button_100 = CComponent.button ("button_100", "+ 100만", button_style, ()=>{ this.data.price = Number(this.data.price) + 1000000;this.render_content(); this.if_user_changed_any_information = true;});
+        let button_50 = CComponent.button ("button_50", "+ 50만", button_style, ()=>{ this.data.price = Number(this.data.price) + 500000;this.render_content(); this.if_user_changed_any_information = true;});
+        let button_10 = CComponent.button ("button_10", "+ 10만", button_style, ()=>{ this.data.price = Number(this.data.price) + 100000;this.render_content(); this.if_user_changed_any_information = true;});
+        let button_1 = CComponent.button ("button_1", "+ 1만", button_style, ()=>{ this.data.price = Number(this.data.price) + 10000;this.render_content(); this.if_user_changed_any_information = true;});
+        let button_delete = CComponent.button ("button_delete", "지우기", button_style, ()=>{ this.data.price = null;this.render_content(); this.if_user_changed_any_information = true;});
+        
+        // let wrapper_style = "display:flex;padding:0px 0 0px 20px;font-size:12px;";
+        // let divider_style = "flex-basis:1px;height:20px;margin-top:10px;background-color:var(--bg-light);display:none;";
+        let wrapper_style = "display:flex;padding:0px 0 0px 40px;font-size:12px;";
+        let divider_style = "flex-basis:8px;height:20px;margin-top:10px;background-color:var(--bg-invisible);";
+        let html = `<div style="${wrapper_style}">
+                        ${button_100} <div style="${divider_style}"></div>
+                        ${button_50} <div style="${divider_style}"></div>
+                        ${button_10} <div style="${divider_style}"></div>
+                        ${button_1} <div style="${divider_style}"></div>
+                        ${button_delete}
+                    </div>`;
+
+        return html;
+    }
+
+    dom_row_ticket_period_input(){
+        let unit = '일';
+        let id = 'ticket_ticket_effective_days_view';
+        let title = this.data.ticket_effective_days == null ? '' : UnitRobot.numberWithCommas(this.data.ticket_effective_days) + unit;
+        let placeholder = '0 일';
+        let icon = NONE;
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
+        let style = null;
+        let disabled = false;
+        let pattern = "[0-9]{0,4}";
+        let pattern_message = "";
+        let required = "";
+        if(this.data.ticket_effective_days >= 99999){
+            title = "소진 시까지";
+        }
+        let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
+            let auth_inspect = pass_inspector.ticket_update();
+            if(auth_inspect.barrier == BLOCKED){
+                let message = `${auth_inspect.limit_type}`;
+                this.init();
+                show_error_message({title:message});
+                return false;
+            }
+
+            if(input_data != '' && input_data != null){
+                input_data = Number(input_data);
+            }
+            let user_input_data = input_data;
+            this.period = user_input_data;
+            // this.send_data(); wait_here_testing
+            this.if_user_changed_any_information = true;
+        }, pattern, pattern_message, required);
+
+        $(document).off('click', `#c_i_n_r_${id}`).on('click', `#c_i_n_r_${id}`, ()=>{
+            if(this.simple_input.period == OFF){
+                this.simple_input.period = ON;
+                this.render_content();
+            }
+        });
+
+        if(this.simple_input.period == ON){
+            html = html + this.dom_row_period_simple_input_machine();
+        }
+
+        return html;
+    }
+
+    dom_row_period_simple_input_machine(){
+        // let button_style = {"flex":"1 1 0", "padding":"10px 8px", "color":"var(--font-sub-normal)"};
+        let button_style = {"flex":"1 1 0", "padding":"6px 0px", "color":"var(--font-sub-normal)", "background-color":"var(--bg-light)", "border-radius":"3px"};
+
+        let button_limitless_d = CComponent.button ("button_limitless_d", "소진 시", button_style, ()=>{ this.data.ticket_effective_days = 99999;this.render_content(); this.if_user_changed_any_information = true;});
+        let button_10 = CComponent.button ("button_10d", "+ 10일", button_style, ()=>{if(this.data.ticket_effective_days >= 99999){this.data.ticket_effective_days = null;} this.data.ticket_effective_days = Number(this.data.ticket_effective_days) + 10;this.render_content(); this.if_user_changed_any_information = true;});
+        let button_7 = CComponent.button ("button_7d", "+ 7일", button_style, ()=>{if(this.data.ticket_effective_days >= 99999){this.data.ticket_effective_days = null;} this.data.ticket_effective_days = Number(this.data.ticket_effective_days) + 7;this.render_content(); this.if_user_changed_any_information = true;});
+        let button_1 = CComponent.button ("button_1d", "+ 1일", button_style, ()=>{if(this.data.ticket_effective_days >= 99999){this.data.ticket_effective_days = null;} this.data.ticket_effective_days = Number(this.data.ticket_effective_days) + 1;this.render_content(); this.if_user_changed_any_information = true;});
+        let button_delete = CComponent.button ("button_delete_d", "지우기", button_style, ()=>{ this.data.ticket_effective_days = null;this.render_content(); this.if_user_changed_any_information = true;});
+        
+        // let wrapper_style = "display:flex;padding:0px 0 0px 20px;font-size:12px;";
+        // let divider_style = "flex-basis:1px;height:20px;margin-top:10px;background-color:var(--bg-light);display:none;";
+        let wrapper_style = "display:flex;padding:0px 0 0px 40px;font-size:12px;";
+        let divider_style = "flex-basis:8px;height:20px;margin-top:10px;background-color:var(--bg-invisible);";
+        let html = `<div style="${wrapper_style}">
+                        ${button_1} <div style="${divider_style}"></div>
+                        ${button_7} <div style="${divider_style}"></div>
+                        ${button_10} <div style="${divider_style}"></div>
+                        ${button_limitless_d} <div style="${divider_style}"></div>
+                        ${button_delete}
+                    </div>`;
+
+        return html;
+    }
+
+    dom_row_reserve_limit_number_daily(){
+        let unit = '회';
+        let id = 'reserve_limit_number_daily';
+        let title = this.data.ticket_day_schedule_enable == null ? '' : UnitRobot.numberWithCommas(this.data.ticket_day_schedule_enable) + unit;
+        if(this.data.ticket_day_schedule_enable >= 99999){
+            title = "제한 없음";
+        }
+        let placeholder = `제한 없음`;
+        let icon = NONE;
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
+        let style = null;
+        let disabled = false;
+        let pattern = "[0-9]{0,3}";
+        let pattern_message = "";
+        let required = "";
+
+        let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
+
+            if(input_data != '' && input_data != null){
+                input_data = Number(input_data);
+            }
+
+            let user_input_data = input_data;
+            this.data.ticket_day_schedule_enable = user_input_data;
+            this.render_content();
+            this.if_user_changed_any_information = true;
+        }, pattern, pattern_message, required);
+
+        return html;
+    }
+
+    dom_row_reserve_limit_number_weekly(){
+        let unit = '회';
+        let id = 'reserve_limit_number_weekly';
+        let title = this.data.ticket_week_schedule_enable == null ? '' : UnitRobot.numberWithCommas(this.data.ticket_week_schedule_enable) + unit;
+        if(this.data.ticket_week_schedule_enable >= 99999){
+            title = "제한 없음";
+        }
+        let placeholder = `제한 없음`;
+        let icon = NONE;
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
+        let style = null;
+        let disabled = false;
+        let pattern = "[0-9]{0,3}";
+        let pattern_message = "";
+        let required = "";
+
+        let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
+
+            if(input_data != '' && input_data != null){
+                input_data = Number(input_data);
+            }
+
+            let user_input_data = input_data;
+            this.data.ticket_week_schedule_enable = user_input_data;
+            this.render_content();
+            this.if_user_changed_any_information = true;
+        }, pattern, pattern_message, required);
+
         return html;
     }
 
     dom_row_ticket_memo_input(){
         let id = 'ticket_memo_view';
-        let title = this.data.memo == null ? '' : this.data.memo;
+        let title = this.data.memo == null || this.data.memo == " " ? '' : this.data.memo;
         let placeholder = '설명';
         let icon = CImg.memo();
         let icon_r_visible = HIDE;
@@ -349,9 +641,18 @@ class Ticket_view{
         let pattern_message = "+ - _ : ., 제외 특수문자는 입력 불가";
         let required = "";
         let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
+            let auth_inspect = pass_inspector.ticket_update();
+            if(auth_inspect.barrier == BLOCKED){
+                let message = `${auth_inspect.limit_type}`;
+                this.init();
+                show_error_message({title:message});
+                return false;
+            }
+
             let user_input_data = input_data;
             this.memo = user_input_data;
-            this.send_data();
+            // this.send_data(); wait_here_testing
+            this.if_user_changed_any_information = true;
         }, pattern, pattern_message, required);
         return html;
     }
@@ -389,6 +690,13 @@ class Ticket_view{
             let style = {"display":"block", "font-size":"15px", "font-weight":"500", "padding":"0", "height":"44px", "line-height":"44px"};
             let member_button =
                 CComponent.text_button(member_id, member_name, style, ()=>{
+                    let auth_inspect = pass_inspector.member_read();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `${auth_inspect.limit_type}`;
+                        this.init();
+                        show_error_message({title:message});
+                        return false;
+                    }
                     let root_content_height = $root_content.height();
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SIMPLE_VIEW, 100*(400/root_content_height), POPUP_FROM_BOTTOM, {'member_id':member_id}, ()=>{
                         member_simple_view_popup = new Member_simple_view('.popup_member_simple_view', member_id, 'member_simple_view_popup');
@@ -407,7 +715,6 @@ class Ticket_view{
         return html;
     }
 
-
     send_data(){
         if(this.check_before_send() == false){
             return false;
@@ -416,12 +723,12 @@ class Ticket_view{
                     "ticket_id":this.ticket_id,
                     "ticket_name":this.data.name,
                     "lecture_id_list[]":this.data.lecture_id,
-                    "ticket_effective_days":this.data.ticket_effective_days,
-                    "ticket_reg_count":this.data.count,
-                    "ticket_price":this.data.price,
+                    "ticket_effective_days":this.data.ticket_effective_days == null ? 0:this.data.ticket_effective_days,
+                    "ticket_reg_count":this.data.count == null ? 0 :this.data.count,
+                    "ticket_price":this.data.price == null ? 0 :this.data.price,
                     "ticket_note":this.data.memo,
-                    "ticket_week_schedule_enable":7, //주간 수강 제한 횟수
-                    "ticket_day_schedule_enable":1  //일일 수강 제한 횟수
+                    "ticket_week_schedule_enable":this.data.ticket_week_schedule_enable == null ? 99999 : this.data.ticket_week_schedule_enable, //주간 수강 제한 횟수
+                    "ticket_day_schedule_enable":this.data.ticket_day_schedule_enable == null ? 99999 : this.data.ticket_day_schedule_enable //일일 수강 제한 횟수
         };
 
         Ticket_func.update(data, ()=>{
@@ -445,10 +752,139 @@ class Ticket_view{
         });
     }
 
+    upper_left_menu(){
+        if(this.if_user_changed_any_information == true){
+            let inspect = pass_inspector.ticket_update();
+            if(inspect.barrier == BLOCKED){
+                let message = `${inspect.limit_type}`;
+                layer_popup.close_layer_popup();
+                this.clear();
+                show_error_message({title:message});
+                return false;
+            }
+            
+            let user_option = {
+                confirm:{text:"변경사항 적용", callback:()=>{this.send_data();layer_popup.close_layer_popup();layer_popup.close_layer_popup();this.clear();}},
+                cancel:{text:"아무것도 변경하지 않음", callback:()=>{ layer_popup.close_layer_popup();layer_popup.close_layer_popup();this.clear();}}
+            };
+            let options_padding_top_bottom = 16;
+            // let button_height = 8 + 8 + 52;
+            let button_height = 52;
+            let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
+            let root_content_height = $root_content.height();
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
+                option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+            });
+        }else{
+            layer_popup.close_layer_popup();this.clear();
+        }
+    }
+
     upper_right_menu(){
         let user_option = {
+            cpy:{text:"복제", callback:()=>{
+                    // let auth_inspect = pass_inspector.ticket_create();
+                    // if(auth_inspect.barrier == BLOCKED){
+                    //     let message = `${auth_inspect.limit_type}`;
+                    //     this.init();
+                    //     show_error_message({title:message});
+                    //     return false;
+                    // }
+
+                    // if(this.data_sending_now == true){
+                    //     return false;
+                    // }else if(this.data_sending_now == false){
+                    //     this.data_sending_now = true;
+                    // }
+
+                    // let inspect = pass_inspector.ticket();
+                    // if(inspect.barrier == BLOCKED){
+                    //     this.data_sending_now = false;
+                    //     let message = {
+                    //         title:`수강권 생성을 완료하지 못했습니다.`,
+                    //         comment:`[${inspect.limit_type}] 이용자께서는 수강권을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다.
+                    //                 <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까?</p>`
+                    //     };
+                    //     show_user_confirm (message, ()=>{
+                    //         layer_popup.all_close_layer_popup();
+                    //         sideGoPopup("pters_pass_main");
+                    //     });
+
+                    //     return false;
+                    // }
+                    show_user_confirm({title:"이 수강권의 복제 수강권을 생성하시겠습니까?"}, ()=>{
+                        let auth_inspect = pass_inspector.ticket_create();
+                        if(auth_inspect.barrier == BLOCKED){
+                            let message = `${auth_inspect.limit_type}`;
+                            this.init();
+                            show_error_message({title:message});
+                            return false;
+                        }
+
+                        if(this.data_sending_now == true){
+                            return false;
+                        }else if(this.data_sending_now == false){
+                            this.data_sending_now = true;
+                        }
+
+                        let inspect = pass_inspector.ticket();
+                        if(inspect.barrier == BLOCKED){
+                            this.data_sending_now = false;
+                            let message = {
+                                title:`수강권 생성을 완료하지 못했습니다.`,
+                                comment:`[${inspect.limit_type}] 이용자께서는 수강권을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다.
+                                        <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까?</p>`
+                            };
+                            show_user_confirm (message, ()=>{
+                                layer_popup.all_close_layer_popup();
+                                sideGoPopup("pters_pass_main");
+                            });
+
+                            return false;
+                        }
+                        let data = {
+                                    "ticket_name":this.data.name+' - 복제',
+                                    "lecture_id_list[]":this.data.lecture_id,
+                                    "ticket_effective_days":this.data.ticket_effective_days,
+                                    "ticket_reg_count":this.data.count,
+                                    "ticket_price":this.data.price,
+                                    "ticket_note":this.data.memo,
+                                    "ticket_week_schedule_enable":this.data.ticket_week_schedule_enable, //주간 수강 제한 횟수
+                                    "ticket_day_schedule_enable":this.data.ticket_day_schedule_enable  //일일 수강 제한 횟수
+                        };
+                        
+                        Ticket_func.create(data, ()=>{
+                            this.data_sending_now = false;
+                            // layer_popup.close_layer_popup();
+                            if(this.callback != undefined){
+                                this.callback();
+                            }
+                            try{
+                                current_page.init();
+                            }catch(e){}
+                            try{
+                                ticket_list_popup.init();
+                            }catch(e){}
+                        }, ()=>{this.data_sending_now = false;});
+                        layer_popup.close_layer_popup(); //confirm 팝업 닫기
+                        layer_popup.close_layer_popup(); //옵션 선택 팝업 닫기
+                        layer_popup.close_layer_popup(); //ticket_view 팝업 닫기
+                    });
+                }
+            },
             activate:{text:"활성화", callback:()=>{
-                    show_user_confirm(`"${this.data.name}" <br> 수강권을 활성화 하시겠습니까? <br> 활성화 탭에서 다시 확인할 수 있습니다.`, ()=>{
+                    let auth_inspect = pass_inspector.ticket_update();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `${auth_inspect.limit_type}`;
+                        this.init();
+                        show_error_message({title:message});
+                        return false;
+                    }
+                    let message = {
+                        title:`"${this.data.name}" <br> 수강권을 활성화 하시겠습니까?`,
+                        comment:`활성화 탭에서 다시 확인할 수 있습니다.`
+                    };
+                    show_user_confirm(message, ()=>{
                         let inspect = pass_inspector.ticket();
                         if(inspect.barrier == BLOCKED){
                             // let id = "go_to_shop";
@@ -461,13 +897,15 @@ class Ticket_view{
                             // let go_to_shop_button = `<div>${CComponent.button (id, title, style, onclick)}</div>`;
                             
                             // layer_popup.close_layer_popup(); //confirm팝업 닫기
-                            // show_error_message(`[${inspect.limit_type}] 이용자께서는 진행중 수강권을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다. 
-                            //                     <br> 수강권 활성화에 실패했습니다.${go_to_shop_button}`);
+                            // show_error_message({title:`[${inspect.limit_type}] 이용자께서는 진행중 수강권을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다. 
+                            //                     <br> 수강권 활성화에 실패했습니다.${go_to_shop_button}`});
 
                             layer_popup.close_layer_popup(); //confirm팝업 닫기
-                            let message = `[${inspect.limit_type}] 이용자께서는 진행중 수강권을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다. 
-                                            <br> 수강권 활성화에 실패했습니다.
-                                            <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까??</p>`;
+                            let message = {
+                                title:`수강권 활성화를 완료하지 못했습니다.`,
+                                comment:`[${inspect.limit_type}] 이용자께서는 진행중 수강권을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다. 
+                                            <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까?</p>`
+                            };         
                             show_user_confirm (message, ()=>{
                                 layer_popup.all_close_layer_popup();
                                 sideGoPopup("pters_pass_main");
@@ -492,11 +930,21 @@ class Ticket_view{
                 }   
             },
             deactivate:{text:"비활성화", callback:()=>{
-                    show_user_confirm(`"${this.data.name}" <br> 수강권을 비활성화 하시겠습니까?  <br> 비활성화 탭에서 다시 활성화 할 수 있습니다. <br><br>
-                                                            <img src="/static/common/icon/icon_stopmark.png" style="width:25px;"><br>
-                                                            <span style="color:var(--font-highlight); font-size:12px;">이 수강권을 가진 회원들에게서 수강권이 삭제됩니다. <br>
-                                                            과거 일정은 완료 처리, 미래 일정은 삭제됩니다. <br>
-                                                            이 수강권 하나만 가진 회원은 종료탭으로 이동됩니다.</span>`, ()=>{
+                    let auth_inspect = pass_inspector.ticket_update();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `${auth_inspect.limit_type}`;
+                        this.init();
+                        show_error_message({title:message});
+                        return false;
+                    }
+                    let message = {
+                        title:`"${this.data.name}" <br>수강권을 비활성화 하시겠습니까?`,
+                        comment:`<img src="/static/common/icon/icon_stopmark.png" style="width:25px;"><br>
+                                <span style="color:var(--font-highlight); font-size:12px;">이 수강권을 가진 회원들에게서 수강권이 삭제됩니다. <br>
+                                과거 일정은 완료 처리, 미래 일정은 삭제됩니다. <br>
+                                이 수강권 하나만 가진 회원은 종료탭으로 이동됩니다.</span>`
+                    };
+                    show_user_confirm(message, ()=>{
                         Ticket_func.status({"ticket_id":this.ticket_id, "state_cd":STATE_END_PROGRESS}, ()=>{
                             try{
                                 current_page.init();
@@ -513,9 +961,20 @@ class Ticket_view{
                 }   
             },
             delete:{text:"삭제", callback:()=>{
-                    show_user_confirm(`"${this.data.name}" <br> 수강권을 영구 삭제 하시겠습니까? <br> 데이터를 복구할 수 없습니다. <br><br>
-                                                            <img src="/static/common/icon/icon_stopmark.png" style="width:25px;"><br>
-                                                            <span style="color:var(--font-highlight); font-size:12px;">수강권과 연결된 수업, 회원에게서 <br>이 수강권과 관련된 정보가 모두 삭제됩니다.</span>`, ()=>{
+                    let auth_inspect = pass_inspector.ticket_delete();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `${auth_inspect.limit_type}`;
+                        this.init();
+                        show_error_message({title:message});
+                        return false;
+                    }
+                    let message = {
+                        title:`"${this.data.name}" <br> 수강권을 영구 삭제 하시겠습니까?`,
+                        comment:`데이터를 복구할 수 없습니다. <br><br>
+                                <img src="/static/common/icon/icon_stopmark.png" style="width:25px;"><br>
+                                <span style="color:var(--font-highlight); font-size:12px;">수강권과 연결된 수업, 회원에게서 <br>이 수강권과 관련된 정보가 모두 삭제됩니다.</span>`
+                    };
+                    show_user_confirm(message, ()=>{
                         Ticket_func.delete({"ticket_id":this.ticket_id}, ()=>{
                             try{
                                 current_page.init();
@@ -539,7 +998,8 @@ class Ticket_view{
             delete user_option.deactivate;
         }
         let options_padding_top_bottom = 16;
-        let button_height = 8 + 8 + 52;
+        // let button_height = 8 + 8 + 52;
+        let button_height = 52;
         let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
         let root_content_height = $root_content.height();
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
@@ -571,9 +1031,8 @@ class Ticket_view{
         let forms = document.getElementById(`${this.form_id}`);
         update_check_registration_form(forms);
         let error_info = check_registration_form(forms);
-        console.log(error_info);
         if(error_info != ''){
-            show_error_message(error_info);
+            show_error_message({title:error_info});
             return false;
         }
         else{
@@ -688,7 +1147,7 @@ class Ticket_simple_view{
     dom_row_toolbox(){
         let text_button_style = {"color":"var(--font-highlight)", "font-size":"13px", "font-weight":"500", "padding":"10px 0"};
         let text_button = CComponent.text_button ("detail_ticket_info", "더보기", text_button_style, ()=>{
-            show_user_confirm(`작업중이던 항목을 모두 닫고 수강권 메뉴로 이동합니다.`, ()=>{
+            show_user_confirm({title:`작업중이던 항목을 모두 닫고 수강권 메뉴로 이동합니다.`}, ()=>{
                 layer_popup.all_close_layer_popup();
                 if($(window).width() > 650){
                     sideGoPage("ticket_page_type");

@@ -14,7 +14,7 @@
 
     width: 300px;
     border: var(--border-article-dark);
-    border-radius: 5px;
+    border-radius: 10px;
 }
 
 .wrapper_popup_basic_comment{
@@ -28,11 +28,12 @@
     display: table;
     width: 100%;
 }
+
 .wrapper_popup_basic_comment > div{
     margin: 0;
     width:  100%;
     /* padding: 0 15px; */
-    padding: 25px 15px;
+    padding: 25px 10px;
     box-sizing: border-box;
     /* position: absolute;
     top: 50%;
@@ -43,11 +44,23 @@
     word-break: keep-all;
 }
 
+.wrapper_popup_basic_comment > div > .popup_title{
+    margin: 0;
+    font-size: 14px;
+    font-weight: bold;
+}
+.wrapper_popup_basic_comment > div > .popup_comment{
+    margin-bottom: 0;
+    /* margin-top: 10px; */
+    font-size: 12.5px;
+    font-weight: normal;
+}
+
 .wrapper_popup_basic_buttons{
     text-align: center;
-    border-top: var(--border-article-dark);
-    height: 65px;
-    line-height: 65px;
+    border-top: var(--border-article);
+    height: 52px;
+    line-height: 52px;
     /* height: 52px;
     line-height: 52px; */
     /* padding-top:8px;

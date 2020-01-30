@@ -175,7 +175,7 @@ class Program_add_new_member{
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             let upper_category = this.category.code[0];
             if(upper_category == undefined){
-                show_error_message('상위 분야를 먼저 선택해주세요');
+                show_error_message({title:'상위 분야를 먼저 선택해주세요'});
                 return false;
             }
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
@@ -192,7 +192,7 @@ class Program_add_new_member{
     send_data(){
         // let inspect = pass_inspector.program();
         // if(inspect.barrier == BLOCKED){
-        //     show_error_message(`[${inspect.limit_type}] 이용자께서는 프로그램을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다.`);
+        //     show_error_message({title:`[${inspect.limit_type}] 이용자께서는 프로그램을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다.`});
         //     return false;
         // }
 
@@ -220,16 +220,16 @@ class Program_add_new_member{
         update_check_registration_form(forms);
         let error_info = check_registration_form(forms);
         if(error_info != ''){
-            show_error_message(error_info);
+            show_error_message({title:error_info});
             return false;
         }
         else{
             if(this.data.program_category_code.length==0){
-                show_error_message('분야를 선택해주세요.');
+                show_error_message({title:'분야를 선택해주세요.'});
                 return false;
             }
             if(this.data.program_category_sub_code.length==0){
-                show_error_message('상세 분야를 선택해주세요.');
+                show_error_message({title:'상세 분야를 선택해주세요.'});
                 return false;
             }
             return true;
@@ -262,7 +262,7 @@ class Program_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -282,7 +282,7 @@ class Program_func{
                     error_callback();
                 }
                 console.log('server error');
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
             }
         });
     }
@@ -307,9 +307,23 @@ class Program_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
+                }
+                let select_check = false;
+                for(let i=0; i<data.program_data.length; i++){
+                    if(data.program_data[i].program_selected == PROGRAM_SELECTED){
+                        select_check = true;
+                    }
+                }
+                if(!select_check){
+                    let message = {
+                        title:`프로그램의 공유 연결 해제 되었습니다.`,
+                        comment:`다시 연결하려면 프로그램 소유자에게 요청 해야합니다.`
+                    };
+                    show_error_message (message);
+                    location.href = '/trainer/refresh_trainer_page/';
                 }
                 if(callback != undefined){
                     callback(data);
@@ -326,6 +340,7 @@ class Program_func{
                 if(error_callback != undefined){
                     error_callback();
                 }
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                 console.log('server error');
             }
         });
@@ -351,7 +366,7 @@ class Program_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -371,7 +386,7 @@ class Program_func{
                     error_callback();
                 }
                 console.log('server error');
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
             }
         });
     }
@@ -396,7 +411,7 @@ class Program_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -416,7 +431,7 @@ class Program_func{
                     error_callback();
                 }
                 console.log('server error');
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
             }
         });
     }

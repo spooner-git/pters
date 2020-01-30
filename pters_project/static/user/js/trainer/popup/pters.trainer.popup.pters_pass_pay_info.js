@@ -268,7 +268,7 @@ class Pters_pass_pay_info{
         
         // pters_pass_pay_info_func.update(data, ()=>{
         //     this.set_initial_data();
-        //     show_error_message('변경 내용이 저장되었습니다.');
+        //     show_error_message({title:'변경 내용이 저장되었습니다.'});
         //     // this.render_content();
         // });
     }

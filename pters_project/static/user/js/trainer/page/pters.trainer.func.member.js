@@ -75,7 +75,7 @@ class Member {
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -146,9 +146,15 @@ class Member {
             let end_date_text = DateRobot.to_text(end_date, '', '', SHORT);
             let remain_date = Math.round((new Date(end_date).getTime() - new Date().getTime()) / (1000*60*60*24));
 
+            
+
             let remain_count_text = '잔여 '+member_rem+'회';
             end_date_text = '-'+end_date_text+' ('+remain_date+'일)';
             let member_counts_text;
+
+            if(member_reg >= 99999){
+                remain_count_text = "무제한";
+            }
 
             if(end_date == "9999-12-31"){
                 end_date_text = '소진 시까지';
@@ -181,9 +187,8 @@ class Member {
                 member_profile_photo = `<img src="${data.member_profile_url}">`;
             }
 
-            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
-            let onclick = `layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_MEMBER_VIEW}', 100, ${popup_style}, {'member_id':${member_id}}, ()=>{
-                member_view_popup = new Member_view('.popup_member_view', ${member_id}, 'member_view_popup');});`;
+            
+            let onclick = `member.event_view_member(${member_id})`;
             let html = `<article class="member_wrapper" data-member_id="${member_id}" data-name="${member_name}" onclick="${onclick}" style="color:${list_type == "ing" ? "" : 'var(--font-inactive)'}">
                             <div class="member_data_wrapper">
                                 <div class="member_data_l">
@@ -234,6 +239,21 @@ class Member {
         
         document.querySelector('.member_search_tool').innerHTML = html;
     }
+    
+    event_view_member(member_id){
+        let inspect = pass_inspector.member_read();
+        if(inspect.barrier == BLOCKED){
+            let message = `${inspect.limit_type}`;
+            show_error_message({title:message});
+            return false;
+        }
+
+        let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_VIEW, 100, popup_style, {'member_id':member_id}, ()=>{
+            member_view_popup = new Member_view('.popup_member_view', member_id, 'member_view_popup');
+        });
+
+    }
 
     event_add_member(){
         let user_option = {
@@ -251,7 +271,8 @@ class Member {
             }}
         };
         let options_padding_top_bottom = 16;
-        let button_height = 8 + 8 + 52;
+        // let button_height = 8 + 8 + 52;
+        let button_height = 52;
         let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
         let root_content_height = $root_content.height();
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
@@ -339,7 +360,8 @@ class Member {
         user_option += `}`;
 
         let options_padding_top_bottom = 16;
-        let button_height = 8 + 8 + 52;
+        // let button_height = 8 + 8 + 52;
+        let button_height = 52;
         let layer_popup_height = options_padding_top_bottom + button_height + 52*user_options_array.length;
         let root_content_height = $root_content.height();
 
@@ -410,7 +432,7 @@ class Member_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -424,7 +446,7 @@ class Member_func{
                 if(error_callback != undefined){
                     error_callback();
                 }
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                 location.reload();
             }
         });
@@ -451,7 +473,7 @@ class Member_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -465,7 +487,7 @@ class Member_func{
                 if(error_callback != undefined){
                     error_callback();
                 }
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                 location.reload();
             }
         });
@@ -492,7 +514,7 @@ class Member_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -506,7 +528,7 @@ class Member_func{
                 if(error_callback != undefined){
                     error_callback();
                 }
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                 location.reload();
             }
         });
@@ -536,7 +558,7 @@ class Member_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -550,7 +572,7 @@ class Member_func{
                 if(error_callback != undefined){
                     error_callback();
                 }
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                 location.reload();
             }
         });
@@ -580,7 +602,7 @@ class Member_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -594,7 +616,7 @@ class Member_func{
                 if(error_callback != undefined){
                     error_callback();
                 }
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                 location.reload();
             }
         });
@@ -626,7 +648,7 @@ class Member_func{
                 console.log(data);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -640,7 +662,7 @@ class Member_func{
                 if(error_callback != undefined){
                     error_callback();
                 }
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                 location.reload();
             }
         });
@@ -671,7 +693,7 @@ class Member_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -685,13 +707,13 @@ class Member_func{
                 if(error_callback != undefined){
                     error_callback();
                 }
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                 location.reload();
             }
         });
     }
 
-    static update(data, callback, error_callback){
+    static update(data, callback, error_callback, success_error_callback){
         //데이터 형태 {"member_id":"", "first_name":"", "phone":"", "sex":"", "birthday":""};
         $.ajax({
             url:'/trainer/update_member_info/',
@@ -716,7 +738,7 @@ class Member_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -730,7 +752,7 @@ class Member_func{
                 if(error_callback != undefined){
                     error_callback();
                 }
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                 location.reload();
             }
         });
@@ -761,7 +783,7 @@ class Member_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -775,7 +797,7 @@ class Member_func{
                 if(error_callback != undefined){
                     error_callback();
                 }
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                 location.reload();
             }
         });
@@ -806,7 +828,7 @@ class Member_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -820,7 +842,7 @@ class Member_func{
                 if(error_callback != undefined){
                     error_callback();
                 }
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                 // location.reload();
             }
         });
@@ -851,7 +873,7 @@ class Member_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -865,7 +887,7 @@ class Member_func{
                 if(error_callback != undefined){
                     error_callback();
                 }
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                 // location.reload();
             }
         });
@@ -896,7 +918,7 @@ class Member_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -910,7 +932,7 @@ class Member_func{
                 if(error_callback != undefined){
                     error_callback();
                 }
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                 // location.reload();
             }
         });
@@ -940,7 +962,7 @@ class Member_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -954,7 +976,7 @@ class Member_func{
                 if(error_callback != undefined){
                     error_callback();
                 }
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                 // location.reload();
             }
         });
@@ -984,7 +1006,7 @@ class Member_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        show_error_message(data.messageArray[0]);
+                        show_error_message({title:data.messageArray[0]});
                         return false;
                     }
                 }
@@ -998,7 +1020,7 @@ class Member_func{
                 if(error_callback != undefined){
                     error_callback();
                 }
-                show_error_message('통신 오류 발생 \n 잠시후 다시 시도해주세요.');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
                 // location.reload();
             }
         });
