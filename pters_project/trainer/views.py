@@ -1105,55 +1105,60 @@ class AttendModeDetailView(LoginRequiredMixin, AccessTestMixin, View):
         phone_number = request.POST.get('phone_number', '')
         schedule_id = request.POST.get('schedule_id', '')
         error = None
-        try:
-            schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id)
-        except ObjectDoesNotExist:
-            schedule_info = None
+        if schedule_id is None or schedule_id == '':
+            error = '일정 정보를 불러오지 못했습니다.'
+        if error is None:
+            try:
+                schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id)
+            except ObjectDoesNotExist:
+                schedule_info = error = '일정 정보를 불러오지 못했습니다.'
 
-        member_data = ClassMemberTicketTb.objects.filter(class_tb_id=class_id,
-                                                         member_ticket_tb__member__phone=phone_number,
-                                                         auth_cd=AUTH_TYPE_VIEW,
-                                                         use=USE)
-        if len(member_data) > 0:
-            context['member_info'] = member_data[0].member_ticket_tb.member
-            member_id = member_data[0].member_ticket_tb.member_id
-            context['member_id'] = member_id
-            context['schedule_info'] = schedule_info
-            context['schedule_id'] = schedule_id
-            if schedule_info.member_ticket_tb is None or schedule_info.member_ticket_tb == '':
-                try:
-                    member_ticket_schedule_info = ScheduleTb.objects.get(lecture_schedule_id=schedule_id,
-                                                                         lecture_tb_id=schedule_info.lecture_tb_id,
-                                                                         member_ticket_tb__member_id=member_id)
-                    context['member_ticket_info'] = member_ticket_schedule_info.member_ticket_tb
-                    context['schedule_info'] = member_ticket_schedule_info
-                    context['schedule_id'] = member_ticket_schedule_info.schedule_id
+        if error is None:
 
-                except ObjectDoesNotExist:
-                    member_ticket_id = None
-                    member_ticket_result = func_get_lecture_member_ticket_id(class_id, schedule_info.lecture_tb_id,
-                                                                             member_id)
-                    if member_ticket_result['error'] is not None:
-                        error = member_ticket_result['error']
-                    else:
-                        member_ticket_id = member_ticket_result['member_ticket_id']
+            member_data = ClassMemberTicketTb.objects.filter(class_tb_id=class_id,
+                                                             member_ticket_tb__member__phone=phone_number,
+                                                             auth_cd=AUTH_TYPE_VIEW,
+                                                             use=USE)
+            if len(member_data) > 0:
+                context['member_info'] = member_data[0].member_ticket_tb.member
+                member_id = member_data[0].member_ticket_tb.member_id
+                context['member_id'] = member_id
+                context['schedule_info'] = schedule_info
+                context['schedule_id'] = schedule_id
+                if schedule_info.member_ticket_tb is None or schedule_info.member_ticket_tb == '':
+                    try:
+                        member_ticket_schedule_info = ScheduleTb.objects.get(lecture_schedule_id=schedule_id,
+                                                                             lecture_tb_id=schedule_info.lecture_tb_id,
+                                                                             member_ticket_tb__member_id=member_id)
+                        context['member_ticket_info'] = member_ticket_schedule_info.member_ticket_tb
+                        context['schedule_info'] = member_ticket_schedule_info
+                        context['schedule_id'] = member_ticket_schedule_info.schedule_id
 
-                    if error is None:
-                        if member_ticket_id is None or member_ticket_id == '':
-                            error = '예약 가능 횟수가 없습니다.'
+                    except ObjectDoesNotExist:
+                        member_ticket_id = None
+                        member_ticket_result = func_get_lecture_member_ticket_id(class_id, schedule_info.lecture_tb_id,
+                                                                                 member_id)
+                        if member_ticket_result['error'] is not None:
+                            error = member_ticket_result['error']
                         else:
-                            try:
-                                context['member_ticket_info'] =\
-                                    MemberTicketTb.objects.get(member_ticket_id=member_ticket_id)
-                            except ObjectDoesNotExist:
-                                error = '수강정보를 불러오지 못했습니다.'
-            else:
-                if schedule_info.member_ticket_tb.member_id == member_id:
-                    context['member_ticket_info'] = schedule_info.member_ticket_tb
+                            member_ticket_id = member_ticket_result['member_ticket_id']
+
+                        if error is None:
+                            if member_ticket_id is None or member_ticket_id == '':
+                                error = '예약 가능 횟수가 없습니다.'
+                            else:
+                                try:
+                                    context['member_ticket_info'] =\
+                                        MemberTicketTb.objects.get(member_ticket_id=member_ticket_id)
+                                except ObjectDoesNotExist:
+                                    error = '수강정보를 불러오지 못했습니다.'
                 else:
-                    error = '번호와 수업이 일치하지 않습니다.'
-        else:
-            error = '등록되지 않은 전화번호 입니다.'
+                    if schedule_info.member_ticket_tb.member_id == member_id:
+                        context['member_ticket_info'] = schedule_info.member_ticket_tb
+                    else:
+                        error = '번호와 수업이 일치하지 않습니다.'
+            else:
+                error = '등록되지 않은 전화번호 입니다.'
 
         if error is not None:
             logger.error('class_id:'+str(class_id) + '/phone_number:' + str(phone_number) + '/schedule_id:'
