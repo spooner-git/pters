@@ -681,7 +681,7 @@ class AddMemberView(RegistrationView, View):
                     for err in field.errors:
                         messages.error(request, str(field.label)+':'+err)
         if error is not None:
-            logger.error(name + '[' + form.cleaned_data['username'] + ']' + error)
+            logger.error(name + '::' + error)
             messages.error(request, error)
 
         return render(request, self.template_name)
