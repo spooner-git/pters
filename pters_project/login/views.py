@@ -1074,7 +1074,7 @@ def clear_badge_counter_logic(request):
     if error is None:
         return render(request, 'ajax/token_check_ajax.html', {'token_check': token_data.token})
     else:
-        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        logger.error(error)
         # messages.error(request, error)
 
         return render(request, 'ajax/token_check_ajax.html', {'token_check': ''})
