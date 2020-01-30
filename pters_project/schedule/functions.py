@@ -361,52 +361,53 @@ def func_delete_schedule(class_id, schedule_id,  user_id):
         except ObjectDoesNotExist:
             error = '일정 정보를 불러오지 못했습니다.'
 
-    try:
-        with transaction.atomic():
-            delete_schedule_info = DeleteScheduleTb(schedule_id=schedule_info.schedule_id,
-                                                    class_tb_id=schedule_info.class_tb_id,
-                                                    lecture_tb_id=schedule_info.lecture_tb_id,
-                                                    member_ticket_tb_id=schedule_info.member_ticket_tb_id,
-                                                    lecture_schedule_id=schedule_info.lecture_schedule_id,
-                                                    delete_repeat_schedule_tb=schedule_info.repeat_schedule_tb_id,
-                                                    daily_record_tb_id=schedule_info.daily_record_tb_id,
-                                                    start_dt=schedule_info.start_dt, end_dt=schedule_info.end_dt,
-                                                    permission_state_cd=schedule_info.permission_state_cd,
-                                                    state_cd=schedule_info.state_cd, note=schedule_info.note,
-                                                    en_dis_type=schedule_info.en_dis_type,
-                                                    member_note=schedule_info.member_note,
-                                                    reg_member=schedule_info.reg_member,
-                                                    del_member=user_id,
-                                                    reg_dt=schedule_info.reg_dt, mod_dt=timezone.now(), use=UN_USE)
+    if error is None:
+        try:
+            with transaction.atomic():
+                delete_schedule_info = DeleteScheduleTb(schedule_id=schedule_info.schedule_id,
+                                                        class_tb_id=schedule_info.class_tb_id,
+                                                        lecture_tb_id=schedule_info.lecture_tb_id,
+                                                        member_ticket_tb_id=schedule_info.member_ticket_tb_id,
+                                                        lecture_schedule_id=schedule_info.lecture_schedule_id,
+                                                        delete_repeat_schedule_tb=schedule_info.repeat_schedule_tb_id,
+                                                        daily_record_tb_id=schedule_info.daily_record_tb_id,
+                                                        start_dt=schedule_info.start_dt, end_dt=schedule_info.end_dt,
+                                                        permission_state_cd=schedule_info.permission_state_cd,
+                                                        state_cd=schedule_info.state_cd, note=schedule_info.note,
+                                                        en_dis_type=schedule_info.en_dis_type,
+                                                        member_note=schedule_info.member_note,
+                                                        reg_member=schedule_info.reg_member,
+                                                        del_member=user_id,
+                                                        reg_dt=schedule_info.reg_dt, mod_dt=timezone.now(), use=UN_USE)
 
-            delete_schedule_info.save()
-            daily_record_info = DailyRecordTb.objects.filter(schedule_tb_id=schedule_id)
-            daily_record_info.delete()
-            func_delete_daily_record_content_image_logic(
-                'https://s3.ap-northeast-2.amazonaws.com/pters-image-master/daily-record/'
-                + str(user_id) + '_' + str(class_id) + '/' + str(schedule_id)+'/')
+                delete_schedule_info.save()
+                daily_record_info = DailyRecordTb.objects.filter(schedule_tb_id=schedule_id)
+                daily_record_info.delete()
+                func_delete_daily_record_content_image_logic(
+                    'https://s3.ap-northeast-2.amazonaws.com/pters-image-master/daily-record/'
+                    + str(user_id) + '_' + str(class_id) + '/' + str(schedule_id)+'/')
 
-            schedule_info.delete()
+                schedule_info.delete()
 
-            if str(delete_schedule_info.en_dis_type) == str(ON_SCHEDULE_TYPE):
-                if delete_schedule_info.member_ticket_tb is not None:
-                    error = func_refresh_member_ticket_count(class_id, delete_schedule_info.member_ticket_tb_id)
-                    if error is not None:
-                        raise InternalError()
+                if str(delete_schedule_info.en_dis_type) == str(ON_SCHEDULE_TYPE):
+                    if delete_schedule_info.member_ticket_tb is not None:
+                        error = func_refresh_member_ticket_count(class_id, delete_schedule_info.member_ticket_tb_id)
+                        if error is not None:
+                            raise InternalError()
 
-                repeat_schedule_id = delete_schedule_info.delete_repeat_schedule_tb
-                if repeat_schedule_id is not None and repeat_schedule_id != '':
-                    error = func_update_repeat_schedule(repeat_schedule_id)
-                    if error is not None:
-                        raise InternalError()
-            context['schedule_id'] = delete_schedule_info.delete_schedule_id
+                    repeat_schedule_id = delete_schedule_info.delete_repeat_schedule_tb
+                    if repeat_schedule_id is not None and repeat_schedule_id != '':
+                        error = func_update_repeat_schedule(repeat_schedule_id)
+                        if error is not None:
+                            raise InternalError()
+                context['schedule_id'] = delete_schedule_info.delete_schedule_id
 
-    except TypeError:
-        error = '일정 취소중 오류가 발생했습니다.[0]'
-    except ValueError:
-        error = '일정 취소중 오류가 발생했습니다.[1]'
-    except InternalError:
-        error = error
+        except TypeError:
+            error = '일정 취소중 오류가 발생했습니다.[0]'
+        except ValueError:
+            error = '일정 취소중 오류가 발생했습니다.[1]'
+        except InternalError:
+            error = error
 
     context['error'] = error
 

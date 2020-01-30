@@ -4476,6 +4476,7 @@ class GetTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):
         center_name = '없음'
         user_member_info = None
         off_repeat_schedule_data = None
+        member_data = collections.OrderedDict()
 
         if class_id is None or class_id == '':
             error = '오류가 발생했습니다.'

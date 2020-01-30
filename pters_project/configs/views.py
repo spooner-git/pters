@@ -293,6 +293,8 @@ def func_setting_data_update(request, group):
         request.session['setting_theme'] = context['setting_theme']
 
         request.session['setting_data'] = context
+    else:
+        request.session['setting_data'] = None
 
 
 def get_function_auth_type_cd(request):
