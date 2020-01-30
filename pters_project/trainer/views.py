@@ -2971,7 +2971,7 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                 lecture_list = sorted(lecture_list, key=lambda elem: elem['lecture_name'],
                                       reverse=int(sort_order_by))
             elif sort_info == SORT_LECTURE_MEMBER_COUNT:
-                lecture_list = sorted(lecture_list, key=lambda elem: elem['lecture_ing_member_num'],
+                lecture_list = sorted(lecture_list, key=lambda elem: elem['lecture_name'],
                                       reverse=int(sort_order_by))
             elif sort_info == SORT_LECTURE_CAPACITY_COUNT:
                 lecture_list = sorted(lecture_list, key=lambda elem: elem['lecture_max_num'],
@@ -3618,6 +3618,7 @@ class GetTicketEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                'ticket_month_schedule_enable': ticket_tb.month_schedule_enable,
                                                'ticket_week_schedule_enable': ticket_tb.week_schedule_enable,
                                                'ticket_day_schedule_enable': ticket_tb.day_schedule_enable,
+                                               'ticket_reg_dt': ticket_tb.reg_dt,
                                                'ticket_lecture_list': [],
                                                'ticket_lecture_state_cd_list': [],
                                                'ticket_lecture_id_list': [],
@@ -3649,6 +3650,7 @@ class GetTicketEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                    'ticket_month_schedule_enable': ticket_info.month_schedule_enable,
                                                    'ticket_week_schedule_enable': ticket_info.week_schedule_enable,
                                                    'ticket_day_schedule_enable': ticket_info.day_schedule_enable,
+                                                   'ticket_reg_dt': ticket_tb.reg_dt,
                                                    'ticket_lecture_list': [],
                                                    'ticket_lecture_state_cd_list': [],
                                                    'ticket_lecture_id_list': [],
@@ -3675,6 +3677,7 @@ class GetTicketEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
             #         member_id = class_member_ticket_info.member_ticket_tb.member_id
             #         member_list[member_id] = member_id
             # ticket_data_dict[ticket_info]['ticket_end_member_num'] = len(member_list)
+            # ticket_data_dict[ticket_info]['ticket_ing_member_num'] = 0
             ticket_data_dict[ticket_info]['ticket_end_member_num'] = 0
             ticket_list.append(ticket_data_dict[ticket_info])
 
@@ -3689,7 +3692,7 @@ class GetTicketEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                 ticket_list = sorted(ticket_list, key=lambda elem: elem['ticket_name'],
                                      reverse=int(sort_order_by))
             elif sort_info == SORT_TICKET_MEMBER_COUNT:
-                ticket_list = sorted(ticket_list, key=lambda elem: elem['ticket_ing_member_num'],
+                ticket_list = sorted(ticket_list, key=lambda elem: elem['ticket_name'],
                                      reverse=int(sort_order_by))
             elif sort_info == SORT_TICKET_CREATE_DATE:
                 ticket_list = sorted(ticket_list, key=lambda elem: elem['ticket_reg_dt'],
