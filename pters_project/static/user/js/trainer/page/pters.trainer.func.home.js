@@ -116,6 +116,10 @@ class Home {
                             let locked = menu_lock_statistics;
                             let sales_summary = this.dom_row_sales_this_month(data, locked);
                             sales_summary_dom = '<div class="contents">' + sales_summary + '</div>';
+                            if(pass_inspector.statistics_read().barrier == BLOCKED){
+                                sales_summary_dom = "";
+                            }
+
 
                             my_pters_pass_dom = '<div class="contents">' + this.dom_row_my_pters_pass() + '</div>';
                             current_date = '<div class="contents">' + this.dom_row_current_date() + '</div>';
