@@ -1428,30 +1428,37 @@ class ActivateSmsConfirmView(View):
         sms_activation_time = request.session.get('sms_activation_time')
         now = timezone.now()
         error = None
-        sms_activation_time = datetime.datetime.strptime(sms_activation_time, '%Y-%m-%d %H:%M:%S.%f')
 
-        time_interval = str(now-sms_activation_time)
-        time_interval_data = time_interval.split('.')[0].split(':')
-        time_interval_minutes = time_interval_data[1]
-        time_interval_seconds = time_interval_data[2]
-
-        if user_activation_code == sms_activation_number:
-            if(int(time_interval_minutes)*60+int(time_interval_seconds)) > settings.SMS_ACTIVATION_SECONDS:
-                error = '입력 시한이 지났습니다.'
-                request.session['sms_activation_check'] = False
-            else:
-                request.session['sms_activation_check'] = True
-                if phone is not None and phone != '':
-                    try:
-                        member_info = MemberTb.objects.get(member_id=request.user.id)
-                        member_info.phone = phone
-                        member_info.phone_is_active = ACTIVATE
-                        member_info.save()
-                    except ObjectDoesNotExist:
-                        error = None
-        else:
+        if sms_activation_time is None or sms_activation_time == '':
             request.session['sms_activation_check'] = False
-            error = '문자 인증번호가 일치하지 않습니다.'
+            error = '오류가 발생했습니다. 다시 시도해주세요.'
+
+        if error is None:
+            sms_activation_time = datetime.datetime.strptime(sms_activation_time, '%Y-%m-%d %H:%M:%S.%f')
+
+            time_interval = str(now-sms_activation_time)
+            time_interval_data = time_interval.split('.')[0].split(':')
+            time_interval_minutes = time_interval_data[1]
+            time_interval_seconds = time_interval_data[2]
+
+            if user_activation_code == sms_activation_number:
+                if(int(time_interval_minutes)*60+int(time_interval_seconds)) > settings.SMS_ACTIVATION_SECONDS:
+                    error = '입력 시한이 지났습니다.'
+                    request.session['sms_activation_check'] = False
+                else:
+                    request.session['sms_activation_check'] = True
+                    if phone is not None and phone != '':
+                        try:
+                            member_info = MemberTb.objects.get(member_id=request.user.id)
+                            member_info.phone = phone
+                            member_info.phone_is_active = ACTIVATE
+                            member_info.save()
+                        except ObjectDoesNotExist:
+                            error = None
+            else:
+                request.session['sms_activation_check'] = False
+                error = '문자 인증번호가 일치하지 않습니다.'
+
         if error is not None:
             messages.error(request, error)
 
