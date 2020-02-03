@@ -250,6 +250,21 @@ urlpatterns = [
     # 공지사항 조회
     url(r'^get_notice_info/$', views.GetNoticeInfoView.as_view(), name='get_notice_info_ajax'),
 
+
+    # 강사 공지 기능 #################################################
+    # 공지사항/사용법/FAQ 전체 조회
+    url(r'^get_program_board_list/$', views.GetProgramBoardListView.as_view(), name='get_program_board_list'),
+
+    url(r'^get_program_notice_all/$', views.GetProgramNoticeAllView.as_view(), name='get_program_notice_all'),
+
+    # 공지사항/사용법/FAQ 추가
+    url(r'^add_program_notice_info/$', views.AddProgramNoticeInfoView.as_view(), name='add_program_notice_info'),
+    # 공지사항/사용법/FAQ 수정
+    url(r'^update_program_notice_info/$', views.UpdateProgramNoticeInfoView.as_view(), name='update_program_notice_info'),
+    # 공지사항/사용법/FAQ 삭제
+    url(r'^delete_program_notice_info/$', views.DeleteProgramNoticeInfoView.as_view(), name='delete_program_notice_info'),
+
+
     # Attend Mode 기능 ###############################################################################################
     # 일정선택후 휴대폰 번호 입력시 확인 기능
     url(r'^attend_mode_check/$', views.attend_mode_check_logic, name='attend_mode_check'),

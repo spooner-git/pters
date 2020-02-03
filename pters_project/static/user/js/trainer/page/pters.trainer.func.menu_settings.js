@@ -85,7 +85,7 @@ class Menu_settings {
                         this.dom_menu_setting_reserve() + 
                         this.dom_menu_setting_alarm() + 
                         this.dom_menu_attendmode() +
-                        this.dom_menu_trainer_notice() +
+                        this.dom_menu_program_board() +
                         this.dom_menu_setting_attendmode() +
                         this.dom_menu_setting_menu_access() +
                         CComponent.dom_tag('개인 설정', dom_tag_style) + 
@@ -209,15 +209,15 @@ class Menu_settings {
         return html;
     }
 
-    dom_menu_trainer_notice(){
-        let id = 'menu_trainer_notice';
+    dom_menu_program_board(){
+        let id = 'menu_program_board';
         let title = '공지사항 관리';
-        let icon = CImg.trainer_notice();
+        let icon = CImg.program_board();
         let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            sideGoPage("trainer_notice");
+            sideGoPage("program_board");
         });
         return html;
     }

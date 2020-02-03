@@ -341,7 +341,7 @@
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.plan_daily_record.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.statistics.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.statistics_detail.js" %}></script>
-<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.trainer_notice.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.program_board_list.js" %}></script>
 
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_calendar.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_worktime.js" %}></script>
@@ -504,7 +504,7 @@
     var plan_daily_record_popup;
     var statistics_popup;
     var statistics_detail_popup;
-    var trainer_notice_list_popup;
+    var program_board_list_popup;
     var mypage_popup;
     var mypage_modify_popup;
     var mypage_photo_update_popup;
@@ -903,16 +903,16 @@
                 };
                 
             break;
-            case 'trainer_notice':
+            case 'program_board':
                 open = ()=>{
-                    let auth_inspect = pass_inspector.trainer_notice_read();
+                    let auth_inspect = pass_inspector.program_board_read();
                     if(auth_inspect.barrier == BLOCKED){
                         let message = `${auth_inspect.limit_type}`;
                         show_error_message({title:message});
                         return false;
                     }
-                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TRAINER_NOTICE_LIST, 100, POPUP_FROM_RIGHT, null, ()=>{
-                                                trainer_notice_list_popup = new TrainerNotice('.popup_trainer_notice_list', 'trainer_notice_list_popup')
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PROGRAM_BOARD_LIST, 100, POPUP_FROM_RIGHT, null, ()=>{
+                                                program_board_list_popup = new ProgramBoard('.popup_program_board_list', 'program_board_list_popup')
                     });
                 };
 

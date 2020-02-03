@@ -38,7 +38,7 @@ from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO
     CALENDAR_TIME_SELECTOR_BASIC, SORT_END_DATE, SORT_MEMBER_TICKET, SORT_SCHEDULE_DT, STATE_CD_REFUND, \
     SORT_SCHEDULE_MONTHLY, SHARED_PROGRAM, MY_PROGRAM, PROGRAM_SELECT, PROGRAM_LECTURE_CONNECT_DELETE, \
     PROGRAM_LECTURE_CONNECT_ACCEPT, LECTURE_MEMBER_NUM_VIEW_ENABLE
-from board.models import BoardTb, QATb
+from board.models import BoardTb, QATb, NoticeTb
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 from schedule.functions import func_refresh_member_ticket_count, func_get_trainer_attend_schedule, \
     func_get_lecture_member_ticket_id, func_check_lecture_available_member_before, func_add_schedule, \
@@ -57,7 +57,7 @@ from .functions import func_get_trainer_setting_list, \
     func_delete_member_ticket_info, func_update_lecture_member_fix_status_cd, update_user_setting_data, \
     update_program_setting_data, func_get_member_ticket_info, func_get_trainer_info, update_alarm_setting_data
 from .models import ClassMemberTicketTb, LectureTb, ClassTb, MemberClassTb, BackgroundImgTb, \
-    SettingTb, TicketTb, TicketLectureTb, CenterTrainerTb, LectureMemberTb, ProgramAuthTb
+    SettingTb, TicketTb, TicketLectureTb, CenterTrainerTb, LectureMemberTb, ProgramAuthTb, ProgramBoardTb
 
 logger = logging.getLogger(__name__)
 
@@ -5108,6 +5108,161 @@ class GetNoticeInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context['board_list'] = board_list
 
         return context
+
+
+class GetProgramBoardListView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        program_board_dict = collections.OrderedDict()
+        class_id = request.session.get('class_id')
+        program_board_list = ProgramBoardTb.objects.filter(class_tb=class_id).order_by('-reg_dt')
+
+        for program_board_info in program_board_list:
+            program_board_dict[program_board_info.program_board_id] = {
+                'program_board_id': program_board_info.program_board_id,
+                'member_id': program_board_info.member_id,
+                'class_id': program_board_info.class_tb_id,
+                'to_member_type_cd': program_board_info.to_member_type_cd,
+                'comment_available': program_board_info.comment_available,
+                'anonymous_available': program_board_info.anonymous_available,
+                'important_flag': program_board_info.important_flag,
+                'auth_type_cd': program_board_info.auth_type_cd,
+                'push_status': program_board_info.push_status,
+                'order': program_board_info.order,
+                'name': program_board_info.name,
+                'note': program_board_info.note}
+        return JsonResponse(program_board_dict, json_dumps_params={'ensure_ascii': True})
+
+
+class GetProgramNoticeAllView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        notice_data_dict = collections.OrderedDict()
+        notice_data = NoticeTb.objects.filter().order_by('-reg_dt')
+
+        for notice_info in notice_data:
+            notice_data_dict[notice_info.notice_id] = {'notice_id': notice_info.notice_id,
+                                                       'notice_type_cd': notice_info.notice_type_cd,
+                                                       'notice_title': notice_info.title,
+                                                       'notice_contents': notice_info.contents,
+                                                       'notice_to_member_type_cd': notice_info.to_member_type_cd,
+                                                       'notice_hits': notice_info.hits,
+                                                       'notice_mod_dt': notice_info.mod_dt,
+                                                       'notice_reg_dt': notice_info.reg_dt,
+                                                       'notice_use': notice_info.use}
+
+        return JsonResponse(notice_data_dict, json_dumps_params={'ensure_ascii': True})
+
+
+class AddProgramNoticeInfoView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def post(self, request):
+        # NOTICE : 공지사항, SYS_USAGE : 사용법 , FAQ : 자주 묻는 질문
+        notice_type_cd = request.POST.get('notice_type_cd', '')
+        title = request.POST.get('title', '')
+        contents = request.POST.get('contents', '')
+        to_member_type_cd = request.POST.get('to_member_type_cd')
+        use = request.POST.get('use', USE)
+        member_type_cd = request.session.get('group_name')
+
+        context = {}
+        error = None
+        if member_type_cd != 'admin':
+            error = '관리자만 접근 가능합니다.'
+
+        if notice_type_cd == '' or notice_type_cd is None:
+            error = '공지 유형을 선택해주세요.'
+
+        if error is None:
+            notice_info = NoticeTb(member_id=request.user.id, notice_type_cd=notice_type_cd,
+                                   title=title, contents=contents, to_member_type_cd=to_member_type_cd,
+                                   use=use)
+            notice_info.save()
+
+        if error is not None:
+            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+            # messages.error(request, error)
+            context['messageArray'] = error
+
+        return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+
+class UpdateProgramNoticeInfoView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def post(self, request):
+        notice_id = request.POST.get('notice_id')
+        notice_type_cd = request.POST.get('notice_type_cd', '')
+        title = request.POST.get('title', '')
+        contents = request.POST.get('contents', '')
+        to_member_type_cd = request.POST.get('to_member_type_cd')
+        use = request.POST.get('use', USE)
+        member_type_cd = request.session.get('group_name')
+
+        context = {}
+        error = None
+        notice_info = None
+
+        if member_type_cd != 'admin':
+            error = '관리자만 접근 가능합니다.'
+
+        if notice_id is None or notice_id == '':
+            error = '변경할 게시글을 선택해주세요.'
+
+        if notice_type_cd == '' or notice_type_cd is None:
+            error = '공지 유형을 선택해주세요.'
+
+        if error is None:
+            try:
+                notice_info = NoticeTb.objects.get(notice_id=notice_id)
+            except ObjectDoesNotExist:
+                error = '게시글을 불러오지 못했습니다.'
+
+        if error is None:
+            notice_info.member_id = request.user.id
+            notice_info.notice_type_cd = notice_type_cd
+            notice_info.title = title
+            notice_info.contents = contents
+            notice_info.to_member_type_cd = to_member_type_cd
+            notice_info.use = use
+            notice_info.save()
+
+        if error is not None:
+            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+            # messages.error(request, error)
+            context['messageArray'] = error
+
+        return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+
+class DeleteProgramNoticeInfoView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def post(self, request):
+        notice_id = request.POST.get('notice_id')
+        member_type_cd = request.session.get('group_name')
+
+        context = {}
+        error = None
+        notice_info = None
+
+        if member_type_cd != 'admin':
+            error = '관리자만 접근 가능합니다.'
+
+        if notice_id is None or notice_id == '':
+            error = '변경할 게시글을 선택해주세요.'
+
+        if error is None:
+            try:
+                notice_info = NoticeTb.objects.get(notice_id=notice_id)
+            except ObjectDoesNotExist:
+                error = '게시글을 불러오지 못했습니다.'
+
+        if error is None:
+            notice_info.delete()
+
+        if error is not None:
+            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+            # messages.error(request, error)
+            context['messageArray'] = error
+
+        return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
 
 
 # 출석 체크 완료 기능

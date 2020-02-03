@@ -1,16 +1,16 @@
-class TrainerNotice {
+class ProgramBoard {
     constructor(install_target, instance){
-        this.target = {install: install_target, toolbox:'section_trainer_notice_toolbox', content:'section_trainer_notice_content'};
-        this.page_name = "trainer_notice";
+        this.target = {install: install_target, toolbox:'section_program_board_toolbox', content:'section_program_board_content'};
+        this.page_name = "program_board";
         this.instance = instance;
-        this.form_id = 'id_trainer_notice_form';
+        this.form_id = 'id_program_board_form';
 
         let d = new Date();
         this.current_year = d.getFullYear();
         this.current_month = d.getMonth()+1;
         this.current_date = d.getDate();
         this.today = DateRobot.to_yyyymmdd(this.current_year, this.current_month, this.current_date);
-
+        this.board_list = null;
         this.data = {
             all:null
         };
@@ -27,11 +27,13 @@ class TrainerNotice {
 
     set_initial_data (){
         // this.render_loading_image();
-        // TrainerNotice_func.read_all((data)=>{
-        //     this.data.all = data;
+        ProgramBoard_func.read_board_list((data)=>{
+            this.board_list = data;
+            console.log(this.board_list);
+            console.log(this.board_list.length);
             this.render();
             func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
-        // });
+        });
     }
 
     clear(){
@@ -41,15 +43,14 @@ class TrainerNotice {
     }
 
     render(){
-        console.log(this.instance);
-        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();trainer_notice_list_popup.clear();">${CImg.arrow_left()}</span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();program_board_list_popup.clear();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
         let top_right = `<span class="icon_right">
-                                <!--<span class=".search_trainer_notice" onclick="${this.instance}.search_tool_visible(event, this)">-->
-                                <span class=".search_trainer_notice">
+                                <!--<span class=".search_program_board" onclick="${this.instance}.search_tool_visible(event, this)">-->
+                                <span class=".search_program_board">
                                     ${CImg.search("", {"vertical-align":"middle"})}
                                 </span>
-                                <span class=".add_trainer_notice" onclick="trainer_notice_list_popup.event_add_new();
+                                <span class=".add_program_board" onclick="program_board_list_popup.event_add_new();
                                 // layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_LECTURE_ADD}', 100, ${POPUP_FROM_BOTTOM}, null, ()=>{
 //                                    lecture_add_popup = new Lecture_add('.popup_lecture_add');});
                                     ">
@@ -65,7 +66,7 @@ class TrainerNotice {
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
 
         document.querySelector(this.target.install).innerHTML = html;
-        document.querySelector('.popup_trainer_notice_list .wrapper_top').style.border = 0;
+        document.querySelector('.popup_program_board_list .wrapper_top').style.border = 0;
         PopupBase.top_menu_effect(this.target.install);
     }
 
@@ -85,7 +86,7 @@ class TrainerNotice {
         let options_padding_top_bottom = 16;
         let button_height = 52;
         let title = "공지사항 관리 ";
-        let html = `<div class="trainer_notice_upper_box">
+        let html = `<div class="program_board_upper_box">
                         <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:var(--font-main); letter-spacing: -1px; height:28px;">
                             <span style="display:inline-block;">${title}</span>
                             <span style="display:none;">${title}</span>
@@ -100,7 +101,7 @@ class TrainerNotice {
         let title;
         if(this.sort == "all"){
             title = "전체" + CImg.arrow_expand("", {"width":"17px", "height":"17px", "vertical-align":"middle"});
-        }else if(this.sort == "trainer_notice"){
+        }else if(this.sort == "program_board"){
             title = "공지만" + CImg.arrow_expand("", {"width":"17px", "height":"17px", "vertical-align":"middle"});
         }
         else if(this.sort == "update_history"){
@@ -118,25 +119,28 @@ class TrainerNotice {
         
         let html_to_join = [];
         let numbering = 1;
-        for(let item in this.data.all){
-            let type = this.data.all[item].trainer__type_cd;
-            if(type != TRAINER_NOTICE && type != TRAINER_NOTICE_UPDATE_HISTORY){
-                continue;
-            }
-            
-            if(this.sort == "trainer_notice"){
-                if(type != TRAINER_NOTICE){
-                    continue;
-                }
-            }else if(this.sort == "update_history"){
-                if(type != TRAINER_NOTICE_UPDATE_HISTORY){
-                    continue;
-                }
-            }
+        // for(let item in this.data.all){
+        //     let type = this.data.all[item].trainer__type_cd;
+        //     if(type != PROGRAM_BOARD && type != PROGRAM_BOARD_UPDATE_HISTORY){
+        //         continue;
+        //     }
+        //
+        //     if(this.sort == "program_board"){
+        //         if(type != PROGRAM_BOARD){
+        //             continue;
+        //         }
+        //     }else if(this.sort == "update_history"){
+        //         if(type != PROGRAM_BOARD_UPDATE_HISTORY){
+        //             continue;
+        //         }
+        //     }
+        //
+        //     let article = this.dom_row_program_board_article(numbering, this.data.all[item]);
+        //     numbering++;
+        //     html_to_join.push(article);
+        // }
+        for(let item in this.board_list){
 
-            let article = this.dom_row_trainer_notice_article(numbering, this.data.all[item]);
-            numbering++;
-            html_to_join.push(article);
         }
         if(html_to_join.length == 0){
             html_to_join.push(
@@ -144,62 +148,66 @@ class TrainerNotice {
             );
         }
 
-        let html = '<div class="trainer_notice_article_wrapper">' + html_to_join.join('') + '</div>';
+        let html = '<div class="program_board_article_wrapper">' + html_to_join.join('') + '</div>';
 
 
         return html;
     }
 
-    dom_row_trainer_notice_article(numbering, data){
-        let type = data.trainer_notice_type_cd;
+    dom_row_program_board_article(numbering, data){
 
-        let id = data.trainer_notice_id;
-        let title = data.trainer_notice_title;
-        let content = data.trainer_notice_contents;
-        let target = TRAINER_NOTICE_TARGET[data.trainer_notice_to_member_type_cd];
-        let reg_dt = data.trainer_notice_reg_dt;
-        let mod_dt = data.trainer_notice_mod_dt;
-        let hits = data.trainer_notice_hits; //조회수
-        let use = data.trainer_notice_use; //공개여부
+    }
+
+    dom_row_program_board_article(numbering, data){
+        let type = data.program_board_type_cd;
+
+        let id = data.program_board_id;
+        let title = data.program_board_title;
+        let content = data.program_board_contents;
+        let target = PROGRAM_BOARD_TARGET[data.program_board_to_member_type_cd];
+        let reg_dt = data.program_board_reg_dt;
+        let mod_dt = data.program_board_mod_dt;
+        let hits = data.program_board_hits; //조회수
+        let use = data.program_board_use; //공개여부
 
 
-        let html = `<article id="trainer_notice_article_${id}" class="trainer_notice_article">
-                        <div class="trainer_notice_article_upper">
-                            <div class="trainer_notice_article_id">${numbering}</div>
-                            <div class="trainer_notice_article_title">${title}</div>
-                            <div class="trainer_notice_article_hits">조회수 ${hits}</div>
+        let html = `<article id="program_board_article_${id}" class="program_board_article">
+                        <div class="program_board_article_upper">
+                            <div class="program_board_article_id">${numbering}</div>
+                            <div class="program_board_article_title">${title}</div>
+                            <div class="program_board_article_hits">조회수 ${hits}</div>
                         </div>
-                        <div class="trainer_notice_article_bottom">
-                            <div class=trainer_notice_article_type">${TRAINER_NOTICE_TYPE[type]}</div>
-                            <div class="trainer_notice_article_use" style="color:${TRAINER_NOTICE_USE[use].color}">${TRAINER_NOTICE_USE[use].text}</div>
-                            <div class="trainer_notice_article_target">${target}</div>
-                            <div class="trainer_notice_article_reg_date">${mod_dt.split('T')[0]}  ${mod_dt.split('T')[1].split('.')[0]}</div>
+                        <div class="program_board_article_bottom">
+                            <div class=program_board_article_type">${PROGRAM_BOARD_TYPE[type]}</div>
+                            <div class="program_board_article_use" style="color:${PROGRAM_BOARD_USE[use].color}">${PROGRAM_BOARD_USE[use].text}</div>
+                            <div class="program_board_article_target">${target}</div>
+                            <div class="program_board_article_reg_date">${mod_dt.split('T')[0]}  ${mod_dt.split('T')[1].split('.')[0]}</div>
                         </div>
-                        <div class="trainer_notice_contents" style="display:none;">
+                        <div class="program_board_contents" style="display:none;">
                             <div>
                                 ${content}
                             </div>
                             <div style="text-align:right;margin-top:10px;">
-                                ${CComponent.button ("trainer_notice_modify_"+id, "수정", {"border":"var(--border-article)", "padding":"12px","display":"inline-block", "width":"100px"}, ()=>{
+                                ${CComponent.button ("program_board_modify_"+id, "수정", {"border":"var(--border-article)", "padding":"12px","display":"inline-block", "width":"100px"}, ()=>{
 
                                         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_WRITER, 100, POPUP_FROM_PAGE, null, ()=>{
                                             let external_data = {   title:title, content:content, id:id,
                                                                     category:[
                                                                         {id:"open", title:"공개범위", data: {text:["전체", "강사", "회원"], value:["ALL", "trainer", "trainee"]} },
-                                                                        {id:"type", title:"분류", data: {text:["공지", "업데이트 내역"], value:[TRAINER_NOTICE, TRAINER_NOTICE_UPDATE_HISTORY]} },
+                                                                        {id:"type", title:"분류", data: {text:["공지", "업데이트 내역"], value:[PROGRAM_BOARD, PROGRAM_BOARD_UPDATE_HISTORY]} },
                                                                         {id:"use", title:"상태", data: {text:["공개", "비공개"], value:[ON, OFF]} }
                                                                     ],
                                                                     category_selected:{
-                                                                        open:{text:[target], value:[data.trainer_notice_to_member_type_cd]},
-                                                                        type:{text:[TRAINER_NOTICE_TYPE[type] ], value:[type]},
-                                                                        use:{text:[TRAINER_NOTICE_USE[use].text], value:[use]}
+                                                                        open:{text:[target], value:[data.program_board_to_member_type_cd]},
+                                                                        type:{text:[PROGRAM_BOARD_TYPE[type] ], value:[type]},
+                                                                        use:{text:[PROGRAM_BOARD_USE[use].text], value:[use]}
                                                                     }
                                             };
                                             board_writer = new BoardWriter("공지 수정", '.popup_board_writer', 'board_writer', external_data, (data_written)=>{
-                                                let data = {"trainer_notice_id":data_written.id, "trainer_notice_type_cd":data_written.category_selected.type.value[0], "title":data_written.title, 
+                                                let data = {"program_board_id":data_written.id, "program_board_type_cd":data_written.category_selected.type.value[0], "title":data_written.title, 
                                                             "contents":data_written.content, "to_member_type_cd":data_written.category_selected.open.value[0],
                                                             "use":data_written.category_selected.use.value[0]};
-                                                TrainerNotice_func.update(data, ()=>{
+                                                ProgramBoard_func.update(data, ()=>{
                                                     this.init_content();
                                                 });
                                             });
@@ -208,9 +216,9 @@ class TrainerNotice {
                                     })
                                 }
                                 ${
-                                    CComponent.button ("trainer_notice_delete_"+id, "삭제", {"border":"var(--border-article)", "padding":"12px", "display":"inline-block", "width":"100px"}, ()=>{
+                                    CComponent.button ("program_board_delete_"+id, "삭제", {"border":"var(--border-article)", "padding":"12px", "display":"inline-block", "width":"100px"}, ()=>{
                                         show_user_confirm(`공지 "${numbering}" 번 글을 완전 삭제 하시겠습니까? <br> 다시 복구할 수 없습니다.`, ()=>{
-                                            TrainerNotice_func.delete({"trainer_notice_id":id}, ()=>{
+                                            ProgramBoard_func.delete({"program_board_id":id}, ()=>{
                                                 try{
                                                     this.init_content();
                                                 }catch(e){}
@@ -222,12 +230,12 @@ class TrainerNotice {
                             </div>
                         </div>
                     </article>`;
-        $(document).off('click', `#trainer_notice_article_${id}`).on('click', `#trainer_notice_article_${id}`, function(){
-            let trainer_notice_contents =  $(this).find(".trainer_notice_contents");
-            if(trainer_notice_contents.css('display') == 'none'){
-                trainer_notice_contents.show();
+        $(document).off('click', `#program_board_article_${id}`).on('click', `#program_board_article_${id}`, function(){
+            let program_board_contents =  $(this).find(".program_board_contents");
+            if(program_board_contents.css('display') == 'none'){
+                program_board_contents.show();
             }else{
-                trainer_notice_contents.hide();
+                program_board_contents.hide();
             }
         });
         
@@ -241,8 +249,8 @@ class TrainerNotice {
                 this.render();
                 layer_popup.close_layer_popup();
             }},
-            trainer_notice:{text:"공지만", callback:()=>{
-                this.sort = "trainer_notice";
+            program_board:{text:"공지만", callback:()=>{
+                this.sort = "program_board";
                 this.render();
                 layer_popup.close_layer_popup();
             }},
@@ -266,7 +274,7 @@ class TrainerNotice {
             let external_data = {   
                                         category:[
                                             {id:"open", title:"공개범위", data: {text:["전체", "강사", "회원"], value:["ALL", "trainer", "trainee"]} },
-                                            {id:"type", title:"분류", data: {text:["공지", "업데이트 내역"], value:[TRAINER_NOTICE, TRAINER_NOTICE_UPDATE_HISTORY]} },
+                                            {id:"type", title:"분류", data: {text:["공지", "업데이트 내역"], value:[PROGRAM_BOARD, PROGRAM_BOARD_UPDATE_HISTORY]} },
                                             {id:"use", title:"상태", data: {text:["공개", "비공개"], value:[ON, OFF]} }
                                         ],
                                         category_selected:{
@@ -276,10 +284,10 @@ class TrainerNotice {
                                         }
             };
             board_writer = new BoardWriter("새 공지사항", '.popup_board_writer', 'board_writer', external_data, (data_written)=>{
-                let data = {"trainer_notice_type_cd":data_written.category_selected.type.value[0], "title":data_written.title,
+                let data = {"program_board_type_cd":data_written.category_selected.type.value[0], "title":data_written.title,
                             "contents":data_written.content, "to_member_type_cd":data_written.category_selected.open.value[0],
                             "use":data_written.category_selected.use.value[0]};
-                TrainerNotice_func.create(data, ()=>{
+                ProgramBoard_func.create(data, ()=>{
                     this.init();
                 });
             });
@@ -290,10 +298,10 @@ class TrainerNotice {
 
 
 
-class TrainerNotice_func{
-    static read_all(callback){
+class ProgramBoard_func{
+    static read_board_list(callback){
         $.ajax({
-            url:'/admin_spooner/get_notice_all/',
+            url:'/trainer/get_program_board_list/',
             type:'GET',
             dataType : 'JSON',
     
@@ -329,7 +337,7 @@ class TrainerNotice_func{
 
     static create(data, callback){
         $.ajax({
-            url:'/admin_spooner/add_notice_info/',
+            url:'/admin_spooner/add_board_info/',
             type:'POST',
             data: data,
             dataType : 'JSON',
@@ -363,7 +371,7 @@ class TrainerNotice_func{
     }
     static update(data, callback){
         $.ajax({
-            url:'/admin_spooner/update_notice_info/',
+            url:'/admin_spooner/update_board_info/',
             type:'POST',
             data: data,
             dataType : 'JSON',
@@ -398,7 +406,7 @@ class TrainerNotice_func{
 
     static delete(data, callback){
         $.ajax({
-            url:'/admin_spooner/delete_notice_info/',
+            url:'/admin_spooner/delete_board_info/',
             type:'POST',
             data: data,
             dataType : 'JSON',
