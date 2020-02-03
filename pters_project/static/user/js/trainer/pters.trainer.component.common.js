@@ -434,6 +434,52 @@ class CComponent{
         return html;
     }
 
+    //색상 선택 팝업에 사용되는 행
+    static select_board_type_row (multiple_select, checked, location, board_type_cd, board_type_cd_name, onclick){
+
+        let html = `
+                    <li class="select_board_type_cd_row scr_${location}" id="select_board_type_cd_row_${board_type_cd}">
+                        <div class="obj_table_raw">
+                            <div class="cell_board_type_cd_name">
+                                <div style="width:20px;height:20px;border-radius:4px;"></div>
+                            </div>
+                            <div class="cell_board_type_cd_info">
+                                ${board_type_cd_name}
+                            </div>
+                            <div class="cell_board_type_cd_selected ${checked == 0 ? '' : 'board_type_cd_selected'}">
+                                ${CImg.confirm("", checked == 0 ? {"display":"none"} : {"display":"block"})}
+                            </div>
+                        </div>
+                    </li>
+                    `;
+
+        if(multiple_select > 1){
+            $(document).off('click', `#select_board_type_cd_row_${board_type_cd}`).on('click', `#select_board_type_cd_row_${board_type_cd}`, function(e){
+                if(!$(this).find('.cell_board_type_cd_selected').hasClass('board_type_cd_selected')){
+                    if($(`.scr_${location} .board_type_cd_selected`).length >= multiple_select){
+                        show_error_message({title:`${multiple_select} 개까지 선택할 수 있습니다.`});
+                        return false;
+                    }
+                    // $(this).find('.cell_color_selected img').addClass('color_selected');
+                    $(this).find('.cell_board_type_cd_selected').addClass('board_type_cd_selected');
+                    $(this).find('svg').css('display', 'block');
+                    onclick('add');
+                }else{
+                    // $(this).find('.cell_color_selected img').removeClass('color_selected');
+                    $(this).find('.cell_board_type_cd_selected').removeClass('board_type_cd_selected');
+                    $(this).find('svg').css('display', 'none');
+                    onclick('substract');
+                }
+            });
+        }else if(multiple_select == 1){
+            $(document).off('click', `#select_board_type_cd_row_${board_type_cd}`).on('click', `#select_board_type_cd_row_${board_type_cd}`, function(e){
+
+                onclick('add_single');
+
+            });
+        }
+        return html;
+    }
     //일반(이미지 없음) 선택 팝업에 사용되는 행
     static select_row (multiple_select, checked, location, id, title, icon, onclick){
         if(icon == NONE){
@@ -979,12 +1025,12 @@ class CImg{
         return svg;
     }
 
-    static program_board(svg_color, style, onclick){
+    static program_notice(svg_color, style, onclick){
         if(svg_color == undefined){
             svg_color = [];
         }
         let svg = ` <svg style="${CComponent.data_to_style_code(style)}" ${CImg.data_to_onclick_event(onclick)} width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                        <g id="아이콘/강사게시판/5C5859" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                        <g id="아이콘/강사공지/5C5859" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                             <path id="Combined-Shape" fill="${CImg.data_to_svg_color(svg_color[0], "var(--img-main)")}" d="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z"></path>
                         </g>
                     </svg>

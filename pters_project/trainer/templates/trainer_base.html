@@ -141,7 +141,7 @@
                 <span class="sidemenu_text">통계</span>
             </div>
 
-            <div class="side_menu_item" onclick="sideGoPopup('trainer_popup')" id="side_trainer_popup">
+            <div class="side_menu_item" onclick="sideGoPopup('program_notice')" id="side_trainer_popup">
                 <svg style="vertical-align:middle;margin-right:15px;" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <g id="데스크탑/아이콘/강사공지/5C5859" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                         <path id="Combined-Shape" fill="var(--img-main)" d="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z"></path>
@@ -307,6 +307,8 @@
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.ticket.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.lecture.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.member.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.program_board.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.program_notice.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.menu.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.menu_settings.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.menu_service.js" %}></script>
@@ -342,6 +344,11 @@
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.statistics.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.statistics_detail.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.program_board_list.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.program_board_add.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.program_board_view.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.program_notice_list.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.program_notice_add.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.program_notice_view.js" %}></script>
 
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_calendar.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_worktime.js" %}></script>
@@ -505,6 +512,11 @@
     var statistics_popup;
     var statistics_detail_popup;
     var program_board_list_popup;
+    var program_board_add_popup;
+    var program_board_view_popup;
+    var program_notice_list_popup;
+    var program_notice_add_popup;
+    var program_notice_view_popup;
     var mypage_popup;
     var mypage_modify_popup;
     var mypage_photo_update_popup;
@@ -554,6 +566,7 @@
     var ticket_select;
     var member_select;
     var color_select;
+    var board_type_select;
     var custom_selector;
     var password_4d_input;
     var password_input;
@@ -903,6 +916,21 @@
                 };
                 
             break;
+            case 'program_notice':
+                open = ()=>{
+                    let auth_inspect = pass_inspector.program_notice_read();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `${auth_inspect.limit_type}`;
+                        show_error_message({title:message});
+                        return false;
+                    }
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PROGRAM_NOTICE_LIST, 100, POPUP_FROM_RIGHT, null, ()=>{
+                                                program_notice_list_popup = new ProgramNotice_list('.popup_program_notice_list', 'program_notice_list_popup')
+                    });
+                };
+
+            break;
+            /*
             case 'program_board':
                 open = ()=>{
                     let auth_inspect = pass_inspector.program_board_read();
@@ -912,11 +940,12 @@
                         return false;
                     }
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PROGRAM_BOARD_LIST, 100, POPUP_FROM_RIGHT, null, ()=>{
-                                                program_board_list_popup = new ProgramBoard('.popup_program_board_list', 'program_board_list_popup')
+                                                program_board_list_popup = new ProgramBoard_list('.popup_program_board_list', 'program_board_list_popup')
                     });
                 };
 
             break;
+            */
             case 'mypage':
                 open = ()=>{
                     let popup_style = $root_content.width() > 650 ? POPUP_FROM_TOP : POPUP_FROM_RIGHT;

@@ -73,7 +73,7 @@ class Menu {
                                 this.dom_menu_ticket() + 
                                 this.dom_menu_statistics() +
                                 this.dom_menu_attendmode() +
-                                this.dom_menu_program_board();
+                                this.dom_menu_program_notice();
         // let sub_assembly_setting_sharing =
         //                         CComponent.dom_tag('프로그램 설정', dom_tag_style) +
         //                         this.dom_menu_setting_calendar() +
@@ -229,15 +229,15 @@ class Menu {
         return html;
     }
 
-    dom_menu_program_board(){
-        let id = 'menu_program_board';
+    dom_menu_program_notice(){
+        let id = 'menu_program_notice';
         let title = '공지사항 관리';
-        let icon = CImg.program_board();
+        let icon = CImg.program_notice();
         let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            sideGoPopup("program_board");
+            sideGoPopup("program_notice");
         });
         return html;
     }

@@ -173,7 +173,7 @@ const PROGRAM_BOARD = 'NOTICE';
 const PROGRAM_BOARD_FAQ = 'FAQ';
 const PROGRAM_BOARD_USAGE = 'SYS_USAGE';
 const PROGRAM_BOARD_UPDATE_HISTORY = 'UPDATE_HISTORY';
-const PROGRAM_BOARD_TYPE = {NOTICE:"공지", FAQ:"FAQ", SYS_USAGE:"사용법", UPDATE_HISTORY:"업데이트 내역"};
+const PROGRAM_BOARD_TYPE = {NOTICE:"공지사항", BOARD:"게시판"};
 const PROGRAM_BOARD_USE = {1:{text:"공개", color:"green"}, 0:{text:"비공개", color:"#676767"} };
 const PROGRAM_BOARD_TARGET = {ALL:"전체", trainer:"강사", trainee:"수강회원"};
 
@@ -213,7 +213,15 @@ const POPUP_ADDRESS_MEMBER_ATTEND = 'popup_member_attend';
 const POPUP_ADDRESS_PLAN_DAILY_RECORD = 'popup_plan_daily_record';
 const POPUP_ADDRESS_STATISTICS = 'popup_statistics';
 const POPUP_ADDRESS_STATISTICS_DETAIL = 'popup_statistics_detail';
+
 const POPUP_ADDRESS_PROGRAM_BOARD_LIST = 'popup_program_board_list';
+const POPUP_ADDRESS_PROGRAM_BOARD_ADD = 'popup_program_board_add';
+const POPUP_ADDRESS_PROGRAM_BOARD_VIEW = 'popup_program_board_view';
+
+const POPUP_ADDRESS_PROGRAM_NOTICE_LIST = 'popup_program_notice_list';
+const POPUP_ADDRESS_PROGRAM_NOTICE_ADD = 'popup_program_notice_add';
+const POPUP_ADDRESS_PROGRAM_NOTICE_VIEW = 'popup_program_notice_view';
+
 
 const POPUP_ADDRESS_PROGRAM_LIST = 'popup_program_list';
 const POPUP_ADDRESS_PROGRAM_ADD = 'popup_program_add';
