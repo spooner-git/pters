@@ -56,11 +56,11 @@ class TrainerNotice {
                                     ${CImg.plus("", {"vertical-align":"middle"})}
                                 </span>
                         </span>`;
-        // let content =   `<div class="search_bar"></div>
-        //                 <section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;">${this.dom_assembly_toolbox()}</section>
-        //                 <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
         let content =   `<div class="search_bar"></div>
+                        <section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
+        // let content =   `<div class="search_bar"></div>
+        //                 <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
 
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
 
@@ -82,7 +82,16 @@ class TrainerNotice {
     }
 
     dom_row_toolbox(){
-        let html = '';
+        let options_padding_top_bottom = 16;
+        let button_height = 52;
+        let title = "공지사항 관리 ";
+        let html = `<div class="trainer_notice_upper_box">
+                        <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:var(--font-main); letter-spacing: -1px; height:28px;">
+                            <span style="display:inline-block;">${title}</span>
+                            <span style="display:none;">${title}</span>
+                            <div style="display:inline-block; color:var(--font-highlight); font-weight:900;"></div>
+                        </div>
+                    </div>`;
         return html;
     }
 
@@ -253,7 +262,7 @@ class TrainerNotice {
     }
 
     event_add_new(){
-        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_WRITER, 100, POPUP_FROM_PAGE, null, ()=>{
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_WRITER, 100, POPUP_FROM_RIGHT, null, ()=>{
             let external_data = {   
                                         category:[
                                             {id:"open", title:"공개범위", data: {text:["전체", "강사", "회원"], value:["ALL", "trainer", "trainee"]} },
