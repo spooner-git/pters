@@ -168,6 +168,16 @@ const NOTICE_UPDATE_HISTORY = 'UPDATE_HISTORY';
 const BASIC = 0;
 const CLASSIC = 1;
 
+/* 공지사항 type */
+const TRAINER_NOTICE = 'NOTICE';
+const TRAINER_NOTICE_FAQ = 'FAQ';
+const TRAINER_NOTICE_USAGE = 'SYS_USAGE';
+const TRAINER_NOTICE_UPDATE_HISTORY = 'UPDATE_HISTORY';
+const TRAINER_NOTICE_TYPE = {NOTICE:"공지", FAQ:"FAQ", SYS_USAGE:"사용법", UPDATE_HISTORY:"업데이트 내역"};
+const TRAINER_NOTICE_USE = {1:{text:"공개", color:"green"}, 0:{text:"비공개", color:"#676767"} };
+const TRAINER_NOTICE_TARGET = {ALL:"전체", trainer:"강사", trainee:"수강회원"};
+
+
 /* 팝업 주소 */
 
 // 풀페이지 팝업
@@ -203,6 +213,7 @@ const POPUP_ADDRESS_MEMBER_ATTEND = 'popup_member_attend';
 const POPUP_ADDRESS_PLAN_DAILY_RECORD = 'popup_plan_daily_record';
 const POPUP_ADDRESS_STATISTICS = 'popup_statistics';
 const POPUP_ADDRESS_STATISTICS_DETAIL = 'popup_statistics_detail';
+const POPUP_ADDRESS_TRAINER_NOTICE_LIST = 'popup_trainer_notice_list';
 
 const POPUP_ADDRESS_PROGRAM_LIST = 'popup_program_list';
 const POPUP_ADDRESS_PROGRAM_ADD = 'popup_program_add';
