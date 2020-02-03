@@ -6,6 +6,7 @@ import boto3
 import httplib2
 from awscli.errorhandler import ClientError
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.paginator import Paginator
 from django.db import InternalError
 from django.db import transaction
 from django.db.models import Q
@@ -16,7 +17,7 @@ from configs import settings
 from configs.const import REPEAT_TYPE_2WEAK, ON_SCHEDULE_TYPE, USE, UN_USE, SCHEDULE_DUPLICATION_DISABLE, \
     STATE_CD_ABSENCE, STATE_CD_FINISH, STATE_CD_IN_PROGRESS, STATE_CD_NOT_PROGRESS, LECTURE_TYPE_ONE_TO_ONE, \
     AUTH_TYPE_VIEW, GROUP_SCHEDULE, OFF_SCHEDULE, FROM_TRAINEE_LESSON_ALARM_ON, TO_SHARED_TRAINER_LESSON_ALARM_OFF, \
-    TO_SHARED_TRAINER_LESSON_ALARM_ON
+    TO_SHARED_TRAINER_LESSON_ALARM_ON, MEMBER_SCHEDULE_PAGINATION_COUNTER
 from configs.settings import DEBUG
 from login.models import PushInfoTb
 from trainee.models import MemberTicketTb
@@ -952,7 +953,7 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
     return date_schedule_list
 
 
-def func_get_member_schedule_all_by_member_ticket(class_id, member_id):
+def func_get_member_schedule_all_by_member_ticket(class_id, member_id, page):
     ordered_schedule_dict = collections.OrderedDict()
     # 회원의 일정중 강사가 볼수 있는 수강정보의 일정을 불러오기 위한 query
     query_auth = "select " + ClassMemberTicketTb._meta.get_field('auth_cd').column + \
@@ -964,13 +965,14 @@ def func_get_member_schedule_all_by_member_ticket(class_id, member_id):
                  " and B." + ClassMemberTicketTb._meta.get_field('use').column + "=" + str(USE)
 
     member_schedule_data = ScheduleTb.objects.select_related(
-        'member_ticket_tb__member', 'reg_member', 'mod_member',
+        'member_ticket_tb__member', 'reg_member', 'mod_member','member_ticket_tb__ticket_tb',
         'lecture_tb').filter(
         class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, use=USE, member_ticket_tb__member_id=member_id,
         member_ticket_tb__use=USE).annotate(auth_cd=RawSQL(query_auth,
                                                            [])).filter(auth_cd=AUTH_TYPE_VIEW).order_by(
         '-member_ticket_tb__start_date', '-member_ticket_tb__end_date', '-member_ticket_tb__reg_dt', 'start_dt')
-
+    # paginator = Paginator(member_schedule_data, MEMBER_SCHEDULE_PAGINATION_COUNTER)
+    # member_schedule_data = paginator.page(page)
     schedule_list = []
     temp_member_ticket_id = None
     for member_schedule_info in member_schedule_data:
@@ -1044,7 +1046,7 @@ def func_get_member_schedule_all_by_member_ticket(class_id, member_id):
     return ordered_schedule_dict
 
 
-def func_get_member_schedule_all_by_schedule_dt(class_id, member_id):
+def func_get_member_schedule_all_by_schedule_dt(class_id, member_id, page):
     # ordered_schedule_dict = collections.OrderedDict()
     # 회원의 일정중 강사가 볼수 있는 수강정보의 일정을 불러오기 위한 query
     query_auth = "select " + ClassMemberTicketTb._meta.get_field('auth_cd').column + \
@@ -1056,12 +1058,13 @@ def func_get_member_schedule_all_by_schedule_dt(class_id, member_id):
                  " and B." + ClassMemberTicketTb._meta.get_field('use').column + "=" + str(USE)
 
     member_schedule_data = ScheduleTb.objects.select_related(
-        'member_ticket_tb__member', 'reg_member',
+        'member_ticket_tb__member', 'reg_member', 'member_ticket_tb__ticket_tb',
         'lecture_tb').filter(
         class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, use=USE, member_ticket_tb__member_id=member_id,
         member_ticket_tb__use=USE).annotate(auth_cd=RawSQL(query_auth,
                                                            [])).filter(auth_cd=AUTH_TYPE_VIEW).order_by('start_dt')
-
+    # paginator = Paginator(member_schedule_data, MEMBER_SCHEDULE_PAGINATION_COUNTER)
+    # member_schedule_data = paginator.page(page)
     schedule_list = []
     temp_member_ticket_id = None
     for member_schedule_info in member_schedule_data:
@@ -1130,7 +1133,7 @@ def func_get_member_schedule_all_by_schedule_dt(class_id, member_id):
     return schedule_list
 
 
-def func_get_member_schedule_all_by_monthly(class_id, member_id):
+def func_get_member_schedule_all_by_monthly(class_id, member_id, page):
     monthly_schedule_data_dict = collections.OrderedDict()
     # 회원의 일정중 강사가 볼수 있는 수강정보의 일정을 불러오기 위한 query
     query_auth = "select " + ClassMemberTicketTb._meta.get_field('auth_cd').column + \
@@ -1142,12 +1145,13 @@ def func_get_member_schedule_all_by_monthly(class_id, member_id):
                  " and B." + ClassMemberTicketTb._meta.get_field('use').column + "=" + str(USE)
 
     member_schedule_data = ScheduleTb.objects.select_related(
-        'member_ticket_tb__member', 'reg_member',
+        'member_ticket_tb__member', 'reg_member', 'member_ticket_tb__ticket_tb'
         'lecture_tb').filter(
         class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, use=USE, member_ticket_tb__member_id=member_id,
         member_ticket_tb__use=USE).annotate(auth_cd=RawSQL(query_auth,
                                                            [])).filter(auth_cd=AUTH_TYPE_VIEW).order_by('start_dt')
-
+    # paginator = Paginator(member_schedule_data, MEMBER_SCHEDULE_PAGINATION_COUNTER)
+    # member_schedule_data = paginator.page(page)
     # schedule_list = []
     temp_member_ticket_id = None
     for member_schedule_info in member_schedule_data:

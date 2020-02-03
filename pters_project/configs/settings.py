@@ -390,3 +390,5 @@ CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Asia/Seoul'
 CELERY_ENABLE_UTC = False
 # Define the timezone for the scheduler, Celery beat.
+
+
