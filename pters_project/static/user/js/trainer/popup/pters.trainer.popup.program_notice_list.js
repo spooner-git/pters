@@ -48,21 +48,13 @@ class ProgramNotice_list {
 
     render(){
         let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();program_notice_list_popup.clear();">${CImg.arrow_left()}</span>`;
-        let top_center = `<span class="icon_center"><span>공지사항 관리</span></span>`;
+        let top_center = `<span class="icon_center">공지사항 관리</span>`;
         let top_right = `<span class="icon_right">
-                                <!--<span class=".search_program_notice" onclick="${this.instance}.search_tool_visible(event, this)">
-                                <span class=".search_program_notice">
-                                    ${CImg.search("", {"vertical-align":"middle"})}
-                                </span>-->
-                                <span class=".add_program_notice" onclick="${this.instance}.event_add_new();">
-                                    ${CImg.plus("", {"vertical-align":"middle"})}
-                                </span>
+                            <span class=".add_program_notice" onclick="${this.instance}.event_add_new();">
+                                ${CImg.plus("", {"vertical-align":"middle"})}
+                            </span>
                         </span>`;
-        // let content =   `<div class="search_bar"></div>
-        //                 <section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;">${this.dom_assembly_toolbox()}</section>
-        //                 <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
-        let content =   `<div class="search_bar"></div>
-                        <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
+        let content =   `<section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
 
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
 
@@ -160,74 +152,59 @@ class ProgramNotice_list {
         let target = PROGRAM_BOARD_TARGET[data.program_notice_to_member_type_cd];
         let reg_dt = data.program_notice_reg_dt;
         let mod_dt = data.program_notice_mod_dt;
+        let reg_member_name = data.program_notice_reg_member_name;
+        let reg_date = reg_dt.split(' ')[0];
         let hits = data.program_notice_hits; //조회수
         let use = data.program_notice_use; //공개여부
 
 
         let html = `<article id="program_notice_article_${id}" class="program_notice_article">
-                        <div class="program_notice_article_upper">
-                            <div class="program_notice_article_id">${numbering}.</div>
-                            <div class="program_notice_article_title">${title}</div>
-                            <div class="program_notice_article_hits">조회수 ${hits}</div>
-                        </div>
-                        <div class="program_notice_article_bottom">
-                            <div class="program_notice_article_use" style="color:${PROGRAM_BOARD_USE[use].color}">${PROGRAM_BOARD_USE[use].text}</div>
-                            <div class="program_notice_article_reg_date">등록 : ${reg_dt}</div>
-                        </div>
-                        <div class="program_notice_article_bottom">
-                            <div class="program_notice_article_use">${target}에게</div>
-                            <div class="program_notice_article_mod_date">수정 : ${mod_dt} </div>
-                        </div>
-                        <div class="program_notice_contents" style="display:none;">
-                            <div>
-                                ${content}
-                            </div>
-                            <div style="text-align:right;margin-top:10px;">
-                                ${CComponent.button ("program_notice_modify_"+id, "수정", {"border":"var(--border-article)", "padding":"12px","display":"inline-block", "width":"100px"}, ()=>{
-
-                                        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_WRITER, 100, POPUP_FROM_BOTTOM, null, ()=>{
-                                            let external_data = {   title:title, content:content, id:id,
-                                                                    category:[
-                                                                        {id:"use", title:"공개 여부", data: {text:["공개", "비공개"], value:[ON, OFF]} }
-                                                                    ],
-                                                                    category_selected:{
-                                                                        use:{text:[PROGRAM_BOARD_USE[use].text], value:[use]}
-                                                                    }
-                                            };
-                                            board_writer = new BoardWriter("공지 수정", '.popup_board_writer', 'board_writer', external_data, (data_written)=>{
-                                                let data = {"program_notice_id":data_written.id, "notice_type_cd":NOTICE, "title":data_written.title, 
-                                                            "contents":data_written.content, "to_member_type_cd":'trainee',
-                                                            "use":data_written.category_selected.use.value[0]};
-                                                ProgramNotice_func.update(data, ()=>{
-                                                    this.render();
-                                                });
-                                            });
-
-                                        });
-                                    })
-                                }
-                                ${
-                                    CComponent.button ("program_notice_delete_"+id, "삭제", {"border":"var(--border-article)", "padding":"12px", "display":"inline-block", "width":"100px"}, ()=>{
-                                        show_user_confirm(`공지 "${numbering}" 번 글을 완전 삭제 하시겠습니까? <br> 다시 복구할 수 없습니다.`, ()=>{
-                                            ProgramNotice_func.delete({"program_notice_id":id}, ()=>{
-                                                try{
-                                                    this.render();
-                                                }catch(e){}
-                                                layer_popup.all_close_layer_popup();
-                                            });
-                                        });
-                                    })
-                                }
+                        <div style="display:table; width:100%;">
+                            <div style="display:table-row;">
+                                <div class="program_notice_article_id" style="width:5%;display:table-cell;vertical-align:middle;">
+                                    ${numbering}
+                                </div>
+                                <div style="width:80%;display:table-cell;padding-left:10px;">
+                                    <div class="program_notice_article_upper">
+                                        <div class="program_notice_article_title">${title}</div>
+                                    </div>
+                                    <div class="program_notice_article_bottom">
+                                        <div class="program_notice_article_reg_date">등록일:${reg_date}, 조회수:${hits}</div>
+                                    </div>
+                                </div>
+                                <div style="width:10%;display:table-cell;vertical-align:middle;">
+                                        <div class="program_notice_article_use" style="color:${PROGRAM_BOARD_USE[use].color}">${PROGRAM_BOARD_USE[use].text}</div>
+                                </div>
                             </div>
                         </div>
                     </article>`;
         $(document).off('click', `#program_notice_article_${id}`).on('click', `#program_notice_article_${id}`, function(){
-            let program_notice_contents =  $(this).find(".program_notice_contents");
-            if(program_notice_contents.css('display') == 'none'){
-                program_notice_contents.show();
-            }else{
-                program_notice_contents.hide();
-            }
+            // let program_notice_contents =  $(this).find(".program_notice_contents");
+            // if(program_notice_contents.css('display') == 'none'){
+            //     program_notice_contents.show();
+            // }else{
+            //     program_notice_contents.hide();
+            // }
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_WRITER, 100, POPUP_FROM_BOTTOM, null, ()=>{
+                let external_data = {   title:title, content:content, id:id, reg_dt:reg_dt, mod_dt:mod_dt,reg_member_name:reg_member_name,
+                                        category:[
+                                            {id:"use", title:"공개 여부", data: {text:["공개", "비공개"], value:[ON, OFF]} }
+                                        ],
+                                        category_selected:{
+                                            use:{text:[PROGRAM_BOARD_USE[use].text], value:[use]}
+                                        },
+                                        new_check:false
+                };
+                board_writer = new BoardWriter("공지 수정", '.popup_board_writer', 'board_writer', external_data, (data_written)=>{
+                    let data = {"program_notice_id":data_written.id, "notice_type_cd":NOTICE, "title":data_written.title,
+                                "contents":data_written.content, "to_member_type_cd":'trainee',
+                                "use":data_written.category_selected.use.value[0]};
+                    ProgramNotice_func.update(data, ()=>{
+                        program_notice_list_popup.init();
+                    });
+                });
+
+            });
         });
         
         return html;
@@ -268,14 +245,15 @@ class ProgramNotice_list {
                                         ],
                                         category_selected:{
                                             use:{text:[], value:[]}
-                                        }
+                                        },
+                                        new_check:true
             };
             board_writer = new BoardWriter("새 공지사항", '.popup_board_writer', 'board_writer', external_data, (data_written)=>{
                 let data = {"notice_type_cd": NOTICE, "title":data_written.title,
                             "contents":data_written.content, "to_member_type_cd":'trainee',
                             "use":data_written.category_selected.use.value[0]};
                 ProgramNotice_func.create(data, ()=>{
-                    this.render();
+                    this.init();
                 });
             });
         });

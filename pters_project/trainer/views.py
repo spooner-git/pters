@@ -5356,7 +5356,8 @@ class GetProgramNoticeAllView(LoginRequiredMixin, AccessTestMixin, View):
         class_id = request.session.get('class_id')
         program_notice_data_dict = collections.OrderedDict()
 
-        program_notice_data = ProgramNoticeTb.objects.filter(class_tb_id=class_id).order_by('-reg_dt')
+        program_notice_data = ProgramNoticeTb.objects.select_related(
+            'member').filter(class_tb_id=class_id).order_by('-reg_dt')
 
         for program_notice_info in program_notice_data:
             program_notice_data_dict[program_notice_info.program_notice_id] = {
@@ -5368,6 +5369,7 @@ class GetProgramNoticeAllView(LoginRequiredMixin, AccessTestMixin, View):
                 'program_notice_hits': program_notice_info.hits,
                 'program_notice_mod_dt': str(program_notice_info.mod_dt),
                 'program_notice_reg_dt': str(program_notice_info.reg_dt),
+                'program_notice_reg_member_name': str(program_notice_info.member.name),
                 'program_notice_use': program_notice_info.use
             }
 
