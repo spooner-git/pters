@@ -27,7 +27,7 @@ from schedule.functions import func_get_member_ticket_id, func_check_lecture_ava
 from schedule.models import ScheduleTb, DeleteScheduleTb, DailyRecordTb
 from trainer.functions import func_get_trainer_setting_list
 from trainer.models import ClassMemberTicketTb,  ClassTb, SettingTb, LectureTb, TicketLectureTb,\
-    TicketTb
+    TicketTb, ProgramNoticeTb
 from .functions import func_get_class_member_ticket_count, func_get_member_ticket_list, func_get_class_list, \
     func_get_trainee_on_schedule, func_get_trainee_off_schedule, func_get_trainee_lecture_schedule, \
     func_get_trainee_on_repeat_schedule, func_check_select_time_reserve_setting, \
@@ -237,6 +237,19 @@ class TraineeCalendarView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         # context = func_get_class_member_ticket_count(context, class_id, self.request.user.id)
 
         context['holiday'] = func_get_holiday_schedule(start_date, end_date)
+
+        return context
+
+
+class TraineeProgramNoticeView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'trainee_program_notice.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(TraineeProgramNoticeView, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
+        program_notice_data = ProgramNoticeTb.objects.filter(class_tb_id=class_id, to_member_type_cd='trainee',
+                                                             use=USE).order_by('-reg_dt')
+        context['program_notice_data'] = program_notice_data
 
         return context
 
@@ -1800,6 +1813,27 @@ class PopupPlanDailyRecordView(TemplateView):
             context['daily_record_info'] = daily_record_info
         return context
 
+
+class PopupProgramNoticeView(TemplateView):
+    template_name = 'popup/trainee_popup_program_notice.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PopupProgramNoticeView, self).get_context_data(**kwargs)
+        program_notice_id = self.request.GET.get('program_notice_id')
+        program_notice_info = None
+        error = None
+        if program_notice_id is None or program_notice_id == '':
+            error = '공지사항 정보를 불러오지 못했습니다.[0]'
+        try:
+            program_notice_info = ProgramNoticeTb.objects.get(program_notice_id=program_notice_id)
+            if program_notice_info.member.profile_url is None or program_notice_info.member.profile_url == '':
+                program_notice_info.member.profile_url = '/static/common/icon/icon_account.png'
+        except ObjectDoesNotExist:
+            error = '공지사항 정보를 불러오지 못했습니다.[1]'
+
+        if error is None:
+            context['program_notice_info'] = program_notice_info
+        return context
 
 # skkim Test페이지, 테스트 완료후 지울것 190316
 class TestPageView(TemplateView):

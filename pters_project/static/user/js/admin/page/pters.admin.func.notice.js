@@ -143,7 +143,6 @@ class Notice {
                 `<p style="font-size:14px;">데이터가 없습니다.</p>`
             );
         }
-
         let html = '<div class="notice_article_wrapper">' + html_to_join.join('') + '</div>';
 
 

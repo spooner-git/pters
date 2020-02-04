@@ -146,7 +146,7 @@ class ProgramNotice_list {
             );
         }
 
-        let html = '<div class="notice_article_wrapper">' + html_to_join.join('') + '</div>';
+        let html = '<div class="program_notice_article_wrapper">' + html_to_join.join('') + '</div>';
 
         return html;
     }

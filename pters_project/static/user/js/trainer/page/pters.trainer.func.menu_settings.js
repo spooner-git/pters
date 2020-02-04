@@ -85,7 +85,7 @@ class Menu_settings {
                         this.dom_menu_setting_reserve() + 
                         this.dom_menu_setting_alarm() + 
                         this.dom_menu_attendmode() +
-                        this.dom_menu_program_notice() +
+                        // this.dom_menu_program_notice() +
                         this.dom_menu_setting_attendmode() +
                         this.dom_menu_setting_menu_access() +
                         CComponent.dom_tag('개인 설정', dom_tag_style) + 

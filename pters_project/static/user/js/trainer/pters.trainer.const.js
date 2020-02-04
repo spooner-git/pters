@@ -176,7 +176,7 @@ const PROGRAM_BOARD_UPDATE_HISTORY = 'UPDATE_HISTORY';
 const PROGRAM_BOARD_TYPE = {NOTICE:"공지사항", BOARD:"게시판"};
 const PROGRAM_BOARD_USE = {1:{text:"공개", color:"green"}, 0:{text:"비공개", color:"#676767"} };
 const PROGRAM_BOARD_TARGET = {ALL:"전체", trainer:"강사", trainee:"수강회원"};
-
+const PROGRAM_BOARD_CATEGORY = {use:"공개 여부", type:"분류", open:"공개 범위"};
 
 /* 팝업 주소 */
 

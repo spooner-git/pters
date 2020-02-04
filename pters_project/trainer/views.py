@@ -5368,7 +5368,8 @@ class GetProgramNoticeAllView(LoginRequiredMixin, AccessTestMixin, View):
                 'program_notice_hits': program_notice_info.hits,
                 'program_notice_mod_dt': str(program_notice_info.mod_dt),
                 'program_notice_reg_dt': str(program_notice_info.reg_dt),
-                'program_notice_use': program_notice_info.use}
+                'program_notice_use': program_notice_info.use
+            }
 
         return JsonResponse(program_notice_data_dict, json_dumps_params={'ensure_ascii': True})
 
