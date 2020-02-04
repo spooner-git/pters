@@ -199,7 +199,7 @@ class ProgramNotice_list {
                                                             "contents":data_written.content, "to_member_type_cd":'trainee',
                                                             "use":data_written.category_selected.use.value[0]};
                                                 ProgramNotice_func.update(data, ()=>{
-                                                    this.init();
+                                                    this.render();
                                                 });
                                             });
 
@@ -211,7 +211,7 @@ class ProgramNotice_list {
                                         show_user_confirm(`공지 "${numbering}" 번 글을 완전 삭제 하시겠습니까? <br> 다시 복구할 수 없습니다.`, ()=>{
                                             ProgramNotice_func.delete({"program_notice_id":id}, ()=>{
                                                 try{
-                                                    this.init();
+                                                    this.render();
                                                 }catch(e){}
                                                 layer_popup.all_close_layer_popup();
                                             });
@@ -275,7 +275,7 @@ class ProgramNotice_list {
                             "contents":data_written.content, "to_member_type_cd":'trainee',
                             "use":data_written.category_selected.use.value[0]};
                 ProgramNotice_func.create(data, ()=>{
-                    this.init();
+                    this.render();
                 });
             });
         });

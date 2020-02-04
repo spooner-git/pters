@@ -390,7 +390,7 @@ class ProgramBoardCommentTb(TimeStampedModel):
         db_table = 'PROGRAM_BOARD_COMMENT_TB'
 
 
-class ProgramNoticeTb(TimeStampedModel):
+class ProgramNoticeTb(models.Model):
     program_notice_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, null=True)
     class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
@@ -401,6 +401,8 @@ class ProgramNoticeTb(TimeStampedModel):
     to_member_type_cd = models.CharField(db_column='TO_MEMBER_TYPE_CD', max_length=20,
                                          blank=True, null=True, default=TO_MEMBER_BOARD_TYPE_CD_TRAINEE)
     hits = models.BigIntegerField(db_column='HITS', default=0)  # Field name made lowercase.
+    reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True, auto_now_add=True)
+    mod_dt = models.DateTimeField(db_column='MOD_DT', blank=True, null=True, auto_now_add=True)
     use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
 
     class Meta:

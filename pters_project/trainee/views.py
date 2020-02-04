@@ -1828,12 +1828,15 @@ class PopupProgramNoticeView(TemplateView):
             program_notice_info = ProgramNoticeTb.objects.get(program_notice_id=program_notice_id)
             if program_notice_info.member.profile_url is None or program_notice_info.member.profile_url == '':
                 program_notice_info.member.profile_url = '/static/common/icon/icon_account.png'
+            program_notice_info.hits += 1
+            program_notice_info.save()
         except ObjectDoesNotExist:
             error = '공지사항 정보를 불러오지 못했습니다.[1]'
 
         if error is None:
             context['program_notice_info'] = program_notice_info
         return context
+
 
 # skkim Test페이지, 테스트 완료후 지울것 190316
 class TestPageView(TemplateView):

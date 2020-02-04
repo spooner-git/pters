@@ -4760,7 +4760,7 @@ class BoardWriter{
     }
 
     render_upper_html(){
-        let html = this.data.upper_html != null ? this.data.upper_html : ""
+        let html = this.data.upper_html != null ? this.data.upper_html : "";
         document.getElementById(this.target.upper_html).innerHTML = html;
     }
 

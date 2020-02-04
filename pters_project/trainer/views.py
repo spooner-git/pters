@@ -5438,6 +5438,7 @@ class UpdateProgramNoticeInfoView(LoginRequiredMixin, AccessTestMixin, View):
             program_notice_info.title = title
             program_notice_info.contents = contents
             program_notice_info.to_member_type_cd = to_member_type_cd
+            program_notice_info.mod_dt = timezone.now()
             program_notice_info.use = use
             program_notice_info.save()
 
