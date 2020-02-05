@@ -22,6 +22,10 @@ input:disabled{
 	opacity: 1; */
 }
 
+:focus{
+	outline: none;
+}
+
 .create_row, .create_input_row, .cell_text{
 	vertical-align: inherit;
 	overflow: hidden;
