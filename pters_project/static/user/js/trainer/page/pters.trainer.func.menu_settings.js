@@ -211,7 +211,7 @@ class Menu_settings {
 
     dom_menu_program_notice(){
         let id = 'menu_program_notice';
-        let title = '공지사항 관리';
+        let title = '프로그램 공지사항';
         let icon = CImg.program_notice();
         let icon_r_visible = NONE;
         let icon_r_text = "";

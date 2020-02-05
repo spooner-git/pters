@@ -48,7 +48,7 @@ class ProgramNotice_list {
 
     render(){
         let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();program_notice_list_popup.clear();">${CImg.arrow_left()}</span>`;
-        let top_center = `<span class="icon_center">공지사항 관리</span>`;
+        let top_center = `<span class="icon_center">프로그램 공지사항</span>`;
         let top_right = `<span class="icon_right">
                             <span class=".add_program_notice" onclick="${this.instance}.event_add_new();">
                                 ${CImg.plus("", {"vertical-align":"middle"})}
@@ -78,7 +78,7 @@ class ProgramNotice_list {
     dom_row_toolbox(){
         // let options_padding_top_bottom = 16;
         // let button_height = 52;
-        let title = "공지사항 관리";
+        let title = "프로그램 공지사항";
         let html = `<div class="program_notice_upper_box">
                         <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:var(--font-main); letter-spacing: -1px; height:28px;">
                             <span style="display:inline-block;">${title}</span>

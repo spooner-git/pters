@@ -1,7 +1,6 @@
 class Ticket{
     constructor(install_target, instance){
         this.target = {install: install_target, toolbox:'section_ticket_list_toolbox', content:'section_ticket_list_content'};
-
         this.instance = instance;
         this.page_name = 'ticket_page_type';
         this.data = null;

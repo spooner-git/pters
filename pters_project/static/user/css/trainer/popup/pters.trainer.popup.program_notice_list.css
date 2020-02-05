@@ -48,6 +48,7 @@
 		cursor: pointer;
 		vertical-align: middle;
 		text-align: center;
+		visibility: hidden;
 	}
 	.program_notice_tools_wrap > .search_program_notice > svg{
 		vertical-align: middle;
@@ -229,12 +230,12 @@
 
 
 
-#section_program_notice_content .program_notice_article_wrapper{
+.program_notice_article_wrapper{
 	display: flex;
 	flex-direction: column-reverse;
 }
 
-#section_program_notice_content .program_notice_article{
+.program_notice_article{
 	padding: 10px 16px;
 	box-sizing: border-box;
 	border-bottom: var(--border-article-dark);
@@ -242,53 +243,53 @@
 	/*display: table;*/
 }
 
-#section_program_notice_content .program_notice_article_upper{
+ .program_notice_article_upper{
 	display: flex;
 	font-size: 12px;
 	margin-bottom: 8px;
 }
-#section_program_notice_content .program_notice_article_bottom{
+ .program_notice_article_bottom{
 	display: flex;
 	font-size: 13px;
 }
-#section_program_notice_content .program_notice_contents{
+ .program_notice_contents{
 	font-size: 13px;
 	margin-top: 10px;
 }
-#section_program_notice_content .program_notice_contents > div:first-child{
+ .program_notice_contents > div:first-child{
 	padding: 10px 5px;
 	background-color: var(--bg-light);
 }
 
-#section_program_notice_content .program_notice_article_id{
+.program_notice_article_id{
 	flex-basis: 20px;
 	color: #b3b3b3;
 	font-size: 12px;
 }
-#section_program_notice_content .program_notice_article_title{
+.program_notice_article_title{
 	flex: 1 1 0;
 	font-size: 14px;
 }
 
-#section_program_notice_content .program_notice_article_use{
+.program_notice_article_use{
  	width: 100%;
 	text-align: right;
 	font-size: 12px;
 }
 
-#section_program_notice_content .program_notice_article_target{
+.program_notice_article_target{
 	flex: 1 0 0;
 }
-#section_program_notice_content .program_notice_article_type{
+.program_notice_article_type{
 	flex-basis: 80px;
 }
 
-#section_program_notice_content .program_notice_article_reg_date{
+.program_notice_article_reg_date{
 	width: 100%;
 	text-align: left;
 	color: #b3b3b3;
 }
-#section_program_notice_content .program_notice_article_mod_date{
+.program_notice_article_mod_date{
 	width: 100%;
 	text-align: left;
 	color: #b3b3b3;
