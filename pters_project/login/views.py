@@ -1031,17 +1031,17 @@ class DeletePushTokenView(View):
     def post(self, request):
         device_id = request.POST.get('device_id', '')
         # logger.info('device_id::' + device_id)
+        device_info = 'app'
         if device_id != '':
             token_data = PushInfoTb.objects.filter(device_id=device_id, use=USE)
             if len(token_data) > 0:
                 token_data.delete()
-            request.session['device_id'] = device_id
-            request.session['device_info'] = 'app'
+            device_info = 'app'
         else:
-            request.session['device_id'] = device_id
-            request.session['device_info'] = 'web'
-
-        return render(request, self.template_name, {'token_check': True})
+            device_info = 'web'
+        request.session['device_id'] = device_id
+        request.session['device_info'] = device_info
+        return render(request, self.template_name, {'token_check': True, 'device_info': device_info})
 
 
 class ClearBadgeCounterView(TemplateView):

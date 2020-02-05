@@ -1314,6 +1314,7 @@ function delete_token(device_id){
         url:'/login/delete_push_token/',
         type:'POST',
         data:{"device_id": device_id},
+        dataType : 'html',
 
         beforeSend:function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -1323,8 +1324,9 @@ function delete_token(device_id){
         },
 
         //통신성공시 처리
-        success:function(){
-            console.log('토큰 삭제 완료')
+        success:function(data_){
+            let data = JSON.parse(data_);
+            device_info = data.device_info;
         },
 
         //보내기후 팝업창 닫기
