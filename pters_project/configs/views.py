@@ -311,6 +311,7 @@ def get_function_auth_type_cd(request):
         except ObjectDoesNotExist:
             trainer_id = ''
 
+    request.session['auth_info'] = {}
     if trainer_id != '' and trainer_id is not None:
         payment_data = PaymentInfoTb.objects.filter(member_id=trainer_id, status='paid',
                                                     start_date__lte=today, end_date__gte=today,

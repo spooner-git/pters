@@ -111,6 +111,17 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                         request.session['class_center_name'] = class_info.class_tb.get_center_name()
                         request.session['trainer_name'] = class_info.class_tb.member.name
                         temp_class_counter = class_member_ticket_counter
+                    if class_member_ticket_counter == 0 and temp_class_counter == 0:
+                        request.session['class_id'] = class_info.class_tb_id
+                        request.session['class_hour'] = class_info.class_tb.class_hour
+                        request.session['class_type_code'] = class_info.class_tb.subject_cd
+                        request.session['class_type_name'] = class_info.class_tb.get_class_type_cd_name()
+                        if str(class_info.class_tb.member_id) != str(request.user.id):
+                            request.session['class_type_name'] = class_info.class_tb.get_class_type_cd_name() \
+                                                                 + '-' + class_info.class_tb.member.name
+                            request.session['shared_program_flag'] = SHARED_PROGRAM
+                        request.session['class_center_name'] = class_info.class_tb.get_center_name()
+                        request.session['trainer_name'] = class_info.class_tb.member.name
 
                 # self.url = '/trainer/class_select/'
         else:
