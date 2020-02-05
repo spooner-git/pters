@@ -4784,7 +4784,7 @@ class BoardWriter{
 
     dom_content_assembly (){
         // let upper_html = this.data.upper_html != null ? this.data.upper_html : "";
-        let title_input = `<div class="obj_input_box_full">`+CComponent.dom_tag("제목")+ this.dom_row_subject_input() + `</div>`;
+        let title_input = `<div class="obj_input_box_full" style="padding:8px 20px;">`+ this.dom_row_subject_input() + `</div>`;
         let content_input = `<div class="obj_input_box_full">` + this.dom_row_content_input() + `</div>`;
         let reg_mod_info = '';
         if(!this.data.new_check){
@@ -4813,18 +4813,19 @@ class BoardWriter{
         let length = this.data.category.length;
         let html_to_join = [];
         for(let i=0; i<length; i++){
-            let html = CComponent.dom_tag(this.data.category[i].title)+ this.dom_row_category(this.data.category[i]);
+            // let html = CComponent.dom_tag(this.data.category[i].title)+ this.dom_row_category(this.data.category[i]);
+            let html = this.dom_row_category(this.data.category[i]);
             html_to_join.push(html);
         }
 
-        return '<div class="obj_input_box_full">'+html_to_join.join("") + '</div>';
+        return '<div class="obj_input_box_full" style="padding:8px 20px;">'+html_to_join.join("") + '</div>';
     }
 
     dom_row_subject_input(){
         let id = "dom_row_subject_input";
         let title = this.data.title != null ? this.data.title : "";
         let placeholder = "제목";
-        let icon = NONE;
+        let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
@@ -4832,14 +4833,18 @@ class BoardWriter{
         let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+~.,\\s 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
         let pattern_message = "+ - _ .,~ 제외 특수문자는 입력 불가";
         let required = "";
-        // let row = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, onfocusout, pattern, pattern_message, required);
-        // let html = row;
-        // return html;
-        let html = CComponent.create_input_textarea_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, (input_data)=>{
+        let onfocusout = ()=>{
             this.data.title = input_data;
             this.if_user_changed_any_information = true;
-        }, pattern, pattern_message, required);
+        };
+        let row = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, onfocusout, pattern, pattern_message, required);
+        let html = row;
         return html;
+        // let html = CComponent.create_input_textarea_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, (input_data)=>{
+        //     this.data.title = input_data;
+        //     this.if_user_changed_any_information = true;
+        // }, pattern, pattern_message, required);
+        // return html;
     }
 
     dom_row_content_input(){
@@ -4851,11 +4856,12 @@ class BoardWriter{
     dom_row_category(data){
         let category_id = data.id;
         let category_title = this.data.category_selected[category_id].text.length == 0 ? data.title: this.data.category_selected[category_id].text;
+        let category_inner_title = data.title;
         let option_data = data.data;
 
         let id = `dom_row_category_${category_id}`;
         let title = category_title;
-        let icon = NONE;
+        let icon = DELETE;
         let icon_r_visible = SHOW;
         let icon_r_text = "";
         let style = this.data.category_selected[category_id].text.length == 0 ? {"color":"var(--font-inactive)"} : null;
@@ -4867,7 +4873,7 @@ class BoardWriter{
             let selected_data = this.data.category_selected[category_id];
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, popup_style, null, ()=>{
-                custom_selector = new CustomSelector(title, install_target, multiple_select, data, selected_data, (set_data)=>{
+                custom_selector = new CustomSelector(category_inner_title, install_target, multiple_select, data, selected_data, (set_data)=>{
                     this.data.category_selected[category_id] = set_data;
                     this.render_category_selector();
                     this.if_user_changed_any_information = true;

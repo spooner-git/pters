@@ -6,10 +6,10 @@ class ProgramNotice_add{
         this.form_id = 'id_program_notice_add_form';
 
         this.data = {
-                name:null,
-                note:null,
-                board_type_cd:[],
-                board_type_cd_name:[]
+            name:null,
+            note:null,
+            board_type_cd:[],
+            board_type_cd_name:[]
         };
 
         this.init();

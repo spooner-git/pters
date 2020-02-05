@@ -134,7 +134,7 @@ class ProgramNotice_list {
         }
         if(html_to_join.length == 0){
             html_to_join.push(
-                `<p style="font-size:14px;">데이터가 없습니다.</p>`
+                `<p style="font-size:14px;padding:16px">데이터가 없습니다.</p>`
             );
         }
 
