@@ -4784,7 +4784,7 @@ class BoardWriter{
 
     dom_content_assembly (){
         // let upper_html = this.data.upper_html != null ? this.data.upper_html : "";
-        let title_input = `<div class="obj_input_box_full" style="padding:8px 20px;">`+ this.dom_row_subject_input() + `</div>`;
+        let title_input = `<div class="obj_input_box_full" style="padding:6px 20px;">`+ this.dom_row_subject_input() + `</div>`;
         let content_input = `<div class="obj_input_box_full">` + this.dom_row_content_input() + `</div>`;
         let reg_mod_info = '';
         if(!this.data.new_check){
