@@ -163,7 +163,7 @@ class ProgramNotice {
             );
         }
 
-        let html = html_to_join.join('');
+        let html = '<div class="program_notice_article_wrapper">' + html_to_join.join('') + '</div>';
 
         return html;
     }

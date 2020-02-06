@@ -4788,7 +4788,7 @@ class BoardWriter{
         let content_input = `<div class="obj_input_box_full">` + this.dom_row_content_input() + `</div>`;
         let reg_mod_info = '';
         if(!this.data.new_check){
-            reg_mod_info = `<div class="obj_input_box_full">` + this.dom_row_reg_mod_date() + `</div>`;
+            reg_mod_info = `<div class="obj_input_box_full" style="padding:6px 20px">` + this.dom_row_reg_mod_date() + `</div>`;
         }
         // let category = this.dom_assembly_category();
         let bottom_html = this.data.bottom_html != null ? this.data.bottom_html : "";
@@ -4897,8 +4897,8 @@ class BoardWriter{
         let reg_date_text = reg_date == mod_date ? reg_date + ' - ' + member_name : reg_date;
         let mod_date_text = mod_date + ' - ' + member_name;
 
-        let html1 = CComponent.create_row('reg_date_view', `등록: ${reg_date_text}`, NONE, NONE, "", style, ()=>{});
-        let html2 = CComponent.create_row('mod_date_view', `수정: ${mod_date_text}`, NONE, NONE, "", style, ()=>{});
+        let html1 = CComponent.create_row('reg_date_view', `등록: ${reg_date_text}`, DELETE, NONE, "", style, ()=>{});
+        let html2 = CComponent.create_row('mod_date_view', `수정: ${mod_date_text}`, DELETE, NONE, "", style, ()=>{});
 
         let html = html1 + html2;
         if(reg_date_text == mod_date_text){
