@@ -11,7 +11,7 @@
         {% if program_notice_info %}
             <div class="wrapper_program_notice_title">
                 <div class="wrapper_popup_title_text obj_font_size_18_weight_900">
-                    {{ program_notice_info.reg_dt | date:'Y.m.d (l)'|cut:"요일" }} {{ program_notice_info.reg_dt | time:'H:i' }}
+                    공지 사항
                 </div>
                 <div class="wrapper_popup_title_date obj_font_size_13_weight_500">
 {#                    <div class="obj_box_full">#}
@@ -31,12 +31,17 @@
             </div>
             <div class="wrapper_program_notice_content obj_font_size_14_weight_500">
                 <div class="obj_box_full">
-                        <div class="obj_table_cell_x2" style="width:auto;">
+                        <div style="width:auto;">
                             {{ program_notice_info.title }}
                         </div>
                 </div>
                 <div class="obj_table_raw obj_box_full">
-                        <div class="obj_table_cell_x2" style="width:auto;" id="daily_record_content_wrap">
+                        <div class="obj_font_color_grey obj_font_size_12_weight_normal" style="height:35px">
+                            <div style="float:right;">
+                                {{ program_notice_info.reg_dt | date:'Y.m.d (l)'|cut:"요일" }} {{ program_notice_info.reg_dt | time:'H:i' }}
+                            </div>
+                        </div>
+                        <div style="width:auto;" id="daily_record_content_wrap">
                             {% autoescape off %}
                                 {{ program_notice_info.contents }}
                             {% endautoescape %}
