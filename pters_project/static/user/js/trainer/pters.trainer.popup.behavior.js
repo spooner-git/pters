@@ -160,8 +160,7 @@ let layer_popup = (function (){
 
         "animation_set": function (option, popup_data){
             //비어 있는 경우 동작 안되도록 설정;
-            if(popup_data==undefined || !Object.keys(popup_data).length){  
-                alert(JSON.stringify(popup_data));
+            if(popup_data==undefined || !Object.keys(popup_data).length){
                 location.reload();
             }else{
                 // let animation_flag = func_get_animation_flag(popup_data.popup_size);
