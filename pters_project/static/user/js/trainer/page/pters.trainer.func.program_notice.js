@@ -159,7 +159,7 @@ class ProgramNotice {
         }
         if(html_to_join.length == 0){
             html_to_join.push(
-                `<p style="font-size:14px;">데이터가 없습니다.</p>`
+                `<p style="font-size:14px;padding:16px">데이터가 없습니다.</p>`
             );
         }
 
@@ -203,7 +203,7 @@ class ProgramNotice {
                             </div>
                         </div>
                     </article>`;
-        $(document).off('click', `#program_notice_article_${id}`).on('click', `#program_notice_article_${id}`, function(){
+        $(document).off('click', `#program_notice_article_${id}`).on('click', `#program_notice_article_${id}`, ()=>{
             // let program_notice_contents =  $(this).find(".program_notice_contents");
             // if(program_notice_contents.css('display') == 'none'){
             //     program_notice_contents.show();
@@ -225,7 +225,7 @@ class ProgramNotice {
                                 "contents":data_written.content, "to_member_type_cd":'trainee',
                                 "use":data_written.category_selected.use.value[0]};
                     ProgramNotice_func.update(data, ()=>{
-                        program_notice_list_popup.init();
+                        this.init();
                     });
                 });
 

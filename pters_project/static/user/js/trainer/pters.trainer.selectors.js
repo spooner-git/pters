@@ -4833,7 +4833,7 @@ class BoardWriter{
         let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+~.,\\s 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
         let pattern_message = "+ - _ .,~ 제외 특수문자는 입력 불가";
         let required = "";
-        let onfocusout = ()=>{
+        let onfocusout = (input_data)=>{
             this.data.title = input_data;
             this.if_user_changed_any_information = true;
         };
