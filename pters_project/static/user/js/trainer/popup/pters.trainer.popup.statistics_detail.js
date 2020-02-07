@@ -2,7 +2,7 @@ class Statistics_detail{
     constructor(install_target, target_month_date){
         this.target = {install: install_target, toolbox:'section_statistics_detail_toolbox', content:'section_statistics_detail_content'};
         this.target_month_date = target_month_date;
-        this.target_yyyy_mm = `${target_month_date.split('-')[0]}년 ${target_month_date.split('-')[1]}월`
+        this.target_yyyy_mm = `${target_month_date.split('-')[0]}년 ${target_month_date.split('-')[1]}월`;
 
         this.data = null;
 

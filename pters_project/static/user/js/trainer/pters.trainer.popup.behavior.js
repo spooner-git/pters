@@ -6,12 +6,28 @@ let layer_popup = (function (){
     let windowHeight = window.innerHeight;
 
     function func_open_layer_popup (popup_name, popup_size, animation_type){
+        console.log("animation_type",animation_type)
         // $('.content_page').css('overflow-y', 'hidden');
 
         let $popup_selector;
         let popup_data = {"popup_name":popup_name, "popup_size":popup_size, "animation_type":animation_type};
         //똑같은 팝업 여러개 못뜨도록
         let $popup_name_selector = $(`.${popup_name}`);
+        if(animation_type == POPUP_FROM_RIGHT && windowWidth <= 650){
+            if(popup_array.length > 0){
+                let $last_popup =  $(`.${popup_array[popup_array.length - 1].popup_name}`).parents('.popup_mobile');
+                $last_popup.addClass("anim_page_to_left");
+                setTimeout(()=>{
+                    $last_popup.removeClass("anim_page_to_left");
+                }, 300);
+            }else{
+                $root_content.addClass("anim_page_to_left");
+                setTimeout(()=>{
+                    $root_content.removeClass("anim_page_to_left");
+                }, 300);
+            }
+        }
+        
 
         if($popup_name_selector.length == 1){
             popup_array.push(popup_data);
@@ -63,9 +79,30 @@ let layer_popup = (function (){
             // if(popup_size == POPUP_SIZE_WINDOW){
             //     delay_time = 0;
             // }
+
+            
+
+            if(popup_data.animation_type == POPUP_FROM_RIGHT && windowWidth <= 650){
+                if(popup_array.length > 0){
+                    let $last_popup =  $(`.${popup_array[popup_array.length - 1].popup_name}`).parents('.popup_mobile');
+                    $last_popup.addClass('anim_page_to_right');
+                }else{
+                    $root_content.addClass('anim_page_to_right');
+                }
+            }
+            
             setTimeout(function(){
                 $popup_selector.css({"z-index":0});
                 $(`#${popup_data.popup_name}`).remove();
+                if(popup_data.animation_type == POPUP_FROM_RIGHT && windowWidth <= 650){
+                    if(popup_array.length > 0){
+                        let $last_popup =  $(`.${popup_array[popup_array.length - 1].popup_name}`).parents('.popup_mobile');
+                        $last_popup.removeClass('anim_page_to_right');
+                    }else{
+                        $root_content.removeClass('anim_page_to_right');
+                    }
+                    
+                }
             }, delay_time);
         }
 

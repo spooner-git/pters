@@ -27,7 +27,6 @@ class ProgramNotice {
     }
 
     init(){
-        console.log(current_page_text);
         if(current_page_text != this.page_name){
             return false;
         }
@@ -53,7 +52,6 @@ class ProgramNotice {
     render(){
 
         let html = `<div>
-                        
                         <div id="program_notice_display_panel">
                             ${this.dom_assembly_toolbox()}
                         </div>
@@ -183,7 +181,7 @@ class ProgramNotice {
         let use = data.program_notice_use; //공개여부
 
 
-        let html = `<article id="program_notice_article_${id}" class="program_notice_article">
+        let html = `<article id="program_notice_article_${id}" class="program_notice_article anim_fade_in_vibe_top">
                         <div style="display:table; width:100%;">
                             <div style="display:table-row;">
                                 <div class="program_notice_article_id" style="width:5%;display:table-cell;vertical-align:middle;">
@@ -210,7 +208,8 @@ class ProgramNotice {
             // }else{
             //     program_notice_contents.hide();
             // }
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_WRITER, 100, POPUP_FROM_BOTTOM, null, ()=>{
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_WRITER, 100, popup_style, null, ()=>{
                 let external_data = {   title:title, content:content, id:id, reg_dt:reg_dt, mod_dt:mod_dt,reg_member_name:reg_member_name,
                                         category:[
                                             {id:"use", title:"공개 여부", data: {text:["공개", "비공개"], value:[ON, OFF]} }
@@ -257,13 +256,15 @@ class ProgramNotice {
         let button_height = 8 + 8 + 52;
         let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
         let root_content_height = $root_content.height();
-        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
+        let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, popup_style, null, ()=>{
             option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
         });
     }
 
     event_add_new(){
-        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_WRITER, 100, POPUP_FROM_RIGHT, null, ()=>{
+        let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_WRITER, 100, popup_style, null, ()=>{
             let external_data = {
                                         category:[
                                             {id:"use", title:"공개 여부", data: {text:["공개", "비공개"], value:[ON, OFF]} }

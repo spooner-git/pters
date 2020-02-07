@@ -102,7 +102,7 @@ class Alarm {
                 if(this.new_alarms_id_cache.indexOf(alarm_id) != -1){
                     alarm_highlight = "var(--bg-for-only-new-notifi)";
                 }
-                let html = `<article class="alarm_wrapper anim_fade_in" data-alarm_id="${alarm_id}" style="background-color:${alarm_highlight}">
+                let html = `<article class="alarm_wrapper anim_fade_in_vibe_top" data-alarm_id="${alarm_id}" style="background-color:${alarm_highlight}">
                                 <div class="alarm_data_u">
                                     <div>
                                         ${CImg.blank()}
@@ -143,7 +143,7 @@ class Alarm {
         
 
         if(html_temp.length == 0){
-            html_temp.push(`<article class="alarm_wrapper anim_fade_in">   
+            html_temp.push(`<article class="alarm_wrapper anim_fade_in_vibe_top">   
                                 <div>
                                     <span>새로운 알림이 없습니다.</span>
                                 </div>
