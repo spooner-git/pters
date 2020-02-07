@@ -392,16 +392,14 @@
 
 
 <script>
-    // history.pushState(null, null, location.href);
-    // window.addEventListener("popstate", (e)=>{
-    //     console.log(e);
-    //     history.go(1);
-    // });
-
-    history.pushState(null, null, '#Back');
-    window.addEventListener("hashchange", function(){
-        history.pushState(null, null, '#Back');
+    history.pushState(null, null, location.href);
+    window.addEventListener("popstate", (e)=>{
+        if(layer_popup.stack > 0){
+            layer_popup.close_layer_popup();
+        }
+        history.go(1);
     });
+
 
     var user_email = '{{ request.user.email }}';
     var user_name = '{{ request.user.first_name }}';
