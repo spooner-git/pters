@@ -17,9 +17,10 @@
 } */
 
 input:disabled{
-	/* color: #282828 !important;
-	-webkit-text-fill-color: #282828 !important;
-	opacity: 1; */
+	color: inherit !important;
+	-webkit-text-fill-color: inherit!important;
+	opacity: 1;
+	/* color: inherit; */
 }
 
 :focus{

@@ -26,6 +26,12 @@ let layer_popup = (function (){
                     $root_content.removeClass("anim_page_to_left");
                 }, 300);
             }
+        }else if(animation_type == POPUP_FROM_PAGE){
+                let $this_popup =  $(`.${popup_data.popup_name}`).parents('.popup_mobile');
+                $this_popup.addClass("anim_pulse");
+                setTimeout(()=>{
+                    $this_popup.removeClass("anim_pulse");
+                }, 300);
         }
         
 
@@ -60,55 +66,35 @@ let layer_popup = (function (){
         return popup_data;
     }
 
-    function func_close_layer_popup (popup_size){
+    function func_close_layer_popup (){
         let popup_data = {};
         //혹시 있을 pop 에러 방지
         if(popup_array.length > 0){
-            let $popup_selector;
-            // if(popup_specified == undefined){ //특정 팝업을 지정하지 않았을 때
-                popup_data = popup_array.pop();
-                $popup_selector = $(`.${popup_data.popup_name}`).parents('.popup_mobile');
-            // }else{ //특정 팝업을 닫고자 지정했을 때
-            //     for(let i=0; i<popup_array.length; i++){
-
-            //     }
-            // }
-            
-            //팝업이 옆으로 닫히는 애니메이션이 종료된후 해당 팝업의 html을 지운다.
-            let delay_time = 250;
-            // if(popup_size == POPUP_SIZE_WINDOW){
-            //     delay_time = 0;
-            // }
-
-            
+            // let $popup_selector;
+            popup_data = popup_array.pop();
+            // $popup_selector = $(`.${popup_data.popup_name}`).parents('.popup_mobile');
 
             if(popup_data.animation_type == POPUP_FROM_RIGHT && windowWidth <= 650){
                 if(popup_array.length > 0){
                     let $last_popup =  $(`.${popup_array[popup_array.length - 1].popup_name}`).parents('.popup_mobile');
                     $last_popup.addClass('anim_page_to_right');
+                    setTimeout(()=>{
+                        $last_popup.removeClass('anim_page_to_right');
+                    }, 300);
                 }else{
                     $root_content.addClass('anim_page_to_right');
-                }
-            }
-            
-            setTimeout(function(){
-                $popup_selector.css({"z-index":0});
-                $(`#${popup_data.popup_name}`).remove();
-                if(popup_data.animation_type == POPUP_FROM_RIGHT && windowWidth <= 650){
-                    if(popup_array.length > 0){
-                        let $last_popup =  $(`.${popup_array[popup_array.length - 1].popup_name}`).parents('.popup_mobile');
-                        $last_popup.removeClass('anim_page_to_right');
-                    }else{
+                    setTimeout(()=>{
                         $root_content.removeClass('anim_page_to_right');
-                    }
-                    
+                    }, 300);
                 }
-            }, delay_time);
+            }else if(popup_data.animation_type == POPUP_FROM_PAGE){
+                    let $this_popup =  $(`.${popup_data.popup_name}`).parents('.popup_mobile');
+                    $this_popup.addClass("anim_pulse");
+                    setTimeout(()=>{
+                        $this_popup.removeClass("anim_pulse");
+                    }, 300);
+            }
         }
-
-        // if(popup_array.length == 0){
-        //     $('.content_page').css('overflow-y', 'auto');
-        // }
 
         return popup_data;
     }
@@ -186,8 +172,8 @@ let layer_popup = (function (){
             // }, 10);
         },
 
-        "close_layer_popup": function (popup_size) {
-            let popup_data = func_close_layer_popup(popup_size);
+        "close_layer_popup": function () {
+            let popup_data = func_close_layer_popup();
             this.animation_set(CLOSE, popup_data);
         },
         "all_close_layer_popup": function () {
@@ -362,7 +348,7 @@ function func_set_open_popup_animation ($popup_selector, animation_type, popup_s
         "transition": `${animation_info}`
     });
     if(animation_type==POPUP_FROM_PAGE){
-        $popup_selector.fadeIn(300);
+        $popup_selector.fadeIn(200);
     }
     else{
         $popup_selector.css({"visibility":"visible"});
@@ -405,7 +391,7 @@ function func_set_close_popup_animation ($popup_selector, animation_type){
             break;
     }
     if(animation_type==POPUP_FROM_PAGE){
-        $popup_selector.fadeOut(300);
+        $popup_selector.fadeOut(200);
     }
     else{
         $popup_selector.css({
@@ -413,7 +399,7 @@ function func_set_close_popup_animation ($popup_selector, animation_type){
             "transition": `${animation_info}`
         });
         setTimeout(()=>{
-            $popup_selector.css({"visibility":"hidden"});
+            $popup_selector.css({"visibility":"hidden", "z-index":0});
         }, 300);
     }
 }
