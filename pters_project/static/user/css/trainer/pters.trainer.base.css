@@ -159,15 +159,14 @@
     --fundamental-white: #ffffff;
 }
 
-svg:active{
+.nav_img:active{
     animation-name: pulse-strong;
-	animation-duration: 0.4s;
-	animation-delay: 0;
-	animation-direction: normal;
-	animation-iteration-count: 1; 
-	animation-timing-function: ease-out;
+    animation-duration: 0.4s;
+    animation-delay: 0;
+    animation-direction: normal;
+    animation-iteration-count: 1; 
+    animation-timing-function: ease-out;
 }
-
 
 .anim_pulse{
 	animation-name: pulse;
