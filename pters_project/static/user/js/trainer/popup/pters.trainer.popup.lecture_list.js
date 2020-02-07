@@ -274,7 +274,7 @@ class Lecture_list {
                 if(load_image == OFF){
                     return;
                 }
-                ajax_load_image(SHOW);
+                // ajax_load_image(SHOW);
             },
     
             //통신성공시 처리
@@ -298,7 +298,7 @@ class Lecture_list {
                 if(load_image == OFF){
                     return;
                 }
-                ajax_load_image(HIDE);
+                // ajax_load_image(HIDE);
             },
     
             //통신 실패시 처리
