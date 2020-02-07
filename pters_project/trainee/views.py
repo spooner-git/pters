@@ -1883,6 +1883,52 @@ class PopupProgramNoticeView(TemplateView):
         return context
 
 
+class PopupInquiryView(TemplateView):
+    template_name = 'popup/trainee_popup_inquiry.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PopupInquiryView, self).get_context_data(**kwargs)
+        qa_type_list = CommonCdTb.objects.filter(upper_common_cd='16', use=1).order_by('order')
+        context['qa_type_data'] = qa_type_list
+        class_id = self.request.session.get('class_id', '')
+        if class_id is not None and class_id != '':
+            check_alarm_program_notice_qa_comment(context, class_id, self.request.user.id)
+        return context
+
+
+class PopupInquiryHistoryView(TemplateView):
+    template_name = 'popup/trainee_popup_inquiry_history.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PopupInquiryHistoryView, self).get_context_data(**kwargs)
+        query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `QA_TB`.`QA_TYPE_CD`"
+        query_status = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `QA_TB`.`STATUS`"
+        qa_list = QATb.objects.select_related(
+            'member').filter(member_id=self.request.user.id, use=USE
+                             ).annotate(qa_type_cd_name=RawSQL(query_type_cd, []),
+                                        status_type_cd_name=RawSQL(query_status, [])
+                                        ).order_by('-reg_dt')
+        for qa_info in qa_list:
+            if qa_info.read == 0 and qa_info.status_type_cd == 'QA_COMPLETE':
+                qa_info.read = 1
+                qa_info.save()
+            qa_info.contents = qa_info.contents.replace('\n', '<br/>')
+        context['qa_data'] = qa_list
+
+        return context
+
+
+class PopupInquiryHistoryInfoView(TemplateView):
+    template_name = 'popup/trainee_popup_inquiry_history_info.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PopupInquiryHistoryInfoView, self).get_context_data(**kwargs)
+        qa_id = self.request.GET.get('qa_id')
+        qa_info = QATb.objects.get(qa_id=qa_id).order_by('-reg_dt')
+        context['qa_info'] = qa_info
+
+        return context
+
 # skkim Test페이지, 테스트 완료후 지울것 190316
 class TestPageView(TemplateView):
     template_name = 'test_page.html'

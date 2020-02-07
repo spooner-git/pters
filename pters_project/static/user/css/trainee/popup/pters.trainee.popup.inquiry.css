@@ -1,0 +1,49 @@
+	#popup_inquiry .popup_mobile .wrapper_top{
+		height: 40px;
+		margin-bottom: 10px;
+	}
+
+	.popup_inquiry{
+		/*min-height: 100%;*/
+	}
+		.popup_inquiry .wrapper_inquiry_title{
+			padding: 0 20px;
+		}
+		.popup_inquiry .wrapper_popup_title_text{
+			position: absolute;
+			top: 20px;
+			height: 35px;
+			line-height: 35px;
+		}
+		.popup_inquiry .obj_font_size_14_weight_500{
+			height: 20px;
+			line-height: 20px;
+		}
+		.popup_inquiry .wrapper_inquiry_title .wrapper_popup_title_date{
+			position: absolute;
+			top: 55px;
+		}
+			
+		.popup_inquiry .obj_font_size_14_weight_normal{
+			height: 35px;
+			line-height: 35px;
+		}
+		.popup_inquiry .obj_font_size_13_weight_500{
+			height: 24px;
+			line-height: 24px;
+		}
+		.popup_inquiry .obj_font_size_12_weight_500{
+			height: 35px;
+			line-height: 35px;
+		}
+		.popup_inquiry .obj_font_size_11_weight_normal{
+			height: 30px;
+			line-height: 30px;
+		}
+
+		.popup_inquiry > .obj_box_full{
+			margin-bottom: 10px;
+			padding: 10px 20px;
+			border: 0;
+		}
+

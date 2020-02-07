@@ -122,6 +122,11 @@ urlpatterns = [
     url(r'^popup_program_notice/$', views.PopupProgramNoticeView.as_view(),
         name='popup_program_notice'),
 
+    # 회원 문의 내역 팝업 페이지
+    url(r'^popup_inquiry/$', views.PopupInquiryView.as_view(), name='popup_inquiry'),
+    url(r'^popup_inquiry_history/$', views.PopupInquiryHistoryView.as_view(), name='popup_inquiry_history'),
+    url(r'^popup_inquiry_history_info/$', views.PopupInquiryHistoryInfoView.as_view(), name='popup_inquiry_history_info'),
+
     # 삭제된 페이지
     # 회원 빈 월간 일정 페이지
     url(r'^cal_month_blank/$', views.CalMonthBlankView.as_view(), name='cal_month_blank'),

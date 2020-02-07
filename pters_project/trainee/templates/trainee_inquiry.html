@@ -7,30 +7,21 @@
         .trainee_inquiry{
             background-color: #f2f2f2;
         }
-        .wrapper_inquiry_select_box{
+        .wrapper_inquiry_title_box{
             padding: 15px 20px 20px 20px;
             background-image: linear-gradient(4deg, #fb767d, #ff3b44);
             border: 1px solid #e6e6e6;
             margin-top: 10px;
-            margin-bottom: 5px;
-        }
-        .wrapper_inquiry_select_box_title{
             margin-bottom: 10px;
+            text-align: center;
         }
-        .wrapper_inquiry_type_select{
-            -webkit-appearance:none;
+        .wrapper_inquiry_select_box{
+            padding: 15px 20px 20px 20px;
             background-color: #ffffff;
-            height: 40px;
-            width: 100%;
-            border-radius: 2px;
-            border:0;
-        }
-        .wrapper_trainee_iquiry_textarea{
-            resize: none;
-            width: 100%;
-            padding: 20px;
-            box-sizing: border-box;
-            font-size: 14px;
+            border: 1px solid #e6e6e6;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            cursor: pointer;
         }
         textarea{
             font-family: 'Noto Sans KR', sans-serif !important;
@@ -41,27 +32,21 @@
 {% block content %}
 
     <div class="trainee_inquiry">
-        <form id="form_inquiry"  action="{% url 'board:add_qa_info' %}" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="next_page" value="{% url 'trainee:trainee_inquiry' %}">
-            <input type="hidden" name="inquire_type" id="id_inquire_type">
-            <input type="hidden" name="inquire_body" id="id_inquire_body">
-            <input type="hidden" name="inquire_subject" id="id_inquire_subject" value="[수강회원문의]">
-        </form>
-        <div class="wrapper_inquiry_select_box">
-            <div class="wrapper_inquiry_select_box_title obj_font_size_15_weight_900 obj_font_color_white">피터스에게 문의하기</div>
-            <select class="wrapper_inquiry_type_select">
-                <option disabled selected>카테고리 선택</option>
-                {% for qa_type_info in qa_type_data %}
-                    <option value="{{ qa_type_info.common_cd }}">{{ qa_type_info.common_cd_nm }}</option>
-                {% endfor %}
-                
-            </select>
+        <div class="wrapper_inquiry_title_box">
+            <div class="obj_font_size_15_weight_900 obj_font_color_white">피터스에게 문의하기</div>
         </div>
-
-        <textarea class="wrapper_trainee_iquiry_textarea obj_box_full" placeholder="문의 내용을 입력 해주세요.&#13;&#10;(작성하신 문의는 등록하신 이메일로 답변 드립니다.)"></textarea>
-
-        <div id="button_inquiry_send" class="obj_button_big obj_font_bg_white_coral">보내기</div>
+        <div class="wrapper_inquiry_select_box">
+            <div class="obj_font_size_13_weight_500 obj_font_color_black"
+                 onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_inquiry_history', 90, POPUP_FROM_BOTTOM, {});">
+                내 문의 내역
+            </div>
+        </div>
+        <div class="wrapper_inquiry_select_box">
+            <div class="obj_font_size_13_weight_500 obj_font_color_black"
+                 onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_inquiry', 90, POPUP_FROM_BOTTOM, {});">
+                문의 하기
+            </div>
+        </div>
     </div>
 
 
@@ -90,76 +75,6 @@
 
             func_set_webkit_overflow_scrolling('.wrapper_trainee_iquiry_textarea');
         });
-
-        $('#button_inquiry_send').click(function(){
-            let type = $('#id_inquire_type');
-            let body = $('#id_inquire_body');
-            func_send_inquiry(type, body);
-        });
-
-        $('.wrapper_inquiry_type_select').change(function(){
-            $('#id_inquire_type').val($(this).val());
-        });
-
-        function func_send_inquiry(type, body){
-            let validity = func_check_inquiry_validity(type, body);
-            if(validity == false){
-                return false;
-            }
-{#            $('#form_inquiry').submit();#}
-
-            $.ajax({
-                url : "/board/add_qa_info/",
-                type:'POST',
-                data: $('#form_inquiry').serialize(),
-                dataType : 'json',
-
-                beforeSend:function(xhr, settings) {
-                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                    }
-                },
-
-                //보내기후 팝업창 닫기
-                complete:function(){
-
-                },
-
-                //통신성공시 처리
-                success:function(data){
-                    if(data.messageArray != undefined){
-                        if(data.messageArray.length > 0){
-                            show_error_message({title:data.messageArray[0]});
-                            return false;
-                        }
-                    }
-                    alert('문의 발송 완료');
-                    window.location.reload();
-                },
-
-                //통신 실패시 처리
-                error:function(){
-                    show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
-                    // location.reload();
-                }
-            });
-        }
-
-        function func_check_inquiry_validity(type, body){
-            var content = $('.wrapper_trainee_iquiry_textarea').val();
-            content = content.replace(/(?:\r\n|\r|\n)/g, '<br>');
-            $('#id_inquire_body').val(content);
-
-            if(type.val() == ""){
-                show_error_message({title:'문의 타입을 선택해주세요.'});
-                return false;
-            }
-            if(body.val() == ""){
-                show_error_message({title:'문의 내용을 작성해주세요.'});
-                return false;
-            }
-            return true;
-        }
 
     </script>
 
