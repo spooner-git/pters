@@ -394,7 +394,7 @@
 <script>
     history.pushState(null, null, location.href);
     window.addEventListener("popstate", (e)=>{
-        if(layer_popup.stack > 0){
+        if(layer_popup.stack.length > 0){
             layer_popup.close_layer_popup();
         }
         history.go(1);
