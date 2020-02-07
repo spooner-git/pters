@@ -55,7 +55,7 @@ class Calendar {
                 clearInterval(interval);
             }
             
-        }, 60000);//60000
+        }, 60000);
 
         this.long_touch = OFF;
         this.long_touch_schedule_id;
@@ -1513,7 +1513,13 @@ class Calendar {
                                   </div>
                                   `
                 ,
-                "initial_page":`<div id="${this.subtargetHTML}"><div id="cal_display_panel"><span></span></div><div id="page${this.current_page_num}" class="pages" style="left:0px;"></div>.</div>`
+                "initial_page":`<div id="${this.subtargetHTML}">
+                                    <div id="cal_display_panel">
+                                        <span></span>
+                                    </div>
+                                    <div id="page${this.current_page_num}" class="pages" style="left:0px;">
+                                    </div>
+                                </div>`
             }
         );
     }

@@ -475,7 +475,7 @@ class Menu {
                                     </div>
                                         `
                 ,
-                initial_page:`<div id="menu_display_panel"></div><div id="menu_content_wrap" class="pages"></div>`
+                initial_page:`<div id="menu_display_panel"></div><div id="menu_content_wrap" class="pages anim_fade_in"></div>`
             }
         );
     }

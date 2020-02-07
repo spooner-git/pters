@@ -34,9 +34,9 @@ class Member {
 
         this.list_type = list_type;
 
-        if(this.received_data_cache != null){
-            this.render_member_list(this.received_data_cache, list_type);
-        }
+        // if(this.received_data_cache != null){
+        //     this.render_member_list(this.received_data_cache, list_type);
+        // }
         this.render_upper_box();
         this.request_member_list(list_type, (jsondata) => {
             this.received_data_cache = jsondata;
@@ -189,7 +189,7 @@ class Member {
 
             
             let onclick = `member.event_view_member(${member_id})`;
-            let html = `<article class="member_wrapper" data-member_id="${member_id}" data-name="${member_name}" onclick="${onclick}" style="color:${list_type == "ing" ? "" : 'var(--font-inactive)'}">
+            let html = `<article class="member_wrapper anim_fade_in" data-member_id="${member_id}" data-name="${member_name}" onclick="${onclick}" style="color:${list_type == "ing" ? "" : 'var(--font-inactive)'}">
                             <div class="member_data_wrapper">
                                 <div class="member_data_l">
                                     ${member_profile_photo}
@@ -215,9 +215,9 @@ class Member {
         }
 
         if(html_temp.length == 0){
-            html_temp.push(`<div style="font-size:14px;padding:16px;">등록된 회원이 없습니다.</div>`);
+            html_temp.push(`<div style="font-size:14px;padding:16px;" class="anim_fade_in">등록된 회원이 없습니다.</div>`);
         }
-
+        console.log("두번?")
         document.querySelector('#member_content_wrap').innerHTML = html_temp.join("");
     }
 
