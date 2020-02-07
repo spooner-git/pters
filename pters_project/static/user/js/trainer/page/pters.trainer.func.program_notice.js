@@ -27,7 +27,6 @@ class ProgramNotice {
     }
 
     init(){
-        console.log(current_page_text);
         if(current_page_text != this.page_name){
             return false;
         }
@@ -53,7 +52,6 @@ class ProgramNotice {
     render(){
 
         let html = `<div>
-                        
                         <div id="program_notice_display_panel">
                             ${this.dom_assembly_toolbox()}
                         </div>
@@ -183,7 +181,7 @@ class ProgramNotice {
         let use = data.program_notice_use; //공개여부
 
 
-        let html = `<article id="program_notice_article_${id}" class="program_notice_article">
+        let html = `<article id="program_notice_article_${id}" class="program_notice_article anim_fade_in">
                         <div style="display:table; width:100%;">
                             <div style="display:table-row;">
                                 <div class="program_notice_article_id" style="width:5%;display:table-cell;vertical-align:middle;">
