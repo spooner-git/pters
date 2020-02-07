@@ -106,8 +106,43 @@
             if(validity == false){
                 return false;
             }
-            alert('문의 발송 완료');
-            $('#form_inquiry').submit();
+{#            $('#form_inquiry').submit();#}
+
+            $.ajax({
+                url : "/board/add_qa_info/",
+                type:'POST',
+                data: $('#form_inquiry').serialize(),
+                dataType : 'json',
+
+                beforeSend:function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                },
+
+                //보내기후 팝업창 닫기
+                complete:function(){
+
+                },
+
+                //통신성공시 처리
+                success:function(data){
+                    if(data.messageArray != undefined){
+                        if(data.messageArray.length > 0){
+                            show_error_message({title:data.messageArray[0]});
+                            return false;
+                        }
+                    }
+                    alert('문의 발송 완료');
+                    window.location.reload();
+                },
+
+                //통신 실패시 처리
+                error:function(){
+                    show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
+                    // location.reload();
+                }
+            });
         }
 
         function func_check_inquiry_validity(type, body){

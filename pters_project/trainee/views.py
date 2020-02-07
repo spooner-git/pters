@@ -34,9 +34,14 @@ from .functions import func_get_class_member_ticket_count, func_get_member_ticke
     func_get_member_ticket_connection_list, func_get_trainee_next_schedule_by_class_id,\
     func_get_trainee_select_schedule, func_get_trainee_ing_member_ticket_list, func_check_select_date_reserve_setting, \
     func_get_trainee_ticket_list, func_get_class_list_only_view
-from .models import MemberTicketTb
+from .models import MemberTicketTb, ProgramNoticeHistoryTb
 
 logger = logging.getLogger(__name__)
+
+
+# class TraineeBasicDataMixin(object):
+#     def test2(self):
+#         print("second mixin!!!")
 
 
 class GetTraineeErrorInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
@@ -182,7 +187,7 @@ class TraineeMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                 # 근접 취소 시간 확인
                 cancel_disable_time = timezone.now() + datetime.timedelta(minutes=cancel_prohibition_time)
                 context['cancel_disable_time'] = cancel_disable_time
-
+                check_alarm_program_notice_qa_comment(context, class_id, self.request.user.id)
         return context
 
 
@@ -225,6 +230,7 @@ class TraineeCalendarView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
         date = self.request.GET.get('date', '')
         day = self.request.GET.get('day', '')
+        class_id = self.request.session.get('class_id', '')
         today = datetime.date.today()
         if date != '':
             today = datetime.datetime.strptime(date, '%Y-%m-%d')
@@ -238,6 +244,8 @@ class TraineeCalendarView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
         context['holiday'] = func_get_holiday_schedule(start_date, end_date)
 
+        if class_id is not None and class_id != '':
+            check_alarm_program_notice_qa_comment(context, class_id, self.request.user.id)
         return context
 
 
@@ -247,9 +255,17 @@ class TraineeProgramNoticeView(LoginRequiredMixin, AccessTestMixin, TemplateView
     def get_context_data(self, **kwargs):
         context = super(TraineeProgramNoticeView, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
-        program_notice_data = ProgramNoticeTb.objects.filter(class_tb_id=class_id, to_member_type_cd='trainee',
-                                                             use=USE).order_by('-reg_dt')
-        context['program_notice_data'] = program_notice_data
+        if class_id is not None and class_id != '':
+            query = "select count(B.ID) from PROGRAM_NOTICE_MEMBER_READ_HISTORY_TB as B " \
+                    " where B.PROGRAM_NOTICE_TB_ID = `PROGRAM_NOTICE_TB`.`ID`" \
+                    " and B.MEMBER_ID="+str(self.request.user.id)+" and B.USE=1"
+
+            program_notice_data = ProgramNoticeTb.objects.filter(
+                class_tb_id=class_id, to_member_type_cd='trainee',
+                use=USE).annotate(read=RawSQL(query, [])).order_by('-reg_dt')
+            context['program_notice_data'] = program_notice_data
+
+            check_alarm_program_notice_qa_comment(context, class_id, self.request.user.id)
 
         return context
 
@@ -310,6 +326,11 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
             if sns_password_change_check == 0:
                 context['check_password_changed'] = 0
         func_setting_data_update(self.request, 'trainee')
+
+        if error is None:
+            if class_id is not None and class_id != '':
+                check_alarm_program_notice_qa_comment(context, class_id, self.request.user.id)
+
         return render(request, self.template_name, context)
 
 
@@ -1099,11 +1120,7 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                 class_tb_id=class_id, member_ticket_tb__member_id=self.request.user.id, reg_dt__gte=three_days_ago,
                 use=USE).order_by('-reg_dt')
 
-            query = "select count(B.ID) from QA_COMMENT_TB as B where B.QA_TB_ID = `QA_TB`.`ID` and B.READ=0 and B.USE=1"
-
-            context['check_qa_comment'] = QATb.objects.filter(
-                member_id=self.request.user.id, status_type_cd='QA_COMPLETE',
-                use=USE).annotate(qa_comment=RawSQL(query, [])).filter(qa_comment__gt=0).count()
+            check_alarm_program_notice_qa_comment(context, class_id, self.request.user.id)
 
         if error is None:
             for log_info in log_data:
@@ -1763,6 +1780,9 @@ class UserPolicyView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(UserPolicyView, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
+        if class_id is not None and class_id != '':
+            check_alarm_program_notice_qa_comment(context, class_id, self.request.user.id)
         return context
 
 
@@ -1771,6 +1791,9 @@ class PrivacyPolicyView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(PrivacyPolicyView, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
+        if class_id is not None and class_id != '':
+            check_alarm_program_notice_qa_comment(context, class_id, self.request.user.id)
         return context
 
 
@@ -1779,6 +1802,9 @@ class AboutusView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(AboutusView, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
+        if class_id is not None and class_id != '':
+            check_alarm_program_notice_qa_comment(context, class_id, self.request.user.id)
         return context
 
 
@@ -1789,6 +1815,9 @@ class TraineeInquiryView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = super(TraineeInquiryView, self).get_context_data(**kwargs)
         qa_type_list = CommonCdTb.objects.filter(upper_common_cd='16', use=1).order_by('order')
         context['qa_type_data'] = qa_type_list
+        class_id = self.request.session.get('class_id', '')
+        if class_id is not None and class_id != '':
+            check_alarm_program_notice_qa_comment(context, class_id, self.request.user.id)
         return context
 
 
@@ -1820,18 +1849,34 @@ class PopupProgramNoticeView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(PopupProgramNoticeView, self).get_context_data(**kwargs)
         program_notice_id = self.request.GET.get('program_notice_id')
+        class_id = self.request.session.get('class_id')
         program_notice_info = None
         error = None
         if program_notice_id is None or program_notice_id == '':
             error = '공지사항 정보를 불러오지 못했습니다.[0]'
+
         try:
-            program_notice_info = ProgramNoticeTb.objects.get(program_notice_id=program_notice_id)
+            program_notice_history_info = ProgramNoticeHistoryTb.objects.get(program_notice_tb_id=program_notice_id)
+            program_notice_info = program_notice_history_info.program_notice_tb
             if program_notice_info.member.profile_url is None or program_notice_info.member.profile_url == '':
                 program_notice_info.member.profile_url = '/static/common/icon/icon_account.png'
             program_notice_info.hits += 1
             program_notice_info.save()
         except ObjectDoesNotExist:
-            error = '공지사항 정보를 불러오지 못했습니다.[1]'
+            program_notice_history_info = ProgramNoticeHistoryTb(program_notice_tb_id=program_notice_id,
+                                                                 member_id=self.request.user.id,
+                                                                 class_tb_id=class_id, use=USE)
+            program_notice_history_info.save()
+
+        if program_notice_info is None:
+            try:
+                program_notice_info = ProgramNoticeTb.objects.get(program_notice_id=program_notice_id)
+                if program_notice_info.member.profile_url is None or program_notice_info.member.profile_url == '':
+                    program_notice_info.member.profile_url = '/static/common/icon/icon_account.png'
+                program_notice_info.hits += 1
+                program_notice_info.save()
+            except ObjectDoesNotExist:
+                error = '공지사항 정보를 불러오지 못했습니다.[1]'
 
         if error is None:
             context['program_notice_info'] = program_notice_info
@@ -1845,3 +1890,26 @@ class TestPageView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(TestPageView, self).get_context_data(**kwargs)
         return context
+
+
+def check_alarm_program_notice_qa_comment(context, class_id, user_id):
+    query = "select count(B.ID) from QA_COMMENT_TB as B where B.QA_TB_ID = `QA_TB`.`ID` and B.READ=0 and B.USE=1"
+
+    context['check_qa_comment'] = QATb.objects.filter(
+        member_id=user_id, status_type_cd='QA_COMPLETE',
+        use=USE).annotate(qa_comment=RawSQL(query, [])).filter(qa_comment__gt=0).count()
+    program_notice_count = ProgramNoticeTb.objects.filter(class_tb_id=class_id,
+                                                          to_member_type_cd='trainee', use=USE).count()
+    program_notice_read_count = ProgramNoticeHistoryTb.objects.filter(class_tb_id=class_id,
+                                                                      member_id=user_id,
+                                                                      use=USE).count()
+
+    context['check_program_notice'] = program_notice_count - program_notice_read_count
+
+    today = datetime.date.today()
+    seven_days_ago = today - datetime.timedelta(days=7)
+    context['check_alarm'] = LogTb.objects.select_related('member_ticket_tb__member').filter(
+        Q(member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW) | Q(auth_member_id=user_id),
+        class_tb_id=class_id, member_ticket_tb__member_id=user_id, reg_dt__gte=seven_days_ago,
+        member_read=0, use=USE).order_by('-reg_dt').count()
+    context['check_np_member_ticket_counts'] = func_get_class_list(context, user_id)['np_member_ticket_counts']

@@ -231,7 +231,7 @@ class Menu {
 
     dom_menu_program_notice(){
         let id = 'menu_program_notice';
-        let title = '프로그램 공지사항';
+        let title = '공지사항';
         let icon = CImg.program_notice();
         let icon_r_visible = NONE;
         let icon_r_text = "";
@@ -400,7 +400,7 @@ class Menu {
 
     dom_menu_service_notice(){
         let id = 'menu_service_notice';
-        let title = '공지사항';
+        let title = 'PTERS 공지사항';
         let icon = CImg.notice();
         let icon_r_visible = NONE;
         let icon_r_text = "";

@@ -21,11 +21,14 @@
                 </div>
             </div>
         {% for program_notice_info in program_notice_data %}
-            <div class="obj_table_raw wrapper_program_notice_element" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_program_notice', 90, POPUP_FROM_BOTTOM, {'program_notice_id':'{{ program_notice_info.program_notice_id }}'})">
+            <div class="obj_table_raw wrapper_program_notice_element" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_program_notice', 90, POPUP_FROM_BOTTOM,
+                                                                                {'program_notice_id':'{{ program_notice_info.program_notice_id }}'}); program_notice_read_check('{{program_notice_info.program_notice_id}}');">
                 <div class="obj_table_cell_x3 obj_font_size_12_weight_500 obj_font_color_light_grey" style="width: 10%; text-align: center;">
                     {{ forloop.revcounter }}
                 </div>
-                <div class="obj_table_cell_x3 wrapper_program_notice_element_title obj_font_size_14_weight_normal" style="width: 70%; padding-left: 10px;">
+                <div id="program_notice_title_{{program_notice_info.program_notice_id}}"
+                     class="obj_table_cell_x3 wrapper_program_notice_element_title obj_font_size_14_weight_normal {% if program_notice_info.read > 0 %}obj_font_color_grey{% endif %}"
+                     style="width: 70%; padding-left: 10px;">
                     <div class="program_notice_status">{{ program_notice_info.title }}</div>
                 </div>
                 <div class="obj_table_cell_x3 wrapper_program_notice_element_text" style="width: 20%; text-align: center;">
@@ -34,25 +37,6 @@
             </div>
         {% endfor %}
         </div>
-
-{#        <div class="wrapper_program_notice_list obj_box_full ">#}
-{#            <p class="obj_font_size_11_weight_bold obj_font_color_dark_grey wrapper_program_notice_list_title">이전 알림</p>#}
-{#            {% for log_info in log_data %}#}
-{#                {% if log_info.log_read != 0 %}#}
-{#                <div class="wrapper_program_notice_element obj_font_size_15_weight_500">#}
-{#                    <div class="wrapper_program_notice_element_title">#}
-{#                        <!-- <div class="program_notice_oval"></div> -->#}
-{#                        <div class="program_notice_status">{{ log_info.log_how }} <span class="program_notice_time_ago obj_font_size_11_weight_normal obj_font_color_light_grey">{{ log_info.time_ago }}</span></div>#}
-{#                    </div>#}
-{#                    <div class="wrapper_program_notice_element_text obj_font_size_12_weight_normal">#}
-{#                        {{ log_info.log_info }}이 {{ log_info.log_how }} 됐습니다.#}
-{#                    </div>#}
-{#                    <div class="obj_font_size_11_weight_normal obj_font_color_light_black">{% if log_info.log_detail != '' %}({{ log_info.log_detail }}){% endif %}</div>#}
-{#                </div>#}
-{#                {% endif %}#}
-{#            {% endfor %}#}
-{#        </div>#}
-
     </div>
 
 {% endblock %}
@@ -61,7 +45,14 @@
     <script type="text/javascript">
         //Nav바에 현재 페이지에 밑줄 표기
         $('#nav_btn_program_notice').addClass("nav_selected");
-
+        function program_notice_read_check(program_notioce_id) {
+            let arr;
+            let element = document.getElementById("program_notice_title_"+program_notioce_id);
+            arr = element.className.split(" ");
+              if (arr.indexOf("obj_font_color_grey") == -1) {
+                element.className += " " + "obj_font_color_grey";
+              }
+        }
     </script>
 
 {% endblock %}

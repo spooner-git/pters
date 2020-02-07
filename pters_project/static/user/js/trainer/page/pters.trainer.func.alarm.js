@@ -215,7 +215,7 @@ class Alarm {
 
     dom_row_qna_unread(unread_number){
         let comp = `<div style="padding:20px 20px 15px 20px;box-shadow:var(--box-shadow-article);border:var(--border-article);">
-                            <div style="padding:5px 0;font-size:14px;font-weight:bold;">답변이 등록된 읽지 않은 문의가 ${unread_number}건 있습니다.</div>
+                            <div style="padding:5px 0;font-size:14px;font-weight:bold;">이용 문의 답변이 ${unread_number}건 있습니다.</div>
                         </div>`;
         return comp;
     }
@@ -227,7 +227,7 @@ class Alarm {
         Setting_shared_func.read_request((invited)=>{
             let invited_length = Object.keys(invited).length;
             Alarm_func.read((data)=>{
-                console.log(data)
+                console.log(data);
                 for(let date in data){
                     let length = data[date].length;
                     for(let i=0; i<length; i++){

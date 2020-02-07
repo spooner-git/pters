@@ -93,7 +93,7 @@ class ProgramNotice {
     dom_row_toolbox(){
         // let options_padding_top_bottom = 16;
         // let button_height = 52;
-        let title = "프로그램 공지사항";
+        let title = "공지사항";
         let html = `<div class="program_notice_upper_box">
                         <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:var(--font-main); letter-spacing: -1px; height:28px;">
                             <span style="display:inline-block;">${title}</span>
