@@ -392,9 +392,15 @@
 
 
 <script>
-    history.pushState(null, null, location.href);
-    window.addEventListener("popstate", (e)=>{
-        history.go(1);
+    // history.pushState(null, null, location.href);
+    // window.addEventListener("popstate", (e)=>{
+    //     console.log(e);
+    //     history.go(1);
+    // });
+
+    history.pushState(null, null, '#Back');
+    window.addEventListener("hashchange", function(){
+        history.pushState(null, null, '#Back');
     });
 
     var user_email = '{{ request.user.email }}';
