@@ -95,9 +95,20 @@
                                 height: 5px;
                                 background-color: #ffffff;
                                 border-radius: 50%;
-                            "></div>
+                            " id="alarm_read"></div>
                     </div></a>
-                    <a href="{% url 'trainee:trainee_program_notice' %}"><div id="nav_btn_program_notice">공지사항</div></a>
+                    <a href="{% url 'trainee:trainee_program_notice' %}"><div id="nav_btn_program_notice">공지사항
+                            <div style="
+                                display: none;
+                                position: absolute;
+                                top: 5px;
+                                right: -2px;
+                                width: 5px;
+                                height: 5px;
+                                background-color: #ffffff;
+                                border-radius: 50%;
+                            " id="program_notice_read"></div>
+                    </div></a>
                     <!-- <a href="{% url 'trainee:trainee_program' %}"><div id="nav_btn_program_select">프로그램</div></a>
                     <a href="{% url 'trainee:trainee_design_template' %}"><div id="nav_btn_guide" >가이드</div></a>
                     <a href="{% url 'trainee:test_page' %}"><div id="nav_btn_test" >테스트</div></a> -->
@@ -230,7 +241,22 @@
                     location.reload();
                 }
             });
-
+            let check_qa_comment = '{{ check_qa_comment }}';
+            let check_program_notice = '{{ check_program_notice }}';
+            let check_alarm = '{{ check_alarm }}';
+            let check_np_member_ticket_counts = '{{ check_np_member_ticket_counts }}';
+            if(check_qa_comment > 0 || check_alarm > 0 || check_np_member_ticket_counts > 0){
+                document.getElementById('alarm_read').style.display = 'block';
+            }
+            else{
+                document.getElementById('alarm_read').style.display = 'none';
+            }
+            if(check_program_notice > 0){
+                document.getElementById('program_notice_read').style.display = 'block';
+            }
+            else{
+                document.getElementById('program_notice_read').style.display = 'none';
+            }
         </script>
         {% block local_js_footer %}
         {% endblock %}

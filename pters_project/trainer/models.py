@@ -408,3 +408,4 @@ class ProgramNoticeTb(models.Model):
     class Meta:
         managed = False
         db_table = 'PROGRAM_NOTICE_TB'
+
