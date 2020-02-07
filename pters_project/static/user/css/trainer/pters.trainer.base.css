@@ -161,7 +161,7 @@
 
 .anim_fade_in{
 	animation-name: fade-in;
-	animation-duration: 0.5s;
+	animation-duration: 0.4s;
 	animation-delay: 0;
 	animation-direction: normal;
 	animation-iteration-count: 1; 
@@ -169,9 +169,14 @@
 }
 
 @keyframes fade-in{
-	0%{opacity: 0;}
-	100%{opacity: 1;}
+    0%{opacity: 0;
+        transform:translateY(-10px);    
+    }
+    100%{opacity: 1;
+        transform:translateY(0px);
+    }
 }
+
 
 #shade_for_popup_basic{
     position: absolute;
