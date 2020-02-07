@@ -159,8 +159,8 @@
     --fundamental-white: #ffffff;
 }
 
-.anim_fade_in{
-	animation-name: fade-in;
+.anim_fade_in_vibe_top{
+	animation-name: fade-in-vibe-top;
 	animation-duration: 0.4s;
 	animation-delay: 0;
 	animation-direction: normal;
@@ -168,7 +168,7 @@
 	animation-timing-function: ease-out;
 }
 
-@keyframes fade-in{
+@keyframes fade-in-vibe-top{
     0%{opacity: 0;
         transform:translateY(-10px);    
     }
@@ -176,6 +176,76 @@
         transform:translateY(0px);
     }
 }
+
+.anim_fade_in{
+    animation-name: fade-in;
+	animation-duration: 0.3s;
+	animation-delay: 0;
+	animation-direction: normal;
+	animation-iteration-count: 1; 
+	animation-timing-function: ease-out;
+}
+
+@keyframes fade-in{
+    0%{opacity: 0;  
+    }
+    100%{opacity: 1;
+    }
+}
+
+.anim_fade_out{
+    animation-name: fade-out;
+	animation-duration: 0.3s;
+	animation-delay: 0;
+	animation-direction: normal;
+	animation-iteration-count: 1; 
+	animation-timing-function: ease-out;
+}
+
+@keyframes fade-out{
+    0%{opacity: 1;  
+    }
+    100%{opacity: 0;
+    }
+}
+
+
+.anim_page_to_right{
+    animation-name: appear-to-right;
+	animation-duration: 0.3s;
+	animation-delay: 0;
+	animation-direction: normal;
+	animation-iteration-count: 1; 
+	animation-timing-function: ease-out;
+}
+
+@keyframes appear-to-right{
+    0%{
+        transform: translateX(-150px);
+    }
+    100%{
+        transform: translateX(0px);
+    }
+}
+
+.anim_page_to_left{
+    animation-name: appear-to-left;
+	animation-duration: 0.3s;
+	animation-delay: 0;
+	animation-direction: normal;
+	animation-iteration-count: 1; 
+	animation-timing-function: ease-out;
+}
+
+@keyframes appear-to-left{
+    0%{
+        transform: translateX(0px);
+    }
+    100%{
+        transform: translateX(-150px);
+    }
+}
+
 
 
 #shade_for_popup_basic{
