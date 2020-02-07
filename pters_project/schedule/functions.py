@@ -972,9 +972,11 @@ def func_get_member_schedule_all_by_member_ticket(class_id, member_id, page):
                                                            [])).filter(auth_cd=AUTH_TYPE_VIEW).order_by(
         '-member_ticket_tb__start_date', '-member_ticket_tb__end_date', '-member_ticket_tb__reg_dt', 'start_dt')
     # paginator = Paginator(member_schedule_data, MEMBER_SCHEDULE_PAGINATION_COUNTER)
-    # member_schedule_data = paginator.page(page)
-    # paginator.count
-    # paginator.num_pages
+    # try:
+    #     member_schedule_data = paginator.page(page)
+    # except EmptyPage:
+    #     member_schedule_data = []
+    # schedule_idx = paginator.count
     schedule_list = []
     temp_member_ticket_id = None
     for member_schedule_info in member_schedule_data:
@@ -1044,6 +1046,7 @@ def func_get_member_schedule_all_by_member_ticket(class_id, member_id, page):
                                                    'member_ticket_note': str(member_ticket_tb.note),
                                                    'member_ticket_reg_dt': str(member_ticket_tb.reg_dt)
                                                    }
+        # schedule_idx -= 1
 
     return ordered_schedule_dict
 
@@ -1065,14 +1068,14 @@ def func_get_member_schedule_all_by_schedule_dt(class_id, member_id, page):
         class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, use=USE, member_ticket_tb__member_id=member_id,
         member_ticket_tb__use=USE).annotate(auth_cd=RawSQL(query_auth,
                                                            [])).filter(auth_cd=AUTH_TYPE_VIEW).order_by('-start_dt')
-    paginator = Paginator(member_schedule_data, MEMBER_SCHEDULE_PAGINATION_COUNTER)
-    try:
-        member_schedule_data = paginator.page(page)
-    except EmptyPage:
-        member_schedule_data = []
+    # paginator = Paginator(member_schedule_data, MEMBER_SCHEDULE_PAGINATION_COUNTER)
+    # try:
+    #     member_schedule_data = paginator.page(page)
+    # except EmptyPage:
+    #     member_schedule_data = []
+    # schedule_idx = paginator.count
     schedule_list = []
     temp_member_ticket_id = None
-    schedule_idx = paginator.count
     for member_schedule_info in member_schedule_data:
         member_ticket_tb = member_schedule_info.member_ticket_tb
         member_ticket_id = str(member_ticket_tb.member_ticket_id)
@@ -1136,7 +1139,7 @@ def func_get_member_schedule_all_by_schedule_dt(class_id, member_id, page):
                          'member_ticket_note': str(member_ticket_tb.note)
                          }
         schedule_list.append(schedule_info)
-        schedule_idx -= 1
+        # schedule_idx -= 1
         # ordered_schedule_dict[member_ticket_id] = schedule_list
     return schedule_list
 
@@ -1158,9 +1161,12 @@ def func_get_member_schedule_all_by_monthly(class_id, member_id, page):
         class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, use=USE, member_ticket_tb__member_id=member_id,
         member_ticket_tb__use=USE).annotate(auth_cd=RawSQL(query_auth,
                                                            [])).filter(auth_cd=AUTH_TYPE_VIEW).order_by('-start_dt')
-    paginator = Paginator(member_schedule_data, MEMBER_SCHEDULE_PAGINATION_COUNTER)
-    member_schedule_data = paginator.page(page)
-    schedule_idx = paginator.count
+    # paginator = Paginator(member_schedule_data, MEMBER_SCHEDULE_PAGINATION_COUNTER)
+    # try:
+    #     member_schedule_data = paginator.page(page)
+    # except EmptyPage:
+    #     member_schedule_data = []
+    # schedule_idx = paginator.count
     # schedule_list = []
     temp_member_ticket_id = None
     for member_schedule_info in member_schedule_data:
@@ -1229,7 +1235,7 @@ def func_get_member_schedule_all_by_monthly(class_id, member_id, page):
                          'member_ticket_note': str(member_ticket_tb.note),
                          'month_num': month_num
                          }
-        schedule_idx -= 1
+        # schedule_idx -= 1
         try:
             monthly_schedule_data_dict[month_num]
         except KeyError:
