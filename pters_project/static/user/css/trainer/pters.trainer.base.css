@@ -160,13 +160,14 @@
 }
 
 svg:active{
-    animation-name: pulse;
+    animation-name: pulse-strong;
 	animation-duration: 0.4s;
 	animation-delay: 0;
 	animation-direction: normal;
 	animation-iteration-count: 1; 
 	animation-timing-function: ease-out;
 }
+
 
 .anim_pulse{
 	animation-name: pulse;
@@ -187,12 +188,21 @@ svg:active{
     30%{
         transform:scale(1.1)
     }
-    /* 40%{
-        transform:scale(1.05)  
+    100%{
+        transform:scale(1);
     }
-    80%{
-        transform:scale(1.03)  
-    } */
+}
+
+@keyframes pulse-strong{
+    0%{
+        transform:scale(1.1)  
+    }
+    20%{
+        transform:scale(1.2)  
+    }
+    30%{
+        transform:scale(1.15)
+    }
     100%{
         transform:scale(1);
     }
