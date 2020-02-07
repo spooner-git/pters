@@ -102,7 +102,7 @@ class Alarm {
                 if(this.new_alarms_id_cache.indexOf(alarm_id) != -1){
                     alarm_highlight = "var(--bg-for-only-new-notifi)";
                 }
-                let html = `<article class="alarm_wrapper" data-alarm_id="${alarm_id}" style="background-color:${alarm_highlight}">
+                let html = `<article class="alarm_wrapper anim_fade_in" data-alarm_id="${alarm_id}" style="background-color:${alarm_highlight}">
                                 <div class="alarm_data_u">
                                     <div>
                                         ${CImg.blank()}
@@ -157,7 +157,7 @@ class Alarm {
         let dom = Ads.row();
 
         let html = `<article class="alarm_wrapper">   
-                            ${dom}
+                        ${dom}
                     </article>`;
 
         return pass_inspector.data.auth_ads.limit_num != 0 ? html : "";
