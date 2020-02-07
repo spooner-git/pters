@@ -159,6 +159,36 @@
     --fundamental-white: #ffffff;
 }
 
+.anim_pulse{
+	animation-name: pulse;
+	animation-duration: 0.4s;
+	animation-delay: 0;
+	animation-direction: normal;
+	animation-iteration-count: 1; 
+	animation-timing-function: ease-out;
+}
+
+@keyframes pulse{
+    0%{
+        transform:scale(1)  
+    }
+    20%{
+        transform:scale(1.05)  
+    }
+    30%{
+        transform:scale(1.1)
+    }
+    /* 40%{
+        transform:scale(1.05)  
+    }
+    80%{
+        transform:scale(1.03)  
+    } */
+    100%{
+        transform:scale(1);
+    }
+}
+
 .anim_fade_in_vibe_top{
 	animation-name: fade-in-vibe-top;
 	animation-duration: 0.4s;

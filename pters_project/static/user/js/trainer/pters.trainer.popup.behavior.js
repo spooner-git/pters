@@ -26,6 +26,12 @@ let layer_popup = (function (){
                     $root_content.removeClass("anim_page_to_left");
                 }, 300);
             }
+        }else if(animation_type == POPUP_FROM_PAGE){
+                let $this_popup =  $(`.${popup_data.popup_name}`).parents('.popup_mobile');
+                $this_popup.addClass("anim_pulse");
+                setTimeout(()=>{
+                    $this_popup.removeClass("anim_pulse");
+                }, 300);
         }
         
 

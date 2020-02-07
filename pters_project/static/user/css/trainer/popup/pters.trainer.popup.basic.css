@@ -13,7 +13,7 @@
     background-color: var(--bg-main);
 
     width: 300px;
-    border: var(--border-article-dark);
+    border: var(--border-article);
     border-radius: 10px;
 }
 
