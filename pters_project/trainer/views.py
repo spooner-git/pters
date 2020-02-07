@@ -235,26 +235,25 @@ class GetMemberScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
         class_id = self.request.session.get('class_id', '')
         member_id = request.GET.get('member_id', '')
         page = request.GET.get('page', 1)
-        sort = request.GET.get('sort_val', SORT_MEMBER_TICKET)
+        sort = request.GET.get('sort_val', SORT_SCHEDULE_DT)
 
         error = None
         ordered_schedule_dict = collections.OrderedDict()
 
         if member_id == '':
             error = '회원 정보를 불러오지 못했습니다.'
-
         # context = {}
         if error is None:
-            if str(sort) == str(SORT_MEMBER_TICKET):
-                ordered_schedule_dict = func_get_member_schedule_all_by_member_ticket(class_id, member_id, page)
-                # context['test'] = ordered_schedule_dict
-            elif str(sort) == str(SORT_SCHEDULE_DT):
+            if str(sort) == str(SORT_SCHEDULE_DT):
                 ordered_schedule_dict = {
                     'member_schedule': func_get_member_schedule_all_by_schedule_dt(class_id, member_id, page)
                 }
                 # context['test'] = ordered_schedule_dict['member_schedule']
             elif str(sort) == str(SORT_SCHEDULE_MONTHLY):
-                ordered_schedule_dict = func_get_member_schedule_all_by_monthly(class_id, member_id)
+                ordered_schedule_dict = func_get_member_schedule_all_by_monthly(class_id, member_id, page)
+            elif str(sort) == str(SORT_MEMBER_TICKET):
+                ordered_schedule_dict = func_get_member_schedule_all_by_member_ticket(class_id, member_id, page)
+                # context['test'] = ordered_schedule_dict
         else:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
             messages.error(request, error)
