@@ -348,7 +348,7 @@ function func_set_open_popup_animation ($popup_selector, animation_type, popup_s
         "transition": `${animation_info}`
     });
     if(animation_type==POPUP_FROM_PAGE){
-        $popup_selector.fadeIn(300);
+        $popup_selector.fadeIn(200);
     }
     else{
         $popup_selector.css({"visibility":"visible"});
@@ -391,7 +391,7 @@ function func_set_close_popup_animation ($popup_selector, animation_type){
             break;
     }
     if(animation_type==POPUP_FROM_PAGE){
-        $popup_selector.fadeOut(300);
+        $popup_selector.fadeOut(200);
     }
     else{
         $popup_selector.css({
