@@ -143,7 +143,7 @@ class Alarm {
         
 
         if(html_temp.length == 0){
-            html_temp.push(`<article class="alarm_wrapper">   
+            html_temp.push(`<article class="alarm_wrapper anim_fade_in">   
                                 <div>
                                     <span>새로운 알림이 없습니다.</span>
                                 </div>

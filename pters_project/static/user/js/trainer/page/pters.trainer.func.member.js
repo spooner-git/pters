@@ -215,7 +215,7 @@ class Member {
         }
 
         if(html_temp.length == 0){
-            html_temp.push(`<div style="font-size:14px;padding:16px;">등록된 회원이 없습니다.</div>`);
+            html_temp.push(`<div style="font-size:14px;padding:16px;" class="anim_fade_in">등록된 회원이 없습니다.</div>`);
         }
         console.log("두번?")
         document.querySelector('#member_content_wrap').innerHTML = html_temp.join("");
