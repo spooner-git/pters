@@ -269,6 +269,7 @@
 .program_notice_article_title{
 	flex: 1 1 0;
 	font-size: 14px;
+	font-weight: 500;
 }
 
 .program_notice_article_use{
