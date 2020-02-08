@@ -426,7 +426,7 @@ class Menu {
 
     dom_menu_service_faq(){
         let id = 'menu_service_faq_menu';
-        let title = '사용법 & 자주묻는 질문';
+        let title = '시스템 사용법 & 자주묻는 질문';
         let icon = CImg.inquiry();
         let icon_r_visible = NONE;
         let icon_r_text = "";
