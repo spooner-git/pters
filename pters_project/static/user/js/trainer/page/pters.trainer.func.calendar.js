@@ -1312,9 +1312,10 @@ class Calendar {
                 // this.long_touch_schedule_id = event.target.dataset.scheduleid;
                 this.long_touch_target = $(this_);
                 this.long_touch_schedule_id = this.long_touch_target.attr("data-scheduleid");
-                $('#debug_toolbar').show().html(`<span style="margin-left:10px;line-height:60px;font-size:14px;">일정 변경을 위해 원하는 곳을 터치해주세요.</span>
+                $('#debug_toolbar').show().html(`<span style="margin-left:10px;line-height:56px;font-size:14px;">일정 변경을 위해 원하는 곳을 터치해주세요.</span>
                                                 <button style="float:right;width:70px;height:40px;margin:10px;border-radius:4px;color:var(--font-main);background-color:var(--bg-main);border:var(--border-article-dark);" onclick="calendar.mode_to_plan_change(OFF)">취소</button>`)
-                                          .css({"height":"60px", "line-height":"60px;"});
+                                          .css({"height":"56px", "line-height":"56px;", "top":"unset", "bottom":"0"}).addClass("anim_pulse");
+                setTimeout(()=>{$("#debug_toolbar").removeClass('anim_pulse');}, 300);
                 this.render_upper_box(this.cal_type);
                 this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, this.latest_received_data);
                 if(this.week_zoomed.target_row != null && this.week_zoomed.activate == true){
@@ -1512,7 +1513,16 @@ class Calendar {
                                   </div>
                                   `
                 ,
+                // "initial_page":`<div id="${this.subtargetHTML}">
+                //                     <div id="cal_display_panel">
+                //                         <span></span>
+                //                     </div>
+                //                     <div id="page${this.current_page_num}" class="pages" style="left:0px;">
+                //                     </div>
+                //                 </div>`
                 "initial_page":`<div id="${this.subtargetHTML}">
+                                    <div id="next_arrow_indicator" style="z-index:-100;position:fixed;top:50%;right:5%;transform:translateY(-50%);opacity:0">${CImg.arrow_expand([""], {width:"100px", height:"100px", transform:"rotate(-90deg)"})}</div>
+                                    <div id="prev_arrow_indicator" style="z-index:-100;position:fixed;top:50%;left:5%;transform:translateY(-50%);opacity:0">${CImg.arrow_expand([""], {width:"100px", height:"100px", transform:"rotate(90deg)"})}</div>
                                     <div id="cal_display_panel">
                                         <span></span>
                                     </div>
@@ -1584,13 +1594,37 @@ class Calendar {
                     
                     
                     if(ts - tm>x_threshold){
-                        if(this.cal_type == "month"){this.move_month("next");}else if(this.cal_type == "week"){this.move_week("next");}
+                        if(this.cal_type == "month"){
+                            this.move_month("next");
+                            $('#next_arrow_indicator').addClass('anim_paging_next');
+                            setTimeout(()=>{
+                                $('#next_arrow_indicator').removeClass('anim_paging_next');
+                            }, 200);
+                        }else if(this.cal_type == "week"){
+                            this.move_week("next");
+                            $('#next_arrow_indicator').addClass('anim_paging_next');
+                            setTimeout(()=>{
+                                $('#next_arrow_indicator').removeClass('anim_paging_next');
+                            }, 200);
+                        }
                         if(swiper_x == true){
                             $('#root_content').off('touchmove');
                             swiper_x = false;
                         }
                     }else if(ts - tm<-x_threshold){
-                        if(this.cal_type == "month"){this.move_month("prev");}else if(this.cal_type == "week"){this.move_week("prev");}
+                        if(this.cal_type == "month"){
+                            this.move_month("prev");
+                            $('#prev_arrow_indicator').addClass('anim_paging_prev');
+                            setTimeout(()=>{
+                                $('#prev_arrow_indicator').removeClass('anim_paging_prev');
+                            }, 200);
+                        }else if(this.cal_type == "week"){
+                            this.move_week("prev");
+                            $('#prev_arrow_indicator').addClass('anim_paging_prev');
+                            setTimeout(()=>{
+                                $('#prev_arrow_indicator').removeClass('anim_paging_prev');
+                            }, 200);
+                        }
                         if(swiper_x == true){
                             $('#root_content').off('touchmove');
                             swiper_x = false;
