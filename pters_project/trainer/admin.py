@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 from .models import ClassTb, MemberClassTb, ClassMemberTicketTb, LectureTb, LectureMemberTicketTb, SettingTb,\
-    TicketTb, TicketLectureTb, LectureMemberTb, ProgramAuthTb
+    TicketTb, TicketLectureTb, LectureMemberTb, ProgramAuthTb, BugMemberTicketPriceTb, ProgramNoticeTb
 
 
 @admin.register(ClassTb)
@@ -71,7 +71,20 @@ class SettingTbAdmin(admin.ModelAdmin):
 
 
 @admin.register(ProgramAuthTb)
-class SettingTbAdmin(admin.ModelAdmin):
+class ProgramAuthTb(admin.ModelAdmin):
     list_display = ('product_function_auth_id', 'class_tb', 'member', 'function_auth_tb', 'auth_type_cd', 'enable_flag',
                     'reg_dt', 'mod_dt', 'use')
+    search_fields = ['member__name', 'class_tb']
+
+
+@admin.register(ProgramNoticeTb)
+class ProgramNoticeTb(admin.ModelAdmin):
+    list_display = ('program_notice_id', 'class_tb', 'member', 'notice_type_cd', 'title', 'contents',
+                    'to_member_type_cd', 'hits', 'reg_dt', 'mod_dt', 'use')
+    search_fields = ['member__name', 'class_tb']
+
+
+@admin.register(BugMemberTicketPriceTb)
+class BugMemberTicketPriceTb(admin.ModelAdmin):
+    list_display = ('bug_member_ticket_price_id', 'class_tb', 'member', 'bug_check', 'reg_dt', 'mod_dt', 'use')
     search_fields = ['member__name', 'class_tb']
