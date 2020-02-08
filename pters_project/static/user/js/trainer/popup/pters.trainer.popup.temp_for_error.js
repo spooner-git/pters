@@ -40,7 +40,7 @@ class TempForError {
 
         let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();temp_for_error.clear();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right" onclick="temp_for_error.open_confirm_popup_do_not_popup_anymore()">더이상 보지 않기</span>`;
+        let top_right = `<span class="icon_right" onclick="temp_for_error.open_confirm_popup_do_not_popup_anymore()"><span style="font-weight:bold;">더이상 보지 않기</span></span>`;
         let content =   `<div class="search_bar"></div>
                         <section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
@@ -125,10 +125,11 @@ class TempForError {
             "POST",
             "",
             ()=>{
-
+                layer_popup.close_layer_popup();
+                layer_popup.close_layer_popup();
             },
             ()=>{
-                layer_popup.close_layer_popup();
+                
             }
         );
     }
