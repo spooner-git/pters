@@ -40,7 +40,7 @@ class TempForError {
 
         let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();temp_for_error.clear();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right"></span>`;
+        let top_right = `<span class="icon_right" onclick="temp_for_error.open_confirm_popup_do_not_popup_anymore()">더이상 보지 않기</span>`;
         let content =   `<div class="search_bar"></div>
                         <section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
@@ -119,6 +119,20 @@ class TempForError {
         );
     }
 
+    event_noproblem(){
+        TempForError_func.ajax(
+            '/trainer/add_trainer_member_ticket_price_bug_check/',
+            "POST",
+            "",
+            ()=>{
+
+            },
+            ()=>{
+                layer_popup.close_layer_popup();
+            }
+        );
+    }
+
     open_popup_member_ticket_modify(data, member_name, member_id){
         let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_TICKET_MODIFY, 100, popup_style, null, ()=>{
@@ -133,6 +147,15 @@ class TempForError {
                 this.init();
             });
         });
+    }
+
+    open_confirm_popup_do_not_popup_anymore(){
+        show_user_confirm(
+            {title:"이 안내를 더 이상 보지 않으시겠습니까?", comment:""},
+            ()=>{
+                this.event_noproblem();
+            }
+        );
     }
 
 
@@ -195,7 +218,7 @@ class TempForError_func{
                     error_callback();
                 }
                 show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
-                location.reload();
+                // location.reload();
             }
         });
     }
