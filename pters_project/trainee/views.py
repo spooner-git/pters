@@ -1909,9 +1909,9 @@ class PopupInquiryHistoryView(TemplateView):
                                         status_type_cd_name=RawSQL(query_status, [])
                                         ).order_by('-reg_dt')
         for qa_info in qa_list:
-            if qa_info.read == 0 and qa_info.status_type_cd == 'QA_COMPLETE':
-                qa_info.read = 1
-                qa_info.save()
+            # if qa_info.read == 0 and qa_info.status_type_cd == 'QA_COMPLETE':
+            #     qa_info.read = 1
+            #     qa_info.save()
             qa_info.contents = qa_info.contents.replace('\n', '<br/>')
         context['qa_data'] = qa_list
 
@@ -1936,6 +1936,9 @@ class PopupInquiryHistoryInfoView(TemplateView):
 
         if error is None:
             if qa_info.status_type_cd == 'QA_COMPLETE':
+                if qa_info.read == 0:
+                    qa_info.read = 1
+                    qa_info.save()
                 try:
                     qa_comment_info = QACommentTb.objects.get(qa_tb_id=qa_id)
                     if qa_comment_info.read == 0:

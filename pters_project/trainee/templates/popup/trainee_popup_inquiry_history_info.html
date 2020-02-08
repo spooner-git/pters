@@ -45,8 +45,8 @@
                             {% endautoescape %}
                         </div>
                 </div>
-                {% if qa_comment_info %}
                     <div class="obj_table_raw obj_box_full" style="margin-top:20px;">
+                        {% if qa_comment_info %}
                             <div style="height:35px">
                                 <div>
                                     PTERS 답변 :
@@ -55,13 +55,22 @@
                                     {{ qa_comment_info.reg_dt | date:'Y.m.d (l)'|cut:"요일" }} {{ qa_comment_info.reg_dt | time:'H:i' }}
                                 </div>
                             </div>
-                            <div style="width:auto; margin-top:30px;" class="daily_record_content_wrap">
+                            <div style="width:auto; margin-top:30px;" class="inquiry_history_info_content_wrap">
                                 {% autoescape off %}
                                     {{ qa_comment_info.contents }}
                                 {% endautoescape %}
                             </div>
+                        {% else %}
+                            <div style="height:35px">
+                                <div>
+                                    PTERS 답변 :
+                                </div>
+                            </div>
+                            <div style="width:auto; margin-top:30px;" class="inquiry_history_info_content_wrap">
+                                고객님의 Email 로 답변이 전달 되었습니다.
+                            </div>
+                        {% endif %}
                     </div>
-                {% endif %}
             </div>
 
         {% else %}
