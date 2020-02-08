@@ -630,6 +630,7 @@ class Member_view{
         let ticket_length = this.data.ticket.length;
         let html_to_join = [];
         for(let i=ticket_length-1; i>=0; i--){
+            console.log(this.data.ticket[i]);
             let ticket_name = this.data.ticket[i].ticket_name;
             let ticket_id =  this.data.ticket[i].ticket_id;
             let member_ticket_id =  this.data.ticket[i].member_ticket_id;
@@ -662,7 +663,8 @@ class Member_view{
                                 "reg_count":ticket_reg_count, "price":ticket_price, "status":ticket_status,
                                 "refund_date": ticket_refund_date == null ? null : DateRobot.to_split(ticket_refund_date), 
                                 "refund_date_text": ticket_refund_date == null ? null : DateRobot.to_text(ticket_refund_date, "", "", SHORT),
-                                "refund_price":ticket_refund_price, "note":ticket_note, "pay_method":ticket_pay_method};
+                                "refund_price":ticket_refund_price, "note":ticket_note, "pay_method":ticket_pay_method
+                            };
                     member_ticket_modify = new Member_ticket_modify('.popup_member_ticket_modify', data, 'member_ticket_modify');
                 });
             });
