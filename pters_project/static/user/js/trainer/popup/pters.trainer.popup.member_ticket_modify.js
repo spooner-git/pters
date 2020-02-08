@@ -76,7 +76,7 @@ class Member_ticket_modify{
 
     render(){
         let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();member_ticket_modify.clear();">${CImg.arrow_left()}</span>`;
-        let top_center = `<span class="icon_center"><span>${this.data.member_name}님의 수강권</span></span>`;
+        let top_center = `<span class="icon_center"><span>${this.data.member_name}님의 등록</span></span>`;
         let top_right = `<span class="icon_right" onclick="member_ticket_modify.send_data()"><span style="color:var(--font-highlight);font-weight: 500;" >완료</span></span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
@@ -103,7 +103,7 @@ class Member_ticket_modify{
     
     dom_assembly_content(){
 
-        let status = CComponent.dom_tag('수강권') + this.dom_row_status_input() + 
+        let status = CComponent.dom_tag('진행 상태') + this.dom_row_status_input() + 
                     `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>`;
         let refund_date  = CComponent.dom_tag('환불일') + this.dom_row_refund_date_input() +
                     `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>`;
@@ -148,12 +148,108 @@ class Member_ticket_modify{
         return html;
     }
 
+    // dom_row_status_input(){
+    //     let id = 'member_ticket_status_modify';
+    //     let title = this.data.member_ticket_name == null ||this.data.member_ticket_name == 'None' ? '수강권명' : this.data.member_ticket_name;
+    //     let icon = CImg.ticket();
+    //     let icon_r_visible = SHOW;
+    //     let icon_r_text = `상태 (<span style="color:${TICKET_STATUS_COLOR[this.data.status]}">${TICKET_STATUS[this.data.status]}</span>)`;
+    //     let style = null;
+    //     let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+    //         let user_option = {
+    //             finish:{text:"종료", callback:()=>{
+    //                 Member_func.ticket_status({"member_ticket_id":this.data.member_ticket_id, "state_cd":"PE", "refund_price":"", "refund_date":""}, ()=>{
+    //                     this.data.status = "PE";
+    //                     this.render_content();
+    //                     try{
+    //                         current_page.init();
+    //                     }catch(e){}
+    //                     try{
+    //                         member_view_popup.init();
+    //                         member_ticket_history.init();
+    //                     }catch(e){}
+    //                 });
+    //                 layer_popup.close_layer_popup();}
+    //             },
+    //             resume:{text:"재개", callback:()=>{
+    //                 let inspect = pass_inspector.member("recontract", this.data.member_id);
+    //                 if(inspect.barrier == BLOCKED){
+    //                     this.data_sending_now = false;
+    //                     let message = {
+    //                         title:'수강권 재개를 완료하지 못했습니다.',
+    //                         comment:`[${inspect.limit_type}] 이용자께서는 회원을 최대 ${inspect.limit_num}명까지 등록하실 수 있습니다.
+    //                                 <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까?</p>`
+    //                     }
+    //                     show_user_confirm (message, ()=>{
+    //                         layer_popup.all_close_layer_popup();
+    //                         sideGoPopup("pters_pass_main");
+    //                     });
+
+    //                     return false;
+    //                 }
+
+    //                 Member_func.ticket_status({"member_ticket_id":this.data.member_ticket_id, "state_cd":"IP", "refund_price":"", "refund_date":""}, ()=>{
+    //                     this.data.status = "IP";
+    //                     this.render_content();
+    //                     try{
+    //                         current_page.init();
+    //                     }catch(e){}
+    //                     try{
+    //                         member_view_popup.init();
+    //                         member_ticket_history.init();
+    //                     }catch(e){}
+    //                 });
+    //                 layer_popup.close_layer_popup();}
+    //             },
+    //             refund:{text:"환불", callback:()=>{
+    //                 layer_popup.close_layer_popup();
+    //                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+    //                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_TICKET_REFUND, 100, popup_style, null, ()=>{
+    //                     let start_date = DateRobot.to_yyyymmdd(this.data.start_date.year, this.data.start_date.month, this.data.start_date.date);
+    //                     let external_data = {"member_ticket_id":this.data.member_ticket_id,"state_cd":"RF", "member_ticket_name":this.data.member_ticket_name, "member_ticket_price":this.data.price, "member_ticket_start_date":start_date};
+    //                     member_ticket_refund = new Member_ticket_refund('.popup_member_ticket_refund', external_data, 'member_ticket_refund');
+    //                 });}
+    //             },
+    //             delete:{text:"삭제", callback:()=>{
+    //                 Member_func.ticket_delete({"member_ticket_id":this.data.member_ticket_id}, ()=>{
+    //                     try{
+    //                         current_page.init();
+    //                     }catch(e){}
+    //                     try{
+    //                         member_view_popup.init();
+    //                         member_ticket_history.init();
+    //                     }catch(e){}
+    //                     layer_popup.close_layer_popup();
+    //                 });
+    //                 layer_popup.close_layer_popup();}
+    //             }
+    //         };
+
+    //         if(this.data.status == "IP"){
+    //             delete user_option.resume;
+    //             delete user_option.delete;
+    //         }else{
+    //             delete user_option.refund;
+    //             delete user_option.finish;
+    //         }
+
+    //         let options_padding_top_bottom = 16;
+    //         // let button_height = 8 + 8 + 52;
+    //         let button_height = 52;
+    //         let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
+    //         let root_content_height = $root_content.height();
+    //         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
+    //             option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+    //         });
+    //     });
+    //     return html;
+    // }
     dom_row_status_input(){
         let id = 'member_ticket_status_modify';
-        let title = this.data.member_ticket_name == null ||this.data.member_ticket_name == 'None' ? '수강권명' : this.data.member_ticket_name;
+        let title = `<span style="color:${TICKET_STATUS_COLOR[this.data.status]}">${TICKET_STATUS[this.data.status]}</span>`;
         let icon = CImg.ticket();
         let icon_r_visible = SHOW;
-        let icon_r_text = `상태 (<span style="color:${TICKET_STATUS_COLOR[this.data.status]}">${TICKET_STATUS[this.data.status]}</span>)`;
+        let icon_r_text = `변경`;
         let style = null;
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             let user_option = {

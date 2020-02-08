@@ -70,7 +70,7 @@ class Menu {
                                 this.dom_menu_calendar() + 
                                 this.dom_menu_member() + 
                                 this.dom_menu_lecture() +
-                                this.dom_menu_ticket() + 
+                                // this.dom_menu_ticket() + 
                                 this.dom_menu_statistics() +
                                 this.dom_menu_attendmode() +
                                 this.dom_menu_program_notice();

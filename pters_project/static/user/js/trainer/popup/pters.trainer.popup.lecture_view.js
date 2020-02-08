@@ -202,7 +202,7 @@ class Lecture_view{
         let html =  capacity_assembly +
                     lecture_lecture_minute +
                     color_select_assembly +
-                    ticket_list_assembly +
+                    // ticket_list_assembly +
                     member_list_assembly;
 
         return html;

@@ -334,7 +334,8 @@ class Member_view{
                 + CComponent.dom_tag('성별') + sex +
             '</div>' +
             '<div class="obj_input_box_full">'
-                + CComponent.dom_tag('진행중인 수강권') + ticket +
+                // + CComponent.dom_tag('진행중인 수강권') + ticket +
+                + CComponent.dom_tag('진행 중인 등록 건') + ticket +
             '</div>';
             // '<div class="obj_input_box_full">'
             //     + CComponent.dom_tag('특이사항')  + memo +
@@ -650,7 +651,7 @@ class Member_view{
             let title = this.data.ticket[i].ticket_id.length == 0 ? '' : ticket_name;
             let icon = CImg.ticket();
             let icon_r_visible = SHOW;
-            let icon_r_text = "";
+            let icon_r_text = "수정";
             let style = null;
             let html_ticket_name = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
@@ -867,7 +868,7 @@ class Member_view{
                         member_add_popup = new Member_add('.popup_member_add', member_add_initial_data, 'member_add_popup');});
                 }
             },
-            ticket_history:{text:"수강권 이력", callback:()=>{
+            ticket_history:{text:"등록 이력", callback:()=>{
                     layer_popup.close_layer_popup();
                     let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_TICKET_HISTORY, 100, popup_style, null, ()=>{

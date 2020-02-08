@@ -30,12 +30,19 @@ class Member_add{
                 ticket_name:[],
                 ticket_effective_days:[],
                 ticket_reg_count:[null],
-                ticket_price:[],
+                ticket_price:[null],
                 pay_method:{value:["NONE"], text:["선택 안함"]},
                 start_date:null,
                 start_date_text:null,
                 end_date:null,
-                end_date_text:null
+                end_date_text:null,
+
+                lecture_id:[],
+                lecture_name:[],
+                lecture_max:[],
+                lecture_color:[],
+                lecture_state_cd:[],
+                lecture_type_cd:[]
         };
 
         this.date_start = 0;
@@ -148,6 +155,20 @@ class Member_add{
         return {id:this.data.ticket_id, name:this.data.ticket_name, effective_days: this.data.ticket_effective_days, reg_count:this.data.reg_count, reg_price:this.data.reg_price};
     }
 
+    set lecture(data){
+        this.data.lecture_id = data.id;
+        this.data.lecture_name = data.name;
+        this.data.lecture_max = data.max;
+        this.data.lecture_state_cd = data.state_cd;
+        this.data.lecture_type_cd = data.type_cd;
+        this.data.lecture_color = data.color;
+        this.render_content();
+    }
+
+    get lecture(){
+        return {id:this.data.lecture_id, name:this.data.lecture_name, max:this.data.lecture_max, state_cd:this.data.lecture_state_cd, type_cd:this.data.lecture_type_cd, color:this.data.lecture_color};
+    }
+
     set reg_count(number){
         this.data.ticket_reg_count = [number];
         this.render_content();
@@ -226,6 +247,7 @@ class Member_add{
         let sex = this.dom_row_member_sex_input();
         let memo = this.dom_row_member_memo_input();
         let ticket = this.dom_row_ticket_select();
+        let lecture = this.dom_row_lecture_select();
         let start_date = this.dom_row_start_date_select();
         let end_date = this.dom_row_end_date_select();
         let reg_count = this.dom_row_member_reg_count_input();
@@ -233,7 +255,8 @@ class Member_add{
         let pay_method = this.dom_row_ticket_pay_method_select();
 
         let ticket_sub_assembly = "";
-        if(this.data.ticket_id.length > 0){
+        // if(this.data.ticket_id.length > 0){
+        if(this.data.lecture_id.length > 0){
             ticket_sub_assembly =  CComponent.dom_tag('횟수') + reg_count + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
                                 + CComponent.dom_tag('시작일') + start_date + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
                                 + CComponent.dom_tag('종료일') + end_date + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
@@ -241,7 +264,6 @@ class Member_add{
                                 + CComponent.dom_tag('지불 방법') + pay_method + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
                                 + CComponent.dom_tag('특이사항') + memo;
         }
-        
 
 
         let html =
@@ -252,13 +274,8 @@ class Member_add{
                 + CComponent.dom_tag('성별') + sex +
             '</div>' +
             '<div class="obj_input_box_full">'
-                + CComponent.dom_tag('수강권') + ticket + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
-                // + CComponent.dom_tag('횟수') + reg_count + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
-                // + CComponent.dom_tag('시작일') + start_date + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
-                // + CComponent.dom_tag('종료일') + end_date + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
-                // + CComponent.dom_tag('가격') + reg_price + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
-                // + CComponent.dom_tag('지불 방법') + pay_method + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
-                // + CComponent.dom_tag('특이사항') + memo +
+                // + CComponent.dom_tag('수강권') + ticket + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag('참석 가능한 수업') + lecture + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
                 + ticket_sub_assembly +
             '</div>';
         
@@ -268,13 +285,8 @@ class Member_add{
                 + CComponent.dom_tag('회원명') + name +
             '</div>' +
             '<div class="obj_input_box_full">'
-                + CComponent.dom_tag('수강권') + ticket + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
-                // + CComponent.dom_tag('횟수') + reg_count + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
-                // + CComponent.dom_tag('시작일') + start_date + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
-                // + CComponent.dom_tag('종료일') + end_date + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
-                // + CComponent.dom_tag('가격') + reg_price + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
-                // + CComponent.dom_tag('지불 방법') + pay_method + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
-                // + CComponent.dom_tag('특이사항') + memo +
+                // + CComponent.dom_tag('수강권') + ticket + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag('참석 가능한 수업') + lecture + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
                 + ticket_sub_assembly +
             '</div>';
         }
@@ -444,6 +456,42 @@ class Member_add{
                 });
             });
         });
+        return html;
+    }
+
+    dom_row_lecture_select(){
+        let id = 'input_ticket_select';
+        let title = this.data.lecture_id.length == 0 ? '선택*' : this.data.lecture_id.length + ' 개 선택됨';
+        let icon = CImg.lecture();
+        let icon_r_visible = SHOW;
+        let icon_r_text = "";
+        let style = this.data.ticket_id.length == 0 ? {"color":"var(--font-inactive)"} : null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SELECT, 100, popup_style, null, ()=>{
+                lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 999, {'title':'수업'}, (set_data)=>{
+                    this.lecture = set_data; //타겟에 선택된 데이터를 set
+                    this.render_content();
+                });
+            });
+        });
+        let selected_lecture_list = this.dom_row_selected_lecture_list();
+        return html + selected_lecture_list;
+    }
+
+    dom_row_selected_lecture_list(){
+        let html_to_join = [];
+        for(let i=0; i<this.data.lecture_id.length; i++){
+            html_to_join.push(
+                `<div>
+                    <div style="display:flex;font-size:14px;font-weight:500;padding:5px 36px;">
+                        <div style="flex-basis:7px"><div style="width:5px;height:100%;border-radius:3px;background-color:${this.data.lecture_color[i]}"></div></div>
+                        <div style="flex:1 1 0">${this.data.lecture_name[i]}</div>
+                    </div>
+                </div>`
+            );
+        }
+        let html = html_to_join.join("");
         return html;
     }
 
@@ -736,11 +784,11 @@ class Member_add{
         // let button_style = {"flex":"1 1 0", "padding":"10px 8px", "color":"var(--font-sub-normal)"};
         let button_style = {"flex":"1 1 0", "padding":"6px 0px", "color":"var(--font-sub-normal)", "background-color":"var(--bg-light)", "border-radius":"3px"};
 
-        let button_100 = CComponent.button ("button_100", "+ 100만", button_style, ()=>{ this.data.ticket_price = Number(this.data.ticket_price) + 1000000;this.render_content(); });
-        let button_50 = CComponent.button ("button_50", "+ 50만", button_style, ()=>{ this.data.ticket_price = Number(this.data.ticket_price) + 500000;this.render_content(); });
-        let button_10 = CComponent.button ("button_10", "+ 10만", button_style, ()=>{ this.data.ticket_price = Number(this.data.ticket_price) + 100000;this.render_content(); });
-        let button_1 = CComponent.button ("button_1", "+ 1만", button_style, ()=>{ this.data.ticket_price = Number(this.data.ticket_price) + 10000;this.render_content(); });
-        let button_delete = CComponent.button ("button_delete", "지우기", button_style, ()=>{ this.data.ticket_price = [null];this.render_content(); });
+        let button_100 = CComponent.button ("button_100", "+ 100만", button_style, ()=>{ this.data.ticket_price[0] = Number(this.data.ticket_price[0]) + 1000000;this.render_content(); });
+        let button_50 = CComponent.button ("button_50", "+ 50만", button_style, ()=>{ this.data.ticket_price[0] = Number(this.data.ticket_price[0]) + 500000;this.render_content(); });
+        let button_10 = CComponent.button ("button_10", "+ 10만", button_style, ()=>{ this.data.ticket_price[0] = Number(this.data.ticket_price[0]) + 100000;this.render_content(); });
+        let button_1 = CComponent.button ("button_1", "+ 1만", button_style, ()=>{ this.data.ticket_price[0] = Number(this.data.ticket_price[0]) + 10000;this.render_content(); });
+        let button_delete = CComponent.button ("button_delete", "지우기", button_style, ()=>{ this.data.ticket_price[0] = null;this.render_content(); });
         
         // let wrapper_style = "display:flex;padding:0px 0 0px 20px;font-size:12px;";
         // let divider_style = "flex-basis:1px;height:20px;margin-top:10px;background-color:var(--bg-light);display:none;";
@@ -798,7 +846,18 @@ class Member_add{
         }
     }
 
+    
+
     send_data(){
+        this.make_new_ticket(()=>{
+            let error_callback = ()=>{
+                this.delete_ticket_when_member_create_failed({ticket_id:this.data.ticket_id[0]});
+            };
+            this.make_member(error_callback);
+        });
+    }
+
+    make_member(error_callback){
         if(this.data_sending_now == true){
             return false;
         }else if(this.data_sending_now == false){
@@ -818,12 +877,13 @@ class Member_add{
                 layer_popup.all_close_layer_popup();
                 sideGoPopup("pters_pass_main");
             });
-
+            error_callback();
             return false;
         }
 
         if(this.check_before_send() == false){
             this.data_sending_now = false;
+            error_callback();
             return false;
         }
 
@@ -854,8 +914,6 @@ class Member_add{
             "pay_method":this.data.pay_method.value[0]
         };
 
-        console.log(data_for_new)
-
         if(this.data_from_external == null){ //신규 회원 등록
             Member_func.create_pre(data_for_new, (received)=>{
                 data_for_new.member_id = received.user_db_id[0];
@@ -864,8 +922,8 @@ class Member_add{
                     try{
                         current_page.init();
                     }catch(e){}
-                }, ()=>{this.data_sending_now = false;});
-            }, ()=>{this.data_sending_now = false;});
+                }, ()=>{this.data_sending_now = false;error_callback();});
+            }, ()=>{this.data_sending_now = false;error_callback();});
         }else{ // 재등록
             Member_func.create_ticket_re(data_for_re, ()=>{
                 // member_ticket_history.init();
@@ -880,11 +938,89 @@ class Member_add{
                 }catch(e){
                     console.log(e);
                 }
-            }, ()=>{this.data_sending_now = false;});
+            }, ()=>{this.data_sending_now = false;error_callback();});
         }
 
         
         layer_popup.close_layer_popup();
+    }
+
+    make_new_ticket(callback){
+        let d = new Date();
+        let time_info = DateRobot.to_yyyymmdd(d.getFullYear(), d.getMonth()+1, d.getDate()) + ' ' + TimeRobot.to_hhmm(d.getHours(), d.getMinutes()).complete+':'+d.getSeconds();
+        let ticket_name = `${time_info} 등록`;
+        let data = {
+                    "ticket_name":ticket_name,
+                    "lecture_id_list[]":this.data.lecture_id,
+                    "ticket_effective_days":this.data.ticket_effective_days == null ? 0 :this.data.ticket_effective_days,
+                    "ticket_reg_count":this.data.count == null ? 0 : this.data.count,
+                    "ticket_price":this.data.price == null ? 0 : this.data.price,
+                    "ticket_note":this.data.memo,
+                    "ticket_week_schedule_enable":this.data.ticket_week_schedule_enable == null ? 99999 : this.data.ticket_week_schedule_enable, //주간 수강 제한 횟수
+                    "ticket_day_schedule_enable":this.data.ticket_day_schedule_enable == null ? 99999 : this.data.ticket_day_schedule_enable  //일일 수강 제한 횟수
+        };
+
+        Ticket_func.create(data, ()=>{
+            let this_ticket_id;
+            ticket.request_ticket_list('ing', (list)=>{
+                list.current_ticket_data.forEach((el)=>{
+                    if(el.ticket_name == ticket_name){
+                        this_ticket_id = el.ticket_id;
+                        this.data.ticket_id.push(this_ticket_id);
+                        return;
+                    }
+                });
+                callback();
+            });
+            
+        }, ()=>{this.data_sending_now = false;});
+    }
+
+    delete_ticket_when_member_create_failed(data, callback, error_callback){
+        $.ajax({
+            url:'/trainer/delete_ticket_info/',
+            type:'POST',
+            data: data,
+            dataType : 'html',
+    
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+    
+            //보내기후 팝업창 닫기
+            complete:function(){
+                
+            },
+    
+            //통신성공시 처리
+            success:function(data_){
+                let data = JSON.parse(data_);
+                check_app_version(data.app_version);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message({title:data.messageArray[0]});
+                        if(error_callback != undefined){
+                            error_callback();
+                        }
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(data);
+                }
+            },
+    
+            //통신 실패시 처리
+            error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
+                location.reload();
+            }
+        });
     }
 
     check_before_send(){

@@ -23,7 +23,7 @@ class Member_ticket_history{
 
     render(){
         let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();member_ticket_history.clear();">${CImg.arrow_left()}</span>`;
-        let top_center = `<span class="icon_center"><span>수강권 이력</span></span>`;
+        let top_center = `<span class="icon_center"><span>등록 이력</span></span>`;
         let top_right = `<span class="icon_right"></span>`;
         let content =   `<section style="margin-top:8px;">${this.dom_list()}</section>`;
         
