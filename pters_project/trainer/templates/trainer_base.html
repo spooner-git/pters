@@ -952,6 +952,7 @@
         "GET",
         "",
         (data)=>{
+            console.log("가격 입력 에러", data);
             if(Object.keys(data).length > 0){
                 layer_popup.open_layer_popup(POPUP_BASIC, 'popup_temp_for_error', 100, POPUP_FROM_RIGHT, null, ()=>{
                 temp_for_error = new TempForError('.popup_temp_for_error', 'temp_for_error');});
