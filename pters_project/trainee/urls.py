@@ -67,6 +67,8 @@ urlpatterns = [
     url(r'^trainee_main/$', views.TraineeMainView.as_view(), name='trainee_main'),
     # 월간 일정 페이지
     url(r'^trainee_calendar/$', views.TraineeCalendarView.as_view(), name='trainee_calendar'),
+    # 공지 사항 페이지
+    url(r'^trainee_program_notice/$', views.TraineeProgramNoticeView.as_view(), name='trainee_program_notice'),
     # 프로그램 선택 페이지
     url(r'^trainee_program/$', views.ProgramSelectView.as_view(), name='trainee_program'),
 
@@ -115,6 +117,15 @@ urlpatterns = [
     # 회원 일지 팝업 페이지
     url(r'^popup_plan_daily_record/$', views.PopupPlanDailyRecordView.as_view(),
         name='popup_plan_daily_record'),
+
+    # 회원 프로그램 공지 팝업 페이지
+    url(r'^popup_program_notice/$', views.PopupProgramNoticeView.as_view(),
+        name='popup_program_notice'),
+
+    # 회원 문의 내역 팝업 페이지
+    url(r'^popup_inquiry/$', views.PopupInquiryView.as_view(), name='popup_inquiry'),
+    url(r'^popup_inquiry_history/$', views.PopupInquiryHistoryView.as_view(), name='popup_inquiry_history'),
+    url(r'^popup_inquiry_history_info/$', views.PopupInquiryHistoryInfoView.as_view(), name='popup_inquiry_history_info'),
 
     # 삭제된 페이지
     # 회원 빈 월간 일정 페이지

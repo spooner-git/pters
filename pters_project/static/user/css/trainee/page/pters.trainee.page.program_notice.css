@@ -1,0 +1,44 @@
+	.trainee_program_notice{
+
+	}
+
+
+
+	.trainee_program_notice .wrapper_program_notice_list.obj_box_full{
+		border-left: 0;
+		border-right: 0;
+	}
+		.trainee_program_notice .wrapper_program_notice_list.obj_box_full .wrapper_program_notice_list_title{
+			margin-top: 15px;
+			margin-bottom: 15px;
+			padding-left: 20px;
+		}
+		.trainee_program_notice .wrapper_program_notice_list .wrapper_program_notice_element:last-child{
+			border-bottom: 0;
+		}
+	
+	.trainee_program_notice .wrapper_program_notice_element{
+		padding: 10px 0px;
+		border-bottom: 1px solid #f2f2f2;
+		/*margin-bottom: 15px;*/
+	}
+		.trainee_program_notice .wrapper_program_notice_element .wrapper_program_notice_element_title{
+			margin-bottom: 5px;
+		}
+		.trainee_program_notice .wrapper_program_notice_element .program_notice_oval{
+			display: inline-block;
+			width: 14px;
+			height: 14px;
+			border-radius: 50%;
+			vertical-align: middle;
+			border: 1px solid #000000;
+			margin-bottom: 3px;
+			margin-right: 11px;
+		}
+		
+		.trainee_program_notice .wrapper_program_notice_element .program_notice_time_ago{
+			float: right;
+		}
+		.trainee_program_notice .wrapper_program_notice_element .wrapper_program_notice_element_text{
+			line-height: 23px;
+		}

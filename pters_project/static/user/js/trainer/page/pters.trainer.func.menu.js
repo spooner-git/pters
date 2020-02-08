@@ -71,8 +71,9 @@ class Menu {
                                 this.dom_menu_member() + 
                                 this.dom_menu_lecture() +
                                 this.dom_menu_ticket() + 
-                                this.dom_menu_statistics() + 
-                                this.dom_menu_attendmode();
+                                this.dom_menu_statistics() +
+                                this.dom_menu_attendmode() +
+                                this.dom_menu_program_notice();
         // let sub_assembly_setting_sharing =
         //                         CComponent.dom_tag('프로그램 설정', dom_tag_style) +
         //                         this.dom_menu_setting_calendar() +
@@ -224,6 +225,19 @@ class Menu {
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             sideGoPage("attend_mode");
+        });
+        return html;
+    }
+
+    dom_menu_program_notice(){
+        let id = 'menu_program_notice';
+        let title = '공지사항';
+        let icon = CImg.program_notice();
+        let icon_r_visible = NONE;
+        let icon_r_text = "";
+        let style = {"font-size":"17px", "padding":"13px 0"};
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            sideGoPopup("program_notice");
         });
         return html;
     }
@@ -386,7 +400,7 @@ class Menu {
 
     dom_menu_service_notice(){
         let id = 'menu_service_notice';
-        let title = '공지사항';
+        let title = 'PTERS 공지사항';
         let icon = CImg.notice();
         let icon_r_visible = NONE;
         let icon_r_text = "";
@@ -461,7 +475,7 @@ class Menu {
                                     </div>
                                         `
                 ,
-                initial_page:`<div id="menu_display_panel"></div><div id="menu_content_wrap" class="pages"></div>`
+                initial_page:`<div id="menu_display_panel"></div><div id="menu_content_wrap" class="pages anim_fade_in_vibe_top"></div>`
             }
         );
     }

@@ -55,7 +55,7 @@ class Calendar {
                 clearInterval(interval);
             }
             
-        }, 60000);//60000
+        }, 60000);
 
         this.long_touch = OFF;
         this.long_touch_schedule_id;
@@ -1426,11 +1426,10 @@ class Calendar {
                 if(load_image == OFF){
                     return;
                 }
-                ajax_load_image(SHOW);
+                // ajax_load_image(SHOW);
             },
             success:function (data){
                 check_app_version(data.app_version);
-                console.log(data);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
                         show_error_message({title:data.messageArray});
@@ -1447,7 +1446,7 @@ class Calendar {
                 if(load_image == OFF){
                     return;
                 }
-                ajax_load_image(HIDE);
+                // ajax_load_image(HIDE);
             },
 
             error:function (){
@@ -1513,7 +1512,13 @@ class Calendar {
                                   </div>
                                   `
                 ,
-                "initial_page":`<div id="${this.subtargetHTML}"><div id="cal_display_panel"><span></span></div><div id="page${this.current_page_num}" class="pages" style="left:0px;"></div>.</div>`
+                "initial_page":`<div id="${this.subtargetHTML}">
+                                    <div id="cal_display_panel">
+                                        <span></span>
+                                    </div>
+                                    <div id="page${this.current_page_num}" class="pages" style="left:0px;">
+                                    </div>
+                                </div>`
             }
         );
     }
@@ -1772,7 +1777,7 @@ class Plan_func{
             dataType: "JSON",
 
             beforeSend:function (){
-                ajax_load_image(SHOW);
+                // ajax_load_image(SHOW);
             },
             success:function (data){
                 check_app_version(data.app_version);
@@ -1789,7 +1794,7 @@ class Plan_func{
             },
 
             complete:function (){
-                ajax_load_image(HIDE);
+                // ajax_load_image(HIDE);
             },
 
             error:function (){
@@ -1811,7 +1816,7 @@ class Plan_func{
             dataType: "JSON",
 
             beforeSend:function (){
-                ajax_load_image(SHOW);
+                // ajax_load_image(SHOW);
             },
             success:function (data){
                 check_app_version(data.app_version);
@@ -1828,7 +1833,7 @@ class Plan_func{
             },
 
             complete:function (){
-                ajax_load_image(HIDE);
+                // ajax_load_image(HIDE);
             },
 
             error:function (){
@@ -1854,7 +1859,7 @@ class Plan_func{
             dataType: "JSON",
 
             beforeSend:function (){
-                ajax_load_image(SHOW);
+                // ajax_load_image(SHOW);
             },
             success:function (data){
                 check_app_version(data.app_version);
@@ -1871,7 +1876,7 @@ class Plan_func{
             },
 
             complete:function (){
-                ajax_load_image(HIDE);
+                // ajax_load_image(HIDE);
             },
 
             error:function (){
@@ -2040,7 +2045,7 @@ class Plan_func{
             dataType: "JSON",
 
             beforeSend:function (){
-                ajax_load_image(SHOW);
+                // ajax_load_image(SHOW);
             },
             success:function (data){
                 check_app_version(data.app_version);
@@ -2056,7 +2061,7 @@ class Plan_func{
             },
 
             complete:function (){
-                ajax_load_image(HIDE);
+                // ajax_load_image(HIDE);
             },
 
             error:function (){

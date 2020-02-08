@@ -1,0 +1,89 @@
+	#popup_inquiry_history .popup_mobile .wrapper_top{
+		height: 40px;
+		margin-bottom: 10px;
+	}
+
+	.popup_inquiry_history{
+		/*min-height: 100%;*/
+	}
+		.popup_inquiry_history .wrapper_inquiry_history_title{
+			padding: 0 20px;
+		}
+		.popup_inquiry_history .wrapper_popup_title_text{
+			position: absolute;
+			top: 20px;
+			height: 35px;
+			line-height: 35px;
+		}
+		.popup_inquiry_history .obj_font_size_14_weight_500{
+			height: 20px;
+			line-height: 20px;
+		}
+		.popup_inquiry_history .wrapper_inquiry_history_title .wrapper_popup_title_date{
+			position: absolute;
+			top: 55px;
+		}
+			
+		.popup_inquiry_history .obj_font_size_14_weight_normal{
+			height: 35px;
+			line-height: 35px;
+		}
+		.popup_inquiry_history .obj_font_size_13_weight_500{
+			height: 24px;
+			line-height: 24px;
+		}
+		.popup_inquiry_history .obj_font_size_12_weight_500{
+			height: 35px;
+			line-height: 35px;
+		}
+		.popup_inquiry_history .obj_font_size_11_weight_normal{
+			height: 30px;
+			line-height: 30px;
+		}
+
+		.popup_inquiry_history > .obj_box_full{
+			margin-bottom: 10px;
+			padding: 10px 20px;
+			border: 0;
+		}
+
+
+
+	.trainee_inquiry_history .wrapper_inquiry_history_list.obj_box_full{
+		border-left: 0;
+		border-right: 0;
+	}
+		.trainee_inquiry_history .wrapper_inquiry_history_list.obj_box_full .wrapper_inquiry_history_list_title{
+			margin-top: 15px;
+			margin-bottom: 15px;
+			padding-left: 20px;
+		}
+		.trainee_inquiry_history .wrapper_inquiry_history_list .wrapper_inquiry_history_element:last-child{
+			border-bottom: 0;
+		}
+	
+	.trainee_inquiry_history .wrapper_inquiry_history_element{
+		padding: 10px 0px;
+		border-bottom: 1px solid #f2f2f2;
+		/*margin-bottom: 15px;*/
+	}
+		.trainee_inquiry_history .wrapper_inquiry_history_element .wrapper_inquiry_history_element_title{
+			margin-bottom: 5px;
+		}
+		.trainee_inquiry_history .wrapper_inquiry_history_element .inquiry_history_oval{
+			display: inline-block;
+			width: 14px;
+			height: 14px;
+			border-radius: 50%;
+			vertical-align: middle;
+			border: 1px solid #000000;
+			margin-bottom: 3px;
+			margin-right: 11px;
+		}
+		
+		.trainee_inquiry_history .wrapper_inquiry_history_element .inquiry_history_time_ago{
+			float: right;
+		}
+		.trainee_inquiry_history .wrapper_inquiry_history_element .wrapper_inquiry_history_element_text{
+			line-height: 23px;
+		}

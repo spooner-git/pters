@@ -114,7 +114,7 @@ class Lecture_list {
 
             
             let onclick = `lecture_list_popup.event_view_lecture(${lecture_id})`;
-            let html = `<article class="lecture_wrapper" data-text="${lecture_name}" data-lectureid="${lecture_id}" onclick="${onclick}" style="color:${this.list_status_type == "ing" ? "" : 'var(--font-inactive)'}">
+            let html = `<article class="lecture_wrapper anim_fade_in_vibe_top" data-text="${lecture_name}" data-lectureid="${lecture_id}" onclick="${onclick}" style="color:${this.list_status_type == "ing" ? "" : 'var(--font-inactive)'}">
                             <div>
                                 <div class="lecture_data_l">
                                     <div class="lecture_tag" style="background:${this.list_status_type == "ing" ? lecture_ing_bg_color : "var(--font-inactive)"}"></div>
@@ -274,7 +274,7 @@ class Lecture_list {
                 if(load_image == OFF){
                     return;
                 }
-                ajax_load_image(SHOW);
+                // ajax_load_image(SHOW);
             },
     
             //통신성공시 처리
@@ -298,7 +298,7 @@ class Lecture_list {
                 if(load_image == OFF){
                     return;
                 }
-                ajax_load_image(HIDE);
+                // ajax_load_image(HIDE);
             },
     
             //통신 실패시 처리

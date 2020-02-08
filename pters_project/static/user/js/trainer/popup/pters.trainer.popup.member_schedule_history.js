@@ -8,7 +8,8 @@ class Member_schedule_history{
         this.settings = {
             sign_use:OFF
         };
-        this.sort_val = SORT_MEMBER_TICKET;
+        this.page = 1;
+        this.sort_val = SORT_SCHEDULE_DT;
         this.init();
 
         this.expand = null;
@@ -32,13 +33,7 @@ class Member_schedule_history{
         let top_center = `<span class="icon_center"><span id="">일정 이력</span></span>`;
         let top_right = `<span class="icon_right"></span>`;
         let content;
-        if(this.sort_val == SORT_MEMBER_TICKET){
-            content =   `<section style="margin-top:8px;">
-                            ${this.dom_arrange_select()}
-                            ${this.dom_list()}
-                        </section>`;
-        }
-        else if(this.sort_val == SORT_SCHEDULE_DT){
+        if(this.sort_val == SORT_SCHEDULE_DT){
             content = `<section style="margin-top:8px;">
                             ${this.dom_arrange_select()}
                             ${this.dom_list_by_time()}
@@ -50,6 +45,12 @@ class Member_schedule_history{
                             ${this.dom_list_by_monthly()}
                         </section>`;
         }
+        else if(this.sort_val == SORT_MEMBER_TICKET){
+            content =   `<section style="margin-top:8px;">
+                            ${this.dom_arrange_select()}
+                            ${this.dom_list()}
+                        </section>`;
+        }
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
 
         document.querySelector(this.target.install).innerHTML = html;
@@ -58,12 +59,12 @@ class Member_schedule_history{
     dom_arrange_select(){
         let icon = CImg.arrow_expand(['var(--img-sub1)'], {"vertical-align":"middle"});
         let id = "list_arrange_select";
-        let title = "수강권별 정렬"+icon;
-        if(this.sort_val == SORT_SCHEDULE_DT){
-            title = "시간순 정렬"+icon;
-        }
-        else if(this.sort_val == SORT_SCHEDULE_MONTHLY){
+        let title = "시간순 정렬"+icon;
+        if(this.sort_val == SORT_SCHEDULE_MONTHLY){
             title = "월별 정렬"+icon;
+        }
+        else if(this.sort_val == SORT_MEMBER_TICKET){
+            title = "수강권별 정렬"+icon;
         }
         let style = {"color": "var(--font-sub-normal)", "font-size":"13px", "font-weight":"500"};
         let onclick = ()=>{
@@ -284,8 +285,10 @@ class Member_schedule_history{
         let length = this.received_data.member_schedule.length;
         let html_to_join = [];
         for(let i=length-1; i>=0; i--){
+        // for(let i=0; i<length; i++){
             let data = this.received_data.member_schedule[i];
-            let numbering = i+1 + ' 회차';
+            // let numbering = data.schedule_idx + ' 회차';
+            let numbering = Number(i+1) + ' 회차';
             let schedule_id = data.schedule_id;
             let date =  DateRobot.to_text(data.start_dt.split(' ')[0], '', '', SHORT) +' '+ TimeRobot.to_text(data.start_dt.split(' ')[1], '', SHORT) + ' - ' +
                             TimeRobot.to_text(data.end_dt.split(' ')[1], '', SHORT);
@@ -426,6 +429,7 @@ class Member_schedule_history{
                 let data = member_monthly_list[i].schedule_data[j];
                 let schedule_id = data.schedule_id;
                 let numbering = Number(j+1) + ' 회차';
+                // let numbering = data.schedule_idx + ' 회차';
                 let date =  DateRobot.to_text(data.start_dt.split(' ')[0], '', '', SHORT) +' '+ TimeRobot.to_text(data.start_dt.split(' ')[1], '', SHORT) + ' - '+
                             TimeRobot.to_text(data.end_dt.split(' ')[1], '', SHORT);
                 let schedule_name = data.lecture_name;
@@ -573,9 +577,9 @@ class Member_schedule_history{
 
     switch_type(){
         let user_option = {
-            by_ticket:{text:"수강권별 정렬", callback:()=>{this.sort_val = SORT_MEMBER_TICKET;this.init();layer_popup.close_layer_popup();}},
             by_time:{text:"시간순 정렬", callback:()=>{this.sort_val = SORT_SCHEDULE_DT;this.init();layer_popup.close_layer_popup();}},
-            by_monthly:{text:"월별 정렬", callback:()=>{this.sort_val = SORT_SCHEDULE_MONTHLY;this.init();layer_popup.close_layer_popup();}}
+            by_monthly:{text:"월별 정렬", callback:()=>{this.sort_val = SORT_SCHEDULE_MONTHLY;this.init();layer_popup.close_layer_popup();}},
+            by_ticket:{text:"수강권별 정렬", callback:()=>{this.sort_val = SORT_MEMBER_TICKET;this.init();layer_popup.close_layer_popup();}}
         };
         let options_padding_top_bottom = 16;
         // let button_height = 8 + 8 + 52;
@@ -590,7 +594,7 @@ class Member_schedule_history{
     request_list (callback){
         Setting_calendar_func.read((settings)=>{
             this.settings.sign_use = settings.setting_schedule_sign_enable;
-            let send_data = {"member_id": this.member_id, "sort_val": this.sort_val};
+            let send_data = {"member_id": this.member_id, "sort_val": this.sort_val, "page": this.page};
             Member_func.read_schedule_list_by_ticket(send_data, (data)=>{
                 this.received_data = data;
                 callback();

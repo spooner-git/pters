@@ -37,8 +37,8 @@ from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO
     SORT_LECTURE_NAME, SORT_LECTURE_MEMBER_COUNT, SORT_LECTURE_CAPACITY_COUNT, SORT_LECTURE_CREATE_DATE, ON_SCHEDULE, \
     CALENDAR_TIME_SELECTOR_BASIC, SORT_END_DATE, SORT_MEMBER_TICKET, SORT_SCHEDULE_DT, STATE_CD_REFUND, \
     SORT_SCHEDULE_MONTHLY, SHARED_PROGRAM, MY_PROGRAM, PROGRAM_SELECT, PROGRAM_LECTURE_CONNECT_DELETE, \
-    PROGRAM_LECTURE_CONNECT_ACCEPT, LECTURE_MEMBER_NUM_VIEW_ENABLE
-from board.models import BoardTb, QATb
+    PROGRAM_LECTURE_CONNECT_ACCEPT, LECTURE_MEMBER_NUM_VIEW_ENABLE, BOARD_TYPE_CD_NOTICE
+from board.models import BoardTb, QATb, NoticeTb
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 from schedule.functions import func_refresh_member_ticket_count, func_get_trainer_attend_schedule, \
     func_get_lecture_member_ticket_id, func_check_lecture_available_member_before, func_add_schedule, \
@@ -57,7 +57,8 @@ from .functions import func_get_trainer_setting_list, \
     func_delete_member_ticket_info, func_update_lecture_member_fix_status_cd, update_user_setting_data, \
     update_program_setting_data, func_get_member_ticket_info, func_get_trainer_info, update_alarm_setting_data
 from .models import ClassMemberTicketTb, LectureTb, ClassTb, MemberClassTb, BackgroundImgTb, \
-    SettingTb, TicketTb, TicketLectureTb, CenterTrainerTb, LectureMemberTb, ProgramAuthTb, BugMemberTicketPriceTb
+    SettingTb, TicketTb, TicketLectureTb, CenterTrainerTb, LectureMemberTb, ProgramAuthTb, ProgramBoardTb, \
+    ProgramNoticeTb
 
 logger = logging.getLogger(__name__)
 
@@ -111,6 +112,10 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                         request.session['class_center_name'] = class_info.class_tb.get_center_name()
                         request.session['trainer_name'] = class_info.class_tb.member.name
                         temp_class_counter = class_member_ticket_counter
+<<<<<<< HEAD
+=======
+                        temp_class_counter = class_member_ticket_counter
+>>>>>>> feature/notice-board
                     if class_member_ticket_counter == 0 and temp_class_counter == 0:
                         request.session['class_id'] = class_info.class_tb_id
                         request.session['class_hour'] = class_info.class_tb.class_hour
@@ -228,31 +233,34 @@ class GetTrainerScheduleInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
 
 class GetMemberScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
-
+    # template_name = 'test.html'
     def get(self, request):
         class_id = self.request.session.get('class_id', '')
         member_id = request.GET.get('member_id', '')
-        sort = request.GET.get('sort_val', SORT_MEMBER_TICKET)
+        page = request.GET.get('page', 1)
+        sort = request.GET.get('sort_val', SORT_SCHEDULE_DT)
 
         error = None
         ordered_schedule_dict = collections.OrderedDict()
 
         if member_id == '':
             error = '회원 정보를 불러오지 못했습니다.'
-
+        # context = {}
         if error is None:
-            if str(sort) == str(SORT_MEMBER_TICKET):
-                ordered_schedule_dict = func_get_member_schedule_all_by_member_ticket(class_id, member_id)
-            elif str(sort) == str(SORT_SCHEDULE_DT):
+            if str(sort) == str(SORT_SCHEDULE_DT):
                 ordered_schedule_dict = {
-                    'member_schedule': func_get_member_schedule_all_by_schedule_dt(class_id, member_id)
+                    'member_schedule': func_get_member_schedule_all_by_schedule_dt(class_id, member_id, page)
                 }
+                # context['test'] = ordered_schedule_dict['member_schedule']
             elif str(sort) == str(SORT_SCHEDULE_MONTHLY):
-                ordered_schedule_dict = func_get_member_schedule_all_by_monthly(class_id, member_id)
+                ordered_schedule_dict = func_get_member_schedule_all_by_monthly(class_id, member_id, page)
+            elif str(sort) == str(SORT_MEMBER_TICKET):
+                ordered_schedule_dict = func_get_member_schedule_all_by_member_ticket(class_id, member_id, page)
+                # context['test'] = ordered_schedule_dict
         else:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
             messages.error(request, error)
-
+        # return render(request, self.template_name, context)
         return JsonResponse(ordered_schedule_dict, json_dumps_params={'ensure_ascii': True})
 
 
@@ -5115,6 +5123,376 @@ class GetNoticeInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context['board_list'] = board_list
 
         return context
+
+
+class GetProgramBoardIngListView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        program_board_dict = collections.OrderedDict()
+        class_id = request.session.get('class_id')
+        program_board_list = ProgramBoardTb.objects.filter(class_tb=class_id, auth_type_cd=AUTH_TYPE_VIEW, use=USE
+                                                           ).order_by('-reg_dt')
+
+        for program_board_info in program_board_list:
+            program_board_dict[program_board_info.program_board_id] = {
+                'program_board_id': program_board_info.program_board_id,
+                'program_board_type_cd': program_board_info.board_type_cd,
+                'program_board_member_id': program_board_info.member_id,
+                'program_board_class_id': program_board_info.class_tb_id,
+                'program_board_to_member_type_cd': program_board_info.to_member_type_cd,
+                'program_board_comment_available': program_board_info.comment_available,
+                'program_board_anonymous_available': program_board_info.anonymous_available,
+                'program_board_important_flag': program_board_info.important_flag,
+                'program_board_auth_type_cd': program_board_info.auth_type_cd,
+                'program_board_push_status': program_board_info.push_status,
+                'program_board_order': program_board_info.order,
+                'program_board_name': program_board_info.name,
+                'program_board_note': program_board_info.note,
+                'program_board_use': program_board_info.use}
+        return JsonResponse(program_board_dict, json_dumps_params={'ensure_ascii': True})
+
+
+class GetProgramBoardEndListView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        program_board_dict = collections.OrderedDict()
+        class_id = request.session.get('class_id')
+        program_board_list = ProgramBoardTb.objects.filter(class_tb=class_id, auth_type_cd=AUTH_TYPE_VIEW, use=UN_USE
+                                                           ).order_by('-reg_dt')
+
+        for program_board_info in program_board_list:
+            program_board_dict[program_board_info.program_board_id] = {
+                'program_board_id': program_board_info.program_board_id,
+                'program_board_type_cd': program_board_info.board_type_cd,
+                'program_board_member_id': program_board_info.member_id,
+                'program_board_class_id': program_board_info.class_tb_id,
+                'program_board_to_member_type_cd': program_board_info.to_member_type_cd,
+                'program_board_comment_available': program_board_info.comment_available,
+                'program_board_anonymous_available': program_board_info.anonymous_available,
+                'program_board_important_flag': program_board_info.important_flag,
+                'program_board_auth_type_cd': program_board_info.auth_type_cd,
+                'program_board_push_status': program_board_info.push_status,
+                'program_board_order': program_board_info.order,
+                'program_board_name': program_board_info.name,
+                'program_board_note': program_board_info.note,
+                'program_board_use': program_board_info.use}
+        return JsonResponse(program_board_dict, json_dumps_params={'ensure_ascii': True})
+
+
+class GetProgramBoardInfoView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        program_board_dict = collections.OrderedDict()
+        program_board_id = request.GET.get('program_board_id')
+        class_id = request.session.get('class_id')
+        error = None
+        if program_board_id is None or program_board_id == '':
+            error = '게시판 정보를 불러오지 못했습니다.'
+        if error is None:
+            try:
+                program_board_info = ProgramBoardTb.objects.get(program_board_id=program_board_id,
+                                                                class_tb=class_id, auth_type_cd=AUTH_TYPE_VIEW)
+                program_board_dict = {
+                    'program_board_id': program_board_info.program_board_id,
+                    'program_board_type_cd': program_board_info.board_type_cd,
+                    'program_board_member_id': program_board_info.member_id,
+                    'program_board_class_id': program_board_info.class_tb_id,
+                    'program_board_to_member_type_cd': program_board_info.to_member_type_cd,
+                    'program_board_comment_available': program_board_info.comment_available,
+                    'program_board_anonymous_available': program_board_info.anonymous_available,
+                    'program_board_important_flag': program_board_info.important_flag,
+                    'program_board_auth_type_cd': program_board_info.auth_type_cd,
+                    'program_board_push_status': program_board_info.push_status,
+                    'program_board_order': program_board_info.order,
+                    'program_board_name': program_board_info.name,
+                    'program_board_note': program_board_info.note,
+                    'program_board_use': program_board_info.use}
+            except ObjectDoesNotExist:
+                error = '게시판 정보를 불러오지 못했습니다.'
+        if error is not None:
+            context = {'messageArray': error}
+            return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+
+        return JsonResponse(program_board_dict, json_dumps_params={'ensure_ascii': True})
+
+
+class GetProgramBoardAllView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        notice_data_dict = collections.OrderedDict()
+        notice_data = NoticeTb.objects.filter().order_by('-reg_dt')
+
+        for notice_info in notice_data:
+            notice_data_dict[notice_info.notice_id] = {'notice_id': notice_info.notice_id,
+                                                       'notice_type_cd': notice_info.notice_type_cd,
+                                                       'notice_title': notice_info.title,
+                                                       'notice_contents': notice_info.contents,
+                                                       'notice_to_member_type_cd': notice_info.to_member_type_cd,
+                                                       'notice_hits': notice_info.hits,
+                                                       'notice_mod_dt': notice_info.mod_dt,
+                                                       'notice_reg_dt': notice_info.reg_dt,
+                                                       'notice_use': notice_info.use}
+
+        return JsonResponse(notice_data_dict, json_dumps_params={'ensure_ascii': True})
+
+
+def add_program_board_info_logic(request):
+
+    # NOTICE : 공지사항, BOARD : 게시판
+    board_type_cd = request.POST.get('board_type_cd', BOARD_TYPE_CD_NOTICE)
+    to_member_type_cd = request.POST.get('to_member_type_cd', 'trainee')
+    comment_available = request.POST.get('comment_available', UN_USE)
+    anonymous_available = request.POST.get('anonymous_available', UN_USE)
+    important_flag = request.POST.get('important_flag', UN_USE)
+    auth_type_cd = request.POST.get('auth_type_cd', AUTH_TYPE_VIEW)
+    push_status = request.POST.get('push_status', UN_USE)
+    name = request.POST.get('name', '')
+    note = request.POST.get('note', '')
+    use = request.POST.get('use', USE)
+    class_id = request.session.get('class_id')
+
+    context = {}
+    error = None
+    if board_type_cd == '' or board_type_cd is None:
+        error = '게시판 종류를 선택해주세요.'
+
+    if error is None:
+        program_board_info = ProgramBoardTb(board_type_cd=board_type_cd, class_tb_id=class_id,
+                                            member_id=request.user.id, to_member_type_cd=to_member_type_cd,
+                                            comment_available=comment_available, auth_type_cd=auth_type_cd,
+                                            anonymous_available=anonymous_available, important_flag=important_flag,
+                                            push_status=push_status, name=name, note=note, use=use)
+        program_board_info.save()
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        # messages.error(request, error)
+        context['messageArray'] = error
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
+def update_program_board_info_logic(request):
+
+    # NOTICE : 공지사항, BOARD : 게시판
+    program_board_id = request.POST.get('program_board_id')
+    board_type_cd = request.POST.get('board_type_cd', '')
+    to_member_type_cd = request.POST.get('to_member_type_cd', 'trainee')
+    comment_available = request.POST.get('comment_available', '')
+    anonymous_available = request.POST.get('anonymous_available', '')
+    important_flag = request.POST.get('important_flag', '')
+    auth_type_cd = request.POST.get('auth_type_cd', '')
+    push_status = request.POST.get('push_status', '')
+    name = request.POST.get('name', '')
+    note = request.POST.get('note', '')
+    use = request.POST.get('use', '')
+    class_id = request.session.get('class_id')
+
+    context = {}
+    error = None
+    program_board_info = None
+
+    if program_board_id is None or program_board_id == '':
+        error = '게시판 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            program_board_info = ProgramBoardTb.objects.get(program_board_id=program_board_id, class_tb=class_id)
+        except ObjectDoesNotExist:
+            error = '오류가 발생했습니다. [0]'
+
+    if error is None:
+        if board_type_cd != '' and board_type_cd is not None:
+            program_board_info.board_type_cd = board_type_cd
+        if to_member_type_cd != '' and to_member_type_cd is not None:
+            program_board_info.to_member_type_cd = to_member_type_cd
+        if comment_available != '' and comment_available is not None:
+            program_board_info.comment_available = comment_available
+        if anonymous_available != '' and anonymous_available is not None:
+            program_board_info.anonymous_available = anonymous_available
+        if important_flag != '' and important_flag is not None:
+            program_board_info.important_flag = important_flag
+        if auth_type_cd != '' and auth_type_cd is not None:
+            program_board_info.auth_type_cd = auth_type_cd
+        if push_status != '' and push_status is not None:
+            program_board_info.push_status = push_status
+        if name != '' and name is not None:
+            program_board_info.name = name
+        if note != '' and note is not None:
+            program_board_info.note = note
+        if use != '' and use is not None:
+            program_board_info.use = use
+        program_board_info.save()
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        # messages.error(request, error)
+        context['messageArray'] = error
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
+def delete_program_board_info_logic(request):
+
+    notice_id = request.POST.get('notice_id')
+    member_type_cd = request.session.get('group_name')
+
+    context = {}
+    error = None
+    notice_info = None
+
+    if member_type_cd != 'admin':
+        error = '관리자만 접근 가능합니다.'
+
+    if notice_id is None or notice_id == '':
+        error = '변경할 게시글을 선택해주세요.'
+
+    if error is None:
+        try:
+            notice_info = NoticeTb.objects.get(notice_id=notice_id)
+        except ObjectDoesNotExist:
+            error = '게시글을 불러오지 못했습니다.'
+
+    if error is None:
+        notice_info.delete()
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        # messages.error(request, error)
+        context['messageArray'] = error
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
+class GetProgramNoticeAllView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        class_id = request.session.get('class_id')
+        program_notice_data_dict = collections.OrderedDict()
+
+        program_notice_data = ProgramNoticeTb.objects.select_related(
+            'member').filter(class_tb_id=class_id).order_by('-reg_dt')
+
+        for program_notice_info in program_notice_data:
+            program_notice_data_dict[program_notice_info.program_notice_id] = {
+                'program_notice_id': program_notice_info.program_notice_id,
+                'program_notice_type_cd': program_notice_info.notice_type_cd,
+                'program_notice_title': program_notice_info.title,
+                'program_notice_contents': program_notice_info.contents,
+                'program_notice_to_member_type_cd': program_notice_info.to_member_type_cd,
+                'program_notice_hits': program_notice_info.hits,
+                'program_notice_mod_dt': str(program_notice_info.mod_dt),
+                'program_notice_reg_dt': str(program_notice_info.reg_dt),
+                'program_notice_reg_member_name': str(program_notice_info.member.name),
+                'program_notice_use': program_notice_info.use
+            }
+
+        return JsonResponse(program_notice_data_dict, json_dumps_params={'ensure_ascii': True})
+
+
+class AddProgramNoticeInfoView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def post(self, request):
+        # NOTICE : 공지사항, SYS_USAGE : 사용법 , FAQ : 자주 묻는 질문
+        notice_type_cd = request.POST.get('notice_type_cd', '')
+        title = request.POST.get('title', '')
+        contents = request.POST.get('contents', '')
+        to_member_type_cd = request.POST.get('to_member_type_cd')
+        use = request.POST.get('use', USE)
+        class_id = request.session.get('class_id')
+
+        context = {}
+        error = None
+
+        if notice_type_cd == '' or notice_type_cd is None:
+            error = '공지 유형을 선택해주세요.'
+
+        if error is None:
+            program_notice_info = ProgramNoticeTb(member_id=request.user.id, notice_type_cd=notice_type_cd,
+                                                  class_tb_id=class_id, title=title, contents=contents,
+                                                  to_member_type_cd=to_member_type_cd, use=use)
+            program_notice_info.save()
+
+        if error is not None:
+            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+            # messages.error(request, error)
+            context['messageArray'] = error
+
+        return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+
+
+class UpdateProgramNoticeInfoView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def post(self, request):
+        program_notice_id = request.POST.get('program_notice_id')
+        notice_type_cd = request.POST.get('notice_type_cd', '')
+        title = request.POST.get('title', '')
+        contents = request.POST.get('contents', '')
+        to_member_type_cd = request.POST.get('to_member_type_cd')
+        use = request.POST.get('use', USE)
+        # class_id = request.session.get('class_id')
+
+        context = {}
+        error = None
+        program_notice_info = None
+
+        if program_notice_id is None or program_notice_id == '':
+            error = '변경할 공지사항을 선택해주세요.'
+
+        if notice_type_cd == '' or notice_type_cd is None:
+            error = '공지 유형을 선택해주세요.'
+
+        if error is None:
+            try:
+                program_notice_info = ProgramNoticeTb.objects.get(program_notice_id=program_notice_id)
+            except ObjectDoesNotExist:
+                error = '공지사항을 불러오지 못했습니다.'
+
+        if error is None:
+            program_notice_info.member_id = request.user.id
+            program_notice_info.notice_type_cd = notice_type_cd
+            program_notice_info.title = title
+            program_notice_info.contents = contents
+            program_notice_info.to_member_type_cd = to_member_type_cd
+            program_notice_info.mod_dt = timezone.now()
+            program_notice_info.use = use
+            program_notice_info.save()
+
+        if error is not None:
+            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+            # messages.error(request, error)
+            context['messageArray'] = error
+
+        return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+
+
+class DeleteProgramNoticeInfoView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def post(self, request):
+        program_notice_id = request.POST.get('program_notice_id')
+
+        context = {}
+        error = None
+        program_notice_info = None
+
+        if program_notice_id is None or program_notice_id == '':
+            error = '변경할 공지사항을 선택해주세요.'
+
+        if error is None:
+            try:
+                program_notice_info = ProgramNoticeTb.objects.get(program_notice_id=program_notice_id)
+            except ObjectDoesNotExist:
+                error = '공지사항을 불러오지 못했습니다.'
+
+        if error is None:
+            program_notice_info.delete()
+
+        if error is not None:
+            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+            # messages.error(request, error)
+            context['messageArray'] = error
+
+        return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
 
 
 # 출석 체크 완료 기능

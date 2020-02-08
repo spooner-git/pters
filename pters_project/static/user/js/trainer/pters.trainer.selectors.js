@@ -3268,7 +3268,7 @@ class ColorSelector{
 
     render(){
         let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();color_select.clear();">${CImg.arrow_left()}</span>`;
-        let top_center = `<span class="icon_center"><span id="">&nbsp;</span></span>`;
+        let top_center = `<span class="icon_center"><span id="">색상 선택</span></span>`;
         let top_right = `<span class="icon_right" onclick="color_select.upper_right_menu();"><span style="color:var(--font-highlight);font-weight: 500;" hidden>완료</span></span>`;
         let content =   `<section>${this.dom_list()}</section>`;
         
@@ -3344,6 +3344,104 @@ class ColorSelector{
             // {color_code:"#664120", color_font_code:"#f5f2f3"}
         ];
         this.received_data = color_data;
+        callback();
+    }
+
+    upper_right_menu(){
+        this.callback(this.data);
+        layer_popup.close_layer_popup();
+        this.clear();
+    }
+}
+
+class BoardTypeSelector{
+    constructor(install_target, target_instance, multiple_select, callback){
+        this.target = {install:install_target};
+        this.target_instance = target_instance;
+        this.unique_instance = install_target.replace(/#./gi, "");
+        this.callback = callback;
+        this.received_data;
+        this.multiple_select = multiple_select;
+        this.data = {
+            board_type_cd:[],
+            board_type_cd_name:[],
+        };
+        this.data.board_type_cd = this.target_instance.board_type.board_type_cd;
+        this.data.board_type_cd_name = this.target_instance.board_type.board_type_cd_name;
+        this.init();
+    }
+
+    init(){
+        this.request_list(()=>{
+            this.render();
+            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
+        });
+    }
+
+    clear(){
+        setTimeout(()=>{
+            document.querySelector(this.target.install).innerHTML = "";
+        }, 300);
+    }
+
+    render(){
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();board_type_select.clear();">${CImg.arrow_left()}</span>`;
+        let top_center = `<span class="icon_center"><span id="">게시판 종류 선택</span></span>`;
+        let top_right = `<span class="icon_right" onclick="board_type_select.upper_right_menu();"><span style="color:var(--font-highlight);font-weight: 500;" hidden>완료</span></span>`;
+        let content =   `<section>${this.dom_list()}</section>`;
+
+        let html = PopupBase.base(top_left, top_center, top_right, content, "");
+
+        document.querySelector(this.target.install).innerHTML = html;
+    }
+
+    dom_list (){
+        let html_to_join = [];
+        let length = this.received_data.length;
+        if(length == 0){
+            html_to_join.push(CComponent.no_data_row('목록이 비어있습니다.'));
+        }
+        for(let i=0; i<length; i++){
+            let data = this.received_data[i];
+            let board_type_cd = data.board_type_cd;
+            let board_type_cd_name = PROGRAM_BOARD_TYPE[board_type_cd];
+            let checked = this.target_instance.board_type.board_type_cd.indexOf(board_type_cd) >= 0 ? 1 : 0; //타겟이 이미 가진 색상 데이터를 get
+            let html = CComponent.select_board_type_row (
+                this.multiple_select, checked, this.unique_instance, board_type_cd, board_type_cd_name, (add_or_substract)=>{
+                    if(add_or_substract == "add"){
+                        this.data.board_type_cd.push(board_type_cd);
+                        this.data.board_type_cd_name.push(board_type_cd_name);
+                    }else if(add_or_substract == "substract"){
+                        this.data.board_type_cd.splice(this.data.board_type.board_type_cd.indexOf(board_type_cd), 1);
+                        this.data.board_type_cd_name.splice(this.data.board_type.board_type_cd.indexOf(board_type_cd), 1);
+                    }else if(add_or_substract == "add_single"){
+                        this.data.board_type_cd = [];
+                        this.data.board_type_cd_name = [];
+                        this.data.board_type_cd.push(board_type_cd);
+                        this.data.board_type_cd_name.push(board_type_cd_name);
+                    }
+
+                    // this.target_instance.color = this.data; //타겟에 선택된 데이터를 set
+
+                    if(this.multiple_select == 1){
+                        this.upper_right_menu();
+                    }
+
+                }
+            );
+            html_to_join.push(html);
+        }
+
+        // document.querySelector(this.target.install).innerHTML = html_to_join.join('');
+        return html_to_join.join('');
+    }
+
+    request_list (callback){
+        let board_data = [
+            {board_type_cd:"NOTICE", board_type_cd_name:"공지"},
+            {board_type_cd:"BOARD", board_type_cd_name:"게시판"}
+        ];
+        this.received_data = board_data;
         callback();
     }
 
@@ -4604,7 +4702,9 @@ class BoardWriter{
         this.target = {install:install_target, instance:instance, upper_html:"section_board_writer_upper_html", category_selector:"section_board_writer_category_selector", content_writer:"section_board_writer_content_writer"};
         this.callback = callback;
         this.external_data = data;
+        this.if_user_changed_any_information = false;
         this.data = {
+            id:null,
             title:null,
             content:null,
             category:[
@@ -4613,6 +4713,7 @@ class BoardWriter{
             category_selected:{
                 
             },
+            new_check:true,
             visibility:{
                 title:SHOW,
                 content:SHOW
@@ -4644,13 +4745,18 @@ class BoardWriter{
     }
 
     render(){
-        let top_left = `<span class="icon_left" onclick="${this.target.instance}.close();">${CImg.arrow_left()}</span>`;
+        let top_left = `<span class="icon_left" onclick="${this.target.instance}.upper_left_menu();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center">
                             <span id="">${this.title}</span>
                           </span>`;
-        let top_right = `<span class="icon_right"  onclick="${this.target.instance}.upper_right_menu();">
-                            <span style="color:var(--font-highlight);font-weight: 500;">저장</span>
+        let top_right = `<span class="icon_right"  onclick="${this.target.instance}.upper_right_menu();">`;
+        if(this.data.new_check){
+            top_right += `<span style="color:var(--font-highlight);font-weight: 500;">저장</span>
                         </span>`;
+        }else{
+            top_right += `${CImg.delete(["#5c5859"])}`;
+        }
+
         let content =   `<section id="${this.target.upper_html}">${this.data.upper_html != null ? this.data.upper_html : ""}</section>`+
                         `<section id="${this.target.category_selector}">${this.dom_assembly_category()}</section>`+
                         `<section id="${this.target.content_writer}">${this.dom_content_assembly()}</section>`;
@@ -4662,7 +4768,7 @@ class BoardWriter{
     }
 
     render_upper_html(){
-        let html = this.data.upper_html != null ? this.data.upper_html : ""
+        let html = this.data.upper_html != null ? this.data.upper_html : "";
         document.getElementById(this.target.upper_html).innerHTML = html;
     }
 
@@ -4678,8 +4784,12 @@ class BoardWriter{
 
     dom_content_assembly (){
         // let upper_html = this.data.upper_html != null ? this.data.upper_html : "";
-        let title_input = `<div class="obj_input_box_full" style="padding:8px 16px;">`+ this.dom_row_subject_input() + `</div>`;
+        let title_input = `<div class="obj_input_box_full" style="padding:6px 20px;">`+ this.dom_row_subject_input() + `</div>`;
         let content_input = `<div class="obj_input_box_full">` + this.dom_row_content_input() + `</div>`;
+        let reg_mod_info = '';
+        if(!this.data.new_check){
+            reg_mod_info = `<div class="obj_input_box_full" style="padding:6px 20px">` + this.dom_row_reg_mod_date() + `</div>`;
+        }
         // let category = this.dom_assembly_category();
         let bottom_html = this.data.bottom_html != null ? this.data.bottom_html : "";
 
@@ -4691,7 +4801,8 @@ class BoardWriter{
         }
 
         let html =  
-                    title_input + 
+                    title_input +
+                    reg_mod_info +
                     content_input +
                     bottom_html;
 
@@ -4702,10 +4813,12 @@ class BoardWriter{
         let length = this.data.category.length;
         let html_to_join = [];
         for(let i=0; i<length; i++){
+            // let html = CComponent.dom_tag(this.data.category[i].title)+ this.dom_row_category(this.data.category[i]);
             let html = this.dom_row_category(this.data.category[i]);
             html_to_join.push(html);
         }
-        return html_to_join.join("");
+
+        return '<div class="obj_input_box_full" style="padding:8px 20px;">'+html_to_join.join("") + '</div>';
     }
 
     dom_row_subject_input(){
@@ -4717,16 +4830,21 @@ class BoardWriter{
         let icon_r_text = "";
         let style = null;
         let disabled = false;
-        let onfocusout = (data)=>{
-            this.data.title = data;
-            // this.render_content();
-        };
-        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+.,\\s 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
-        let pattern_message = "+ - _ ., 제외 특수문자는 입력 불가";
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+~.,\\s 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
+        let pattern_message = "+ - _ .,~ 제외 특수문자는 입력 불가";
         let required = "";
+        let onfocusout = (input_data)=>{
+            this.data.title = input_data;
+            this.if_user_changed_any_information = true;
+        };
         let row = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, onfocusout, pattern, pattern_message, required);
         let html = row;
         return html;
+        // let html = CComponent.create_input_textarea_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, (input_data)=>{
+        //     this.data.title = input_data;
+        //     this.if_user_changed_any_information = true;
+        // }, pattern, pattern_message, required);
+        // return html;
     }
 
     dom_row_content_input(){
@@ -4737,32 +4855,55 @@ class BoardWriter{
 
     dom_row_category(data){
         let category_id = data.id;
-        let category_title = data.title;
-        let category_data = data.data;
+        let category_title = this.data.category_selected[category_id].text.length == 0 ? data.title: this.data.category_selected[category_id].text;
+        let category_inner_title = data.title;
+        let option_data = data.data;
 
         let id = `dom_row_category_${category_id}`;
         let title = category_title;
         let icon = DELETE;
         let icon_r_visible = SHOW;
-        let icon_r_text = this.data.category_selected[category_id].text.length == 0 ? '' : this.data.category_selected[category_id].text;
-        // let style = {"display":"inline-block", 'padding':"16px", "padding-right":"0", "width":"43%", "min-width":"170px", "max-width":"208px", "font-size":"14px"};
-        // let style = {"display":"inline-block", 'padding':"16px", "padding-right":"0", "width":"43%", "min-width":"300px", "max-width":"320px", "font-size":"14px"};
-        let style = {"display":"inline-block", 'padding':"16px", "padding-right":"0", "width":`${ this.data.category.length > 1 ? "50%" : "100%"}`, "height":"56px", "font-size":"14px", "box-sizing":"border-box"};
-        let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            let title = category_title;
+        let icon_r_text = "";
+        let style = this.data.category_selected[category_id].text.length == 0 ? {"color":"var(--font-inactive)"} : null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            // let title = this.data.category_selected[category_id].text;
             let install_target = "#wrapper_box_custom_select";
             let multiple_select = 1;
-            let data = category_data;
+            let data = option_data;
             let selected_data = this.data.category_selected[category_id];
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, popup_style, null, ()=>{
-                custom_selector = new CustomSelector(title, install_target, multiple_select, data, selected_data, (set_data)=>{
+                custom_selector = new CustomSelector(category_inner_title, install_target, multiple_select, data, selected_data, (set_data)=>{
                     this.data.category_selected[category_id] = set_data;
                     this.render_category_selector();
+                    this.if_user_changed_any_information = true;
                 });
             });
         });
-        let html = row;
+        return html;
+    }
+
+
+    dom_row_reg_mod_date(){
+        // let icon_button_style = {"display":"block", "padding":0, "font-size":"12px"};
+        let style = {"font-size":"10px", "height":"25px", "line-height":"25px", "padding":"0", "color":"#b3b3b3"};
+
+        let member_name = this.data.reg_member_name;
+        let reg_date = DateRobot.to_text(this.data.reg_dt.split(" ")[0]) + ' ' +
+                            TimeRobot.to_text(this.data.reg_dt.split(" ")[1]);
+        let mod_date = DateRobot.to_text(this.data.mod_dt.split(" ")[0]) + ' ' +
+                            TimeRobot.to_text(this.data.mod_dt.split(" ")[1]);
+
+        let reg_date_text = reg_date == mod_date ? reg_date + ' - ' + member_name : reg_date;
+        let mod_date_text = mod_date + ' - ' + member_name;
+
+        let html1 = CComponent.create_row('reg_date_view', `등록: ${reg_date_text}`, DELETE, NONE, "", style, ()=>{});
+        let html2 = CComponent.create_row('mod_date_view', `수정: ${mod_date_text}`, DELETE, NONE, "", style, ()=>{});
+
+        let html = html1 + html2;
+        if(reg_date_text == mod_date_text){
+            html = html1;
+        }
         return html;
     }
 
@@ -4789,12 +4930,12 @@ class BoardWriter{
             tabsize: 2,
             lang: 'ko-KR',
             toolbar: [
-                ['style', ['bold', 'italic', 'underline', 'clear']],
+                // ['style', ['bold', 'italic', 'underline', 'clear']],
                 // ['fontsize', ['fontsize']],
-                ['color', ['color']],
+                // ['color', ['color']],
                 ['insert', ['picture', 'video']],
-                ['para', ['paragraph']],
-                ['table', ['table']],
+                // ['para', ['paragraph']],
+                // ['table', ['table']],
             ],
             focus: false,
             // fontSize: 14,
@@ -4864,6 +5005,7 @@ class BoardWriter{
                         return false;
                     }
                 }
+                this.if_user_changed_any_information = true;
                 $('#board_writer_content_input').summernote('insertImage', data.img_url);
             },
 
@@ -4886,11 +5028,64 @@ class BoardWriter{
         this.clear();
         layer_popup.close_layer_popup();
     }
+    upper_left_menu(){
+        let content_value = $('#board_writer_content_input').summernote('code');
+        if(this.data.content != content_value){
+            this.data.content = content_value;
+            this.if_user_changed_any_information = true;
+        }
+        if(this.data.new_check){
+            this.if_user_changed_any_information = false;
+        }
+        if(this.if_user_changed_any_information == true){
+            let inspect = pass_inspector.program_notice_update();
+            if(inspect.barrier == BLOCKED){
+                let message = `${inspect.limit_type}`;
+                layer_popup.close_layer_popup();
+                this.clear();
+                show_error_message({title:message});
+                return false;
+            }
 
+            let user_option = {
+                confirm:{text:"변경사항 적용", callback:()=>{this.callback(this.data);layer_popup.close_layer_popup();layer_popup.close_layer_popup();this.clear();}},
+                cancel:{text:"아무것도 변경하지 않음", callback:()=>{ layer_popup.close_layer_popup();layer_popup.close_layer_popup();this.clear();}}
+            };
+            let options_padding_top_bottom = 16;
+            // let button_height = 8 + 8 + 52;
+            let button_height = 52;
+            let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
+            let root_content_height = $root_content.height();
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
+                option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+            });
+        }else{
+            layer_popup.close_layer_popup();this.clear();
+        }
+    }
     upper_right_menu(){
+
+        if(this.data.new_check){
+            this.save_data();
+        }
+        else{
+            show_user_confirm({title:"공지사항을 완전 삭제 하시겠습니까? <br> 다시 복구할 수 없습니다."}, ()=>{
+                ProgramNotice_func.delete({"program_notice_id":this.data.id}, ()=>{
+                    try{
+                        program_notice_list_popup.init();
+                    }catch(e){
+                    }
+                    layer_popup.close_layer_popup();
+                    layer_popup.close_layer_popup();
+                    this.clear();
+                });
+            });
+        }
+    }
+
+    save_data(){
         let content_value = $('#board_writer_content_input').summernote('code');
         this.data.content = content_value;
-
         if(this.data.title == null){
             show_error_message({title:"제목을 입력해주세요."});
             return false;
@@ -4901,17 +5096,18 @@ class BoardWriter{
         }
         if(this.data.category.length > 0){
             let selected_value_ok = true;
+            let category_type = "";
             for(let item in this.data.category_selected){
                 if(this.data.category_selected[item].value.length == 0){
                     selected_value_ok = false;
+                    category_type = PROGRAM_BOARD_CATEGORY[item];
                 }
             }
             if(selected_value_ok == false){
-                show_error_message({title:"카테고리를 선택해주세요."})
+                show_error_message({title:category_type + "를 선택해주세요."});
                 return false;
             }
         }
-
         this.callback(this.data);
         layer_popup.close_layer_popup();
         this.clear();

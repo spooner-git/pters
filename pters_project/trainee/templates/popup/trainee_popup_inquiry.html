@@ -1,0 +1,145 @@
+{% extends 'popup/trainee_base_popup.html' %}
+{% load static_url %}
+{% block popup_base_css %}
+    <link rel="stylesheet" href={% static_url "user/css/trainee/popup/pters.trainee.popup.inquiry.css" %}>
+    <style type="text/css">
+        .trainee_inquiry{
+            background-color: #f2f2f2;
+        }
+        .wrapper_inquiry_type_select{
+            -webkit-appearance:none;
+            background-color: #ffffff;
+            height: 40px;
+            width: 100%;
+            border-radius: 2px;
+            border:0;
+            font-size:13px;
+        }
+        .wrapper_trainee_iquiry_textarea{
+            resize: none;
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        textarea{
+            font-family: 'Noto Sans KR', sans-serif !important;
+        }
+    </style>
+{% endblock %}
+<!-- pters.trainee.popup.plan_reserve.css -->
+{% block popup_base_contents %}
+    <div class="popup_inquiry">
+        <div class="wrapper_inquiry_title">
+            <div class="wrapper_popup_title_text obj_font_size_18_weight_900">피터스에게 문의하기</div>
+        </div>
+
+        <div class="obj_box_full">
+            <select class="wrapper_inquiry_type_select">
+                <option disabled selected>문의 유형 선택</option>
+                {% for qa_type_info in qa_type_data %}
+                    <option value="{{ qa_type_info.common_cd }}">{{ qa_type_info.common_cd_nm }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="trainee_inquiry">
+            <form id="form_inquiry"  action="{% url 'board:add_qa_info' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="next_page" value="{% url 'trainee:trainee_inquiry' %}">
+                <input type="hidden" name="inquire_type" id="id_inquire_type">
+                <input type="hidden" name="inquire_body" id="id_inquire_body">
+                <input type="hidden" name="inquire_subject" id="id_inquire_subject" value="[수강회원문의]">
+            </form>
+            <textarea id="inquiry_textarea" class="wrapper_trainee_iquiry_textarea obj_box_full" placeholder="문의 내용을 입력 해주세요.&#13;&#10;"></textarea>
+        </div>
+
+    </div>
+{% endblock %}
+{% block popoup_base_wrapper_bottom_inside %}
+    <div id="button_inquiry_send" class="obj_button_big obj_font_bg_white_coral">문의하기</div>
+{% endblock %}
+
+{% block popup_base_js %}
+    <script type="text/javascript">
+        let device_height = $(window).height();
+        let select_box_height = 115;
+        let button_height = 55;
+        let margins = 15;
+        let nav_bar_height = parseInt($('body').css('padding-top')) + 80;
+        let iphone_scroll_vibe_margin = 2;
+
+        $('.wrapper_trainee_iquiry_textarea').css('height', device_height-nav_bar_height-select_box_height-button_height-margins-iphone_scroll_vibe_margin);
+
+        func_set_webkit_overflow_scrolling('.wrapper_trainee_iquiry_textarea');
+
+
+        $('#button_inquiry_send').click(function(){
+            let type = $('#id_inquire_type');
+            let body = $('#id_inquire_body');
+            func_send_inquiry(type, body);
+        });
+
+        $('.wrapper_inquiry_type_select').change(function(){
+            $('#id_inquire_type').val($(this).val());
+        });
+
+        function func_send_inquiry(type, body){
+            let validity = func_check_inquiry_validity(type, body);
+            if(validity == false){
+                return false;
+            }
+{#            $('#form_inquiry').submit();#}
+
+            $.ajax({
+                url : "/board/add_qa_info/",
+                type:'POST',
+                data: $('#form_inquiry').serialize(),
+                dataType : 'json',
+
+                beforeSend:function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                },
+
+                //보내기후 팝업창 닫기
+                complete:function(){
+
+                },
+
+                //통신성공시 처리
+                success:function(data){
+                    if(data.messageArray != undefined){
+                        if(data.messageArray.length > 0){
+                            show_error_message({title:data.messageArray[0]});
+                            return false;
+                        }
+                    }
+                    alert('문의 발송 완료');
+                    layer_popup.close_layer_popup();
+                },
+
+                //통신 실패시 처리
+                error:function(){
+                    show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
+                    // location.reload();
+                }
+            });
+        }
+
+        function func_check_inquiry_validity(type, body){
+            var content = $('#inquiry_textarea').val();
+            content = content.replace(/(?:\r\n|\r|\n)/g, '<br>');
+            $('#id_inquire_body').val(content);
+            if(type.val() == ""){
+                show_error_message({title:'문의 유형을 선택해주세요.'});
+                return false;
+            }
+            if(body.val() == ""){
+                show_error_message({title:'문의 내용을 작성해주세요.'});
+                return false;
+            }
+            return true;
+        }
+    </script>
+{% endblock %}

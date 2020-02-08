@@ -752,7 +752,7 @@ class Member_view{
                             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
                                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
                             }
-                            ajax_load_image(SHOW);
+                            // ajax_load_image(SHOW);
                         },
 
                         success:function(data){
@@ -771,7 +771,7 @@ class Member_view{
                         },
 
                         complete:function(){
-                            ajax_load_image(HIDE);
+                            // ajax_load_image(HIDE);
                         },
 
                         error:function(){

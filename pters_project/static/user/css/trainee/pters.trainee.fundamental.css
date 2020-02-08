@@ -203,6 +203,12 @@
         width: 18px;
         vertical-align: middle;
     }
+    #nav_btn_program_notice{
+
+    }
+        #nav_btn_program_notice > img{
+            padding: 11px;
+        }
     #nav_btn_alarm{
 
     }

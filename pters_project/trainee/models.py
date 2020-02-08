@@ -66,3 +66,15 @@ class MemberMemberTicketTb(TimeStampedModel):
         except ObjectDoesNotExist:
             auth_cd_name = ''
         return auth_cd_name
+
+
+class ProgramNoticeHistoryTb(TimeStampedModel):
+    program_notice_history_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    program_notice_tb = models.ForeignKey("trainer.ProgramNoticeTb", on_delete=models.CASCADE, null=True)
+    member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, null=True)
+    class_tb = models.ForeignKey("trainer.ClassTb", on_delete=models.CASCADE, null=True)
+    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'PROGRAM_NOTICE_MEMBER_READ_HISTORY_TB'
