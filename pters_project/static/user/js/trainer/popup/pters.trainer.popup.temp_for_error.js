@@ -40,7 +40,7 @@ class TempForError {
 
         let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();temp_for_error.clear();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right" onclick="temp_for_error.open_confirm_popup_do_not_popup_anymore()"><span style="font-weight:bold;">더이상 보지 않기</span></span>`;
+        let top_right = `<span class="icon_right" onclick="temp_for_error.open_confirm_popup_do_not_popup_anymore()"><span style="font-weight:bold;color:#fe4e65;text-decoration:underline">데이터에 이상 없음</span></span>`;
         let content =   `<div class="search_bar"></div>
                         <section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
@@ -144,6 +144,7 @@ class TempForError {
                         "refund_date": data.member_ticket_refund_date == "None" ? null : DateRobot.to_split(data.member_ticket_refund_date), 
                         "refund_date_text": data.member_ticket_refund_date == "None" ? null : DateRobot.to_text(data.member_ticket_refund_date, "", "", SHORT),
                         "refund_price":data.member_ticket_refund_price, "note":data.member_ticket_note, "pay_method":data.member_ticket_pay_method};
+                        console.log("external_data",external_data);
             member_ticket_modify = new Member_ticket_modify('.popup_member_ticket_modify', external_data, 'member_ticket_modify', ()=>{
                 this.init();
             });
@@ -152,7 +153,7 @@ class TempForError {
 
     open_confirm_popup_do_not_popup_anymore(){
         show_user_confirm(
-            {title:"이 안내를 더 이상 보지 않으시겠습니까?", comment:""},
+            {title:"데이터에 이상이 없음을 확인하십니까?", comment:"더 이상 데이터를 수정하는 이 팝업을 보지 않습니다."},
             ()=>{
                 this.event_noproblem();
             }

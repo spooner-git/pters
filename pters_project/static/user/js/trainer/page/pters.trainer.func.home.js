@@ -139,7 +139,7 @@ class Home {
                                         this.temp_for_error = HIDE;
                                         temp_for_error = "";
                                     }
-                                    let html = current_date + program_dom + plan_dom + end_alert_dom + sales_summary_dom + temp_for_error;
+                                    let html = temp_for_error + current_date + program_dom + plan_dom + end_alert_dom + sales_summary_dom;
                                     document.querySelector('#home_content_wrap').innerHTML = html;
                                 }
                             );
@@ -188,7 +188,7 @@ class Home {
             temp_for_error = "";
         }
                         
-        let html = current_date_dom + program_dom + plan_dom + end_alert_dom + sales_summary_dom + temp_for_error;
+        let html = temp_for_error + current_date_dom + program_dom + plan_dom + end_alert_dom + sales_summary_dom;
         document.querySelector('#home_content_wrap').innerHTML = html;
     }
 
