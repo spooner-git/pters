@@ -96,7 +96,7 @@ class TempForError {
                 {height:"auto"},
                 ()=>{ //onclick
                     // show_error_message({title:data.member_ticket_id});
-                    this.event_popup_member_ticket_info(data.member_ticket_id, data.member_name);
+                    this.event_popup_member_ticket_info(data.member_ticket_id, data.member_name, data.member_id);
                 }
             )+
             `<div style="position:absolute;top:15px;right:15px;color:var(--font-sub-normal);font-size:13px;font-weight:500;">수정 ${CImg.arrow_right([""], {"vertical-align":"middle"})}</div>`
@@ -105,13 +105,13 @@ class TempForError {
         return html;
     }
 
-    event_popup_member_ticket_info(member_ticket_id, member_name){
+    event_popup_member_ticket_info(member_ticket_id, member_name, member_id){
         TempForError_func.ajax(
             '/trainer/get_member_ticket_info/',
             "GET",
             {"member_ticket_id": member_ticket_id},
             (data)=>{ //callback
-                this.open_popup_member_ticket_modify(data[member_ticket_id], member_name);
+                this.open_popup_member_ticket_modify(data[member_ticket_id], member_name, member_id);
             },
             ()=>{ //error_callback
 
@@ -119,10 +119,10 @@ class TempForError {
         );
     }
 
-    open_popup_member_ticket_modify(data, member_name){
+    open_popup_member_ticket_modify(data, member_name, member_id){
         let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_TICKET_MODIFY, 100, popup_style, null, ()=>{
-            let external_data = {"member_id":null, "member_name":member_name, "member_ticket_id":data.member_ticket_id, "member_ticket_name":data.member_ticket_name, 
+            let external_data = {"member_id":member_id, "member_name":member_name, "member_ticket_id":data.member_ticket_id, "member_ticket_name":data.member_ticket_name, 
                         "start_date": DateRobot.to_split(data.member_ticket_start_date), "start_date_text": DateRobot.to_text(data.member_ticket_start_date, "", "", SHORT),
                         "end_date": DateRobot.to_split(data.member_ticket_end_date), "end_date_text": data.member_ticket_end_date == "9999-12-31" ? "소진 시까지" : DateRobot.to_text(data.member_ticket_end_date, "", "", SHORT),
                         "reg_count":data.member_ticket_reg_count, "price":data.member_ticket_price, "status":data.member_ticket_state_cd,
