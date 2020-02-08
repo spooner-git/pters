@@ -306,6 +306,7 @@
 <!-- 페이지 스크립트 로드-->
 
 <!-- ajax 팝업 JS 로드 -->
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.temp_for_error.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.plan_view.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.plan_add.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.plan_repeat_list.js" %}></script>
@@ -465,6 +466,7 @@
     // 페이지 인스턴스
 
     // 팝업 인스턴스
+    var temp_for_error;
     var plan_view_popup;
     var plan_add_popup;
     var plan_repeat_list_popup;
