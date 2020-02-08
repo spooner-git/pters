@@ -171,8 +171,8 @@ class TempForError {
                     </div>
                     <div style="font-size:14px;">
                         <p style="margin-bottom:0">2020.2.1 업데이트 이후 회원 등록시 입력하신 가격이 정상적으로 반영되지 않는 문제가 일부 이용자님들께 발생하였습니다.</p>
-                        <p style="margin-top:0">고객님께서 입력하신 가격이 아닌 0원이 들어가 있는 데이터를 확인하시고, 수정을 부탁드립니다.</p>
-                        <p style="margin:0;">시스템 이용에 불편을 드린 점 고개 숙여 사과드립니다.  - 피터스팀 일동</p>
+                        <p style="margin-top:0">고객님께서 입력하신 가격이 아닌, 0원이 들어가 있는 데이터를 확인하시고, 수정을 부탁드립니다.</p>
+                        <p style="margin:0;">시스템 이용에 불편을 드린 점 고개 숙여 사과드립니다.  <br>- 피터스팀 일동</p>
                     </div>
                         `;
         return html;
