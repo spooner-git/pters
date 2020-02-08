@@ -1,8 +1,9 @@
 class Member_ticket_modify{
-    constructor(install_target, data, instance){
+    constructor(install_target, data, instance, callback){
         this.target = {install: install_target, toolbox:'section_member_ticket_modify_toolbox', content:'section_member_ticket_modify_content'};
         this.instance = instance;
         this.external_data = data;
+        this.callback = callback;
         this.form_id = 'id_member_ticket_modify_form';
 
         let d = new Date();
@@ -659,6 +660,9 @@ class Member_ticket_modify{
                 member_view_popup.init();
                 member_ticket_history.init();
             }catch(e){}
+            if(this.callback != undefined){
+                this.callback();
+            }
         });
     }
 

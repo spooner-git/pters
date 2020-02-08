@@ -37,17 +37,17 @@ class GetSalesListViewAjax(LoginRequiredMixin, TemplateView):
             error = '종료 일자를 선택해주세요.'
 
         if error is None:
-            try:
-                finish_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
-                month_first_day = datetime.datetime.strptime(start_date, '%Y-%m-%d')
-                month_first_day = month_first_day.replace(day=1)
-                self.request.session['sales_start_date'] = str(month_first_day.date())
-                self.request.session['sales_finish_date'] = str(finish_date.date())
-                sales_data_result = get_sales_data(class_id, month_first_day, finish_date)
-            except TypeError:
-                error = '날짜 형식에 문제 있습니다.[1]'
-            except ValueError:
-                error = '날짜 형식에 문제 있습니다.[2]'
+            # try:
+            finish_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
+            month_first_day = datetime.datetime.strptime(start_date, '%Y-%m-%d')
+            month_first_day = month_first_day.replace(day=1)
+            self.request.session['sales_start_date'] = str(month_first_day.date())
+            self.request.session['sales_finish_date'] = str(finish_date.date())
+            sales_data_result = get_sales_data(class_id, month_first_day, finish_date)
+            # except TypeError:
+            #     error = '날짜 형식에 문제 있습니다.[1]'
+            # except ValueError:
+            #     error = '날짜 형식에 문제 있습니다.[2]'
 
         if error is None:
             if sales_data_result['error'] is None:
