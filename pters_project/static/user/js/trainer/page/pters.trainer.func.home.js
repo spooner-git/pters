@@ -88,6 +88,7 @@ class Home {
         let end_alert_dom;
         let sales_summary_dom;
         let my_pters_pass_dom;
+        let pters_notice_dom;
 
         Setting_menu_access_func.read((data)=>{
             this.setting_data_cache = data;
@@ -123,8 +124,9 @@ class Home {
 
                             my_pters_pass_dom = '<div class="contents">' + this.dom_row_my_pters_pass() + '</div>';
                             current_date = '<div class="contents">' + this.dom_row_current_date() + '</div>';
+                            pters_notice_dom = '<div class="contents">' + this.dom_row_pters_notice() + '</div>';
 
-                            let html = current_date + program_dom + plan_dom + end_alert_dom + sales_summary_dom;
+                            let html = pters_notice_dom + current_date + program_dom + plan_dom + end_alert_dom + sales_summary_dom;
                             document.querySelector('#home_content_wrap').innerHTML = html;
                             // $('#root_content').scrollTop(0);
                         });
@@ -162,13 +164,33 @@ class Home {
 
         let my_pters_pass_dom;
         my_pters_pass_dom = '<div class="contents">' + this.dom_row_my_pters_pass() + '</div>';
+
+        let pters_notice_dom;
+        pters_notice_dom = '<div class="contents">' + this.dom_row_pters_notice() + '</div>';
                         
-        let html = current_date_dom + program_dom + plan_dom + end_alert_dom + sales_summary_dom;
+        let html = pters_notice_dom + current_date_dom + program_dom + plan_dom + end_alert_dom + sales_summary_dom;
         document.querySelector('#home_content_wrap').innerHTML = html;
     }
 
-    dom_row_current_date(){
+    dom_row_pters_notice(){
+        let id = "pters_notice_dom";
+        let title = `<span style="color:#fe4e65">!! 일부이용자 가격 입력오류 수정</span>`;
+        let icon = DELETE;
+        let icon_r_visible = NONE;
+        let icon_r_text = ``;
+        let style = {"font-size":"15px", "font-weight":"bold"};
+        let onclick = ()=>{
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_temp_for_error', 100, POPUP_FROM_RIGHT, null, ()=>{
+                temp_for_error = new TempForError('.popup_temp_for_error', 'temp_for_error');});
+        };
+        let my_pters_pass = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
+        let dom = `<article class="my_pters_pass_wrapper">
+                        ${my_pters_pass}
+                    </article>`;
+        return dom;
+    }
 
+    dom_row_current_date(){
         let id = "home_current_date";
         let title = `${this.current_year}${TEXT.unit.year[language]} ${this.current_month}${TEXT.unit.month[language]} ${this.current_date}${TEXT.unit.date[language]} (${DAYNAME_KR[this.current_day]})`;
         let icon = DELETE;
