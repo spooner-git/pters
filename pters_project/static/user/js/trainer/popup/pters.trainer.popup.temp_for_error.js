@@ -13,13 +13,21 @@ class TempForError {
     }
 
     set_initial_data (){
-        this.data = [
-            {member_ticket_id:13299, member_ticket_name:"수강권 이름", member_name:"회원 이름1", reg:"2020-2-2", price:"0"},
-            {member_ticket_id:13299, member_ticket_name:"수강권 이름", member_name:"회원 이름2", reg:"2020-2-3", price:"0"},
-            {member_ticket_id:13299, member_ticket_name:"수강권 이름", member_name:"회원 이름3", reg:"2020-2-4", price:"0"}
-        ];
-
-        this.render();
+        let received_data = [];
+        TempForError_func.ajax(
+            "/trainer/get_trainer_member_ticket_price_bug_list/",
+            "GET",
+            "",
+            (data)=>{
+                for(let ticket in data){
+                    received_data.push(
+                        data[ticket]
+                    );
+                }
+                this.data = received_data;
+                this.render();
+            }
+        );   
     }
 
     clear(){
@@ -32,7 +40,7 @@ class TempForError {
 
         let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();temp_for_error.clear();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right"></span>`;
+        let top_right = `<span class="icon_right" onclick="temp_for_error.open_confirm_popup_do_not_popup_anymore()">더이상 보지 않기</span>`;
         let content =   `<div class="search_bar"></div>
                         <section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
@@ -72,37 +80,38 @@ class TempForError {
         let content = 
             `
                 <div ${flex_style}><div ${flex_child1}>회원명</div><div ${flex_child2}>${data.member_name}</div></div>
-                <div ${flex_style}><div ${flex_child1}>등록일</div><div ${flex_child2}>${data.reg}</div></div>
+                <div ${flex_style}><div ${flex_child1}>등록일</div><div ${flex_child2}>${data.member_ticket_reg_dt.split('.')[0]}</div></div>
                 <div ${flex_style}><div ${flex_child1}>수강권명</div><div ${flex_child2}>${data.member_ticket_name}</div></div>
-                <div ${flex_style}><div ${flex_child1}>가격</div><div ${flex_child2}>${data.price} 원</div></div>
+                <div ${flex_style}><div ${flex_child1}>가격</div><div ${flex_child2}>${data.member_ticket_price} 원</div></div>
             `;
 
         let html = 
-        `<article style="margin:10px 15px;padding:0px 15px;border:1px solid var(--bg-sub-light);border-radius:4px;">`+
+        `<article style="position:relative;margin:10px 15px;padding:0px 15px;border:1px solid var(--bg-sub-light);border-radius:4px;">`+
             CComponent.create_row(
                 `temp_for_error_${data.member_ticket_id}`,
                 content,
                 DELETE,
-                SHOW,
-                "수정",
+                NONE,
+                "",
                 {height:"auto"},
                 ()=>{ //onclick
                     // show_error_message({title:data.member_ticket_id});
-                    this.event_popup_member_ticket_info(data.member_ticket_id);
+                    this.event_popup_member_ticket_info(data.member_ticket_id, data.member_name, data.member_id);
                 }
-            )
+            )+
+            `<div style="position:absolute;top:15px;right:15px;color:var(--font-sub-normal);font-size:13px;font-weight:500;">수정 ${CImg.arrow_right([""], {"vertical-align":"middle"})}</div>`
         +'</article>';
         
         return html;
     }
 
-    event_popup_member_ticket_info(member_ticket_id){
+    event_popup_member_ticket_info(member_ticket_id, member_name, member_id){
         TempForError_func.ajax(
             '/trainer/get_member_ticket_info/',
             "GET",
             {"member_ticket_id": member_ticket_id},
             (data)=>{ //callback
-                this.open_popup_member_ticket_modify(data[member_ticket_id]);
+                this.open_popup_member_ticket_modify(data[member_ticket_id], member_name, member_id);
             },
             ()=>{ //error_callback
 
@@ -110,10 +119,24 @@ class TempForError {
         );
     }
 
-    open_popup_member_ticket_modify(data){
+    event_noproblem(){
+        TempForError_func.ajax(
+            '/trainer/add_trainer_member_ticket_price_bug_check/',
+            "POST",
+            "",
+            ()=>{
+
+            },
+            ()=>{
+                layer_popup.close_layer_popup();
+            }
+        );
+    }
+
+    open_popup_member_ticket_modify(data, member_name, member_id){
         let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_TICKET_MODIFY, 100, popup_style, null, ()=>{
-            let external_data = {"member_id":null, "member_name":null, "member_ticket_id":data.member_ticket_id, "member_ticket_name":data.member_ticket_name, 
+            let external_data = {"member_id":member_id, "member_name":member_name, "member_ticket_id":data.member_ticket_id, "member_ticket_name":data.member_ticket_name, 
                         "start_date": DateRobot.to_split(data.member_ticket_start_date), "start_date_text": DateRobot.to_text(data.member_ticket_start_date, "", "", SHORT),
                         "end_date": DateRobot.to_split(data.member_ticket_end_date), "end_date_text": data.member_ticket_end_date == "9999-12-31" ? "소진 시까지" : DateRobot.to_text(data.member_ticket_end_date, "", "", SHORT),
                         "reg_count":data.member_ticket_reg_count, "price":data.member_ticket_price, "status":data.member_ticket_state_cd,
@@ -122,12 +145,18 @@ class TempForError {
                         "refund_price":data.member_ticket_refund_price, "note":data.member_ticket_note, "pay_method":data.member_ticket_pay_method};
             member_ticket_modify = new Member_ticket_modify('.popup_member_ticket_modify', external_data, 'member_ticket_modify', ()=>{
                 this.init();
-                console.log("새로 고침");
             });
         });
     }
 
-
+    open_confirm_popup_do_not_popup_anymore(){
+        show_user_confirm(
+            {title:"이 안내를 더 이상 보지 않으시겠습니까?", comment:""},
+            ()=>{
+                this.event_noproblem();
+            }
+        );
+    }
 
     dom_row_toolbox(){
         let title = "가격 입력오류 수정";
@@ -187,7 +216,7 @@ class TempForError_func{
                     error_callback();
                 }
                 show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
-                location.reload();
+                // location.reload();
             }
         });
     }
