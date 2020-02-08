@@ -1938,6 +1938,9 @@ class PopupInquiryHistoryInfoView(TemplateView):
             if qa_info.status_type_cd == 'QA_COMPLETE':
                 try:
                     qa_comment_info = QACommentTb.objects.get(qa_tb_id=qa_id)
+                    if qa_comment_info.read == 0:
+                        qa_comment_info.read = 1
+                        qa_comment_info.save()
                 except ObjectDoesNotExist:
                     qa_comment_info = None
 
