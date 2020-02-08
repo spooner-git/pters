@@ -30,7 +30,7 @@ class Member_add{
                 ticket_name:[],
                 ticket_effective_days:[],
                 ticket_reg_count:[null],
-                ticket_price:[],
+                ticket_price:[null],
                 pay_method:{value:["NONE"], text:["선택 안함"]},
                 start_date:null,
                 start_date_text:null,
@@ -711,7 +711,7 @@ class Member_add{
     dom_row_member_reg_price_input(){
         let unit = '원';
         let id = 'input_reg_price';
-        let title = this.data.ticket_price.length == 0 ? '' : UnitRobot.numberWithCommas(this.data.ticket_price);
+        let title = this.data.ticket_price.length == 0 || this.data.ticket_price[0] == null ? '' : UnitRobot.numberWithCommas(this.data.ticket_price[0]);
         let placeholder = '가격';
         let icon = NONE;
         let icon_r_visible = HIDE;
