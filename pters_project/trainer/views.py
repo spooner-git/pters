@@ -5723,7 +5723,6 @@ class GetTrainerMemberTicketPriceBugListView(LoginRequiredMixin, AccessTestMixin
 
 
 def add_trainer_member_ticket_price_bug_check_logic(request):
-    error_message = None
     context = {}
 
     class_id = request.session.get('class_id', '')
@@ -5740,6 +5739,27 @@ def add_trainer_member_ticket_price_bug_check_logic(request):
             bug_info = BugMemberTicketPriceTb(member_id=request.user.id,
                                               class_tb_id=class_id, bug_check=1, use=USE)
             bug_info.save()
+
+    if error is not None:
+        messages.error(request, error)
+        context['messageArray'] = error
+    return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+
+
+def delete_trainer_member_ticket_price_bug_check_logic(request):
+    context = {}
+
+    class_id = request.session.get('class_id', '')
+    error = None
+    if class_id is None or class_id == '':
+        error = '오류가 발생했습니다.'
+
+    if error is None:
+        try:
+            bug_info = BugMemberTicketPriceTb.objects.get(class_tb_id=class_id)
+            bug_info.delete()
+        except ObjectDoesNotExist:
+            error = None
 
     if error is not None:
         messages.error(request, error)
