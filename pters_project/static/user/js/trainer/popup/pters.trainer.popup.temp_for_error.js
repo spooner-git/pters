@@ -158,8 +158,6 @@ class TempForError {
         );
     }
 
-
-
     dom_row_toolbox(){
         let title = "가격 입력오류 수정";
         let html = `<div class="lecture_upper_box">
