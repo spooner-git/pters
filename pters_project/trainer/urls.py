@@ -349,6 +349,8 @@ urlpatterns = [
 
     url(r'^add_trainer_member_ticket_price_bug_check/$',
         views.add_trainer_member_ticket_price_bug_check_logic, name='add_trainer_member_ticket_price_bug_check'),
+    url(r'^delete_trainer_member_ticket_price_bug_check/$',
+        views.delete_trainer_member_ticket_price_bug_check_logic, name='delete_trainer_member_ticket_price_bug_check'),
     url(r'^get_trainer_member_ticket_price_bug_list/$',
         views.GetTrainerMemberTicketPriceBugListView.as_view(), name='get_trainer_member_ticket_price_bug_list'),
 ]
