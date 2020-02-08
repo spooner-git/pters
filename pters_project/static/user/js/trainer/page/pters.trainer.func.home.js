@@ -30,6 +30,7 @@ class Home {
         };
 
         this.setting_data_cache = null;
+        this.temp_for_error = HIDE;
     }
 
     init (){
@@ -124,9 +125,27 @@ class Home {
                             my_pters_pass_dom = '<div class="contents">' + this.dom_row_my_pters_pass() + '</div>';
                             current_date = '<div class="contents">' + this.dom_row_current_date() + '</div>';
 
-                            let html = current_date + program_dom + plan_dom + end_alert_dom + sales_summary_dom;
-                            document.querySelector('#home_content_wrap').innerHTML = html;
-                            // $('#root_content').scrollTop(0);
+                            let temp_for_error = '<div class="contents">' + this.dom_row_temp_for_error() + '</div>';
+
+                            TempForError_func.ajax(
+                                "/trainer/get_trainer_member_ticket_price_bug_list/",
+                                "GET",
+                                "",
+                                (data)=>{
+                                    if(Object.keys(data).length > 0){
+                                        this.temp_for_error = SHOW;
+                                        
+                                    }else{
+                                        this.temp_for_error = HIDE;
+                                        temp_for_error = "";
+                                    }
+                                    let html = current_date + program_dom + plan_dom + end_alert_dom + sales_summary_dom + temp_for_error;
+                                    document.querySelector('#home_content_wrap').innerHTML = html;
+                                }
+                            );
+
+                            // let html = current_date + program_dom + plan_dom + end_alert_dom + sales_summary_dom + temp_for_error;
+                            // document.querySelector('#home_content_wrap').innerHTML = html;
                         });
                     }, OFF);
                 }, OFF);
@@ -162,8 +181,14 @@ class Home {
 
         let my_pters_pass_dom;
         my_pters_pass_dom = '<div class="contents">' + this.dom_row_my_pters_pass() + '</div>';
+
+        let temp_for_error = '<div class="contents">' + this.dom_row_temp_for_error() + '</div>';
+
+        if(this.temp_for_error == HIDE){
+            temp_for_error = "";
+        }
                         
-        let html = current_date_dom + program_dom + plan_dom + end_alert_dom + sales_summary_dom;
+        let html = current_date_dom + program_dom + plan_dom + end_alert_dom + sales_summary_dom + temp_for_error;
         document.querySelector('#home_content_wrap').innerHTML = html;
     }
 
@@ -176,6 +201,24 @@ class Home {
         let style = {"font-size":"15px", "font-weight":"bold"};
         let onclick = ()=>{
             sideGoPage("calendar");
+        };
+        let my_pters_pass = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
+        let dom = `<article class="my_pters_pass_wrapper">
+                        ${my_pters_pass}
+                    </article>`;
+        return dom;
+    }
+
+    dom_row_temp_for_error(){
+        let id = "temp_for_error_at_home";
+        let title = '<span style="color:#fe4e65;font-size:13px;">[PTERS 안내] 일부 이용자 가격 입력오류 수정</span>';
+        let icon = DELETE;
+        let icon_r_visible = NONE;
+        let icon_r_text = ``;
+        let style = {"font-size":"15px", "font-weight":"bold"};
+        let onclick = ()=>{
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_temp_for_error', 100, POPUP_FROM_RIGHT, null, ()=>{
+                temp_for_error = new TempForError('.popup_temp_for_error', 'temp_for_error');});
         };
         let my_pters_pass = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
         let dom = `<article class="my_pters_pass_wrapper">
