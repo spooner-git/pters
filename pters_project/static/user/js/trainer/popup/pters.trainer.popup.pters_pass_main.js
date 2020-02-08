@@ -159,7 +159,7 @@ class Pters_pass_main{
 
     dom_row_pters_pass_purchase(){
         let id = "pters_pass_purchase";
-        let title = "PTERS 패스 상품 구매";
+        let title = "레슨온 이용권";
         let icon = DELETE;
         let icon_r_visible = SHOW;
         let icon_r_text = "";
@@ -177,7 +177,7 @@ class Pters_pass_main{
 
     dom_row_pters_pass_change(){
         let id = "pters_pass_purchase";
-        let title = "PTERS 패스 상품 변경";
+        let title = "레슨온 이용권 변경";
         let icon = DELETE;
         let icon_r_visible = SHOW;
         let icon_r_text = "";
@@ -256,7 +256,7 @@ class Pters_pass_main{
 
 
     dom_row_toolbox(){
-        let title_upper = `<span style=" font-size: 12px;display:block;line-height: 5px;color: var(--font-sub-normal);font-weight: 500;">이용중인 PTERS 패스</span>`;
+        let title_upper = `<span style=" font-size: 12px;display:block;line-height: 5px;color: var(--font-sub-normal);font-weight: 500;">사용중인 레슨온 이용권</span>`;
         let current_pass_name = this.data.current.name[0] == "" ? "무료 이용자" : this.data.current.name[0];
         let title = this.data.current.name.length == 0 ? "" :title_upper + current_pass_name;
         
@@ -287,7 +287,7 @@ class Pters_pass_main{
                 <span style="display:none">${title}</span>
             </div>
             <!--<div style="display:inline-block;width:25%; color:#ff001f; text-align:right; font-size:15px; font-weight:bold;">-->
-                    <!--PTERS 패스 변경-->
+                    <!--레슨온 이용권 변경-->
             <!--</div>-->
         </div>
         `;

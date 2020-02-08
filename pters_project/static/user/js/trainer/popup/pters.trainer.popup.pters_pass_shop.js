@@ -122,10 +122,6 @@ class Pters_pass_shop{
                             this.dom_row_pters_pass_premium() +
                             this.dom_row_pters_pass_premium_explain() +
                         '</div>' +
-                        `<div class="pters_pass_product_wrapper" style="${custom_color}" onclick="pters_pass_shop_popup.event_custom_app_launch()">` +
-                            this.dom_row_pters_pass_custom() +
-                            this.dom_row_pters_pass_custom_explain() +
-                        '</div>' +
                     '</article>';
         if(os == IOS && user_username =='guest'){
             html =  '<article class="obj_input_box_full">' +
@@ -167,10 +163,7 @@ class Pters_pass_shop{
                             this.dom_row_pters_pass_premium_explain() +
                         '</div>';
                 }
-                html += `<div class="pters_pass_product_wrapper" style="${custom_color}" onclick="pters_pass_shop_popup.event_custom_app_launch()">` +
-                            this.dom_row_pters_pass_custom() +
-                            this.dom_row_pters_pass_custom_explain() +
-                        '</div>';
+
 
                 html += '</article>';
             }
@@ -421,7 +414,7 @@ class Pters_pass_shop{
                 return false;
             }
             let message = {
-                title:`PTERS 패스 상품을 즉시 변경하시겠습니까?`,
+                title:`레슨온 이용권을 즉시 변경하시겠습니까?`,
                 comment:`변경 시 다음 결제일까지 변경이 불가능합니다.`
             };
             show_user_confirm (message, ()=>{
@@ -462,9 +455,9 @@ class Pters_pass_shop{
 
 
     dom_row_toolbox(){
-        let title = "PTERS 패스 구독";
+        let title = "레슨온 이용권 구독";
         if(this.data.pass_purchase_change == PASS_CHANGE){
-            title = "PTERS 패스 변경";
+            title = "레슨온 이용권 변경";
         }
         let description = ``;
         let html = `

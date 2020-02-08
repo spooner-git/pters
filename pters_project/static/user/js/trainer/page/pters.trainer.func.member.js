@@ -257,7 +257,7 @@ class Member {
 
     event_add_member(){
         let user_option = {
-            old:{text:"PTERS 아이디가 있는 회원", callback:()=>{
+            old:{text:"레슨온 아이디가 있는 회원", callback:()=>{
                 layer_popup.close_layer_popup();
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_BOTTOM;
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SEARCH, 100, popup_style, null, ()=>{

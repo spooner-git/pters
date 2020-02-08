@@ -914,7 +914,7 @@ class Calendar {
                 let holiday_name = "";
                 if(this.holiday != null){
                     if(Object.keys(this.holiday).indexOf(this_date_yyyymmdd) != -1){
-                        holiday_color = "color:var(--font-highlight);";
+                        holiday_color = "color:#fe4e65;";
                         holiday_name = this.holiday[this_date_yyyymmdd].holiday_name;
                     }
                 }

@@ -166,7 +166,7 @@ class Mypage{
 
     dom_row_my_pass(){
         let id = "my_pass";
-        let title = "PTERS 패스";
+        let title = "레슨온 이용권";
         let icon = DELETE;
         let icon_r_visible = SHOW;
         let icon_r_text = `${pass_inspector.trainer_data.auth_plan_create.limit_type}`;
