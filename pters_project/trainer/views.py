@@ -57,7 +57,7 @@ from .functions import func_get_trainer_setting_list, \
     func_delete_member_ticket_info, func_update_lecture_member_fix_status_cd, update_user_setting_data, \
     update_program_setting_data, func_get_member_ticket_info, func_get_trainer_info, update_alarm_setting_data
 from .models import ClassMemberTicketTb, LectureTb, ClassTb, MemberClassTb, BackgroundImgTb, \
-    SettingTb, TicketTb, TicketLectureTb, CenterTrainerTb, LectureMemberTb, ProgramAuthTb
+    SettingTb, TicketTb, TicketLectureTb, CenterTrainerTb, LectureMemberTb, ProgramAuthTb, BugMemberTicketPriceTb
 
 logger = logging.getLogger(__name__)
 
@@ -5666,43 +5666,82 @@ class GetTrainerMemberTicketPriceBugListView(LoginRequiredMixin, AccessTestMixin
         class_id = self.request.session.get('class_id', '')
         error = None
         member_ticket_list = collections.OrderedDict()
-
+        bug_check = 0
         if class_id is None or class_id == '':
             error = '오류가 발생했습니다.'
+
         if error is None:
-            member_ticket_data = ClassMemberTicketTb.objects.select_related(
-                'member_ticket_tb__member',
-                'member_ticket_tb__ticket_tb').filter(class_tb_id=class_id,
-                                                      auth_cd=AUTH_TYPE_VIEW,
-                                                      member_ticket_tb__use=USE,
-                                                      member_ticket_tb__price=0,
-                                                      member_ticket_tb__reg_dt__gte='2020-02-02',
-                                                      member_ticket_tb__reg_dt__lt='2020-02-09',
-                                                      use=USE).order_by('-member_ticket_tb__start_date',
-                                                                        '-member_ticket_tb__reg_dt')
-            for member_ticket_info in member_ticket_data:
-                member_ticket_tb = member_ticket_info.member_ticket_tb
-                ticket_tb = member_ticket_tb.ticket_tb
-                if '\r\n' in member_ticket_tb.note:
-                    member_ticket_tb.note = member_ticket_tb.note.replace('\r\n', ' ')
-                member_ticket_info = {'member_name': str(member_ticket_tb.member.name),
-                                      'member_ticket_id': str(member_ticket_tb.member_ticket_id),
-                                      'member_ticket_name': ticket_tb.name,
-                                      'member_ticket_state_cd': member_ticket_tb.state_cd,
-                                      'member_ticket_reg_count': member_ticket_tb.member_ticket_reg_count,
-                                      'member_ticket_rem_count': member_ticket_tb.member_ticket_rem_count,
-                                      'member_ticket_avail_count': member_ticket_tb.member_ticket_avail_count,
-                                      'member_ticket_start_date': str(member_ticket_tb.start_date),
-                                      'member_ticket_end_date': str(member_ticket_tb.end_date),
-                                      'member_ticket_price': member_ticket_tb.price,
-                                      'member_ticket_pay_method': member_ticket_tb.pay_method,
-                                      'member_ticket_refund_date': str(member_ticket_tb.refund_date),
-                                      'member_ticket_refund_price': member_ticket_tb.refund_price,
-                                      'member_ticket_note': str(member_ticket_tb.note),
-                                      'member_ticket_reg_dt': str(member_ticket_tb.reg_dt)
-                                      }
-                member_ticket_list[str(member_ticket_tb.member_ticket_id)] = member_ticket_info
+            try:
+                bug_info = BugMemberTicketPriceTb.objects.get(class_tb_id=class_id)
+                bug_check = bug_info.bug_check
+            except ObjectDoesNotExist:
+                bug_check = 0
+        if error is None:
+            if bug_check == 0:
+                member_ticket_data = ClassMemberTicketTb.objects.select_related(
+                    'member_ticket_tb__member',
+                    'member_ticket_tb__ticket_tb').filter(class_tb_id=class_id,
+                                                          auth_cd=AUTH_TYPE_VIEW,
+                                                          member_ticket_tb__use=USE,
+                                                          member_ticket_tb__price=0,
+                                                          member_ticket_tb__reg_dt__gte='2020-02-02',
+                                                          member_ticket_tb__reg_dt__lt='2020-02-09',
+                                                          use=USE).order_by('-member_ticket_tb__start_date',
+                                                                            '-member_ticket_tb__reg_dt')
+                for member_ticket_info in member_ticket_data:
+                    member_ticket_tb = member_ticket_info.member_ticket_tb
+                    ticket_tb = member_ticket_tb.ticket_tb
+                    ticket_id = str(ticket_tb.ticket_id)
+                    if '\r\n' in member_ticket_tb.note:
+                        member_ticket_tb.note = member_ticket_tb.note.replace('\r\n', ' ')
+                    if ticket_id != '3198' and ticket_id != '3238' and ticket_id != '3315' and ticket_id != '4334' \
+                            and ticket_id != '4337' and ticket_id != '4339' and ticket_id != '4351' \
+                            and ticket_id != '4374' and ticket_id != '4379' and ticket_id != '4383'and ticket_id != '4386' \
+                            and ticket_id != '4397' and ticket_id != '4417' and ticket_id != '4434':
+                        member_ticket_info = {'member_name': str(member_ticket_tb.member.name),
+                                              'member_id': str(member_ticket_tb.member.member_id),
+                                              'member_ticket_id': str(member_ticket_tb.member_ticket_id),
+                                              'member_ticket_name': ticket_tb.name,
+                                              'member_ticket_state_cd': member_ticket_tb.state_cd,
+                                              'member_ticket_reg_count': member_ticket_tb.member_ticket_reg_count,
+                                              'member_ticket_rem_count': member_ticket_tb.member_ticket_rem_count,
+                                              'member_ticket_avail_count': member_ticket_tb.member_ticket_avail_count,
+                                              'member_ticket_start_date': str(member_ticket_tb.start_date),
+                                              'member_ticket_end_date': str(member_ticket_tb.end_date),
+                                              'member_ticket_price': member_ticket_tb.price,
+                                              'member_ticket_pay_method': member_ticket_tb.pay_method,
+                                              'member_ticket_refund_date': str(member_ticket_tb.refund_date),
+                                              'member_ticket_refund_price': member_ticket_tb.refund_price,
+                                              'member_ticket_note': str(member_ticket_tb.note),
+                                              'member_ticket_reg_dt': str(member_ticket_tb.reg_dt)
+                                              }
+                        member_ticket_list[str(member_ticket_tb.member_ticket_id)] = member_ticket_info
         if error is not None:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
             messages.error(request, error)
         return JsonResponse(member_ticket_list, json_dumps_params={'ensure_ascii': True})
+
+
+def add_trainer_member_ticket_price_bug_check_logic(request):
+    error_message = None
+    context = {}
+
+    class_id = request.session.get('class_id', '')
+    error = None
+    if class_id is None or class_id == '':
+        error = '오류가 발생했습니다.'
+
+    if error is None:
+        try:
+            bug_info = BugMemberTicketPriceTb.objects.get(class_tb_id=class_id)
+            bug_info.bug_check = 1
+            bug_info.save()
+        except ObjectDoesNotExist:
+            bug_info = BugMemberTicketPriceTb(member_id=request.user.id,
+                                              class_tb_id=class_id, bug_check=1, use=USE)
+            bug_info.save()
+
+    if error is not None:
+        messages.error(request, error)
+        context['messageArray'] = error
+    return JsonResponse(context, json_dumps_params={'ensure_ascii': True})

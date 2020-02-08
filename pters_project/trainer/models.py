@@ -301,3 +301,15 @@ class ProgramAuthTb(TimeStampedModel):
     class Meta:
         managed = False
         db_table = 'PROGRAM_AUTH_TB'
+
+
+class BugMemberTicketPriceTb(TimeStampedModel):
+    bug_member_ticket_price_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    bug_check = models.IntegerField(db_column='ENABLE_FLAG', default=1)
+    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'BUG_MEMBER_TICKET_PRICE_TB'
