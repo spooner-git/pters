@@ -657,14 +657,15 @@ class Member_view{
             let html_ticket_name = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_TICKET_MODIFY, 100, popup_style, null, ()=>{
-                    let data = {"member_id":this.member_id, "member_name":this.name, "member_ticket_id":member_ticket_id, "member_ticket_name":ticket_name, 
-                                "start_date": DateRobot.to_split(ticket_start_date), "start_date_text": DateRobot.to_text(ticket_start_date, "", "", SHORT),
-                                "end_date": DateRobot.to_split(ticket_end_date), "end_date_text": ticket_end_date == "9999-12-31" ? "소진 시까지" : DateRobot.to_text(ticket_end_date, "", "", SHORT),
-                                "reg_count":ticket_reg_count, "price":ticket_price, "status":ticket_status,
-                                "refund_date": ticket_refund_date == null ? null : DateRobot.to_split(ticket_refund_date), 
-                                "refund_date_text": ticket_refund_date == null ? null : DateRobot.to_text(ticket_refund_date, "", "", SHORT),
-                                "refund_price":ticket_refund_price, "note":ticket_note, "pay_method":ticket_pay_method
-                            };
+                    // let data = {"member_id":this.member_id, "member_name":this.name, "member_ticket_id":member_ticket_id, "member_ticket_name":ticket_name, 
+                    //             "start_date": DateRobot.to_split(ticket_start_date), "start_date_text": DateRobot.to_text(ticket_start_date, "", "", SHORT),
+                    //             "end_date": DateRobot.to_split(ticket_end_date), "end_date_text": ticket_end_date == "9999-12-31" ? "소진 시까지" : DateRobot.to_text(ticket_end_date, "", "", SHORT),
+                    //             "reg_count":ticket_reg_count, "price":ticket_price, "status":ticket_status,
+                    //             "refund_date": ticket_refund_date == null ? null : DateRobot.to_split(ticket_refund_date), 
+                    //             "refund_date_text": ticket_refund_date == null ? null : DateRobot.to_text(ticket_refund_date, "", "", SHORT),
+                    //             "refund_price":ticket_refund_price, "note":ticket_note, "pay_method":ticket_pay_method
+                    //         };
+                    let data = {"member_ticket_id":member_ticket_id, "member_name":this.name, "member_id":this.member_id};
                     member_ticket_modify = new Member_ticket_modify('.popup_member_ticket_modify', data, 'member_ticket_modify');
                 });
             });

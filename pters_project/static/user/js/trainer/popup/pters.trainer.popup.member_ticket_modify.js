@@ -2,7 +2,10 @@ class Member_ticket_modify{
     constructor(install_target, data, instance){
         this.target = {install: install_target, toolbox:'section_member_ticket_modify_toolbox', content:'section_member_ticket_modify_content'};
         this.instance = instance;
-        this.external_data = data;
+        // this.external_data = data;
+        this.member_ticket_id = data.member_ticket_id;
+        this.member_id = data.member_id;
+        this.member_name = data.member_name;
         this.form_id = 'id_member_ticket_modify_form';
 
         let d = new Date();
@@ -18,9 +21,11 @@ class Member_ticket_modify{
         };
 
         this.data = {
+            member_id:null,
             member_name:null,
             member_ticket_name: null,
             member_ticket_id: null,
+            ticket_id : null,
             start_date: null,
             start_date_text:null,
             end_date: null,
@@ -31,7 +36,15 @@ class Member_ticket_modify{
             status:null,
             note:null,
             refund_date:null,
-            refund_price:null
+            refund_price:null,
+
+            lecture_id_original: [],
+            lecture_id: [],
+            lecture_name: [],
+            lecture_color: [],
+            lecture_max:[],
+            lecture_state_cd:[],
+            lecture_type_cd:[]
         };
 
         this.date_start = 0;
@@ -51,6 +64,20 @@ class Member_ticket_modify{
         this.init();
     }
 
+    set lecture(data){
+        this.data.lecture_id = data.id;
+        this.data.lecture_name = data.name;
+        this.data.lecture_max = data.max;
+        this.data.lecture_state_cd = data.state_cd;
+        this.data.lecture_type_cd = data.type_cd;
+        this.data.lecture_color = data.color;
+        this.render_content();
+    }
+
+    get lecture(){
+        return {id:this.data.lecture_id, name:this.data.lecture_name, max:this.data.lecture_max, state_cd:this.data.lecture_state_cd, type_cd:this.data.lecture_type_cd, color:this.data.lecture_color};
+    }
+
     init(){
         // this.render();
         this.set_initial_data();
@@ -58,14 +85,40 @@ class Member_ticket_modify{
     }
 
     set_initial_data (){
-        // this.data = this.external_data;
-        for(let item in this.external_data){
-            if(this.external_data[item] != undefined){
-                this.data[item] = this.external_data[item];
+        MemberTicketModifyFunc.read_ticket_info({"member_ticket_id":this.member_ticket_id},
+            (data)=>{ //callback
+                let mydata = data[this.member_ticket_id];
+                this.data.member_id = this.member_id;
+                this.data.member_name = this.member_name;
+                this.data.member_ticket_name = mydata.member_ticket_name;
+                this.data.member_ticket_id = mydata.member_ticket_id;
+                this.data.ticket_id = mydata.ticket_id;
+                this.data.start_date = DateRobot.to_split(mydata.member_ticket_start_date);
+                this.data.start_date_text = DateRobot.to_text(mydata.member_ticket_start_date, "", "", SHORT);
+                this.data.end_date = DateRobot.to_split(mydata.member_ticket_end_date);
+                this.data.end_date_text = DateRobot.to_text(mydata.member_ticket_end_date, "", "", SHORT);
+                this.data.reg_count = mydata.member_ticket_reg_count;
+                this.data.price = mydata.member_ticket_price;
+                this.data.pay_method = {value:[mydata.member_ticket_pay_method], text:[TICKET_PAY_METHOD[mydata.member_ticket_pay_method]]},
+                this.data.status = mydata.member_ticket_state_cd;
+                this.data.note = mydata.member_ticket_note;
+                this.data.refund_date = mydata.member_ticket_refund_date;
+                this.data.refund_price = mydata.member_ticket_refund_price;
+
+                this.render();
+                Ticket_func.read({"ticket_id":mydata.ticket_id}, (data)=>{
+                    let ticket_data = data.ticket_info;
+                    this.data.lecture_id_original = ticket_data.ticket_lecture_id_list;
+                    this.data.lecture_id = ticket_data.ticket_lecture_id_list;
+                    this.data.lecture_name = ticket_data.ticket_lecture_list;
+                    this.data.lecture_color = ticket_data.ticket_lecture_ing_color_cd_list;
+                    this.render();
+                }, ()=>{});
+            },
+            ()=>{ //error_callback
+
             }
-        }
-        this.data.pay_method = {value:[this.external_data.pay_method], text:[TICKET_PAY_METHOD[this.external_data.pay_method]]};
-        this.render();
+        );
     }
 
     clear(){
@@ -105,6 +158,8 @@ class Member_ticket_modify{
 
         let status = CComponent.dom_tag('진행 상태') + this.dom_row_status_input() + 
                     `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>`;
+        let lectures = CComponent.dom_tag('참여 가능한 수업') + this.dom_row_lecture_select() + 
+                    `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>`;
         let refund_date  = CComponent.dom_tag('환불일') + this.dom_row_refund_date_input() +
                     `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>`;
         let refund_price  = CComponent.dom_tag('환불 금액') + this.dom_row_refund_price_input() +
@@ -130,6 +185,7 @@ class Member_ticket_modify{
         let html =
             '<div class="obj_input_box_full">'
                 + status
+                + lectures
                 + refund_date
                 + refund_price
                 + count
@@ -148,102 +204,6 @@ class Member_ticket_modify{
         return html;
     }
 
-    // dom_row_status_input(){
-    //     let id = 'member_ticket_status_modify';
-    //     let title = this.data.member_ticket_name == null ||this.data.member_ticket_name == 'None' ? '수강권명' : this.data.member_ticket_name;
-    //     let icon = CImg.ticket();
-    //     let icon_r_visible = SHOW;
-    //     let icon_r_text = `상태 (<span style="color:${TICKET_STATUS_COLOR[this.data.status]}">${TICKET_STATUS[this.data.status]}</span>)`;
-    //     let style = null;
-    //     let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-    //         let user_option = {
-    //             finish:{text:"종료", callback:()=>{
-    //                 Member_func.ticket_status({"member_ticket_id":this.data.member_ticket_id, "state_cd":"PE", "refund_price":"", "refund_date":""}, ()=>{
-    //                     this.data.status = "PE";
-    //                     this.render_content();
-    //                     try{
-    //                         current_page.init();
-    //                     }catch(e){}
-    //                     try{
-    //                         member_view_popup.init();
-    //                         member_ticket_history.init();
-    //                     }catch(e){}
-    //                 });
-    //                 layer_popup.close_layer_popup();}
-    //             },
-    //             resume:{text:"재개", callback:()=>{
-    //                 let inspect = pass_inspector.member("recontract", this.data.member_id);
-    //                 if(inspect.barrier == BLOCKED){
-    //                     this.data_sending_now = false;
-    //                     let message = {
-    //                         title:'수강권 재개를 완료하지 못했습니다.',
-    //                         comment:`[${inspect.limit_type}] 이용자께서는 회원을 최대 ${inspect.limit_num}명까지 등록하실 수 있습니다.
-    //                                 <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까?</p>`
-    //                     }
-    //                     show_user_confirm (message, ()=>{
-    //                         layer_popup.all_close_layer_popup();
-    //                         sideGoPopup("pters_pass_main");
-    //                     });
-
-    //                     return false;
-    //                 }
-
-    //                 Member_func.ticket_status({"member_ticket_id":this.data.member_ticket_id, "state_cd":"IP", "refund_price":"", "refund_date":""}, ()=>{
-    //                     this.data.status = "IP";
-    //                     this.render_content();
-    //                     try{
-    //                         current_page.init();
-    //                     }catch(e){}
-    //                     try{
-    //                         member_view_popup.init();
-    //                         member_ticket_history.init();
-    //                     }catch(e){}
-    //                 });
-    //                 layer_popup.close_layer_popup();}
-    //             },
-    //             refund:{text:"환불", callback:()=>{
-    //                 layer_popup.close_layer_popup();
-    //                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
-    //                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_TICKET_REFUND, 100, popup_style, null, ()=>{
-    //                     let start_date = DateRobot.to_yyyymmdd(this.data.start_date.year, this.data.start_date.month, this.data.start_date.date);
-    //                     let external_data = {"member_ticket_id":this.data.member_ticket_id,"state_cd":"RF", "member_ticket_name":this.data.member_ticket_name, "member_ticket_price":this.data.price, "member_ticket_start_date":start_date};
-    //                     member_ticket_refund = new Member_ticket_refund('.popup_member_ticket_refund', external_data, 'member_ticket_refund');
-    //                 });}
-    //             },
-    //             delete:{text:"삭제", callback:()=>{
-    //                 Member_func.ticket_delete({"member_ticket_id":this.data.member_ticket_id}, ()=>{
-    //                     try{
-    //                         current_page.init();
-    //                     }catch(e){}
-    //                     try{
-    //                         member_view_popup.init();
-    //                         member_ticket_history.init();
-    //                     }catch(e){}
-    //                     layer_popup.close_layer_popup();
-    //                 });
-    //                 layer_popup.close_layer_popup();}
-    //             }
-    //         };
-
-    //         if(this.data.status == "IP"){
-    //             delete user_option.resume;
-    //             delete user_option.delete;
-    //         }else{
-    //             delete user_option.refund;
-    //             delete user_option.finish;
-    //         }
-
-    //         let options_padding_top_bottom = 16;
-    //         // let button_height = 8 + 8 + 52;
-    //         let button_height = 52;
-    //         let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
-    //         let root_content_height = $root_content.height();
-    //         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
-    //             option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
-    //         });
-    //     });
-    //     return html;
-    // }
     dom_row_status_input(){
         let id = 'member_ticket_status_modify';
         let title = `<span style="color:${TICKET_STATUS_COLOR[this.data.status]}">${TICKET_STATUS[this.data.status]}</span>`;
@@ -340,6 +300,43 @@ class Member_ticket_modify{
         });
         return html;
     }
+
+    dom_row_lecture_select(){
+        let id = 'input_ticket_select';
+        let title = this.data.lecture_id.length == 0 ? '선택*' : this.data.lecture_id.length + ' 개';
+        let icon = CImg.lecture();
+        let icon_r_visible = SHOW;
+        let icon_r_text = "";
+        let style = this.data.ticket_id.length == 0 ? {"color":"var(--font-inactive)"} : null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SELECT, 100, popup_style, null, ()=>{
+                lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 999, {'title':'수업'}, (set_data)=>{
+                    this.lecture = set_data; //타겟에 선택된 데이터를 set
+                    this.render_content();
+                });
+            });
+        });
+        let selected_lecture_list = this.dom_row_selected_lecture_list();
+        return html + selected_lecture_list;
+    }
+
+    dom_row_selected_lecture_list(){
+        let html_to_join = [];
+        for(let i=0; i<this.data.lecture_id.length; i++){
+            html_to_join.push(
+                `<div>
+                    <div style="display:flex;font-size:14px;font-weight:500;padding:5px 36px;">
+                        <div style="flex-basis:7px"><div style="width:5px;height:100%;border-radius:3px;background-color:${this.data.lecture_color[i]}"></div></div>
+                        <div style="flex:1 1 0">${this.data.lecture_name[i]}</div>
+                    </div>
+                </div>`
+            );
+        }
+        let html = html_to_join.join("");
+        return html;
+    }
+
 
     dom_row_start_input(){
         let id = 'member_ticket_start_modify';
@@ -756,6 +753,15 @@ class Member_ticket_modify{
                 member_ticket_history.init();
             }catch(e){}
         });
+        let lecture_to_be_update = this.func_update_lecture();
+        for(let i=0; i<lecture_to_be_update.add.length; i++){
+            let data = {"ticket_id":this.data.ticket_id, "lecture_id":lecture_to_be_update.add[i]};
+            Ticket_func.update_lecture(ADD, data);
+        }
+        for(let j=0; j<lecture_to_be_update.del.length; j++){
+            let data = {"ticket_id":this.data.ticket_id, "lecture_id":lecture_to_be_update.del[j]};
+            Ticket_func.update_lecture(DELETE, data);
+        }
     }
 
     upper_right_menu(){
@@ -773,5 +779,70 @@ class Member_ticket_modify{
         else{
             return true;
         }
+    }
+
+    func_update_lecture(){
+        let lectures = {};
+        let sum_lecture = this.data.lecture_id.concat(this.data.lecture_id_original);
+        for(let i=0; i<sum_lecture.length; i++){
+            lectures[sum_lecture[i]] = sum_lecture[i];
+        }
+        let lecture_ids = Object.keys(lectures); //data_original과 data의 lecture_id들을 중복을 제거하고 합친 결과
+        let lecture_id_to_be_deleted = [];
+        let lecture_id_to_be_added = [];
+        for(let j=0; j<lecture_ids.length; j++){
+            if(this.data.lecture_id_original.indexOf(lecture_ids[j]) == -1){ //원래 데이터에 없는 lecture id가 추가되었을 경우
+                lecture_id_to_be_added.push(lecture_ids[j]);
+            }else if(this.data.lecture_id.indexOf(lecture_ids[j]) == -1){ //원래 데이터에 있던 lecture id가 빠진 경우
+                lecture_id_to_be_deleted.push(lecture_ids[j]);
+            }
+        }
+        return {add:lecture_id_to_be_added, del:lecture_id_to_be_deleted};
+    }
+}
+
+class MemberTicketModifyFunc{
+    static read_ticket_info(data, callback, error_callback){
+        // {"member_ticket_id"}
+        $.ajax({
+            url:'/trainer/get_member_ticket_info/',
+            type:'GET',
+            data: data,
+            dataType : 'JSON',
+    
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+    
+            //보내기후 팝업창 닫기
+            complete:function(){
+                
+            },
+    
+            //통신성공시 처리
+            success:function(data){
+                check_app_version(data.app_version);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message({title:data.messageArray[0]});
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(data);
+                }
+            },
+    
+            //통신 실패시 처리
+            error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
+                // location.reload();
+            }
+        });
     }
 }
