@@ -308,11 +308,13 @@
         transform: scale(1);
         z-index: 1500;
         opacity: 0.3;
+        right:8%;
     }
     100%{
         transform: scale(1.2);
         z-index: 0;
         opacity: 0;
+        right:1%;
     }
 }
 
@@ -330,11 +332,13 @@
         transform: scale(1);
         z-index: 1500;
         opacity: 0.3;
+        left: 8%;
     }
     100%{
         transform: scale(1.2);
         z-index: 0;
         opacity: 0;
+        left: 1%;
     }
 }
 

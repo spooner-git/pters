@@ -905,8 +905,12 @@ class Calendar {
                 
                 
                 if(`${_year[i]}-${_month[i]}-${_date[i]}` == this.today){
-                    today_marking = `<div class="today_marking" style="${month_or_week == "week" ? 'top:-4px;' : 'top:-2px; width:20px; height:20px; border-radius:12px;'}"></div>`;
-                    today_text_style = 'color:var(--font-highlight-sub);font-weight:bold;';
+                    today_marking = `<div class="today_marking" style="top:-4px;"></div>`;
+                    today_text_style = 'color:var(--font-highlight-sub);font-weight:bold;position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);z-index:1';
+                    if(month_or_week == "month"){
+                        today_text_style = 'color:var(--font-highlight-sub);font-weight:bold;';
+                        today_marking = `<div class="today_marking" style="top:-2px; width:20px; height:20px; border-radius:12px;z-index:-1;"></div>`;
+                    }
                 }
 
                 let this_date_yyyymmdd = DateRobot.to_yyyymmdd(_year[i], _month[i], _date[i]);
@@ -926,12 +930,13 @@ class Calendar {
                 dates_to_join.push(
                     `
                     <div ${height_style} class="${saturday} ${sunday} ${border_style} _week_row_${i+1}" data-row="${i+1}" ${this.dayoff.indexOf(i) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""} onclick="event.stopPropagation();${onclick}">
+                        ${today_marking}    
                         <span style="${today_text_style} ${holiday_color}" data-holiday="${holiday_name}">
                             ${_date[i]}
                             <div ${month_or_week == "month" ? "" : "hidden"}>${holiday_name}</div>
                         </span>
                         <div class="${schedule_number_display} ${has_schedule}">${schedule_date}</div>
-                        ${today_marking}
+                        
                     </div>
                     `
                 );
@@ -1521,14 +1526,16 @@ class Calendar {
                 //                     </div>
                 //                 </div>`
                 "initial_page":`<div id="${this.subtargetHTML}">
-                                    <div id="next_arrow_indicator" style="z-index:-100;position:fixed;top:50%;right:5%;transform:translateY(-50%);opacity:0">${CImg.arrow_expand([""], {width:"100px", height:"100px", transform:"rotate(-90deg)"})}</div>
-                                    <div id="prev_arrow_indicator" style="z-index:-100;position:fixed;top:50%;left:5%;transform:translateY(-50%);opacity:0">${CImg.arrow_expand([""], {width:"100px", height:"100px", transform:"rotate(90deg)"})}</div>
                                     <div id="cal_display_panel">
                                         <span></span>
                                     </div>
                                     <div id="page${this.current_page_num}" class="pages" style="left:0px;">
                                     </div>
-                                </div>`
+                                    
+                                </div>
+                                <div id="next_arrow_indicator" style="position:fixed;z-index:-100;top:50%;right:5%;transform:translateY(-50%);opacity:0">${CImg.arrow_expand([""], {width:"100px", height:"100px", transform:"rotate(-90deg)"})}</div>
+                                <div id="prev_arrow_indicator" style="position:fixed;z-index:-100;top:50%;left:5%;transform:translateY(-50%);opacity:0">${CImg.arrow_expand([""], {width:"100px", height:"100px", transform:"rotate(90deg)"})}</div>
+                                `
             }
         );
     }
