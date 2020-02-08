@@ -77,11 +77,24 @@ class TempForError {
         let flex_style = `style="display:flex;"`;
         let flex_child1 = `style="flex-basis:60px;color:var(--font-sub-normal);font-size:13px;"`;
         let flex_child2 = `style="flex:1 1 0"`;
+        let member_ticket_reg_count = data.member_ticket_reg_count;
+        let member_ticket_start_end_date = data.member_ticket_start_date + ' ~ ' + data.member_ticket_end_date;
+        if(member_ticket_reg_count >=99999){
+            member_ticket_reg_count = '무제한'
+        }
+        else{
+            member_ticket_reg_count += '회'
+        }
+        if(data.member_ticket_end_date =='9999-12-31'){
+            member_ticket_start_end_date = '소진시 까지'
+        }
         let content = 
             `
                 <div ${flex_style}><div ${flex_child1}>회원명</div><div ${flex_child2}>${data.member_name}</div></div>
                 <div ${flex_style}><div ${flex_child1}>등록일</div><div ${flex_child2}>${data.member_ticket_reg_dt.split('.')[0]}</div></div>
                 <div ${flex_style}><div ${flex_child1}>수강권명</div><div ${flex_child2}>${data.member_ticket_name}</div></div>
+                <div ${flex_style}><div ${flex_child1}>등록횟수</div><div ${flex_child2}>${member_ticket_reg_count}</div></div>
+                <div ${flex_style}><div ${flex_child1}>기간</div><div ${flex_child2}>${member_ticket_start_end_date}</div></div>
                 <div ${flex_style}><div ${flex_child1}>가격</div><div ${flex_child2}>${data.member_ticket_price} 원</div></div>
             `;
 
@@ -170,7 +183,7 @@ class TempForError {
                         </div>
                     </div>
                     <div style="font-size:14px;">
-                        <p style="margin-bottom:0">2020.2.1 업데이트 이후 회원 등록시 입력하신 가격이 정상적으로 반영되지 않는 문제가 일부 이용자님들께 발생하였습니다.</p>
+                        <p style="margin-bottom:0">2020.2.2 업데이트 이후 회원 등록시 입력하신 가격이 정상적으로 반영되지 않는 문제가 일부 이용자님들께 발생하였습니다.</p>
                         <p style="margin-top:0">고객님께서 입력하신 가격이 아닌, 0원이 들어가 있는 데이터를 확인하시고, 수정을 부탁드립니다.</p>
                         <p style="margin:0;">시스템 이용에 불편을 드린 점 고개 숙여 사과드립니다.  <br>- 피터스팀 일동</p>
                     </div>
