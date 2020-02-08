@@ -112,10 +112,6 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                         request.session['class_center_name'] = class_info.class_tb.get_center_name()
                         request.session['trainer_name'] = class_info.class_tb.member.name
                         temp_class_counter = class_member_ticket_counter
-<<<<<<< HEAD
-=======
-                        temp_class_counter = class_member_ticket_counter
->>>>>>> feature/notice-board
                     if class_member_ticket_counter == 0 and temp_class_counter == 0:
                         request.session['class_id'] = class_info.class_tb_id
                         request.session['class_hour'] = class_info.class_tb.class_hour
