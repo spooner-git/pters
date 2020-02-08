@@ -303,13 +303,6 @@ class ProgramAuthTb(TimeStampedModel):
         db_table = 'PROGRAM_AUTH_TB'
 
 
-<<<<<<< HEAD
-class BugMemberTicketPriceTb(TimeStampedModel):
-    bug_member_ticket_price_id = models.AutoField(db_column='ID', primary_key=True, null=False)
-    class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
-    member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
-    bug_check = models.IntegerField(db_column='BUG_CHECK', default=1)
-=======
 class ProgramGroupTb(TimeStampedModel):
     program_group_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.

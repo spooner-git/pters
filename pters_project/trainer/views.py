@@ -58,7 +58,7 @@ from .functions import func_get_trainer_setting_list, \
     update_program_setting_data, func_get_member_ticket_info, func_get_trainer_info, update_alarm_setting_data
 from .models import ClassMemberTicketTb, LectureTb, ClassTb, MemberClassTb, BackgroundImgTb, \
     SettingTb, TicketTb, TicketLectureTb, CenterTrainerTb, LectureMemberTb, ProgramAuthTb, ProgramBoardTb, \
-    ProgramNoticeTb
+    ProgramNoticeTb, BugMemberTicketPriceTb
 
 logger = logging.getLogger(__name__)
 
