@@ -5658,3 +5658,51 @@ def delete_member_profile_img_logic(request):
         log_data.save()
 
     return render(request, 'ajax/trainer_error_ajax.html')
+
+
+class GetTrainerMemberTicketPriceBugListView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        class_id = self.request.session.get('class_id', '')
+        error = None
+        member_ticket_list = collections.OrderedDict()
+
+        if class_id is None or class_id == '':
+            error = '오류가 발생했습니다.'
+        if error is None:
+            member_ticket_data = ClassMemberTicketTb.objects.select_related(
+                'member_ticket_tb__member',
+                'member_ticket_tb__ticket_tb').filter(class_tb_id=class_id,
+                                                      auth_cd=AUTH_TYPE_VIEW,
+                                                      member_ticket_tb__use=USE,
+                                                      member_ticket_tb__price=0,
+                                                      member_ticket_tb__reg_dt__gte='2020-02-02',
+                                                      member_ticket_tb__reg_dt__lt='2020-02-09',
+                                                      use=USE).order_by('-member_ticket_tb__start_date',
+                                                                        '-member_ticket_tb__reg_dt')
+            for member_ticket_info in member_ticket_data:
+                member_ticket_tb = member_ticket_info.member_ticket_tb
+                ticket_tb = member_ticket_tb.ticket_tb
+                if '\r\n' in member_ticket_tb.note:
+                    member_ticket_tb.note = member_ticket_tb.note.replace('\r\n', ' ')
+                member_ticket_info = {'member_name': str(member_ticket_tb.member.name),
+                                      'member_ticket_id': str(member_ticket_tb.member_ticket_id),
+                                      'member_ticket_name': ticket_tb.name,
+                                      'member_ticket_state_cd': member_ticket_tb.state_cd,
+                                      'member_ticket_reg_count': member_ticket_tb.member_ticket_reg_count,
+                                      'member_ticket_rem_count': member_ticket_tb.member_ticket_rem_count,
+                                      'member_ticket_avail_count': member_ticket_tb.member_ticket_avail_count,
+                                      'member_ticket_start_date': str(member_ticket_tb.start_date),
+                                      'member_ticket_end_date': str(member_ticket_tb.end_date),
+                                      'member_ticket_price': member_ticket_tb.price,
+                                      'member_ticket_pay_method': member_ticket_tb.pay_method,
+                                      'member_ticket_refund_date': str(member_ticket_tb.refund_date),
+                                      'member_ticket_refund_price': member_ticket_tb.refund_price,
+                                      'member_ticket_note': str(member_ticket_tb.note),
+                                      'member_ticket_reg_dt': str(member_ticket_tb.reg_dt)
+                                      }
+                member_ticket_list[str(member_ticket_tb.member_ticket_id)] = member_ticket_info
+        if error is not None:
+            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+            messages.error(request, error)
+        return JsonResponse(member_ticket_list, json_dumps_params={'ensure_ascii': True})
