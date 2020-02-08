@@ -11,7 +11,7 @@
         {% if qa_info %}
             <div class="wrapper_inquiry_history_info_title">
                 <div class="wrapper_popup_title_text obj_font_size_18_weight_900">
-                    PTERS 문의 사항
+                    {{ qa_info.get_qa_type_cd_name }}
                 </div>
                 <div class="wrapper_popup_title_date obj_font_size_13_weight_500">
 {#                    <div class="obj_box_full">#}
@@ -19,34 +19,49 @@
 {#                            <div class="obj_table_cell_x3" style="width:60px;">#}
 {#                                <div class="obj_font_size_12_weight_500">작성자 : </div>#}
 {#                            </div>#}
-                            <div class="obj_table_cell_x2" style="width:40px;">
-                                <img src="{{ qa_info.member.profile_url }}" class="obj_box_photo">
+                            <div class="obj_table_cell_x2" style="width:auto;">
+                                - {{ qa_info.get_status_type_cd_name }}
                             </div>
                             <div class="obj_table_cell_x2" style="width:auto;">
-                                <div class="obj_font_size_12_weight_500">{{ qa_info.member.name }}</div>
+{#                                <div class="obj_font_size_12_weight_500">{{ qa_info.member.name }}</div>#}
                             </div>
                         </div>
 {#                    </div>#}
                 </div>
             </div>
             <div class="wrapper_inquiry_history_info_content obj_font_size_14_weight_500">
-                <div class="obj_box_full">
-                        <div style="width:auto;">
-                            {{ qa_info.title }}
-                        </div>
-                </div>
                 <div class="obj_table_raw obj_box_full">
-                        <div class="obj_font_color_grey obj_font_size_12_weight_normal" style="height:35px">
-                            <div style="float:right;">
+                        <div style="height:35px">
+                            <div>
+                                    문의사항 :
+                            </div>
+                            <div class="obj_font_color_grey obj_font_size_12_weight_normal">
                                 {{ qa_info.reg_dt | date:'Y.m.d (l)'|cut:"요일" }} {{ qa_info.reg_dt | time:'H:i' }}
                             </div>
                         </div>
-                        <div style="width:auto;" id="daily_record_content_wrap">
+                        <div style="width:auto; margin-top:30px;" class="inquiry_history_info_content_wrap">
                             {% autoescape off %}
                                 {{ qa_info.contents }}
                             {% endautoescape %}
                         </div>
                 </div>
+                {% if qa_comment_info %}
+                    <div class="obj_table_raw obj_box_full">
+                            <div style="height:35px">
+                                <div>
+                                    답변 :
+                                </div>
+                                <div class="obj_font_color_grey obj_font_size_12_weight_normal">
+                                    {{ qa_comment_info.reg_dt | date:'Y.m.d (l)'|cut:"요일" }} {{ qa_comment_info.reg_dt | time:'H:i' }}
+                                </div>
+                            </div>
+                            <div style="width:auto; margin-top:30px;" class="daily_record_content_wrap">
+                                {% autoescape off %}
+                                    {{ qa_comment_info.contents }}
+                                {% endautoescape %}
+                            </div>
+                    </div>
+                {% endif %}
             </div>
 
         {% else %}

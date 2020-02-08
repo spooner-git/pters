@@ -1,8 +1,9 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 
 from configs.const import BOARD_TYPE_CD_QA, BOARD_TYPE_CD_NOTICE, TO_MEMBER_BOARD_TYPE_CD_ALL
 from configs.models import TimeStampedModel
-from login.models import MemberTb
+from login.models import MemberTb, CommonCdTb
 
 
 class QATb(TimeStampedModel):
@@ -19,6 +20,22 @@ class QATb(TimeStampedModel):
     class Meta:
         managed = False
         db_table = 'QA_TB'
+
+    def get_qa_type_cd_name(self):
+        try:
+            qa_type_cd_name = CommonCdTb.objects.get(common_cd=self.qa_type_cd).common_cd_nm
+        except ObjectDoesNotExist:
+            qa_type_cd_name = ''
+
+        return qa_type_cd_name
+
+    def get_status_type_cd_name(self):
+        try:
+            status_type_cd_name = CommonCdTb.objects.get(common_cd=self.status_type_cd).common_cd_nm
+        except ObjectDoesNotExist:
+            status_type_cd_name = ''
+
+        return status_type_cd_name
 
 
 class QACommentTb(TimeStampedModel):

@@ -37,7 +37,7 @@
         <div class="wrapper_inquiry_history_list obj_box_full" style="padding:0;">
         {% for qa_info in qa_data %}
             <div class="obj_table_raw wrapper_inquiry_history_element" style="height: 45px; border-bottom:1px solid #f5f2f3"
-                 onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_inquiry_history_info', 90, POPUP_FROM_BOTTOM, {'qa_id':'{{ qa_info.qa_id }}'});">
+                 onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_inquiry_history_info', 90, POPUP_FROM_BOTTOM, {'qa_id':{{qa_info.qa_id}}});">
                 <div class="obj_table_cell_x3 wrapper_inquiry_history_element_text" style="width: 20%; padding-left: 10px; text-align: center;">
                     <span class="obj_font_size_14_weight_normal obj_font_color_light_grey">{{ qa_info.reg_dt | date:'Y.m.d' }}</span>
                 </div>

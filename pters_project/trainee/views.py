@@ -13,7 +13,7 @@ from django.utils import timezone
 from django.views import View
 from django.views.generic import TemplateView, RedirectView
 
-from board.models import QATb
+from board.models import QATb, QACommentTb
 from configs import settings
 from configs.views import AccessTestMixin, func_setting_data_update
 from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, DEL_SCHEDULE, USE, UN_USE, FROM_TRAINEE_LESSON_ALARM_ON, \
@@ -1924,10 +1924,32 @@ class PopupInquiryHistoryInfoView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(PopupInquiryHistoryInfoView, self).get_context_data(**kwargs)
         qa_id = self.request.GET.get('qa_id')
-        qa_info = QATb.objects.get(qa_id=qa_id).order_by('-reg_dt')
+        error = None
+        qa_info = None
+        qa_comment_info = None
+
+        if qa_id is None or qa_id != '':
+            try:
+                qa_info = QATb.objects.get(qa_id=qa_id)
+            except ObjectDoesNotExist:
+                error = '문의 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            if qa_info.status_type_cd == 'QA_COMPLETE':
+                try:
+                    qa_comment_info = QACommentTb.objects.get(qa_tb_id=qa_id)
+                except ObjectDoesNotExist:
+                    qa_comment_info = None
+
+        if error is not None:
+            logger.error('[' + str(self.request.user.id) + ']' + str(error))
+            messages.error(self.request, str(error))
+
         context['qa_info'] = qa_info
+        context['qa_comment_info'] = qa_comment_info
 
         return context
+
 
 # skkim Test페이지, 테스트 완료후 지울것 190316
 class TestPageView(TemplateView):
