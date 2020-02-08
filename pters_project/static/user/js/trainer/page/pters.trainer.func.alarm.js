@@ -92,6 +92,11 @@ class Alarm {
                 let alarm_how = data.alarm_how;
                 let alarm_time_ago = data.time_ago;
                 let alarm_detail = data.alarm_detail;
+            
+                if(alarm_what.match(/수강권/)){
+                    continue;
+                }
+
                 if(alarm_detail.split('->').length > 1){
                     let alarm_detail_of_change_plan = alarm_detail.split('->');
                     alarm_detail = "변경 전: " + alarm_detail_of_change_plan[0] + "<br> 변경 후: " + alarm_detail_of_change_plan[1];
@@ -100,7 +105,7 @@ class Alarm {
                 let read_check = data.read_check;
                 let alarm_highlight = "";
                 if(this.new_alarms_id_cache.indexOf(alarm_id) != -1){
-                    alarm_highlight = "var(--bg-for-only-new-notifi)";
+                    alarm_highlight = "#C0B4FF";
                 }
                 let html = `<article class="alarm_wrapper anim_fade_in_vibe_top" data-alarm_id="${alarm_id}" style="background-color:${alarm_highlight}">
                                 <div class="alarm_data_u">
@@ -227,10 +232,13 @@ class Alarm {
         Setting_shared_func.read_request((invited)=>{
             let invited_length = Object.keys(invited).length;
             Alarm_func.read((data)=>{
-                console.log(data);
                 for(let date in data){
                     let length = data[date].length;
                     for(let i=0; i<length; i++){
+                        let alarm_what = data[date][i].alarm_info;
+                        if(alarm_what.match(/수강권/)){
+                            continue;
+                        }
                         let read_check = data[date][i].read_check;
                         let alarm_id = data[date][i].alarm_id;
                         if(read_check == UNREAD){

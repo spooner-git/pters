@@ -1108,7 +1108,8 @@ def func_get_member_schedule_all_by_schedule_dt(class_id, member_id, page):
             mod_member_name = member_schedule_info.mod_member.name
         end_dt = str(member_schedule_info.start_dt).split(' ')[0] + ' ' + end_dt_time
         # 일정 정보를 추가하고 수강권에 할당
-        schedule_info = {'schedule_idx': str(schedule_idx),
+        schedule_info = {
+                        # 'schedule_idx': str(schedule_idx),
                          'schedule_id': str(member_schedule_info.schedule_id),
                          'lecture_id': str(lecture_id),
                          'lecture_name': lecture_name,
@@ -1204,7 +1205,8 @@ def func_get_member_schedule_all_by_monthly(class_id, member_id, page):
             mod_member_id = member_schedule_info.mod_member_id
             mod_member_name = member_schedule_info.mod_member.name
         # 일정 정보를 추가하고 수강권에 할당
-        schedule_info = {'schedule_idx': str(schedule_idx),
+        schedule_info = {
+                        # 'schedule_idx': str(schedule_idx),
                          'schedule_id': str(member_schedule_info.schedule_id),
                          'lecture_id': str(lecture_id),
                          'lecture_name': lecture_name,
