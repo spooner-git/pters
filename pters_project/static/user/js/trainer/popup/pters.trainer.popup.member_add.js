@@ -284,14 +284,14 @@ class Member_add{
     dom_row_toolbox(){
         let title = this.data_from_external == null ? '새로운 회원' : '등록';
         let html = `
-        <div class="member_add_upper_box">
-            <div style="display:inline-block;width:200px;">
+        <div class="member_add_upper_box" style="display:table;">
+            <div style="display:table-cell;width:200px;">
                 <span style="font-size:20px;font-weight:bold; letter-spacing: -0.9px; color: var(--font-main);">
                     ${title}
                 </span>
-                <!--<div style="float:right;" onclick="member_add_popup.popup_device_contacts_list();">-->
-                    <!--주소록에서 가져오기-->
-                <!--</div>-->
+            </div>
+            <div style="display:table-cell;width:200px;text-align:right;" onclick="member_add_popup.popup_device_contacts_list();">
+                주소록
             </div>
         </div>
         `;
@@ -916,8 +916,8 @@ class Member_add{
 
     popup_device_contacts_list(){
         let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
-        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SELECT, 100, popup_style, {'member_id':null}, ()=>{
-            member_select = new MemberContactsSelector('#wrapper_box_member_select', this, '주소록', (set_data)=>{
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_CONTACTS_SELECT, 100, popup_style, {'member_id':null}, ()=>{
+            member_contacts_select = new MemberContactsSelector('#wrapper_box_member_contacts_select', this, '주소록', (set_data)=>{
                 this.member = set_data;
                 this.data.member_id = set_data.member_id;
                 this.data.phone = set_data.phone;

@@ -373,6 +373,19 @@ input:disabled{
 	float: right;;
 }
 
+.select_member_row .cell_member_contacts_selected{
+	display: table-cell;
+	width: 24px;
+	vertical-align: middle;
+}
+.select_contacts_member_row .cell_member_contacts_selected img{
+	display: none;
+}
+.select_contacts_member_row .cell_member_contacts_selected .member_contacts_selected{
+	display: block !important;
+	float: right;;
+}
+
 
 .select_color_row{
 	list-style: none;
@@ -861,5 +874,17 @@ input:disabled{
 }
 /* 탭 */
 
-
-
+.member_contacts_search_tool{
+	/* background-color: var(--bg-main); */
+	background-color: var(--root-content-bg-color);
+	padding-bottom: 5px;
+	text-align: center;
+}
+.member_contacts_search_tool > input{
+	width: 95%;
+	height: 35px;
+	border: var(--border-article-dark);
+	border-radius: 2px;
+	padding: 0 10px;
+	box-sizing: border-box;
+}

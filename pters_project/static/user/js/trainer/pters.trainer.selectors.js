@@ -3242,6 +3242,8 @@ class MemberContactsSelector{
         this.received_data = [];
         this.callback = callback;
         this.title = title;
+        this.search = false;
+        this.search_value = "";
         // this.multiple_select = multiple_select;
         this.data = {
             member_id: '',
@@ -3259,8 +3261,9 @@ class MemberContactsSelector{
 
     init(){
         this.request_list(()=>{
-            // this.render();
-            // func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
+            console.log('test');
+            this.render();
+            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
         });
     }
 
@@ -3271,10 +3274,16 @@ class MemberContactsSelector{
     }
 
     render(){
-        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();member_select.clear();">${CImg.arrow_left()}</span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();member_contacts_select.clear();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span id="">${this.title}</span></span>`;
-        let top_right = `<span class="icon_right"  onclick="member_select.upper_right_menu();"><span style="color:var(--font-highlight);font-weight: 500;">완료</span></span>`;
-        let content =   `<section>
+        let top_right = `<span class="icon_right"  onclick="member_contacts_select.upper_right_menu();"><span style="color:var(--font-highlight);font-weight: 500;">완료</span></span>
+                        <span class="icon_right search_member" onclick="member_contacts_select.search_contacts_member_tool_visible(event, this);">
+                                 ${CImg.search()}
+                        </span>
+                        `;
+
+        let content =   `<div class="member_contacts_search_tool"></div>
+                        <section>
                             ${this.dom_assembly()}
                         </section>`;
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
@@ -3295,7 +3304,7 @@ class MemberContactsSelector{
         let length = this.received_data.length;
         let select_member_num = 0;
         if(length == 0){
-            html_to_join.push(CComponent.no_data_row('목록이 비어있습니다.', {"border-bottom":0}));
+            html_to_join.push(CComponent.no_data_row('목록을 가져오지 못했습니다.', {"border-bottom":0}));
         }
         for(let i=0; i<length; i++){
             let data = this.received_data[i];
@@ -3371,9 +3380,60 @@ class MemberContactsSelector{
         return html_to_join.join('');
     }
 
+    search_contacts_member_tool_visible (event, self){
+        event.stopPropagation();
+        event.preventDefault();
+        switch(this.search){
+        case true:
+            this.search = false;
+            document.getElementsByClassName('search_input')[0].value = this.search_value;
+            this.render_search_tool('clear');
+            this.search_value = "";
+            Array.from(document.getElementsByClassName('select_member_row')).forEach((el)=>{
+                $(el).show();
+            });
+
+            $(self).html(CImg.search());
+            break;
+        case false:
+            this.search = true;
+            this.render_search_tool('draw');
+            document.getElementsByClassName('search_input')[0].value = this.search_value;
+
+            $(self).html(CImg.x());
+            break;
+        }
+    }
+    render_search_tool(type){
+        let html = `<input type="text" class="search_input" placeholder="이름 검색" onclick="event.stopPropagation();" onkeyup="member_contacts_select.search_contacts_member_by_typing(event)">`;
+        if(type == "clear"){
+            html = '';
+        }
+
+        document.querySelector('.member_contacts_search_tool').innerHTML = html;
+    }
+
+    search_contacts_member_by_typing (event){
+        let value = event.target.value;
+        this.search_value = value;
+        Array.from(document.getElementsByClassName('select_member_row')).forEach((el)=>{
+            let name = el.dataset.name;
+            if(name.match(value)){
+                // el.style.display = 'block';
+                $(el).show();
+                // $("#root_content").scrollTop(1);
+            }else{
+                $(el).hide();
+                // el.style.display = 'none';
+            }
+        });
+    }
     request_list (callback){
-        if((os == IOS) && (device = MOBILE)){
+        if((os == IOS) && (device_info == 'app')){
             window.webkit.messageHandlers.get_contacts.postMessage('');
+        }
+        else{
+            callback();
         }
     }
 
@@ -3392,8 +3452,33 @@ class MemberContactsSelector{
         this.received_data.push(data);
     }
     get_device_contacts_finish(){
-        this.render();
-        func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
+        // alert(this.received_data.length);
+        if(this.received_data.length==0){
+            layer_popup.close_layer_popup();
+            member_contacts_select.clear();
+        }
+        else{
+            this.received_data.sort(function(a, b){
+                let return_val = 0;
+                if(a.name <= b.name){
+                    return_val = -1;
+                }
+                else if(a.name > b.name){
+                    return_val = 1;
+                }
+                else{
+                    if(a.phone <= b.phone) {
+                        return_val = -1;
+                    }
+                    else if(a.phone > b.phone){
+                        return_val = 1;
+                    }
+                }
+                return return_val;
+            });
+            this.render();
+            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
+        }
     }
 }
 
