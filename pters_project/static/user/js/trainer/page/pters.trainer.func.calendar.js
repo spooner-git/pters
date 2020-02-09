@@ -1257,6 +1257,7 @@ class Calendar {
     }
 
     open_popup_plan_view (event, schedule_id, year, month, date){
+        event.stopPropagation();
         if(this.long_touch == ON){
             return false;
         }
