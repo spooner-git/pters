@@ -45,8 +45,8 @@
                             {% endautoescape %}
                         </div>
                 </div>
-                    <div class="obj_table_raw obj_box_full" style="margin-top:20px;">
-                        {% if qa_comment_info %}
+                    {% if qa_comment_info %}
+                        <div class="obj_table_raw obj_box_full" style="margin-top:20px;">
                             <div style="height:35px">
                                 <div>
                                     PTERS 답변 :
@@ -60,17 +60,21 @@
                                     {{ qa_comment_info.contents }}
                                 {% endautoescape %}
                             </div>
-                        {% else %}
-                            <div style="height:35px">
-                                <div>
-                                    PTERS 답변 :
+                        </div>
+                    {% else %}
+                        {% if qa_info.status_type_cd == 'QA_COMPLETE' %}
+                            <div class="obj_table_raw obj_box_full" style="margin-top:20px;">
+                                <div style="height:35px">
+                                    <div>
+                                        PTERS 답변 :
+                                    </div>
+                                </div>
+                                <div style="width:auto; margin-top:30px;" class="inquiry_history_info_content_wrap">
+                                    고객님의 Email 로 답변이 전달 되었습니다.
                                 </div>
                             </div>
-                            <div style="width:auto; margin-top:30px;" class="inquiry_history_info_content_wrap">
-                                고객님의 Email 로 답변이 전달 되었습니다.
-                            </div>
                         {% endif %}
-                    </div>
+                    {% endif %}
             </div>
 
         {% else %}
