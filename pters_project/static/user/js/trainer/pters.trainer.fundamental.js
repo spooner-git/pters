@@ -1447,3 +1447,14 @@ function theme_data_to_app(){
         window.set_theme.callMethodName(setting_theme);
     }
 }
+// var device_contacts = {
+//     member_name: [],
+//     member_phone: []
+// };
+// function get_device_contacts_list(name, phone){
+//     console.log(name);
+//     console.log(phone);
+//     alert(name+':'+phone);
+//     device_contacts.member_name.append(name);
+//     device_contacts.member_phone.append(phone);
+// }

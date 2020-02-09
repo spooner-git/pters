@@ -37,7 +37,6 @@ class Member_add{
                 end_date:null,
                 end_date_text:null
         };
-
         this.date_start = 0;
         Setting_reserve_func.read((data)=>{
             let date_start_array = {"SUN":0, "MON":1};
@@ -290,6 +289,9 @@ class Member_add{
                 <span style="font-size:20px;font-weight:bold; letter-spacing: -0.9px; color: var(--font-main);">
                     ${title}
                 </span>
+                <!--<div style="float:right;" onclick="member_add_popup.popup_device_contacts_list();">-->
+                    <!--주소록에서 가져오기-->
+                <!--</div>-->
             </div>
         </div>
         `;
@@ -854,8 +856,6 @@ class Member_add{
             "pay_method":this.data.pay_method.value[0]
         };
 
-        console.log(data_for_new)
-
         if(this.data_from_external == null){ //신규 회원 등록
             Member_func.create_pre(data_for_new, (received)=>{
                 data_for_new.member_id = received.user_db_id[0];
@@ -912,5 +912,18 @@ class Member_add{
             }
             return true;
         }
+    }
+
+    popup_device_contacts_list(){
+        let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SELECT, 100, popup_style, {'member_id':null}, ()=>{
+            member_select = new MemberContactsSelector('#wrapper_box_member_select', this, '주소록', (set_data)=>{
+                this.member = set_data;
+                this.data.member_id = set_data.member_id;
+                this.data.phone = set_data.phone;
+                this.data.name = set_data.name;
+                this.render_content();
+            });
+        });
     }
 }

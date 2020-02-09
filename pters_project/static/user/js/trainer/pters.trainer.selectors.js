@@ -3234,6 +3234,169 @@ class MemberSelector{
     }
 }
 
+class MemberContactsSelector{
+    constructor(install_target, target_instance, title, callback){
+        this.target = {install:install_target};
+        this.target_instance = target_instance;
+        this.unique_instance = install_target.replace(/#./gi, "");
+        this.received_data = [];
+        this.callback = callback;
+        this.title = title;
+        // this.multiple_select = multiple_select;
+        this.data = {
+            member_id: '',
+            name: '',
+            phone: ''
+        };
+        this.data.member_id = this.target_instance.data.member_id;
+        this.data.name = this.target_instance.data.name;
+        this.data.phone = this.target_instance.data.phone;
+
+        // this.hide_entire_member_list = true;
+
+        this.init();
+    }
+
+    init(){
+        this.request_list(()=>{
+            // this.render();
+            // func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
+        });
+    }
+
+    clear(){
+        setTimeout(()=>{
+            document.querySelector(this.target.install).innerHTML = "";
+        }, 300);
+    }
+
+    render(){
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();member_select.clear();">${CImg.arrow_left()}</span>`;
+        let top_center = `<span class="icon_center"><span id="">${this.title}</span></span>`;
+        let top_right = `<span class="icon_right"  onclick="member_select.upper_right_menu();"><span style="color:var(--font-highlight);font-weight: 500;">완료</span></span>`;
+        let content =   `<section>
+                            ${this.dom_assembly()}
+                        </section>`;
+        let html = PopupBase.base(top_left, top_center, top_right, content, "");
+
+        document.querySelector(this.target.install).innerHTML = html;
+    }
+
+    dom_assembly(){
+        let all_member_list = `<div>${this.dom_list()}</div>`;
+
+        let html = all_member_list;
+
+        return html;
+    }
+
+    dom_list (){
+        let html_to_join = [];
+        let length = this.received_data.length;
+        let select_member_num = 0;
+        if(length == 0){
+            html_to_join.push(CComponent.no_data_row('목록이 비어있습니다.', {"border-bottom":0}));
+        }
+        for(let i=0; i<length; i++){
+            let data = this.received_data[i];
+            let member_name = data.name;
+            let member_phone = data.phone;
+            let member_id = data.member_id;
+            // let member_rem_count = data.member_ticket_rem_count;
+            let member_profile_url = '/static/common/icon/icon_account.png';
+            let checked = this.target_instance.data.member_id == member_id ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
+
+            // if(this.appendix.disable_zero_avail_count == ON && member_avail_count == 0){
+            //     checked = 0;
+            // }
+            let html = CComponent.select_member_contacts_row (
+                checked, this.unique_instance, member_id, member_name, member_phone, member_profile_url, (add_or_substract)=>{
+                    if(add_or_substract == "add"){
+                        this.data.member_id = member_id;
+                        this.data.phone = member_phone;
+                        this.data.name = member_name;
+                    }else if(add_or_substract == "substract"){
+                        this.data.member_id = '';
+                        this.data.phone = '';
+                        this.data.name = '';
+                        // this.data.phone.splice(this.data.phone.indexOf(member_phone), 1);
+                        // this.data.name.splice(this.data.phone.indexOf(member_phone), 1);
+                    }else if(add_or_substract == "add_single"){
+                        // this.data.phone = [];
+                        // this.data.name = [];
+                        // this.data.phone.push(member_phone);
+                        // this.data.name.push(member_name);
+                        this.data.member_id = member_id;
+                        this.data.phone = member_phone;
+                        this.data.name = member_name;
+                    }
+                    // if(this.multiple_select == 1){
+                        this.upper_right_menu();
+                    // }
+                }
+            );
+            if(checked!=0){
+                select_member_num++;
+            }
+            if(checked > 0){
+                html_to_join.unshift(html);
+            }else{
+                html_to_join.push(html);
+            }
+        }
+
+        // if(this.hide_entire_member_list == true){
+        //     html_to_join = [];
+        // }
+
+        // html_to_join.unshift(`<div class="select_member_max_num">
+        //                         <span>전체 회원</span><span style="float:right;">${CComponent.text_button("entire_member_toggle", this.hide_entire_member_list == true ? "펼치기" : "접기", null, ()=>{
+        //                             this.hide_entire_member_list = this.hide_entire_member_list == true ? false : true;
+        //                             this.render();
+        //                         })}</span>
+        //                     </div>`);
+        // let img_expand = CImg.arrow_expand("", {"width":"18px", "height":"18px", "vertical-align":"middle"});
+        // let img_fold = CImg.arrow_expand("", {"width":"18px", "height":"18px", "vertical-align":"middle", "transform":"rotate(180deg)"})
+        //
+        // let button_title = `<span>전체 회원</span><span style="float:right;">${this.hide_entire_member_list == true ? "펼치기 "+img_expand : "접기" + img_fold}</span>`;
+        // html_to_join.unshift(`<div class="select_member_max_num">
+        //                         ${CComponent.text_button("entire_member_toggle", button_title, {"display":"block"}, ()=>{
+        //                             this.hide_entire_member_list = this.hide_entire_member_list == true ? false : true;
+        //                             this.render();
+        //                         })}
+        //
+        //                     </div>`);
+
+        // document.querySelector(this.targetHTML).innerHTML = html_to_join.join('');
+        return html_to_join.join('');
+    }
+
+    request_list (callback){
+        if((os == IOS) && (device = MOBILE)){
+            window.webkit.messageHandlers.get_contacts.postMessage('');
+        }
+    }
+
+    upper_right_menu(){
+        this.callback(this.data);
+        layer_popup.close_layer_popup();
+        this.clear();
+    }
+
+    get_device_contacts_list(name, phone){
+        let data = {
+            member_id:this.received_data.length,
+            name:name,
+            phone:phone
+        };
+        this.received_data.push(data);
+    }
+    get_device_contacts_finish(){
+        this.render();
+        func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
+    }
+}
+
 class ColorSelector{
     constructor(install_target, target_instance, multiple_select, callback){
         this.target = {install:install_target};

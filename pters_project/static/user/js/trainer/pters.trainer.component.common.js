@@ -386,6 +386,42 @@ class CComponent{
         return html;
     }
 
+    //회원 선택 팝업에 사용되는 행
+    static select_member_contacts_row (checked, location, member_id, member_name, member_phone, member_profile_url, callback){
+        let html = `
+                    <li class="select_member_row smr_${location}" id="select_member_contacts_row_${member_id}">
+                        <div class="obj_table_raw">
+                            <div style="display:table-cell; width:35px; height:35px; padding-right:10px;">
+                                <img src="${member_profile_url}" style="width:35px; height:35px; border-radius: 50%;">
+                            </div>
+                            <div style="display:table-cell; vertical-align: middle;">
+                                <div class="cell_member_name">
+                                    ${member_name}
+                                </div>
+                                <div class="cell_member_info">
+                                    ${member_phone} //////
+                                </div>
+                            </div>
+                            <div style="display:table-cell; line-height:35px; float:right;">
+                                <div class="cell_member_selected ${checked == 0 ? '' : 'member_selected'}">
+                                    ${CImg.confirm("", checked == 0 ? {"display":"none"} : {"display":"block"})}
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    `;
+        // if(multiple_select == 1){
+            $(document).off('click', `#select_member_contacts_row_${member_id}`).on('click', `#select_member_contacts_row_${member_id}`, function(e){
+                if(checked == 1){
+                    return false;
+                }
+                callback('add_single');
+
+            });
+        // }
+        return html;
+    }
+
     //색상 선택 팝업에 사용되는 행
     static select_color_row (multiple_select, checked, location, bg_code, font_code, color_name, onclick){
         let color_bg_code_without_sharp = bg_code.replace('#', '');
