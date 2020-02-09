@@ -283,18 +283,27 @@ class Member_add{
 
     dom_row_toolbox(){
         let title = this.data_from_external == null ? '새로운 회원' : '등록';
-        let html = `
-        <div class="member_add_upper_box" style="display:table;">
-            <div style="display:table-cell;width:200px;">
-                <span style="font-size:20px;font-weight:bold; letter-spacing: -0.9px; color: var(--font-main);">
-                    ${title}
-                </span>
-            </div>
-            <div style="display:table-cell;width:200px;text-align:right;" onclick="member_add_popup.popup_device_contacts_list();">
-                주소록
-            </div>
-        </div>
-        `;
+        let html = `<div class="member_add_upper_box" style="display:table;">
+                        <div style="display:table-cell;width:200px;">
+                            <span style="font-size:20px;font-weight:bold; letter-spacing: -0.9px; color: var(--font-main);">
+                                ${title}
+                            </span>
+                        </div>
+                        <div style="display:table-cell;width:200px;text-align:right; color:blue; font-size:13px;" onclick="member_add_popup.popup_device_contacts_list();">
+                            주소록
+                        </div>
+                    </div>
+                    `;
+        if(device_info != 'app'){
+            html = `<div class="member_add_upper_box" style="display:table;">
+                        <div style="display:table-cell;width:200px;">
+                            <span style="font-size:20px;font-weight:bold; letter-spacing: -0.9px; color: var(--font-main);">
+                                ${title}
+                            </span>
+                        </div>
+                    </div>
+                    `;
+        }
         return html;
     }
 
