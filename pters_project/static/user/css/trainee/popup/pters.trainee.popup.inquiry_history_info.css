@@ -12,7 +12,7 @@
 		margin-bottom: 5px;
 		box-sizing: border-box;
 	}
-	#daily_record_content_wrap img, #daily_record_content_wrap iframe{
+	.inquiry_history_info_content_wrap img, .inquiry_history_info_content_wrap iframe{
 		width: 100% !important;
 	}
 

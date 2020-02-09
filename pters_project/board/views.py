@@ -67,9 +67,9 @@ class GetQADataView(LoginRequiredMixin, TemplateView):
                                         status_type_cd_name=RawSQL(query_status, [])
                                         ).order_by('reg_dt')
         for qa_info in qa_list:
-            if qa_info.read == 0 and qa_info.status_type_cd == 'QA_COMPLETE':
-                qa_info.read = 1
-                qa_info.save()
+            # if qa_info.read == 0 and qa_info.status_type_cd == 'QA_COMPLETE':
+            #     qa_info.read = 1
+            #     qa_info.save()
             qa_info.contents = qa_info.contents.replace('\n', '<br/>')
         context['qa_data'] = qa_list
 
@@ -137,7 +137,8 @@ class GetQACommentDataView(LoginRequiredMixin, View):
                                     'qa_comment_mod_dt': str(qa_comment_info.mod_dt),
                                     'qa_comment_reg_dt': str(qa_comment_info.reg_dt),
                                     'qa_comment_use': qa_comment_info.use})
-            qa_comment_info.read = 1
-            qa_comment_info.save()
+            if qa_comment_info.read == 0:
+                qa_comment_info.read = 1
+                qa_comment_info.save()
 
         return JsonResponse({'qa_comment_data': qa_comment_list}, json_dumps_params={'ensure_ascii': True})
