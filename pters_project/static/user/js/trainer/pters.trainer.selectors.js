@@ -3261,7 +3261,6 @@ class MemberContactsSelector{
 
     init(){
         this.request_list(()=>{
-            console.log('test');
             this.render();
             func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
         });
@@ -3430,7 +3429,10 @@ class MemberContactsSelector{
     }
     request_list (callback){
         if((os == IOS) && (device_info == 'app')){
-            window.webkit.messageHandlers.get_contacts.postMessage('');
+            window.webkit.messageHandlers.get_contacts.postMessage("");
+        }
+        else if ((os == ANDROID) && (device_info == 'app')){
+            window.get_contacts.callMethodName("");
         }
         else{
             callback();
