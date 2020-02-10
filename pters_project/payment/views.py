@@ -1056,8 +1056,13 @@ class GetCouponProductInfoView(LoginRequiredMixin, View):
         if error is None:
             try:
                 product_info = ProductTb.objects.get(coupon_cd=coupon_cd, use=USE)
+                if product_info.expiry_date < timezone.now():
+                    error = '오류 : 유효기간이 지난 쿠폰입니다.'
+                if product_info.coupon_amount <= 0:
+                    error = '오류 : 쿠폰이 모두 소진됐습니다.'
             except ObjectDoesNotExist:
                 error = '쿠폰 코드를 다시 확인해주세요.[2]'
+
         if error is None:
             product_function_auth_data = ProductFunctionAuthTb.objects.select_related(
                 'function_auth_tb').filter(product_tb_id=product_info.product_id,
@@ -1290,6 +1295,7 @@ def payment_for_coupon_logic(request):
     if error is None:
         try:
             payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id, status='paid',
+                                                        product_tb__promotion_type_cd='NORMAL_PRODUCT',
                                                         end_date__gte=today,
                                                         use=USE).latest('end_date')
             error = '오류 : 최초 결제 이벤트 쿠폰입니다.'
@@ -1298,9 +1304,21 @@ def payment_for_coupon_logic(request):
 
     if error is None:
         try:
+            payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id, status='paid',
+                                                        product_tb__promotion_type_cd='COUPON_PRODUCT',
+                                                        end_date__gte=today,
+                                                        use=USE).latest('end_date')
+            start_date = payment_info.end_date + datetime.timedelta(days=1)
+        except ObjectDoesNotExist:
+            start_date = today
+
+    if error is None:
+        try:
             product_info = ProductTb.objects.get(product_id=product_id, use=USE)
             if product_info.expiry_date < timezone.now():
                 error = '오류 : 유효기간이 지난 쿠폰입니다.'
+            if product_info.coupon_amount <= 0:
+                error = '오류 : 쿠폰이 모두 소진됐습니다.'
         except ObjectDoesNotExist:
             error = '쿠폰 등록 오류 발생[0]'
 
@@ -1348,6 +1366,8 @@ def payment_for_coupon_logic(request):
         payment_info.save()
 
     if error is None:
+        product_info.coupon_amount -= 1
+        product_info.save()
         logger.info(str(request.user.first_name)
                     + '(' + str(request.user.id) + ')님 coupon 결제 완료:' + str(product_id) + ':' + ' '
                     + str(start_date))

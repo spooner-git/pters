@@ -556,7 +556,7 @@ class Pters_pass_shop{
 
                 if(jsondata.messageArray.length>0){
                     this.coupon_html = "";
-                    msg = '쿠폰 코드를 다시 확인해주세요.';
+                    msg = jsondata.messageArray;
                     show_error_message({title:msg});
                 }else {
                     callback(jsondata);
