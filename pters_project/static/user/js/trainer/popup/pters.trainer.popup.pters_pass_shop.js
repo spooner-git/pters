@@ -232,6 +232,10 @@ class Pters_pass_shop{
                             <div class="product_explain_row_detail">10개</div>
                         </div>
                         <div class="product_explain_row">
+                            <div class="product_explain_row_title">${CImg.confirm(["var(--fundamental-white)"], {"vertical-align":"middle", "width":"17px", "margin-right":"5px"})} 공지사항</div>
+                            <div class="product_explain_row_detail">이용 가능</div>
+                        </div>
+                        <div class="product_explain_row">
                             <div class="product_explain_row_title">${CImg.confirm(["var(--fundamental-white)"], {"vertical-align":"middle", "width":"17px", "margin-right":"5px"})} 설정</div>
                             <div class="product_explain_row_detail">제한 없음</div>
                         </div>
@@ -293,6 +297,10 @@ class Pters_pass_shop{
                             <div class="product_explain_row_detail">5개</div>
                         </div>
                         <div class="product_explain_row">
+                            <div class="product_explain_row_title">${CImg.confirm(["var(--fundamental-white)"], {"vertical-align":"middle", "width":"17px", "margin-right":"5px"})} 공지사항</div>
+                            <div class="product_explain_row_detail">이용 가능</div>
+                        </div>
+                        <div class="product_explain_row">
                             <div class="product_explain_row_title">${CImg.confirm(["var(--fundamental-white)"], {"vertical-align":"middle", "width":"17px", "margin-right":"5px"})} 설정</div>
                             <div class="product_explain_row_detail">제한 없음</div>
                         </div>
@@ -350,6 +358,10 @@ class Pters_pass_shop{
                         <div class="product_explain_row">
                             <div class="product_explain_row_title">${CImg.confirm(["var(--fundamental-white)"], {"vertical-align":"middle", "width":"17px", "margin-right":"5px"})} 프로그램</div>
                             <div class="product_explain_row_detail">2개</div>
+                        </div>
+                        <div class="product_explain_row">
+                            <div class="product_explain_row_title">${CImg.confirm(["var(--fundamental-white)"], {"vertical-align":"middle", "width":"17px", "margin-right":"5px"})} 공지사항</div>
+                            <div class="product_explain_row_detail">이용 가능</div>
                         </div>
                         <div class="product_explain_row">
                             <div class="product_explain_row_title">${CImg.confirm(["var(--fundamental-white)"], {"vertical-align":"middle", "width":"17px", "margin-right":"5px"})} 설정</div>

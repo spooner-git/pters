@@ -232,7 +232,7 @@ class Menu {
     dom_menu_program_notice(){
         let id = 'menu_program_notice';
         let title = '공지사항';
-        let icon = CImg.program_notice();
+        let icon = CImg.notice();
         let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
