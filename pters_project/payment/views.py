@@ -1281,18 +1281,18 @@ def payment_for_coupon_logic(request):
     if error is None:
         try:
             payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id, status='paid',
-                                                        end_date__gte=today,
+                                                        product_tb_id=product_id,
                                                         use=USE).latest('end_date')
-            error = '오류 : 최초 결제 이벤트 쿠폰입니다.'
+            error = '오류 : 이미 사용한 쿠폰입니다.'
         except ObjectDoesNotExist:
             start_date = today
 
     if error is None:
         try:
             payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id, status='paid',
-                                                        product_tb_id=product_id,
+                                                        end_date__gte=today,
                                                         use=USE).latest('end_date')
-            error = '오류 : 이미 사용한 쿠폰입니다.'
+            error = '오류 : 최초 결제 이벤트 쿠폰입니다.'
         except ObjectDoesNotExist:
             start_date = today
 
