@@ -389,21 +389,21 @@ class CComponent{
     //회원 선택 팝업에 사용되는 행
     static select_member_contacts_row (checked, location, member_id, member_name, member_phone, member_profile_url, callback){
         let html = `
-                    <li class="select_member_row smr_${location}" id="select_member_contacts_row_${member_id}">
+                    <li class="select_member_contacts_row smr_${location}" id="select_member_contacts_row_${member_id}"  data-name="${member_name}">
                         <div class="obj_table_raw">
-                            <div style="display:table-cell; width:35px; height:35px; padding-right:10px;">
-                                <img src="${member_profile_url}" style="width:35px; height:35px; border-radius: 50%;">
+                            <div style="display:table-cell; width:45px; height:45px; padding-right:10px; line-height:0px;">
+                                <img src="${member_profile_url}" style="width:45px; height:45px; border-radius: 50%;">
                             </div>
                             <div style="display:table-cell; vertical-align: middle;">
                                 <div class="cell_member_name">
                                     ${member_name}
                                 </div>
                                 <div class="cell_member_info">
-                                    ${member_phone} //////
+                                    ${member_phone}
                                 </div>
                             </div>
-                            <div style="display:table-cell; line-height:35px; float:right;">
-                                <div class="cell_member_selected ${checked == 0 ? '' : 'member_selected'}">
+                            <div style="display:table-cell; float:right;">
+                                <div class="cell_member_contacts_selected ${checked == 0 ? '' : 'member_selected'}">
                                     ${CImg.confirm("", checked == 0 ? {"display":"none"} : {"display":"block"})}
                                 </div>
                             </div>
