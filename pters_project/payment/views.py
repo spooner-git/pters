@@ -1041,6 +1041,51 @@ class GetProductInfoView(LoginRequiredMixin, View):
         return render(request, self.template_name, context)
 
 
+class GetCouponProductInfoView(LoginRequiredMixin, View):
+    template_name = 'ajax/product_info.html'
+
+    def get(self, request):
+        context = {}
+        # product_id = request.GET.get('product_id', '')
+        coupon_cd = request.GET.get('coupon_cd', '')
+        product_function_data = []
+        error = None
+        if coupon_cd is None or coupon_cd == '':
+            error = '쿠폰 코드를 다시 확인해주세요.[1]'
+
+        if error is None:
+            try:
+                product_info = ProductTb.objects.get(coupon_cd=coupon_cd, use=USE)
+            except ObjectDoesNotExist:
+                error = '쿠폰 코드를 다시 확인해주세요.[2]'
+        if error is None:
+            product_function_auth_data = ProductFunctionAuthTb.objects.select_related(
+                'function_auth_tb').filter(product_tb_id=product_info.product_id,
+                                           use=USE).order_by('function_auth_tb_id', 'auth_type_cd')
+            temp_function_auth_tb_id = ''
+
+            for product_function_auth_info in product_function_auth_data:
+                if temp_function_auth_tb_id == '':
+                    temp_function_auth_tb_id = product_function_auth_info.function_auth_tb_id
+                    product_function_data.append(product_function_auth_info.function_auth_tb.function_auth_type_name)
+                else:
+                    if temp_function_auth_tb_id != product_function_auth_info.function_auth_tb_id:
+                        temp_function_auth_tb_id = product_function_auth_info.function_auth_tb_id
+                        product_function_data.append(product_function_auth_info.function_auth_tb.function_auth_type_name)
+
+            product_price_data = ProductPriceTb.objects.filter(product_tb_id=product_info.product_id,
+                                                               use=USE).order_by('order')
+
+            context['product_info'] = product_info
+            context['product_function_data'] = product_function_data
+            context['product_function_auth_data'] = product_function_auth_data
+            context['product_price_data'] = product_price_data
+        else:
+            messages.error(request, error)
+
+        return render(request, self.template_name, context)
+
+
 class PaymentCompleteView(LoginRequiredMixin, TemplateView):
     template_name = 'payment_complete.html'
 
@@ -1213,6 +1258,92 @@ def payment_for_ios_logic(request):
                     + str(start_date))
 
         email = EmailMessage('[PTERS 결제]' + request.user.first_name + '회원', 'ios 인앱 결제 :' + str(timezone.now()),
+                             to=['support@pters.co.kr'])
+        email.send()
+    else:
+        messages.error(request, error)
+        logger.error(str(request.user.first_name) + '(' + str(request.user.id) + ')님 결제 완료 오류:' + str(error))
+
+    return render(request, 'ajax/payment_error_info.html', context)
+
+
+def payment_for_coupon_logic(request):
+    product_id = request.POST.get('product_id', '')
+    payment_type_cd = None
+    context = {}
+    error = None
+    today = datetime.date.today()
+    start_date = today
+    pay_info = '쿠폰 등록'
+    product_info = None
+    product_price_info = None
+
+    if error is None:
+        try:
+            payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id, status='paid',
+                                                        end_date__gte=today,
+                                                        use=USE).latest('end_date')
+            error = '오류 : 최초 결제 이벤트 쿠폰입니다.'
+        except ObjectDoesNotExist:
+            start_date = today
+
+    if error is None:
+        try:
+            product_info = ProductTb.objects.get(product_id=product_id, use=USE)
+            if product_info.expiry_date < timezone.now():
+                error = '오류 : 유효기간이 지난 쿠폰입니다.'
+        except ObjectDoesNotExist:
+            error = '쿠폰 등록 오류 발생[0]'
+
+    if error is None:
+        try:
+            product_price_info = ProductPriceTb.objects.get(product_tb_id=product_id,
+                                                            payment_type_cd='SINGLE',
+                                                            use=USE)
+        except ObjectDoesNotExist:
+            error = '쿠폰 등록 오류 발생[1]'
+
+    if error is None:
+        date = int(start_date.strftime('%d'))
+        end_date = str(func_get_end_date(payment_type_cd, start_date,
+                                         product_price_info.period_month, date)).split(' ')[0]
+        start_date = str(start_date).split(' ')[0]
+
+        payment_info = PaymentInfoTb(member_id=str(request.user.id),
+                                     product_tb_id=product_id,
+                                     payment_type_cd='SINGLE',
+                                     merchant_uid='m_'+str(request.user.id)+'_'+str(product_id)
+                                                  + '_' + str(timezone.now().timestamp()),
+                                     customer_uid='c_'+str(request.user.id)+'_'+str(product_id)
+                                                  + '_' + str(timezone.now().timestamp()),
+                                     start_date=start_date, end_date=end_date,
+                                     paid_date=today,
+                                     period_month=product_price_info.period_month,
+                                     price=int(product_price_info.sale_price),
+                                     name=product_info.name + ' - '+str(product_price_info.period_month)+'개월 이용권',
+                                     imp_uid='',
+                                     # imp_uid=input_transaction_id,
+                                     channel='coupon',
+                                     card_name=pay_info,
+                                     buyer_email=request.user.email,
+                                     status='paid',
+                                     fail_reason='',
+                                     currency='',
+                                     pay_method='coupon',
+                                     pg_provider='PTERS',
+                                     receipt_url='',
+                                     buyer_name=str(request.user.first_name),
+                                     # amount=int(payment_result['amount']),
+                                     use=USE)
+
+        payment_info.save()
+
+    if error is None:
+        logger.info(str(request.user.first_name)
+                    + '(' + str(request.user.id) + ')님 coupon 결제 완료:' + str(product_id) + ':' + ' '
+                    + str(start_date))
+
+        email = EmailMessage('[PTERS 결제]' + request.user.first_name + '회원', 'coupon 결제 :' + str(timezone.now()),
                              to=['support@pters.co.kr'])
         email.send()
     else:

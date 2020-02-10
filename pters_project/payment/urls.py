@@ -76,6 +76,10 @@ urlpatterns = [
     url(r'^get_product_info/$', views.GetProductInfoView.as_view(), name='get_product_info'),
 
 
+    # 쿠폰 기능
+    url(r'^get_coupon_product_info/$', views.GetCouponProductInfoView.as_view(), name='get_coupon_product_info'),
+
+
     # 현재 미사용 ########################################################################################################
     url(r'^delete_billing_info/$', views.delete_billing_info_logic, name='delete_billing_info'),
     # 결제 페이지
@@ -85,6 +89,7 @@ urlpatterns = [
 
     url(r'^payment_for_iap/$', views.payment_for_iap_logic, name='payment_for_iap'),
     url(r'^payment_for_ios/$', views.payment_for_ios_logic, name='payment_for_ios'),
+    url(r'^payment_for_coupon/$', views.payment_for_coupon_logic, name='payment_for_coupon'),
 
     url(r'^ios_receipt_validation/$', views.ios_receipt_validation_logic, name='ios_receipt_validation'),
 

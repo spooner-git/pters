@@ -1,7 +1,7 @@
 class Pters_pass_shop{
     constructor(install_target, pass_purchase_change){
         this.target = {install: install_target, toolbox:'section_pters_pass_shop_toolbox', content:'section_pters_pass_shop_content'};
-
+        this.coupon_html = "";
         this.data = {
             current:{
                 messageArray:[""],
@@ -110,6 +110,10 @@ class Pters_pass_shop{
         let basic_color = `background-color:#fe4e65;`;
         let custom_color = `background-color:var(--bg-invisible);`;
         let html =  '<article class="obj_input_box_full">' +
+                        `<div>  <input type="text" id="pters_pass_coupon_code" name="coupon_code" value="" placeholder="프로모션 코드 입력">
+                        </div> <div onclick="pters_pass_shop_popup.coupon_check((data)=>pters_pass_shop_popup.dom_row_pters_coupon_html(data));">확인</div>
+                        ${this.coupon_html}
+                        `+
                         `<div class="pters_pass_product_wrapper" style="${basic_color}" onclick="pters_pass_shop_popup.event_buy('basic')">` +
                             this.dom_row_pters_pass_basic() +
                             this.dom_row_pters_pass_basic_explain() +
@@ -359,6 +363,23 @@ class Pters_pass_shop{
         return html;
     }
 
+    dom_row_pters_pass_coupon(unit, promotion_name, price){
+        unit = " ~ "+unit +"(중복 사용 불가)";
+        let id = "pters_pass_basic_ticket";
+        let title = `<div style='font-size:12px;font-weight:500;margin-bottom:10px'>${promotion_name}</div>
+                    <span style="font-size:32px;font-weight:900">&#8361; ${price}</span><span style="font-size:13px">${unit}</span>
+                    `;
+        let icon = DELETE;
+        let icon_r_visible = NONE;
+        let icon_r_text = "";
+        let style = {"color":"var(--fundamental-white)", "font-weight":"bold", "height":"auto", "cursor":"unset"};
+        let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            // this.event_buy("basic");
+        });
+
+        let html = row;
+        return html;
+    }
     dom_row_pters_pass_custom(){
         let unit = ' 부터';
         // if(user_username =='guest'){
@@ -411,7 +432,30 @@ class Pters_pass_shop{
                     </article>`;
         return html;
     }
-
+    dom_row_pters_coupon_html(data){
+        let premium_color = `background-color:#362e2e;`;
+        let standard_color = `background-color:#d6424e;`;
+        let basic_color = `background-color:#fe4e65;`;
+        let upper_product_id = data.upper_product_id;
+        if(upper_product_id == PASS_PRODUCT.basic.id)
+            this.coupon_html = `<div class="pters_pass_product_wrapper" style="${basic_color}" onclick="pters_pass_shop_popup.event_coupon(${data.product_id})">` +
+                this.dom_row_pters_pass_coupon(data.product_price_name, data.product_name, data.product_price_price) +
+                this.dom_row_pters_pass_basic_explain() +
+            '</div>';
+        else if (upper_product_id == PASS_PRODUCT.standard.id){
+            this.coupon_html = `<div class="pters_pass_product_wrapper" style="${standard_color}" onclick="pters_pass_shop_popup.event_coupon(${data.product_id})">` +
+                this.dom_row_pters_pass_coupon(data.product_price_name, data.product_name, data.product_price_price) +
+                this.dom_row_pters_pass_standard_explain() +
+            '</div>';
+        }
+        else if(upper_product_id == PASS_PRODUCT.premium.id){
+            this.coupon_html = `<div class="pters_pass_product_wrapper" style="${premium_color}" onclick="pters_pass_shop_popup.event_coupon(${data.product_id})">` +
+                this.dom_row_pters_pass_coupon(data.product_price_name, data.product_name, data.product_price_price) +
+                this.dom_row_pters_pass_premium_explain() +
+            '</div>';
+        }
+        this.render_content();
+    }
     event_buy(product){
         let pass_purchase_change = this.data.pass_purchase_change;
 
@@ -454,12 +498,79 @@ class Pters_pass_shop{
         }
     }
 
+    event_coupon(product_id){
+        let message = {title:`쿠폰 등록`, comment:'최초 1회만 사용 가능 합니다.<br>지금 <span style="color:red;">사용</span> 하시겠습니까?'};
+        show_user_confirm (message, ()=>{
+            pters_pass_shop_popup.send_coupon({"product_id":product_id}, ()=>{
+                layer_popup.close_layer_popup();
+                show_error_message({title:"등록 되었습니다."});
+                this.init();
+            }, ()=>{});
+        });
+        // switch(product){
+        //     case "basic":
+        //             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP_AGREEMENT, 100, POPUP_FROM_BOTTOM, null, ()=>{
+        //                 pters_pass_shop_agreement_popup = new Pters_pass_shop_agreement('.popup_pters_pass_shop_agreement', "basic", pass_purchase_change);
+        //             });
+        //         break;
+        //     case "standard":
+        //             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP_AGREEMENT, 100, POPUP_FROM_BOTTOM, null, ()=>{
+        //                 pters_pass_shop_agreement_popup = new Pters_pass_shop_agreement('.popup_pters_pass_shop_agreement', "standard", pass_purchase_change);
+        //             });
+        //         break;
+        //     case "premium":
+        //             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP_AGREEMENT, 100, POPUP_FROM_BOTTOM, null, ()=>{
+        //                 pters_pass_shop_agreement_popup = new Pters_pass_shop_agreement('.popup_pters_pass_shop_agreement', "premium", pass_purchase_change);
+        //             });
+        //         break;
+        // }
+    }
+
     event_custom_app_launch(){
         let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SERVICE_INQUIRY, 100, popup_style, null, ()=>{
                 service_inquiry_popup = new Service_inquiry_for_custom_app_launch('.popup_service_inquiry');});
     }
 
+    coupon_check(callback){
+
+        let coupon_cd = $('#pters_pass_coupon_code').val();
+        $.ajax({
+            url: "/payment/get_coupon_product_info/",
+            method: "GET",
+            data: {
+                "coupon_cd": coupon_cd
+            },
+            dataType: "html",
+
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+
+            success:function(data){
+                var jsondata = JSON.parse(data);
+                let msg;
+                check_app_version(jsondata.app_version);
+
+                if(jsondata.messageArray.length>0){
+                    this.coupon_html = "";
+                    msg = '쿠폰 코드를 다시 확인해주세요.';
+                    show_error_message({title:msg});
+                }else {
+                    callback(jsondata);
+                }
+            },
+
+            complete:function(){
+            },
+
+            error:function(){
+                console.log('server error');
+            }
+        });
+    }
 
     dom_row_toolbox(){
         let title = "PTERS 패스 구독";
@@ -500,6 +611,49 @@ class Pters_pass_shop{
         //     show_error_message({title:'변경 내용이 저장되었습니다.'});
         //     // this.render_content();
         // });
+    }
+    send_coupon(data, callback, error_callback){
+        $.ajax({
+            url:"/payment/payment_for_coupon/",
+            type:'POST',
+            data: data,
+            dataType : 'html',
+
+            beforeSend:function(xhr, settings){
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+
+            //통신성공시 처리
+            success:function (data_){
+                let data = JSON.parse(data_);
+                check_app_version(data.app_version);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message({title:data.messageArray[0]});
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(data);
+                }
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function (){
+
+            },
+
+            //통신 실패시 처리
+            error:function (){
+                if(error_callback != undefined){
+                    error_callback();
+                }
+                console.log('server error');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
+            }
+        });
     }
 
     upper_right_menu(){
