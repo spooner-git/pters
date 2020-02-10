@@ -3388,7 +3388,7 @@ class MemberContactsSelector{
             document.getElementsByClassName('search_input')[0].value = this.search_value;
             this.render_search_tool('clear');
             this.search_value = "";
-            Array.from(document.getElementsByClassName('select_member_row')).forEach((el)=>{
+            Array.from(document.getElementsByClassName('select_member_contacts_row')).forEach((el)=>{
                 $(el).show();
             });
 
@@ -3415,7 +3415,7 @@ class MemberContactsSelector{
     search_contacts_member_by_typing (event){
         let value = event.target.value;
         this.search_value = value;
-        Array.from(document.getElementsByClassName('select_member_row')).forEach((el)=>{
+        Array.from(document.getElementsByClassName('select_member_contacts_row')).forEach((el)=>{
             let name = el.dataset.name;
             if(name.match(value)){
                 // el.style.display = 'block';
