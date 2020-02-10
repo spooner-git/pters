@@ -322,9 +322,9 @@ class Setting_sharing_member_auth{
         let message = {
             title:title_message
         };
-        this.shared_status = AUTH_TYPE_DELETE;
+        // this.shared_status = AUTH_TYPE_DELETE;
         show_user_confirm (message, ()=>{
-            // this.shared_status = AUTH_TYPE_DELETE;
+            this.shared_status = AUTH_TYPE_DELETE;
             this.send_data();
             layer_popup.close_layer_popup(); //옵션 셀렉터 닫기
             // layer_popup.close_layer_popup(); //권한 설정창 닫기
