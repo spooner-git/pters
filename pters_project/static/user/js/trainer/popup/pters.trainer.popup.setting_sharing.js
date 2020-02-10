@@ -95,6 +95,11 @@ class Setting_sharing{
         let auth_ticket_update = indiv_auth_data.auth_package_update == 1 ? "수정" :  null;
         let auth_ticket_delete = indiv_auth_data.auth_package_delete == 1 ? "삭제" :  null;
 
+        let auth_notice_create = indiv_auth_data.auth_notice_create == 1 ? "등록" :  null;
+        let auth_notice_read = indiv_auth_data.auth_notice_read == 1 ? "조회" :  null;
+        let auth_notice_update = indiv_auth_data.auth_notice_update == 1 ? "수정" :  null;
+        let auth_notice_delete = indiv_auth_data.auth_notice_delete == 1 ? "삭제" :  null;
+
         let auth_statistics_read = indiv_auth_data.auth_analytics_read == 1 ? "조회" :  null;
 
         let auth_setting_read = indiv_auth_data.auth_setting_read == 1 ? "조회" :  null;
@@ -104,6 +109,7 @@ class Setting_sharing{
         let member_auth = [auth_member_create, auth_member_read, auth_member_update, auth_member_delete].filter((el)=>{ if(el == null){return false;} return true; }).map((el)=>{return el;});
         let lecture_auth = [auth_lecture_create, auth_lecture_read, auth_lecture_update, auth_lecture_delete].filter((el)=>{ if(el == null){return false;} return true; }).map((el)=>{return el;});
         let ticket_auth = [auth_ticket_create, auth_ticket_read, auth_ticket_update, auth_ticket_delete].filter((el)=>{ if(el == null){return false;} return true; }).map((el)=>{return el;});
+        let notice_auth = [auth_notice_create, auth_notice_read, auth_notice_update, auth_notice_delete].filter((el)=>{ if(el == null){return false;} return true; }).map((el)=>{return el;});
         let statistics_auth = [auth_statistics_read].filter((el)=>{ if(el == null){return false;} return true; }).map((el)=>{return el;});
         let setting_auth = [auth_setting_read, auth_setting_update].filter((el)=>{ if(el == null){return false;} return true; }).map((el)=>{return el;});
 
@@ -131,6 +137,12 @@ class Setting_sharing{
                                     ${ticket_auth.join("/")}
                                 </div>
                             </div>`;
+        let auth_notice= `<div class="shared_member_auth" style="${notice_auth.length == 0 ? "display:none" : ""}">
+                                <div class="auth_title">공지사항</div>
+                                <div class="auth_setting">
+                                    ${notice_auth.join("/")}
+                                </div>
+                            </div>`;
         let auth_statistics = `<div class="shared_member_auth" style="${statistics_auth.length == 0 ? "display:none" : ""}">
                                 <div class="auth_title">통계</div>
                                 <div class="auth_setting">
@@ -154,6 +166,7 @@ class Setting_sharing{
                             ${auth_member == null ? "" : auth_member}
                             ${auth_lecture == null ? "" : auth_lecture}
                             ${auth_ticket == null ? "" : auth_ticket}
+                            ${auth_notice == null ? "" : auth_notice}
                             ${auth_statistics == null ? "" : auth_statistics}
                             ${auth_setting == null ? "" : auth_setting}
                         </div>                 

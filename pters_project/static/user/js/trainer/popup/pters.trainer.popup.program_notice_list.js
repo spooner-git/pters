@@ -37,7 +37,7 @@ class ProgramNotice_list {
             // this.notice_list = data;
             this.render();
             func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
-        }, ()=>{this.data_sending_now = false;layer_popup.close_layer_popup();program_notice_list_popup.clear();});
+        }, ()=>{this.data_sending_now = false;layer_popup.close_layer_popup();program_notice_list_popup.clear();}, ()=>{}, true);
     }
 
     clear(){

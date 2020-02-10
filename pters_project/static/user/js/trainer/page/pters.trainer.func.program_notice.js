@@ -40,7 +40,7 @@ class ProgramNotice {
             // this.notice_list = data;
             this.render();
             func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
-        }, ()=>{this.data_sending_now = false;layer_popup.close_layer_popup();program_notice_list_popup.clear();});
+        }, ()=>{this.data_sending_now = false;layer_popup.close_layer_popup();program_notice_list_popup.clear();},()=>{}, true);
     }
 
     clear(){
@@ -292,6 +292,36 @@ class ProgramNotice {
 
 class ProgramNotice_func{
     static create(data, callback, error_callback){
+
+        let auth_inspect = pass_inspector.program_notice_create();
+        if(auth_inspect.barrier == BLOCKED){
+            let message = `${auth_inspect.limit_type}`;
+            // this.init();
+            show_error_message({title:message});
+            return false;
+        }
+
+        if(this.data_sending_now == true){
+            return false;
+        }else if(this.data_sending_now == false){
+            this.data_sending_now = true;
+        }
+
+        let inspect = pass_inspector.program_notice();
+        if(inspect.barrier == BLOCKED){
+            this.data_sending_now = false;
+            let message = {
+                            title:`공지사항 등록을 완료하지 못하였습니다.`,
+                            comment:`[${inspect.limit_type}] 이용자께서는 공지사항을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다.
+                                    <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까?</p>`
+            }
+            show_user_confirm (message, ()=>{
+                layer_popup.all_close_layer_popup();
+                sideGoPopup("pters_pass_main");
+            });
+
+            return false;
+        }
         $.ajax({
             url:'/trainer/add_program_notice_info/',
             type:'POST',
@@ -385,12 +415,13 @@ class ProgramNotice_func{
             }
         });
     }
-    static read_all(data, callback, error_callback){
+    static read_all(data, callback, error_callback, async){
         //데이터 형태 {"ticket_id":""};
         $.ajax({
             url:'/trainer/get_program_notice_list/',
             type:'GET',
             dataType : 'JSON',
+            async: async,
 
             beforeSend:function(xhr, settings) {
                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -434,6 +465,14 @@ class ProgramNotice_func{
 
 
     static delete(data, callback, error_callback){
+        let auth_inspect = pass_inspector.program_notice_delete();
+        if(auth_inspect.barrier == BLOCKED){
+            let message = `${auth_inspect.limit_type}`;
+            // this.init();
+            layer_popup.close_layer_popup();
+            show_error_message({title:message});
+            return false;
+        }
         //데이터 형태 {"ticket_id":""};
         $.ajax({
             url:'/trainer/delete_program_notice_info/',
@@ -483,6 +522,13 @@ class ProgramNotice_func{
 
     static update(data, callback, error_callback){
         //데이터 형태 {"ticket_id":"", "ticket_name":"", "ticket_note":""};
+        let auth_inspect = pass_inspector.program_notice_update();
+        if(auth_inspect.barrier == BLOCKED){
+            let message = `${auth_inspect.limit_type}`;
+            // this.init();
+            show_error_message({title:message});
+            return false;
+        }
         $.ajax({
             url:'/trainer/update_program_notice_info/',
             type:'POST',

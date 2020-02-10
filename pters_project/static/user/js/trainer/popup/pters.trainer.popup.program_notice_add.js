@@ -171,7 +171,7 @@ class ProgramNotice_add{
         let auth_inspect = pass_inspector.program_notice_create();
         if(auth_inspect.barrier == BLOCKED){
             let message = `${auth_inspect.limit_type}`;
-            this.init();
+            // this.init();
             show_error_message({title:message});
             return false;
         }
