@@ -87,10 +87,11 @@ class Plan_view{
     set member_schedule (data){
         this.data.member_schedule_id = data.schedule_id;
         this.data.member_schedule_state = data.schedule_state;
+        this.data.member_schedule_permission_state_cd = data.schedule_permission_state_cd;
     }
 
     get member_schedule (){
-        return {schedule_id:this.data.member_schedule_id, schedule_state: this.data.member_schedule_state};
+        return {schedule_id:this.data.member_schedule_id, schedule_state: this.data.member_schedule_state, schedule_permission_state_cd: this.data.member_schedule_permission_state_cd};
     }
 
     set date (data){
@@ -164,14 +165,14 @@ class Plan_view{
         this.data.member_name = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.member_name}`;});
         this.data.member_schedule_id = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.schedule_id}`;});
         this.data.member_schedule_state = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.state_cd}`;});
-        this.data.member_permission_state_cd = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.permission_state_cd}`;});
+        this.data.member_schedule_permission_state_cd = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.permission_state_cd}`;});
         if(data.schedule_info[0].schedule_type == 1){
             this.data.member_id.push(data.schedule_info[0].member_id);
             this.data.member_id_original.push(this.data.member_id);
             this.data.member_name.push(data.schedule_info[0].member_name);
             this.data.member_schedule_id.push(data.schedule_info[0].schedule_id);
             this.data.member_schedule_state.push(data.schedule_info[0].state_cd);
-            this.data.member_permission_state_cd.push(data.schedule_info[0].permission_state_cd);
+            this.data.member_schedule_permission_state_cd.push(data.schedule_info[0].permission_state_cd);
         }
         this.data.date = this.selected_date;
         this.data.date_text = DateRobot.to_text(this.data.date.year, this.data.date.month, this.data.date.date);
@@ -453,8 +454,16 @@ class Plan_view{
             let member_id = this.data.member_id[i];
             let member_name = this.data.member_name[i];
             let member_schedule_id = this.data.member_schedule_id[i];
-            let icon_button_style = {"padding":"3px 1%", "width":"30%", "overflow":"hidden", "text-overflow":"ellipsis", "white-space":"nowrap", "font-size":"15px", "font-weight":"500", "text-align":"center"};
+            let icon_button_style = {"padding":"3px 1%", "width":"45%", "overflow":"hidden", "text-overflow":"ellipsis", "white-space":"nowrap", "font-size":"15px", "font-weight":"500", "text-align":"center"};
             let state = this.data.member_schedule_state[i];
+            let permission_state_cd = this.data.member_schedule_permission_state_cd[i];
+
+            if(permission_state_cd == SCHEDULE_APPROVE){
+                member_name += '(예약 승인)'
+            }
+            if(permission_state_cd == SCHEDULE_WAIT){
+                member_name += '(예약 대기)'
+            }
             let state_icon_url;
             if(state == SCHEDULE_ABSENCE){
                 // state_icon_url = CImg.x(["var(--img-sub1)"], {"vertical-align":"middle", "margin-bottom":"3px"});
@@ -498,10 +507,44 @@ class Plan_view{
                             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_SCHEDULE_HISTORY, 100, popup_style, null, ()=>{
                                 member_schedule_history = new Member_schedule_history('.popup_member_schedule_history', member_id, null);
                             });
+                        }},
+                        permission_approve:{text:"예약 승인", callback:()=>{
+                            layer_popup.close_layer_popup();
+                            let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>예약 승인 하시겠습니까?</span>"};
+                            show_user_confirm (confirm_message, ()=>{
+                                layer_popup.close_layer_popup();
+                                let send_data = {"schedule_id":member_schedule_id, "permission_state_cd":SCHEDULE_APPROVE};
+                                Plan_func.permission_status(send_data, ()=>{
+                                    this.init();
+                                    try{
+                                        current_page.init();
+                                    }catch(e){}
+                                });
+                            });
+                        }},
+                        permission_wait:{text:"예약 대기", callback:()=>{
+                            layer_popup.close_layer_popup();
+                            let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>예약 대기로 변경 하시겠습니까?</span>"};
+                            show_user_confirm (confirm_message, ()=>{
+                                layer_popup.close_layer_popup();
+                                let send_data = {"schedule_id":member_schedule_id, "permission_state_cd":SCHEDULE_WAIT};
+                                Plan_func.permission_status(send_data, ()=>{
+                                    this.init();
+                                    try{
+                                        current_page.init();
+                                    }catch(e){}
+                                });
+                            });
                         }}
                     };
                     if(state != SCHEDULE_FINISH){
                         delete user_option.sign_image;
+                    }
+                    if(permission_state_cd == SCHEDULE_APPROVE){
+                        delete user_option.permission_approve;
+                    }
+                    if(permission_state_cd == SCHEDULE_WAIT){
+                        delete user_option.permission_wait;
                     }
                     if(this.settings.sign_use == OFF){
                         delete user_option.sign_image;

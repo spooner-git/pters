@@ -24,7 +24,7 @@ from admin_spooner.functions import func_upload_board_content_image_logic
 from configs.const import ON_SCHEDULE_TYPE, USE, AUTO_FINISH_OFF, AUTO_FINISH_ON, TO_TRAINEE_LESSON_ALARM_ON, \
     TO_TRAINEE_LESSON_ALARM_OFF, SCHEDULE_DUPLICATION_DISABLE, AUTO_ABSENCE_ON, SCHEDULE_DUPLICATION_ENABLE, \
     LECTURE_TYPE_ONE_TO_ONE, STATE_CD_NOT_PROGRESS, PERMISSION_STATE_CD_APPROVE, STATE_CD_FINISH, STATE_CD_ABSENCE, \
-    OFF_SCHEDULE_TYPE, TO_SHARED_TRAINER_LESSON_ALARM_OFF, TO_SHARED_TRAINER_LESSON_ALARM_ON
+    OFF_SCHEDULE_TYPE, TO_SHARED_TRAINER_LESSON_ALARM_OFF, TO_SHARED_TRAINER_LESSON_ALARM_ON, PERMISSION_STATE_CD_WAIT
 from configs import settings
 from configs.views import AccessTestMixin
 from login.models import LogTb, MemberTb
@@ -805,6 +805,116 @@ def update_schedule_state_cd_logic(request):
                          to_member_name=member_name,
                          class_tb_id=class_id,
                          log_info=log_info + ' 수업', log_how=schedule_state_cd_name + ' 처리',
+                         log_detail=log_detail_info, use=USE)
+
+        if member_ticket_info is not None and member_ticket_info != '':
+            log_data.member_ticket_tb_id = member_ticket_info.member_ticket_id
+            if str(setting_to_trainee_lesson_alarm) == str(TO_TRAINEE_LESSON_ALARM_ON):
+                func_send_push_trainer(schedule_info.member_ticket_tb_id,
+                                       class_type_name + ' - 수업 알림',
+                                       # trainer_name + '님의 ' +
+                                       push_info)
+            if str(setting_to_shared_trainer_lesson_alarm) == str(TO_SHARED_TRAINER_LESSON_ALARM_ON):
+                func_send_push_trainer_trainer(class_id, class_type_name + ' - 수업 알림',
+                                               member_name + '님의 ' + push_info, request.user.id)
+        else:
+            if schedule_info.en_dis_type == ON_SCHEDULE_TYPE and str(setting_to_shared_trainer_lesson_alarm) == str(TO_SHARED_TRAINER_LESSON_ALARM_ON):
+                func_send_push_trainer_trainer(class_id, class_type_name + ' - 수업 알림',
+                                               push_info, request.user.id)
+
+        log_data.save()
+
+    if error is not None:
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
+        # messages.error(request, error)
+        context['messageArray'] = error
+    return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+    # return render(request, 'ajax/schedule_error_info.html', context)
+
+
+# 일정 완료
+def update_schedule_permission_state_cd_logic(request):
+    schedule_id = request.POST.get('schedule_id')
+    schedule_permission_state_cd = request.POST.get('permission_state_cd', PERMISSION_STATE_CD_APPROVE)
+    class_id = request.session.get('class_id', '')
+    class_type_name = request.session.get('class_type_name', '')
+    setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
+                                                          TO_TRAINEE_LESSON_ALARM_OFF)
+    setting_to_shared_trainer_lesson_alarm = request.session.get('setting_to_shared_trainer_lesson_alarm',
+                                                                 TO_SHARED_TRAINER_LESSON_ALARM_OFF)
+    trainer_name = request.session.get('trainer_name', '')
+    schedule_permission_state_cd_name = '변경'
+    error = None
+    schedule_info = None
+    member_ticket_info = None
+    member_name = None
+    start_date = None
+    end_date = None
+    context = {'messageArray': ''}
+
+    if schedule_id == '':
+        error = '일정을 선택하세요.'
+
+    if error is None:
+        try:
+            schedule_info = ScheduleTb.objects.select_related('lecture_tb').get(schedule_id=schedule_id)
+        except ObjectDoesNotExist:
+            error = '일정 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        if schedule_permission_state_cd == PERMISSION_STATE_CD_APPROVE:
+            schedule_permission_state_cd_name = '예약 승인'
+        elif schedule_permission_state_cd == PERMISSION_STATE_CD_WAIT:
+            schedule_permission_state_cd_name = '예약 대기'
+
+    if error is None:
+        start_date = schedule_info.start_dt
+        end_date = schedule_info.end_dt
+        if schedule_info.member_ticket_tb is not None and schedule_info.member_ticket_tb != '':
+            member_ticket_info = schedule_info.member_ticket_tb
+            if schedule_info.member_ticket_tb.member is not None and schedule_info.member_ticket_tb.member != '':
+                member_name = schedule_info.member_ticket_tb.member.name
+        else:
+            member_name = ''
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                schedule_info.permission_state_cd = schedule_permission_state_cd
+                schedule_info.mod_member_id = request.user.id
+                schedule_info.save()
+        except TypeError:
+            error = '등록 값에 문제가 있습니다.'
+        except ValueError:
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError:
+            error = '등록 값에 문제가 있습니다.'
+
+    if error is None:
+
+        push_info_schedule_start_date = str(start_date).split(':')
+        push_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
+        log_info = '개인'
+        push_info = push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1] \
+                    + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] \
+                    + ' [개인] 수업이 '+schedule_permission_state_cd_name+' 처리 됐습니다.'
+
+        log_detail_info = push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1] \
+                        + '/' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] \
+
+        # 그룹 수업인 경우 처리
+        if schedule_info.lecture_tb is not None and schedule_info.lecture_tb != '':
+            log_info = schedule_info.lecture_tb.name
+            push_info = push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1] \
+                        + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] \
+                        + ' ['+schedule_info.lecture_tb.name\
+                        + '] 수업이 '+schedule_permission_state_cd_name+' 처리 됐습니다.'
+
+        log_data = LogTb(log_type='LS03', auth_member_id=request.user.id,
+                         from_member_name=trainer_name,
+                         to_member_name=member_name,
+                         class_tb_id=class_id,
+                         log_info=log_info + ' 수업', log_how=schedule_permission_state_cd_name + ' 처리',
                          log_detail=log_detail_info, use=USE)
 
         if member_ticket_info is not None and member_ticket_info != '':
