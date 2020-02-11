@@ -294,6 +294,7 @@
     .obj_font_bg_coral_white{
         color: #ff3b44;
         background-color: #ffffff;
+        border: 1px solid #ff3b44;
     }
     .obj_font_bg_grey_trans{
         color: #656565;

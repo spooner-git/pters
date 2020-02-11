@@ -19,7 +19,8 @@ from configs.views import AccessTestMixin, func_setting_data_update
 from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, DEL_SCHEDULE, USE, UN_USE, FROM_TRAINEE_LESSON_ALARM_ON, \
     SCHEDULE_DUPLICATION_DISABLE, PROGRAM_SELECT, PROGRAM_LECTURE_CONNECT_DELETE, PROGRAM_LECTURE_CONNECT_ACCEPT, \
     SCHEDULE_DUPLICATION_ENABLE, LECTURE_TYPE_ONE_TO_ONE, STATE_CD_IN_PROGRESS, STATE_CD_FINISH, STATE_CD_ABSENCE, \
-    STATE_CD_NOT_PROGRESS, PERMISSION_STATE_CD_APPROVE, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, AUTH_TYPE_DELETE
+    STATE_CD_NOT_PROGRESS, PERMISSION_STATE_CD_APPROVE, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, AUTH_TYPE_DELETE, \
+    PERMISSION_STATE_CD_WAIT
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 from schedule.functions import func_get_member_ticket_id, func_check_lecture_available_member_before,\
     func_check_lecture_available_member_after, func_add_schedule, func_refresh_member_ticket_count, \
@@ -1231,12 +1232,29 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
     note = ''
     schedule_duplication = SCHEDULE_DUPLICATION_DISABLE
     schedule_result = {'error': None, 'schedule_id': ''}
+    setting_member_private_class_auto_approve = USE
+    setting_member_public_class_auto_approve = USE
+
     # start_date = None
     # end_date = None
     if member_ticket_id is None or member_ticket_id == '':
         error = '수강권 정보를 불러오지 못했습니다.[0]'
     elif schedule_date == '':
         error = '날짜를 선택해 주세요.'
+
+    if error is None:
+        try:
+            setting_info = SettingTb.objects.get(class_tb_id=class_id,
+                                                 setting_type_cd='LT_RES_PRIVATE_CLASS_AUTO_APPROVE', use=USE)
+            setting_member_private_class_auto_approve = int(setting_info.setting_info)
+        except ObjectDoesNotExist:
+            setting_member_private_class_auto_approve = USE
+        try:
+            setting_info = SettingTb.objects.get(class_tb_id=class_id,
+                                                 setting_type_cd='LT_RES_PUBLIC_CLASS_AUTO_APPROVE', use=USE)
+            setting_member_public_class_auto_approve = int(setting_info.setting_info)
+        except ObjectDoesNotExist:
+            setting_member_public_class_auto_approve = USE
 
     if error is None:
         if lecture_schedule_id is not None and lecture_schedule_id != '':
@@ -1286,7 +1304,14 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
     if error is None:
         try:
             with transaction.atomic():
-                permission_state_cd = PERMISSION_STATE_CD_APPROVE
+                permission_state_cd = PERMISSION_STATE_CD_WAIT
+                if lecture_schedule_id is not None and lecture_schedule_id != '':
+                    if str(setting_member_public_class_auto_approve) == str(USE):
+                        permission_state_cd = PERMISSION_STATE_CD_APPROVE
+                else:
+                    if str(setting_member_private_class_auto_approve) == str(USE):
+                        permission_state_cd = PERMISSION_STATE_CD_APPROVE
+
                 schedule_result = func_add_schedule(class_id, member_ticket_id, None,
                                                     lecture_id, lecture_schedule_id,
                                                     start_date, end_date, note, ON_SCHEDULE_TYPE, request.user.id,

@@ -452,6 +452,7 @@ function pters_month_calendar(calendar_name, calendar_options){
                 let schedule_id = split[3];
                 let schedule_finish = split[4];
                 let schedule_repeat_id = split[5];
+                let schedule_permission_status = split[6];
                 let schedule_type = '개별일정';
                 let schedule_finish_tag;
 
@@ -472,8 +473,14 @@ function pters_month_calendar(calendar_name, calendar_options){
                 }
 
                 if(schedule_finish==SCHEDULE_NOT_FINISH){
-                    schedule_finish = '예약 완료';
-                    schedule_finish_tag = "obj_font_bg_white_coral";
+                    if(schedule_permission_status==SCHEDULE_WAIT){
+                        schedule_finish = '예약 대기';
+                        schedule_finish_tag = "obj_font_bg_coral_white";
+                    }
+                    else{
+                        schedule_finish = '예약 완료';
+                        schedule_finish_tag = "obj_font_bg_white_coral";
+                    }
                 }
                 else if(schedule_finish==SCHEDULE_FINISH){
                     schedule_finish = '출석';
@@ -613,10 +620,11 @@ function pters_month_calendar(calendar_name, calendar_options){
             let schedule_name = json.schedule_lecture_name[j];
             let schedule_finish = json.scheduleFinishArray[j];
             let schedule_repeat_id = json.class_repeat_schedule_id[j];
+            let schedule_permission_status = json.schedulePermissionStateArray[j];
             if(schedule_name.length == 0){
                 schedule_name = "개인 수업";
             }
-            dic[json.classTimeArray_start_date[j].split(' ')[0]].push(schedule_name+' / '+schedule_start_time+' / '+schedule_end_time+' / '+schedule_id+' / '+schedule_finish+' / '+schedule_repeat_id);
+            dic[json.classTimeArray_start_date[j].split(' ')[0]].push(schedule_name+' / '+schedule_start_time+' / '+schedule_end_time+' / '+schedule_id+' / '+schedule_finish+' / '+schedule_repeat_id+' / '+schedule_permission_status);
         }
         return dic;
     }

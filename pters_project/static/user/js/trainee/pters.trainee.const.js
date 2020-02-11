@@ -61,6 +61,9 @@ const SCHEDULE_ABSENCE = 2;
 const SCHEDULE_ALL = 3;
 const SCHEDULE_FINISH_ANYWAY = 4;
 
+const SCHEDULE_APPROVE = 'AP';
+const SCHEDULE_WAIT = 'WP';
+
 /* px */
 const MAX_WIDTH = 800;
 

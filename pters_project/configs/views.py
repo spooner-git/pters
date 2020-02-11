@@ -277,6 +277,8 @@ def func_setting_data_update(request, group):
 
         request.session['setting_member_lecture_max_num_view_available'] = context['setting_member_lecture_max_num_view_available']
         request.session['setting_schedule_sign_enable'] = context['setting_schedule_sign_enable']
+        request.session['setting_member_private_class_auto_approve'] = context['setting_member_private_class_auto_approve']
+        request.session['setting_member_public_class_auto_approve'] = context['setting_member_public_class_auto_approve']
         if group == 'trainee':
             try:
                 setting_data = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_LAN_01')

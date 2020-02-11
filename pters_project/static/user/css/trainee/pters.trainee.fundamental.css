@@ -256,6 +256,11 @@
     .wrapper_member_ticket_title{
         text-align: center;
     }
+
+    .wrapper_permission_type{
+        text-align: left;
+    }
+
     .wrapper_img_lesson_type{
         text-align: center;
     }

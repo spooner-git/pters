@@ -10,7 +10,9 @@ class Setting_reserve{
                 available_reserve_date:{value:[], text:[]},
                 available_reserve_time:{value:[], text:[]},
                 available_cancel_time:{value:[], text:[]},
-                capacity_visible:OFF
+                capacity_visible:OFF,
+                setting_member_private_class_auto_approve:ON,
+                setting_member_public_class_auto_approve:ON
         };
 
         this.data_for_selector = {
@@ -53,6 +55,8 @@ class Setting_reserve{
 
             this.data.capacity_visible = data.setting_member_lecture_max_num_view_available;
 
+            this.data.setting_member_private_class_auto_approve = data.setting_member_private_class_auto_approve;
+            this.data.setting_member_public_class_auto_approve = data.setting_member_public_class_auto_approve;
             this.render_content();
         });
         func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
@@ -105,7 +109,7 @@ class Setting_reserve{
         let html = this.dom_row_stop_reserve() + 
                     '<article class="obj_input_box_full" style="padding-top:5px;">' +
                        this.dom_row_start_time_for_private_reserve() +
-                       "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>수강 회원님께서 선택 가능한 시작 시각</span>" + 
+                       "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>수강 회원님께서 선택 가능한 시작 시각</span>" +
                     '</article>' +
                     '<article class="obj_input_box_full">' +
                         this.dom_row_available_reserve_date() + 
@@ -114,13 +118,19 @@ class Setting_reserve{
                     '</article>' +
                     '<article class="obj_input_box_full">' +
                         this.dom_row_capacity_visible() +
-                        "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>회원님께서 예약 시 일정의 현재 참석자와 정원 숫자를 볼 수 있습니다.</span>" +
+                        "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>수강 회원님께서 예약 시 일정의 현재 참석자와 정원 숫자를 볼 수 있습니다.</span>" +
+                    '</article>' +
+                    '<article class="obj_input_box_full"><div style="margin-bottom:15px;">' +
+                        this.dom_row_mmember_private_class_auto_approve() +
+                       "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>수강 회원님께서 개인 수업 예약시 자동 수락됩니다.</span></div><div>" +
+                        this.dom_row_mmember_public_class_auto_approve() +
+                       "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>수강 회원님께서 그룹 수업 예약시 자동 수락됩니다.</span></div>" +
                     '</article>';
         if(this.data.stop_reserve == ON){
             html = this.dom_row_stop_reserve() + 
                     '<article class="obj_input_box_full">' +
                         this.dom_row_capacity_visible() +
-                        "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>회원님께서 예약 시 일정의 현재 참석자와 정원 숫자를 볼 수 있습니다.</span>" +
+                        "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>수강 회원님께서 예약 시 일정의 현재 참석자와 정원 숫자를 볼 수 있습니다.</span>" +
                     '</article>';
         }
         return html;
@@ -287,6 +297,41 @@ class Setting_reserve{
         return html;
     }
 
+    dom_row_mmember_private_class_auto_approve(){
+        let id = `member_private_class_auto_approve`;
+        let power = this.data.setting_member_private_class_auto_approve;
+        let style = null;
+        let member_private_class_auto_approve_toggle = CComponent.toggle_button (id, power, style, (data)=>{
+                                this.data.setting_member_private_class_auto_approve = data; // ON or OFF
+                                this.render_content();
+                            });
+        let title_row = CComponent.text_button ("setting_member_private_class_auto_approve_text", '개인 수업 예약시 자동 수락', {"font-size":"15px", "font-weight":"500", "letter-spacing":"-0.8px"}, ()=>{});
+        let html = `
+                    <div style="display:table;width:100%;">
+                        <div style="display:table-cell;width:auto;vertical-align:middle">${title_row}</div>
+                        <div style="display:table-cell;width:50px;vertical-align:middle">${member_private_class_auto_approve_toggle}</div>
+                    </div>
+                   `;
+        return html;
+    }
+    dom_row_mmember_public_class_auto_approve(){
+        let id = `member_public_class_auto_approve`;
+        let power = this.data.setting_member_public_class_auto_approve;
+        let style = null;
+        let member_public_class_auto_approve_toggle = CComponent.toggle_button (id, power, style, (data)=>{
+                                this.data.setting_member_public_class_auto_approve = data; // ON or OFF
+                                this.render_content();
+                            });
+        let title_row = CComponent.text_button ("setting_member_public_class_auto_approve_text", '그룹 수업 예약시 자동 수락', {"font-size":"15px", "font-weight":"500", "letter-spacing":"-0.8px"}, ()=>{});
+        let html = `
+                    <div style="display:table;width:100%;">
+                        <div style="display:table-cell;width:auto;vertical-align:middle">${title_row}</div>
+                        <div style="display:table-cell;width:50px;vertical-align:middle">${member_public_class_auto_approve_toggle}</div>
+                    </div>
+                   `;
+        return html;
+    }
+
     dom_row_toolbox(){
         let title = "회원 예약";
         let description = "<p style='font-size:14px;font-weight:500;'>회원에게 적용되는 예약 관련 설정입니다.</p>";
@@ -327,7 +372,10 @@ class Setting_reserve{
             "setting_member_reserve_date_available":this.data.available_reserve_date.value[0], //예약 가능 날짜
             "setting_member_reserve_enable_time":this.data.available_reserve_time.value[0], //예약 가능 시간
             "setting_member_reserve_cancel_time":this.data.available_cancel_time.value[0], //예약 취소 가능 시간
-            "setting_member_lecture_max_num_view_available":this.data.capacity_visible // 현재 참석자/정원 보이기
+            "setting_member_lecture_max_num_view_available":this.data.capacity_visible, // 현재 참석자/정원 보이기
+
+            "setting_member_private_class_auto_approve":this.data.setting_member_private_class_auto_approve, // 개인 수업 예약 자동 수락 기능
+            "setting_member_public_class_auto_approve":this.data.setting_member_public_class_auto_approve // 그룹 수업 예약 자동 수락 기능
         };
         
         Setting_reserve_func.update(data, ()=>{
