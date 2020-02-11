@@ -314,10 +314,10 @@ class Home {
             let member_name = plans[i].member_name;
             let permission_status = plans[i].permission_state_cd;
             // if(permission_status == SCHEDULE_APPROVE){
-            //     member_name = '(예약 승인) '+plans[i].member_name;
+            //     member_name = '('+APPROVE_SCHEDULE_STATUS[permission_status]+') '+plans[i].member_name;
             // }
             if(permission_status == SCHEDULE_WAIT){
-                member_name = '(예약 대기) '+plans[i].member_name;
+                member_name = '('+APPROVE_SCHEDULE_STATUS[permission_status]+') '+plans[i].member_name;
             }
             let type = plans[i].schedule_type;
             let participants = plans[i].lecture_current_member_num + '/' + plans[i].lecture_max_member_num;

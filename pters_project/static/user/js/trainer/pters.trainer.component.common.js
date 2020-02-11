@@ -618,7 +618,11 @@ class CComponent{
     }
 
     //회원의 일정 이력에 사용되는 행
-    static schedule_history_row (numbering, schedule_id, date, schedule_name, attend_status, memo, daily_record_id, sign_use, callback){
+    static schedule_history_row (numbering, schedule_id, date, schedule_name, attend_status, permission_status, memo, daily_record_id, sign_use, callback){
+        let permission_status_name = "";
+        if(permission_status == SCHEDULE_WAIT){
+            permission_status_name = '('+APPROVE_SCHEDULE_STATUS[permission_status]+')';
+        }
         let sign_image = `<img src="https://s3.ap-northeast-2.amazonaws.com/pters-image-master/${schedule_id}.png" style="width:100%;max-height:44px;filter:var(--transform-invert);" onerror="this.onerror=null;this.src='/static/common/icon/icon_no_signature.png'">`;
         let tag_daily_record = daily_record_id == null ? "" : "<div style='display:inline-block;font-size:10px;padding:0 2px;border:1px solid var(--font-main);border-radius:5px;margin-left:3px;'>일지</div>";
         let html = `<li class="schedule_history_row" id="schedule_history_row_${schedule_id}">`;
@@ -638,12 +642,12 @@ class CComponent{
 
         let sub_assemble = `<div style="display:flex;">
                                 <div style="flex:1 1 0;">${raw_1} ${raw_2}</div>
-                                <div style="flex-basis:80px;text-align:right;">${attend_status == SCHEDULE_FINISH ? sign_image : ""}</div>
+                                <div style="flex-basis:80px;text-align:right;">${attend_status == SCHEDULE_FINISH ? sign_image : ""}<br/>${permission_status_name}</div>
                             </div>`;
         if(sign_use == OFF){
             sub_assemble = `<div style="display:flex;">
                                 <div style="flex:1 1 0;">${raw_1} ${raw_2}</div>
-                                <div style="flex-basis:80px;text-align:right;"><span style="color:${SCHEDULE_STATUS_COLOR[attend_status]}">${SCHEDULE_STATUS[attend_status]}</span></div>
+                                <div style="flex-basis:80px;text-align:right;"><span style="color:${SCHEDULE_STATUS_COLOR[attend_status]}">${SCHEDULE_STATUS[attend_status]}<br/>${permission_status_name}</span></div>
                             </div>`;
         }
 

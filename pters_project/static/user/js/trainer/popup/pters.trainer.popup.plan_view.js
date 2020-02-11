@@ -332,7 +332,7 @@ class Plan_view{
             //     lecture_name = '(예약 승인) '+this.data.member_name;
             // }
             if(this.data.member_schedule_permission_state_cd[0] == SCHEDULE_WAIT){
-                lecture_name = '(예약 대기) '+this.data.member_name;
+                lecture_name = '('+APPROVE_SCHEDULE_STATUS[this.data.member_schedule_permission_state_cd[0]]+') '+this.data.member_name;
             }
             lecture_name += CImg.arrow_expand(["#5c5859"], {"height":"17px", "width":"17px"});
             // lecture_name = this.data.lecture_name;
@@ -433,6 +433,9 @@ class Plan_view{
             if(this.data.member_schedule_permission_state_cd[0] == SCHEDULE_WAIT){
                 delete user_option.permission_wait;
             }
+            if(this.data.member_schedule_state[0] == SCHEDULE_FINISH || this.data.member_schedule_state[0] == SCHEDULE_ABSENCE){
+                delete user_option.permission_wait;
+            }
 
             let options_padding_top_bottom = 16;
             // let button_height = 8 + 8 + 52;
@@ -518,7 +521,7 @@ class Plan_view{
             //     member_name = '(예약 승인) '+this.data.member_name[i];
             // }
             if(permission_state_cd == SCHEDULE_WAIT){
-                member_name = '(예약 대기) '+this.data.member_name[i];
+                member_name = '('+APPROVE_SCHEDULE_STATUS[permission_state_cd]+') '+this.data.member_name[i];
             }
             let state_icon_url;
             if(state == SCHEDULE_ABSENCE){
@@ -617,6 +620,9 @@ class Plan_view{
                         delete user_option.permission_approve;
                     }
                     if(permission_state_cd == SCHEDULE_WAIT){
+                        delete user_option.permission_wait;
+                    }
+                    if(state == SCHEDULE_FINISH || state == SCHEDULE_ABSENCE){
                         delete user_option.permission_wait;
                     }
                     let options_padding_top_bottom = 16;

@@ -98,11 +98,12 @@ class Plan_permission_wait_list{
             let color = data.lecture_ing_color_cd;
             let lecture_name = data.lecture_name
             let member_name = data.member_name;
+            let state_cd = data.state_cd;
             let permission_state_cd = data.permission_state_cd;
             let schedule_date = data.schedule_date;
             let schedule_time = data.schedule_time;
             let schedule_reg_dt = data.reg_dt;
-            let html = this.dom_row_permission_wait_item(schedule_id, color, lecture_name, member_name, schedule_date, schedule_time, schedule_reg_dt, permission_state_cd);
+            let html = this.dom_row_permission_wait_item(schedule_id, color, lecture_name, member_name, schedule_date, schedule_time, schedule_reg_dt, state_cd, permission_state_cd);
 
             html_to_join.push(html);
         }
@@ -110,7 +111,7 @@ class Plan_permission_wait_list{
         return html_to_join.join("");
     }
 
-    dom_row_permission_wait_item(schedule_id, color, lecture_name, member_name, schedule_date, schedule_time, schedule_reg_dt, permission_state_cd){
+    dom_row_permission_wait_item(schedule_id, color, lecture_name, member_name, schedule_date, schedule_time, schedule_reg_dt, state_cd, permission_state_cd){
         let html = `<div class="permission_wait_wrapper" id="permission_wait_item_${schedule_id}">
                         <div style="flex-basis:16px;">
                             <div style="float:left;width:4px;height:62px;background-color:${color}"></div>
@@ -192,6 +193,9 @@ class Plan_permission_wait_list{
                 delete user_option.permission_approve;
             }
             if(permission_state_cd == SCHEDULE_WAIT){
+                delete user_option.permission_wait;
+            }
+            if(state_cd == SCHEDULE_FINISH || state_cd == SCHEDULE_ABSENCE){
                 delete user_option.permission_wait;
             }
             let options_padding_top_bottom = 16;

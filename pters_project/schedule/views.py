@@ -862,6 +862,9 @@ def update_schedule_permission_state_cd_logic(request):
             error = '일정 정보를 불러오지 못했습니다.'
 
     if error is None:
+        if schedule_info.state_cd == STATE_CD_FINISH or schedule_info.state_cd == STATE_CD_FINISH:
+            error = '종료된 일정은 변경이 불가합니다.'
+    if error is None:
         if schedule_permission_state_cd == PERMISSION_STATE_CD_APPROVE:
             schedule_permission_state_cd_name = '예약 승인'
         elif schedule_permission_state_cd == PERMISSION_STATE_CD_WAIT:

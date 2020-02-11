@@ -31,7 +31,7 @@ class Member_attend{
             let member_schedule_id = data.lecture_schedule_data[i].schedule_id;
             let member_id = data.lecture_schedule_data[i].member_id;
             let state = data.lecture_schedule_data[i].state_cd;
-            let permission_state = data.lecture_schedule_data[i].permission_state_cd;
+            let permission_state_cd = data.lecture_schedule_data[i].permission_state_cd;
             let member_name = data.lecture_schedule_data[i].member_name;
             let image_url = `https://s3.ap-northeast-2.amazonaws.com/pters-image-master/${member_schedule_id}.png`;
             if(state != SCHEDULE_FINISH){
