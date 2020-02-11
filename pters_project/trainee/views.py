@@ -1232,8 +1232,8 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
     note = ''
     schedule_duplication = SCHEDULE_DUPLICATION_DISABLE
     schedule_result = {'error': None, 'schedule_id': ''}
-    setting_member_private_class_auto_approve = USE
-    setting_member_public_class_auto_approve = USE
+    setting_member_private_class_auto_permission = USE
+    setting_member_public_class_auto_permission = USE
 
     # start_date = None
     # end_date = None
@@ -1245,16 +1245,16 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
     if error is None:
         try:
             setting_info = SettingTb.objects.get(class_tb_id=class_id,
-                                                 setting_type_cd='LT_RES_PRIVATE_CLASS_AUTO_APPROVE', use=USE)
-            setting_member_private_class_auto_approve = int(setting_info.setting_info)
+                                                 setting_type_cd='LT_RES_PRIVATE_CLASS_AUTO_PERMISSION', use=USE)
+            setting_member_private_class_auto_permission = int(setting_info.setting_info)
         except ObjectDoesNotExist:
-            setting_member_private_class_auto_approve = USE
+            setting_member_private_class_auto_permission = USE
         try:
             setting_info = SettingTb.objects.get(class_tb_id=class_id,
-                                                 setting_type_cd='LT_RES_PUBLIC_CLASS_AUTO_APPROVE', use=USE)
-            setting_member_public_class_auto_approve = int(setting_info.setting_info)
+                                                 setting_type_cd='LT_RES_PUBLIC_CLASS_AUTO_PERMISSION', use=USE)
+            setting_member_public_class_auto_permission = int(setting_info.setting_info)
         except ObjectDoesNotExist:
-            setting_member_public_class_auto_approve = USE
+            setting_member_public_class_auto_permission = USE
 
     if error is None:
         if lecture_schedule_id is not None and lecture_schedule_id != '':
@@ -1306,10 +1306,10 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
             with transaction.atomic():
                 permission_state_cd = PERMISSION_STATE_CD_WAIT
                 if lecture_schedule_id is not None and lecture_schedule_id != '':
-                    if str(setting_member_public_class_auto_approve) == str(USE):
+                    if str(setting_member_public_class_auto_permission) == str(USE):
                         permission_state_cd = PERMISSION_STATE_CD_APPROVE
                 else:
-                    if str(setting_member_private_class_auto_approve) == str(USE):
+                    if str(setting_member_private_class_auto_permission) == str(USE):
                         permission_state_cd = PERMISSION_STATE_CD_APPROVE
 
                 schedule_result = func_add_schedule(class_id, member_ticket_id, None,

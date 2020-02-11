@@ -30,6 +30,7 @@ class Plan_view{
             member_name:[],
             member_schedule_id:[],
             member_schedule_state:[],
+            member_schedule_permission_state_cd:[],
             date: null,
             date_text: null,
             start_time: null,
@@ -51,6 +52,7 @@ class Plan_view{
             lecture_font_color: null,
             lecture_current_num: null,
             lecture_state_cd: null,
+            lecture_permission_state_cd: null,
             schedule_type:null,
 
             duplicate_plan_when_add:[],
@@ -162,13 +164,14 @@ class Plan_view{
         this.data.member_name = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.member_name}`;});
         this.data.member_schedule_id = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.schedule_id}`;});
         this.data.member_schedule_state = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.state_cd}`;});
-
+        this.data.member_permission_state_cd = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.permission_state_cd}`;});
         if(data.schedule_info[0].schedule_type == 1){
             this.data.member_id.push(data.schedule_info[0].member_id);
             this.data.member_id_original.push(this.data.member_id);
             this.data.member_name.push(data.schedule_info[0].member_name);
             this.data.member_schedule_id.push(data.schedule_info[0].schedule_id);
             this.data.member_schedule_state.push(data.schedule_info[0].state_cd);
+            this.data.member_permission_state_cd.push(data.schedule_info[0].permission_state_cd);
         }
         this.data.date = this.selected_date;
         this.data.date_text = DateRobot.to_text(this.data.date.year, this.data.date.month, this.data.date.date);
@@ -181,6 +184,7 @@ class Plan_view{
         this.data.lecture_max_num = data.schedule_info[0].lecture_max_member_num;
         this.data.lecture_current_num = data.schedule_info[0].lecture_current_member_num;
         this.data.lecture_state_cd = data.schedule_info[0].state_cd;
+        this.data.lecture_permission_state_cd = data.schedule_info[0].permission_state_cd;
         this.data.memo = data.schedule_info[0].note;
         this.data.schedule_type = data.schedule_info[0].schedule_type;
 

@@ -715,8 +715,8 @@ def func_get_trainer_setting_list(context, trainer_id, class_id, user_id):
     setting_trainer_attend_mode_out_lock = str(UN_USE)
     setting_member_lecture_max_num_view_available = str(USE)
     setting_schedule_sign_enable = USE
-    setting_member_private_class_auto_approve = USE
-    setting_member_public_class_auto_approve = USE
+    setting_member_private_class_auto_permission = USE
+    setting_member_public_class_auto_permission = USE
 
     for setting_info in setting_data:
         if setting_info.setting_type_cd == 'LT_RES_01':
@@ -784,10 +784,10 @@ def func_get_trainer_setting_list(context, trainer_id, class_id, user_id):
             setting_member_lecture_max_num_view_available = str(setting_info.setting_info)
         if setting_info.setting_type_cd == 'SCHEDULE_SIGN_ENABLE':
             setting_schedule_sign_enable = setting_info.setting_info
-        if setting_info.setting_type_cd == 'LT_RES_PRIVATE_CLASS_AUTO_APPROVE':
-            setting_member_private_class_auto_approve = int(setting_info.setting_info)
-        if setting_info.setting_type_cd == 'LT_RES_PUBLIC_CLASS_AUTO_APPROVE':
-            setting_member_public_class_auto_approve = int(setting_info.setting_info)
+        if setting_info.setting_type_cd == 'LT_RES_PRIVATE_CLASS_AUTO_PERMISSION':
+            setting_member_private_class_auto_permission = int(setting_info.setting_info)
+        if setting_info.setting_type_cd == 'LT_RES_PUBLIC_CLASS_AUTO_PERMISSION':
+            setting_member_public_class_auto_permission = int(setting_info.setting_info)
     try:
         lecture_info = LectureTb.objects.get(class_tb_id=class_id, lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, use=USE)
         one_to_one_lecture_time_duration = lecture_info.lecture_minute
@@ -854,8 +854,8 @@ def func_get_trainer_setting_list(context, trainer_id, class_id, user_id):
     context['setting_trainer_attend_mode_out_lock'] = setting_trainer_attend_mode_out_lock
     context['setting_member_lecture_max_num_view_available'] = setting_member_lecture_max_num_view_available
     context['setting_schedule_sign_enable'] = setting_schedule_sign_enable
-    context['setting_member_private_class_auto_approve'] = setting_member_private_class_auto_approve
-    context['setting_member_public_class_auto_approve'] = setting_member_public_class_auto_approve
+    context['setting_member_private_class_auto_permission'] = setting_member_private_class_auto_permission
+    context['setting_member_public_class_auto_permission'] = setting_member_public_class_auto_permission
     return context
 
 
