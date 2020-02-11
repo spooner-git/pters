@@ -326,7 +326,15 @@ class Plan_view{
         if(this.data.schedule_type == 0){
             lecture_name =`OFF 일정 ${this.data.memo != "" ? '('+this.data.memo+')' : ''}`;
         }else if(this.data.schedule_type == 1){
-            lecture_name = this.data.member_name + CImg.arrow_expand(["#5c5859"], {"height":"17px", "width":"17px"});
+
+            // lecture_name = this.data.member_name;
+            if(this.data.member_schedule_permission_state_cd[0] == SCHEDULE_APPROVE){
+                lecture_name = '(예약 승인)'+this.data.member_name;
+            }
+            if(this.data.member_schedule_permission_state_cd[0] == SCHEDULE_WAIT){
+                lecture_name = '(예약 대기)'+this.data.member_name;
+            }
+            lecture_name += CImg.arrow_expand(["#5c5859"], {"height":"17px", "width":"17px"});
             // lecture_name = this.data.lecture_name;
         }else if(this.data.schedule_type == 2){
             lecture_name = this.data.lecture_name;
@@ -368,6 +376,34 @@ class Plan_view{
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_SCHEDULE_HISTORY, 100, popup_style, null, ()=>{
                         member_schedule_history = new Member_schedule_history('.popup_member_schedule_history', this.data.member_id[0], null);
                     });
+                }},
+                permission_approve:{text:"예약 승인", callback:()=>{
+                    layer_popup.close_layer_popup();
+                    let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>예약 승인 하시겠습니까?</span>"};
+                    show_user_confirm (confirm_message, ()=>{
+                        layer_popup.close_layer_popup();
+                        let send_data = {"schedule_id":this.data.member_schedule_id[0], "permission_state_cd":SCHEDULE_APPROVE};
+                        Plan_func.permission_status(send_data, ()=>{
+                            this.init();
+                            try{
+                                current_page.init();
+                            }catch(e){}
+                        });
+                    });
+                }},
+                permission_wait:{text:"예약 대기", callback:()=>{
+                    layer_popup.close_layer_popup();
+                    let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>예약 대기로 변경 하시겠습니까?</span>"};
+                    show_user_confirm (confirm_message, ()=>{
+                        layer_popup.close_layer_popup();
+                        let send_data = {"schedule_id":this.data.member_schedule_id[0], "permission_state_cd":SCHEDULE_WAIT};
+                        Plan_func.permission_status(send_data, ()=>{
+                            this.init();
+                            try{
+                                current_page.init();
+                            }catch(e){}
+                        });
+                    });
                 }}
             };
 
@@ -376,6 +412,12 @@ class Plan_view{
             }
             if(this.settings.sign_use == OFF){
                 delete user_option.sign_image;
+            }
+            if(this.data.member_schedule_permission_state_cd[0] == SCHEDULE_APPROVE){
+                delete user_option.permission_approve;
+            }
+            if(this.data.member_schedule_permission_state_cd[0] == SCHEDULE_WAIT){
+                delete user_option.permission_wait;
             }
 
             let options_padding_top_bottom = 16;
@@ -454,15 +496,15 @@ class Plan_view{
             let member_id = this.data.member_id[i];
             let member_name = this.data.member_name[i];
             let member_schedule_id = this.data.member_schedule_id[i];
-            let icon_button_style = {"padding":"3px 1%", "width":"45%", "overflow":"hidden", "text-overflow":"ellipsis", "white-space":"nowrap", "font-size":"15px", "font-weight":"500", "text-align":"center"};
+            let icon_button_style = {"padding":"3px 1%", "width":"45%", "overflow":"hidden", "text-overflow":"ellipsis", "white-space":"nowrap", "font-size":"15px", "font-weight":"500", "text-align":"left"};
             let state = this.data.member_schedule_state[i];
             let permission_state_cd = this.data.member_schedule_permission_state_cd[i];
 
             if(permission_state_cd == SCHEDULE_APPROVE){
-                member_name += '(예약 승인)'
+                member_name = '(예약 승인)'+this.data.member_name[i];
             }
             if(permission_state_cd == SCHEDULE_WAIT){
-                member_name += '(예약 대기)'
+                member_name = '(예약 대기)'+this.data.member_name[i];
             }
             let state_icon_url;
             if(state == SCHEDULE_ABSENCE){
@@ -540,16 +582,15 @@ class Plan_view{
                     if(state != SCHEDULE_FINISH){
                         delete user_option.sign_image;
                     }
+                    if(this.settings.sign_use == OFF){
+                        delete user_option.sign_image;
+                    }
                     if(permission_state_cd == SCHEDULE_APPROVE){
                         delete user_option.permission_approve;
                     }
                     if(permission_state_cd == SCHEDULE_WAIT){
                         delete user_option.permission_wait;
                     }
-                    if(this.settings.sign_use == OFF){
-                        delete user_option.sign_image;
-                    }
-
                     let options_padding_top_bottom = 16;
                     // let button_height = 8 + 8 + 52;
                     let button_height = 52;
