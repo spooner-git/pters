@@ -735,6 +735,8 @@ def update_schedule_state_cd_logic(request):
     if error is None:
         try:
             with transaction.atomic():
+                if schedule_state_cd == STATE_CD_FINISH or schedule_state_cd == STATE_CD_ABSENCE:
+                    schedule_info.permission_state_cd = PERMISSION_STATE_CD_APPROVE
                 schedule_info.state_cd = schedule_state_cd
                 schedule_info.mod_member_id = request.user.id
                 schedule_info.save()
