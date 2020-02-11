@@ -190,7 +190,7 @@ class Plan_daily_record_func{
         let placeholder_text = `내용을 입력해주세요.<br>
                                 일지 작성 대상: ${schedule_name_array.join(", ")}<br>
                                 이미지는 자동 리사이즈 되며, 최대 2장 첨부 가능합니다.`;
-        let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+        let popup_style = POPUP_FROM_BOTTOM;
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_WRITER, 100, popup_style, null, ()=>{
                 let external_data = {   
                                     title:"",
@@ -258,7 +258,7 @@ class Plan_daily_record_func{
                         </div>`;
         let placeholder_text = `내용을 입력해주세요.<br>
                                 이미지는 자동 리사이즈 되어 업로드 되며, 최대 2장까지 첨부 가능합니다.`;
-        let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+        let popup_style = POPUP_FROM_BOTTOM;
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_WRITER, 100, popup_style, null, ()=>{
             Plan_daily_record_func.read({"schedule_id":schedule_id}, (data)=>{
                 let prev_text_open = data.daily_record_is_member_view != undefined ? DAILY_RECORD_OPEN_TYPE[data.daily_record_is_member_view] : DAILY_RECORD_OPEN_TYPE[0];

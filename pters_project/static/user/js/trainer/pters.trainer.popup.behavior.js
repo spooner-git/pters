@@ -146,6 +146,7 @@ let layer_popup = (function (){
                 func_set_popup_basic(popup_name, data);
                 let func_animation_set = this.animation_set;
                 setTimeout(function (){
+                    // alert(popup_name);
                     func_set_popup_position($(`.${popup_name}`).parents('.popup_mobile'), animation_type, popup_size);
 
                     let popup_data = func_open_layer_popup(popup_name, popup_size, animation_type);
@@ -301,7 +302,6 @@ function func_set_popup_position ($popup_selector, animation_type, popup_size){
             translate_y = 0;
             break; 
     }
-
     $popup_selector.css({
         "transform": `translate(${translate_x}px, ${translate_y}px)`,
         "width": `${width}%`,

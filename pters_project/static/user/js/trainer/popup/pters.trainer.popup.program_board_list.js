@@ -206,7 +206,7 @@ class ProgramBoard_list {
                             <div style="text-align:right;margin-top:10px;">
                                 ${CComponent.button ("program_board_modify_"+id, "수정", {"border":"var(--border-article)", "padding":"12px","display":"inline-block", "width":"100px"}, ()=>{
 
-                                        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_WRITER, 100, POPUP_FROM_PAGE, null, ()=>{
+                                        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_WRITER_UPDATE, 100, POPUP_FROM_PAGE, null, ()=>{
                                             let external_data = {   title:title, content:content, id:id,
                                                                     category:[
                                                                         {id:"open", title:"공개범위", data: {text:["전체", "강사", "회원"], value:["ALL", "trainer", "trainee"]} },
@@ -219,7 +219,7 @@ class ProgramBoard_list {
                                                                         use:{text:[PROGRAM_BOARD_USE[use].text], value:[use]}
                                                                     }
                                             };
-                                            board_writer = new BoardWriter("공지 수정", '.popup_board_writer', 'board_writer', external_data, (data_written)=>{
+                                            board_writer = new BoardWriter("공지 수정", '.popup_board_writer_update', 'board_writer', external_data, (data_written)=>{
                                                 let data = {"program_board_id":data_written.id, "program_board_type_cd":data_written.category_selected.type.value[0], "title":data_written.title, 
                                                             "contents":data_written.content, "to_member_type_cd":data_written.category_selected.open.value[0],
                                                             "use":data_written.category_selected.use.value[0]};

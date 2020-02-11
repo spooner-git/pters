@@ -186,7 +186,7 @@ class ProgramNotice_list {
             //     program_notice_contents.hide();
             // }
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_WRITER, 100, popup_style, null, ()=>{
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_WRITER_UPDATE, 100, popup_style, null, ()=>{
                 let external_data = {   title:title, content:content, id:id, reg_dt:reg_dt, mod_dt:mod_dt,reg_member_name:reg_member_name,
                                         category:[
                                             {id:"use", title:"공개 여부", data: {text:["공개", "비공개"], value:[ON, OFF]} }
@@ -196,7 +196,7 @@ class ProgramNotice_list {
                                         },
                                         new_check:false
                 };
-                board_writer = new BoardWriter("공지 수정", '.popup_board_writer', 'board_writer', external_data, (data_written)=>{
+                board_writer = new BoardWriter("공지 수정", '.popup_board_writer_update', 'board_writer', external_data, (data_written)=>{
                     let data = {"program_notice_id":data_written.id, "notice_type_cd":NOTICE, "title":data_written.title,
                                 "contents":data_written.content, "to_member_type_cd":'trainee',
                                 "use":data_written.category_selected.use.value[0]};
@@ -232,15 +232,15 @@ class ProgramNotice_list {
         let button_height = 8 + 8 + 52;
         let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
         let root_content_height = $root_content.height();
-        let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+        let popup_style = POPUP_FROM_BOTTOM;
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, popup_style, null, ()=>{
             option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
         });
     }
 
     event_add_new(){
-        let popup_style = POPUP_FROM_BOTTOM;
-        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_WRITER, 100, popup_style, null, ()=>{
+        // let popup_style = POPUP_FROM_BOTTOM;
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_WRITER, 100, POPUP_FROM_BOTTOM, null, ()=>{
             let external_data = {   
                                         category:[
                                             {id:"use", title:"공개 여부", data: {text:["공개", "비공개"], value:[ON, OFF]} }
