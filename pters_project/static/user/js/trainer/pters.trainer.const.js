@@ -187,6 +187,7 @@ const PROGRAM_BOARD_CATEGORY = {use:"공개 여부", type:"분류", open:"공개
 const POPUP_ADDRESS_PLAN_VIEW = 'popup_plan_view';
 const POPUP_ADDRESS_PLAN_ADD = 'popup_plan_add';
 const POPUP_ADDRESS_PLAN_REPEAT_LIST = 'popup_plan_repeat_list';
+const POPUP_ADDRESS_PLAN_PERMISSION_WAIT_LIST = 'popup_plan_permission_wait_list';
 
 const POPUP_ADDRESS_MEMBER_VIEW = 'popup_member_view';
 const POPUP_ADDRESS_MEMBER_SIMPLE_VIEW = 'popup_member_simple_view';

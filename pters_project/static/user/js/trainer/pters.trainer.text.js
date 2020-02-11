@@ -51,7 +51,8 @@ const TEXT = {
         //일정
         monthly_calendar:{KOR:"월간 달력", EN:"Monthly Calendar", JP:"月間"},
         weekly_calendar:{KOR:"주간 달력", EN:"Weekly Calendar", JP:"週間"},
-        repeat_schedule_list:{KOR:"반복 일정 리스트", EN:"Repeat schedule list", JP:"繰り返しリスト"},
+        repeat_schedule_list:{KOR:"반복 일정 목록", EN:"Repeat schedule list", JP:"繰り返しリスト"},
+        // permission_wait_schedule_list:{KOR:"예약 대기 일정 리스트", EN:"Repeat schedule list", JP:"繰り返しリスト"},
         am:{KOR:"오전", EN:"AM", JP:"午前"},
         pm:{KOR:"오후", EN:"PM", JP:"午後"},
 

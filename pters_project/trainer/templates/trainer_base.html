@@ -329,6 +329,7 @@
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.plan_view.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.plan_add.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.plan_repeat_list.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.plan_permission_wait_list.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.member_add.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.member_search.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.member_view.js" %}></script>
@@ -510,6 +511,7 @@
     var plan_view_popup;
     var plan_add_popup;
     var plan_repeat_list_popup;
+    var plan_permission_wait_list_popup;
     var member_add_popup;
     var member_search_popup;
     var member_view_popup;
@@ -598,7 +600,8 @@
     var board_writer;
     var board_reader;
     var drawing_board;
-    
+
+    var permission_wait_select;
     var repeat_select;
     var day_select;
     var category_select;

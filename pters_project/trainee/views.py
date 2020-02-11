@@ -1253,10 +1253,8 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
             setting_info = SettingTb.objects.get(class_tb_id=class_id,
                                                  setting_type_cd='LT_RES_PUBLIC_CLASS_AUTO_PERMISSION', use=USE)
             setting_member_public_class_auto_permission = int(setting_info.setting_info)
-            print('setting:'+str(setting_member_public_class_auto_permission))
         except ObjectDoesNotExist:
             setting_member_public_class_auto_permission = USE
-            print('default::'+str(setting_member_public_class_auto_permission))
 
     if error is None:
         if lecture_schedule_id is not None and lecture_schedule_id != '':
@@ -1307,10 +1305,6 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
         try:
             with transaction.atomic():
                 permission_state_cd = PERMISSION_STATE_CD_WAIT
-
-                print(str(lecture_id))
-                print(str(lecture_schedule_id))
-                print(str(setting_member_public_class_auto_permission))
                 if lecture_schedule_id is not None and lecture_schedule_id != '':
                     if str(setting_member_public_class_auto_permission) == str(USE):
                         permission_state_cd = PERMISSION_STATE_CD_APPROVE

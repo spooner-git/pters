@@ -44,7 +44,8 @@ from schedule.functions import func_refresh_member_ticket_count, func_get_traine
     func_get_lecture_member_ticket_id, func_check_lecture_available_member_before, func_add_schedule, \
     func_check_lecture_available_member_after, func_get_trainer_schedule_all, func_get_trainer_schedule_info, \
     func_get_lecture_schedule_all, func_get_member_schedule_all_by_member_ticket, \
-    func_get_member_schedule_all_by_schedule_dt, func_get_member_schedule_all_by_monthly
+    func_get_member_schedule_all_by_schedule_dt, func_get_member_schedule_all_by_monthly, \
+    func_get_permission_wait_schedule_all
 from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb
 from stats.functions import get_sales_data
 from trainee.models import MemberTicketTb
@@ -477,6 +478,27 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
         repeat_schedule['member_repeat_schedule_list'] = member_repeat_schedule_list
         repeat_schedule['lecture_repeat_schedule_list'] = lecture_member_repeat_schedule_ordered_dict
         return JsonResponse(repeat_schedule, json_dumps_params={'ensure_ascii': True})
+
+
+class GetPermissionWaitScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
+    # template_name = 'test.html'
+    def get(self, request):
+        class_id = self.request.session.get('class_id', '')
+        page = request.GET.get('page', 1)
+
+        error = None
+        ordered_schedule_dict = collections.OrderedDict()
+
+        # context = {}
+        if error is None:
+            ordered_schedule_dict = {
+                'permission_wait_schedule': func_get_permission_wait_schedule_all(class_id, page)
+            }
+        else:
+            logger.error('[' + str(request.user.id) + ']' + error)
+            messages.error(request, error)
+        # return render(request, self.template_name, context)
+        return JsonResponse(ordered_schedule_dict, json_dumps_params={'ensure_ascii': True})
 
 
 class GetOffRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, View):

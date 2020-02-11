@@ -327,12 +327,12 @@ class Plan_view{
             lecture_name =`OFF 일정 ${this.data.memo != "" ? '('+this.data.memo+')' : ''}`;
         }else if(this.data.schedule_type == 1){
 
-            // lecture_name = this.data.member_name;
-            if(this.data.member_schedule_permission_state_cd[0] == SCHEDULE_APPROVE){
-                lecture_name = '(예약 승인)'+this.data.member_name;
-            }
+            lecture_name = this.data.member_name;
+            // if(this.data.member_schedule_permission_state_cd[0] == SCHEDULE_APPROVE){
+            //     lecture_name = '(예약 승인) '+this.data.member_name;
+            // }
             if(this.data.member_schedule_permission_state_cd[0] == SCHEDULE_WAIT){
-                lecture_name = '(예약 대기)'+this.data.member_name;
+                lecture_name = '(예약 대기) '+this.data.member_name;
             }
             lecture_name += CImg.arrow_expand(["#5c5859"], {"height":"17px", "width":"17px"});
             // lecture_name = this.data.lecture_name;
@@ -382,6 +382,13 @@ class Plan_view{
                     let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>예약 승인 하시겠습니까?</span>"};
                     show_user_confirm (confirm_message, ()=>{
                         layer_popup.close_layer_popup();
+                        let inspect = pass_inspector.schedule_update();
+                        if(inspect.barrier == BLOCKED){
+                            let message = `${inspect.limit_type}`;
+                            // layer_popup.close_layer_popup();
+                            show_error_message({title:message});
+                            return false;
+                        }
                         let send_data = {"schedule_id":this.data.member_schedule_id[0], "permission_state_cd":SCHEDULE_APPROVE};
                         Plan_func.permission_status(send_data, ()=>{
                             this.init();
@@ -396,6 +403,13 @@ class Plan_view{
                     let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>예약 대기로 변경 하시겠습니까?</span>"};
                     show_user_confirm (confirm_message, ()=>{
                         layer_popup.close_layer_popup();
+                        let inspect = pass_inspector.schedule_update();
+                        if(inspect.barrier == BLOCKED){
+                            let message = `${inspect.limit_type}`;
+                            // layer_popup.close_layer_popup();
+                            show_error_message({title:message});
+                            return false;
+                        }
                         let send_data = {"schedule_id":this.data.member_schedule_id[0], "permission_state_cd":SCHEDULE_WAIT};
                         Plan_func.permission_status(send_data, ()=>{
                             this.init();
@@ -500,11 +514,11 @@ class Plan_view{
             let state = this.data.member_schedule_state[i];
             let permission_state_cd = this.data.member_schedule_permission_state_cd[i];
 
-            if(permission_state_cd == SCHEDULE_APPROVE){
-                member_name = '(예약 승인)'+this.data.member_name[i];
-            }
+            // if(permission_state_cd == SCHEDULE_APPROVE){
+            //     member_name = '(예약 승인) '+this.data.member_name[i];
+            // }
             if(permission_state_cd == SCHEDULE_WAIT){
-                member_name = '(예약 대기)'+this.data.member_name[i];
+                member_name = '(예약 대기) '+this.data.member_name[i];
             }
             let state_icon_url;
             if(state == SCHEDULE_ABSENCE){
@@ -555,6 +569,13 @@ class Plan_view{
                             let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>예약 승인 하시겠습니까?</span>"};
                             show_user_confirm (confirm_message, ()=>{
                                 layer_popup.close_layer_popup();
+                                let inspect = pass_inspector.schedule_update();
+                                if(inspect.barrier == BLOCKED){
+                                    let message = `${inspect.limit_type}`;
+                                    // layer_popup.close_layer_popup();
+                                    show_error_message({title:message});
+                                    return false;
+                                }
                                 let send_data = {"schedule_id":member_schedule_id, "permission_state_cd":SCHEDULE_APPROVE};
                                 Plan_func.permission_status(send_data, ()=>{
                                     this.init();
@@ -569,6 +590,13 @@ class Plan_view{
                             let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>예약 대기로 변경 하시겠습니까?</span>"};
                             show_user_confirm (confirm_message, ()=>{
                                 layer_popup.close_layer_popup();
+                                let inspect = pass_inspector.schedule_update();
+                                if(inspect.barrier == BLOCKED){
+                                    let message = `${inspect.limit_type}`;
+                                    // layer_popup.close_layer_popup();
+                                    show_error_message({title:message});
+                                    return false;
+                                }
                                 let send_data = {"schedule_id":member_schedule_id, "permission_state_cd":SCHEDULE_WAIT};
                                 Plan_func.permission_status(send_data, ()=>{
                                     this.init();
@@ -602,7 +630,7 @@ class Plan_view{
                 })
             );
         }
-        let html = `<div style="padding-left:5px;">${html_to_join.join('')}</div>`;
+        let html = `<div style="padding-left:40px;">${html_to_join.join('')}</div>`;
 
         return html;
     }
