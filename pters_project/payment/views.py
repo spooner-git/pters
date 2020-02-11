@@ -1288,7 +1288,7 @@ def payment_for_coupon_logic(request):
             payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id, status='paid',
                                                         product_tb_id=product_id,
                                                         use=USE).latest('end_date')
-            error = '오류 : 이미 사용한 쿠폰입니다.'
+            error = '[오류] 이미 사용한 쿠폰입니다.'
         except ObjectDoesNotExist:
             start_date = today
 
@@ -1298,7 +1298,7 @@ def payment_for_coupon_logic(request):
                                                         product_tb__promotion_type_cd='NORMAL_PRODUCT',
                                                         end_date__gte=today,
                                                         use=USE).latest('end_date')
-            error = '오류 : 최초 결제 이벤트 쿠폰입니다.'
+            error = '[오류] 이미 사용중인 이용권이 있습니다.'
         except ObjectDoesNotExist:
             start_date = today
 
@@ -1316,11 +1316,11 @@ def payment_for_coupon_logic(request):
         try:
             product_info = ProductTb.objects.get(product_id=product_id, use=USE)
             if product_info.expiry_date < timezone.now():
-                error = '오류 : 유효기간이 지난 쿠폰입니다.'
+                error = '[오류] 유효기간이 지난 쿠폰입니다.'
             if product_info.coupon_amount <= 0:
-                error = '오류 : 쿠폰이 모두 소진됐습니다.'
+                error = '[오류] 쿠폰이 모두 소진됐습니다.'
         except ObjectDoesNotExist:
-            error = '쿠폰 등록 오류 발생[0]'
+            error = '[오류] 쿠폰 등록 오류[0]'
 
     if error is None:
         try:
@@ -1328,7 +1328,7 @@ def payment_for_coupon_logic(request):
                                                             payment_type_cd='SINGLE',
                                                             use=USE)
         except ObjectDoesNotExist:
-            error = '쿠폰 등록 오류 발생[1]'
+            error = '[오류] 쿠폰 등록 오류[1]'
 
     if error is None:
         date = int(start_date.strftime('%d'))

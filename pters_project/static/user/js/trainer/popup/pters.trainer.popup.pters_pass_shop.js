@@ -82,8 +82,13 @@ class Pters_pass_shop{
         let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();pters_pass_shop_popup.clear();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"></span>`;
-        let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
-                        <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
+        let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>`+
+                        `<div style="width:100%; font-size:13px; text-align:right; height: 20px;line-height:20px; margin-bottom:5px;">
+                            <input type="text" id="pters_pass_coupon_code" name="coupon_code" value="" placeholder="프로모션 코드 입력" style="font-size:14px; text-align:right; color:inherit; background-color:transparent;">
+                            <div style="display:inline-block; width:30px; color:var(--font-highlight); font-size:13px; font-weight:500; margin-right:10px;" onclick="pters_pass_shop_popup.coupon_check((data)=>pters_pass_shop_popup.dom_row_pters_coupon_html(data));">확인</div>
+                         </div>
+                        `+
+                        `<section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
 
@@ -110,10 +115,7 @@ class Pters_pass_shop{
         let basic_color = `background-color:#fe4e65;`;
         let custom_color = `background-color:var(--bg-invisible);`;
         let html =  '<article class="obj_input_box_full">' +
-                        `<div>  <input type="text" id="pters_pass_coupon_code" name="coupon_code" value="" placeholder="프로모션 코드 입력">
-                        </div> <div onclick="pters_pass_shop_popup.coupon_check((data)=>pters_pass_shop_popup.dom_row_pters_coupon_html(data));">확인</div>
-                        ${this.coupon_html}
-                        `+
+
                         `<div class="pters_pass_product_wrapper" style="${basic_color}" onclick="pters_pass_shop_popup.event_buy('basic')">` +
                             this.dom_row_pters_pass_basic() +
                             this.dom_row_pters_pass_basic_explain() +
@@ -131,6 +133,11 @@ class Pters_pass_shop{
                             this.dom_row_pters_pass_custom_explain() +
                         '</div>' +
                     '</article>';
+        if(this.coupon_html != ""){
+            html =  '<article class="obj_input_box_full">' +
+                        `${this.coupon_html}`+
+                    '</article>';
+        }
         if(os == IOS && user_username =='guest'){
             html =  '<article class="obj_input_box_full">' +
                         `<div class="pters_pass_product_wrapper" style="${premium_color}" onclick="pters_pass_shop_popup.event_buy('premium')">` +
@@ -585,7 +592,7 @@ class Pters_pass_shop{
                     ${title}
                     ${description}
                 </span>
-                <span style="display:none">${title}</span>
+                <!--<span style="display:none">${title}</span>-->
             </div>
         </div>
         `;
