@@ -122,9 +122,9 @@ class Setting_reserve{
                     '</article>' +
                     '<article class="obj_input_box_full"><div style="margin-bottom:15px;">' +
                         this.dom_row_member_private_class_auto_permission() +
-                       "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>설정 해제시 지난 예약 대기 일정은 자동 삭제됩니다.</span></div><div>" +
+                       "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>설정 해제시 지난 예약 대기 일정은 자동 취소됩니다.</span></div><div>" +
                         this.dom_row_member_public_class_auto_permission() +
-                       "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>설정 해제시 지난 예약 대기 일정은 자동 삭제됩니다.</span></div>" +
+                       "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>설정 해제시 지난 예약 대기 일정은 자동 취소됩니다.</span></div>" +
                     '</article>';
         if(this.data.stop_reserve == ON){
             html = this.dom_row_stop_reserve() + 
