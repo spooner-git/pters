@@ -1665,19 +1665,24 @@ class PopupLectureTicketInfoView(LoginRequiredMixin, AccessTestMixin, TemplateVi
             member_ticket_info.member_ticket_abs_count = member_ticket_abs_count
         if error is None:
             query_status = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `SCHEDULE_TB`.`STATE_CD`"
+            query_permission = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `SCHEDULE_TB`.`PERMISSION_STATE_CD`"
             # 자유형 문제
             if lecture_info.lecture_type_cd != LECTURE_TYPE_ONE_TO_ONE:
                 schedule_list = ScheduleTb.objects.filter(member_ticket_tb_id=member_ticket_id,
                                                           lecture_tb_id=lecture_id,
                                                           use=USE).annotate(status=RawSQL(query_status,
-                                                                                          [])).order_by('-start_dt',
-                                                                                                        '-end_dt')
+                                                                                          []),
+                                                                            permission=RawSQL(query_permission,
+                                                                                              [])).order_by('-start_dt',
+                                                                                                            '-end_dt')
             else:
                 schedule_list = ScheduleTb.objects.filter(member_ticket_tb_id=member_ticket_id,
                                                           lecture_tb__isnull=True,
                                                           use=USE).annotate(status=RawSQL(query_status,
-                                                                                          [])).order_by('-start_dt',
-                                                                                                        '-end_dt')
+                                                                                          []),
+                                                                            permission=RawSQL(query_permission,
+                                                                                              [])).order_by('-start_dt',
+                                                                                                            '-end_dt')
 
         context['class_data'] = class_list
         context['member_ticket_info'] = member_ticket_info
