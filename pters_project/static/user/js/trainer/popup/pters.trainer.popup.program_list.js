@@ -221,7 +221,7 @@ class Program_list{
     }
 
     upper_right_menu(){
-        let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+        let popup_style = POPUP_FROM_BOTTOM;
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PROGRAM_ADD, 100, popup_style, null, ()=>{
             program_add_popup = new Program_add('.popup_program_add');
         });

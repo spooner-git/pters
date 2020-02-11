@@ -239,7 +239,7 @@ class ProgramNotice_list {
     }
 
     event_add_new(){
-        let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+        let popup_style = POPUP_FROM_BOTTOM;
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_WRITER, 100, popup_style, null, ()=>{
             let external_data = {   
                                         category:[
