@@ -187,7 +187,7 @@
     30%{
         transform:scale(1.1)
     }
-    100%{
+    80%{
         transform:scale(1);
     }
 }
