@@ -25,6 +25,15 @@
 	padding-bottom: 20px;
 }
 
+.popup_member_view .member_current_ticket_article{
+	margin-left: 38px;
+	margin-top: 10px;
+	padding: 5px 10px;
+	border: var(--border-article);
+	box-shadow: var(--box-shadow-article);
+	border-radius: 5px;
+}
+
 
 /* 간단 보기 */
 .popup_member_simple_view{

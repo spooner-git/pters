@@ -333,7 +333,7 @@ class Member_view{
                 + CComponent.dom_tag('생년월일') + birth + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('성별') + sex +
             '</div>' +
-            '<div class="obj_input_box_full">'
+            '<div class="obj_input_box_full" style="padding-right:18px">'
                 + CComponent.dom_tag('진행중인 수강권') + ticket +
             '</div>';
             // '<div class="obj_input_box_full">'
@@ -650,7 +650,7 @@ class Member_view{
             let title = this.data.ticket[i].ticket_id.length == 0 ? '' : ticket_name;
             let icon = CImg.ticket();
             let icon_r_visible = SHOW;
-            let icon_r_text = "";
+            let icon_r_text = "수정";
             let style = null;
             let html_ticket_name = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
@@ -700,7 +700,11 @@ class Member_view{
                                     CComponent.text_button('note', `특이사항 <span style="display:block; white-space:pre-wrap; font-size:11px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${ticket_note}</span>`, icon_button_style_note_info, ()=>{});
             let html_ticket_lecture_list = `<div>${html_to_join_lecture_list.join('')}</div>`;
 
-            html_to_join.push(html_ticket_name + html_ticket_lecture_list + html_remain_info);
+            html_to_join.push(
+                `<div class="member_current_ticket_article">`+
+                html_ticket_name + html_ticket_lecture_list + html_remain_info +
+                `</div>`
+            );
         }
         let html = html_to_join.join('');
 

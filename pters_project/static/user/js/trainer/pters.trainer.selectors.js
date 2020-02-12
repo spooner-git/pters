@@ -5086,6 +5086,7 @@ class BoardWriter{
         let onfocusout = (input_data)=>{
             this.data.title = input_data;
             this.if_user_changed_any_information = true;
+            this.render();
         };
         let row = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, onfocusout, pattern, pattern_message, required);
         let html = row;
@@ -5216,12 +5217,16 @@ class BoardWriter{
             },
         });
         if(this.data.content == "" || this.data.content == null){
-            this.data.content = " "
+            this.data.content = " ";
         }
         if(this.data.content != " "){
             $(`#board_writer_content_input`).summernote('code', this.data.content);
         }
-        $('.note-editable').blur();
+        $('#board_writer_content_input').on('summernote.blur', ()=>{
+            this.data.content = $('#board_writer_content_input').summernote('code');
+            this.if_user_changed_any_information = true;
+            this.render();
+        });
     }
 
     update_content_img(file){
@@ -5279,6 +5284,7 @@ class BoardWriter{
         layer_popup.close_layer_popup();
     }
     upper_left_menu(){
+
         let content_value = $('#board_writer_content_input').summernote('code');
         if(this.data.content != content_value){
             this.data.content = content_value;
@@ -5306,6 +5312,7 @@ class BoardWriter{
             let button_height = 52;
             let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
             let root_content_height = $root_content.height();
+            // let root_content_height = this.original_root_content_height;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
                 option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
             });
