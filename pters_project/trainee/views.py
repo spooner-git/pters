@@ -448,11 +448,6 @@ def add_trainee_schedule_logic(request):
                     error = '이미 출석 처리된 일정입니다.'
                 elif lecture_schedule_info.state_cd == STATE_CD_ABSENCE:
                     error = '이미 결석 처리된 일정입니다.'
-                if error is None:
-                    lecture_schedule_num = ScheduleTb.objects.filter(lecture_schedule_id=lecture_schedule_id,
-                                                                     use=USE).count()
-                    if lecture_schedule_num >= lecture_schedule_info.lecture_tb.member_num:
-                        error = '정원을 초과했습니다.'
 
                 if error is None:
                     lecture_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_schedule_info.lecture_tb_id,
@@ -1234,7 +1229,8 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
     schedule_result = {'error': None, 'schedule_id': ''}
     setting_member_private_class_auto_permission = USE
     setting_member_public_class_auto_permission = USE
-
+    setting_member_public_class_wait_member_num = 0
+    lecture_schedule_num = 0
     # start_date = None
     # end_date = None
     if member_ticket_id is None or member_ticket_id == '':
@@ -1255,6 +1251,12 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
             setting_member_public_class_auto_permission = int(setting_info.setting_info)
         except ObjectDoesNotExist:
             setting_member_public_class_auto_permission = USE
+        try:
+            setting_info = SettingTb.objects.get(class_tb_id=class_id,
+                                                 setting_type_cd='LT_RES_PUBLIC_CLASS_WAIT_MEMBER_NUM', use=USE)
+            setting_member_public_class_wait_member_num = int(setting_info.setting_info)
+        except ObjectDoesNotExist:
+            setting_member_public_class_wait_member_num = 0
 
     if error is None:
         if lecture_schedule_id is not None and lecture_schedule_id != '':
@@ -1296,10 +1298,17 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
         if member_ticket_info.member_ticket_avail_count == 0:
             error = '예약가능 횟수가 없습니다'
 
+    # if error is None:
+    #     if lecture_schedule_info is not None and lecture_schedule_info != '':
+    #         error = func_check_lecture_available_member_before(class_id, lecture_schedule_info.lecture_tb_id,
+    #                                                            lecture_schedule_id)
+
     if error is None:
         if lecture_schedule_info is not None and lecture_schedule_info != '':
-            error = func_check_lecture_available_member_before(class_id, lecture_schedule_info.lecture_tb_id,
-                                                               lecture_schedule_id)
+            lecture_schedule_num = ScheduleTb.objects.filter(lecture_schedule_id=lecture_schedule_id,
+                                                             use=USE).count()
+            if lecture_schedule_num >= lecture_schedule_info.lecture_tb.member_num + setting_member_public_class_wait_member_num:
+                error = '정원을 초과했습니다.'
 
     if error is None:
         try:
@@ -1311,7 +1320,9 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
                 else:
                     if str(setting_member_private_class_auto_permission) == str(USE):
                         permission_state_cd = PERMISSION_STATE_CD_APPROVE
-
+                if lecture_schedule_info is not None and lecture_schedule_info != '':
+                    if lecture_schedule_num >= lecture_schedule_info.lecture_tb.member_num:
+                        permission_state_cd = PERMISSION_STATE_CD_WAIT
                 schedule_result = func_add_schedule(class_id, member_ticket_id, None,
                                                     lecture_id, lecture_schedule_id,
                                                     start_date, end_date, note, ON_SCHEDULE_TYPE, request.user.id,
@@ -1321,10 +1332,15 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
 
                 if error is None:
                     if lecture_schedule_info is not None and lecture_schedule_info != '':
-                        error = func_check_lecture_available_member_after(class_id, lecture_id, lecture_schedule_id)
 
-                        if error is not None:
-                            error += ' 일정이 중복됐습니다.'
+                        lecture_schedule_num = ScheduleTb.objects.filter(lecture_schedule_id=lecture_schedule_id,
+                                                                         use=USE).count()
+                        if lecture_schedule_num > lecture_schedule_info.lecture_tb.member_num + setting_member_public_class_wait_member_num:
+                            error = '정원을 초과했습니다.'
+                        # error = func_check_lecture_available_member_after(class_id, lecture_id, lecture_schedule_id)
+
+                        # if error is not None:
+                        #     error += ' 일정이 중복됐습니다.'
 
                         if error is not None:
                             raise InternalError()
@@ -1363,6 +1379,8 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
                                         + '/' + log_info_schedule_end_date[0] + ':' + log_info_schedule_end_date[1],
                              use=USE)
             log_data.save()
+    else:
+        schedule_result['error'] = error
     return schedule_result
 
 

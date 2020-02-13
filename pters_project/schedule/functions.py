@@ -507,7 +507,7 @@ def func_check_lecture_available_member_before(class_id, lecture_id, lecture_sch
     schedule_counter = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                  lecture_schedule_id=lecture_schedule_id,
                                                  use=USE).exclude(state_cd=STATE_CD_ABSENCE).count()
-    if schedule_counter > lecture_info.member_num:
+    if schedule_counter >= lecture_info.member_num:
         error = '정원을 초과했습니다.'
 
     return error

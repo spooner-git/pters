@@ -128,7 +128,7 @@ class Setting_reserve{
                         this.dom_row_member_public_class_auto_permission() +
                        "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>설정 해제시 지난 예약 대기 일정은 자동 취소됩니다.</span></div><div>" +
                         this.dom_row_member_public_class_wait_member_num() +
-                       "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>모든 수업에 일괄 적용됩니다.</span></div>" +
+                       "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>수업 정원 초과시 예약 대기로 등록됩니다.</span></div>" +
                     '</article>';
         if(this.data.stop_reserve == ON){
             html = this.dom_row_stop_reserve() + 
@@ -351,14 +351,14 @@ class Setting_reserve{
         let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
-        let style = {"text-align":"right"};
+        let style = {"text-align":"right", "padding-bottom":"0", "padding-top":"24px;", "padding-right":"10px"};
         let disabled = false;
         let onfocusout = (user_input_data)=>{
             if(user_input_data==null){
                 user_input_data = 0;
             }
             if(Number(user_input_data) < 0){
-                show_error_message({title:"추가 예약 대기 허용 인원은 0명 이상 설정해주세요."});
+                show_error_message({title:"추가 허용 인원은 0명 이상 설정해주세요."});
                 this.render_content();
                 return false;
             }
@@ -369,11 +369,11 @@ class Setting_reserve{
         let pattern = "[0-9]{0,4}";
         let pattern_message = "";
         let required = "";
-        let title_row = CComponent.text_button ("member_public_class_wait_member_num", '그룹 수업 추가 예약 대기 허용 인원', {"font-size":"15px", "font-weight":"500", "letter-spacing":"-0.8px"}, ()=>{});
+        let title_row = CComponent.text_button ("member_public_class_wait_member_num", '그룹 수업 정원외 대기 허용 인원', {"font-size":"15px", "font-weight":"500", "letter-spacing":"-0.8px"}, ()=>{});
         let member_public_class_wait_member_num_row = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, onfocusout, pattern, pattern_message, required);
         let html = `
             <div style="display:table;width:100%;">
-                <div style="display:table-cell;width:auto;vertical-align:middle">${title_row}</div>
+                <div style="display:table-cell;width:auto;vertical-align:bottom">${title_row}</div>
                 <div style="display:table-cell;width:200px;vertical-align:middle">${member_public_class_wait_member_num_row}</div>
             </div>
            `;
