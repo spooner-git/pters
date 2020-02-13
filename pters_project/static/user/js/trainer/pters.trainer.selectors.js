@@ -2921,12 +2921,13 @@ class MemberSelector{
             name: [],
             id_other:[],
             name_other:[],
-            ticket_id_other:[]
+            ticket_id_other:[],
+            schedule_state:[]
         };
-        this.data.id = this.target_instance.member.id;
-        this.data.name = this.target_instance.member.name;
-        this.data.schedule_state = this.target_instance.member.schedule_state;
-
+        this.data.id = this.target_instance.data.member_id;
+        this.data.name = this.target_instance.data.member_name;
+        this.data.schedule_state = this.target_instance.data.member_schedule_state;
+        console.log(this.data.schedule_state);
         this.hide_entire_member_list = true;
 
         this.init();
@@ -2994,7 +2995,7 @@ class MemberSelector{
             let member_expiry = data.end_date;
             let member_fix_state_cd = data.member_fix_state_cd;
             let member_profile_url = data.member_profile_url;
-            let checked = this.target_instance.member.id.indexOf(member_id) >= 0 ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
+            let checked = this.data.id.indexOf(member_id) >= 0 ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
 
             let lecture_member_list = this.received_data_lecture_member.map((el)=>{return el.member_id;});
             if(lecture_member_list.indexOf(member_id) != -1){
@@ -3162,16 +3163,12 @@ class MemberSelector{
             let member_expiry = data.end_date;
             let member_fix_state_cd = data.member_fix_state_cd;
             let member_profile_url = data.member_profile_url;
-            let checked = this.target_instance.member.id.indexOf(member_id) >= 0 ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
-            let member_idx = this.target_instance.member.id.indexOf(member_id);
+            let checked = this.data.id.indexOf(member_id) >= 0 ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
+            let member_idx = this.data.id.indexOf(member_id);
             let schedule_state = SCHEDULE_NOT_FINISH;
             if(member_idx >=0){
-                schedule_state = this.target_instance.member.schedule_state[member_idx];
+                schedule_state = this.data.schedule_state[member_idx];
                 if(schedule_state == SCHEDULE_ABSENCE){
-                    checked = 0;
-                    this.data.id.splice(this.data.id.indexOf(member_id), 1);
-                    this.data.name.splice(this.data.id.indexOf(member_id), 1);
-                    this.data.schedule_state.splice(this.data.id.indexOf(member_id), 1);
                     continue;
                 }
             }

@@ -78,12 +78,11 @@ class Plan_view{
     set member (data){
         this.data.member_id = data.id;
         this.data.member_name = data.name;
-        this.data.member_schedule_state = data.schedule_state;
         this.init();
     }
 
     get member (){
-        return {id:this.data.member_id, name:this.data.member_name, schedule_state:this.data.member_schedule_state};
+        return {id:this.data.member_id, name:this.data.member_name};
     }
 
     set member_schedule (data){
@@ -167,9 +166,7 @@ class Plan_view{
         this.data.member_id_original = this.data.member_id.slice();
         this.data.member_name = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.member_name}`;});
         this.data.member_schedule_id = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.schedule_id}`;});
-        console.log(this.data.member_schedule_id);
         this.data.member_schedule_state = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.state_cd}`;});
-        console.log(this.data.member_schedule_state);
         this.data.member_schedule_permission_state_cd = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.permission_state_cd}`;});
         this.data.member_schedule_reg_dt = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.reg_dt}`;});
         if(data.schedule_info[0].schedule_type == 1){
@@ -200,7 +197,7 @@ class Plan_view{
         this.data.reg_member_name = data.schedule_info[0].reg_member_name;
         this.data.reg_date = data.schedule_info[0].reg_dt;
         this.data.mod_date = data.schedule_info[0].mod_dt;
-
+        console.log(this);
     }
 
     calc_end_time_by_start_time(start_time_, lecture_minute, work_time_end){
@@ -262,6 +259,7 @@ class Plan_view{
         document.querySelector('.popup_plan_view .wrapper_top').style.border = 0;
         document.querySelector('.popup_plan_view .wrapper_top').style.paddingTop = '0px';
         document.querySelector('.popup_plan_view .wrapper_top').style.lineHeight = '0px';
+        console.log(this);
     }
 
     render_toolbox(){
@@ -472,12 +470,12 @@ class Plan_view{
         let icon_r_visible = SHOW;
         let icon_r_text = "예약 목록";
         let style = null;
-        console.log(this);
         let html_member_select = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             //회원 선택 팝업 열기
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SELECT, 100, popup_style, {'data':null}, ()=>{
                 let appendix =  {lecture_id:this.data.lecture_id, title:"회원", disable_zero_avail_count:ON, entire_member:SHOW};
+                console.log(this);
                 member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.lecture_max_num, appendix, (set_data)=>{
                     this.member = set_data;
                     console.log(set_data);
@@ -659,13 +657,17 @@ class Plan_view{
                         <div style="font-weight: bold;font-size: 14px;color: var(--font-sub-dark);width: 80%;padding-top: 12px;">
                             예약 완료 목록
                         </div>
-                        ${html_to_join.length ==0? '목록 없음' : html_to_join.join('')}
+                        <div style="font-size:12px;">
+                        ${html_to_join.length ==0? '예약 완료 회원이 없습니다.' : html_to_join.join('')}
+                        </div>
                     </div>
                     <div style="padding-left:40px;">
                         <div style="font-weight: bold;font-size: 14px;color: var(--font-sub-dark);width: 80%;padding-top: 12px;">
                             예약 대기 목록
                         </div>
-                        ${html_to_wait_join.length ==0? '목록 없음' : html_to_wait_join.join('')}
+                        <div style="font-size:12px;">
+                        ${html_to_wait_join.length ==0? '예약 대기 회원이 없습니다.' : html_to_wait_join.join('')}
+                        </div>
                     </div>`;
 
         return html;

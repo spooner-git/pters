@@ -195,15 +195,16 @@ def func_refresh_lecture_status(lecture_id, lecture_schedule_id, lecture_repeat_
             lecture_schedule_info = ScheduleTb.objects.get(schedule_id=lecture_schedule_id, use=USE)
         except ObjectDoesNotExist:
             lecture_schedule_info = None
-        lecture_schedule_total_count = ScheduleTb.objects.filter(lecture_schedule_id=lecture_schedule_id,
-                                                                 use=USE).count()
+        # lecture_schedule_total_count = ScheduleTb.objects.filter(lecture_schedule_id=lecture_schedule_id,
+        #                                                          use=USE).count()
         lecture_schedule_end_count = ScheduleTb.objects.filter(Q(state_cd=STATE_CD_FINISH)
                                                                | Q(state_cd=STATE_CD_ABSENCE),
                                                                lecture_schedule_id=lecture_schedule_id,
                                                                lecture_tb_id=lecture_id, use=USE).count()
 
         if lecture_schedule_info is not None:
-            if lecture_schedule_total_count == lecture_schedule_end_count:
+            if lecture_schedule_info.lecture_tb.member_num >= lecture_schedule_end_count:
+            # if lecture_schedule_total_count == lecture_schedule_end_count:
                 if lecture_schedule_info.state_cd != STATE_CD_FINISH:
                     lecture_schedule_info.state_cd = STATE_CD_FINISH
                     lecture_schedule_info.save()
