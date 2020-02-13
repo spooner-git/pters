@@ -717,6 +717,7 @@ def func_get_trainer_setting_list(context, trainer_id, class_id, user_id):
     setting_schedule_sign_enable = USE
     setting_member_private_class_auto_permission = USE
     setting_member_public_class_auto_permission = USE
+    setting_member_public_class_wait_member_num = 0
 
     for setting_info in setting_data:
         if setting_info.setting_type_cd == 'LT_RES_01':
@@ -788,6 +789,8 @@ def func_get_trainer_setting_list(context, trainer_id, class_id, user_id):
             setting_member_private_class_auto_permission = int(setting_info.setting_info)
         if setting_info.setting_type_cd == 'LT_RES_PUBLIC_CLASS_AUTO_PERMISSION':
             setting_member_public_class_auto_permission = int(setting_info.setting_info)
+        if setting_info.setting_type_cd == 'LT_RES_PUBLIC_CLASS_WAIT_MEMBER_NUM':
+            setting_member_public_class_wait_member_num = int(setting_info.setting_info)
     try:
         lecture_info = LectureTb.objects.get(class_tb_id=class_id, lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, use=USE)
         one_to_one_lecture_time_duration = lecture_info.lecture_minute
@@ -856,6 +859,7 @@ def func_get_trainer_setting_list(context, trainer_id, class_id, user_id):
     context['setting_schedule_sign_enable'] = setting_schedule_sign_enable
     context['setting_member_private_class_auto_permission'] = setting_member_private_class_auto_permission
     context['setting_member_public_class_auto_permission'] = setting_member_public_class_auto_permission
+    context['setting_member_public_class_wait_member_num'] = setting_member_public_class_wait_member_num
     return context
 
 

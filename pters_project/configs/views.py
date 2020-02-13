@@ -280,6 +280,7 @@ def func_setting_data_update(request, group):
         request.session['setting_schedule_sign_enable'] = context['setting_schedule_sign_enable']
         request.session['setting_member_private_class_auto_permission'] = context['setting_member_private_class_auto_permission']
         request.session['setting_member_public_class_auto_permission'] = context['setting_member_public_class_auto_permission']
+        request.session['setting_member_public_class_wait_member_num'] = context['setting_member_public_class_wait_member_num']
         if group == 'trainee':
             try:
                 setting_data = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_LAN_01')

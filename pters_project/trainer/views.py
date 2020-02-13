@@ -4862,6 +4862,7 @@ def update_setting_reserve_logic(request):
     setting_member_start_time = request.POST.get('setting_member_start_time', 'A-0')
     setting_member_private_class_auto_permission = request.POST.get('setting_member_private_class_auto_permission', USE)
     setting_member_public_class_auto_permission = request.POST.get('setting_member_public_class_auto_permission', USE)
+    setting_member_public_class_wait_member_num = request.POST.get('setting_member_public_class_wait_member_num', 0)
     class_id = request.session.get('class_id', '')
 
     if setting_member_lecture_max_num_view_available is None or setting_member_lecture_max_num_view_available == '':
@@ -4884,15 +4885,19 @@ def update_setting_reserve_logic(request):
         setting_member_private_class_auto_permission = USE
     if setting_member_public_class_auto_permission is None or setting_member_public_class_auto_permission == '':
         setting_member_public_class_auto_permission = USE
+    if setting_member_public_class_wait_member_num is None or setting_member_public_class_wait_member_num == '':
+        setting_member_public_class_wait_member_num = 0
 
     setting_type_cd_data = ['LT_RES_MEMBER_LECTURE_MAX_NUM_VIEW', 'LT_RES_01', 'LT_RES_03', 'LT_RES_05',
                             'LT_RES_CANCEL_TIME', 'LT_RES_ENABLE_TIME', 'LT_RES_MEMBER_START_TIME',
-                            'LT_RES_PRIVATE_CLASS_AUTO_PERMISSION', 'LT_RES_PUBLIC_CLASS_AUTO_PERMISSION']
+                            'LT_RES_PRIVATE_CLASS_AUTO_PERMISSION', 'LT_RES_PUBLIC_CLASS_AUTO_PERMISSION',
+                            'LT_RES_PUBLIC_CLASS_WAIT_MEMBER_NUM']
     setting_info_data = [setting_member_lecture_max_num_view_available, setting_member_reserve_time_available,
                          setting_member_reserve_prohibition,
                          setting_member_reserve_date_available, setting_member_reserve_cancel_time,
                          setting_member_reserve_enable_time, setting_member_start_time,
-                         setting_member_private_class_auto_permission, setting_member_public_class_auto_permission]
+                         setting_member_private_class_auto_permission, setting_member_public_class_auto_permission,
+                         setting_member_public_class_wait_member_num]
     error = update_program_setting_data(class_id, setting_type_cd_data, setting_info_data)
 
     if error is None:
@@ -4906,6 +4911,7 @@ def update_setting_reserve_logic(request):
         request.session['setting_member_start_time'] = setting_member_start_time
         request.session['setting_member_private_class_auto_permission'] = setting_member_private_class_auto_permission
         request.session['setting_member_public_class_auto_permission'] = setting_member_public_class_auto_permission
+        request.session['setting_member_public_class_wait_member_num'] = setting_member_public_class_wait_member_num
     else:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
