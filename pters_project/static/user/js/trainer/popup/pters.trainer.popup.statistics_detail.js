@@ -74,12 +74,13 @@ class Statistics_detail{
                     <div class="sales_detail_row">
                         <div class="sales_detail_date">${date}</div>
                         <div class="sales_detail_content">
-                            <div>${type} (${TICKET_PAY_METHOD[pay_method]})</div>
+                            ${type}
                             <div>${member}</div>
                             <div>${ticket}</div>
                         </div>
                         <div class="sales_detail_price" ${type_cd == 2 || type_cd == 3 ? "style='color:var(--font-highlight)'" : ""}>
                             ${type_cd == 2 || type_cd == 3 ? "-" : ""} ${price} 원
+                            <div style="color:var(--font-sub-normal)">${TICKET_PAY_METHOD[pay_method]}</div>
                         </div>
                     </div>
                     `;
