@@ -31,6 +31,7 @@ class Plan_view{
             member_schedule_id:[],
             member_schedule_state:[],
             member_schedule_permission_state_cd:[],
+            member_schedule_reg_dt:[],
             date: null,
             date_text: null,
             start_time: null,
@@ -88,10 +89,11 @@ class Plan_view{
         this.data.member_schedule_id = data.schedule_id;
         this.data.member_schedule_state = data.schedule_state;
         this.data.member_schedule_permission_state_cd = data.schedule_permission_state_cd;
+        this.data.member_schedule_reg_dt = data.schedule_reg_dt;
     }
 
     get member_schedule (){
-        return {schedule_id:this.data.member_schedule_id, schedule_state: this.data.member_schedule_state, schedule_permission_state_cd: this.data.member_schedule_permission_state_cd};
+        return {schedule_id:this.data.member_schedule_id, schedule_state: this.data.member_schedule_state, schedule_permission_state_cd: this.data.member_schedule_permission_state_cd, schedule_reg_dt:this.data.member_schedule_reg_dt};
     }
 
     set date (data){
@@ -166,6 +168,7 @@ class Plan_view{
         this.data.member_schedule_id = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.schedule_id}`;});
         this.data.member_schedule_state = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.state_cd}`;});
         this.data.member_schedule_permission_state_cd = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.permission_state_cd}`;});
+        this.data.member_schedule_reg_dt = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.reg_dt}`;});
         if(data.schedule_info[0].schedule_type == 1){
             this.data.member_id.push(data.schedule_info[0].member_id);
             this.data.member_id_original.push(this.data.member_id);
@@ -173,6 +176,7 @@ class Plan_view{
             this.data.member_schedule_id.push(data.schedule_info[0].schedule_id);
             this.data.member_schedule_state.push(data.schedule_info[0].state_cd);
             this.data.member_schedule_permission_state_cd.push(data.schedule_info[0].permission_state_cd);
+            this.data.member_schedule_reg_dt.push(data.schedule_info[0].reg_dt);
         }
         this.data.date = this.selected_date;
         this.data.date_text = DateRobot.to_text(this.data.date.year, this.data.date.month, this.data.date.date);
@@ -508,12 +512,13 @@ class Plan_view{
     dom_row_member_list (){
         let length = this.data.member_id.length;
         let html_to_join = [];
-        
+        let html_to_wait_join = [];
+        let reg_dt_style = {"font-size":"12px", "height":"25px", "line-height":"25px", "padding":"0"};
         for(let i=0; i<length; i++){
             let member_id = this.data.member_id[i];
             let member_name = this.data.member_name[i];
             let member_schedule_id = this.data.member_schedule_id[i];
-            let icon_button_style = {"padding":"3px 1%", "width":"45%", "overflow":"hidden", "text-overflow":"ellipsis", "white-space":"nowrap", "font-size":"15px", "font-weight":"500", "text-align":"left"};
+            let icon_button_style = {"padding":"3px 1%", "width":"45%","height":"50px", "overflow":"hidden", "text-overflow":"ellipsis", "white-space":"nowrap", "font-size":"15px", "font-weight":"500", "text-align":"left"};
             let state = this.data.member_schedule_state[i];
             let permission_state_cd = this.data.member_schedule_permission_state_cd[i];
 
@@ -523,6 +528,9 @@ class Plan_view{
             if(permission_state_cd == SCHEDULE_WAIT){
                 member_name = '('+APPROVE_SCHEDULE_STATUS[permission_state_cd]+') '+this.data.member_name[i];
             }
+            let member_schedule_reg_dt = this.data.member_schedule_reg_dt[i].split(" ")[0] + ' ' +
+                                        this.data.member_schedule_reg_dt[i].split(" ")[1].split(".")[0];
+            member_name += '<br/><div style="font-size: 10px;line-height: 0;">등록: '+member_schedule_reg_dt+'</div>';
             let state_icon_url;
             if(state == SCHEDULE_ABSENCE){
                 // state_icon_url = CImg.x(["var(--img-sub1)"], {"vertical-align":"middle", "margin-bottom":"3px"});
@@ -533,10 +541,9 @@ class Plan_view{
             }else if(state == SCHEDULE_NOT_FINISH){
                 state_icon_url = DELETE;
             }
-
-            html_to_join.push(
+            let temp_html =
                 CComponent.icon_button(member_id, member_name, state_icon_url, icon_button_style, ()=>{
-                   
+
                     let user_option = {
                         info:{text:"회원 정보", callback:()=>{
                             layer_popup.close_layer_popup();
@@ -552,7 +559,7 @@ class Plan_view{
                                 show_error_message({title:`[${member_name}] 일지 변경사항이 저장 되었습니다.`});
                             }, ()=>{
                                 show_error_message({title:`<span style="color:var(--font-highlight)">일지 변경사항 저장에 실패 하였습니다.</span>`});
-                            }); 
+                            });
                         }},
                         sign_image:{text:"출석 서명 확인", callback:()=>{
                             layer_popup.close_layer_popup();
@@ -633,10 +640,26 @@ class Plan_view{
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
                         option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
                     });
-                })
-            );
+                });
+            if(permission_state_cd == SCHEDULE_WAIT){
+                html_to_wait_join.push(temp_html);
+            }else{
+                html_to_join.push(temp_html);
+            }
+
         }
-        let html = `<div style="padding-left:40px;">${html_to_join.join('')}</div>`;
+        let html = `<div style="padding-left:40px;">
+                        <div style="font-weight: bold;font-size: 14px;color: var(--font-sub-dark);width: 80%;padding-top: 12px;">
+                            예약 완료 목록
+                        </div>
+                        ${html_to_join.join('')}
+                    </div>
+                    <div style="padding-left:40px;">
+                        <div style="font-weight: bold;font-size: 14px;color: var(--font-sub-dark);width: 80%;padding-top: 12px;">
+                            예약 대기 목록
+                        </div>
+                        ${html_to_wait_join.join('')}
+                    </div>`;
 
         return html;
     }
