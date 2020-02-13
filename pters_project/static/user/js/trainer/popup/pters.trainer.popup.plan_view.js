@@ -78,11 +78,12 @@ class Plan_view{
     set member (data){
         this.data.member_id = data.id;
         this.data.member_name = data.name;
-        this.render_content();
+        this.data.member_schedule_state = data.schedule_state;
+        this.init();
     }
 
     get member (){
-        return {id:this.data.member_id, name:this.data.member_name};
+        return {id:this.data.member_id, name:this.data.member_name, schedule_state:this.data.member_schedule_state};
     }
 
     set member_schedule (data){
@@ -166,7 +167,9 @@ class Plan_view{
         this.data.member_id_original = this.data.member_id.slice();
         this.data.member_name = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.member_name}`;});
         this.data.member_schedule_id = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.schedule_id}`;});
+        console.log(this.data.member_schedule_id);
         this.data.member_schedule_state = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.state_cd}`;});
+        console.log(this.data.member_schedule_state);
         this.data.member_schedule_permission_state_cd = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.permission_state_cd}`;});
         this.data.member_schedule_reg_dt = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.reg_dt}`;});
         if(data.schedule_info[0].schedule_type == 1){
@@ -464,11 +467,12 @@ class Plan_view{
 
     dom_row_member_select (){
         let id = 'select_member';
-        let title = this.data.member_id.length == 0 ? '회원*' : this.data.member_id.length+ '/' + this.data.lecture_max_num +' 명';
+        let title = this.data.member_id.length == 0 ? '회원*' : this.data.lecture_current_num+ '/' + this.data.lecture_max_num +' 명';
         let icon = CImg.members();
         let icon_r_visible = SHOW;
         let icon_r_text = "예약 목록";
         let style = null;
+        console.log(this);
         let html_member_select = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             //회원 선택 팝업 열기
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
@@ -476,12 +480,15 @@ class Plan_view{
                 let appendix =  {lecture_id:this.data.lecture_id, title:"회원", disable_zero_avail_count:ON, entire_member:SHOW};
                 member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.lecture_max_num, appendix, (set_data)=>{
                     this.member = set_data;
+                    console.log(set_data);
                     let changed = this.func_update_member();
 
                     for(let j=0; j<changed.del.length; j++){
                         let index = this.data.member_id_original.indexOf(changed.del[j]);
                         let member_schedule_id = this.data.member_schedule_id[index];
-                        Plan_func.delete({"schedule_id":member_schedule_id, "async":false});
+                        if(this.data.member_schedule_state[index] != SCHEDULE_ABSENCE){
+                            Plan_func.delete({"schedule_id":member_schedule_id, "async":false});
+                        }
                     }
 
                     for(let i=0; i<changed.add.length; i++){
@@ -652,13 +659,13 @@ class Plan_view{
                         <div style="font-weight: bold;font-size: 14px;color: var(--font-sub-dark);width: 80%;padding-top: 12px;">
                             예약 완료 목록
                         </div>
-                        ${html_to_join.join('')}
+                        ${html_to_join.length ==0? '목록 없음' : html_to_join.join('')}
                     </div>
                     <div style="padding-left:40px;">
                         <div style="font-weight: bold;font-size: 14px;color: var(--font-sub-dark);width: 80%;padding-top: 12px;">
                             예약 대기 목록
                         </div>
-                        ${html_to_wait_join.join('')}
+                        ${html_to_wait_join.length ==0? '목록 없음' : html_to_wait_join.join('')}
                     </div>`;
 
         return html;
@@ -957,19 +964,19 @@ class Plan_view{
                                 if(state_cd == SCHEDULE_FINISH){
                                     if(send_data.upload_file != null){
                                         Plan_func.upload_sign(send_data, ()=>{
-                                            this.init();
+                                            plan_view_popup.init();
                                             try{
                                                 current_page.init();
                                             }catch(e){}
                                         });
                                     }else{
-                                        this.init();
+                                        plan_view_popup.init();
                                         try{
                                             current_page.init();
                                         }catch(e){}
                                     }
                                 }else{
-                                    this.init();
+                                    plan_view_popup.init();
                                     try{
                                         current_page.init();
                                     }catch(e){}
@@ -1013,7 +1020,7 @@ class Plan_view{
                                                     current_page.init();
                                                 }catch(e){}
                                                 try{
-                                                    this.init();
+                                                    plan_view_popup.init();
                                                 }catch(e){}
                                             }
                                         });
@@ -1024,7 +1031,7 @@ class Plan_view{
                                                 current_page.init();
                                             }catch(e){}
                                             try{
-                                                this.init();
+                                                plan_view_popup.init();
                                             }catch(e){}
                                         }
                                     }
@@ -1037,7 +1044,7 @@ class Plan_view{
                                             current_page.init();
                                         }catch(e){}
                                         try{
-                                            this.init();
+                                            plan_view_popup.init();
                                         }catch(e){}
                                     }
                                 }
@@ -1128,7 +1135,7 @@ class Plan_view{
         for(let j=0; j<member_ids.length; j++){
             if(this.data.member_id_original.indexOf(member_ids[j]) == -1){ //원래 데이터에 없는 member id가 추가되었을 경우
                 member_id_to_be_added.push(member_ids[j]);
-            }else if(this.data.member_id.indexOf(member_ids[j]) == -1){ //원래 데이터에 있던 member id가 빠진 경우
+            }else if(this.data.member_id.indexOf(member_ids[j]) == -1){ //원래 데이터에 있던 member id가 빠진 경우우
                 member_id_to_be_deleted.push(member_ids[j]);
             }
         }

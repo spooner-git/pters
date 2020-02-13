@@ -51,7 +51,7 @@ class Member_attend{
             if(state != SCHEDULE_FINISH){
                 image_url = null;
             }
-            new_data[null] = {name:data.member_name, state_cd:data.state_cd, permission_state_cd:data.permission_state_cd, member_id:null, image:image_url, profile_img:member_profile_img};
+            new_data[null] = {name:data.member_name, state_cd:data.state_cd, permission_state_cd:permission_state_cd, member_id:null, image:image_url, profile_img:member_profile_img};
             //서버로부터 image를 받아오면 image를 null이 아니라 image 주소로
         }
 

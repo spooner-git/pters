@@ -2925,6 +2925,7 @@ class MemberSelector{
         };
         this.data.id = this.target_instance.member.id;
         this.data.name = this.target_instance.member.name;
+        this.data.schedule_state = this.target_instance.member.schedule_state;
 
         this.hide_entire_member_list = true;
 
@@ -3162,6 +3163,19 @@ class MemberSelector{
             let member_fix_state_cd = data.member_fix_state_cd;
             let member_profile_url = data.member_profile_url;
             let checked = this.target_instance.member.id.indexOf(member_id) >= 0 ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
+            let member_idx = this.target_instance.member.id.indexOf(member_id);
+            let schedule_state = SCHEDULE_NOT_FINISH;
+            if(member_idx >=0){
+                schedule_state = this.target_instance.member.schedule_state[member_idx];
+                if(schedule_state == SCHEDULE_ABSENCE){
+                    checked = 0;
+                    this.data.id.splice(this.data.id.indexOf(member_id), 1);
+                    this.data.name.splice(this.data.id.indexOf(member_id), 1);
+                    this.data.schedule_state.splice(this.data.id.indexOf(member_id), 1);
+                    continue;
+                }
+            }
+
             if(member_expiry == '9999-12-31'){
                 member_expiry = '소진시';
             }
