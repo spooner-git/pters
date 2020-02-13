@@ -67,13 +67,14 @@ class Statistics_detail{
             let type_cd = this.data.trade_type[i];
             let member = this.data.member_name[i];
             let ticket = this.data.package_name[i];
+            let pay_method = this.data.pay_method[i];
             let price = UnitRobot.numberWithCommas(this.data.price[i]);
 
             let html = `
                     <div class="sales_detail_row">
                         <div class="sales_detail_date">${date}</div>
                         <div class="sales_detail_content">
-                            ${type}
+                            <div>${type} (${TICKET_PAY_METHOD[pay_method]})</div>
                             <div>${member}</div>
                             <div>${ticket}</div>
                         </div>
