@@ -3256,14 +3256,18 @@ class MemberContactsSelector{
 
         // this.hide_entire_member_list = true;
 
+        this.ready_render();
         this.init();
     }
 
     init(){
-        this.request_list(()=>{
-            this.render();
-            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
-        });
+
+        setTimeout(()=>{
+            this.request_list(()=>{
+                this.render();
+                func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
+            });
+        }, 600);
     }
 
     clear(){
@@ -3272,6 +3276,23 @@ class MemberContactsSelector{
         }, 300);
     }
 
+    ready_render(){
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();member_contacts_select.clear();">${CImg.arrow_left()}</span>`;
+        let top_center = `<span class="icon_center"><span id="">${this.title}</span></span>`;
+        let top_right = `<span class="icon_right"  onclick="member_contacts_select.upper_right_menu();"><span style="color:var(--font-highlight);font-weight: 500;">완료</span></span>
+                        <span class="icon_right search_member" onclick="member_contacts_select.search_contacts_member_tool_visible(event, this);">
+                                 ${CImg.search()}
+                        </span>
+                        `;
+
+        let content =   `<div class="member_contacts_search_tool"></div>
+                        <section style="text-align:center; vertical-align: middle;">
+                            목록을 불러오는 중입니다..
+                        </section>`;
+        let html = PopupBase.base(top_left, top_center, top_right, content, "");
+
+        document.querySelector(this.target.install).innerHTML = html;
+    }
     render(){
         let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();member_contacts_select.clear();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span id="">${this.title}</span></span>`;

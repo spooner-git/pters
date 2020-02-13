@@ -523,7 +523,8 @@ class Pters_pass_shop{
             pters_pass_shop_popup.send_coupon({"product_id":product_id}, ()=>{
                 layer_popup.close_layer_popup();
                 show_error_message({title:"등록 되었습니다."});
-                this.init();
+                // this.init();
+                window.location.reload();
             }, ()=>{});
         });
         // switch(product){

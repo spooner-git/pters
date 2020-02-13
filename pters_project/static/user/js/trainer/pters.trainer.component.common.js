@@ -62,6 +62,11 @@ class CComponent{
             icon = '';
         }
 
+        if(id=="input_member_name"){
+            let limit_reg_pattern = pattern.replace('[', '[^').split('{')[0];
+            let limit = new RegExp(limit_reg_pattern, "gi");
+            title = title.replace(limit, "");
+        }
         let html = `<li class="create_input_row" id="c_i_r_${id}" style="${CComponent.data_to_style_code(style)}">
                         <div style="display:flex;height:100%;">
                             <div class="cell_title" style="display:${icon == DELETE ? 'none' : ''}">
@@ -69,7 +74,8 @@ class CComponent{
                             </div>
                             <div class="cell_content">
                                 <input type="text" class="cell_text" title="${placeholder}" placeholder="${placeholder}" pattern="${pattern}" value="${title}"
-                                 onkeyup="limit_char_auto_correction(event.target);" minlength="${min_max_length[0]}" maxlength="${min_max_length[1]}" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" 
+                                 onkeyup="limit_char_auto_correction(event.target);"
+                                  minlength="${min_max_length[0]}" maxlength="${min_max_length[1]}" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" 
                                  data-error-message="${placeholder} : 필수 입력입니다." data-pattern-message="${pattern_message}" data-valid="false" ${disable} ${required}>
                             </div>
                             <div class="cell_icon" ${icon_r_visible == HIDE ? 'style="display:none"' : ''} >
@@ -91,6 +97,7 @@ class CComponent{
             }
             onfocusout(user_input_data);
         });
+
         return html;
     }
     
@@ -104,6 +111,11 @@ class CComponent{
 
         if(icon == NONE){
             icon = '';
+        }
+        if(id=="input_member_phone"){
+            let limit_reg_pattern = pattern.replace('[', '[^').split('{')[0];
+            let limit = new RegExp(limit_reg_pattern, "gi");
+            title = title.replace(limit, "");
         }
         let html = `<li class="create_input_row" id="c_i_n_r_${id}" style="${CComponent.data_to_style_code(style)}">
                         <div style="display:flex;height:100%;">
