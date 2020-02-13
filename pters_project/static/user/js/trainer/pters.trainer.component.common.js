@@ -62,10 +62,11 @@ class CComponent{
             icon = '';
         }
 
-        // let pattern_test = pattern;
-        let limit_reg_pattern = pattern.replace('[', '[^').split('{')[0];
-        let limit = new RegExp(limit_reg_pattern, "gi");
-        title = title.replace(limit, "");
+        if(id=="input_member_name"){
+            let limit_reg_pattern = pattern.replace('[', '[^').split('{')[0];
+            let limit = new RegExp(limit_reg_pattern, "gi");
+            title = title.replace(limit, "");
+        }
         let html = `<li class="create_input_row" id="c_i_r_${id}" style="${CComponent.data_to_style_code(style)}">
                         <div style="display:flex;height:100%;">
                             <div class="cell_title" style="display:${icon == DELETE ? 'none' : ''}">
@@ -111,9 +112,11 @@ class CComponent{
         if(icon == NONE){
             icon = '';
         }
-        let limit_reg_pattern = pattern.replace('[', '[^').split('{')[0];
-        let limit = new RegExp(limit_reg_pattern, "gi");
-        title = title.replace(limit, "");
+        if(id=="input_member_phone"){
+            let limit_reg_pattern = pattern.replace('[', '[^').split('{')[0];
+            let limit = new RegExp(limit_reg_pattern, "gi");
+            title = title.replace(limit, "");
+        }
         let html = `<li class="create_input_row" id="c_i_n_r_${id}" style="${CComponent.data_to_style_code(style)}">
                         <div style="display:flex;height:100%;">
                             <div class="cell_title" style="display:${icon == DELETE ? 'none' : ''}">
