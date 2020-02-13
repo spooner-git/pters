@@ -45,7 +45,7 @@ class CComponent{
 
         $(document).off('click', `#c_r_${id}`).on('click', `#c_r_${id}`, function(e){
             e.stopPropagation();
-            onclick();
+            onclick(e);
         });
         return html;
     }
@@ -733,7 +733,7 @@ class CComponent{
         
         $(document).off('click', `#text_button_${id}`).on('click', `#text_button_${id}`, function(e){
             if(onclick!=undefined){
-                onclick();
+                onclick(e);
             }
         });
         return html;
@@ -1524,7 +1524,152 @@ class Ads{
     }
 }
 
+class CComp{
+    static div(title, style){
+        let style_code = CComp.data_to_style_code(style);
+        let html = `<div style="${style_code}">${title}</div>`;
+        return html;
+    }
+    static container(type, title, style, attr, event){
+        let style_code = style == null ? "" : `style="${CComp.data_to_style_code(style)}"`;
+        let attr_code = CComp.data_to_attr_code(attr);
+        
+        let html = `<${type} ${style_code} ${attr_code}>${title}</${type}>`;
 
+        console.log(attr.id, event)
+        //onclick을 사용하려면 attr에 무조건 id가 부여되어야함
+        if(event != undefined && attr != undefined){
+            if(attr.id != undefined){
+                $(document).off(event.type, `#${attr.id}`).on(event.type, `#${attr.id}`, (e)=>{
+                    if(event.exe != undefined){
+                        event.exe(e);
+                    }
+                });
+            }
+        }
+
+        return html;
+    }
+
+    static element(type, title, style, attr, event){
+        let style_code = style == null ? "" : `style="${CComp.data_to_style_code(style)}"`;
+        let attr_code = CComp.data_to_attr_code(attr);
+        
+        let html = `<${type} ${style_code} ${attr_code}>${title}</${type}>`;
+
+        //onclick을 사용하려면 attr에 무조건 id가 부여되어야함
+        if(event != undefined && attr != undefined){
+            if(attr.id != undefined){
+                $(document).off(event.type, `#${attr.id}`).on(event.type, `#${attr.id}`, (e)=>{
+                    if(event.exe != undefined){
+                        event.exe(e);
+                    }
+                });
+            }
+        }
+
+        return html;
+    }
+
+    static text(title, style, attr){
+        let style_code = CComp.data_to_style_code(style);
+        let attr_code = CComp.data_to_attr_code(attr);
+        let html = `<div style="display:inline-block;${style_code};" ${attr_code}>${title}</div>`;
+        
+        return html;
+    }
+
+    //버튼
+    static button (id, title, style, attr, onclick){
+        let style_code = CComp.data_to_style_code(style);
+        let attr_code = CComp.data_to_attr_code(attr);
+        let html = `<div id="button_${id}" ${attr_code} style="text-align:center;cursor:pointer;padding:3px 8px;${style_code}">${title}</div>`;
+        
+        $(document).off('click', `#button_${id}`).on('click', `#button_${id}`, function(e){
+            if(onclick!=undefined){
+                onclick(e);
+            }
+        });
+        return html;
+    }
+    //텍스트만 있는 버튼
+
+    static toggle_button (id, power, style, onclick){
+        let html = `<div id="toggle_button_${id}" style="${CComp.data_to_style_code(style)}" class="toggle_button ${power == ON ? 'toggle_button_active': ''}">
+                        <div class="toggle_button_ball ${power == ON ? 'toggle_button_ball_active':''}"></div>
+                    </div>`;
+        
+        $(document).off('click', `#toggle_button_${id}`).on('click', `#toggle_button_${id}`, function(e){
+            let $this = $(`#toggle_button_${id}`);
+            if($this.hasClass('toggle_button_active')){
+                onclick(OFF);
+            }else{
+                onclick(ON);
+            }
+        });
+        return html;
+    }
+
+    static radio_button (id, checked, style, onclick){
+        let html = `<div id="radio_button_${id}" style="${CComp.data_to_style_code(style)}" class="radio_button ${checked == ON ? 'radio_button_active': ''}">
+                        <div class="radio_button_ball ${checked == ON ? 'radio_button_ball_active':''}"></div>
+                    </div>`;
+        
+        $(document).off('click', `#radio_button_${id}`).on('click', `#radio_button_${id}`, function(e){
+            let $this = $(`#radio_button_${id}`);
+            if($this.hasClass('radio_button_active')){
+                onclick(OFF);
+            }else{
+                onclick(ON);
+            }
+        });
+        return html;
+    }
+
+    static check_button (id, checked, style, onclick){
+        let html = `<div id="check_button_${id}" style="${CComp.data_to_style_code(style)}" class="check_button ${checked == ON ? 'check_button_active': ''}">
+                        ${checked == ON ? CImg.confirm(["#fe4e65"], {"width":"100%", "height":"100%", "vertical-align":"top"}) : ""}
+                    </div>`;
+        
+        $(document).off('click', `#check_button_${id}`).on('click', `#check_button_${id}`, function(e){
+            let $this = $(`#check_button_${id}`);
+            if($this.hasClass('check_button_active')){
+                onclick(OFF);
+            }else{
+                onclick(ON);
+            }
+        });
+        return html;
+    }
+
+    //스타일 코드를 인라인스타일 스타일 코드로 변환시켜주는 함수
+    static data_to_style_code(data){
+        if(data == null || data == undefined){
+            return "";
+        }
+        let style_to_join = [];
+        for(let item in data){
+            style_to_join.push( `${item}:${data[item]}` );
+        }
+
+        let style_code = style_to_join.join(';');
+        return style_code;
+    }
+
+    static data_to_attr_code(data){
+        if(data == null || data == undefined){
+            return "";
+        }
+
+        let style_to_join = [];
+        for(let item in data){
+            style_to_join.push( `${item}="${data[item]}"` );
+        }
+
+        let style_code = style_to_join.join(' ');
+        return style_code;
+    }
+}
 
 class LimitChar{
     static number(selector){
