@@ -654,16 +654,13 @@ class Plan_view{
 
         }
         let html = `<div style="padding-left:40px;">
-                        <div style="font-weight: bold;font-size: 14px;color: var(--font-sub-dark);width: 80%;padding-top: 12px;">
-                            예약 완료 목록
-                        </div>
                         <div style="font-size:12px;">
                         ${html_to_join.length ==0? '예약 완료 회원이 없습니다.' : html_to_join.join('')}
                         </div>
                     </div>
                     <div style="padding-left:40px;">
                         <div style="font-weight: bold;font-size: 14px;color: var(--font-sub-dark);width: 80%;padding-top: 12px;">
-                            예약 대기 목록
+                            예약 대기자 목록
                         </div>
                         <div style="font-size:12px;">
                         ${html_to_wait_join.length ==0? '예약 대기 회원이 없습니다.' : html_to_wait_join.join('')}

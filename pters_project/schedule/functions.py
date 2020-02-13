@@ -203,7 +203,7 @@ def func_refresh_lecture_status(lecture_id, lecture_schedule_id, lecture_repeat_
                                                                lecture_tb_id=lecture_id, use=USE).count()
 
         if lecture_schedule_info is not None:
-            if lecture_schedule_info.lecture_tb.member_num >= lecture_schedule_end_count:
+            if lecture_schedule_info.lecture_tb.member_num <= lecture_schedule_end_count:
             # if lecture_schedule_total_count == lecture_schedule_end_count:
                 if lecture_schedule_info.state_cd != STATE_CD_FINISH:
                     lecture_schedule_info.state_cd = STATE_CD_FINISH
