@@ -13,7 +13,7 @@
       [{% for price_info in price_data %}"{{ price_info.member_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
         "package_name":
       [{% for price_info in price_data %}"{{ price_info.package_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-        "pay_method"
+        "pay_method":
       [{% for price_info in price_data %}"{{ price_info.pay_method }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "messageArray" :
         "{{ messageArray }}"
