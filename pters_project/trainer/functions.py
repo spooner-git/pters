@@ -779,7 +779,7 @@ def func_get_trainer_setting_list(context, trainer_id, class_id, user_id):
         if setting_info.setting_type_cd == 'ATTEND_MODE_OUT_LOCK':
             setting_trainer_attend_mode_out_lock = setting_info.setting_info
         if setting_info.setting_type_cd == 'LT_RES_MEMBER_LECTURE_MAX_NUM_VIEW':
-            setting_member_lecture_max_num_view_available = str(setting_info.setting_info)
+            setting_member_lecture_max_num_view_available = int(setting_info.setting_info)
         if setting_info.setting_type_cd == 'SCHEDULE_SIGN_ENABLE':
             setting_schedule_sign_enable = setting_info.setting_info
 
