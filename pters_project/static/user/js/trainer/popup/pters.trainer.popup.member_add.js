@@ -289,11 +289,21 @@ class Member_add{
                                 ${title}
                             </span>
                         </div>
+                    </div>
+                    `;
+        if(user_username =='guest'){
+            html = `<div class="member_add_upper_box" style="display:table;">
+                        <div style="display:table-cell;width:200px;">
+                            <span style="font-size:20px;font-weight:bold; letter-spacing: -0.9px; color: var(--font-main);">
+                                ${title}
+                            </span>
+                        </div>
                         <div style="display:table-cell;width:200px;text-align:right; font-size:13px;" onclick="member_add_popup.popup_device_contacts_list();">
                             주소록
                         </div>
                     </div>
                     `;
+        }
         if(this.data_from_external != null){
             html = `<div class="member_add_upper_box" style="display:table;">
                         <div style="display:table-cell;width:200px;">
