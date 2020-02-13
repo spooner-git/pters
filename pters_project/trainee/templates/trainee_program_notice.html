@@ -1,0 +1,58 @@
+{% extends "trainee_base.html" %}
+{% load static_url %}
+
+{% block local_css %}
+    <link rel="stylesheet" href={% static_url "user/css/trainee/page/pters.trainee.page.program_notice.css" %}>
+{% endblock %}
+
+{% block content %}
+    <div class="trainee_program_notice">
+
+        <div class="wrapper_program_notice_list obj_box_full">
+            <div class="obj_table_raw wrapper_program_notice_element" style="padding:0; margin-top: 10px; background-color:#f8f9fa">
+                <div class="obj_table_cell_x3 obj_font_size_12_weight_500 obj_font_color_light_grey" style="width: 10%; text-align: center;">
+                    번호
+                </div>
+                <div class="obj_table_cell_x3 wrapper_program_notice_element_title obj_font_size_12_weight_normal obj_font_color_light_grey" style="width: 70%;text-align:center;">
+                    <div class="program_notice_status">제목</div>
+                </div>
+                <div class="obj_table_cell_x3 wrapper_program_notice_element_text" style="width: 20%; text-align: center;">
+                    <span class="obj_font_size_12_weight_500 obj_font_color_light_grey">날짜</span>
+                </div>
+            </div>
+        {% for program_notice_info in program_notice_data %}
+            <div class="obj_table_raw wrapper_program_notice_element" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_program_notice', 90, POPUP_FROM_BOTTOM,
+                                                                                {'program_notice_id':'{{ program_notice_info.program_notice_id }}'}); program_notice_read_check('{{program_notice_info.program_notice_id}}');">
+                <div class="obj_table_cell_x3 obj_font_size_12_weight_500 obj_font_color_light_grey" style="width: 10%; text-align: center;">
+                    {{ forloop.revcounter }}
+                </div>
+                <div id="program_notice_title_{{program_notice_info.program_notice_id}}"
+                     class="obj_table_cell_x3 wrapper_program_notice_element_title obj_font_size_14_weight_normal {% if program_notice_info.read > 0 %}obj_font_color_grey{% endif %}"
+                     style="width: 70%; padding-left: 10px;">
+                    <div class="program_notice_status">{{ program_notice_info.title }}</div>
+                </div>
+                <div class="obj_table_cell_x3 wrapper_program_notice_element_text" style="width: 20%; text-align: center;">
+                    <span class="obj_font_size_12_weight_500 obj_font_color_light_grey">{{ program_notice_info.reg_dt | date:'Y.m.d' }}</span>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block local_js_footer %}
+    <script type="text/javascript">
+        //Nav바에 현재 페이지에 밑줄 표기
+        $('#nav_btn_program_notice').addClass("nav_selected");
+        function program_notice_read_check(program_notioce_id) {
+            let arr;
+            let element = document.getElementById("program_notice_title_"+program_notioce_id);
+            arr = element.className.split(" ");
+              if (arr.indexOf("obj_font_color_grey") == -1) {
+                element.className += " " + "obj_font_color_grey";
+              }
+        }
+    </script>
+
+{% endblock %}

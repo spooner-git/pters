@@ -378,6 +378,7 @@ def func_get_class_list(context, member_id):
 
     class_list = []
     # wait_class_list = []
+    np_member_ticket_counts = 0
     if len(class_member_ticket_data) > 0:
         for class_member_ticket_info in class_member_ticket_data:
             class_id = class_member_ticket_info.class_tb_id
@@ -402,12 +403,14 @@ def func_get_class_list(context, member_id):
 
             if input_class_info.member_ticket_tb.member_auth_cd == AUTH_TYPE_WAIT:
                 input_class_info.np_member_ticket_counts += 1
+                np_member_ticket_counts += 1
                 input_class_info.class_member_ticket_data.append(class_member_ticket_info.member_ticket_tb)
             if input_class_info.member_ticket_tb.member_auth_cd == AUTH_TYPE_VIEW:
                 input_class_info.member_ticket_counts += 1
                 input_class_info.member_ticket_rem_count \
                     += class_member_ticket_info.member_ticket_tb.member_ticket_rem_count
 
+    context['np_member_ticket_counts'] = np_member_ticket_counts
     context['class_data'] = class_list
     if error is not None:
         context['error'] = error

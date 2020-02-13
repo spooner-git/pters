@@ -55,7 +55,7 @@ class Calendar {
                 clearInterval(interval);
             }
             
-        }, 60000);//60000
+        }, 60000);
 
         this.long_touch = OFF;
         this.long_touch_schedule_id;
@@ -905,8 +905,12 @@ class Calendar {
                 
                 
                 if(`${_year[i]}-${_month[i]}-${_date[i]}` == this.today){
-                    today_marking = `<div class="today_marking" style="${month_or_week == "week" ? 'top:-4px;' : 'top:-2px; width:20px; height:20px; border-radius:12px;'}"></div>`;
-                    today_text_style = 'color:var(--font-highlight-sub);font-weight:bold;';
+                    today_marking = `<div class="today_marking" style="top:-4px;"></div>`;
+                    today_text_style = 'color:var(--font-highlight-sub);font-weight:bold;position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);z-index:1';
+                    if(month_or_week == "month"){
+                        today_text_style = 'color:var(--font-highlight-sub);font-weight:bold;';
+                        today_marking = `<div class="today_marking" style="top:-2px; width:20px; height:20px; border-radius:12px;z-index:-1;"></div>`;
+                    }
                 }
 
                 let this_date_yyyymmdd = DateRobot.to_yyyymmdd(_year[i], _month[i], _date[i]);
@@ -926,12 +930,13 @@ class Calendar {
                 dates_to_join.push(
                     `
                     <div ${height_style} class="${saturday} ${sunday} ${border_style} _week_row_${i+1}" data-row="${i+1}" ${this.dayoff.indexOf(i) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""} onclick="event.stopPropagation();${onclick}">
+                        ${today_marking}    
                         <span style="${today_text_style} ${holiday_color}" data-holiday="${holiday_name}">
                             ${_date[i]}
                             <div ${month_or_week == "month" ? "" : "hidden"}>${holiday_name}</div>
                         </span>
                         <div class="${schedule_number_display} ${has_schedule}">${schedule_date}</div>
-                        ${today_marking}
+                        
                     </div>
                     `
                 );
@@ -1067,7 +1072,7 @@ class Calendar {
                             
 
                             return `<div data-scheduleid="${plan.schedule_id}" onclick="event.stopPropagation();${onclick}" class="calendar_schedule_display_week ${long_touch_active} ${go_behind}" 
-                                        style="${styles}" ontouchstart="event.stopPropagation();${this.instance}.longtouchstart(this, ()=>{})" ontouchend="event.stopPropagation();${this.instance}.longtouchend(event)">
+                                        style="${styles}" ontouchstart="${this.instance}.longtouchstart(this, ()=>{})" ontouchend="event.stopPropagation();${this.instance}.longtouchend(event)">
                                         ${plan_name}
                                     </div>`;
                         })
@@ -1312,9 +1317,10 @@ class Calendar {
                 // this.long_touch_schedule_id = event.target.dataset.scheduleid;
                 this.long_touch_target = $(this_);
                 this.long_touch_schedule_id = this.long_touch_target.attr("data-scheduleid");
-                $('#debug_toolbar').show().html(`<span style="margin-left:10px;line-height:60px;font-size:14px;">일정 변경을 위해 원하는 곳을 터치해주세요.</span>
+                $('#debug_toolbar').show().html(`<span style="margin-left:10px;line-height:56px;font-size:14px;">일정 변경을 위해 원하는 곳을 터치해주세요.</span>
                                                 <button style="float:right;width:70px;height:40px;margin:10px;border-radius:4px;color:var(--font-main);background-color:var(--bg-main);border:var(--border-article-dark);" onclick="calendar.mode_to_plan_change(OFF)">취소</button>`)
-                                          .css({"height":"60px", "line-height":"60px;"});
+                                          .css({"height":"56px", "line-height":"56px;", "top":"unset", "bottom":"0"}).addClass("anim_pulse");
+                setTimeout(()=>{$("#debug_toolbar").removeClass('anim_pulse');}, 300);
                 this.render_upper_box(this.cal_type);
                 this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, this.latest_received_data);
                 if(this.week_zoomed.target_row != null && this.week_zoomed.activate == true){
@@ -1426,11 +1432,10 @@ class Calendar {
                 if(load_image == OFF){
                     return;
                 }
-                ajax_load_image(SHOW);
+                // ajax_load_image(SHOW);
             },
             success:function (data){
                 check_app_version(data.app_version);
-                console.log(data);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
                         show_error_message({title:data.messageArray});
@@ -1447,7 +1452,7 @@ class Calendar {
                 if(load_image == OFF){
                     return;
                 }
-                ajax_load_image(HIDE);
+                // ajax_load_image(HIDE);
             },
 
             error:function (){
@@ -1513,7 +1518,24 @@ class Calendar {
                                   </div>
                                   `
                 ,
-                "initial_page":`<div id="${this.subtargetHTML}"><div id="cal_display_panel"><span></span></div><div id="page${this.current_page_num}" class="pages" style="left:0px;"></div>.</div>`
+                // "initial_page":`<div id="${this.subtargetHTML}">
+                //                     <div id="cal_display_panel">
+                //                         <span></span>
+                //                     </div>
+                //                     <div id="page${this.current_page_num}" class="pages" style="left:0px;">
+                //                     </div>
+                //                 </div>`
+                "initial_page":`<div id="${this.subtargetHTML}">
+                                    <div id="cal_display_panel">
+                                        <span></span>
+                                    </div>
+                                    <div id="page${this.current_page_num}" class="pages" style="left:0px;">
+                                    </div>
+                                    
+                                </div>
+                                <div id="next_arrow_indicator" style="position:fixed;z-index:-100;top:50%;right:5%;transform:translateY(-50%);opacity:0">${CImg.arrow_expand([""], {width:"100px", height:"100px", transform:"rotate(-90deg)"})}</div>
+                                <div id="prev_arrow_indicator" style="position:fixed;z-index:-100;top:50%;left:5%;transform:translateY(-50%);opacity:0">${CImg.arrow_expand([""], {width:"100px", height:"100px", transform:"rotate(90deg)"})}</div>
+                                `
             }
         );
     }
@@ -1579,13 +1601,37 @@ class Calendar {
                     
                     
                     if(ts - tm>x_threshold){
-                        if(this.cal_type == "month"){this.move_month("next");}else if(this.cal_type == "week"){this.move_week("next");}
+                        if(this.cal_type == "month"){
+                            this.move_month("next");
+                            $('#next_arrow_indicator').addClass('anim_paging_next');
+                            setTimeout(()=>{
+                                $('#next_arrow_indicator').removeClass('anim_paging_next');
+                            }, 200);
+                        }else if(this.cal_type == "week"){
+                            this.move_week("next");
+                            $('#next_arrow_indicator').addClass('anim_paging_next');
+                            setTimeout(()=>{
+                                $('#next_arrow_indicator').removeClass('anim_paging_next');
+                            }, 200);
+                        }
                         if(swiper_x == true){
                             $('#root_content').off('touchmove');
                             swiper_x = false;
                         }
                     }else if(ts - tm<-x_threshold){
-                        if(this.cal_type == "month"){this.move_month("prev");}else if(this.cal_type == "week"){this.move_week("prev");}
+                        if(this.cal_type == "month"){
+                            this.move_month("prev");
+                            $('#prev_arrow_indicator').addClass('anim_paging_prev');
+                            setTimeout(()=>{
+                                $('#prev_arrow_indicator').removeClass('anim_paging_prev');
+                            }, 200);
+                        }else if(this.cal_type == "week"){
+                            this.move_week("prev");
+                            $('#prev_arrow_indicator').addClass('anim_paging_prev');
+                            setTimeout(()=>{
+                                $('#prev_arrow_indicator').removeClass('anim_paging_prev');
+                            }, 200);
+                        }
                         if(swiper_x == true){
                             $('#root_content').off('touchmove');
                             swiper_x = false;
@@ -1772,7 +1818,7 @@ class Plan_func{
             dataType: "JSON",
 
             beforeSend:function (){
-                ajax_load_image(SHOW);
+                // ajax_load_image(SHOW);
             },
             success:function (data){
                 check_app_version(data.app_version);
@@ -1789,7 +1835,7 @@ class Plan_func{
             },
 
             complete:function (){
-                ajax_load_image(HIDE);
+                // ajax_load_image(HIDE);
             },
 
             error:function (){
@@ -1811,7 +1857,7 @@ class Plan_func{
             dataType: "JSON",
 
             beforeSend:function (){
-                ajax_load_image(SHOW);
+                // ajax_load_image(SHOW);
             },
             success:function (data){
                 check_app_version(data.app_version);
@@ -1828,7 +1874,7 @@ class Plan_func{
             },
 
             complete:function (){
-                ajax_load_image(HIDE);
+                // ajax_load_image(HIDE);
             },
 
             error:function (){
@@ -1854,7 +1900,7 @@ class Plan_func{
             dataType: "JSON",
 
             beforeSend:function (){
-                ajax_load_image(SHOW);
+                // ajax_load_image(SHOW);
             },
             success:function (data){
                 check_app_version(data.app_version);
@@ -1871,7 +1917,7 @@ class Plan_func{
             },
 
             complete:function (){
-                ajax_load_image(HIDE);
+                // ajax_load_image(HIDE);
             },
 
             error:function (){
@@ -2040,7 +2086,7 @@ class Plan_func{
             dataType: "JSON",
 
             beforeSend:function (){
-                ajax_load_image(SHOW);
+                // ajax_load_image(SHOW);
             },
             success:function (data){
                 check_app_version(data.app_version);
@@ -2056,7 +2102,7 @@ class Plan_func{
             },
 
             complete:function (){
-                ajax_load_image(HIDE);
+                // ajax_load_image(HIDE);
             },
 
             error:function (){

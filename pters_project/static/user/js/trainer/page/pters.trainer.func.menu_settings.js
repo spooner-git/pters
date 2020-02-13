@@ -84,7 +84,8 @@ class Menu_settings {
                         this.dom_menu_setting_autocomplete() +
                         this.dom_menu_setting_reserve() + 
                         this.dom_menu_setting_alarm() + 
-                        this.dom_menu_attendmode() + 
+                        this.dom_menu_attendmode() +
+                        // this.dom_menu_program_notice() +
                         this.dom_menu_setting_attendmode() +
                         this.dom_menu_setting_menu_access() +
                         CComponent.dom_tag('개인 설정', dom_tag_style) + 
@@ -204,6 +205,19 @@ class Menu_settings {
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             sideGoPage("attend_mode");
+        });
+        return html;
+    }
+
+    dom_menu_program_notice(){
+        let id = 'menu_program_notice';
+        let title = '공지사항';
+        let icon = CImg.notice();
+        let icon_r_visible = NONE;
+        let icon_r_text = "";
+        let style = {"font-size":"17px", "padding":"13px 0"};
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            sideGoPage("program_notice");
         });
         return html;
     }
@@ -366,7 +380,7 @@ class Menu_settings {
 
     dom_menu_service_notice(){
         let id = 'menu_service_notice';
-        let title = '공지사항';
+        let title = 'PTERS 공지사항';
         let icon = CImg.notice();
         let icon_r_visible = NONE;
         let icon_r_text = "";
@@ -413,7 +427,7 @@ class Menu_settings {
                                     </div>
                                         `
                 ,
-                initial_page:`<div id="menu_display_panel"></div><div id="menu_content_wrap" class="pages" style="top:unset;left:unset;background-color:unset;position:relative;min-height:calc(100% - 68px); padding:8px 16px 20px 16px;box-sizing:border-box"></div>`
+                initial_page:`<div id="menu_display_panel"></div><div id="menu_content_wrap" class="pages anim_fade_in_vibe_top" style="top:unset;left:unset;background-color:unset;position:relative;min-height:calc(100% - 68px); padding:8px 16px 20px 16px;box-sizing:border-box"></div>`
             }
         );
     }

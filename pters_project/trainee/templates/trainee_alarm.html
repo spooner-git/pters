@@ -7,32 +7,43 @@
 
 {% block content %}
     <div class="trainee_alarm">
-
+        <div class="wrapper_alarm_unread obj_box_full">
+        {% if check_qa_comment > 0 %}
+            <p class="obj_font_size_11_weight_bold obj_font_color_dark_grey wrapper_alarm_unread_title">시스템 문의 알림</p>
+            <div class="wrapper_alarm_element obj_font_size_15_weight_500">
+                <div class="wrapper_alarm_element_title">
+                    <div class="alarm_status">시스템 문의 답변이 {{ check_qa_comment }}건 있습니다.<br/>문의 내역을 확인해주세요.</div>
+                </div>
+            </div>
+        {% endif %}
+        </div>
         <div class="wrapper_alarm_unread obj_box_full">
             <p class="obj_font_size_11_weight_bold obj_font_color_dark_grey wrapper_alarm_unread_title">새로운 알림</p>
-            {% for class_info in class_data %}
-                {% if class_info.np_member_ticket_counts > 0 %}
-                    <div class="wrapper_alarm_element obj_font_size_15_weight_500">
-                        <div class="wrapper_alarm_element_title">
-                            <div class="alarm_status">{{ class_info.class_type_name }}</div>
+            {% if np_member_ticket_counts > 0 %}
+                {% for class_info in class_data %}
+                    {% if class_info.np_member_ticket_counts > 0 %}
+                        <div class="wrapper_alarm_element obj_font_size_15_weight_500">
+                            <div class="wrapper_alarm_element_title">
+                                <div class="alarm_status">{{ class_info.class_type_name }}</div>
+                            </div>
+                            <div class="wrapper_alarm_element_text obj_font_size_12_weight_normal">
+                                <span class="obj_font_size_12_weight_500">{{ class_info.class_tb.member.name }}</span> 강사님
+                                <span class="obj_font_size_12_weight_500">'{{ class_info.class_type_name }}'</span> 프로그램을 연결 요청했습니다.
+                            </div>
+                            {% for class_member_ticket_info in class_info.class_member_ticket_data %}
+                                {% if class_member_ticket_info.state_cd == 'IP' %}
+                                    <div class="obj_font_size_11_weight_normal obj_font_color_light_black">(수강권: {{ class_member_ticket_info.ticket_tb.name }}) </div>
+                                {% endif %}
+                            {% endfor %}
+                            <div class="wrapper_request_select_box">
+                                <div class="obj_button_gen obj_font_bg_white_coral" onclick="func_program_select('{{ class_info.class_tb_id }}',`${PROGRAM_LECTURE_CONNECT_ACCEPT}`);">연결하기</div>
+                                <div class="obj_button_gen obj_font_bg_coral_trans"
+                                     onclick="program_connect_accept('{{ class_info.class_tb_id }}')">취소하기</div>
+                            </div>
                         </div>
-                        <div class="wrapper_alarm_element_text obj_font_size_12_weight_normal">
-                            <span class="obj_font_size_12_weight_500">{{ class_info.class_tb.member.name }}</span> 강사님
-                            <span class="obj_font_size_12_weight_500">'{{ class_info.class_type_name }}'</span> 프로그램을 연결 요청했습니다.
-                        </div>
-                        {% for class_member_ticket_info in class_info.class_member_ticket_data %}
-                            {% if class_member_ticket_info.state_cd == 'IP' %}
-                                <div class="obj_font_size_11_weight_normal obj_font_color_light_black">(수강권: {{ class_member_ticket_info.ticket_tb.name }}) </div>
-                            {% endif %}
-                        {% endfor %}
-                        <div class="wrapper_request_select_box">
-                            <div class="obj_button_gen obj_font_bg_white_coral" onclick="func_program_select('{{ class_info.class_tb_id }}',`${PROGRAM_LECTURE_CONNECT_ACCEPT}`);">연결하기</div>
-                            <div class="obj_button_gen obj_font_bg_coral_trans"
-                                 onclick="program_connect_accept('{{ class_info.class_tb_id }}')">취소하기</div>
-                        </div>
-                    </div>
-                {% endif %}
-            {% endfor %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
             {% for log_info in log_data %}
                 {% if log_info.log_read == 0 %}
                     <div class="wrapper_alarm_element obj_font_size_15_weight_500">

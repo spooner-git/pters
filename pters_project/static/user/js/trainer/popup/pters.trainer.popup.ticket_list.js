@@ -132,7 +132,7 @@ class Ticket_list {
             }
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             let onclick = `ticket_list_popup.event_view_ticket(${ticket_id})`;
-            let html = `<article class="ticket_wrapper" data-text="${ticket_name}" data-ticketid="${ticket_id}" onclick="${onclick}" style="opacity:${this.list_status_type == "ing" ? "1" : '0.6'}">
+            let html = `<article class="ticket_wrapper anim_fade_in_vibe_top" data-text="${ticket_name}" data-ticketid="${ticket_id}" onclick="${onclick}" style="opacity:${this.list_status_type == "ing" ? "1" : '0.6'}">
                             <div class="ticket_data_u">
                                 <div class="ticket_name">
                                     ${ticket_name}
@@ -285,7 +285,7 @@ class Ticket_list {
                 if(load_image == OFF){
                     return;
                 }
-                ajax_load_image(SHOW);
+                // ajax_load_image(SHOW);
             },
 
             //통신성공시 처리
@@ -309,7 +309,7 @@ class Ticket_list {
                 if(load_image == OFF){
                     return;
                 }
-                ajax_load_image(HIDE);
+                // ajax_load_image(HIDE);
             },
 
             //통신 실패시 처리

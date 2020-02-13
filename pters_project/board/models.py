@@ -1,8 +1,9 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 
-from configs.const import BOARD_TYPE_CD_QA, NOTICE_TYPE_CD_NORMAL, TO_MEMBER_BOARD_TYPE_CD_ALL
+from configs.const import BOARD_TYPE_CD_QA, BOARD_TYPE_CD_NOTICE, TO_MEMBER_BOARD_TYPE_CD_ALL
 from configs.models import TimeStampedModel
-from login.models import MemberTb
+from login.models import MemberTb, CommonCdTb
 
 
 class QATb(TimeStampedModel):
@@ -13,12 +14,28 @@ class QATb(TimeStampedModel):
     title = models.CharField(db_column='TITLE', max_length=255, blank=True, default='')
     contents = models.CharField(db_column='CONTENTS', max_length=1000, blank=True, default='')
     status_type_cd = models.CharField(db_column='STATUS', max_length=45, blank=True, default='')
-    read = models.IntegerField(db_column='READ', default=1)  # Field name made lowercase.)
+    read = models.IntegerField(db_column='READ', default=0)  # Field name made lowercase.)
     use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
 
     class Meta:
         managed = False
         db_table = 'QA_TB'
+
+    def get_qa_type_cd_name(self):
+        try:
+            qa_type_cd_name = CommonCdTb.objects.get(common_cd=self.qa_type_cd).common_cd_nm
+        except ObjectDoesNotExist:
+            qa_type_cd_name = ''
+
+        return qa_type_cd_name
+
+    def get_status_type_cd_name(self):
+        try:
+            status_type_cd_name = CommonCdTb.objects.get(common_cd=self.status_type_cd).common_cd_nm
+        except ObjectDoesNotExist:
+            status_type_cd_name = ''
+
+        return status_type_cd_name
 
 
 class QACommentTb(TimeStampedModel):
@@ -28,7 +45,7 @@ class QACommentTb(TimeStampedModel):
     upper_qa_comment_tb_id = models.CharField(db_column='UPPER_QA_COMMENT_TB_ID', max_length=20, blank=True, default='')
     title = models.CharField(db_column='TITLE', max_length=255, blank=True, default='')
     contents = models.CharField(db_column='CONTENTS', max_length=3000, blank=True, default='')
-    read = models.IntegerField(db_column='READ', default=1)  # Field name made lowercase.)
+    read = models.IntegerField(db_column='READ', default=0)  # Field name made lowercase.)
     use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
 
     class Meta:
@@ -70,7 +87,7 @@ class NoticeTb(TimeStampedModel):
     notice_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
     notice_type_cd = models.CharField(db_column='NOTICE_TYPE_CD', max_length=20,
-                                      blank=True, default=NOTICE_TYPE_CD_NORMAL)
+                                      blank=True, default=BOARD_TYPE_CD_NOTICE)
     title = models.CharField(db_column='TITLE', max_length=255, blank=True, default='')
     contents = models.CharField(db_column='CONTENTS', max_length=3000, blank=True, default='')
     to_member_type_cd = models.CharField(db_column='TO_MEMBER_TYPE_CD', max_length=20,

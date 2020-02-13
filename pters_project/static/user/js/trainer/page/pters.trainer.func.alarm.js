@@ -102,7 +102,7 @@ class Alarm {
                 if(this.new_alarms_id_cache.indexOf(alarm_id) != -1){
                     alarm_highlight = "var(--bg-for-only-new-notifi)";
                 }
-                let html = `<article class="alarm_wrapper" data-alarm_id="${alarm_id}" style="background-color:${alarm_highlight}">
+                let html = `<article class="alarm_wrapper anim_fade_in_vibe_top" data-alarm_id="${alarm_id}" style="background-color:${alarm_highlight}">
                                 <div class="alarm_data_u">
                                     <div>
                                         ${CImg.blank()}
@@ -143,7 +143,7 @@ class Alarm {
         
 
         if(html_temp.length == 0){
-            html_temp.push(`<article class="alarm_wrapper">   
+            html_temp.push(`<article class="alarm_wrapper anim_fade_in_vibe_top">   
                                 <div>
                                     <span>새로운 알림이 없습니다.</span>
                                 </div>
@@ -157,7 +157,7 @@ class Alarm {
         let dom = Ads.row();
 
         let html = `<article class="alarm_wrapper">   
-                            ${dom}
+                        ${dom}
                     </article>`;
 
         return pass_inspector.data.auth_ads.limit_num != 0 ? html : "";
@@ -215,7 +215,7 @@ class Alarm {
 
     dom_row_qna_unread(unread_number){
         let comp = `<div style="padding:20px 20px 15px 20px;box-shadow:var(--box-shadow-article);border:var(--border-article);">
-                            <div style="padding:5px 0;font-size:14px;font-weight:bold;">답변이 등록된 읽지 않은 문의가 ${unread_number}건 있습니다.</div>
+                            <div style="padding:5px 0;font-size:14px;font-weight:bold;">이용 문의 답변이 ${unread_number}건 있습니다.</div>
                         </div>`;
         return comp;
     }
@@ -227,7 +227,7 @@ class Alarm {
         Setting_shared_func.read_request((invited)=>{
             let invited_length = Object.keys(invited).length;
             Alarm_func.read((data)=>{
-                console.log(data)
+                console.log(data);
                 for(let date in data){
                     let length = data[date].length;
                     for(let i=0; i<length; i++){
@@ -273,7 +273,7 @@ class Alarm_func{
             url:"/trainer/alarm/",
             dataType : 'JSON',
             beforeSend:function (){
-                ajax_load_image(SHOW);
+                // ajax_load_image(SHOW);
             },
     
             //통신성공시 처리
@@ -292,7 +292,7 @@ class Alarm_func{
 
             //보내기후 팝업창 닫기
             complete:function (){
-                ajax_load_image(HIDE);
+                // ajax_load_image(HIDE);
             },
     
             //통신 실패시 처리

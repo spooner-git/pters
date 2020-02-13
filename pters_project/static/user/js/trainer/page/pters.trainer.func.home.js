@@ -97,17 +97,17 @@ class Home {
             Program_func.read((data)=>{
                 this.received_data.program = data;
                 let program = this.dom_row_program(data);
-                program_dom = '<div class="contents">' + program + '</div>';
+                program_dom = '<div class="contents anim_fade_in_vibe_top">' + program + '</div>';
 
                 calendar.request_schedule_data (this.today, 1, (data)=>{
                     this.received_data.schedule = data;
                     let today_plan = this.dom_row_today_plan(data);
-                    plan_dom = '<div class="contents">' + today_plan + '</div>';
+                    plan_dom = '<div class="contents anim_fade_in_vibe_top">' + today_plan + '</div>';
 
                     member.request_member_list("ing", (data)=>{
                         this.received_data.member = data;
                         let end_alert = this.dom_row_end_alert(data);
-                        end_alert_dom = '<div class="contents">' + end_alert + '</div>';
+                        end_alert_dom = '<div class="contents anim_fade_in_vibe_top">' + end_alert + '</div>';
 
                         Statistics_func.read("sales", {"start_date":this.today, "end_date":this.today}, (data)=>{
                             this.received_data.statistics = data;
@@ -116,14 +116,14 @@ class Home {
                             }
                             let locked = menu_lock_statistics;
                             let sales_summary = this.dom_row_sales_this_month(data, locked);
-                            sales_summary_dom = '<div class="contents">' + sales_summary + '</div>';
+                            sales_summary_dom = '<div class="contents anim_fade_in_vibe_top">' + sales_summary + '</div>';
                             if(pass_inspector.statistics_read().barrier == BLOCKED){
                                 sales_summary_dom = "";
                             }
 
 
-                            my_pters_pass_dom = '<div class="contents">' + this.dom_row_my_pters_pass() + '</div>';
-                            current_date = '<div class="contents">' + this.dom_row_current_date() + '</div>';
+                            my_pters_pass_dom = '<div class="contents anim_fade_in_vibe_top">' + this.dom_row_my_pters_pass() + '</div>';
+                            current_date = '<div class="contents anim_fade_in_vibe_top">' + this.dom_row_current_date() + '</div>';
 
                             let temp_for_error = '<div class="contents">' + this.dom_row_temp_for_error() + '</div>';
 

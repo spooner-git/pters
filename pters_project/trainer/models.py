@@ -4,7 +4,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 
-from configs.const import LECTURE_TYPE_ONE_TO_ONE, LECTURE_MEMBER_NUM_VIEW_ENABLE
+from configs.const import LECTURE_TYPE_ONE_TO_ONE, BOARD_TYPE_CD_NOTICE, TO_MEMBER_BOARD_TYPE_CD_TRAINEE
 from configs.models import TimeStampedModel
 from login.models import MemberTb, CommonCdTb
 from payment.models import FunctionAuthTb
@@ -301,6 +301,113 @@ class ProgramAuthTb(TimeStampedModel):
     class Meta:
         managed = False
         db_table = 'PROGRAM_AUTH_TB'
+
+
+class ProgramGroupTb(TimeStampedModel):
+    program_group_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    name = models.CharField(db_column='NAME', max_length=255, blank=True, null=True)
+    note = models.CharField(db_column='NOTE', max_length=1000, blank=True, null=True)
+    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'PROGRAM_GROUP_TB'
+
+
+class ProgramGroupMemberTb(TimeStampedModel):
+    program_group_member_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    program_group_tb = models.ForeignKey(ProgramGroupTb, on_delete=models.CASCADE, null=True)
+    member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, null=True)
+    use = models.IntegerField(db_column='USE', default=1)
+
+    class Meta:
+        managed = False
+        db_table = 'PROGRAM_GROUP_MEMBER_TB'
+
+
+class ProgramBoardTb(TimeStampedModel):
+    program_board_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    board_type_cd = models.CharField(db_column='BOARD_TYPE_CD', max_length=45, blank=True, null=True)
+    member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, null=True)
+    class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    to_member_type_cd = models.CharField(db_column='TO_MEMBER_TYPE_CD', max_length=45, blank=True, null=True)
+    comment_available = models.IntegerField(db_column='COMMENT_AVAILABLE', default=1)  # Field name made lowercase.
+    anonymous_available = models.IntegerField(db_column='ANONYMOUS_AVAILABLE', default=0)  # Field name made lowercase.
+    important_flag = models.IntegerField(db_column='IMPORTANT_FLAG', default=0)  # Field name made lowercase.
+    auth_type_cd = models.CharField(db_column='AUTH_TYPE_CD', max_length=45, blank=True, null=True)
+    push_status = models.IntegerField(db_column='PUSH_STATUS', default=0)  # Field name made lowercase.
+    order = models.IntegerField(db_column='ORDER', default=1)  # Field name made lowercase.
+    name = models.CharField(db_column='NAME', max_length=100, blank=True, null=True)
+    note = models.CharField(db_column='NOTE', max_length=1000, blank=True, null=True)
+    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'PROGRAM_BOARD_TB'
+
+
+class ProgramBoardPostTb(TimeStampedModel):
+    program_board_post_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    program_board_tb = models.ForeignKey(ProgramBoardTb, on_delete=models.CASCADE, null=True)
+    class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    comment_available = models.IntegerField(db_column='COMMENT_AVAILABLE', default=1)  # Field name made lowercase.
+    upper_post_tb_id = models.CharField(db_column='UPPER_POST_ID', max_length=45, blank=True, null=True)
+    member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    to_member_type_cd = models.CharField(db_column='TO_MEMBER_TYPE_CD', max_length=45, blank=True, null=True)
+    to_program_group_tb = models.ForeignKey(ProgramGroupTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    to_member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, related_name='TO_MEMBER_ID', null=True)
+    order = models.IntegerField(db_column='ORDER', default=1)  # Field name made lowercase.
+    important_flag = models.IntegerField(db_column='IMPORTANT_FLAG', default=0)  # Field name made lowercase.
+    title = models.CharField(db_column='TITLE', max_length=200, blank=True, null=True)
+    contents = models.CharField(db_column='CONTENTS', max_length=3000, blank=True, null=True)
+    auth_type_cd = models.CharField(db_column='AUTH_TYPE_CD', max_length=45, blank=True, null=True)
+    popup_flag = models.IntegerField(db_column='POPUP_FLAG', default=0)  # Field name made lowercase.
+    hits = models.BigIntegerField(db_column='HITS', default=0)  # Field name made lowercase.
+    get = models.BigIntegerField(db_column='GET', default=0)  # Field name made lowercase.
+    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'PROGRAM_BOARD_POST_TB'
+
+
+class ProgramBoardCommentTb(TimeStampedModel):
+    program_board_comment_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    program_board_post_tb = models.ForeignKey(ProgramBoardPostTb, on_delete=models.CASCADE, null=True)
+    class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    upper_comment_tb_id = models.CharField(db_column='UPPER_COMMENT_ID', max_length=45, blank=True, null=True)
+    member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    auth_type_cd = models.CharField(db_column='AUTH_TYPE_CD', max_length=45, blank=True, null=True)
+    pin_status = models.IntegerField(db_column='PIN_STATUS', default=0)  # Field name made lowercase.
+    title = models.CharField(db_column='TITLE', max_length=100, blank=True, null=True)
+    comment = models.CharField(db_column='COMMENT', max_length=1000, blank=True, null=True)
+    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'PROGRAM_BOARD_COMMENT_TB'
+
+
+class ProgramNoticeTb(models.Model):
+    program_notice_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, null=True)
+    class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    notice_type_cd = models.CharField(db_column='NOTICE_TYPE_CD', max_length=20,
+                                      blank=True, default=BOARD_TYPE_CD_NOTICE)
+    title = models.CharField(db_column='TITLE', max_length=45, blank=True, null=True)
+    contents = models.CharField(db_column='CONTENTS', max_length=3000, blank=True, null=True)
+    to_member_type_cd = models.CharField(db_column='TO_MEMBER_TYPE_CD', max_length=20,
+                                         blank=True, null=True, default=TO_MEMBER_BOARD_TYPE_CD_TRAINEE)
+    hits = models.BigIntegerField(db_column='HITS', default=0)  # Field name made lowercase.
+    reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True, auto_now_add=True)
+    mod_dt = models.DateTimeField(db_column='MOD_DT', blank=True, null=True, auto_now_add=True)
+    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'PROGRAM_NOTICE_TB'
 
 
 class BugMemberTicketPriceTb(TimeStampedModel):

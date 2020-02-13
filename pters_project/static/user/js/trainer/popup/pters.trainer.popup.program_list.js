@@ -88,7 +88,7 @@ class Program_list{
             let category_sub_name = PROGRAM_CATEGORY[category_code].sub_category[data.program_subject_cd].name;
             let category_sub_code = data.program_subject_cd;
 
-            let html = `<article class="program_wrapper" data-program_id="${id}" onclick="program_list_popup.event_program_click(${id}, '${name}', '${category_code}', '${category_sub_code}', '${selected}', '${shared}');">
+            let html = `<article class="program_wrapper anim_fade_in_vibe_top" data-program_id="${id}" onclick="program_list_popup.event_program_click(${id}, '${name}', '${category_code}', '${category_sub_code}', '${selected}', '${shared}');">
                             <div class="program_data_u">
                                 <div>
                                     <span>${name}</span>
@@ -221,7 +221,7 @@ class Program_list{
     }
 
     upper_right_menu(){
-        let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+        let popup_style = POPUP_FROM_BOTTOM;
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PROGRAM_ADD, 100, popup_style, null, ()=>{
             program_add_popup = new Program_add('.popup_program_add');
         });

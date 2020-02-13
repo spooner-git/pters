@@ -3655,7 +3655,7 @@ class BoardReader{
         }
 
         let html = `<div style="font-size:16px;font-weight:bold;color:#3d3b3b;letter-spacing:-0.9px;margin-bottom:40px;">
-                        답글 : ${this.data.answer_title == null ? "" : this.data.answer_title}
+                        답변 : ${this.data.answer_title == null ? "" : this.data.answer_title}
                         <div style="font-size:12px;font-weight:500;letter-spacing:#858282;color:#858282;">${date}</div>
                     </div>`;
         return html;

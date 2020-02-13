@@ -140,6 +140,23 @@
                 </svg>
                 <span class="sidemenu_text">통계</span>
             </div>
+
+            <div class="side_menu_item" onclick="sideGoPage('program_notice_page_type')" id="side_program_notice_page_type">
+                <!--
+                <svg style="vertical-align:middle;margin-right:15px;" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <g id="데스크탑/아이콘/강사공지/5C5859" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                        <path class="nav_svg" id="Combined-Shape" fill="var(--img-main)" fill-rule="nonzero"  d="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z"></path>
+                    </g>
+                </svg>
+                -->
+                <svg style="vertical-align:middle;margin-right:15px;" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <g id="데스크탑/아이콘/강사공지/5C5859" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                        <path class="nav_svg" id="Combined-Shape" fill="var(--img-main)" d="M20,3 C20.5128358,3 20.9355072,3.38604019 20.9932723,3.88337887 L21,4 L21,19.087931 C21,19.2096756 20.9777689,19.330397 20.9344005,19.4441553 C20.7517158,19.9233494 20.2404339,20.1807767 19.7551431,20.0575883 L19.6437756,20.0223314 L12,17.108 L12,18 C12,19.1045695 11.1045695,20 10,20 L7,20 C5.8954305,20 5,19.1045695 5,18 L5,15.5833391 C3.9456382,15.5833391 3.08183488,14.7674613 3.00548574,13.7326015 L3,13.5833391 L3,9.58333912 C3,8.52897733 3.81587779,7.665174 4.85073766,7.58882486 L5,7.58333912 L8,7.58333912 L19.6382755,3.06771495 C19.7536231,3.02296037 19.8762744,3 20,3 Z M7,18 L10,18 L10,16.346 L8,15.5833391 L7,15.583 L7,18 Z M19,5.58333912 L8,9.58333912 L5,9.58333912 L5,13.5833391 L8,13.5833391 L19,17.5833391 L19,5.58333912 Z"></path>
+                    </g>
+                </svg>
+                <span class="sidemenu_text">공지사항</span>
+            </div>
+
             <div class="side_menu_item" onclick="sideGoPage('settings')" id="side_settings">
                 <!-- <img src={% static_url "common/icon/icon_setting_worktime_grey.png" %} alt=""> -->
                 <svg style="vertical-align:middle;margin-right:15px;" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -297,6 +314,8 @@
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.ticket.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.lecture.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.member.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.program_board.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.program_notice.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.menu.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.menu_settings.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.menu_service.js" %}></script>
@@ -332,6 +351,12 @@
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.plan_daily_record.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.statistics.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.statistics_detail.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.program_board_list.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.program_board_add.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.program_board_view.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.program_notice_list.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.program_notice_add.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.program_notice_view.js" %}></script>
 
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_calendar.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.setting_worktime.js" %}></script>
@@ -375,6 +400,20 @@
 
 
 <script>
+    // history.pushState(null, null, location.href);
+    // window.addEventListener("popstate", (e)=>{
+    //     console.log(e);
+    //     history.go(1);
+    // });
+
+    history.pushState(null, null, '#Back');
+    window.addEventListener("hashchange", function(e){
+        console.log(layer_popup.stack.length,"여기")
+        if(layer_popup.stack.length > 0){
+            layer_popup.close_layer_popup();
+        }
+        history.pushState(null, null, '#Back');
+    });
 
     var user_email = '{{ request.user.email }}';
     var user_name = '{{ request.user.first_name }}';
@@ -458,6 +497,7 @@
     var calendar = new Calendar('#root_content', 'calendar');
     var ticket = new Ticket('#root_content', 'ticket');
     var lecture = new Lecture('#root_content', 'lecture');
+    var program_notice = new ProgramNotice('#root_content', 'program_notice');
     var member = new Member('#root_content', 'member');
     var menu = new Menu('#root_content', 'menu');
     var alarm = new Alarm('#root_content', 'alarm');
@@ -495,6 +535,12 @@
     var plan_daily_record_popup;
     var statistics_popup;
     var statistics_detail_popup;
+    var program_board_list_popup;
+    var program_board_add_popup;
+    var program_board_view_popup;
+    var program_notice_list_popup;
+    var program_notice_add_popup;
+    var program_notice_view_popup;
     var mypage_popup;
     var mypage_modify_popup;
     var mypage_photo_update_popup;
@@ -543,7 +589,9 @@
     var lecture_select;
     var ticket_select;
     var member_select;
+    var member_contacts_select;
     var color_select;
+    var board_type_select;
     var custom_selector;
     var password_4d_input;
     var password_input;
@@ -615,6 +663,17 @@
 
                 current_page = lecture;
                 lecture.init();
+            break;
+            case 'program_notice_page_type':
+                auth_inspect = pass_inspector.program_notice_read();
+                if(auth_inspect.barrier == BLOCKED){
+                    let message = `${auth_inspect.limit_type}`;
+                    show_error_message({title:message});
+                    return false;
+                }
+
+                current_page = program_notice;
+                program_notice.init();
             break;
             case 'member':
                 auth_inspect = pass_inspector.member_read();
@@ -707,7 +766,7 @@
         $('#debug_toolbar').hide();
 
         let open;
-        let auth_inspect
+        let auth_inspect;
         switch(page){
             case 'ticket':
                 open = ()=>{
@@ -720,7 +779,7 @@
 
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_LIST, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     ticket_list_popup = new Ticket_list('.popup_ticket_list', 'ticket_list_popup')});
-                    }
+                    };
             break;
             case 'lecture':
                 open = ()=>{
@@ -733,7 +792,7 @@
 
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_LIST, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     lecture_list_popup = new Lecture_list('.popup_lecture_list', 'lecture_list_popup')});
-                    }
+                    };
             break;
             case 'program':
                 open = ()=>{
@@ -745,7 +804,7 @@
                     }
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PROGRAM_LIST, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     program_list_popup = new Program_list('.popup_program_list')});
-                }
+                };
             break;
             case 'setting_calendar':
                 open = ()=>{
@@ -757,7 +816,7 @@
                     }
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_CALENDAR, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     setting_calendar_popup = new Setting_calendar('.popup_setting_calendar')});
-                    }
+                    };
             break;
             case 'setting_worktime':
                 open = ()=>{
@@ -769,7 +828,7 @@
                     }
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_WORKTIME, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     setting_worktime_popup = new Setting_worktime('.popup_setting_worktime')});
-                }
+                };
             break;
             case 'setting_autocomplete':
                 open = ()=>{
@@ -781,7 +840,7 @@
                     }
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_AUTOCOMPLETE, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     setting_autocomplete_popup = new Setting_autocomplete('.popup_setting_autocomplete')});
-                    }
+                    };
             break;
             case 'setting_reserve':
                 open = ()=>{
@@ -793,7 +852,7 @@
                     }
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_RESERVE, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     setting_reserve_popup = new Setting_reserve('.popup_setting_reserve')});
-                    }
+                    };
             break;
             case 'setting_alarm':
                 open = ()=>{
@@ -805,7 +864,7 @@
                     }
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_ALARM, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     setting_alarm_popup = new Setting_alarm('.popup_setting_alarm')});
-                }
+                };
             break;
             case 'setting_alarm_personal':
                 open = ()=>{
@@ -817,7 +876,7 @@
                     // }
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_ALARM_PERSONAL, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     setting_alarm_personal_popup = new Setting_alarm_personal('.popup_setting_alarm_personal')});
-                }
+                };
             break;
             case 'setting_attendmode':
                 open = ()=>{
@@ -829,7 +888,7 @@
                     }
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_ATTENDMODE, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     setting_attendmode_popup = new Setting_attendmode('.popup_setting_attendmode')});
-                    }
+                    };
             break;
             case 'setting_theme':
                 open = ()=>{
@@ -841,7 +900,7 @@
                     // }
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_THEME, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     setting_theme_popup = new Setting_theme('.popup_setting_theme')});
-                    }
+                    };
             break;
             case 'setting_menu_access':
                 open = ()=>{
@@ -853,31 +912,31 @@
                     }
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_MENU_ACCESS, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     setting_menu_access_popup = new Setting_menu_access('.popup_setting_menu_access')});
-                    }
+                    };
             break;
             case 'setting_sharing':
                 open = ()=>{
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_SHARING, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     setting_sharing_popup = new Setting_sharing('.popup_setting_sharing')});
-                    }
+                    };
             break;
             case 'setting_shared':
                 open = ()=>{
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_SHARED, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     setting_shared_popup = new Setting_shared('.popup_setting_shared')});
-                    }
+                    };
             break;
             case 'service_notice':
                 open = ()=>{
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SERVICE_NOTICE, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     service_notice_popup = new Service_notice('.popup_service_notice')});
-                    }
+                    };
             break;
             case 'service_inquiry_menu':
                 open = ()=>{
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SERVICE_INQUIRY_MENU, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     service_inquiry_menu_popup = new Service_inquiry_menu('.popup_service_inquiry_menu')});
-                    }
+                    };
             break;
             case 'statistics':
                 open = ()=>{
@@ -890,33 +949,63 @@
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_STATISTICS, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                 statistics_popup = new Statistics('.popup_statistics');
                     });
-                }
+                };
                 
             break;
+            case 'program_notice':
+                open = ()=>{
+                    let auth_inspect = pass_inspector.program_notice_read();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `${auth_inspect.limit_type}`;
+                        show_error_message({title:message});
+                        return false;
+                    }
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PROGRAM_NOTICE_LIST, 100, POPUP_FROM_RIGHT, null, ()=>{
+                                                program_notice_list_popup = new ProgramNotice_list('.popup_program_notice_list', 'program_notice_list_popup')
+                    });
+                };
+
+            break;
+            /*
+            case 'program_board':
+                open = ()=>{
+                    let auth_inspect = pass_inspector.program_board_read();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `${auth_inspect.limit_type}`;
+                        show_error_message({title:message});
+                        return false;
+                    }
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PROGRAM_BOARD_LIST, 100, POPUP_FROM_RIGHT, null, ()=>{
+                                                program_board_list_popup = new ProgramBoard_list('.popup_program_board_list', 'program_board_list_popup')
+                    });
+                };
+
+            break;
+            */
             case 'mypage':
                 open = ()=>{
                     let popup_style = $root_content.width() > 650 ? POPUP_FROM_TOP : POPUP_FROM_RIGHT;
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MYPAGE, 100, popup_style, null, ()=>{
                                                         mypage_popup = new Mypage('.popup_mypage')});
-                    }
+                    };
             break;
             case 'pters_pass_main':
                 open = ()=>{
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_MAIN, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     pters_pass_main_popup = new Pters_pass_main('.popup_pters_pass_main')});
-                    }
+                    };
             break;
             case 'helper':
                 open = ()=>{
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SERVICE_HELPER, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     service_helper_popup = new Service_helper('.popup_service_helper')});
-                    }
+                    };
             break;
             case 'service_about_us':
                 open = ()=>{
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SERVICE_ABOUT_US, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     service_about_us_popup = new Service_about_us('.popup_service_about_us')});
-                    }
+                    };
             break;
         }
     

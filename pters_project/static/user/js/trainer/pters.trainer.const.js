@@ -168,6 +168,16 @@ const NOTICE_UPDATE_HISTORY = 'UPDATE_HISTORY';
 const BASIC = 0;
 const CLASSIC = 1;
 
+/* 공지사항 type */
+const PROGRAM_BOARD = 'NOTICE';
+const PROGRAM_BOARD_FAQ = 'FAQ';
+const PROGRAM_BOARD_USAGE = 'SYS_USAGE';
+const PROGRAM_BOARD_UPDATE_HISTORY = 'UPDATE_HISTORY';
+const PROGRAM_BOARD_TYPE = {NOTICE:"공지사항", BOARD:"게시판"};
+const PROGRAM_BOARD_USE = {1:{text:"공개", color:"green"}, 0:{text:"비공개", color:"#676767"} };
+const PROGRAM_BOARD_TARGET = {ALL:"전체", trainer:"강사", trainee:"수강회원"};
+const PROGRAM_BOARD_CATEGORY = {use:"공개 여부", type:"분류", open:"공개 범위"};
+
 /* 팝업 주소 */
 
 // 풀페이지 팝업
@@ -203,6 +213,15 @@ const POPUP_ADDRESS_MEMBER_ATTEND = 'popup_member_attend';
 const POPUP_ADDRESS_PLAN_DAILY_RECORD = 'popup_plan_daily_record';
 const POPUP_ADDRESS_STATISTICS = 'popup_statistics';
 const POPUP_ADDRESS_STATISTICS_DETAIL = 'popup_statistics_detail';
+
+const POPUP_ADDRESS_PROGRAM_BOARD_LIST = 'popup_program_board_list';
+const POPUP_ADDRESS_PROGRAM_BOARD_ADD = 'popup_program_board_add';
+const POPUP_ADDRESS_PROGRAM_BOARD_VIEW = 'popup_program_board_view';
+
+const POPUP_ADDRESS_PROGRAM_NOTICE_LIST = 'popup_program_notice_list';
+const POPUP_ADDRESS_PROGRAM_NOTICE_ADD = 'popup_program_notice_add';
+const POPUP_ADDRESS_PROGRAM_NOTICE_VIEW = 'popup_program_notice_view';
+
 
 const POPUP_ADDRESS_PROGRAM_LIST = 'popup_program_list';
 const POPUP_ADDRESS_PROGRAM_ADD = 'popup_program_add';
@@ -244,6 +263,7 @@ const POPUP_ADDRESS_DATE_SELECTOR = 'popup_basic_date_selector';
 const POPUP_ADDRESS_SPIN_SELECTOR = 'popup_basic_spin_selector';
 
 const POPUP_ADDRESS_MEMBER_SELECT = 'popup_member_select';
+const POPUP_ADDRESS_MEMBER_CONTACTS_SELECT = 'popup_member_contacts_select';
 const POPUP_ADDRESS_LECTURE_SELECT = 'popup_lecture_select';
 const POPUP_ADDRESS_TICKET_SELECT = 'popup_ticket_select';
 const POPUP_ADDRESS_COLOR_SELECT = 'popup_color_select';
@@ -255,6 +275,7 @@ const POPUP_ADDRESS_CATEGORY_SELECT = 'popup_category_select';
 const POPUP_ADDRESS_CUSTOM_SELECT = 'popup_custom_select';
 const POPUP_ADDRESS_PASSWORD_4D_INPUT = 'popup_password_4d_input';
 const POPUP_ADDRESS_BOARD_WRITER = 'popup_board_writer';
+const POPUP_ADDRESS_BOARD_WRITER_UPDATE = 'popup_board_writer_update';
 const POPUP_ADDRESS_BOARD_READER = 'popup_board_reader';
 const POPUP_ADDRESS_DRAWING_BOARD = 'popup_drawing_board';
 
@@ -293,7 +314,7 @@ const TICKET_STATUS = {"IP": "진행중", "PE": "종료", "RF": "환불"};
 const TICKET_STATUS_COLOR = {"IP": "green", "PE": "var(--font-main)", "RF": "orange"};
 const PAY_TYPE_NAME = {"SINGLE": "1회 결제", "PERIOD": "정기 결제 / 1 개월", "":"없음", "FREE_EVENT":"무료 이벤트", "CHANGE":"상품 변경"};
 const PAY_STATUS = {"paid":"결제 완료", "failed":"결제 실패", "cancelled":"결제 취소", "reserve":"결제 예정"};
-const PAY_METHOD = {"card":"카드 결제", "iap": "인앱 결제", "":"-", "event":"이벤트", "ios": "ios", "android": "android", "인앱 결제": "인앱 결제"};
+const PAY_METHOD = {"card":"카드 결제", "iap": "인앱 결제", "":"-", "event":"이벤트", "ios": "ios", "android": "android", "인앱 결제": "인앱 결제", "coupon":"쿠폰"};
 const PAYMENT_ID = "imp53133818";
 const PASS_PRODUCT = {"basic":{id:14, text:"베이직", price:3900}, "premium":{id:7, text:"프리미엄", price:9900}, "standard":{id:8, text:"스탠다드", price:6900}};
 const PASS_PURCHASE = 0;

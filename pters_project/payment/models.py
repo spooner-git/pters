@@ -7,6 +7,10 @@ from login.models import MemberTb
 class ProductTb(TimeStampedModel):
     product_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     upper_product_id = models.CharField(db_column='UPPER_PRODUCT_ID', max_length=45, blank=True, default='')
+    promotion_type_cd = models.CharField(db_column='PROMOTION_TYPE_CD', max_length=45, blank=True, default='')
+    coupon_cd = models.CharField(db_column='COUPON_CD', max_length=45, blank=True, default='')
+    coupon_amount = models.IntegerField(db_column='COUPON_AMOUNT', default=0)
+    expiry_date = models.DateTimeField(db_column='EXPIRY_DATE', blank=True)
     name = models.CharField(db_column='NAME', max_length=100, blank=True, default='')
     contents = models.CharField(db_column='CONTENTS', max_length=1000,  blank=True, default='')
     order = models.IntegerField(db_column='ORDER', default=1)

@@ -250,6 +250,30 @@ urlpatterns = [
     # 공지사항 조회
     url(r'^get_notice_info/$', views.GetNoticeInfoView.as_view(), name='get_notice_info_ajax'),
 
+
+    # 강사 게시판 관리 기능 #################################################################################################
+    # 공지사항/사용법/FAQ 전체 조회
+    url(r'^get_program_board_ing_list/$', views.GetProgramBoardIngListView.as_view(), name='get_program_board_ing_list'),
+    url(r'^get_program_board_end_list/$', views.GetProgramBoardEndListView.as_view(), name='get_program_board_end_list'),
+    url(r'^get_program_board_all/$', views.GetProgramBoardAllView.as_view(), name='get_program_board_all'),
+    url(r'^get_program_board_info/$', views.GetProgramBoardInfoView.as_view(), name='get_program_board_info'),
+    # 공지사항/사용법/FAQ 추가
+    url(r'^add_program_board_info/$', views.add_program_board_info_logic, name='add_program_board_info'),
+    # 공지사항/사용법/FAQ 수정
+    url(r'^update_program_board_info/$', views.update_program_board_info_logic, name='update_program_board_info'),
+    # 공지사항/사용법/FAQ 삭제
+    url(r'^delete_program_board_info/$', views.delete_program_board_info_logic, name='delete_program_board_info'),
+
+    # 강사 공지사항 관리 기능 ###############################################################################################
+    # 강사의 공지사항 전체 조회
+    url(r'^get_program_notice_list/$', views.GetProgramNoticeAllView.as_view(), name='get_program_notice_list'),
+    # 강사 공지사항 추가
+    url(r'^add_program_notice_info/$', views.AddProgramNoticeInfoView.as_view(), name='add_program_notice_info'),
+    # 강사 공지사항 수정
+    url(r'^update_program_notice_info/$', views.UpdateProgramNoticeInfoView.as_view(), name='update_program_notice_info'),
+    # 강사 공지사항 삭제
+    url(r'^delete_program_notice_info/$', views.DeleteProgramNoticeInfoView.as_view(), name='delete_program_notice_info'),
+
     # Attend Mode 기능 ###############################################################################################
     # 일정선택후 휴대폰 번호 입력시 확인 기능
     url(r'^attend_mode_check/$', views.attend_mode_check_logic, name='attend_mode_check'),

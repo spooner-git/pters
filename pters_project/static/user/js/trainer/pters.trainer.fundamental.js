@@ -940,6 +940,124 @@ class PassInspector{
         return {barrier:PASSED};
     }
 
+    program_notice(){
+        let async = false;
+        let data1;
+        let current_notice_number = 0;
+
+        ProgramNotice_func.read_all({}, (data)=>{
+            data1 = data;
+            current_notice_number = Object.keys(data1).length;
+            // this.notice_list = data;
+        },()=>{}, async);
+
+        let total_number = current_notice_number;
+        let limit_number = this.data.auth_notice_create.limit_num;
+        let limit_type = this.data.auth_notice_create.limit_type;
+        if(total_number >= limit_number){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
+    }
+
+    program_notice_create(){
+        let limit_number = Number(this.data.auth_notice_create.active);
+        // let limit_type = "수강권 작성 권한이 없습니다.";
+        let limit_type = `${this.data.auth_notice_create.limit_type}의 공지사항 작성 권한이 없습니다.`;
+
+        if(limit_number == 0){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
+    }
+
+    program_notice_read(){
+        console.log(this.data);
+        let limit_number = Number(this.data.auth_notice_read.active);
+        // let limit_type = "수강권 읽기 권한이 없습니다.";
+        let limit_type = `${this.data.auth_notice_read.limit_type}의 공지사항 조회 권한이 없습니다.`;
+
+        if(limit_number == 0){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
+    }
+
+    program_notice_update(){
+        let limit_number = Number(this.data.auth_notice_update.active);
+        // let limit_type = "수강권 수정 권한이 없습니다.";
+        let limit_type = `${this.data.auth_notice_update.limit_type}의 공지사항 수정 권한이 없습니다.`;
+
+        if(limit_number == 0){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
+    }
+
+    program_notice_delete(){
+        let limit_number = Number(this.data.auth_notice_delete.active);
+        let limit_type = `${this.data.auth_notice_delete.limit_type}의 공지사항 삭제 권한이 없습니다.`;
+
+        if(limit_number == 0){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
+    }
+
+    program_board(){
+        // let total_number = 0;
+        // let limit_number = this.data.auth_program_notice_create.limit_num;
+        // let limit_type = this.data.auth_program_notice_create.limit_type;
+        //
+        // if(total_number >= limit_number){
+        //     return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        // }
+        return {barrier:PASSED};
+    }
+
+    program_board_create(){
+        // let limit_number = Number(this.data.auth_package_create.active);
+        // // let limit_type = "수강권 작성 권한이 없습니다.";
+        // let limit_type = `${this.data.auth_package_create.limit_type}의 공지 작성 권한이 없습니다.`;
+        //
+        // if(limit_number == 0){
+        //     return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        // }
+        return {barrier:PASSED};
+    }
+
+    program_board_read(){
+        // let limit_number = Number(this.data.auth_program_notice_read.active);
+        // // let limit_type = "수강권 읽기 권한이 없습니다.";
+        // let limit_type = `${this.data.auth_package_read.limit_type}의 공지 조회 권한이 없습니다.`;
+        //
+        // if(limit_number == 0){
+        //     return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        // }
+        return {barrier:PASSED};
+    }
+
+    program_board_update(){
+        // let limit_number = Number(this.data.auth_program_notice_update.active);
+        // // let limit_type = "수강권 수정 권한이 없습니다.";
+        // let limit_type = `${this.data.auth_program_notice_update.limit_type}의 공지 수정 권한이 없습니다.`;
+        //
+        // if(limit_number == 0){
+        //     return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        // }
+        return {barrier:PASSED};
+    }
+
+    program_board_delete(){
+        // let limit_number = Number(this.data.auth_program_notice_delete.active);
+        // let limit_type = `${this.data.auth_program_notice_delete.limit_type}의 공지 삭제 권한이 없습니다.`;
+        //
+        // if(limit_number == 0){
+        //     return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        // }
+        return {barrier:PASSED};
+    }
+
     program(){
         let async = false;
         let data;
@@ -1340,3 +1458,14 @@ function theme_data_to_app(){
         window.set_theme.callMethodName(setting_theme);
     }
 }
+// var device_contacts = {
+//     member_name: [],
+//     member_phone: []
+// };
+// function get_device_contacts_list(name, phone){
+//     console.log(name);
+//     console.log(phone);
+//     alert(name+':'+phone);
+//     device_contacts.member_name.append(name);
+//     device_contacts.member_phone.append(phone);
+// }

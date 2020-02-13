@@ -1,7 +1,6 @@
 class Ticket{
     constructor(install_target, instance){
         this.target = {install: install_target, toolbox:'section_ticket_list_toolbox', content:'section_ticket_list_content'};
-
         this.instance = instance;
         this.page_name = 'ticket_page_type';
         this.data = null;
@@ -144,7 +143,7 @@ class Ticket{
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             let onclick = `layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_TICKET_VIEW}', 100, ${popup_style}, {'ticket_id':${ticket_id}}, ()=>{
                 ticket_view_popup = new Ticket_view('.popup_ticket_view', ${ticket_id}, 'ticket_view_popup');});`;
-            let html = `<article class="ticket_wrapper" data-text="${ticket_name}" data-ticketid="${ticket_id}" onclick="${onclick}" style="opacity:${this.list_status_type == "ing" ? "1" : '0.6'}">
+            let html = `<article class="ticket_wrapper anim_fade_in_vibe_top" data-text="${ticket_name}" data-ticketid="${ticket_id}" onclick="${onclick}" style="opacity:${this.list_status_type == "ing" ? "1" : '0.6'}">
                             <div class="ticket_data_u">
                                 <div class="ticket_name">
                                     ${ticket_name}
@@ -300,7 +299,7 @@ class Ticket{
                 if(load_image == OFF){
                     return;
                 }
-                ajax_load_image(SHOW);
+                // ajax_load_image(SHOW);
             },
 
             //통신성공시 처리
@@ -324,7 +323,7 @@ class Ticket{
                 if(load_image == OFF){
                     return;
                 }
-                ajax_load_image(HIDE);
+                // ajax_load_image(HIDE);
             },
 
             //통신 실패시 처리

@@ -34,6 +34,12 @@ class Setting_sharing_member_auth{
                     update:OFF,
                     delete:OFF
                 },
+                notice:{
+                    create:OFF,
+                    read:OFF,
+                    update:OFF,
+                    delete:OFF
+                },
                 statistics:{
                     read : OFF
                 },
@@ -80,6 +86,11 @@ class Setting_sharing_member_auth{
                 this.data.ticket.read = my_auth.auth_package_read != undefined ? my_auth.auth_package_read : OFF;
                 this.data.ticket.update = my_auth.auth_package_update != undefined ? my_auth.auth_package_update : OFF;
                 this.data.ticket.delete = my_auth.auth_package_delete != undefined ? my_auth.auth_package_delete : OFF;
+
+                this.data.notice.create = my_auth.auth_notice_create != undefined ? my_auth.auth_notice_create : OFF;
+                this.data.notice.read = my_auth.auth_notice_read != undefined ? my_auth.auth_notice_read : OFF;
+                this.data.notice.update = my_auth.auth_notice_update != undefined ? my_auth.auth_notice_update : OFF;
+                this.data.notice.delete = my_auth.auth_notice_delete != undefined ? my_auth.auth_notice_delete : OFF;
 
                 this.data.statistics.read = my_auth.auth_analytics_read != undefined ? my_auth.auth_analytics_read : OFF;
 
@@ -135,10 +146,11 @@ class Setting_sharing_member_auth{
         let member = this.dom_sub_assembly_member();
         let lecture = this.dom_sub_assembly_lecture();
         let ticket = this.dom_sub_assembly_ticket();
+        let notice = this.dom_sub_assembly_notice();
         let statistics = this.dom_sub_assembly_statistics();
         let settings = this.dom_sub_assembly_setting();
 
-        let html = schedule + member + lecture + ticket + statistics + settings + `<article class="obj_input_box_full">${shared_status_button}</article>`;
+        let html = schedule + member + lecture + ticket + notice + statistics + settings + `<article class="obj_input_box_full">${shared_status_button}</article>`;
 
         return html;
     }
@@ -199,6 +211,20 @@ class Setting_sharing_member_auth{
 
         let html = `<article class="obj_input_box_full">` +
                         ticket + child_assemble +
+                    `</article>`;
+        return html;
+    }
+    dom_sub_assembly_notice(){
+        let notice = this.dom_row_share_menu_title("공지사항", "notice");
+        let notice_auth_create = this.dom_row_share_menu_auth_toggle("공지사항", "등록", "notice", "create");
+        let notice_auth_read = this.dom_row_share_menu_auth_toggle("공지사항", "조회", "notice", "read");
+        let notice_auth_update = this.dom_row_share_menu_auth_toggle("공지사항", "수정", "notice", "update");
+        let notice_auth_delete = this.dom_row_share_menu_auth_toggle("공지사항", "삭제", "notice", "delete");
+
+        let child_assemble = this.data.notice.read == ON ? notice_auth_read + notice_auth_create +  notice_auth_update + notice_auth_delete : "";
+
+        let html = `<article class="obj_input_box_full">` +
+                        notice + child_assemble +
                     `</article>`;
         return html;
     }
@@ -296,9 +322,9 @@ class Setting_sharing_member_auth{
         let message = {
             title:title_message
         };
-        this.shared_status = AUTH_TYPE_DELETE;
+        // this.shared_status = AUTH_TYPE_DELETE;
         show_user_confirm (message, ()=>{
-            // this.shared_status = AUTH_TYPE_DELETE;
+            this.shared_status = AUTH_TYPE_DELETE;
             this.send_data();
             layer_popup.close_layer_popup(); //옵션 셀렉터 닫기
             // layer_popup.close_layer_popup(); //권한 설정창 닫기
@@ -406,6 +432,11 @@ class Setting_sharing_member_auth{
             "auth_package_read":this.data.ticket.read,
             "auth_package_update":this.data.ticket.update,
             "auth_package_delete":this.data.ticket.delete,
+
+            "auth_notice_create":this.data.notice.create,
+            "auth_notice_read":this.data.notice.read,
+            "auth_notice_update":this.data.notice.update,
+            "auth_notice_delete":this.data.notice.delete,
 
             "auth_analytics_read":this.data.statistics.read,
 

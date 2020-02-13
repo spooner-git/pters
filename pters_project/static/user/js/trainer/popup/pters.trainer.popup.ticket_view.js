@@ -351,7 +351,7 @@ class Ticket_view{
     dom_row_ticket_count_input(){
         let unit = '회';
         let id = 'ticket_count_view';
-        let title = this.data.count == null ? '' : UnitRobot.numberWithCommas(this.data.count) + unit;
+        let title = this.data.count == null ? "" : UnitRobot.numberWithCommas(this.data.count) + unit;
         let placeholder = '0 회';
         let icon = NONE;
         let icon_r_visible = HIDE;

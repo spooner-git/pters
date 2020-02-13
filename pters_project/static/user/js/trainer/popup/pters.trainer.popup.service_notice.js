@@ -172,7 +172,7 @@ class Service_notice {
             dataType : 'JSON',
     
             beforeSend:function (){
-                ajax_load_image(SHOW);
+                // ajax_load_image(SHOW);
             },
     
             //통신성공시 처리
@@ -193,7 +193,7 @@ class Service_notice {
 
             //보내기후 팝업창 닫기
             complete:function (){
-                ajax_load_image(HIDE);
+                // ajax_load_image(HIDE);
             },
     
             //통신 실패시 처리

@@ -224,7 +224,7 @@ def func_get_end_date(payment_type_cd, start_date, month, date):
                 break
     else:
         # 인앱 결제를 통한 단일 결제의 경우 30일 이용권
-        end_date += datetime.timedelta(days=30)
+        end_date += datetime.timedelta(days=30*month)
 
     return end_date
 
