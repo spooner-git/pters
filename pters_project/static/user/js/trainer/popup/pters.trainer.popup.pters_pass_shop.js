@@ -524,7 +524,8 @@ class Pters_pass_shop{
                 layer_popup.close_layer_popup();
                 show_error_message({title:"등록 되었습니다."});
                 // this.init();
-                window.location.reload();
+                // window.location.reload();
+                layer_popup.all_close_layer_popup();
             }, ()=>{});
         });
         // switch(product){
