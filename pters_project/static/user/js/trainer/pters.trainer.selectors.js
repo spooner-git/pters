@@ -2921,13 +2921,11 @@ class MemberSelector{
             name: [],
             id_other:[],
             name_other:[],
-            ticket_id_other:[],
-            schedule_state:[]
+            ticket_id_other:[]
         };
-        this.data.id = this.target_instance.data.member_id;
-        this.data.name = this.target_instance.data.member_name;
-        this.data.schedule_state = this.target_instance.data.member_schedule_state;
-        console.log(this.data.schedule_state);
+        this.data.id = this.target_instance.member.id;
+        this.data.name = this.target_instance.member.name;
+
         this.hide_entire_member_list = true;
 
         this.init();
@@ -2953,7 +2951,7 @@ class MemberSelector{
         let content =   `<section>
                             ${this.dom_assembly()}
                         </section>`;
-        
+
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
 
         document.querySelector(this.target.install).innerHTML = html;
@@ -2995,7 +2993,7 @@ class MemberSelector{
             let member_expiry = data.end_date;
             let member_fix_state_cd = data.member_fix_state_cd;
             let member_profile_url = data.member_profile_url;
-            let checked = this.data.id.indexOf(member_id) >= 0 ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
+            let checked = this.target_instance.member.id.indexOf(member_id) >= 0 ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
 
             let lecture_member_list = this.received_data_lecture_member.map((el)=>{return el.member_id;});
             if(lecture_member_list.indexOf(member_id) != -1){
@@ -3046,7 +3044,7 @@ class MemberSelector{
                                         this.render();
                                         layer_popup.close_layer_popup();
                                     }};
-                                    
+
                                     let options_padding_top_bottom = 16;
                                     // let button_height = 8 + 8 + 52;
                                     let button_height = 52;
@@ -3106,9 +3104,9 @@ class MemberSelector{
                             this.upper_right_menu();
                         }
                     }
-                    
-                        
-                }  
+
+
+                }
             );
             if(checked!=0){
                 select_member_num++;
@@ -3163,16 +3161,7 @@ class MemberSelector{
             let member_expiry = data.end_date;
             let member_fix_state_cd = data.member_fix_state_cd;
             let member_profile_url = data.member_profile_url;
-            let checked = this.data.id.indexOf(member_id) >= 0 ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
-            let member_idx = this.data.id.indexOf(member_id);
-            let schedule_state = SCHEDULE_NOT_FINISH;
-            if(member_idx >=0){
-                schedule_state = this.data.schedule_state[member_idx];
-                if(schedule_state == SCHEDULE_ABSENCE){
-                    continue;
-                }
-            }
-
+            let checked = this.target_instance.member.id.indexOf(member_id) >= 0 ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
             if(member_expiry == '9999-12-31'){
                 member_expiry = '소진시';
             }
@@ -3181,7 +3170,7 @@ class MemberSelector{
             // }
             let html = CComponent.select_member_row (
                 this.multiple_select, checked, this.unique_instance, member_id, member_name, member_reg_count, member_avail_count, member_expiry, member_fix_state_cd, member_profile_url, this.appendix.disable_zero_avail_count, (add_or_substract)=>{
-                    
+
                     if(add_or_substract == "add"){
                         this.data.id.push(member_id);
                         this.data.name.push(member_name);
@@ -3197,7 +3186,7 @@ class MemberSelector{
                     if(this.multiple_select == 1){
                         this.upper_right_menu();
                     }
-                }  
+                }
             );
             if(checked!=0){
                 select_member_num++;
@@ -3226,7 +3215,7 @@ class MemberSelector{
                 callback();
             });
         }else{
-            
+
             member.request_member_list("ing", (data)=>{
                 this.received_data = data.current_member_data;
                 let data_ = {"lecture_id": this.appendix.lecture_id};
@@ -3244,6 +3233,676 @@ class MemberSelector{
         this.clear();
     }
 }
+
+class MemberPlanApproveSelector{
+    constructor(install_target, target_instance, multiple_select, appendix, callback){
+        this.target = {install:install_target};
+        this.target_instance = target_instance;
+        this.unique_instance = install_target.replace(/#./gi, "");
+        this.received_data;
+        this.received_data_lecture_member;
+        this.callback = callback;
+        this.appendix = appendix;
+        this.multiple_select = multiple_select;
+        this.data = {
+            id: [],
+            name: [],
+            permission_state_cd: [],
+            id_other:[],
+            name_other:[],
+            ticket_id_other:[]
+        };
+        this.data.id = this.target_instance.data.member_id;
+        this.data.name = this.target_instance.data.member_name;
+        this.data.permission_state_cd = this.target_instance.data.member_schedule_permission_state_cd;
+
+        this.hide_entire_member_list = true;
+
+        this.init();
+    }
+
+    init(){
+        this.request_list(()=>{
+            this.render();
+            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
+        });
+    }
+
+    clear(){
+        setTimeout(()=>{
+            document.querySelector(this.target.install).innerHTML = "";
+        }, 300);
+    }
+
+    render(){
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();member_select.clear();">${CImg.arrow_left()}</span>`;
+        let top_center = `<span class="icon_center"><span id="">${this.appendix.title}</span></span>`;
+        let top_right = `<span class="icon_right"  onclick="member_select.upper_right_menu();"><span style="color:var(--font-highlight);font-weight: 500;">완료</span></span>`;
+        let content =   `<section>
+                            ${this.dom_assembly()}
+                        </section>`;
+
+        let html = PopupBase.base(top_left, top_center, top_right, content, "");
+
+        document.querySelector(this.target.install).innerHTML = html;
+    }
+
+    dom_assembly(){
+        let lecture_member_list = `<div>${this.dom_list_lecture_member()}</div>`;
+        let all_member_list = `<div>${this.dom_list()}</div>`;
+
+        let html;
+        if(this.appendix.lecture_id != null){ //특정 수업의 회원들을 조회할 때
+            if(this.appendix.entire_member == SHOW){ //전체 회원 리스트도 함께 표기
+                html = lecture_member_list + all_member_list;
+            }else{ //전체 회원리스트는 숨기기
+                html = lecture_member_list;
+            }
+        }else{
+            html = all_member_list;
+        }
+
+
+        return html;
+    }
+
+    dom_list (){
+        let html_to_join = [];
+        let length = this.received_data.length;
+        let select_member_num = 0;
+        if(length == 0){
+            html_to_join.push(CComponent.no_data_row('목록이 비어있습니다.', {"border-bottom":0}));
+        }
+        for(let i=0; i<length; i++){
+            let data = this.received_data[i];
+            let member_id = data.member_id;
+            let member_name = data.member_name;
+            // let member_rem_count = data.member_ticket_rem_count;
+            let member_reg_count = data.member_ticket_reg_count;
+            let member_avail_count = data.member_ticket_avail_count;
+            let member_expiry = data.end_date;
+            let member_fix_state_cd = data.member_fix_state_cd;
+            let member_profile_url = data.member_profile_url;
+            let checked = this.target_instance.data.member_id.indexOf(member_id) >= 0 ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
+
+            let lecture_member_list = this.received_data_lecture_member.map((el)=>{return el.member_id;});
+            if(lecture_member_list.indexOf(member_id) != -1){
+                continue;
+            }
+            if(member_expiry == '9999-12-31'){
+                member_expiry = '소진시';
+            }
+
+            // if(this.appendix.disable_zero_avail_count == ON && member_avail_count == 0){
+            //     checked = 0;
+            // }
+            let html = CComponent.select_member_row (
+                this.multiple_select, checked, this.unique_instance, member_id, member_name, member_reg_count, member_avail_count, member_expiry, member_fix_state_cd, member_profile_url, this.appendix.disable_zero_avail_count, (add_or_substract)=>{
+                    if(this.appendix.lecture_id != null){
+                        let member_id_list = this.received_data_lecture_member.map((el)=>{return el.member_id;});
+                        if(member_id_list.indexOf(member_id) == -1){ // 선택한 회원이 수업 리스트의 회원이 아니라면 (전체회원에서 선택했다면)
+                            Member_func.read_ticket_list({"member_id":member_id}, (ticket_data)=>{ // 그 회원의 수강권 리스트를 불러온다.
+                                let available_ticket = [];
+                                for(let ticket in ticket_data){
+                                    let avail_count = ticket_data[ticket].member_ticket_avail_count;
+                                    if(avail_count > 0){
+                                        available_ticket.push({"ticket_name":ticket_data[ticket].member_ticket_name,
+                                                                "ticket_id":ticket_data[ticket].member_ticket_id,
+                                                                "ticket_avail_count":avail_count
+                                                                });
+                                    }
+                                }
+
+                                if(add_or_substract == "add"){
+                                    let user_option = {};
+                                    for(let i=0; i<available_ticket.length; i++){
+                                        let ticket_id = available_ticket[i].ticket_id;
+                                        let ticket_name = available_ticket[i].ticket_name;
+                                        let ticket_avail_count = available_ticket[i].ticket_avail_count;
+                                        user_option[ticket_id] = {text: ticket_name + `<span style="font-size:11px;font-weight:500;color:var(--font-sub-normal)"> (예약 가능: ${ticket_avail_count}회)</span>`, callback:()=>{
+                                            if(add_or_substract == "add"){
+                                                this.data.name_other.push(member_name);
+                                                this.data.ticket_id_other.push(ticket_id);
+                                                this.data.id_other.push(member_id);
+                                            }
+                                            layer_popup.close_layer_popup();
+                                            layer_popup.enable_shade_click_close();
+                                        }};
+                                    }
+                                    user_option[0] = {text:"<span style='color:var(--font-highlight);'>차감 할 수강권을 선택 해주세요.</span>", callback:()=>{}};
+                                    user_option["close"] = {text:"취소", callback:()=>{
+                                        this.render();
+                                        layer_popup.close_layer_popup();
+                                    }};
+
+                                    let options_padding_top_bottom = 16;
+                                    // let button_height = 8 + 8 + 52;
+                                    let button_height = 52;
+                                    // let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
+                                    let layer_popup_height = options_padding_top_bottom + 52*Object.keys(user_option).length;
+                                    let root_content_height = $root_content.height();
+                                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
+                                        option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+                                        layer_popup.disable_shade_click_close();
+                                    });
+                                }else if(add_or_substract == "substract"){
+                                    this.data.name_other.splice(this.data.id_other.indexOf(member_id), 1);
+                                    this.data.ticket_id_other.splice(this.data.id_other.indexOf(member_id), 1);
+                                    this.data.id_other.splice(this.data.id_other.indexOf(member_id), 1);
+                                    this.data.name.splice(this.data.id.indexOf(member_id), 1);
+                                    this.data.id.splice(this.data.id.indexOf(member_id), 1);
+                                }else if(add_or_substract == "add_single"){
+                                    this.data.name_other = [];
+                                    this.data.ticket_id_other = [];
+                                    this.data.id_other = [];
+                                    this.data.name_other.push(member_name);
+                                    this.data.ticket_id_other.push(ticket_id);
+                                    this.data.id_other.push(member_id);
+                                }
+                            });
+                        }else{
+                            if(add_or_substract == "add"){
+                                this.data.name.push(member_name);
+                                this.data.id.push(member_id);
+                            }else if(add_or_substract == "substract"){
+                                this.data.name.splice(this.data.id.indexOf(member_id), 1);
+                                this.data.id.splice(this.data.id.indexOf(member_id), 1);
+                            }else if(add_or_substract == "add_single"){
+                                this.data.name = [];
+                                this.data.id = [];
+                                this.data.name.push(member_name);
+                                this.data.id.push(member_id);
+                            }
+                            if(this.multiple_select == 1){
+                                this.upper_right_menu();
+                            }
+                        }
+                    }else{
+                        if(add_or_substract == "add"){
+                            this.data.name.push(member_name);
+                            this.data.id.push(member_id);
+                        }else if(add_or_substract == "substract"){
+                            this.data.name.splice(this.data.id.indexOf(member_id), 1);
+                            this.data.id.splice(this.data.id.indexOf(member_id), 1);
+                        }else if(add_or_substract == "add_single"){
+                            this.data.name = [];
+                            this.data.id = [];
+                            this.data.name.push(member_name);
+                            this.data.id.push(member_id);
+                        }
+                        if(this.multiple_select == 1){
+                            this.upper_right_menu();
+                        }
+                    }
+
+
+                }
+            );
+            if(checked!=0){
+                select_member_num++;
+            }
+            if(checked > 0){
+                html_to_join.unshift(html);
+            }else{
+                html_to_join.push(html);
+            }
+        }
+
+        if(this.hide_entire_member_list == true){
+            html_to_join = [];
+        }
+
+        // html_to_join.unshift(`<div class="select_member_max_num">
+        //                         <span>전체 회원</span><span style="float:right;">${CComponent.text_button("entire_member_toggle", this.hide_entire_member_list == true ? "펼치기" : "접기", null, ()=>{
+        //                             this.hide_entire_member_list = this.hide_entire_member_list == true ? false : true;
+        //                             this.render();
+        //                         })}</span>
+        //                     </div>`);
+        let img_expand = CImg.arrow_expand("", {"width":"18px", "height":"18px", "vertical-align":"middle"});
+        let img_fold = CImg.arrow_expand("", {"width":"18px", "height":"18px", "vertical-align":"middle", "transform":"rotate(180deg)"})
+
+        let button_title = `<span>전체 회원</span><span style="float:right;">${this.hide_entire_member_list == true ? "펼치기 "+img_expand : "접기" + img_fold}</span>`;
+        html_to_join.unshift(`<div class="select_member_max_num">
+                                ${CComponent.text_button("entire_member_toggle", button_title, {"display":"block"}, ()=>{
+                                    this.hide_entire_member_list = this.hide_entire_member_list == true ? false : true;
+                                    this.render();
+                                })}
+                                
+                            </div>`);
+
+        // document.querySelector(this.targetHTML).innerHTML = html_to_join.join('');
+        return html_to_join.join('');
+    }
+
+    dom_list_lecture_member (){
+        let html_to_join = [];
+        let length = this.received_data_lecture_member.length;
+        let select_member_num = 0;
+        if(length == 0){
+            html_to_join.push(CComponent.no_data_row('목록이 비어있습니다.', {"border-bottom":0}));
+        }
+        for(let i=0; i<length; i++){
+            let data = this.received_data_lecture_member[i];
+            let member_id = data.member_id;
+            let member_name = data.member_name;
+            // let member_rem_count = data.member_ticket_rem_count;
+            let member_reg_count = data.member_ticket_reg_count;
+            let member_avail_count = data.member_ticket_avail_count;
+            let member_expiry = data.end_date;
+            let member_fix_state_cd = data.member_fix_state_cd;
+            let member_profile_url = data.member_profile_url;
+            let member_id_idx =  this.target_instance.data.member_id.indexOf(member_id);
+            let checked = member_id_idx >= 0 ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
+            if(member_expiry == '9999-12-31'){
+                member_expiry = '소진시';
+            }
+            if(this.target_instance.data.member_schedule_permission_state_cd[member_id_idx] == SCHEDULE_WAIT){
+                continue;
+            }
+            // if(this.appendix.disable_zero_avail_count == ON && member_avail_count == 0){
+            //     checked = 0;
+            // }
+            let html = CComponent.select_member_row (
+                this.multiple_select, checked, this.unique_instance, member_id, member_name, member_reg_count, member_avail_count, member_expiry, member_fix_state_cd, member_profile_url, this.appendix.disable_zero_avail_count, (add_or_substract)=>{
+
+                    if(add_or_substract == "add"){
+                        this.data.name.push(member_name);
+                        this.data.id.push(member_id);
+                    }else if(add_or_substract == "substract"){
+                        this.data.name.splice(this.data.id.indexOf(member_id), 1);
+                        this.data.id.splice(this.data.id.indexOf(member_id), 1);
+                    }else if(add_or_substract == "add_single"){
+                        this.data.name = [];
+                        this.data.id = [];
+                        this.data.name.push(member_name);
+                        this.data.id.push(member_id);
+                    }
+                    if(this.multiple_select == 1){
+                        this.upper_right_menu();
+                    }
+                }
+            );
+            if(checked!=0){
+                select_member_num++;
+            }
+            if(checked > 0){
+                html_to_join.unshift(html);
+            }else{
+                html_to_join.push(html);
+            }
+        }
+
+        html_to_join.unshift(`<div class="select_member_max_num" >
+                                <span>이 수업 등록 회원</span><span> (${this.received_data_lecture_member.length}명)</span>
+                            </div>`);
+
+        // document.querySelector(this.targetHTML).innerHTML = html_to_join.join('');
+        return html_to_join.join('');
+    }
+
+    request_list (callback){
+        //Lecture_id를 클래스가 전달받은 경우, 해당 lecture에 속한 회원 리스트를 받아온다.
+        //Lecture_id를 클래스가 받지 못한 경우, 모든 진행 회원 리스트를 받아온다.
+        if(this.appendix.lecture_id == null){
+            member.request_member_list("ing", (data)=>{
+                this.received_data = data.current_member_data;
+                callback();
+            });
+        }else{
+
+            member.request_member_list("ing", (data)=>{
+                this.received_data = data.current_member_data;
+                let data_ = {"lecture_id": this.appendix.lecture_id};
+                Lecture_func.read_lecture_members(data_, (data)=>{
+                    this.received_data_lecture_member = data.lecture_ing_member_list;
+                    callback();
+                });
+            });
+        }
+    }
+
+    upper_right_menu(){
+        this.callback(this.data);
+        layer_popup.close_layer_popup();
+        this.clear();
+    }
+}
+
+
+class MemberPlanWaitSelector{
+    constructor(install_target, target_instance, multiple_select, appendix, callback){
+        this.target = {install:install_target};
+        this.target_instance = target_instance;
+        this.unique_instance = install_target.replace(/#./gi, "");
+        this.received_data;
+        this.received_data_lecture_member;
+        this.callback = callback;
+        this.appendix = appendix;
+        this.multiple_select = multiple_select;
+        this.data = {
+            id: [],
+            name: [],
+            id_other:[],
+            name_other:[],
+            ticket_id_other:[]
+        };
+        this.data.id = this.target_instance.member.member_id;
+        this.data.name = this.target_instance.member.member_name;
+        this.data.permission_state_cd = this.target_instance.member.member_schedule_permission_state_cd;
+
+        this.hide_entire_member_list = true;
+
+        this.init();
+    }
+
+    init(){
+        this.request_list(()=>{
+            this.render();
+            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
+        });
+    }
+
+    clear(){
+        setTimeout(()=>{
+            document.querySelector(this.target.install).innerHTML = "";
+        }, 300);
+    }
+
+    render(){
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();member_select.clear();">${CImg.arrow_left()}</span>`;
+        let top_center = `<span class="icon_center"><span id="">${this.appendix.title}</span></span>`;
+        let top_right = `<span class="icon_right"  onclick="member_select.upper_right_menu();"><span style="color:var(--font-highlight);font-weight: 500;">완료</span></span>`;
+        let content =   `<section>
+                            ${this.dom_assembly()}
+                        </section>`;
+
+        let html = PopupBase.base(top_left, top_center, top_right, content, "");
+
+        document.querySelector(this.target.install).innerHTML = html;
+    }
+
+    dom_assembly(){
+        let lecture_member_list = `<div>${this.dom_list_lecture_member()}</div>`;
+        let all_member_list = `<div>${this.dom_list()}</div>`;
+
+        let html;
+        if(this.appendix.lecture_id != null){ //특정 수업의 회원들을 조회할 때
+            if(this.appendix.entire_member == SHOW){ //전체 회원 리스트도 함께 표기
+                html = lecture_member_list + all_member_list;
+            }else{ //전체 회원리스트는 숨기기
+                html = lecture_member_list;
+            }
+        }else{
+            html = all_member_list;
+        }
+
+
+        return html;
+    }
+
+    dom_list (){
+        let html_to_join = [];
+        let length = this.received_data.length;
+        let select_member_num = 0;
+        if(length == 0){
+            html_to_join.push(CComponent.no_data_row('목록이 비어있습니다.', {"border-bottom":0}));
+        }
+        for(let i=0; i<length; i++){
+            let data = this.received_data[i];
+            let member_id = data.member_id;
+            let member_name = data.member_name;
+            // let member_rem_count = data.member_ticket_rem_count;
+            let member_reg_count = data.member_ticket_reg_count;
+            let member_avail_count = data.member_ticket_avail_count;
+            let member_expiry = data.end_date;
+            let member_fix_state_cd = data.member_fix_state_cd;
+            let member_profile_url = data.member_profile_url;
+            let checked = this.target_instance.data.member_id.indexOf(member_id) >= 0 ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
+
+            let lecture_member_list = this.received_data_lecture_member.map((el)=>{return el.member_id;});
+            if(lecture_member_list.indexOf(member_id) != -1){
+                continue;
+            }
+            if(member_expiry == '9999-12-31'){
+                member_expiry = '소진시';
+            }
+
+            // if(this.appendix.disable_zero_avail_count == ON && member_avail_count == 0){
+            //     checked = 0;
+            // }
+            let html = CComponent.select_member_row (
+                this.multiple_select, checked, this.unique_instance, member_id, member_name, member_reg_count, member_avail_count, member_expiry, member_fix_state_cd, member_profile_url, this.appendix.disable_zero_avail_count, (add_or_substract)=>{
+                    if(this.appendix.lecture_id != null){
+                        let member_id_list = this.received_data_lecture_member.map((el)=>{return el.member_id;});
+                        if(member_id_list.indexOf(member_id) == -1){ // 선택한 회원이 수업 리스트의 회원이 아니라면 (전체회원에서 선택했다면)
+                            Member_func.read_ticket_list({"member_id":member_id}, (ticket_data)=>{ // 그 회원의 수강권 리스트를 불러온다.
+                                let available_ticket = [];
+                                for(let ticket in ticket_data){
+                                    let avail_count = ticket_data[ticket].member_ticket_avail_count;
+                                    if(avail_count > 0){
+                                        available_ticket.push({"ticket_name":ticket_data[ticket].member_ticket_name,
+                                                                "ticket_id":ticket_data[ticket].member_ticket_id,
+                                                                "ticket_avail_count":avail_count
+                                                                });
+                                    }
+                                }
+
+                                if(add_or_substract == "add"){
+                                    let user_option = {};
+                                    for(let i=0; i<available_ticket.length; i++){
+                                        let ticket_id = available_ticket[i].ticket_id;
+                                        let ticket_name = available_ticket[i].ticket_name;
+                                        let ticket_avail_count = available_ticket[i].ticket_avail_count;
+                                        user_option[ticket_id] = {text: ticket_name + `<span style="font-size:11px;font-weight:500;color:var(--font-sub-normal)"> (예약 가능: ${ticket_avail_count}회)</span>`, callback:()=>{
+                                            if(add_or_substract == "add"){
+                                                this.data.id_other.push(member_id);
+                                                this.data.name_other.push(member_name);
+                                                this.data.ticket_id_other.push(ticket_id);
+                                            }
+                                            layer_popup.close_layer_popup();
+                                            layer_popup.enable_shade_click_close();
+                                        }};
+                                    }
+                                    user_option[0] = {text:"<span style='color:var(--font-highlight);'>차감 할 수강권을 선택 해주세요.</span>", callback:()=>{}};
+                                    user_option["close"] = {text:"취소", callback:()=>{
+                                        this.render();
+                                        layer_popup.close_layer_popup();
+                                    }};
+
+                                    let options_padding_top_bottom = 16;
+                                    // let button_height = 8 + 8 + 52;
+                                    let button_height = 52;
+                                    // let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
+                                    let layer_popup_height = options_padding_top_bottom + 52*Object.keys(user_option).length;
+                                    let root_content_height = $root_content.height();
+                                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
+                                        option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+                                        layer_popup.disable_shade_click_close();
+                                    });
+                                }else if(add_or_substract == "substract"){
+                                    this.data.name_other.splice(this.data.id_other.indexOf(member_id), 1);
+                                    this.data.ticket_id_other.splice(this.data.id_other.indexOf(member_id), 1);
+                                    this.data.id_other.splice(this.data.id_other.indexOf(member_id), 1);
+                                    this.data.name.splice(this.data.id.indexOf(member_id), 1);
+                                    this.data.id.splice(this.data.id.indexOf(member_id), 1);
+                                }else if(add_or_substract == "add_single"){
+                                    this.data.name_other = [];
+                                    this.data.ticket_id_other = [];
+                                    this.data.id_other = [];
+                                    this.data.name_other.push(member_name);
+                                    this.data.ticket_id_other.push(ticket_id);
+                                    this.data.id_other.push(member_id);
+                                }
+                            });
+                        }else{
+                            if(add_or_substract == "add"){
+                                this.data.name.push(member_name);
+                                this.data.id.push(member_id);
+                            }else if(add_or_substract == "substract"){
+                                this.data.name.splice(this.data.id.indexOf(member_id), 1);
+                                this.data.id.splice(this.data.id.indexOf(member_id), 1);
+                            }else if(add_or_substract == "add_single"){
+                                this.data.name = [];
+                                this.data.id = [];
+                                this.data.name.push(member_name);
+                                this.data.id.push(member_id);
+                            }
+                            if(this.multiple_select == 1){
+                                this.upper_right_menu();
+                            }
+                        }
+                    }else{
+                        if(add_or_substract == "add"){
+                            this.data.name.push(member_name);
+                            this.data.id.push(member_id);
+                        }else if(add_or_substract == "substract"){
+                            this.data.name.splice(this.data.id.indexOf(member_id), 1);
+                            this.data.id.splice(this.data.id.indexOf(member_id), 1);
+                        }else if(add_or_substract == "add_single"){
+                            this.data.name = [];
+                            this.data.id = [];
+                            this.data.name.push(member_name);
+                            this.data.id.push(member_id);
+                        }
+                        if(this.multiple_select == 1){
+                            this.upper_right_menu();
+                        }
+                    }
+
+
+                }
+            );
+            if(checked!=0){
+                select_member_num++;
+            }
+            if(checked > 0){
+                html_to_join.unshift(html);
+            }else{
+                html_to_join.push(html);
+            }
+        }
+
+        if(this.hide_entire_member_list == true){
+            html_to_join = [];
+        }
+
+        // html_to_join.unshift(`<div class="select_member_max_num">
+        //                         <span>전체 회원</span><span style="float:right;">${CComponent.text_button("entire_member_toggle", this.hide_entire_member_list == true ? "펼치기" : "접기", null, ()=>{
+        //                             this.hide_entire_member_list = this.hide_entire_member_list == true ? false : true;
+        //                             this.render();
+        //                         })}</span>
+        //                     </div>`);
+        let img_expand = CImg.arrow_expand("", {"width":"18px", "height":"18px", "vertical-align":"middle"});
+        let img_fold = CImg.arrow_expand("", {"width":"18px", "height":"18px", "vertical-align":"middle", "transform":"rotate(180deg)"})
+
+        let button_title = `<span>전체 회원</span><span style="float:right;">${this.hide_entire_member_list == true ? "펼치기 "+img_expand : "접기" + img_fold}</span>`;
+        html_to_join.unshift(`<div class="select_member_max_num">
+                                ${CComponent.text_button("entire_member_toggle", button_title, {"display":"block"}, ()=>{
+                                    this.hide_entire_member_list = this.hide_entire_member_list == true ? false : true;
+                                    this.render();
+                                })}
+                                
+                            </div>`);
+
+        // document.querySelector(this.targetHTML).innerHTML = html_to_join.join('');
+        return html_to_join.join('');
+    }
+
+    dom_list_lecture_member (){
+        let html_to_join = [];
+        let length = this.received_data_lecture_member.length;
+        let select_member_num = 0;
+        if(length == 0){
+            html_to_join.push(CComponent.no_data_row('목록이 비어있습니다.', {"border-bottom":0}));
+        }
+        for(let i=0; i<length; i++){
+            let data = this.received_data_lecture_member[i];
+            let member_id = data.member_id;
+            let member_name = data.member_name;
+            // let member_rem_count = data.member_ticket_rem_count;
+            let member_reg_count = data.member_ticket_reg_count;
+            let member_avail_count = data.member_ticket_avail_count;
+            let member_expiry = data.end_date;
+            let member_fix_state_cd = data.member_fix_state_cd;
+            let member_profile_url = data.member_profile_url;
+            let member_id_idx = this.target_instance.data.member_id.indexOf(member_id);
+            let checked = member_id_idx >= 0 ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
+            if(member_expiry == '9999-12-31'){
+                member_expiry = '소진시';
+            }
+            if(this.target_instance.data.member_schedule_permission_state_cd[member_id_idx] == SCHEDULE_APPROVE){
+                continue;
+            }
+            // if(this.appendix.disable_zero_avail_count == ON && member_avail_count == 0){
+            //     checked = 0;
+            // }
+            let html = CComponent.select_member_row (
+                this.multiple_select, checked, this.unique_instance, member_id, member_name, member_reg_count, member_avail_count, member_expiry, member_fix_state_cd, member_profile_url, this.appendix.disable_zero_avail_count, (add_or_substract)=>{
+
+                    if(add_or_substract == "add"){
+                        this.data.name.push(member_name);
+                        this.data.id.push(member_id);
+                    }else if(add_or_substract == "substract"){
+                        this.data.name.splice(this.data.id.indexOf(member_id), 1);
+                        this.data.id.splice(this.data.id.indexOf(member_id), 1);
+                    }else if(add_or_substract == "add_single"){
+                        this.data.name = [];
+                        this.data.id = [];
+                        this.data.name.push(member_name);
+                        this.data.id.push(member_id);
+                    }
+                    if(this.multiple_select == 1){
+                        this.upper_right_menu();
+                    }
+                }
+            );
+            if(checked!=0){
+                select_member_num++;
+            }
+            if(checked > 0){
+                html_to_join.unshift(html);
+            }else{
+                html_to_join.push(html);
+            }
+        }
+
+        html_to_join.unshift(`<div class="select_member_max_num" >
+                                <span>이 수업 등록 회원</span><span> (${this.received_data_lecture_member.length}명)</span>
+                            </div>`);
+
+        // document.querySelector(this.targetHTML).innerHTML = html_to_join.join('');
+        return html_to_join.join('');
+    }
+
+    request_list (callback){
+        //Lecture_id를 클래스가 전달받은 경우, 해당 lecture에 속한 회원 리스트를 받아온다.
+        //Lecture_id를 클래스가 받지 못한 경우, 모든 진행 회원 리스트를 받아온다.
+        if(this.appendix.lecture_id == null){
+            member.request_member_list("ing", (data)=>{
+                this.received_data = data.current_member_data;
+                callback();
+            });
+        }else{
+
+            member.request_member_list("ing", (data)=>{
+                this.received_data = data.current_member_data;
+                let data_ = {"lecture_id": this.appendix.lecture_id};
+                Lecture_func.read_lecture_members(data_, (data)=>{
+                    this.received_data_lecture_member = data.lecture_ing_member_list;
+                    callback();
+                });
+            });
+        }
+    }
+
+    upper_right_menu(){
+        this.callback(this.data);
+        layer_popup.close_layer_popup();
+        this.clear();
+    }
+}
+
+
 
 class MemberContactsSelector{
     constructor(install_target, target_instance, title, callback){

@@ -41,7 +41,7 @@ class Plan_daily_record{
 
     request_list (callback){
         Plan_func.read_plan(this.schedule_id, (data)=>{
-            console.log("data", data)
+            console.log("data", data);
             this.set_initial_data(data); // 초기값을 미리 셋팅한다.
             callback(data);
         });

@@ -37,6 +37,9 @@ class Member_attend{
             if(state != SCHEDULE_FINISH){
                 image_url = null;
             }
+            if(permission_state_cd == SCHEDULE_WAIT){
+                continue;
+            }
             new_data[member_id] = {name:member_name, member_id:member_id, state_cd:state, permission_state_cd:permission_state_cd, image:image_url, profile_img: member_profile_img};
             //서버로부터 image를 받아오면 image를 null이 아니라 image 주소로
             if(state != SCHEDULE_FINISH){

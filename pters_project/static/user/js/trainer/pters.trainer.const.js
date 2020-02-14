@@ -267,6 +267,8 @@ const POPUP_ADDRESS_DATE_SELECTOR = 'popup_basic_date_selector';
 const POPUP_ADDRESS_SPIN_SELECTOR = 'popup_basic_spin_selector';
 
 const POPUP_ADDRESS_MEMBER_SELECT = 'popup_member_select';
+const POPUP_ADDRESS_MEMBER_PLAN_APPROVE_SELECT = 'popup_member_plan_approve_select';
+const POPUP_ADDRESS_MEMBER_PLAN_WAIT_SELECT = 'popup_member_plan_wait_select';
 const POPUP_ADDRESS_MEMBER_CONTACTS_SELECT = 'popup_member_contacts_select';
 const POPUP_ADDRESS_LECTURE_SELECT = 'popup_lecture_select';
 const POPUP_ADDRESS_TICKET_SELECT = 'popup_ticket_select';

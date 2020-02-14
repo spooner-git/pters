@@ -20,6 +20,7 @@ class Plan_view{
 
         this.if_user_changed_any_information = false;
         this.schedule_id = data_from_external.schedule_id;
+        // this.schedule_permission_state_cd = data_from_external.permission_state_cd;
         this.selected_date = data_from_external.date;
         this.received_data;
         this.data = {
@@ -290,8 +291,10 @@ class Plan_view{
     }
     
     dom_assembly_content (){
-        let member_select_row = this.dom_row_member_select();
-        let member_list_row = this.dom_row_member_list();
+        let member_select_plan_approve_row = this.dom_row_member_plan_approve_select();
+        let member_list_plan_approve_row = this.dom_row_member_plan_approve_list();
+        let member_select_plan_wait_row = this.dom_row_member_plan_wait_select();
+        let member_list_plan_wait_row = this.dom_row_member_plan_wait_list();
         let date_select_row = this.dom_row_date_select();
         let start_time_select_row = this.dom_row_start_time_select();
         let end_time_select_row = this.dom_row_end_time_select();
@@ -310,16 +313,18 @@ class Plan_view{
         
         let html;
         if(this.time_selector == CLASSIC){
-            html =  `<div class="obj_input_box_full" style="display:${display}; border:0;">`+ CComponent.dom_tag('회원') + member_select_row + member_list_row+'</div>' +
-                        '<div class="obj_input_box_full">' +  CComponent.dom_tag('일자') + date_select_row +
+            html =      '<div class="obj_input_box_full">' +  CComponent.dom_tag('일자') + date_select_row +
                                                         CComponent.dom_tag('진행시간') + classic_time_selector + '</div>' +
                         '<div class="obj_input_box_full">'+ CComponent.dom_tag(`메모 <span style="color:var(--font-highlight);display:${hide_when_off}">(회원님께 공유되는 메모입니다.)</span>`) + memo_select_row + '</div>' +
+                        `<div class="obj_input_box_full" style="display:${display};">`+ CComponent.dom_tag('회원') + member_select_plan_approve_row + member_list_plan_approve_row+'</div>' +
+                        `<div class="obj_input_box_full" style="display:${display};">`+ CComponent.dom_tag('대기 회원') + member_select_plan_wait_row + member_list_plan_wait_row+'</div>' +
                         '<div class="obj_input_box_full" style="padding:18px;">' + reg_mod_info + '<div>';
         }else{
-            html =  `<div class="obj_input_box_full" style="display:${display}; border:0;">`+ CComponent.dom_tag('회원') + member_select_row + member_list_row+'</div>' +
-                        '<div class="obj_input_box_full">' +  CComponent.dom_tag('일자') + date_select_row +
+            html =      '<div class="obj_input_box_full">' +  CComponent.dom_tag('일자') + date_select_row +
                                                         CComponent.dom_tag('진행시간') + start_time_select_row + end_time_select_row + '</div>' +
                         '<div class="obj_input_box_full">'+ CComponent.dom_tag(`메모 <span style="color:var(--font-highlight);display:${hide_when_off}">(회원님께 공유되는 메모입니다.)</span>`) + memo_select_row + '</div>' +
+                        `<div class="obj_input_box_full" style="display:${display};">`+ CComponent.dom_tag('회원') + member_select_plan_approve_row + member_list_plan_approve_row+'</div>' +
+                        `<div class="obj_input_box_full" style="display:${display};">`+ CComponent.dom_tag('대기 회원') + member_select_plan_wait_row + member_list_plan_wait_row+'</div>' +
                         '<div class="obj_input_box_full" style="padding:18px;">' + reg_mod_info + '<div>';
         }
 
@@ -331,11 +336,7 @@ class Plan_view{
         if(this.data.schedule_type == 0){
             lecture_name =`OFF 일정 ${this.data.memo != "" ? '('+this.data.memo+')' : ''}`;
         }else if(this.data.schedule_type == 1){
-
             lecture_name = this.data.member_name;
-            // if(this.data.member_schedule_permission_state_cd[0] == SCHEDULE_APPROVE){
-            //     lecture_name = '(예약 승인) '+this.data.member_name;
-            // }
             if(this.data.member_schedule_permission_state_cd[0] == SCHEDULE_WAIT){
                 lecture_name = '('+APPROVE_SCHEDULE_STATUS[this.data.member_schedule_permission_state_cd[0]]+') '+this.data.member_name;
             }
@@ -463,22 +464,22 @@ class Plan_view{
         return html;
     }
 
-    dom_row_member_select (){
-        let id = 'select_member';
-        let title = this.data.member_id.length == 0 ? '회원*' : this.data.lecture_current_num+ '/' + this.data.lecture_max_num +' 명';
+    dom_row_member_plan_approve_select (){
+        let permission_wait_num = this.data.member_schedule_permission_state_cd.filter(permission_state_cd => permission_state_cd == SCHEDULE_WAIT).length;
+
+        let id = 'select_member_plan_approve';
+        let title = this.data.member_id.length == 0 ? '회원*' : this.data.lecture_current_num-permission_wait_num+ '/' + this.data.lecture_max_num +' 명';
         let icon = CImg.members();
         let icon_r_visible = SHOW;
-        let icon_r_text = "예약 목록";
+        let icon_r_text = "예약 완료 목록";
         let style = null;
         let html_member_select = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             //회원 선택 팝업 열기
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SELECT, 100, popup_style, {'data':null}, ()=>{
-                let appendix =  {lecture_id:this.data.lecture_id, title:"회원", disable_zero_avail_count:ON, entire_member:SHOW};
-                console.log(this);
-                member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.lecture_max_num, appendix, (set_data)=>{
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_PLAN_APPROVE_SELECT, 100, popup_style, {'data':null}, ()=>{
+                let appendix =  {lecture_id:this.data.lecture_id, title:"예약 완료 회원", disable_zero_avail_count:ON, entire_member:SHOW};
+                member_select_plan_approve = new MemberPlanApproveSelector('#wrapper_box_member_plan_approve_select', this, this.data.lecture_max_num, appendix, (set_data)=>{
                     this.member = set_data;
-                    console.log(set_data);
                     let changed = this.func_update_member();
 
                     for(let j=0; j<changed.del.length; j++){
@@ -514,10 +515,9 @@ class Plan_view{
         return html;
     }
 
-    dom_row_member_list (){
+    dom_row_member_plan_approve_list (){
         let length = this.data.member_id.length;
         let html_to_join = [];
-        let html_to_wait_join = [];
         let reg_dt_style = {"font-size":"12px", "height":"25px", "line-height":"25px", "padding":"0"};
         for(let i=0; i<length; i++){
             let member_id = this.data.member_id[i];
@@ -527,15 +527,195 @@ class Plan_view{
             let state = this.data.member_schedule_state[i];
             let permission_state_cd = this.data.member_schedule_permission_state_cd[i];
 
-            // if(permission_state_cd == SCHEDULE_APPROVE){
-            //     member_name = '(예약 승인) '+this.data.member_name[i];
-            // }
             if(permission_state_cd == SCHEDULE_WAIT){
-                member_name = '('+APPROVE_SCHEDULE_STATUS[permission_state_cd]+') '+this.data.member_name[i];
+                continue;
             }
-            let member_schedule_reg_dt = this.data.member_schedule_reg_dt[i].split(" ")[0] + ' ' +
-                                        this.data.member_schedule_reg_dt[i].split(" ")[1].split(".")[0];
-            member_name += '<br/><div style="font-size: 10px;line-height: 0;">등록: '+member_schedule_reg_dt+'</div>';
+            let state_icon_url;
+            if(state == SCHEDULE_ABSENCE){
+                // state_icon_url = CImg.x(["var(--img-sub1)"], {"vertical-align":"middle", "margin-bottom":"3px"});
+                state_icon_url = CImg.x(["#ff0022"], {"vertical-align":"middle", "margin-bottom":"3px"});
+            }else if(state == SCHEDULE_FINISH){
+                // state_icon_url = CImg.confirm(["var(--img-sub1)"], {"vertical-align":"middle", "margin-bottom":"3px"});
+                state_icon_url = CImg.confirm(["green"], {"vertical-align":"middle", "margin-bottom":"3px"});
+            }else if(state == SCHEDULE_NOT_FINISH){
+                state_icon_url = DELETE;
+            }
+            let temp_html =
+                CComponent.icon_button(member_id, member_name, state_icon_url, icon_button_style, ()=>{
+
+                    let user_option = {
+                        info:{text:"회원 정보", callback:()=>{
+                            layer_popup.close_layer_popup();
+                            let root_content_height = $root_content.height();
+                            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SIMPLE_VIEW, 100*(400/root_content_height), POPUP_FROM_BOTTOM, {'member_id':member_id}, ()=>{
+                                member_simple_view_popup = new Member_simple_view('.popup_member_simple_view', member_id, 'member_simple_view_popup');
+                                //회원 간단 정보 팝업 열기
+                            });
+                        }},
+                        daily_record:{text:"일지", callback:()=>{
+                            layer_popup.close_layer_popup();
+                            Plan_daily_record_func.write_artice(member_schedule_id, member_name, ()=>{
+                                show_error_message({title:`[${member_name}] 일지 변경사항이 저장 되었습니다.`});
+                            }, ()=>{
+                                show_error_message({title:`<span style="color:var(--font-highlight)">일지 변경사항 저장에 실패 하였습니다.</span>`});
+                            });
+                        }},
+                        sign_image:{text:"출석 서명 확인", callback:()=>{
+                            layer_popup.close_layer_popup();
+                            show_error_message(
+                                {title:`<img src="https://s3.ap-northeast-2.amazonaws.com/pters-image-master/${member_schedule_id}.png" style="width:100%;filter:var(--transform-invert);" onerror="this.onerror=null;this.src='/static/common/icon/icon_no_signature.png'">`}
+                            );
+                        }},
+                        schedule_history:{text:"일정 이력", callback:()=>{
+                            layer_popup.close_layer_popup();
+                            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_SCHEDULE_HISTORY, 100, popup_style, null, ()=>{
+                                member_schedule_history = new Member_schedule_history('.popup_member_schedule_history', member_id, null);
+                            });
+                        }},
+                        permission_approve:{text:"예약 승인", callback:()=>{
+                            layer_popup.close_layer_popup();
+                            let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>예약 승인 하시겠습니까?</span>"};
+                            show_user_confirm (confirm_message, ()=>{
+                                layer_popup.close_layer_popup();
+                                let inspect = pass_inspector.schedule_update();
+                                if(inspect.barrier == BLOCKED){
+                                    let message = `${inspect.limit_type}`;
+                                    // layer_popup.close_layer_popup();
+                                    show_error_message({title:message});
+                                    return false;
+                                }
+                                let send_data = {"schedule_id":member_schedule_id, "permission_state_cd":SCHEDULE_APPROVE};
+                                Plan_func.permission_status(send_data, ()=>{
+                                    this.init();
+                                    try{
+                                        current_page.init();
+                                    }catch(e){}
+                                });
+                            });
+                        }},
+                        permission_wait:{text:"예약 대기", callback:()=>{
+                            layer_popup.close_layer_popup();
+                            let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>예약 대기로 변경 하시겠습니까?</span>"};
+                            show_user_confirm (confirm_message, ()=>{
+                                layer_popup.close_layer_popup();
+                                let inspect = pass_inspector.schedule_update();
+                                if(inspect.barrier == BLOCKED){
+                                    let message = `${inspect.limit_type}`;
+                                    // layer_popup.close_layer_popup();
+                                    show_error_message({title:message});
+                                    return false;
+                                }
+                                let send_data = {"schedule_id":member_schedule_id, "permission_state_cd":SCHEDULE_WAIT};
+                                Plan_func.permission_status(send_data, ()=>{
+                                    this.init();
+                                    try{
+                                        current_page.init();
+                                    }catch(e){}
+                                });
+                            });
+                        }}
+                    };
+                    if(state != SCHEDULE_FINISH){
+                        delete user_option.sign_image;
+                    }
+                    if(this.settings.sign_use == OFF){
+                        delete user_option.sign_image;
+                    }
+                    if(permission_state_cd == SCHEDULE_APPROVE){
+                        delete user_option.permission_approve;
+                    }
+                    if(permission_state_cd == SCHEDULE_WAIT){
+                        delete user_option.permission_wait;
+                    }
+                    if(state == SCHEDULE_FINISH || state == SCHEDULE_ABSENCE){
+                        delete user_option.permission_wait;
+                    }
+                    let options_padding_top_bottom = 16;
+                    // let button_height = 8 + 8 + 52;
+                    let button_height = 52;
+                    let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
+                    let root_content_height = $root_content.height();
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
+                        option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+                    });
+                });
+            html_to_join.push(temp_html);
+
+        }
+        let html = `<div style="padding-left:40px;">${html_to_join.join('')}</div>`;
+
+        return html;
+    }
+
+    dom_row_member_plan_wait_select (){
+        let permission_wait_num = this.data.member_schedule_permission_state_cd.filter(permission_state_cd => permission_state_cd == SCHEDULE_WAIT).length;
+
+        let id = 'select_member_plan_wait';
+        let title = this.data.member_id.length == 0 ? '대기 회원' : permission_wait_num +' 명';
+        let icon = CImg.members();
+        let icon_r_visible = SHOW;
+        let icon_r_text = "예약 대기 목록";
+        let style = null;
+        let html_member_select = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            //회원 선택 팝업 열기
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_PLAN_WAIT_SELECT, 100, popup_style, {'data':null}, ()=>{
+                let appendix =  {lecture_id:this.data.lecture_id, title:"예약 대기 회원", disable_zero_avail_count:ON, entire_member:SHOW};
+                member_select_plan_wait = new MemberPlanWaitSelector('#wrapper_box_member_plan_wait_select', this, this.data.lecture_max_num, appendix, (set_data)=>{
+                    this.member = set_data;
+                    let changed = this.func_update_member();
+
+                    for(let j=0; j<changed.del.length; j++){
+                        let index = this.data.member_id_original.indexOf(changed.del[j]);
+                        let member_schedule_id = this.data.member_schedule_id[index];
+                        if(this.data.member_schedule_state[index] != SCHEDULE_ABSENCE){
+                            Plan_func.delete({"schedule_id":member_schedule_id, "async":false});
+                        }
+                    }
+
+                    for(let i=0; i<changed.add.length; i++){
+                        Plan_func.create('/schedule/add_member_lecture_schedule/', {"member_id":changed.add[i], "schedule_id": this.schedule_id, "async":false}, ()=>{});
+                    }
+
+                    if(set_data.id_other.length > 0){ //전체 회원에서 추가한 것이 있을 때
+                        for(let i=0; i<set_data.id_other.length; i++){
+                            let member_ticket_id = set_data.ticket_id_other[i];
+                            let member_id = set_data.id_other[i];
+                            Plan_func.create('/schedule/add_other_member_lecture_schedule/', {"member_id":member_id, "member_ticket_id": member_ticket_id, "schedule_id": this.schedule_id, "async":false}, ()=>{});
+                        }
+                    }
+
+                    this.init();
+                    try{
+                        current_page.init();
+                    }catch(e){}
+                    // this.render_content();
+                });
+            });
+        });
+        let html = html_member_select;
+
+        return html;
+    }
+
+    dom_row_member_plan_wait_list (){
+        let length = this.data.member_id.length;
+        let html_to_join = [];
+        let html_to_wait_join = [];
+        let reg_dt_style = {"font-size":"12px", "height":"25px", "line-height":"25px", "padding":"0"};
+        let wait_member_counter = 1;
+        for(let i=0; i<length; i++){
+            let member_id = this.data.member_id[i];
+            let member_name = this.data.member_name[i];
+            let member_schedule_id = this.data.member_schedule_id[i];
+            let icon_button_style = {"padding":"3px 1%", "width":"45%","height":"50px", "overflow":"hidden", "text-overflow":"ellipsis", "white-space":"nowrap", "font-size":"15px", "font-weight":"500", "text-align":"left"};
+            let state = this.data.member_schedule_state[i];
+            let permission_state_cd = this.data.member_schedule_permission_state_cd[i];
+            if(permission_state_cd == SCHEDULE_WAIT){
+                member_name = wait_member_counter+'. '+this.data.member_name[i];
+                wait_member_counter++
+            }
             let state_icon_url;
             if(state == SCHEDULE_ABSENCE){
                 // state_icon_url = CImg.x(["var(--img-sub1)"], {"vertical-align":"middle", "margin-bottom":"3px"});
@@ -651,25 +831,11 @@ class Plan_view{
             }else{
                 html_to_join.push(temp_html);
             }
-
         }
-        let html = `<div style="padding-left:40px;">
-                        <div style="font-size:12px;">
-                        ${html_to_join.length ==0? '예약 완료 회원이 없습니다.' : html_to_join.join('')}
-                        </div>
-                    </div>
-                    <div style="padding-left:40px;">
-                        <div style="font-weight: bold;font-size: 14px;color: var(--font-sub-dark);width: 80%;padding-top: 12px;">
-                            예약 대기자 목록
-                        </div>
-                        <div style="font-size:12px;">
-                        ${html_to_wait_join.length ==0? '예약 대기 회원이 없습니다.' : html_to_wait_join.join('')}
-                        </div>
-                    </div>`;
+        let html = `<div style="padding-left:40px;">${html_to_wait_join.join('')}</div>`;
 
         return html;
     }
-
     dom_row_date_select (){
         let id = 'select_date';
         let title = this.data.date_text == null ? '일자*' : this.data.date_text;
