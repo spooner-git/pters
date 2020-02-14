@@ -25,23 +25,28 @@ class Plan_daily_record{
         }
 
         if(schedule_type == 1){
-            this.data.push(
-                {schedule_id: data.schedule_id, schedule_name: data.member_name, state_cd: data.state_cd, daily_record_id: data.daily_record_id, profile_img:data.member_profile_url}
-            );
+            if(data.member_schedule_permission_state_cd == SCHEDULE_APPROVE){
+                this.data.push(
+                    {schedule_id: data.schedule_id, schedule_name: data.member_name, state_cd: data.state_cd, daily_record_id: data.daily_record_id, profile_img:data.member_profile_url,
+                     schedule_permission_state_cd: data.member_schedule_permission_state_cd}
+                );
+            }
         }else if(schedule_type == 2){
             let length = data.lecture_schedule_data.length;
             let data_ = data.lecture_schedule_data;
             for(let i=0; i<length; i++){
-                this.data.push(
-                    {schedule_id: data_[i].schedule_id, schedule_name: data_[i].member_name, state_cd: data_[i].state_cd, daily_record_id:data_[i].daily_record_id, profile_img:data_[i].member_profile_url}
-                );
+                if(data_[i].permission_state_cd == SCHEDULE_APPROVE){
+                    this.data.push(
+                        {schedule_id: data_[i].schedule_id, schedule_name: data_[i].member_name, state_cd: data_[i].state_cd, daily_record_id:data_[i].daily_record_id, profile_img:data_[i].member_profile_url,
+                        schedule_permission_state_cd: data_[i].permission_state_cd}
+                    );
+                }
             }
         }
     }
 
     request_list (callback){
         Plan_func.read_plan(this.schedule_id, (data)=>{
-            console.log("data", data);
             this.set_initial_data(data); // 초기값을 미리 셋팅한다.
             callback(data);
         });

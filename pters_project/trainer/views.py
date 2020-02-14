@@ -5643,7 +5643,8 @@ def attend_mode_finish_logic(request):
                             else:
                                 error = func_check_lecture_available_member_before(class_id,
                                                                                    schedule_info.lecture_tb_id,
-                                                                                   schedule_id)
+                                                                                   schedule_id,
+                                                                                   PERMISSION_STATE_CD_APPROVE)
 
                         if error is None:
                             schedule_result = func_add_schedule(class_id, member_ticket_id, None,
@@ -5659,7 +5660,7 @@ def attend_mode_finish_logic(request):
 
                         if error is None:
                             error = func_check_lecture_available_member_after(class_id, schedule_info.lecture_tb_id,
-                                                                              schedule_id)
+                                                                              schedule_id, PERMISSION_STATE_CD_APPROVE)
 
                 else:
                     if schedule_info.member_ticket_tb.member_id == member_id:

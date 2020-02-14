@@ -198,7 +198,6 @@ class Plan_view{
         this.data.reg_member_name = data.schedule_info[0].reg_member_name;
         this.data.reg_date = data.schedule_info[0].reg_dt;
         this.data.mod_date = data.schedule_info[0].mod_dt;
-        console.log(this);
     }
 
     calc_end_time_by_start_time(start_time_, lecture_minute, work_time_end){
@@ -260,7 +259,6 @@ class Plan_view{
         document.querySelector('.popup_plan_view .wrapper_top').style.border = 0;
         document.querySelector('.popup_plan_view .wrapper_top').style.paddingTop = '0px';
         document.querySelector('.popup_plan_view .wrapper_top').style.lineHeight = '0px';
-        console.log(this);
     }
 
     render_toolbox(){
@@ -471,13 +469,13 @@ class Plan_view{
         let title = this.data.member_id.length == 0 ? '회원*' : this.data.lecture_current_num-permission_wait_num+ '/' + this.data.lecture_max_num +' 명';
         let icon = CImg.members();
         let icon_r_visible = SHOW;
-        let icon_r_text = "예약 완료 목록";
+        let icon_r_text = "예약 승인 목록";
         let style = null;
         let html_member_select = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            //회원 선택 팝업 열기
+            //회원 선택 팝업 열기지
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_PLAN_APPROVE_SELECT, 100, popup_style, {'data':null}, ()=>{
-                let appendix =  {lecture_id:this.data.lecture_id, title:"예약 완료 회원", disable_zero_avail_count:ON, entire_member:SHOW};
+                let appendix =  {lecture_id:this.data.lecture_id, title:"예약 승인 회원", disable_zero_avail_count:ON, entire_member:SHOW};
                 member_select_plan_approve = new MemberPlanApproveSelector('#wrapper_box_member_plan_approve_select', this, this.data.lecture_max_num, appendix, (set_data)=>{
                     this.member = set_data;
                     let changed = this.func_update_member();
@@ -491,14 +489,14 @@ class Plan_view{
                     }
 
                     for(let i=0; i<changed.add.length; i++){
-                        Plan_func.create('/schedule/add_member_lecture_schedule/', {"member_id":changed.add[i], "schedule_id": this.schedule_id, "async":false}, ()=>{});
+                        Plan_func.create('/schedule/add_member_lecture_schedule/', {"member_id":changed.add[i], "schedule_id": this.schedule_id, "permission_state_cd":SCHEDULE_APPROVE, "async":false}, ()=>{});
                     }
 
                     if(set_data.id_other.length > 0){ //전체 회원에서 추가한 것이 있을 때
                         for(let i=0; i<set_data.id_other.length; i++){
                             let member_ticket_id = set_data.ticket_id_other[i];
                             let member_id = set_data.id_other[i];
-                            Plan_func.create('/schedule/add_other_member_lecture_schedule/', {"member_id":member_id, "member_ticket_id": member_ticket_id, "schedule_id": this.schedule_id, "async":false}, ()=>{}); 
+                            Plan_func.create('/schedule/add_other_member_lecture_schedule/', {"member_id":member_id, "member_ticket_id": member_ticket_id, "schedule_id": this.schedule_id, "permission_state_cd":SCHEDULE_APPROVE, "async":false}, ()=>{});
                         }
                     }
                     
@@ -675,14 +673,14 @@ class Plan_view{
                     }
 
                     for(let i=0; i<changed.add.length; i++){
-                        Plan_func.create('/schedule/add_member_lecture_schedule/', {"member_id":changed.add[i], "schedule_id": this.schedule_id, "async":false}, ()=>{});
+                        Plan_func.create('/schedule/add_member_lecture_schedule/', {"member_id":changed.add[i], "schedule_id": this.schedule_id, "permission_state_cd":SCHEDULE_WAIT, "async":false}, ()=>{});
                     }
 
                     if(set_data.id_other.length > 0){ //전체 회원에서 추가한 것이 있을 때
                         for(let i=0; i<set_data.id_other.length; i++){
                             let member_ticket_id = set_data.ticket_id_other[i];
                             let member_id = set_data.id_other[i];
-                            Plan_func.create('/schedule/add_other_member_lecture_schedule/', {"member_id":member_id, "member_ticket_id": member_ticket_id, "schedule_id": this.schedule_id, "async":false}, ()=>{});
+                            Plan_func.create('/schedule/add_other_member_lecture_schedule/', {"member_id":member_id, "member_ticket_id": member_ticket_id, "schedule_id": this.schedule_id, "permission_state_cd":SCHEDULE_WAIT, "async":false}, ()=>{});
                         }
                     }
 

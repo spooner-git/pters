@@ -1371,7 +1371,8 @@ def add_repeat_schedule_confirm(request):
                                     if member_ticket_id is not None and member_ticket_id != '':
                                         error_temp = func_check_lecture_available_member_before(class_id,
                                                                                                 lecture_info.lecture_id,
-                                                                                                schedule_info.schedule_id)
+                                                                                                schedule_info.schedule_id,
+                                                                                                PERMISSION_STATE_CD_APPROVE)
                                         if error_temp is None:
                                             try:
                                                 with transaction.atomic():
@@ -1396,7 +1397,7 @@ def add_repeat_schedule_confirm(request):
                                                         error_temp = \
                                                             func_check_lecture_available_member_after(
                                                                 class_id, lecture_info.lecture_id,
-                                                                schedule_info.schedule_id)
+                                                                schedule_info.schedule_id, PERMISSION_STATE_CD_APPROVE)
 
                                                     if error_temp is not None:
                                                         raise InternalError
@@ -2099,6 +2100,7 @@ def finish_lecture_schedule_logic(request):
 def add_member_lecture_schedule_logic(request):
     member_id = request.POST.get('member_id')
     lecture_schedule_id = request.POST.get('schedule_id')
+    permission_state_cd = request.POST.get('permission_state_cd', PERMISSION_STATE_CD_APPROVE)
     class_id = request.session.get('class_id', '')
     class_type_name = request.session.get('class_type_name', '')
     setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
@@ -2164,7 +2166,8 @@ def add_member_lecture_schedule_logic(request):
             error = '일정에 포함되어있는 회원입니다.'
 
     if error is None:
-        error = func_check_lecture_available_member_before(class_id, lecture_id, lecture_schedule_id)
+        error = func_check_lecture_available_member_before(class_id, lecture_id, lecture_schedule_id,
+                                                           permission_state_cd)
 
     if error is None:
         try:
@@ -2172,7 +2175,7 @@ def add_member_lecture_schedule_logic(request):
                 if error is None:
 
                     state_cd = schedule_info.state_cd
-                    permission_state_cd = PERMISSION_STATE_CD_APPROVE
+                    # permission_state_cd = PERMISSION_STATE_CD_APPROVE
 
                     if timezone.now() > schedule_info.end_dt:
                         if str(setting_schedule_auto_finish) == str(AUTO_FINISH_ON):
@@ -2191,7 +2194,8 @@ def add_member_lecture_schedule_logic(request):
                     error = func_refresh_member_ticket_count(class_id, member_ticket_id)
 
                 if error is None:
-                    error = func_check_lecture_available_member_after(class_id, lecture_id, lecture_schedule_id)
+                    error = func_check_lecture_available_member_after(class_id, lecture_id, lecture_schedule_id,
+                                                                      permission_state_cd)
 
                 if error is not None:
                     raise InternalError()
@@ -2245,6 +2249,7 @@ def add_member_lecture_schedule_logic(request):
 def add_other_member_lecture_schedule_logic(request):
     member_ticket_id = request.POST.get('member_ticket_id')
     lecture_schedule_id = request.POST.get('schedule_id')
+    permission_state_cd = request.POST.get('permission_state_cd', PERMISSION_STATE_CD_APPROVE)
     class_id = request.session.get('class_id', '')
     class_type_name = request.session.get('class_type_name', '')
     setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
@@ -2301,7 +2306,8 @@ def add_other_member_lecture_schedule_logic(request):
             error = '일정에 포함되어있는 회원입니다.'
 
     if error is None:
-        error = func_check_lecture_available_member_before(class_id, lecture_id, lecture_schedule_id)
+        error = func_check_lecture_available_member_before(class_id, lecture_id, lecture_schedule_id,
+                                                           permission_state_cd)
 
     if error is None:
         try:
@@ -2309,7 +2315,7 @@ def add_other_member_lecture_schedule_logic(request):
                 if error is None:
 
                     state_cd = schedule_info.state_cd
-                    permission_state_cd = PERMISSION_STATE_CD_APPROVE
+                    # permission_state_cd = PERMISSION_STATE_CD_APPROVE
                     if timezone.now() > schedule_info.end_dt:
                         if str(setting_schedule_auto_finish) == str(AUTO_FINISH_ON):
                             state_cd = STATE_CD_FINISH
@@ -2327,7 +2333,8 @@ def add_other_member_lecture_schedule_logic(request):
                     error = func_refresh_member_ticket_count(class_id, member_ticket_id)
 
                 if error is None:
-                    error = func_check_lecture_available_member_after(class_id, lecture_id, lecture_schedule_id)
+                    error = func_check_lecture_available_member_after(class_id, lecture_id, lecture_schedule_id,
+                                                                      permission_state_cd)
 
                 if error is not None:
                     raise InternalError()
