@@ -115,7 +115,6 @@ class ProgramNotice_view{
     }
 
     dom_row_toolbox(){
-        
         let id = 'program_notice_name_view';
         let title = this.data.name == null ? '' : this.data.name;
         let style = {"font-size":"20px", "font-weight":"bold"};

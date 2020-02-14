@@ -292,8 +292,7 @@ class Member_add{
                         <div style="display:table-cell;width:200px;text-align:right; font-size:13px;" onclick="member_add_popup.popup_device_contacts_list();">
                             주소록
                         </div>
-                    </div>
-                    `;
+                    </div>`;
         if(this.data_from_external != null){
             html = `<div class="member_add_upper_box" style="display:table;">
                         <div style="display:table-cell;width:200px;">

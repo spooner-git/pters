@@ -67,6 +67,7 @@ class Statistics_detail{
             let type_cd = this.data.trade_type[i];
             let member = this.data.member_name[i];
             let ticket = this.data.package_name[i];
+            let pay_method = this.data.pay_method[i];
             let price = UnitRobot.numberWithCommas(this.data.price[i]);
 
             let html = `
@@ -79,6 +80,7 @@ class Statistics_detail{
                         </div>
                         <div class="sales_detail_price" ${type_cd == 2 || type_cd == 3 ? "style='color:var(--font-highlight)'" : ""}>
                             ${type_cd == 2 || type_cd == 3 ? "-" : ""} ${price} 원
+                            <div style="color:var(--font-sub-normal)">${TICKET_PAY_METHOD[pay_method]}</div>
                         </div>
                     </div>
                     `;

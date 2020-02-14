@@ -3926,14 +3926,18 @@ class MemberContactsSelector{
 
         // this.hide_entire_member_list = true;
 
+        this.ready_render();
         this.init();
     }
 
     init(){
-        this.request_list(()=>{
-            this.render();
-            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
-        });
+
+        setTimeout(()=>{
+            this.request_list(()=>{
+                this.render();
+                func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
+            });
+        }, 600);
     }
 
     clear(){
@@ -3942,6 +3946,23 @@ class MemberContactsSelector{
         }, 300);
     }
 
+    ready_render(){
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();member_contacts_select.clear();">${CImg.arrow_left()}</span>`;
+        let top_center = `<span class="icon_center"><span id="">${this.title}</span></span>`;
+        let top_right = `<span class="icon_right"  onclick="member_contacts_select.upper_right_menu();"><span style="color:var(--font-highlight);font-weight: 500;">완료</span></span>
+                        <span class="icon_right search_member" onclick="member_contacts_select.search_contacts_member_tool_visible(event, this);">
+                                 ${CImg.search()}
+                        </span>
+                        `;
+
+        let content =   `<div class="member_contacts_search_tool"></div>
+                        <section style="text-align:center; vertical-align: middle;">
+                            목록을 불러오는 중입니다..
+                        </section>`;
+        let html = PopupBase.base(top_left, top_center, top_right, content, "");
+
+        document.querySelector(this.target.install).innerHTML = html;
+    }
     render(){
         let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();member_contacts_select.clear();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span id="">${this.title}</span></span>`;
@@ -5756,6 +5777,7 @@ class BoardWriter{
         let onfocusout = (input_data)=>{
             this.data.title = input_data;
             this.if_user_changed_any_information = true;
+            this.render();
         };
         let row = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, onfocusout, pattern, pattern_message, required);
         let html = row;
@@ -5886,12 +5908,16 @@ class BoardWriter{
             },
         });
         if(this.data.content == "" || this.data.content == null){
-            this.data.content = " "
+            this.data.content = " ";
         }
         if(this.data.content != " "){
             $(`#board_writer_content_input`).summernote('code', this.data.content);
         }
-        $('.note-editable').blur();
+        $('#board_writer_content_input').on('summernote.blur', ()=>{
+            this.data.content = $('#board_writer_content_input').summernote('code');
+            this.if_user_changed_any_information = true;
+            this.render();
+        });
     }
 
     update_content_img(file){
@@ -5949,6 +5975,7 @@ class BoardWriter{
         layer_popup.close_layer_popup();
     }
     upper_left_menu(){
+
         let content_value = $('#board_writer_content_input').summernote('code');
         if(this.data.content != content_value){
             this.data.content = content_value;
@@ -5976,6 +6003,7 @@ class BoardWriter{
             let button_height = 52;
             let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
             let root_content_height = $root_content.height();
+            // let root_content_height = this.original_root_content_height;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
                 option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
             });

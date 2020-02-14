@@ -137,7 +137,7 @@ class Pters_pass_main{
         // let ticket =  this.dom_row_auth_info("수강권", `${data["auth_package_create"].limit_num} 개 (진행중)`);
         let statistics =  this.dom_row_auth_info("통계", `${data["auth_analytics_read"].limit_num} 개월씩 조회 가능`);
         let program =  this.dom_row_auth_info("프로그램", `${data["auth_program_create"].limit_num} 개`);
-        let notice =  this.dom_row_auth_info("공지사항", `이용 가능`);
+        let notice =  this.dom_row_auth_info("공지사항", `${data['auth_notice_create'].limit_num > 0 ? '이용 가능': '이용 불가'}`);
         
         let html = `<div>` +
                         // schedule + member + lecture + ticket + statistics + program +

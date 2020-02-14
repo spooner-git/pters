@@ -1904,7 +1904,8 @@ class PopupProgramNoticeView(TemplateView):
             error = '공지사항 정보를 불러오지 못했습니다.[0]'
 
         try:
-            program_notice_history_info = ProgramNoticeHistoryTb.objects.get(program_notice_tb_id=program_notice_id)
+            program_notice_history_info = ProgramNoticeHistoryTb.objects.get(program_notice_tb_id=program_notice_id,
+                                                                             member_id=self.request.user.id, use=USE)
             program_notice_info = program_notice_history_info.program_notice_tb
             if program_notice_info.member.profile_url is None or program_notice_info.member.profile_url == '':
                 program_notice_info.member.profile_url = '/static/common/icon/icon_account.png'
