@@ -242,12 +242,12 @@ class Plan_view{
     }
 
     render(){
-        let top_left = `<span class="icon_left" onclick="plan_view_popup.upper_left_menu();">${CImg.arrow_left(["#5c5859"])}</span>`;
+        let top_left = `<span class="icon_left" onclick="plan_view_popup.upper_left_menu();">${CImg.arrow_left([this.data.lecture_font_color])}</span>`;
         let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
         let top_right = `<span class="icon_right">    
-                            ${CImg.memo(["#5c5859"], this.data.schedule_type == 0 ? {"display":"none"} : null, `plan_view_popup.upper_right_menu(2)`)}
-                            ${CImg.attend_check(["#5c5859"], this.data.schedule_type == 0 ? {"display":"none"} : null, `plan_view_popup.upper_right_menu(1)`)}
-                            ${CImg.delete(["#5c5859"], null, `plan_view_popup.upper_right_menu(0)`)}
+                            ${CImg.memo([this.data.lecture_font_color], this.data.schedule_type == 0 ? {"display":"none"} : null, `plan_view_popup.upper_right_menu(2)`)}
+                            ${CImg.attend_check([this.data.lecture_font_color], this.data.schedule_type == 0 ? {"display":"none"} : null, `plan_view_popup.upper_right_menu(1)`)}
+                            ${CImg.delete([this.data.lecture_font_color], null, `plan_view_popup.upper_right_menu(0)`)}
                         </span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;background-color:${this.data.lecture_color}">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
@@ -339,7 +339,14 @@ class Plan_view{
             if(this.data.member_schedule_permission_state_cd[0] == SCHEDULE_WAIT){
                 lecture_name = '('+APPROVE_SCHEDULE_STATUS[this.data.member_schedule_permission_state_cd[0]]+') '+this.data.member_name;
             }
-            lecture_name += CImg.arrow_expand(["#5c5859"], {"height":"17px", "width":"17px"});
+            if(this.data.member_schedule_state[0] == SCHEDULE_FINISH){
+                // lecture_name = CImg.confirm([this.data.lecture_font_color], {"vertical-align":"middle", "margin-bottom":"5px"}) +this.data.member_name;
+                lecture_name = '(출석) ' +this.data.member_name;
+            }else if(this.data.member_schedule_state[0] == SCHEDULE_ABSENCE){
+                // lecture_name = CImg.x([this.data.lecture_font_color], {"vertical-align":"middle", "margin-bottom":"5px"}) +this.data.member_name;
+                lecture_name = '(결석) ' +this.data.member_name;
+            }
+            lecture_name += CImg.arrow_expand([this.data.lecture_font_color], {"height":"17px", "width":"17px"});
             // lecture_name = this.data.lecture_name;
         }else if(this.data.schedule_type == 2){
             lecture_name = this.data.lecture_name;
@@ -450,7 +457,7 @@ class Plan_view{
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
                 option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
             });
-        }
+        };
         let text_button = CComponent.text_button(id, title, style, onclick);
 
         let html = `
