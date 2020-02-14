@@ -2182,6 +2182,8 @@ def add_member_lecture_schedule_logic(request):
                             state_cd = STATE_CD_FINISH
                         elif str(setting_schedule_auto_finish) == str(AUTO_ABSENCE_ON):
                             state_cd = STATE_CD_ABSENCE
+                    if permission_state_cd == PERMISSION_STATE_CD_WAIT:
+                        state_cd = STATE_CD_NOT_PROGRESS
                     schedule_result = func_add_schedule(class_id, member_ticket_id, None,
                                                         lecture_id, lecture_schedule_id,
                                                         schedule_info.start_dt, schedule_info.end_dt,
@@ -2321,6 +2323,8 @@ def add_other_member_lecture_schedule_logic(request):
                             state_cd = STATE_CD_FINISH
                         elif str(setting_schedule_auto_finish) == str(AUTO_ABSENCE_ON):
                             state_cd = STATE_CD_ABSENCE
+                    if permission_state_cd == PERMISSION_STATE_CD_WAIT:
+                        state_cd = STATE_CD_NOT_PROGRESS
                     schedule_result = func_add_schedule(class_id, member_ticket_id, None,
                                                         lecture_id, lecture_schedule_id,
                                                         schedule_info.start_dt, schedule_info.end_dt,

@@ -512,9 +512,10 @@ def func_check_lecture_available_member_before(class_id, lecture_id, lecture_sch
     except ObjectDoesNotExist:
         setting_member_public_class_wait_member_num = 0
 
-    schedule_counter = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                 lecture_schedule_id=lecture_schedule_id,
-                                                 use=USE).exclude(state_cd=STATE_CD_ABSENCE).count()
+    schedule_wait_counter = ScheduleTb.objects.filter(class_tb_id=class_id,
+                                                      lecture_schedule_id=lecture_schedule_id,
+                                                      permission_state_cd=PERMISSION_STATE_CD_WAIT,
+                                                      use=USE).count()
     schedule_approve_counter = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                          lecture_schedule_id=lecture_schedule_id,
                                                          permission_state_cd=PERMISSION_STATE_CD_APPROVE,
@@ -523,7 +524,7 @@ def func_check_lecture_available_member_before(class_id, lecture_id, lecture_sch
         if schedule_approve_counter >= lecture_info.member_num:
             error = '정원을 초과했습니다.'
     else:
-        if schedule_counter >= lecture_info.member_num + setting_member_public_class_wait_member_num:
+        if schedule_wait_counter >= setting_member_public_class_wait_member_num:
             error = '예약 대기 허용 인원을 초과했습니다.'
 
     return error
@@ -545,9 +546,10 @@ def func_check_lecture_available_member_after(class_id, lecture_id, lecture_sche
     except ObjectDoesNotExist:
         setting_member_public_class_wait_member_num = 0
 
-    schedule_counter = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                 lecture_schedule_id=lecture_schedule_id,
-                                                 use=USE).exclude(state_cd=STATE_CD_ABSENCE).count()
+    schedule_wait_counter = ScheduleTb.objects.filter(class_tb_id=class_id,
+                                                      lecture_schedule_id=lecture_schedule_id,
+                                                      permission_state_cd=PERMISSION_STATE_CD_WAIT,
+                                                      use=USE).count()
     schedule_approve_counter = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                          lecture_schedule_id=lecture_schedule_id,
                                                          permission_state_cd=PERMISSION_STATE_CD_APPROVE,
@@ -556,7 +558,7 @@ def func_check_lecture_available_member_after(class_id, lecture_id, lecture_sche
         if schedule_approve_counter > lecture_info.member_num:
             error = '정원을 초과했습니다.'
     else:
-        if schedule_counter > lecture_info.member_num + setting_member_public_class_wait_member_num:
+        if schedule_wait_counter > setting_member_public_class_wait_member_num:
             error = '예약 대기 허용 인원을 초과했습니다.'
 
     return error

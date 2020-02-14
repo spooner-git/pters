@@ -490,9 +490,9 @@ class Plan_view{
                     for(let j=0; j<changed.del.length; j++){
                         let index = this.data.member_id_original.indexOf(changed.del[j]);
                         let member_schedule_id = this.data.member_schedule_id[index];
-                        if(this.data.member_schedule_state[index] != SCHEDULE_ABSENCE){
+                        // if(this.data.member_schedule_state[index] != SCHEDULE_ABSENCE){
                             Plan_func.delete({"schedule_id":member_schedule_id, "async":false});
-                        }
+                        // }
                     }
 
                     for(let i=0; i<changed.add.length; i++){
@@ -674,9 +674,9 @@ class Plan_view{
                     for(let j=0; j<changed.del.length; j++){
                         let index = this.data.member_id_original.indexOf(changed.del[j]);
                         let member_schedule_id = this.data.member_schedule_id[index];
-                        if(this.data.member_schedule_state[index] != SCHEDULE_ABSENCE){
+                        // if(this.data.member_schedule_state[index] != SCHEDULE_ABSENCE){
                             Plan_func.delete({"schedule_id":member_schedule_id, "async":false});
-                        }
+                        // }
                     }
 
                     for(let i=0; i<changed.add.length; i++){
