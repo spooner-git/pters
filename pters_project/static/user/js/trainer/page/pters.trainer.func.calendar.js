@@ -1053,6 +1053,9 @@ class Calendar {
                                 // let capacity_color = plan.lecture_current_member_num < plan.lecture_max_member_num ? "green" : "#fe4e65";
                                 let capacity_color = "";
                                 plan_capacity_status = '<br>' + `<span style="color:${capacity_color}">(`+plan.lecture_current_member_num + '/' + plan.lecture_max_member_num+')</span>';
+                                // if(plan.lecture_wait_member_num > 0){
+                                //     plan_capacity_status = '<br>' + `<span style="color:${capacity_color}">(`+plan.lecture_current_member_num + '/' + plan.lecture_max_member_num+')+'+plan.lecture_wait_member_num+'</span>';
+                                // }
                                 let plan_height_by_pixel = diff.hour*60+60*diff.min/60;
                                 if(plan_height_by_pixel < 24){
                                     plan_capacity_status = "";

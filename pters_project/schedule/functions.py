@@ -759,15 +759,23 @@ def func_get_trainer_schedule_all(class_id, start_date, end_date):
             " as B where B."+ScheduleTb._meta.get_field('lecture_schedule_id').column+" =`"+ScheduleTb._meta.db_table +\
             "`.`"+ScheduleTb._meta.get_field('schedule_id').column+"` " \
             " AND B."+ScheduleTb._meta.get_field('state_cd').column+" != \'PC\'" \
+            " AND B."+ScheduleTb._meta.get_field('permission_state_cd').column+" = \'AP\'" \
             " AND B."+ScheduleTb._meta.get_field('use').column+"="+str(USE)
+
+    query_wait = "select count(B."+ScheduleTb._meta.get_field('schedule_id').column+") from "+ScheduleTb._meta.db_table +\
+                 " as B where B."+ScheduleTb._meta.get_field('lecture_schedule_id').column+" =`"+ScheduleTb._meta.db_table +\
+                 "`.`"+ScheduleTb._meta.get_field('schedule_id').column+"` " \
+                 " AND B."+ScheduleTb._meta.get_field('permission_state_cd').column+" = \'WP\'" \
+                 " AND B."+ScheduleTb._meta.get_field('use').column+"="+str(USE)
 
     # 그룹 수업에 속한 회원들의 일정은 제외하고 불러온다.
     schedule_data = ScheduleTb.objects.select_related(
         'member_ticket_tb__member', 'reg_member', 'mod_member',
         'lecture_tb').filter(class_tb=class_id, start_dt__gte=start_date, start_dt__lt=end_date,
                              lecture_schedule_id__isnull=True,
-                             use=USE).annotate(lecture_current_member_num=RawSQL(query,
-                                                                                 [])).order_by('start_dt', 'reg_dt')
+                             use=USE).annotate(lecture_current_member_num=RawSQL(query, []),
+                                               lecture_wait_member_num=RawSQL(query_wait, [])).order_by('start_dt',
+                                                                                                        'reg_dt')
 
     ordered_schedule_dict = collections.OrderedDict()
     temp_schedule_date = None
@@ -804,11 +812,13 @@ def func_get_trainer_schedule_all(class_id, start_date, end_date):
             lecture_id = schedule_info.lecture_tb_id
             lecture_name = schedule_info.lecture_tb.name
             lecture_current_member_num = schedule_info.lecture_current_member_num
+            lecture_wait_member_num = schedule_info.lecture_wait_member_num
             schedule_type = 2
         except AttributeError:
             lecture_id = ''
             lecture_name = ''
             lecture_current_member_num = ''
+            lecture_wait_member_num = ''
         mod_member_id = ''
         mod_member_name = ''
         if schedule_info.mod_member is not None and schedule_info.mod_member != '':
@@ -837,7 +847,8 @@ def func_get_trainer_schedule_all(class_id, start_date, end_date):
                                    'lecture_end_color_cd': schedule_info.end_color_cd,
                                    'lecture_end_font_color_cd': schedule_info.end_font_color_cd,
                                    'lecture_max_member_num': schedule_info.max_mem_count,
-                                   'lecture_current_member_num': lecture_current_member_num})
+                                   'lecture_current_member_num': lecture_current_member_num,
+                                   'lecture_wait_member_num': lecture_wait_member_num})
 
         ordered_schedule_dict[schedule_start_date] = date_schedule_list
 
