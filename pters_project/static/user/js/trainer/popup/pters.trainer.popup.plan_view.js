@@ -490,24 +490,22 @@ class Plan_view{
                     this.member = set_data;
                     let changed = this.func_update_member();
 
-                    for(let j=0; j<changed.del.length; j++){
-                        let index = this.data.member_id_original.indexOf(changed.del[j]);
-                        let member_schedule_id = this.data.member_schedule_id[index];
-                        // if(this.data.member_schedule_state[index] != SCHEDULE_ABSENCE){
-                            Plan_func.delete({"schedule_id":member_schedule_id, "async":false});
-                        // }
-                    }
-
                     for(let i=0; i<changed.add.length; i++){
                         Plan_func.create('/schedule/add_member_lecture_schedule/', {"member_id":changed.add[i], "schedule_id": this.schedule_id, "permission_state_cd":SCHEDULE_APPROVE, "async":false}, ()=>{});
                     }
-
                     if(set_data.id_other.length > 0){ //전체 회원에서 추가한 것이 있을 때
                         for(let i=0; i<set_data.id_other.length; i++){
                             let member_ticket_id = set_data.ticket_id_other[i];
                             let member_id = set_data.id_other[i];
                             Plan_func.create('/schedule/add_other_member_lecture_schedule/', {"member_id":member_id, "member_ticket_id": member_ticket_id, "schedule_id": this.schedule_id, "permission_state_cd":SCHEDULE_APPROVE, "async":false}, ()=>{});
                         }
+                    }
+                    for(let j=0; j<changed.del.length; j++){
+                        let index = this.data.member_id_original.indexOf(changed.del[j]);
+                        let member_schedule_id = this.data.member_schedule_id[index];
+                        // if(this.data.member_schedule_state[index] != SCHEDULE_ABSENCE){
+                            Plan_func.delete({"schedule_id":member_schedule_id, "async":false});
+                        // }
                     }
                     
                     this.init();
