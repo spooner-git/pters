@@ -594,7 +594,7 @@ class Calendar {
                     plan_repeat_list_popup = new Plan_repeat_list('.popup_plan_repeat_list');
                 });
             }},
-            permission:{text:"예약 대기 일정 목록", callback:()=>{
+            permission:{text:"대기 예약 일정 목록", callback:()=>{
                 layer_popup.close_layer_popup();
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_BOTTOM;
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PLAN_PERMISSION_WAIT_LIST, 100, popup_style, null, ()=>{

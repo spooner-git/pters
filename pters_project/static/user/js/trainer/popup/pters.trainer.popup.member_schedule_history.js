@@ -218,9 +218,9 @@ class Member_schedule_history{
                                                                 });layer_popup.close_layer_popup();
                                                             }
                                                         }},
-                        permission_approve:{text:"예약 승인", callback:()=>{
+                        permission_approve:{text:"예약 확정", callback:()=>{
                             layer_popup.close_layer_popup();
-                            let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>예약 승인 하시겠습니까?</span>"};
+                            let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>예약 확정 하시겠습니까?</span>"};
                             show_user_confirm (confirm_message, ()=>{
                                 layer_popup.close_layer_popup();
                                 let inspect = pass_inspector.schedule_update();
@@ -245,9 +245,9 @@ class Member_schedule_history{
                                 });
                             });
                         }},
-                        permission_wait:{text:"예약 대기", callback:()=>{
+                        permission_wait:{text:"대기 예약", callback:()=>{
                             layer_popup.close_layer_popup();
-                            let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>예약 대기로 변경 하시겠습니까?</span>"};
+                            let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>대기 예약으로 변경 하시겠습니까?</span>"};
                             show_user_confirm (confirm_message, ()=>{
                                 layer_popup.close_layer_popup();
                                 let inspect = pass_inspector.schedule_update();
@@ -422,9 +422,9 @@ class Member_schedule_history{
                                                             });layer_popup.close_layer_popup();
                                                         }
                                                     }},
-                    permission_approve:{text:"예약 승인", callback:()=>{
+                    permission_approve:{text:"예약 확정", callback:()=>{
                         layer_popup.close_layer_popup();
-                        let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>예약 승인 하시겠습니까?</span>"};
+                        let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>예약 확정 하시겠습니까?</span>"};
                         show_user_confirm (confirm_message, ()=>{
                             layer_popup.close_layer_popup();
                             let inspect = pass_inspector.schedule_update();
@@ -449,9 +449,9 @@ class Member_schedule_history{
                             });
                         });
                     }},
-                    permission_wait:{text:"예약 대기", callback:()=>{
+                    permission_wait:{text:"대기 예약", callback:()=>{
                         layer_popup.close_layer_popup();
-                        let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>예약 대기로 변경 하시겠습니까?</span>"};
+                        let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>대기 예약으로 변경 하시겠습니까?</span>"};
                         show_user_confirm (confirm_message, ()=>{
                             layer_popup.close_layer_popup();
                             let inspect = pass_inspector.schedule_update();
@@ -626,9 +626,9 @@ class Member_schedule_history{
                                                                 });layer_popup.close_layer_popup();
                                                             }
                                                         }},
-                        permission_approve:{text:"예약 승인", callback:()=>{
+                        permission_approve:{text:"예약 확정", callback:()=>{
                             layer_popup.close_layer_popup();
-                            let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>예약 승인 하시겠습니까?</span>"};
+                            let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>예약 확정 하시겠습니까?</span>"};
                             show_user_confirm (confirm_message, ()=>{
                                 layer_popup.close_layer_popup();
                                 let inspect = pass_inspector.schedule_update();
@@ -653,9 +653,9 @@ class Member_schedule_history{
                                 });
                             });
                         }},
-                        permission_wait:{text:"예약 대기", callback:()=>{
+                        permission_wait:{text:"대기 예약", callback:()=>{
                             layer_popup.close_layer_popup();
-                            let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>예약 대기로 변경 하시겠습니까?</span>"};
+                            let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>대기 예약로 변경 하시겠습니까?</span>"};
                             show_user_confirm (confirm_message, ()=>{
                                 layer_popup.close_layer_popup();
                                 let inspect = pass_inspector.schedule_update();

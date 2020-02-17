@@ -904,9 +904,9 @@ def update_schedule_permission_state_cd_logic(request):
             error = '종료된 일정은 변경이 불가합니다.'
     if error is None:
         if schedule_permission_state_cd == PERMISSION_STATE_CD_APPROVE:
-            schedule_permission_state_cd_name = '예약 승인'
+            schedule_permission_state_cd_name = '예약 확정'
         elif schedule_permission_state_cd == PERMISSION_STATE_CD_WAIT:
-            schedule_permission_state_cd_name = '예약 대기'
+            schedule_permission_state_cd_name = '대기 예약'
 
     if error is None:
         start_date = schedule_info.start_dt

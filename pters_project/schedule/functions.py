@@ -525,7 +525,7 @@ def func_check_lecture_available_member_before(class_id, lecture_id, lecture_sch
             error = '정원을 초과했습니다.'
     else:
         if schedule_wait_counter >= setting_member_public_class_wait_member_num:
-            error = '예약 대기 허용 인원을 초과했습니다.'
+            error = '대기 예약 허용 인원을 초과했습니다.'
 
     return error
 
@@ -559,7 +559,7 @@ def func_check_lecture_available_member_after(class_id, lecture_id, lecture_sche
             error = '정원을 초과했습니다.'
     else:
         if schedule_wait_counter > setting_member_public_class_wait_member_num:
-            error = '예약 대기 허용 인원을 초과했습니다.'
+            error = '대기 예약 허용 인원을 초과했습니다.'
 
     return error
 

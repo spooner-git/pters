@@ -391,9 +391,9 @@ class Plan_view{
                         member_schedule_history = new Member_schedule_history('.popup_member_schedule_history', this.data.member_id[0], null);
                     });
                 }},
-                permission_approve:{text:"예약 승인", callback:()=>{
+                permission_approve:{text:"예약 확정", callback:()=>{
                     layer_popup.close_layer_popup();
-                    let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>예약 승인 하시겠습니까?</span>"};
+                    let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>예약 확정 하시겠습니까?</span>"};
                     show_user_confirm (confirm_message, ()=>{
                         layer_popup.close_layer_popup();
                         let inspect = pass_inspector.schedule_update();
@@ -412,9 +412,9 @@ class Plan_view{
                         });
                     });
                 }},
-                permission_wait:{text:"예약 대기", callback:()=>{
+                permission_wait:{text:"대기 예약", callback:()=>{
                     layer_popup.close_layer_popup();
-                    let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>예약 대기로 변경 하시겠습니까?</span>"};
+                    let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>대기 예약으로 변경 하시겠습니까?</span>"};
                     show_user_confirm (confirm_message, ()=>{
                         layer_popup.close_layer_popup();
                         let inspect = pass_inspector.schedule_update();
@@ -479,13 +479,13 @@ class Plan_view{
         let title = this.data.member_id.length == 0 ? '회원*' : this.data.lecture_current_num-permission_wait_num+ '/' + this.data.lecture_max_num +' 명';
         let icon = CImg.members();
         let icon_r_visible = SHOW;
-        let icon_r_text = "예약 승인 목록";
+        let icon_r_text = "예약 확정 회원 목록";
         let style = null;
         let html_member_select = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             //회원 선택 팝업 열기지
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_PLAN_APPROVE_SELECT, 100, popup_style, {'data':null}, ()=>{
-                let appendix =  {lecture_id:this.data.lecture_id, title:"예약 승인 회원", disable_zero_avail_count:ON, entire_member:SHOW, member_id:this.data.member_id, member_name:this.data.member_name, member_schedule_state:this.data.member_schedule_state, member_schedule_permission_state_cd:this.data.member_schedule_permission_state_cd, wait_member_limit:this.settings.wait_member_limit};
+                let appendix =  {lecture_id:this.data.lecture_id, title:"예약 확정 회원", disable_zero_avail_count:ON, entire_member:SHOW, member_id:this.data.member_id, member_name:this.data.member_name, member_schedule_state:this.data.member_schedule_state, member_schedule_permission_state_cd:this.data.member_schedule_permission_state_cd, wait_member_limit:this.settings.wait_member_limit};
                 member_select_plan_approve = new MemberPlanApproveSelector('#wrapper_box_member_plan_approve_select', this, this.data.lecture_max_num, appendix, (set_data)=>{
                     this.member = set_data;
                     let changed = this.func_update_member();
@@ -579,9 +579,9 @@ class Plan_view{
                                 member_schedule_history = new Member_schedule_history('.popup_member_schedule_history', member_id, null);
                             });
                         }},
-                        permission_approve:{text:"예약 승인", callback:()=>{
+                        permission_approve:{text:"예약 확정", callback:()=>{
                             layer_popup.close_layer_popup();
-                            let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>예약 승인 하시겠습니까?</span>"};
+                            let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>예약 확정 하시겠습니까?</span>"};
                             show_user_confirm (confirm_message, ()=>{
                                 layer_popup.close_layer_popup();
                                 let inspect = pass_inspector.schedule_update();
@@ -600,9 +600,9 @@ class Plan_view{
                                 });
                             });
                         }},
-                        permission_wait:{text:"예약 대기", callback:()=>{
+                        permission_wait:{text:"대기 예약", callback:()=>{
                             layer_popup.close_layer_popup();
-                            let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>예약 대기로 변경 하시겠습니까?</span>"};
+                            let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>대기 예약으로 변경 하시겠습니까?</span>"};
                             show_user_confirm (confirm_message, ()=>{
                                 layer_popup.close_layer_popup();
                                 let inspect = pass_inspector.schedule_update();
@@ -661,13 +661,13 @@ class Plan_view{
         let title = this.data.member_id.length == 0 ? '대기 회원' : permission_wait_num +' 명';
         let icon = CImg.members();
         let icon_r_visible = SHOW;
-        let icon_r_text = "예약 대기 목록";
+        let icon_r_text = "대기 예약 회원 목록";
         let style = null;
         let html_member_select = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             //회원 선택 팝업 열기
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_PLAN_WAIT_SELECT, 100, popup_style, {'data':null}, ()=>{
-                let appendix =  {lecture_id:this.data.lecture_id, title:"예약 대기 회원", disable_zero_avail_count:ON, entire_member:SHOW, member_id:this.data.member_id, member_name:this.data.member_name, member_schedule_state:this.data.member_schedule_state, member_schedule_permission_state_cd:this.data.member_schedule_permission_state_cd};
+                let appendix =  {lecture_id:this.data.lecture_id, title:"대기 예약 회원", disable_zero_avail_count:ON, entire_member:SHOW, member_id:this.data.member_id, member_name:this.data.member_name, member_schedule_state:this.data.member_schedule_state, member_schedule_permission_state_cd:this.data.member_schedule_permission_state_cd};
                 member_select_plan_wait = new MemberPlanWaitSelector('#wrapper_box_member_plan_wait_select', this, this.settings.wait_member_limit, appendix, (set_data)=>{
                     this.member = set_data;
                     let changed = this.func_update_member();
@@ -766,9 +766,9 @@ class Plan_view{
                                 member_schedule_history = new Member_schedule_history('.popup_member_schedule_history', member_id, null);
                             });
                         }},
-                        permission_approve:{text:"예약 승인", callback:()=>{
+                        permission_approve:{text:"예약 확정", callback:()=>{
                             layer_popup.close_layer_popup();
-                            let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>예약 승인 하시겠습니까?</span>"};
+                            let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>예약 확정 하시겠습니까?</span>"};
                             show_user_confirm (confirm_message, ()=>{
                                 layer_popup.close_layer_popup();
                                 let inspect = pass_inspector.schedule_update();
@@ -787,9 +787,9 @@ class Plan_view{
                                 });
                             });
                         }},
-                        permission_wait:{text:"예약 대기", callback:()=>{
+                        permission_wait:{text:"대기 예약", callback:()=>{
                             layer_popup.close_layer_popup();
-                            let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>예약 대기로 변경 하시겠습니까?</span>"};
+                            let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>대기 예약으로 변경 하시겠습니까?</span>"};
                             show_user_confirm (confirm_message, ()=>{
                                 layer_popup.close_layer_popup();
                                 let inspect = pass_inspector.schedule_update();

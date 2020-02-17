@@ -82,7 +82,7 @@
                                                 {% if request.session.setting_member_lecture_max_num_view_available == 1 %}
                                                     ({{ lecture_schedule_info.lecture_current_member_num }}/{{ lecture_schedule_info.lecture_tb.member_num }}명)
                                                 {% if lecture_schedule_info.lecture_wait_member_num < request.session.setting_member_public_class_wait_member_num and request.session.setting_member_public_class_wait_member_num > 0%}
-                                                    [예약 대기 가능]
+                                                    [대기 예약 가능]
                                                 {% endif %}
                                                 {% endif %}
                                             </div>

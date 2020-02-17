@@ -81,7 +81,7 @@ class Plan_permission_wait_list{
 
         if(Object.keys(this.data.permission_wait_schedule).length == 0){
             html = `<div style="font-size:14px;letter-spacing:-0.6px;font-weight:500;padding:20px;">
-                        예약 대기 일정이 없습니다.
+                        대기 예약 일정이 없습니다.
                     </div>`;
         }
 
@@ -146,9 +146,9 @@ class Plan_permission_wait_list{
                     });
                 });
                 }},
-                permission_approve:{text:"예약 승인", callback:()=>{
+                permission_approve:{text:"예약 확정", callback:()=>{
                     layer_popup.close_layer_popup();
-                    let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>예약 승인 하시겠습니까?</span>"};
+                    let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>예약 확정 하시겠습니까?</span>"};
                     show_user_confirm (confirm_message, ()=>{
                         layer_popup.close_layer_popup();
                         let inspect = pass_inspector.schedule_update();
@@ -167,9 +167,9 @@ class Plan_permission_wait_list{
                         });
                     });
                 }},
-                permission_wait:{text:"예약 대기", callback:()=>{
+                permission_wait:{text:"대기 예약", callback:()=>{
                     layer_popup.close_layer_popup();
-                    let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>예약 대기로 변경 하시겠습니까?</span>"};
+                    let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>대기 예약으로 변경 하시겠습니까?</span>"};
                     show_user_confirm (confirm_message, ()=>{
                         layer_popup.close_layer_popup();
                         let inspect = pass_inspector.schedule_update();
@@ -212,7 +212,7 @@ class Plan_permission_wait_list{
     }
 
     dom_row_toolbox(){
-        let title = "예약 대기 일정";
+        let title = "대기 예약 일정";
         let html = `
         <div class="lecture_view_upper_box" style="">
             <div style="display:inline-block;">

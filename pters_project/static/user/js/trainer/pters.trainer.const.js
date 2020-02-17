@@ -315,7 +315,7 @@ const COLOR_NAME_CODE = {"#fbf3bd":"바나나", "#dbe6f7":"하늘", "#ffd3d9": "
             };
 const SEX_CODE = {"M": "남성", "W": "여성"};
 const SCHEDULE_STATUS = {"NP" : "진행전", "PC": "결석", "PE": "출석"};
-const APPROVE_SCHEDULE_STATUS = {"AP": "예약 승인", "WP":"예약 대기"};
+const APPROVE_SCHEDULE_STATUS = {"AP": "예약 확정", "WP":"대기 예약"};
 const SCHEDULE_STATUS_COLOR = {"NP" : "진행전", "PC": "orange", "PE": "green"};
 const TICKET_STATUS = {"IP": "진행중", "PE": "종료", "RF": "환불"};
 const TICKET_STATUS_COLOR = {"IP": "green", "PE": "var(--font-main)", "RF": "orange"};
