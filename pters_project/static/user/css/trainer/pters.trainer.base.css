@@ -342,6 +342,36 @@
     }
 }
 
+.anim_blink{
+    animation-name: border-bg-blink;
+	animation-duration: 1s;
+	animation-delay: 0;
+	animation-direction: normal;
+	animation-iteration-count: infinite; 
+    animation-timing-function: ease-in-out;
+}
+
+@keyframes border-bg-blink{
+    0%{
+        border-color: #282828;
+        border-style: dotted;
+        border-width: 2px;
+        opacity: 1;
+    }
+    60%{
+        border-color: #858282;
+        border-style: dotted;
+        border-width: 2px;
+        opacity: 0.8;
+    }
+    100%{
+        border-color: #858282;
+        border-style: dotted;
+        border-width: 2px;
+        opacity: 1;
+    }
+}
+
 
 
 

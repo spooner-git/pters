@@ -1017,6 +1017,7 @@ class Calendar {
                             let start_min = plan_start_split[1];
                             let end_hour = plan_end_split[0];
                             let end_min = plan_end_split[1];
+                            let permission_status = plan.permission_state_cd;
 
                             let plan_start = {full:`${start_hour < work_start ? work_start : start_hour}:${start_min}`, hour:`${start_hour < work_start ? work_start : start_hour}`, minute:`${start_hour < work_start ? 0 : start_min}`};
                             let plan_end = {full:`${end_hour > work_end ? work_end+1 : end_hour }:${end_min}`, hour:`${end_hour > work_end ? work_end+1 : end_hour }`, minute:end_min};
@@ -1079,9 +1080,13 @@ class Calendar {
                                 go_behind = "go_behind";
                             }
 
+                            let something_have_to_do = "";
+                            if(permission_status != SCHEDULE_APPROVE || plan.lecture_wait_member_num > 0){
+                                something_have_to_do = "anim_blink";
+                            }
                             
 
-                            return `<div data-scheduleid="${plan.schedule_id}" onclick="event.stopPropagation();${onclick}" class="calendar_schedule_display_week ${long_touch_active} ${go_behind}" 
+                            return `<div data-scheduleid="${plan.schedule_id}" onclick="event.stopPropagation();${onclick}" class="calendar_schedule_display_week ${long_touch_active} ${go_behind} ${something_have_to_do}" 
                                         style="${styles}" ontouchstart="${this.instance}.longtouchstart(this, ()=>{})" ontouchend="event.stopPropagation();${this.instance}.longtouchend(event)">
                                         ${plan_name}
                                     </div>`;
