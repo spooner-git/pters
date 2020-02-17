@@ -411,10 +411,15 @@ class CComponent{
         }else{
             icon = CImg.confirm(["green"], checked == 0 ? {"display":"none"}:{"display":"inline-block"});
         }
+
         if(member_schedule_permission_state_cd == SCHEDULE_APPROVE){
             icon = CImg.confirm(["green"], checked == 0 ? {"display":"none"}:{"display":"inline-block"});
         }else if(member_schedule_permission_state_cd == SCHEDULE_WAIT){
             icon =  CImg.time(["orange"], checked == 0 ? {"display":"none"}:{"display":"inline-block"});
+        }
+
+        if(member_schedule_permission_state_cd != undefined && member_schedule_permission_state_cd != type_for_default_icon){
+            checked = 0;
         }
 
         let html = `
@@ -450,7 +455,7 @@ class CComponent{
                 }
                 let member_select_count = $(`.smr_${location} .member_selected`).length;
                 if(!$(this).find('.cell_member_selected').hasClass('member_selected')){
-                    if($(`.smr_${location} .member_selected`).length >= multiple_select && member_schedule_permission_state_cd == SCHEDULE_APPROVE){
+                    if($(`.smr_${location} .member_selected`).length >= multiple_select){
                         show_error_message({title:`${multiple_select} 명까지 선택할 수 있습니다.`});
                         return false;
                     }
@@ -469,9 +474,6 @@ class CComponent{
             });
         }else if(multiple_select == 1){
             $(document).off('click', `#select_member_row_${member_id}`).on('click', `#select_member_row_${member_id}`, function(e){
-                // if(disable_zero_avail_count == ON && member_avail_count == 0 && checked == 0){
-                //     return false;
-                // }
                 if(clickable == false){
                     return false;
                 }
