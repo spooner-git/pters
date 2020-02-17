@@ -491,7 +491,7 @@
 
 
     //피터스 패스
-    pass_inspector = new PassInspector();    
+    var pass_inspector = new PassInspector();
 
     // 페이지 인스턴스
     var home = new Home('#root_content', 'home');
@@ -769,6 +769,8 @@
     function sideGoPopup(page){
         // current_page = page;
         $('#debug_toolbar').hide();
+        are_there_new_alarm();
+        pass_inspector.init();
 
         let open;
         let auth_inspect;

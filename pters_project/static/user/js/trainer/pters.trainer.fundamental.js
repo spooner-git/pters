@@ -568,7 +568,7 @@ class PassInspector{
     constructor(){
         this.data;
         this.trainer_data;
-        this.init();
+        // this.init();
     }
     
     init(){
