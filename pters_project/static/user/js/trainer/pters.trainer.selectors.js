@@ -3237,7 +3237,7 @@ class MemberSelector{
 class MemberPlanApproveSelector{
     constructor(install_target, target_instance, multiple_select, appendix, callback){
         this.target = {install:install_target};
-        this.target_instance = target_instance;
+        // this.target_instance = target_instance;
         this.unique_instance = install_target.replace(/#./gi, "");
         this.received_data;
         this.received_data_lecture_member;
@@ -3252,9 +3252,9 @@ class MemberPlanApproveSelector{
             name_other:[],
             ticket_id_other:[]
         };
-        this.data.id = this.target_instance.data.member_id;
-        this.data.name = this.target_instance.data.member_name;
-        this.data.permission_state_cd = this.target_instance.data.member_schedule_permission_state_cd;
+        this.data.id = this.appendix.member_id.slice();
+        this.data.name = this.appendix.member_name.slice();
+        this.data.permission_state_cd = this.appendix.member_schedule_permission_state_cd.slice();
 
         this.hide_entire_member_list = true;
 
@@ -3323,9 +3323,10 @@ class MemberPlanApproveSelector{
             let member_expiry = data.end_date;
             let member_fix_state_cd = data.member_fix_state_cd;
             let member_profile_url = data.member_profile_url;
-            let member_id_idx = this.target_instance.data.member_id.indexOf(member_id);
+            let member_id_idx = this.appendix.member_id.indexOf(member_id);
             let checked =  member_id_idx >= 0 ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
-            let member_schedule_permission_state_cd = SCHEDULE_APPROVE;
+            let clickable = true;
+            let member_schedule_permission_state_cd = this.appendix.member_schedule_permission_state_cd[member_id_idx];
             let lecture_member_list = this.received_data_lecture_member.map((el)=>{return el.member_id;});
             if(lecture_member_list.indexOf(member_id) != -1){
                 continue;
@@ -3333,18 +3334,16 @@ class MemberPlanApproveSelector{
             if(member_expiry == '9999-12-31'){
                 member_expiry = '소진시';
             }
-            if(checked == 1){
-                member_schedule_permission_state_cd = this.target_instance.data.member_schedule_permission_state_cd[member_id_idx];
+
+            if(this.appendix.disable_zero_avail_count == ON && member_avail_count == 0 && checked == 0){
+                clickable = false;
             }
             if(member_schedule_permission_state_cd == SCHEDULE_WAIT){
-                continue;
+                clickable = false;
             }
 
-            // if(this.appendix.disable_zero_avail_count == ON && member_avail_count == 0){
-            //     checked = 0;
-            // }
-            let html = CComponent.select_member_row (
-                this.multiple_select, checked, this.unique_instance, member_id, member_name, member_reg_count, member_avail_count, member_expiry, member_fix_state_cd, member_profile_url, this.appendix.disable_zero_avail_count, (add_or_substract)=>{
+            let html = CComponent.select_member_plan_row (
+                this.multiple_select, checked, this.unique_instance, member_id, member_name, member_reg_count, member_avail_count, member_expiry, member_fix_state_cd, member_profile_url, member_schedule_permission_state_cd, SCHEDULE_APPROVE, clickable,(add_or_substract)=>{
                     if(this.appendix.lecture_id != null){
                         let member_id_list = this.received_data_lecture_member.map((el)=>{return el.member_id;});
                         if(member_id_list.indexOf(member_id) == -1){ // 선택한 회원이 수업 리스트의 회원이 아니라면 (전체회원에서 선택했다면)
@@ -3500,23 +3499,22 @@ class MemberPlanApproveSelector{
             let member_expiry = data.end_date;
             let member_fix_state_cd = data.member_fix_state_cd;
             let member_profile_url = data.member_profile_url;
-            let member_id_idx =  this.target_instance.data.member_id.indexOf(member_id);
-            let member_schedule_permission_state_cd = SCHEDULE_APPROVE;
+            let member_id_idx =  this.appendix.member_id.indexOf(member_id);
+            let member_schedule_permission_state_cd = this.appendix.member_schedule_permission_state_cd[member_id_idx];
             let checked = member_id_idx >= 0 ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
+            let clickable = true;
             if(member_expiry == '9999-12-31'){
                 member_expiry = '소진시';
             }
-            if(checked == 1){
-                member_schedule_permission_state_cd = this.target_instance.data.member_schedule_permission_state_cd[member_id_idx];
+
+            if(this.appendix.disable_zero_avail_count == ON && member_avail_count == 0 && checked == 0){
+                clickable = false;
             }
             if(member_schedule_permission_state_cd == SCHEDULE_WAIT){
-                continue;
+                clickable = false;
             }
-            // if(this.appendix.disable_zero_avail_count == ON && member_avail_count == 0){
-            //     checked = 0;
-            // }
             let html = CComponent.select_member_plan_row (
-                this.multiple_select, checked, this.unique_instance, member_id, member_name, member_reg_count, member_avail_count, member_expiry, member_fix_state_cd, member_profile_url, member_schedule_permission_state_cd, this.appendix.disable_zero_avail_count, (add_or_substract)=>{
+                this.multiple_select, checked, this.unique_instance, member_id, member_name, member_reg_count, member_avail_count, member_expiry, member_fix_state_cd, member_profile_url, member_schedule_permission_state_cd, SCHEDULE_APPROVE, clickable, (add_or_substract)=>{
 
                     if(add_or_substract == "add"){
                         this.data.name.push(member_name);
@@ -3562,7 +3560,6 @@ class MemberPlanApproveSelector{
                 callback();
             });
         }else{
-
             member.request_member_list("ing", (data)=>{
                 this.received_data = data.current_member_data;
                 let data_ = {"lecture_id": this.appendix.lecture_id};
@@ -3585,7 +3582,7 @@ class MemberPlanApproveSelector{
 class MemberPlanWaitSelector{
     constructor(install_target, target_instance, multiple_select, appendix, callback){
         this.target = {install:install_target};
-        this.target_instance = target_instance;
+        // this.target_instance = target_instance;
         this.unique_instance = install_target.replace(/#./gi, "");
         this.received_data;
         this.received_data_lecture_member;
@@ -3600,9 +3597,9 @@ class MemberPlanWaitSelector{
             name_other:[],
             ticket_id_other:[]
         };
-        this.data.id = this.target_instance.data.member_id;
-        this.data.name = this.target_instance.data.member_name;
-        this.data.permission_state_cd = this.target_instance.data.member_schedule_permission_state_cd;
+        this.data.id = this.appendix.member_id.slice();
+        this.data.name = this.appendix.member_name.slice();
+        this.data.permission_state_cd = this.appendix.member_schedule_permission_state_cd.slice();
 
         this.hide_entire_member_list = true;
 
@@ -3671,9 +3668,11 @@ class MemberPlanWaitSelector{
             let member_expiry = data.end_date;
             let member_fix_state_cd = data.member_fix_state_cd;
             let member_profile_url = data.member_profile_url;
-            let member_id_idx = this.target_instance.data.member_id.indexOf(member_id);
+            let member_id_idx = this.appendix.member_id.indexOf(member_id);
             let checked =  member_id_idx >= 0 ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
-            let member_schedule_permission_state_cd = SCHEDULE_WAIT;
+            let clickable = true;
+            // let member_schedule_permission_state_cd = SCHEDULE_WAIT;
+            let member_schedule_permission_state_cd = this.appendix.member_schedule_permission_state_cd[member_id_idx];
             let lecture_member_list = this.received_data_lecture_member.map((el)=>{return el.member_id;});
             if(lecture_member_list.indexOf(member_id) != -1){
                 continue;
@@ -3681,18 +3680,16 @@ class MemberPlanWaitSelector{
             if(member_expiry == '9999-12-31'){
                 member_expiry = '소진시';
             }
-            if(checked == 1){
-                member_schedule_permission_state_cd = this.target_instance.data.member_schedule_permission_state_cd[member_id_idx];
+
+            if(this.appendix.disable_zero_avail_count == ON && member_avail_count == 0 && checked == 0){
+                clickable = false;
             }
             if(member_schedule_permission_state_cd == SCHEDULE_APPROVE){
-                continue;
+                clickable = false;
             }
 
-            // if(this.appendix.disable_zero_avail_count == ON && member_avail_count == 0){
-            //     checked = 0;
-            // }
             let html = CComponent.select_member_plan_row (
-                this.multiple_select, checked, this.unique_instance, member_id, member_name, member_reg_count, member_avail_count, member_expiry, member_fix_state_cd, member_profile_url, member_schedule_permission_state_cd, this.appendix.disable_zero_avail_count, (add_or_substract)=>{
+                this.multiple_select, checked, this.unique_instance, member_id, member_name, member_reg_count, member_avail_count, member_expiry, member_fix_state_cd, member_profile_url, member_schedule_permission_state_cd, SCHEDULE_WAIT, clickable, (add_or_substract)=>{
                     if(this.appendix.lecture_id != null){
                         let member_id_list = this.received_data_lecture_member.map((el)=>{return el.member_id;});
                         if(member_id_list.indexOf(member_id) == -1){ // 선택한 회원이 수업 리스트의 회원이 아니라면 (전체회원에서 선택했다면)
@@ -3846,23 +3843,23 @@ class MemberPlanWaitSelector{
             let member_expiry = data.end_date;
             let member_fix_state_cd = data.member_fix_state_cd;
             let member_profile_url = data.member_profile_url;
-            let member_id_idx = this.target_instance.data.member_id.indexOf(member_id);
-            let member_schedule_permission_state_cd = SCHEDULE_WAIT;
+            let member_id_idx = this.appendix.member_id.indexOf(member_id);
+            let member_schedule_permission_state_cd = this.appendix.member_schedule_permission_state_cd[member_id_idx];
             let checked = member_id_idx >= 0 ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
+            let clickable = true;
             if(member_expiry == '9999-12-31'){
                 member_expiry = '소진시';
             }
-            if(checked == 1){
-                member_schedule_permission_state_cd = this.target_instance.data.member_schedule_permission_state_cd[member_id_idx];
+
+            if(this.appendix.disable_zero_avail_count == ON && member_avail_count == 0 && checked == 0){
+                clickable = false;
             }
             if(member_schedule_permission_state_cd == SCHEDULE_APPROVE){
-                continue;
+                clickable = false;
             }
-            // if(this.appendix.disable_zero_avail_count == ON && member_avail_count == 0){
-            //     checked = 0;
-            // }
+
             let html = CComponent.select_member_plan_row (
-                this.multiple_select, checked, this.unique_instance, member_id, member_name, member_reg_count, member_avail_count, member_expiry, member_fix_state_cd, member_profile_url, member_schedule_permission_state_cd, this.appendix.disable_zero_avail_count, (add_or_substract)=>{
+                this.multiple_select, checked, this.unique_instance, member_id, member_name, member_reg_count, member_avail_count, member_expiry, member_fix_state_cd, member_profile_url, member_schedule_permission_state_cd, SCHEDULE_WAIT, clickable, (add_or_substract)=>{
 
                     if(add_or_substract == "add"){
                         this.data.name.push(member_name);

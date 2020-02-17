@@ -399,13 +399,26 @@ class CComponent{
     }
 
     //회원 선택 팝업에 사용되는 행
-    static select_member_plan_row (multiple_select, checked, location, member_id, member_name, member_reg_count, member_avail_count, member_expiry, member_fix_state_cd, member_profile_url, member_schedule_permission_state_cd, disable_zero_avail_count, onclick){
+    static select_member_plan_row (multiple_select, checked, location, member_id, member_name, member_reg_count, member_avail_count, member_expiry, member_fix_state_cd, member_profile_url, member_schedule_permission_state_cd, type_for_default_icon, clickable, onclick){
         let fix_member_check = '';
         if(member_fix_state_cd==FIX){
             fix_member_check = '고정회원';
         }
+
+        let icon;
+        if(type_for_default_icon == SCHEDULE_WAIT){
+            icon =  CImg.time(["orange"], checked == 0 ? {"display":"none"}:{"display":"inline-block"});
+        }else{
+            icon = CImg.confirm(["green"], checked == 0 ? {"display":"none"}:{"display":"inline-block"});
+        }
+        if(member_schedule_permission_state_cd == SCHEDULE_APPROVE){
+            icon = CImg.confirm(["green"], checked == 0 ? {"display":"none"}:{"display":"inline-block"});
+        }else if(member_schedule_permission_state_cd == SCHEDULE_WAIT){
+            icon =  CImg.time(["orange"], checked == 0 ? {"display":"none"}:{"display":"inline-block"});
+        }
+
         let html = `
-                    <li class="select_member_row smr_${location}" id="select_member_row_${member_id}" ${disable_zero_avail_count == ON && member_avail_count == 0 && checked == 0? "style='opacity:0.6;'": ""}>
+                    <li class="select_member_row smr_${location}" id="select_member_row_${member_id}" ${clickable == false ? "style='opacity:0.6;'": ""}>
                         <div class="obj_table_raw">
                             <div style="display:table-cell; width:35px; height:35px; padding-right:10px;">
                                 <img src="${member_profile_url}" style="width:35px; height:35px; border-radius: 50%;">
@@ -423,7 +436,7 @@ class CComponent{
                                     ${fix_member_check}
                                 </div>
                                 <div class="cell_member_selected ${checked == 0 ? '' : 'member_selected'}">
-                                    ${CImg.confirm("", checked == 0 ? {"display":"none"} : {"display":"block"})}
+                                    ${ icon }
                                 </div>
                             </div>
                         </div>
@@ -432,7 +445,7 @@ class CComponent{
 
         if(multiple_select > 1){
             $(document).off('click', `#select_member_row_${member_id}`).on('click', `#select_member_row_${member_id}`, function(e){
-                if(disable_zero_avail_count == ON && member_avail_count == 0 && checked == 0){
+                if(clickable == false){
                     return false;
                 }
                 let member_select_count = $(`.smr_${location} .member_selected`).length;
@@ -442,7 +455,7 @@ class CComponent{
                         return false;
                     }
                     $(this).find('.cell_member_selected').addClass('member_selected');
-                    $(this).find('svg').css('display', 'block');
+                    $(this).find('svg').css('display', 'inline-block');
                     onclick('add');
                     member_select_count++;
 
@@ -456,7 +469,10 @@ class CComponent{
             });
         }else if(multiple_select == 1){
             $(document).off('click', `#select_member_row_${member_id}`).on('click', `#select_member_row_${member_id}`, function(e){
-                if(disable_zero_avail_count == ON && member_avail_count == 0 && checked == 0){
+                // if(disable_zero_avail_count == ON && member_avail_count == 0 && checked == 0){
+                //     return false;
+                // }
+                if(clickable == false){
                     return false;
                 }
                 onclick('add_single');
