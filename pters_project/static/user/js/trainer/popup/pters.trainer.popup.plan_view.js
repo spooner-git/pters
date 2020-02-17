@@ -66,7 +66,8 @@ class Plan_view{
         };
 
         this.settings = {
-            sign_use: OFF
+            sign_use: OFF,
+            wait_member_limit:0
         };
 
         this.work_time = {start_hour:0, end_hour:24};
@@ -150,7 +151,9 @@ class Plan_view{
             });
 
             Setting_calendar_func.read((settings)=>{
+                console.log("setting", settings)
                 this.settings.sign_use = settings.setting_schedule_sign_enable;
+                this.settings.wait_member_limit = settings.setting_member_public_class_wait_member_num;
             });
 
             Lecture_func.read({"lecture_id": this.data.lecture_id}, (data)=>{
@@ -482,7 +485,7 @@ class Plan_view{
             //회원 선택 팝업 열기지
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_PLAN_APPROVE_SELECT, 100, popup_style, {'data':null}, ()=>{
-                let appendix =  {lecture_id:this.data.lecture_id, title:"예약 승인 회원", disable_zero_avail_count:ON, entire_member:SHOW, member_id:this.data.member_id, member_name:this.data.member_name, member_schedule_state:this.data.member_schedule_state, member_schedule_permission_state_cd:this.data.member_schedule_permission_state_cd};
+                let appendix =  {lecture_id:this.data.lecture_id, title:"예약 승인 회원", disable_zero_avail_count:ON, entire_member:SHOW, member_id:this.data.member_id, member_name:this.data.member_name, member_schedule_state:this.data.member_schedule_state, member_schedule_permission_state_cd:this.data.member_schedule_permission_state_cd, wait_member_limit:this.settings.wait_member_limit};
                 member_select_plan_approve = new MemberPlanApproveSelector('#wrapper_box_member_plan_approve_select', this, this.data.lecture_max_num, appendix, (set_data)=>{
                     this.member = set_data;
                     let changed = this.func_update_member();
@@ -667,7 +670,7 @@ class Plan_view{
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_PLAN_WAIT_SELECT, 100, popup_style, {'data':null}, ()=>{
                 let appendix =  {lecture_id:this.data.lecture_id, title:"예약 대기 회원", disable_zero_avail_count:ON, entire_member:SHOW, member_id:this.data.member_id, member_name:this.data.member_name, member_schedule_state:this.data.member_schedule_state, member_schedule_permission_state_cd:this.data.member_schedule_permission_state_cd};
-                member_select_plan_wait = new MemberPlanWaitSelector('#wrapper_box_member_plan_wait_select', this, this.data.lecture_max_num, appendix, (set_data)=>{
+                member_select_plan_wait = new MemberPlanWaitSelector('#wrapper_box_member_plan_wait_select', this, this.settings.wait_member_limit, appendix, (set_data)=>{
                     this.member = set_data;
                     let changed = this.func_update_member();
 
@@ -692,6 +695,7 @@ class Plan_view{
                     }
 
                     this.init();
+                    this.render_content();
                     try{
                         current_page.init();
                     }catch(e){}
