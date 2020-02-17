@@ -17,7 +17,7 @@ from django.views.generic import TemplateView, RedirectView
 from configs import settings
 from configs.const import USE, STATE_CD_NOT_PROGRESS, ON_SCHEDULE_TYPE, AUTO_FINISH_ON, STATE_CD_FINISH, \
     STATE_CD_ABSENCE, AUTO_ABSENCE_ON, AUTO_CANCEL_ON, UN_USE, AUTO_FINISH_OFF, AUTH_TYPE_VIEW, \
-    PERMISSION_STATE_CD_APPROVE
+    PERMISSION_STATE_CD_APPROVE, PERMISSION_STATE_CD_WAIT
 from board.models import QATb
 from configs.functions import func_delete_profile_image_logic, func_upload_profile_image_logic
 from login.models import PushInfoTb, MemberTb
@@ -573,5 +573,13 @@ def update_finish_schedule_data(request):
                     # member_ticket_tb_id = delete_schedule_info.member_ticket_tb_id
                     if member_ticket_tb_id is not None:
                         func_refresh_member_ticket_count(not_finish_schedule_info.class_tb_id, member_ticket_tb_id)
+        else:
+            not_finish_wait_schedule_data = ScheduleTb.objects.select_related(
+                'member_ticket_tb'
+            ).filter(class_tb_id=class_id, state_cd=STATE_CD_NOT_PROGRESS,
+                     permission_state_cd=PERMISSION_STATE_CD_WAIT,
+                     en_dis_type=ON_SCHEDULE_TYPE, end_dt__lte=now, use=USE
+                     )
+            not_finish_wait_schedule_data.delete()
 
     return render(request, 'ajax/task_error_info.html')
