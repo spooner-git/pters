@@ -1551,7 +1551,6 @@ def delete_repeat_schedule_logic(request):
                             'member_ticket_tb__member').filter(
                             repeat_schedule_tb_id=lecture_member_repeat_schedule_info.repeat_schedule_id,
                             start_dt__gt=timezone.now())
-
                         # 반복일정에 해당하는 회원 수강정보 저장
                         # 일정 삭제
                         delete_member_ticket_id_data = {}
@@ -1638,6 +1637,12 @@ def delete_repeat_schedule_logic(request):
                 else:
                     delete_member_ticket_id_data = {}
                     for schedule_info in schedule_data:
+                        permission_state_cd = schedule_info.permission_state_cd
+                        lecture_schedule_id = schedule_info.lecture_schedule_id
+
+                        push_info_schedule_start_date = str(schedule_info.start_dt).split(':')
+                        push_info_schedule_end_date = str(schedule_info.end_dt).split(' ')[1].split(':')
+
                         member_ticket_id = schedule_info.member_ticket_tb_id
                         delete_member_ticket_id_data[member_ticket_id] = member_ticket_id
 
@@ -1648,6 +1653,57 @@ def delete_repeat_schedule_logic(request):
                             + str(request.user.id) + '_' + str(class_id) + '/' + str(schedule_info.schedule_id) + '/')
 
                         schedule_info.delete()
+
+                        push_schedule_info = push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[
+                            1] \
+                                             + '~' + push_info_schedule_end_date[0] + ':' + \
+                                             push_info_schedule_end_date[1]
+                        log_info = push_schedule_info.replace('~', '/')
+                        print('permission_state_cd:'+str(permission_state_cd))
+                        print('lecture_schedule_id:'+str(lecture_schedule_id))
+                        if lecture_schedule_id is not None and lecture_schedule_id != '' and permission_state_cd == PERMISSION_STATE_CD_APPROVE:
+                            wait_schedule_data = ScheduleTb.objects.filter(class_tb=class_id,
+                                                                           lecture_schedule_id=lecture_schedule_id,
+                                                                           member_ticket_tb__isnull=False,
+                                                                           permission_state_cd=PERMISSION_STATE_CD_WAIT,
+                                                                           use=USE).order_by('start_dt', 'reg_dt')
+                            approve_schedule_count = ScheduleTb.objects.filter(class_tb=class_id,
+                                                                               lecture_schedule_id=lecture_schedule_id,
+                                                                               member_ticket_tb__isnull=False,
+                                                                               permission_state_cd=PERMISSION_STATE_CD_APPROVE,
+                                                                               use=USE).count()
+
+                            print('approve_schedule_count:' + str(approve_schedule_count))
+                            if len(wait_schedule_data) > 0:
+                                wait_schedule_info = wait_schedule_data[0]
+                                print('wait_schedule_info.max_mem_count:' + str(wait_schedule_info.max_mem_count))
+                                if wait_schedule_info.max_mem_count > approve_schedule_count:
+                                    if wait_schedule_info.member_ticket_tb is not None and wait_schedule_info.member_ticket_tb != '':
+                                        wait_schedule_info.permission_state_cd = PERMISSION_STATE_CD_APPROVE
+                                        wait_schedule_info.save()
+                                        member_ticket_id = wait_schedule_info.member_ticket_tb_id
+                                        member_name = wait_schedule_info.member_ticket_tb.member.name
+                                        if str(setting_to_trainee_lesson_alarm) == str(TO_TRAINEE_LESSON_ALARM_ON):
+                                            func_send_push_trainer(member_ticket_id,
+                                                                   class_type_name + ' - 수업 알림',
+                                                                   # trainer_name + '님의 ' +
+                                                                   push_schedule_info
+                                                                   + ' [' + lecture_name + '] 수업이 예약 확정됐습니다.')
+                                        if str(setting_to_shared_trainer_lesson_alarm) == str(
+                                                TO_SHARED_TRAINER_LESSON_ALARM_ON):
+                                            func_send_push_trainer_trainer(class_id, class_type_name + ' - 수업 알림',
+                                                                           member_name + '님의 ' + push_schedule_info
+                                                                           + ' [' + lecture_name + '] 수업이 예약 확정됐습니다.',
+                                                                           request.user.id)
+                                        log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
+                                                         from_member_name=trainer_name,
+                                                         to_member_name=member_name,
+                                                         class_tb_id=class_id,
+                                                         member_ticket_tb_id=member_ticket_id,
+                                                         log_info=lecture_name + ' 수업',
+                                                         log_how='확정',
+                                                         log_detail=log_info, use=USE)
+                                        log_data.save()
 
                     for delete_member_ticket_id_info in delete_member_ticket_id_data:
                         error = func_refresh_member_ticket_count(class_id, delete_member_ticket_id_info)
@@ -2308,6 +2364,7 @@ def add_other_member_lecture_schedule_logic(request):
     lecture_info = None
     lecture_id = ''
     member_id = None
+    log_how = '예약 확정'
 
     context = {'messageArray': ''}
 
@@ -2366,6 +2423,7 @@ def add_other_member_lecture_schedule_logic(request):
                             state_cd = STATE_CD_ABSENCE
                     if permission_state_cd == PERMISSION_STATE_CD_WAIT:
                         state_cd = STATE_CD_NOT_PROGRESS
+                        log_how = '대기 예약'
                     schedule_result = func_add_schedule(class_id, member_ticket_id, None,
                                                         lecture_id, lecture_schedule_id,
                                                         schedule_info.start_dt, schedule_info.end_dt,
@@ -2400,7 +2458,7 @@ def add_other_member_lecture_schedule_logic(request):
                          class_tb_id=class_id,
                          member_ticket_tb_id=member_ticket_info.member_ticket_id,
                          log_info=lecture_info.name + ' 수업',
-                         log_how='등록',
+                         log_how=log_how,
                          log_detail=str(schedule_info.start_dt) + '/' + str(schedule_info.end_dt), use=USE)
         log_data.save()
 
@@ -2415,12 +2473,12 @@ def add_other_member_lecture_schedule_logic(request):
                                    # trainer_name + '님의 ' +
                                    log_info_schedule_start_date + '~'
                                    + log_info_schedule_end_date
-                                   + ' [' + lecture_info.name + '] 수업이 등록됐습니다')
+                                   + ' [' + lecture_info.name + '] 수업이 '+log_how+'됐습니다')
         if str(setting_to_shared_trainer_lesson_alarm) == str(TO_SHARED_TRAINER_LESSON_ALARM_ON):
             func_send_push_trainer_trainer(class_id, class_type_name + ' - 수업 알림',
                                            member_info.name + '님의 ' + log_info_schedule_start_date + '~'
                                            + log_info_schedule_end_date
-                                           + ' [' + lecture_info.name + '] 수업이 등록됐습니다', request.user.id)
+                                           + ' [' + lecture_info.name + '] 수업이 '+log_how+'됐습니다', request.user.id)
     else:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         # messages.error(request, error)
