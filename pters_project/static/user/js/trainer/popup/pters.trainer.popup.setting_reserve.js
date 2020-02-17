@@ -374,7 +374,7 @@ class Setting_reserve{
         let html = `
             <div style="display:table;width:100%;">
                 <div style="display:table-cell;width:auto;vertical-align:bottom">${title_row}</div>
-                <div style="display:table-cell;width:200px;vertical-align:middle">${member_public_class_wait_member_num_row}</div>
+                <div style="display:table-cell;width:80px;vertical-align:middle">${member_public_class_wait_member_num_row}</div>
             </div>
            `;
         return html;

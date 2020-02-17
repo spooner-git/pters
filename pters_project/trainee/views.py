@@ -359,7 +359,7 @@ def add_trainee_schedule_logic(request):
     training_date = request.POST.get('training_date', '')
     # time_duration = request.POST.get('time_duration', '')
     training_time = request.POST.get('training_time', '')
-    class_type_name = request.session.get('class_type_name', '')
+    # class_type_name = request.session.get('class_type_name', '')
     setting_week_start_date = request.session.get('setting_week_start_date', 'SUN')
     error = None
     class_info = None
@@ -370,6 +370,7 @@ def add_trainee_schedule_logic(request):
     member_ticket_id = None
     member_ticket_info = None
     error = None
+    log_how = '예약 확정'
     # lt_res_member_time_duration = 60
 
     if class_id is None or class_id == '':
@@ -524,7 +525,7 @@ def add_trainee_schedule_logic(request):
                                             class_id, request, lecture_schedule_id)
         error = schedule_result['error']
         context['schedule_id'] = schedule_result['schedule_id']
-    if error is None:
+    # if error is None:
         # func_update_member_schedule_alarm(class_id)
         # class_info.schedule_check = 1
         # class_info.save()
@@ -537,19 +538,8 @@ def add_trainee_schedule_logic(request):
         #     lt_pus_from_trainee_lesson_alarm = FROM_TRAINEE_LESSON_ALARM_ON
         #
         # if str(lt_pus_from_trainee_lesson_alarm) == str(FROM_TRAINEE_LESSON_ALARM_ON):
-        push_info_schedule_start_date = str(start_date).split(':')
-
-        push_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
-        lecture_name = '개인 수업'
-        if lecture_schedule_id != '' and lecture_schedule_id is not None:
-            lecture_name = schedule_info.get_lecture_name()
-
-        func_send_push_trainee(class_id, class_type_name + ' - 수업 알림',
-                               request.user.first_name + '님이 '
-                               + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
-                               + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                               + ' [' + lecture_name + '] 수업을 예약했습니다')
-    else:
+    # else:
+    if error is not None:
         logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
@@ -1270,6 +1260,7 @@ class AlarmViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
                       member_ticket_id, class_id, request, lecture_schedule_id):
 
+    class_type_name = request.session.get('class_type_name', '')
     error = None
     member_ticket_info = None
     # class_info = None
@@ -1284,6 +1275,7 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
     setting_member_public_class_auto_permission = USE
     setting_member_public_class_wait_member_num = 0
     lecture_schedule_num = 0
+    log_how = '대기 예약'
     # start_date = None
     # end_date = None
     if member_ticket_id is None or member_ticket_id == '':
@@ -1370,12 +1362,15 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
                 if lecture_schedule_id is not None and lecture_schedule_id != '':
                     if str(setting_member_public_class_auto_permission) == str(USE):
                         permission_state_cd = PERMISSION_STATE_CD_APPROVE
+                        log_how = '예약 확정'
                 else:
                     if str(setting_member_private_class_auto_permission) == str(USE):
                         permission_state_cd = PERMISSION_STATE_CD_APPROVE
+                        log_how = '예약 확정'
                 if lecture_schedule_info is not None and lecture_schedule_info != '':
                     if lecture_schedule_num >= lecture_schedule_info.lecture_tb.member_num:
                         permission_state_cd = PERMISSION_STATE_CD_WAIT
+                        log_how = '대기 예약'
                 schedule_result = func_add_schedule(class_id, member_ticket_id, None,
                                                     lecture_id, lecture_schedule_id,
                                                     start_date, end_date, note, ON_SCHEDULE_TYPE, request.user.id,
@@ -1413,12 +1408,14 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
         log_info_schedule_start_date = str(start_date).split(':')
         log_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
 
+        lecture_name = '개인 수업'
         if lecture_schedule_id is not None and lecture_schedule_id != '':
+            lecture_name = lecture_schedule_info.get_lecture_name()
             log_data = LogTb(log_type='LS01', auth_member_id=request.user.id,
                              from_member_name=request.user.first_name,
                              class_tb_id=class_id,
                              member_ticket_tb_id=member_ticket_id,
-                             log_info=lecture_schedule_info.get_lecture_name() + ' 수업', log_how='예약',
+                             log_info=lecture_schedule_info.get_lecture_name() + ' 수업', log_how=log_how,
                              log_detail=log_info_schedule_start_date[0] + ':' + log_info_schedule_start_date[1]
                                         + '/' + log_info_schedule_end_date[0] + ':' + log_info_schedule_end_date[1],
                              use=USE)
@@ -1427,11 +1424,21 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
             log_data = LogTb(log_type='LS01', auth_member_id=request.user.id,
                              from_member_name=request.user.first_name,
                              class_tb_id=class_id, member_ticket_tb_id=member_ticket_id,
-                             log_info='개인 수업', log_how='예약',
+                             log_info='개인 수업', log_how=log_how,
                              log_detail=log_info_schedule_start_date[0] + ':' + log_info_schedule_start_date[1]
                                         + '/' + log_info_schedule_end_date[0] + ':' + log_info_schedule_end_date[1],
                              use=USE)
             log_data.save()
+
+        push_info_schedule_start_date = str(start_date).split(':')
+        push_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
+
+        func_send_push_trainee(class_id, class_type_name + ' - 수업 알림',
+                               request.user.first_name + '님이 '
+                               + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
+                               + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
+                               + ' [' + lecture_name + '] 수업을 '+log_how+'했습니다')
+
     else:
         schedule_result['error'] = error
     return schedule_result
