@@ -1082,7 +1082,13 @@ class Calendar {
 
                             let something_have_to_do = "";
                             if(permission_status != SCHEDULE_APPROVE || plan.lecture_wait_member_num > 0){
-                                something_have_to_do = "anim_blink";
+                                // if(plan.schedule_type == 2){
+                                //     if(plan.lecture_current_member_num != plan.lecture_max_member_num){
+                                //         something_have_to_do = "anim_blink";
+                                //     }
+                                // }else{
+                                    something_have_to_do = "anim_blink";
+                                // }
                             }
                             
 
