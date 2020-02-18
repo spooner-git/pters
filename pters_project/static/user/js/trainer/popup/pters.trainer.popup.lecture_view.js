@@ -279,7 +279,8 @@ class Lecture_view{
 
                     let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SELECT, 100, popup_style, null, ()=>{
-                        member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.capacity, {'lecture_id':this.lecture_id, "title":"고정 회원 선택"}, (set_data)=>{
+                        let appendix = {'lecture_id':this.lecture_id, "title":"고정 회원 선택", member_id:this.data.fixed_member_id, member_name:this.data.fixed_member_name};
+                        member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.capacity, appendix, (set_data)=>{
                             this.member = set_data;
                             this.send_data();
                         });
@@ -480,7 +481,8 @@ class Lecture_view{
             if(this.data.capacity != null){
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SELECT, 100, popup_style, null, ()=>{
-                    member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.capacity, {'lecture_id':this.lecture_id}, (set_data)=>{
+                    let appendix = {'lecture_id':this.lecture_id, "title":"고정 회원 선택", member_id:this.data.fixed_member_id, member_name:this.data.fixed_member_name};
+                    member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.capacity, appendix, (set_data)=>{
                         this.member = set_data;
                         this.send_data();
                     });

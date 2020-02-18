@@ -2909,7 +2909,7 @@ class LectureSelector{
 class MemberSelector{
     constructor(install_target, target_instance, multiple_select, appendix, callback){
         this.target = {install:install_target};
-        this.target_instance = target_instance;
+        // this.target_instance = target_instance;
         this.unique_instance = install_target.replace(/#./gi, "");
         this.received_data;
         this.received_data_lecture_member;
@@ -2923,8 +2923,8 @@ class MemberSelector{
             name_other:[],
             ticket_id_other:[]
         };
-        this.data.id = this.target_instance.member.id;
-        this.data.name = this.target_instance.member.name;
+        this.data.id = this.appendix.member_id.slice();
+        this.data.name = this.appendix.member_name.slice();
 
         this.hide_entire_member_list = true;
 
@@ -2993,7 +2993,7 @@ class MemberSelector{
             let member_expiry = data.end_date;
             let member_fix_state_cd = data.member_fix_state_cd;
             let member_profile_url = data.member_profile_url;
-            let checked = this.target_instance.member.id.indexOf(member_id) >= 0 ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
+            let checked = this.appendix.member_id.indexOf(member_id) >= 0 ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
 
             let lecture_member_list = this.received_data_lecture_member.map((el)=>{return el.member_id;});
             if(lecture_member_list.indexOf(member_id) != -1){
@@ -3056,11 +3056,11 @@ class MemberSelector{
                                         layer_popup.disable_shade_click_close();
                                     });
                                 }else if(add_or_substract == "substract"){
-                                    this.data.id_other.splice(this.data.id_other.indexOf(member_id), 1);
-                                    this.data.name_other.splice(this.data.id_other.indexOf(member_id), 1);
                                     this.data.ticket_id_other.splice(this.data.id_other.indexOf(member_id), 1);
-                                    this.data.id.splice(this.data.id.indexOf(member_id), 1);
+                                    this.data.name_other.splice(this.data.id_other.indexOf(member_id), 1);
+                                    this.data.id_other.splice(this.data.id_other.indexOf(member_id), 1);
                                     this.data.name.splice(this.data.id.indexOf(member_id), 1);
+                                    this.data.id.splice(this.data.id.indexOf(member_id), 1);
                                 }else if(add_or_substract == "add_single"){
                                     this.data.id_other = [];
                                     this.data.name_other = [];
@@ -3075,8 +3075,8 @@ class MemberSelector{
                                 this.data.id.push(member_id);
                                 this.data.name.push(member_name);
                             }else if(add_or_substract == "substract"){
-                                this.data.id.splice(this.data.id.indexOf(member_id), 1);
                                 this.data.name.splice(this.data.id.indexOf(member_id), 1);
+                                this.data.id.splice(this.data.id.indexOf(member_id), 1);
                             }else if(add_or_substract == "add_single"){
                                 this.data.id = [];
                                 this.data.name = [];
@@ -3092,8 +3092,8 @@ class MemberSelector{
                             this.data.id.push(member_id);
                             this.data.name.push(member_name);
                         }else if(add_or_substract == "substract"){
-                            this.data.id.splice(this.data.id.indexOf(member_id), 1);
                             this.data.name.splice(this.data.id.indexOf(member_id), 1);
+                            this.data.id.splice(this.data.id.indexOf(member_id), 1);
                         }else if(add_or_substract == "add_single"){
                             this.data.id = [];
                             this.data.name = [];
@@ -3161,7 +3161,7 @@ class MemberSelector{
             let member_expiry = data.end_date;
             let member_fix_state_cd = data.member_fix_state_cd;
             let member_profile_url = data.member_profile_url;
-            let checked = this.target_instance.member.id.indexOf(member_id) >= 0 ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
+            let checked = this.appendix.member_id.indexOf(member_id) >= 0 ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
             if(member_expiry == '9999-12-31'){
                 member_expiry = '소진시';
             }
@@ -3175,8 +3175,8 @@ class MemberSelector{
                         this.data.id.push(member_id);
                         this.data.name.push(member_name);
                     }else if(add_or_substract == "substract"){
-                        this.data.id.splice(this.data.id.indexOf(member_id), 1);
                         this.data.name.splice(this.data.id.indexOf(member_id), 1);
+                        this.data.id.splice(this.data.id.indexOf(member_id), 1);
                     }else if(add_or_substract == "add_single"){
                         this.data.id = [];
                         this.data.name = [];
