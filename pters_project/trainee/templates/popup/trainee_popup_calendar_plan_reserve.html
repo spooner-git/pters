@@ -81,9 +81,11 @@
                                             <div class="func_radio_element_title">{{ lecture_schedule_info.start_dt | date:'H:i'}} ~ {{ lecture_schedule_info.end_dt | date:'H:i'}}
                                                 {% if request.session.setting_member_lecture_max_num_view_available == 1 %}
                                                     ({{ lecture_schedule_info.lecture_current_member_num }}/{{ lecture_schedule_info.lecture_tb.member_num }}명)
-                                                {% if lecture_schedule_info.lecture_wait_member_num < request.session.setting_member_public_class_wait_member_num and request.session.setting_member_public_class_wait_member_num > 0%}
-                                                    [대기 예약 가능]
-                                                {% endif %}
+                                                    {% if lecture_schedule_info.lecture_current_member_num == lecture_schedule_info.lecture_tb.member_num %}
+                                                        {% if lecture_schedule_info.lecture_wait_member_num < request.session.setting_member_public_class_wait_member_num and request.session.setting_member_public_class_wait_member_num > 0%}
+                                                            [대기 예약 가능]
+                                                        {% endif %}
+                                                    {% endif %}
                                                 {% endif %}
                                             </div>
                                             <div class="func_radio_element_button"><div class="func_radio_element_button_outer"><div class="func_radio_element_button_inner"></div></div></div>
