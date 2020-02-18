@@ -99,7 +99,8 @@
     /* Element */
     --border-article: 1px solid #292727;
     --border-article-dark: 1px solid #5c5859;
-    --box-shadow-article: 0 0 24px 0 rgba(10, 10, 10, 0.24);
+    /* --box-shadow-article: 0 0 24px 0 rgba(10, 10, 10, 0.24); */
+    --box-shadow-article: 0 0 24px 0 black;
 
     /* image filter */
     --transform-invert:unset;
