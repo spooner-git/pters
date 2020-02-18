@@ -913,9 +913,9 @@ class Calendar {
                 
                 if(`${_year[i]}-${_month[i]}-${_date[i]}` == this.today){
                     today_marking = `<div class="today_marking" style="top:-4px;"></div>`;
-                    today_text_style = 'color:var(--font-highlight-sub);font-weight:bold;position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);z-index:1';
+                    today_text_style = 'color:var(--fundamental-white);font-weight:bold;position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);z-index:1';
                     if(month_or_week == "month"){
-                        today_text_style = 'color:var(--font-highlight-sub);font-weight:bold;';
+                        today_text_style = 'color:var(--fundamental-white);font-weight:bold;';
                         today_marking = `<div class="today_marking" style="top:-2px; width:20px; height:20px; border-radius:12px;z-index:-1;"></div>`;
                     }
                 }

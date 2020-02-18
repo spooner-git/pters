@@ -195,7 +195,8 @@
 	/* top:50%; */
 	left: 50%;
 	transform: translateX(-50%);
-	background: #ffe8eb;
+	/* background: #ffe8eb; */
+	background-color: var(--bg-highlight);
 }
 .no_border{
 	border: 0 !important;
