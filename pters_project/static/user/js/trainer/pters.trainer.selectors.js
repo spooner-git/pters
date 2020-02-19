@@ -2754,20 +2754,28 @@ class TicketSelector{
 class LectureSelector{
     constructor(install_target, target_instance, multiple_select, appendix, callback){
         this.target = {install : install_target};
-        this.target_instance = target_instance;
+        // this.target_instance = target_instance;
         this.unique_instance = install_target.replace(/#./gi, "");
         this.callback = callback;
         this.received_data;
         this.appendix = appendix;
         this.multiple_select = multiple_select;
         this.data = {
-            id: this.target_instance.lecture.id.slice(),
-            name: this.target_instance.lecture.name.slice(),
-            state_cd: this.target_instance.lecture.state_cd.slice(),
-            max: this.target_instance.lecture.max.slice(),
-            type_cd: this.target_instance.lecture.type_cd.slice(),
-            color: this.target_instance.lecture.color.slice()
+            id: [],
+            name: [],
+            state_cd: [],
+            max: [],
+            type_cd: [],
+            color: []
         };
+
+        this.data.id = this.appendix.lecture_id.slice();
+        this.data.name = this.appendix.lecture_name.slice();
+        this.data.state_cd = this.appendix.lecture_state_cd.slice();
+        this.data.max = this.appendix.max.slice();
+        this.data.type_cd = this.appendix.type_cd.slice();
+        this.data.color = this.appendix.color.slice();
+
         this.init();
     }
 
@@ -2811,23 +2819,23 @@ class LectureSelector{
             let lecture_type_cd = data.lecture_type_cd;
             let lecture_ing_member_num = data.lecture_ing_member_num;
             let lecture_time = data.lecture_minute;
-            let checked = this.target_instance.lecture.id.indexOf(lecture_id) >= 0 ? 1 : 0;
+            let checked = this.appendix.lecture_id.indexOf(lecture_id) >= 0 ? 1 : 0;
             let html = CComponent.select_lecture_row(
                 this.multiple_select, checked, this.unique_instance, lecture_id, lecture_name, lecture_color_code, lecture_max_num, lecture_ing_member_num, lecture_state_cd, lecture_time, (add_or_substract)=>{
                     if(add_or_substract == "add"){
-                        this.data.id.push(lecture_id);
                         this.data.name.push(lecture_name);
                         this.data.max.push(lecture_max_num);
                         // this.data.state_cd.push(lecture_state_cd);
                         this.data.type_cd.push(lecture_type_cd);
                         this.data.color.push(lecture_color_code);
+                        this.data.id.push(lecture_id);
                     }else if(add_or_substract == "substract"){
-                        this.data.id.splice(this.data.id.indexOf(lecture_id), 1);
                         this.data.name.splice(this.data.id.indexOf(lecture_id), 1); // 이름으로 찾기 x, 고유한 ID로
                         this.data.max.splice(this.data.id.indexOf(lecture_id), 1); // 이름으로 찾기 x, 고유한 ID로
                         this.data.state_cd.splice(this.data.id.indexOf(lecture_id), 1); // 이름으로 찾기 x, 고유한 ID로
                         this.data.type_cd.splice(this.data.id.indexOf(lecture_id), 1); // 이름으로 찾기 x, 고유한 ID로
                         this.data.color.splice(this.data.id.indexOf(lecture_id), 1);
+                        this.data.id.splice(this.data.id.indexOf(lecture_id), 1);
                     }else if(add_or_substract == "add_single"){
                         this.data.id = [];
                         this.data.name = [];
