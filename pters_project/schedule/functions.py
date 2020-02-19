@@ -233,35 +233,32 @@ def func_refresh_lecture_status(lecture_id, lecture_schedule_id, lecture_repeat_
 
 # 일정 등록
 def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
-                      lecture_id, lecture_schedule_id,
+                      lecture_info, lecture_schedule_id,
                       start_datetime, end_datetime,
                       note, en_dis_type, user_id, permission_state_cd, state_cd, duplication_enable_flag):
     error = None
     context = {'error': None, 'schedule_id': ''}
     if member_ticket_id == '':
         member_ticket_id = None
-    if lecture_id == '':
-        lecture_id = None
+    # if lecture_id == '':
+    lecture_id = None
     if lecture_schedule_id == '':
         lecture_schedule_id = None
     if repeat_schedule_id == '':
         repeat_schedule_id = None
+
     max_mem_count = 1
     ing_color_cd = ''
     end_color_cd = ''
     ing_font_color_cd = ''
     end_font_color_cd = ''
-    if lecture_id is not None:
-        try:
-            lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
-        except ObjectDoesNotExist:
-            lecture_info = None
-    else:
-        try:
-            lecture_info = LectureTb.objects.get(class_tb_id=class_id,
-                                                 lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, use=USE)
-        except ObjectDoesNotExist:
-            lecture_info = None
+
+    if lecture_info is not None:
+        lecture_id = lecture_info.lecture_id
+        if lecture_schedule_id is not None:
+            error = func_check_lecture_available_member_before(class_id, lecture_info, lecture_schedule_id,
+                                                               permission_state_cd)
+
     if lecture_info is not None:
         max_mem_count = lecture_info.member_num
         ing_color_cd = lecture_info.ing_color_cd
@@ -275,40 +272,45 @@ def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
         ing_font_color_cd = '#3b3b3b'
         end_font_color_cd = '#3b3b3b'
 
-    try:
-        with transaction.atomic():
-            add_schedule_info = ScheduleTb(class_tb_id=class_id,
-                                           member_ticket_tb_id=member_ticket_id,
-                                           lecture_tb_id=lecture_id,
-                                           lecture_schedule_id=lecture_schedule_id,
-                                           repeat_schedule_tb_id=repeat_schedule_id,
-                                           start_dt=start_datetime, end_dt=end_datetime,
-                                           state_cd=state_cd, permission_state_cd=permission_state_cd,
-                                           note=note, member_note='', en_dis_type=en_dis_type,
-                                           # Test 용
-                                           max_mem_count=max_mem_count,
-                                           ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
-                                           ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
-                                           # alarm_dt=start_datetime-datetime.timedelta(minutes=5),
-                                           reg_member_id=user_id,
-                                           mod_member_id=user_id)
-            add_schedule_info.save()
-            if member_ticket_id is not None:
-                error = func_refresh_member_ticket_count(class_id, member_ticket_id)
+    if error is None:
+        try:
+            with transaction.atomic():
+                add_schedule_info = ScheduleTb(class_tb_id=class_id,
+                                               member_ticket_tb_id=member_ticket_id,
+                                               lecture_tb_id=lecture_id,
+                                               lecture_schedule_id=lecture_schedule_id,
+                                               repeat_schedule_tb_id=repeat_schedule_id,
+                                               start_dt=start_datetime, end_dt=end_datetime,
+                                               state_cd=state_cd, permission_state_cd=permission_state_cd,
+                                               note=note, member_note='', en_dis_type=en_dis_type,
+                                               max_mem_count=max_mem_count,
+                                               ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
+                                               ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
+                                               # Test 용
+                                               # alarm_dt=start_datetime-datetime.timedelta(minutes=5),
+                                               reg_member_id=user_id,
+                                               mod_member_id=user_id)
+                add_schedule_info.save()
+                if lecture_info is not None:
+                    if lecture_schedule_id is not None:
+                        error = func_check_lecture_available_member_after(class_id, lecture_info, lecture_schedule_id,
+                                                                          permission_state_cd)
+                if error is None:
+                    error = func_date_check(class_id, add_schedule_info.schedule_id,
+                                            str(start_datetime).split(' ')[0], start_datetime, end_datetime,
+                                            duplication_enable_flag)
+                    if error is not None:
+                        error = ' 일정이 중복되었습니다.'
 
-            if error is None:
-                error = func_date_check(class_id, add_schedule_info.schedule_id,
-                                        str(start_datetime).split(' ')[0], start_datetime, end_datetime,
-                                        duplication_enable_flag)
-                if error is not None:
-                    error += ' 일정이 중복되었습니다.'
+                context['schedule_id'] = add_schedule_info.schedule_id
 
-            context['schedule_id'] = add_schedule_info.schedule_id
+        except TypeError:
+            error = '일정 추가중 오류가 발생했습니다.'
+        except ValueError:
+            error = '일정 추가중 오류가 발생했습니다.'
 
-    except TypeError:
-        error = '일정 추가중 오류가 발생했습니다.'
-    except ValueError:
-        error = '일정 추가중 오류가 발생했습니다.'
+    if error is None and member_ticket_id is not None:
+        error = func_refresh_member_ticket_count(class_id, member_ticket_id)
 
     context['error'] = error
 
@@ -496,15 +498,14 @@ def func_update_repeat_schedule(repeat_schedule_id):
 
 
 # 그룹일정 등록전 그룹에 허용 가능 인원 확인
-def func_check_lecture_available_member_before(class_id, lecture_id, lecture_schedule_id, permission_state_cd):
+def func_check_lecture_available_member_before(class_id, lecture_info, lecture_schedule_id, permission_state_cd):
     error = None
-    lecture_info = None
+    # lecture_info = None
+    # try:
+    #     lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
+    # except ObjectDoesNotExist:
+    #     error = '오류가 발생했습니다.'
 
-    try:
-        lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
-
-    except ObjectDoesNotExist:
-        error = '오류가 발생했습니다.'
     try:
         setting_info = SettingTb.objects.get(class_tb_id=class_id,
                                              setting_type_cd='LT_RES_PUBLIC_CLASS_WAIT_MEMBER_NUM', use=USE)
@@ -531,14 +532,14 @@ def func_check_lecture_available_member_before(class_id, lecture_id, lecture_sch
 
 
 # 그룹일정 등록후 그룹에 허용 가능 인원 확인
-def func_check_lecture_available_member_after(class_id, lecture_id, lecture_schedule_id, permission_state_cd):
+def func_check_lecture_available_member_after(class_id, lecture_info, lecture_schedule_id, permission_state_cd):
     error = None
-    lecture_info = None
-    try:
-        lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
-
-    except ObjectDoesNotExist:
-        error = '오류가 발생했습니다.'
+    # lecture_info = None
+    # try:
+    #     lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
+    #
+    # except ObjectDoesNotExist:
+    #     error = '오류가 발생했습니다.'
     try:
         setting_info = SettingTb.objects.get(class_tb_id=class_id,
                                              setting_type_cd='LT_RES_PUBLIC_CLASS_WAIT_MEMBER_NUM', use=USE)

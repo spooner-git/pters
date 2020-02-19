@@ -23,8 +23,7 @@ from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, DEL_SCHEDULE, USE, UN_
     PERMISSION_STATE_CD_WAIT, TO_TRAINEE_LESSON_ALARM_ON, TO_SHARED_TRAINER_LESSON_ALARM_ON, TO_TRAINEE_LESSON_ALARM_OFF, \
     TO_SHARED_TRAINER_LESSON_ALARM_OFF
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
-from schedule.functions import func_get_member_ticket_id, func_check_lecture_available_member_before,\
-    func_check_lecture_available_member_after, func_add_schedule, func_refresh_member_ticket_count, \
+from schedule.functions import func_get_member_ticket_id, func_add_schedule, func_refresh_member_ticket_count, \
     func_get_lecture_member_ticket_id_from_trainee, func_send_push_trainee, func_get_holiday_schedule, \
     func_send_push_trainer_trainer, func_send_push_trainer
 from schedule.models import ScheduleTb, DeleteScheduleTb, DailyRecordTb
@@ -1267,7 +1266,7 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
     today = datetime.datetime.today()
     fifteen_days_after = today + datetime.timedelta(days=15)
     lecture_schedule_info = None
-    lecture_id = None
+    lecture_info = None
     note = ''
     schedule_duplication = SCHEDULE_DUPLICATION_DISABLE
     schedule_result = {'error': None, 'schedule_id': ''}
@@ -1308,7 +1307,7 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
             schedule_duplication = SCHEDULE_DUPLICATION_ENABLE
             try:
                 lecture_schedule_info = ScheduleTb.objects.get(schedule_id=lecture_schedule_id, use=USE)
-                lecture_id = lecture_schedule_info.lecture_tb_id
+                lecture_info = lecture_schedule_info.lecture_tb
                 note = lecture_schedule_info.note
             except ObjectDoesNotExist:
                 error = '회원 정보를 불러오지 못했습니다.[0]'
@@ -1343,18 +1342,6 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
         if member_ticket_info.member_ticket_avail_count == 0:
             error = '예약가능 횟수가 없습니다'
 
-    # if error is None:
-    #     if lecture_schedule_info is not None and lecture_schedule_info != '':
-    #         error = func_check_lecture_available_member_before(class_id, lecture_schedule_info.lecture_tb_id,
-    #                                                            lecture_schedule_id)
-
-    if error is None:
-        if lecture_schedule_info is not None and lecture_schedule_info != '':
-            lecture_schedule_num = ScheduleTb.objects.filter(lecture_schedule_id=lecture_schedule_id,
-                                                             use=USE).count()
-            if lecture_schedule_num >= lecture_schedule_info.lecture_tb.member_num + setting_member_public_class_wait_member_num:
-                error = '정원을 초과했습니다.'
-
     if error is None:
         try:
             with transaction.atomic():
@@ -1372,26 +1359,14 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
                         permission_state_cd = PERMISSION_STATE_CD_WAIT
                         log_how = '대기 예약'
                 schedule_result = func_add_schedule(class_id, member_ticket_id, None,
-                                                    lecture_id, lecture_schedule_id,
+                                                    lecture_info, lecture_schedule_id,
                                                     start_date, end_date, note, ON_SCHEDULE_TYPE, request.user.id,
                                                     permission_state_cd,
                                                     STATE_CD_NOT_PROGRESS, schedule_duplication)
                 error = schedule_result['error']
 
-                if error is None:
-                    if lecture_schedule_info is not None and lecture_schedule_info != '':
-
-                        lecture_schedule_num = ScheduleTb.objects.filter(lecture_schedule_id=lecture_schedule_id,
-                                                                         use=USE).count()
-                        if lecture_schedule_num > lecture_schedule_info.lecture_tb.member_num + setting_member_public_class_wait_member_num:
-                            error = '정원을 초과했습니다.'
-                        # error = func_check_lecture_available_member_after(class_id, lecture_id, lecture_schedule_id)
-
-                        # if error is not None:
-                        #     error += ' 일정이 중복됐습니다.'
-
-                        if error is not None:
-                            raise InternalError()
+                if error is not None:
+                    raise InternalError()
 
         except TypeError:
             error = '오류가 발생했습니다.[0]'
