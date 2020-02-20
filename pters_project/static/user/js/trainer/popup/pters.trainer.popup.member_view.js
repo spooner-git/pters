@@ -789,7 +789,7 @@ class Member_view{
                                 return false;
                             }
                             try{
-                                current_page.init();
+                                current_page.reset();
                             }catch(e){}
                             try{
                                 self.init();
@@ -851,7 +851,7 @@ class Member_view{
                 success_callback();
             }
             try{
-                current_page.init();
+                current_page.reset();
             }catch(e){}
         });
     }
@@ -925,7 +925,7 @@ class Member_view{
 
                         Member_func.delete({"member_id":this.member_id}, ()=>{
                             try{
-                                current_page.init();
+                                current_page.reset();
                             }catch(e){}
                             layer_popup.all_close_layer_popup();
                         });

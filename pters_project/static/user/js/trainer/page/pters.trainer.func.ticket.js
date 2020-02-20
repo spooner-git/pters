@@ -29,6 +29,27 @@ class Ticket{
         this.set_initial_data();
     }
 
+    reset(){
+        if(current_page_text != this.page_name){
+            return false;
+        }
+
+        this.request_ticket_list(this.list_status_type, (data)=>{
+            if(current_page_text != this.page_name){
+                return false;
+            }
+            this.data = data;
+            if(this.list_status_type == "ing"){
+                this.data_length = this.data.current_ticket_data.length;
+            }else if(this.list_status_type == "end"){
+                this.data_length = this.data.finish_ticket_data.length;
+            }
+            this.render_toolbox();
+            this.render_content();
+            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
+        });
+    }
+
     set_initial_data (){
         this.request_ticket_list(this.list_status_type, (data)=>{
             if(current_page_text != this.page_name){
@@ -80,11 +101,11 @@ class Ticket{
     }
 
     render_toolbox(){
-        document.getElementById(this.target.toolbox).innerHTML = this.dom_assembly_toolbox();
+        document.getElementById("ticket_display_panel").innerHTML = this.dom_assembly_toolbox();
     }
 
     render_content(){
-        document.getElementById(this.target.content).innerHTML = this.dom_assembly_content();
+        document.getElementById("ticket_content_wrap").innerHTML = this.dom_assembly_content();
     }
 
     dom_assembly_toolbox(){

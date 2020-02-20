@@ -48,6 +48,18 @@ class Home {
         this.render_content();
     }
 
+    reset(){
+        if(current_page_text != this.page_name){
+            return false;
+        }
+
+        this.set_current_date();
+
+        this.render_loading_image();
+        this.render_upper_box();
+        this.render_content();
+    }
+
     set_current_date(){
         let d = new Date();
         this.current_year = d.getFullYear();

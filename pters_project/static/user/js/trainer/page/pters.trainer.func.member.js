@@ -45,6 +45,25 @@ class Member {
         });
     }
 
+    reset(list_type){
+        if(current_page_text != this.page_name){
+            return false;
+        }
+
+        if(list_type == undefined){
+            list_type = this.list_type;
+        }
+
+        this.list_type = list_type;
+
+        this.render_upper_box();
+        this.request_member_list(list_type, (jsondata) => {
+            this.received_data_cache = jsondata;
+            this.render_member_list(jsondata, list_type);
+            this.render_upper_box();
+        });
+    }
+
 
     //회원 리스트 서버에서 불러오기
     request_member_list (list_type, callback, load_image, async){

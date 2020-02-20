@@ -108,6 +108,10 @@ class Calendar {
         });
     }
 
+    reset(cal_type){
+        this.init(cal_type);
+    }
+
     //달력에 필요한 최상위 컨테이너가 이미 있는 상태에서 컨테이너 내용(달력)을 재초기화 할때 사용한다.
     init(cal_type){
         if(current_page_text != this.page_name){
