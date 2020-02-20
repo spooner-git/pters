@@ -749,7 +749,7 @@ class Ticket_view{
                 current_page.init();
             }catch(e){}
             try{
-                ticket_list_popup.init();
+                ticket_list_popup.reset();
             }catch(e){}
         });
     }
@@ -865,7 +865,7 @@ class Ticket_view{
                                 current_page.init();
                             }catch(e){}
                             try{
-                                ticket_list_popup.init();
+                                ticket_list_popup.reset();
                             }catch(e){}
                         }, ()=>{this.data_sending_now = false;});
                         layer_popup.close_layer_popup(); //confirm 팝업 닫기
@@ -921,7 +921,7 @@ class Ticket_view{
                                 current_page.init();
                             }catch(e){}
                             try{
-                                ticket_list_popup.init();
+                                ticket_list_popup.reset();
                             }catch(e){}
                             layer_popup.close_layer_popup(); //confirm팝업 닫기
                             layer_popup.close_layer_popup(); //option 팝업 닫기
@@ -952,7 +952,7 @@ class Ticket_view{
                                 current_page.init();
                             }catch(e){}
                             try{
-                                ticket_list_popup.init();
+                                ticket_list_popup.reset();
                             }catch(e){}
                             layer_popup.close_layer_popup(); //confirm팝업 닫기
                             layer_popup.close_layer_popup(); //option 팝업 닫기
@@ -982,7 +982,7 @@ class Ticket_view{
                                 current_page.init();
                             }catch(e){}
                             try{
-                                ticket_list_popup.init();
+                                ticket_list_popup.reset();
                             }catch(e){}
                             layer_popup.close_layer_popup(); //confirm팝업 닫기
                             layer_popup.close_layer_popup(); //option 팝업 닫기

@@ -27,6 +27,20 @@ class Ticket_list {
         this.set_initial_data();
     }
 
+    reset(){
+        this.request_ticket_list(this.list_status_type, (data)=>{
+            this.data = data;
+            if(this.list_status_type == "ing"){
+                this.data_length = this.data.current_ticket_data.length;
+            }else if(this.list_status_type == "end"){
+                this.data_length = this.data.finish_ticket_data.length;
+            }
+            this.render_toolbox();
+            this.render_content();
+            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
+        });
+    }
+
     set_initial_data (){
         this.request_ticket_list(this.list_status_type, (data)=>{
             this.data = data;

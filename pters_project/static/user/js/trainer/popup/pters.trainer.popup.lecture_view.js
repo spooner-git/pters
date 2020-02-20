@@ -563,7 +563,7 @@ class Lecture_view{
                 current_page.init();
             }catch(e){}
             try{
-                lecture_list_popup.init();
+                lecture_list_popup.reset();
             }catch(e){}
         });
     }
@@ -606,7 +606,7 @@ class Lecture_view{
                                 current_page.init();
                             }catch(e){}
                             try{
-                                lecture_list_popup.init();
+                                lecture_list_popup.reset();
                             }catch(e){}
                             layer_popup.close_layer_popup(); //confirm팝업 닫기
                             layer_popup.close_layer_popup(); //option 팝업 닫기
@@ -638,7 +638,7 @@ class Lecture_view{
                                 current_page.init();
                             }catch(e){}
                             try{
-                                lecture_list_popup.init();
+                                lecture_list_popup.reset();
                             }catch(e){}
                             layer_popup.close_layer_popup(); //confirm팝업 닫기
                             layer_popup.close_layer_popup(); //option 팝업 닫기
@@ -668,7 +668,7 @@ class Lecture_view{
                                 current_page.init();
                             }catch(e){}
                             try{
-                                lecture_list_popup.init();
+                                lecture_list_popup.reset();
                             }catch(e){}
                             layer_popup.close_layer_popup(); //confirm팝업 닫기
                             layer_popup.close_layer_popup(); //option 팝업 닫기
@@ -721,7 +721,6 @@ class Lecture_view{
         let forms = document.getElementById(`${this.form_id}`);
         update_check_registration_form(forms);
         let error_info = check_registration_form(forms);
-        console.log(error_info);
         if(error_info != ''){
             show_error_message({title:error_info});
             return false;
