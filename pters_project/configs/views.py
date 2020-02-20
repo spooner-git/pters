@@ -72,6 +72,26 @@ class CheckView(LoginRequiredMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         return super(CheckView, self).get_redirect_url(*args, **kwargs)
 
+class ServiceIntroduceView(TemplateView):
+    template_name = 'introduce.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ServiceIntroduceView, self).get_context_data(**kwargs)
+        return context
+
+class TutorFunctionIntroduceView(TemplateView):
+    template_name = 'for_tutor.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(TutorFunctionIntroduceView, self).get_context_data(**kwargs)
+        return context
+
+class TuteeFunctionIntroduceView(TemplateView):
+    template_name = 'for_tutee.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(TuteeFunctionIntroduceView, self).get_context_data(**kwargs)
+        return context
 
 class SiteUsePolicyView(TemplateView):
     template_name = 'policy.html'

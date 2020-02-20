@@ -65,6 +65,10 @@
             background-color: #fbfbfb;
             height: calc(100% - 60px);
         }
+        #page_1{
+            padding-top: 0;
+        }
+
         .login_content{
             background-image: url('/static/common/img/home_bg/bg_big.png');
             background-size: contain;
@@ -107,6 +111,7 @@
             display: flex;
             flex-direction: column;
             position: relative;
+            padding:30px 0;
         }
         .front_page_section .article_wrapper .flex_2_divided_1{
             flex: 1 1 0;
@@ -138,14 +143,9 @@
         }
 
 
-        #page_1{
-            height: auto;
-        }
-        #page_1 .flex_2_divided_1{
-            text-align: center;
-        }
+       
         #page1_description{
-            color: #ffffff;
+            /* color: #ffffff; */
             font-size: 20px;
             font-weight: bold;
             letter-spacing: -1px;
@@ -166,7 +166,7 @@
             /* height: 100%; */
             width: 100%;
             height: auto;
-            background-image: url('/static/common/img/front_page/pters_service_summary.png');
+            background-image: url('/static/common/img/service_introduce/why_pters.png');
             background-position: center;
             background-size: contain;
             background-repeat: no-repeat;
@@ -236,7 +236,17 @@
             }
         }
         #description_wrapper{
+            /* display: none; */
+        }
 
+        .flex_wrap{
+            display: flex;
+            flex-direction: column;
+        }
+        .flex_children{
+            flex: 1 1 0;
+            padding: 10px 50px;
+            box-sizing: border-box;
         }
         /* PC버전 화면 */
         @media(min-width:800px){
@@ -244,7 +254,7 @@
                 display: none;
             }
             #description_wrapper{
-
+                /* display: block; */
             }
             #root_nav{
                 display: block;
@@ -311,8 +321,8 @@
                 flex-direction: row;
                 max-width: 1024px;
                 margin: 0 auto;
-                height: 600px;
-                padding:40px 0;
+                /* height: 600px; */
+                padding:50px 0;
             }
             .front_page_section .article_wrapper .flex_2_divided_1{
                 flex: 4 1 0;
@@ -343,15 +353,15 @@
                 font-size: 15px;
                 font-weight:normal
             }
-
             #page_1{
-                height: 500px;
+                padding-top: 30px;
             }
+
             #page1_description{
                 position: absolute;
                 top: 50%;
                 transform: translateY(-50%);
-                color: #ffffff;
+                /* color: #ffffff; */
                 padding: 0;
                 margin-left: 50px;
             }
@@ -396,6 +406,13 @@
                 box-sizing: border-box;
                 border-radius: 4px;
             }
+            .flex_wrap{
+                /* display: flex; */
+                flex-direction: row;
+            }
+            .flex_children{
+                padding: 40px;
+            }
         }
 
 
@@ -409,9 +426,9 @@
             </div>
             <div id="menu_wrapper">
                 <ul>
-                    <li><a style="cursor: pointer;" href="{% url 'login:what_is_pters' %}">피터스?</a></li>
-                    <li><a style="cursor: pointer;" href="{% url 'login:pters_for_teachers' %}">강사 기능</a></li>
-                    <li><a style="cursor: pointer;color:#fe4e65" href="{% url 'login:pters_for_students' %}">수강회원 기능</a></li>
+                    <li><a style="cursor: pointer;color:#fe4e65" href="/introduce/">피터스?</a></li>
+                    <li><a style="cursor: pointer;" href="/for_tutor/">강사 기능</a></li>
+                    <li><a style="cursor: pointer;" href="/for_tutee/">수강회원 기능</a></li>
                 </ul>
             </div>
         </div>
@@ -419,118 +436,98 @@
     </nav>
 
     <div id="root_content">
+        
+
         <div id="description_wrapper">
-            <section class="front_page_section" style="background-image: linear-gradient(to right, #fe4e65 25%, #ff869e);" id="what_page" hidden>
+            <section class="front_page_section" style="background-color:#fbfbfb;" id="feature_page">
                 <div id="page_1" class="article_wrapper">
-                    <article class="flex_2_divided_1">
-                        <!-- <img id="page1_image" src="/static/common/img/front_page/pters_service_summary.png" alt=""> -->
-                        <div id="page1_image"></div>
-                    </article>
                     <article class="flex_2_divided_2">
-                        <div id="page1_description">
-                            <div style="width:16px;height:2px;background-color:#ffffff"></div>
-                            <p>단 하나의 서비스를 통해<br>강사가 겪는 불편함을 해결합니다.</p>
-                            <div style="width:16px;height:2px;background-color:#ffffff"></div>
-                            <p>개인/기업 누구나<br>업무 방식을 개선 할 수 있습니다.</p>
-                            <div style="width:16px;height:2px;background-color:#ffffff"></div>
-                            <p style="margin-bottom:0">모든 기기를 지원하고 있어<br>언제 어디서든지 이용 가능합니다.</p>
-                            <p style="font-size:13px;font-weight: 500;margin:0">(*회원용 예약 서비스 지원)</p>
+                        <div style="color:#3b3b3b;position: relative;top:unset;transform:unset" class="page_description">
+                            <div style="width:16px;height:2px;background-color:#3b3b3b"></div>
+                            <p>복잡한 관리 업무</p>
+                            <div class="page_description_additional" style="font-size:16px;font-weight:500">
+                                레슨에 집중하고 싶은데, 일정, 횟수, 매출 관리 등 해야할 일이 너무 많습니다.<br>
+                                <span style="font-weight:bold;color:#fe4e65">낭비되고 있는 관리 업무 시간</span>을 레슨 품질 향상에 쓸수 있다면 얼마나 좋을까요?
+                            </div>
+                        </div>
+                        <div style="text-align:center;margin-top:30px">
+                            <img src="/static/common/img/service_introduce/why_pters.png" alt="피터스 기능들" style="width:90%;max-width:500px;">
                         </div>
                     </article>
                 </div>
             </section>
 
-            <section class="front_page_section" style="background-color:#fbfbfb;" id="feature_page">
+            <section class="front_page_section" style="background-color:#ffffff;" id="feature_page">
                 <div id="page_2" class="article_wrapper">
-                    <article class="flex_2_divided_1">
+                    <!-- <article class="flex_2_divided_1">
                         <div class="tag_wrapper">
                             <h1>주요 기능 01.</h1>
-                            <h2>홈 화면</h2>
+                            <h2>일정</h2>
                         </div>
-                        <div id="page2_image" class="page_image" style="background-image:url('/static/common/img/front_page/member/pters_student_main.png')"></div>
-                    </article>
+                        <div id="page2_image" class="page_image" style="background-image:url('/static/common/img/front_page/pters_calendar.png')"></div>
+                    </article> -->
                     <article class="flex_2_divided_2">
-                        <div id="page1_description" style="color:#3b3b3b" class="page_description">
+                        <div style="color:#3b3b3b;position: relative;top:unset;transform:unset" class="page_description">
                             <div style="width:16px;height:2px;background-color:#3b3b3b"></div>
-                            <p>한눈에 파악하는<br>다양한 정보</p>
+                            <p>실시간 회원 예약부터 자동 매출 통계까지<br>레슨과 수업을 위해 최적화 된 올인원 서비스 입니다.</p>
                             <div class="page_description_additional">
-                                <span style="font-weight: bold;">내 다음 일정</span>부터, 등록한 수강권의 <span style="font-weight: bold;">횟수 정보</span>와 <span style="font-weight: bold;">참여가능한 수업 목록</span>까지 요약된 정보를 간편하게 확인할 수 있습니다.
+                                하루에 낭비되고 있는 관리 업무 시간 <span style="font-weight:bold;color:#fe4e65">평균 약 3시간!</span><br>
+                                소중한 시간을 레슨 품질향상과 개인시간으로 바꾸어보세요!
                             </div>
+                        </div>
+                        <div style="text-align:center;margin-top:50px">
+                            <img src="/static/common/img/service_introduce/pters_functions.png" alt="피터스 기능들" style="width:90%;max-width:800px;">
                         </div>
                     </article>
                 </div>
             </section>
-
-            <section class="front_page_section" style="background-color:#ffffff;">
-                <div id="page_3" class="article_wrapper">
-                    <article class="flex_2_divided_1">
-                        <div class="tag_wrapper">
-                            <h1>주요 기능 02.</h1>
-                            <h2>월간 일정</h2>
-                        </div>
-                        <div id="page3_image" class="page_image" style="background-image:url('/static/common/img/front_page/member/pters_student_calendar.png')"></div>
-                    </article>
-                    <article class="flex_2_divided_2">
-                        <div id="page1_description" style="color:#3b3b3b" class="page_description">
-                            <div style="width:16px;height:2px;background-color:#3b3b3b"></div>
-                            <p>예약 일정과 지난일정까지<br>계획적으로 살펴보세요.</p>
-                            <div class="page_description_additional">
-                                <span style="font-weight: bold;">월간일정표</span>로 과거 일정부터 예약된 일정까지 모두 확인하세요. <br> 나의 현황을 살펴보고 보다 계획적이고 능동적으로 수업에 참여해볼까요?
-                            </div>
-                        </div>
-                    </article>
-                </div>
-            </section>
-
+            
             <section class="front_page_section" style="background-color:#fbfbfb;" id="feature_page">
                 <div id="page_2" class="article_wrapper">
-                    <article class="flex_2_divided_1">
+                    <!-- <article class="flex_2_divided_1">
                         <div class="tag_wrapper">
-                            <h1>주요 기능 03.</h1>
-                            <h2>예약하기</h2>
+                            <h1>주요 기능 01.</h1>
+                            <h2>일정</h2>
                         </div>
-                        <div id="page2_image" class="page_image" style="background-image:url('/static/common/img/front_page/member/pters_group_reserve.png')"></div>
-                    </article>
+                        <div id="page2_image" class="page_image" style="background-image:url('/static/common/img/front_page/pters_calendar.png')"></div>
+                    </article> -->
                     <article class="flex_2_divided_2">
-                        <div id="page1_description" style="color:#3b3b3b" class="page_description">
+                        <div style="color:#3b3b3b;position: relative;top:unset;transform:unset" class="page_description">
                             <div style="width:16px;height:2px;background-color:#3b3b3b"></div>
-                            <p>원하는 날짜 시간 고르고<br>터치 한번에 예약 끝!</p>
-                            <!-- <div class="page_description_additional">
-                                비어있는 시간에 예약 가능한 <span style="font-weight:bold">1:1레슨</span> 타입과 강사가 개설한 일정에 선착순 예약하는 <span style="font-weight:bold">그룹레슨</span> 타입을 지원합니다.
-                                <br>일정을 출석처리하면 회원들의 <span style="font-weight:bold">남은 횟수가 자동 차감</span> 저장됩니다.
-                            </div> -->
+                            <p>언제 어디서나 편리하게!</p>
                             <div class="page_description_additional">
-                                참여가능한 날짜와 시간에 예약이 가능한지 바로 살펴보세요. 이제는 문자와 전화로 강사님께 여쭤보지 말고 <span style="font-weight: bold;">쉽고 간편하게 터치 한번에 예약</span>하기로 해요!
+                                클라우드 기술로 시간과 공간의 제약없이 인터넷 접속만 된다면 간편하게 관리
                             </div>
+                        </div>
+                        <div style="text-align:center;margin-top:50px" class="flex_wrap">
+                            <div class="flex_children">
+                                <div style="height:150px;line-height:150px">
+                                    <img src="/static/common/img/service_introduce/pters_is_connected.png" alt="피터스 공유 기능" style="width:100%;max-width:150px;vertical-align: middle;">
+                                </div>
+                                <p style="font-size:20px;font-weight:bold;">공유 관리</p>
+                                <p style="font-size:15px;font-weight:normal">다른 피터스 강사를 검색하고, 프로그램을 공유하여, 함께 관리하는 비즈니스 환경 구축이 가능합니다.</p>
+                            </div>
+                            <div class="flex_children">
+                                <div style="height:150px;line-height:150px">
+                                    <img src="/static/common/img/service_introduce/pters_is_multi.png" alt="피터스 클라우드 기능" style="width:100%;max-width:150px;vertical-align: middle;">
+                                </div>
+                                <p style="font-size:20px;font-weight:bold;">다양한 기기</p>
+                                <p style="font-size:15px;font-weight:normal">IOS, 안드로이드 앱 뿐만 아니라, PC와 모바일 브라우저에서 시간과 장소 제약없이 이용 가능합니다.</p>
+                            </div>
+                            <div class="flex_children">
+                                <div style="height:150px;line-height:150px">
+                                    <img src="/static/common/img/service_introduce/pters_uses_aws.png" alt="피터스 AWS" style="width:100%;max-width:150px;vertical-align: middle;">
+                                </div>
+                                <p style="font-size:20px;font-weight:bold;">Amazon Web Service</p>
+                                <p style="font-size:15px;font-weight:normal">세계적인 기업과 기관에서 사용하며, 가장 권위있는 정보보호 인증을 받은 AWS에 데이터가 저장됩니다.</p>
+                            </div>
+
                         </div>
                     </article>
                 </div>
             </section>
 
-            <section class="front_page_section" style="background-color:#ffffff;">
-                <div id="page_3" class="article_wrapper">
-                    <article class="flex_2_divided_1">
-                        <div class="tag_wrapper">
-                            <h1>주요 기능 04.</h1>
-                            <h2>공지 사항 확인</h2>
-                        </div>
-                        <div id="page3_image" class="page_image" style="background-image:url('/static/common/img/front_page/member/pters_student_notice.png')"></div>
-                    </article>
-                    <article class="flex_2_divided_2">
-                        <div id="page1_description" style="color:#3b3b3b" class="page_description">
-                            <div style="width:16px;height:2px;background-color:#3b3b3b"></div>
-                            <p>강사님의 공지도<br>앱에서 간편하게 확인</p>
-                            <div class="page_description_additional">
-                                강사님이 수강회원님들께 공유하는 <span style="font-weight:bold">공지사항</span>도 쉽고 간편하게 확인하세요. 강사님이 올리는 중요한 정보를 놓치지 말자구요!
-                            </div>
-                        </div>
-                    </article>
-                </div>
-            </section>
-
-
-
-            <section class="front_page_section" style="background-color:#fbfbfb;color:#5c5859">
+            <section class="front_page_section" style="background-color:#ffffff;color:#5c5859">
                 <div id="page_8" class="article_wrapper" style="display:block;height:auto;padding:40px 20px 0 20px;">
                     <div>
                         <p style="margin-top: 0;">
@@ -554,13 +551,187 @@
 {% endblock %}
 
 {% block local_js_footer %}
+<script type="text/javascript" src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.0.js" charset="utf-8"></script>
+<script type="text/javascript" src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+<script type="text/javascript" src="https://apis.google.com/js/platform.js" async defer></script>
 <script type="text/javascript">
+
+    
+    // var varUA = navigator.userAgent.toLowerCase();//useAgent값 얻기
+    /*
+    if(varUA.match('android') != null){
+        $('#download_img_android').show();
+    }else if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
+        $('#download_img_ios').show();
+    }else{
+        $('#download_img_ios, #download_img_android').show();
+    }
+  */
 
     if(varUA.match('MSIE') != null || varUA.match('msie') != null || varUA.match('rv:11.0')){
         $('#root_nav, .login_foot, #description_wrapper').css('display','none');
         $('#IE_block_explain').css('display','block');
     }
     
+
+
+    function enter_key() {
+        if (window.event.keyCode == 13) {
+             // 엔터키가 눌렸을 때 실행할 내용
+             document.getElementById('login-form').submit();
+        }
+    }
+    var kakao_login_test = true;
+
+    $('#errorMessageBar span:nth-child(2)').click(function(){
+        $('#errorMessageBar').fadeOut('fast')
+    });
+
+    window.addEventListener('load', function () {
+        {% for message in messages %}
+            {% if message.tags == "error" %}
+                alert('{{ message }}');
+            {% endif %}
+        {% endfor %}
+        kakao_login_test = true;
+
+        setTimeout(()=>{
+            $('#download_img_ios, #download_img_android').show();
+            if(device == MOBILE){
+                if(device_info == 'app'){
+                    $('#download_img_ios, #download_img_android').hide();
+                }
+                else{
+                    if(os == IOS){
+                        $('#download_img_android').hide();
+                    }else if(os == ANDROID){
+                        $('#download_img_ios').hide();
+                    }
+                }
+            }
+            else{
+                if(device_info == 'app'){
+                    $('#download_img_ios, #download_img_android').hide();
+                }
+            }
+        }, 3000);
+
+        var val = location.href.substr(
+            location.href.lastIndexOf('=') + 1
+        );
+        if(val=='naver'){
+            location.href = naverLogin.generateAuthorizeUrl();
+        }
+        $.ajax({
+            url:'https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id={{ request.session.PTERS_NAVER_ID_LOGIN_CLIENT_ID }}&client_secret={{ request.session.PTERS_NAVER_ID_LOGIN_CLIENT_SECRET }}',
+            type:'POST',
+            dataType : 'json',
+
+            beforeSend:function(){
+                //beforeSend();
+            },
+
+            //통신성공시 처리
+            success:function(data){
+                var jsondata = JSON.parse(data);
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function(){
+            },
+
+            //통신 실패시 처리
+            error:function(){
+
+            }
+        });
+    });
+
+    // <!-- 네이버아디디로로그인 초기화 Script -->
+    var naverLogin = new naver.LoginWithNaverId(
+        {
+            clientId: "{{ request.session.PTERS_NAVER_ID_LOGIN_CLIENT_ID }}",
+            callbackUrl: "http{% if request.is_secure %}s{% endif %}://{{ request.session.domain }}/login/login_simple_naver/",
+            //callbackUrl: "https://www.pters.co.kr/login/login_simple_naver/",
+            //clientId: "VM6zl0mLyBgjf9dgw1cC",
+            //callbackUrl: "http://localhost:8000/login/login_simple_naver/",
+            isPopup: false, /* 팝업을 통한 연동처리 여부 */
+            callbackHandle: false,
+            loginButton: {color: "white", type: 1, height: 39} /* 로그인 버튼의 타입을 지정 */
+        }
+    );
+    /* 설정정보를 초기화하고 연동을 준비 */
+    naverLogin.init();
+    // <!--  네이버아이디로로그인 초기화 Script -->
+
+
+    // <!-- 카카오 로그인  Script -->
+    function loginWithKakao() {
+        if(kakao_login_test){
+            Kakao.init('4533bb10ac61e20907cd273f0941210a');
+            kakao_login_test = false;
+        }
+        // 로그인 창을 띄웁니다.
+        Kakao.Auth.login({
+            success: function(authObj) {
+                location.href = '/login/login_simple_kakao/?access_token='+authObj.access_token;
+            },
+            fail: function(err) {
+                alert(JSON.stringify(err));
+            }
+        });
+    }
+
+// <!-- 구글 로그인  Script -->
+/*
+    var google_login_check = false;
+    window.addEventListener('load', function () {
+        google_signOut();
+    });
+    function onSignIn(googleUser) {
+        // Useful data for your client-side scripts:
+        if(google_login_check == true){
+            var profile = googleUser.getBasicProfile();
+                $('#id_new_sns_id').attr('value', profile.getId());
+                $('#id_sns_username').attr('value', profile.getEmail());
+                $('#id_sns_email').attr('value', profile.getEmail());
+                $('#id_sns_last_name').attr('value', profile.getFamilyName() +profile.getGivenName());
+                $('#id_sns_first_name').attr('value', );
+                $('#id_sns_type').attr('value', 'Google');
+                var id_token = googleUser.getAuthResponse().id_token;
+                $('#id_social_accessToken').attr('value', id_token);
+                document.getElementById('sns-form').submit();
+                // The ID token you need to pass to your backend:
+        }
+      }
+    function google_signOut() {
+        var auth2 = gapi.auth2.getAuthInstance();
+        auth2.signOut().then(function () {
+          console.log('User signed out.');
+        });
+        google_login_check = true;
+      }
+*/
+
+function go_to(location){
+    
+    let loc;
+    let $root_content = $('#root_content');
+    switch(location){
+        case 'feature':
+            loc = $('#feature_page').offset().top - 60 + $root_content.scrollTop();
+            $root_content.animate({scrollTop:loc}, 300);
+            break;
+        case 'price':
+            loc = $('#price_page').offset().top - 60 +  $root_content.scrollTop();
+            $root_content.animate({scrollTop:loc}, 300);
+            break;
+        case 'what':
+            loc = $('#what_page').offset().top - 60 +  $root_content.scrollTop();
+            $root_content.animate({scrollTop:loc}, 300);
+            break;
+    }
+}
 
 </script>
 {% endblock %}
