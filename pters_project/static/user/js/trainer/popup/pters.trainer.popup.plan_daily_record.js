@@ -304,7 +304,7 @@ class Plan_daily_record_func{
                     //작성한 글을 서버 저장한다.
                     let data = {"schedule_id":data_written.schedule_id, "img_list":JSON.stringify(images_uploaded), "title":"",
                                 "contents":data_written.content, "is_member_view":data_written.category_selected.open.value[0]};
-                                console.log(data);
+                                
                     Plan_daily_record_func.create(data, ()=>{
                         // this.init();
                         if(callback != undefined){
@@ -593,7 +593,7 @@ class Plan_daily_record_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        console.log(data.messageArray)
+
                         show_error_message({title:data.messageArray[0]});
                         return false;
                     }

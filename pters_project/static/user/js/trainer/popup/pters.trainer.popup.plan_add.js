@@ -366,7 +366,7 @@ class Plan_add{
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SELECT, 100, popup_style, {'member_id':null}, ()=>{
                     let appendix = {lecture_id:this.data.lecture_id[0], title:"회원", disable_zero_avail_count:ON, entire_member:NONE, member_id:this.data.member_id, member_name:this.data.member_name};
                     member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.lecture_max_num[0], appendix, (set_data)=>{
-                        console.log("setdata", set_data)
+
                         this.member = set_data;
                         this.render_content();
                     });

@@ -972,7 +972,7 @@ class PassInspector{
     }
 
     program_notice_read(){
-        console.log(this.data);
+
         let limit_number = Number(this.data.auth_notice_read.active);
         // let limit_type = "수강권 읽기 권한이 없습니다.";
         let limit_type = `${this.data.auth_notice_read.limit_type}의 공지사항 조회 권한이 없습니다.`;

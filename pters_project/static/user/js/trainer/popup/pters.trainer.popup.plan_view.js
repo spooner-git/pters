@@ -151,7 +151,7 @@ class Plan_view{
             });
 
             Setting_calendar_func.read((settings)=>{
-                console.log("setting", settings)
+
                 this.settings.sign_use = settings.setting_schedule_sign_enable;
                 this.settings.wait_member_limit = settings.setting_member_public_class_wait_member_num;
             });
@@ -1322,7 +1322,7 @@ class Plan_view{
         let end_time = this.data.end_time;
 
         if(start_time == null || end_time == null){
-            console.log("시작시간이나 종료시간이 설정되지 않음");
+
             return false;
         }
         // if(end_time=='0:0'){

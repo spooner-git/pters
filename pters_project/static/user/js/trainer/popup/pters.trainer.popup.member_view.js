@@ -950,7 +950,7 @@ class Member_view{
         let forms = document.getElementById(`${this.form_id}`);
         update_check_registration_form(forms);
         let error_info = check_registration_form(forms);
-        console.log(error_info);
+
         if(error_info != ''){
             show_error_message({title:error_info});
             return false;
@@ -1353,7 +1353,6 @@ class Member_simple_view{
 
         let html_to_join = [];
         for(let i=0; i<ticket_length; i++){
-            console.log("1", this.data.ticket[i]);
             let ticket_name = this.data.ticket[i].ticket_name;
             if(this.data.ticket[i].ticket_state == STATE_END_PROGRESS){
                 ticket_name = `<span style="color:var(--font-sub-normal);">${this.data.ticket[i].ticket_name}</span><span style="font-size:13px;"> (비활성)</span>`;

@@ -1637,7 +1637,6 @@ class CComp{
         
         let html = `<${type} ${style_code} ${attr_code}>${title}</${type}>`;
 
-        console.log(attr.id, event);
         //onclick을 사용하려면 attr에 무조건 id가 부여되어야함
         if(event != undefined && attr != undefined){
             if(attr.id != undefined){

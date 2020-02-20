@@ -194,7 +194,7 @@ class ProgramNotice_view{
         let required = "";
         let html = CComponent.create_input_textarea_row(id, title, placeholder, icon, icon_r_visible, icon_r_text, style, (input_data)=>{
             this.note = input_data;
-            console.log("TESTSETSETSET");
+
             this.if_user_changed_any_information = true;
         }, pattern, pattern_message, required);
         return html;
@@ -405,7 +405,7 @@ class ProgramNotice_view{
         let forms = document.getElementById(`${this.form_id}`);
         update_check_registration_form(forms);
         let error_info = check_registration_form(forms);
-        console.log(error_info);
+
         if(error_info != ''){
             show_error_message({title:error_info});
             return false;

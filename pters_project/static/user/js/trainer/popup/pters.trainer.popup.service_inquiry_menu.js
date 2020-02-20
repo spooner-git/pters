@@ -152,7 +152,7 @@ class Service_inquiry_menu {
             this.init_data();
             Service_inquiry_menu.render_content();
             Service_inquiry_menu_func.read((data)=>{
-                console.log(data);
+                
             });
         });
     }

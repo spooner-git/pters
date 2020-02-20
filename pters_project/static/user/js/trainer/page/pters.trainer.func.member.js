@@ -217,7 +217,6 @@ class Member {
         if(html_temp.length == 0){
             html_temp.push(`<div style="font-size:14px;padding:16px;" class="anim_fade_in_vibe_top">등록된 회원이 없습니다.</div>`);
         }
-        console.log("두번?")
         document.querySelector('#member_content_wrap').innerHTML = html_temp.join("");
     }
 
@@ -645,7 +644,6 @@ class Member_func{
             success:function(data){
                 check_app_version(data.app_version);
                 // let data = JSON.parse(data_);
-                console.log(data);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
                         show_error_message({title:data.messageArray[0]});

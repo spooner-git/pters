@@ -1,6 +1,6 @@
 class Member_ticket_refund{
     constructor(install_target, data, instance){
-        console.log(data)
+
         this.target = {install: install_target, toolbox:'section_member_ticket_refund_toolbox', content:'section_member_ticket_refund_content'};
         this.instance = instance;
         this.external_data = data;

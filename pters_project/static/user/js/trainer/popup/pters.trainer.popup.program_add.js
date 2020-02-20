@@ -248,7 +248,7 @@ class Program_add{
         let forms = document.getElementById(`${this.form_id}`);
         update_check_registration_form(forms);
         let error_info = check_registration_form(forms);
-        console.log(error_info);
+
         if(error_info != ''){
             show_error_message({title:error_info});
             return false;

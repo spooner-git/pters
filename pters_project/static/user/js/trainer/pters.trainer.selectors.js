@@ -5666,7 +5666,7 @@ class PasswordInput{
 
     upper_right_menu(){
         let combined_data = {password : `${this.data.password_digit_1}${this.data.password_digit_2}${this.data.password_digit_3}${this.data.password_digit_4}`};
-        console.log(combined_data.password, this.original_data, "여기")
+
         if(combined_data.password != this.original_data){
             show_error_message({title:"비밀번호가 맞지 않습니다."});
             return;
@@ -6470,7 +6470,7 @@ class BoardWriter_for_daily_record{
         //업로드 된 이미지를 모두 지운다.
         for(let image in this.data.images){
             let data = {"content_img_file_name":image};
-            Plan_daily_record_func.delete_image_from_server(data, ()=>{console.log("서버에서 지우자", image);});
+            Plan_daily_record_func.delete_image_from_server(data, ()=>{console.log("", image);});
         }
         this.clear();
         layer_popup.close_layer_popup();

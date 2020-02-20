@@ -157,7 +157,7 @@ class TempForError {
                         "refund_date": data.member_ticket_refund_date == "None" ? null : DateRobot.to_split(data.member_ticket_refund_date), 
                         "refund_date_text": data.member_ticket_refund_date == "None" ? null : DateRobot.to_text(data.member_ticket_refund_date, "", "", SHORT),
                         "refund_price":data.member_ticket_refund_price, "note":data.member_ticket_note, "pay_method":data.member_ticket_pay_method};
-                        console.log("external_data",external_data);
+                        
             member_ticket_modify = new Member_ticket_modify('.popup_member_ticket_modify', external_data, 'member_ticket_modify', ()=>{
                 this.init();
             });
