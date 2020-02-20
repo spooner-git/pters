@@ -41,11 +41,10 @@ from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO
 from board.models import BoardTb, QATb, NoticeTb
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 from schedule.functions import func_refresh_member_ticket_count, func_get_trainer_attend_schedule, \
-    func_get_lecture_member_ticket_id, func_check_lecture_available_member_before, func_add_schedule, \
-    func_check_lecture_available_member_after, func_get_trainer_schedule_all, func_get_trainer_schedule_info, \
+    func_get_lecture_member_ticket_id, func_get_trainer_schedule_all, func_get_trainer_schedule_info, \
     func_get_lecture_schedule_all, func_get_member_schedule_all_by_member_ticket, \
     func_get_member_schedule_all_by_schedule_dt, func_get_member_schedule_all_by_monthly, \
-    func_get_permission_wait_schedule_all
+    func_get_permission_wait_schedule_all, func_add_schedule
 from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb
 from stats.functions import get_sales_data
 from trainee.models import MemberTicketTb
@@ -1505,8 +1504,9 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, View):
         today = datetime.date.today()
         three_days_ago = today - datetime.timedelta(days=3)
         ordered_alarm_dict = collections.OrderedDict()
-        alarm_data = LogTb.objects.filter(class_tb_id=class_id, reg_dt__gte=three_days_ago,
-                                          use=USE).order_by('-reg_dt')
+        alarm_data = LogTb.objects.select_related('auth_member').filter(class_tb_id=class_id,
+                                                                        reg_dt__gte=three_days_ago,
+                                                                        use=USE).order_by('-reg_dt')
 
         query = "select count(B.ID) from QA_COMMENT_TB as B where B.QA_TB_ID = `QA_TB`.`ID` and B.READ=0 and B.USE=1"
 
@@ -5640,27 +5640,14 @@ def attend_mode_finish_logic(request):
                         if error is None:
                             if member_ticket_id is None or member_ticket_id == '':
                                 error = '예약 가능 횟수가 없습니다.'
-                            else:
-                                error = func_check_lecture_available_member_before(class_id,
-                                                                                   schedule_info.lecture_tb_id,
-                                                                                   schedule_id,
-                                                                                   PERMISSION_STATE_CD_APPROVE)
-
                         if error is None:
                             schedule_result = func_add_schedule(class_id, member_ticket_id, None,
-                                                                schedule_info.lecture_tb_id, schedule_id,
+                                                                schedule_info.lecture_tb, schedule_id,
                                                                 schedule_info.start_dt, schedule_info.end_dt,
                                                                 schedule_info.note, ON_SCHEDULE_TYPE,
                                                                 member_id, PERMISSION_STATE_CD_APPROVE,
                                                                 STATE_CD_FINISH, SCHEDULE_DUPLICATION_ENABLE)
                             error = schedule_result['error']
-
-                        if error is None:
-                            error = func_refresh_member_ticket_count(class_id, member_ticket_id)
-
-                        if error is None:
-                            error = func_check_lecture_available_member_after(class_id, schedule_info.lecture_tb_id,
-                                                                              schedule_id, PERMISSION_STATE_CD_APPROVE)
 
                 else:
                     if schedule_info.member_ticket_tb.member_id == member_id:
