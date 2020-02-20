@@ -45,6 +45,13 @@ urlpatterns = [
         views.ActivationView.as_view(),
         name='registration_activate'),
 
+    # 피터스 개요 소개 부분
+    url(r'^what_is_pters/$', views.WhatIsPters.as_view(), name='what_is_pters'),
+    # 피터스 강사 기능 소개 부분
+    url(r'^pters_for_teachers/$', views.PtersForTeachers.as_view(), name='pters_for_teachers'),
+    # 피터스 회원 기능 소개 부분
+    url(r'^pters_for_students/$', views.PtersForStudents.as_view(), name='pters_for_students'),
+
     # 회원가입 유형 처리 부분
     url(r'^check_registration/$', views.CheckRegistration.as_view(), name='check_registration'),
 

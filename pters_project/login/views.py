@@ -261,6 +261,29 @@ class ServiceTestLoginView(TemplateView):
         #     schedule_info.save()
         return context
 
+class WhatIsPters(TemplateView):
+    template_name = 'what_is_pters.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(WhatIsPters, self).get_context_data(**kwargs)
+
+        return context
+
+class PtersForTeachers(TemplateView):
+    template_name = 'pters_for_teachers.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PtersForTeachers, self).get_context_data(**kwargs)
+
+        return context
+
+class PtersForStudents(TemplateView):
+    template_name = 'pters_for_students.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PtersForStudents, self).get_context_data(**kwargs)
+
+        return context
 
 class CheckRegistration(TemplateView):
     template_name = 'check_registration.html'

@@ -236,7 +236,7 @@
             }
         }
         #description_wrapper{
-            /* display: none; */
+
         }
         /* PC버전 화면 */
         @media(min-width:800px){
@@ -244,10 +244,7 @@
                 display: none;
             }
             #description_wrapper{
-                /* display: block; */
 
-                /* max-width: 1024px; */
-                /* margin: 0 auto; */
             }
             #root_nav{
                 display: block;
@@ -412,13 +409,9 @@
             </div>
             <div id="menu_wrapper">
                 <ul>
-                    <!-- <li><a onclick="go_to('what');" style="cursor: pointer;" href="{% url 'login:check_registration' %}">피터스?</a></li>
-                    <li><a onclick="go_to('feature');" style="cursor: pointer;">주요기능 소개</a></li>
-                    <li><a onclick="go_to('price')" style="cursor: pointer;display:none;">요금 안내</a></li> -->
                     <li><a style="cursor: pointer;" href="{% url 'login:what_is_pters' %}">피터스?</a></li>
-                    <li><a style="cursor: pointer;" href="{% url 'login:pters_for_teachers' %}">강사 기능</a></li>
+                    <li><a style="cursor: pointer;color:#fe4e65" href="{% url 'login:pters_for_teachers' %}">강사 기능</a></li>
                     <li><a style="cursor: pointer;" href="{% url 'login:pters_for_students' %}">수강회원 기능</a></li>
-                    <!-- <li><a onclick="go_to('price')" style="cursor: pointer;display:none;">요금 안내</a></li> -->
                 </ul>
             </div>
         </div>
@@ -426,85 +419,8 @@
     </nav>
 
     <div id="root_content">
-        <section class="front_page_section" id="front_page_login">
-            <div id="login_box">
-                <div class="login_content">
-                    <div class="pters_description">
-                        <span style="font-weight:normal;">프로 강사를 위한</span> <br/>
-                        <span style="font-weight:normal;">운영/관리 서비스</span> <br>
-                        <span style="font-weight:900;font-size:22px">피터스 PTERS</span>
-                    </div>
-                    <div class="pters_download">
-                        <a href="https://itunes.apple.com/kr/app/apple-store/id1373054819"><img id="download_img_ios" src="/static/common/img/front_page/ios.svg" alt=""></a>
-                        <a href="https://play.google.com/store/apps/details?id=kr.co.spooner.pters"><img id="download_img_android" src="/static/common/img/front_page/android.svg" alt=""></a>
-                    </div>
-                </div>
-                <div class="login_foot">
-                    <form action="{% url 'login:login' %}" id="login-form" method="post">
-                        <input type="hidden" name="auto_login_check" value="1">
-                        <input type="hidden" name="next_page" value = '{% url 'index' %}'>
-                        {% csrf_token %}
-
-                        <!-- PTERS 로그인 입력 영역 -->
-                        <div>
-                            <input class="pters_login_input" type="text" name="username" id="username_id" placeholder="아이디" autofocus>
-                        </div>
-                        <div style="margin-top:8px;">
-                            <input class="pters_login_input" type="password" name="password" id="password_id" placeholder="비밀번호" onkeyup="enter_key();">
-                        </div>
-                        <!-- PTERS 로그인 버튼 노출 영역 -->
-                        <div class="social_login_box" onclick="document.getElementById('login-form').submit();" style="background-color: #fe4e65; margin-top:12px;">
-                            <div class="social_login_img" style="display:none;"></div>
-                            <span class="social_login_text" style="color:#ffffff; text-align:center;font-weight: bold;">로그인</span>
-                            <div style="display:table-cell; width:60px;display:none;"></div>
-                        </div>
-
-                        <div style="width:100%;height:2px;background-color:#f5f2f3;margin-top:15px;margin-bottom:15px;">
-
-                        </div>
-
-                        <div class="social_login_box_wrapper">
-                            <!-- 네이버 로그인 버튼 노출 영역 -->
-                            <div class="social_login_box" onclick="location.href=naverLogin.generateAuthorizeUrl();" style="background-color: #0dd25a;">
-                                <div class="social_login_img">
-                                    <img src="/static/common/icon/icon_naver_logo.png" style="width: 24px; height: 24px; vertical-align:middle;margin-bottom:5px;" alt="PTERS 네이버로 로그인">
-                                </div>
-                                <span class="social_login_text">네이버 로그인</span>
-                                
-                            </div>
-
-                            <div style="flex-basis:8px;"></div>
-
-                            <!-- 카카오톡 로그인 버튼 노출 영역 -->
-                            <div class="social_login_box" id="custom-login-btn" onclick="loginWithKakao();" style="background-color: #ffeb00;">
-                                <div class="social_login_img">
-                                    <img src="/static/common/icon/icon_kakao_logo.png" style="width: 24px; height: 24px; vertical-align:middle;margin-bottom:5px;" alt="PTERS 카카오로 로그인">
-                                </div>
-                                <span class="social_login_text" style="color:#3a1c1d;">카카오 로그인</span>
-                                
-                            </div>
-                        </div>
-                        <div style="display:table; width:100%; height: 48px;margin-top:10px;">
-                            <div class="general_text" style="color:#858282;" onclick="location.href='{% url 'login:check_registration' %}'">회원 가입</div>
-                            <div class="general_text" style="color:#858282;" onclick="location.href='{% url 'login:reset_password' %}'">비밀번호 초기화</div>
-                        </div>
-                    </form>
-                </div>
-                <div id="IE_block_explain">
-                    <p>죄송합니다!</p>
-                    <p>PTERS는 구형 explorer를 지원하지 않습니다.</p>
-                    <p>크롬, 파이어폭스, MS엣지 브라우저로 이용하실 수 있습니다.</p>
-                    <p>iOS, 안드로이드 앱을 통해서 접속이 가능합니다.</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="mobile_button_for_show" onclick="show_description();" style="display:none;">
-            <p style="margin:0;line-height:10px;color:#B8B4B4;font-size:12px;font-weight:500;letter-spacing: -0.3px;">서비스 소개 보기<br><img src="/static/common/icon/icon_arrow_expand_grey.png" alt=""></p>
-        </section>
-
         <div id="description_wrapper">
-            <section class="front_page_section" style="background-image: linear-gradient(to right, #fe4e65 25%, #ff869e);" id="what_page">
+            <section class="front_page_section" style="background-image: linear-gradient(to right, #fe4e65 25%, #ff869e);" id="what_page" hidden>
                 <div id="page_1" class="article_wrapper">
                     <article class="flex_2_divided_1">
                         <!-- <img id="page1_image" src="/static/common/img/front_page/pters_service_summary.png" alt=""> -->
@@ -524,7 +440,7 @@
                 </div>
             </section>
 
-            <section class="front_page_section" style="background-color:#fbfbfb;" id="feature_page" hidden>
+            <section class="front_page_section" style="background-color:#fbfbfb;" id="feature_page">
                 <div id="page_2" class="article_wrapper">
                     <article class="flex_2_divided_1">
                         <div class="tag_wrapper">
@@ -551,7 +467,7 @@
                 </div>
             </section>
 
-            <section class="front_page_section" style="background-color:#ffffff;" hidden>
+            <section class="front_page_section" style="background-color:#ffffff;">
                 <div id="page_3" class="article_wrapper">
                     <article class="flex_2_divided_1">
                         <div class="tag_wrapper">
@@ -572,7 +488,7 @@
                 </div>
             </section>
 
-            <section class="front_page_section" style="background-color:#fbfbfb;" hidden>
+            <section class="front_page_section" style="background-color:#fbfbfb;">
                 <div id="page_4" class="article_wrapper">
                     <article class="flex_2_divided_1">
                         <div class="tag_wrapper">
@@ -593,7 +509,7 @@
                 </div>
             </section>
 
-            <section class="front_page_section" style="background-color:#ffffff;" hidden>
+            <section class="front_page_section" style="background-color:#ffffff;">
                 <div id="page_5" class="article_wrapper">
                     <article class="flex_2_divided_1">
                         <div class="tag_wrapper">
@@ -616,7 +532,7 @@
                 </div>
             </section>
 
-            <section class="front_page_section" style="background-color:#fbfbfb;" hidden>
+            <section class="front_page_section" style="background-color:#fbfbfb;">
                 <div id="page_6" class="article_wrapper">
                     <article class="flex_2_divided_1">
                         <div class="tag_wrapper">
@@ -639,7 +555,7 @@
                 </div>
             </section>
 
-            <section class="front_page_section" style="background-color:#ffffff;" hidden>
+            <!-- <section class="front_page_section" style="background-color:#ffffff;">
                 <div id="page_7" class="article_wrapper">
                     <article class="flex_2_divided_1">
                         <div class="tag_wrapper">
@@ -660,9 +576,9 @@
                         </div>
                     </article>
                 </div>
-            </section>
+            </section> -->
 
-            <section class="front_page_section" style="background-color:#ffffff;display:;" id="price_page" hidden>
+            <section class="front_page_section" style="background-color:#ffffff;display:;" id="price_page">
                     <div id="page_8" class="article_wrapper" style="display:block;padding:40px 20px;height:auto">
                         <div class="tag_wrapper" style="position: relative;top:unset;margin-bottom:30px;">
                             <h1>요금 안내</h1>
@@ -905,22 +821,7 @@
 {% endblock %}
 
 {% block local_js_footer %}
-<script type="text/javascript" src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.0.js" charset="utf-8"></script>
-<script type="text/javascript" src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
-<script type="text/javascript" src="https://apis.google.com/js/platform.js" async defer></script>
 <script type="text/javascript">
-
-    
-    // var varUA = navigator.userAgent.toLowerCase();//useAgent값 얻기
-    /*
-    if(varUA.match('android') != null){
-        $('#download_img_android').show();
-    }else if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
-        $('#download_img_ios').show();
-    }else{
-        $('#download_img_ios, #download_img_android').show();
-    }
-  */
 
     if(varUA.match('MSIE') != null || varUA.match('msie') != null || varUA.match('rv:11.0')){
         $('#root_nav, .login_foot, #description_wrapper').css('display','none');
@@ -928,168 +829,5 @@
     }
     
 
-
-    function enter_key() {
-        if (window.event.keyCode == 13) {
-             // 엔터키가 눌렸을 때 실행할 내용
-             document.getElementById('login-form').submit();
-        }
-    }
-    var kakao_login_test = true;
-
-    $('#errorMessageBar span:nth-child(2)').click(function(){
-        $('#errorMessageBar').fadeOut('fast')
-    });
-
-    window.addEventListener('load', function () {
-        {% for message in messages %}
-            {% if message.tags == "error" %}
-                alert('{{ message }}');
-            {% endif %}
-        {% endfor %}
-        kakao_login_test = true;
-
-        setTimeout(()=>{
-            $('#download_img_ios, #download_img_android').show();
-            if(device == MOBILE){
-                if(device_info == 'app'){
-                    $('#download_img_ios, #download_img_android').hide();
-                }
-                else{
-                    if(os == IOS){
-                        $('#download_img_android').hide();
-                    }else if(os == ANDROID){
-                        $('#download_img_ios').hide();
-                    }
-                }
-            }
-            else{
-                if(device_info == 'app'){
-                    $('#download_img_ios, #download_img_android').hide();
-                }
-            }
-        }, 3000);
-
-        var val = location.href.substr(
-            location.href.lastIndexOf('=') + 1
-        );
-        if(val=='naver'){
-            location.href = naverLogin.generateAuthorizeUrl();
-        }
-        $.ajax({
-            url:'https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id={{ request.session.PTERS_NAVER_ID_LOGIN_CLIENT_ID }}&client_secret={{ request.session.PTERS_NAVER_ID_LOGIN_CLIENT_SECRET }}',
-            type:'POST',
-            dataType : 'json',
-
-            beforeSend:function(){
-                //beforeSend();
-            },
-
-            //통신성공시 처리
-            success:function(data){
-                var jsondata = JSON.parse(data);
-            },
-
-            //보내기후 팝업창 닫기
-            complete:function(){
-            },
-
-            //통신 실패시 처리
-            error:function(){
-
-            }
-        });
-    });
-
-    // <!-- 네이버아디디로로그인 초기화 Script -->
-    var naverLogin = new naver.LoginWithNaverId(
-        {
-            clientId: "{{ request.session.PTERS_NAVER_ID_LOGIN_CLIENT_ID }}",
-            callbackUrl: "http{% if request.is_secure %}s{% endif %}://{{ request.session.domain }}/login/login_simple_naver/",
-            //callbackUrl: "https://www.pters.co.kr/login/login_simple_naver/",
-            //clientId: "VM6zl0mLyBgjf9dgw1cC",
-            //callbackUrl: "http://localhost:8000/login/login_simple_naver/",
-            isPopup: false, /* 팝업을 통한 연동처리 여부 */
-            callbackHandle: false,
-            loginButton: {color: "white", type: 1, height: 39} /* 로그인 버튼의 타입을 지정 */
-        }
-    );
-    /* 설정정보를 초기화하고 연동을 준비 */
-    naverLogin.init();
-    // <!--  네이버아이디로로그인 초기화 Script -->
-
-
-    // <!-- 카카오 로그인  Script -->
-    function loginWithKakao() {
-        if(kakao_login_test){
-            Kakao.init('4533bb10ac61e20907cd273f0941210a');
-            kakao_login_test = false;
-        }
-        // 로그인 창을 띄웁니다.
-        Kakao.Auth.login({
-            success: function(authObj) {
-                location.href = '/login/login_simple_kakao/?access_token='+authObj.access_token;
-            },
-            fail: function(err) {
-                alert(JSON.stringify(err));
-            }
-        });
-    }
-
-// <!-- 구글 로그인  Script -->
-/*
-    var google_login_check = false;
-    window.addEventListener('load', function () {
-        google_signOut();
-    });
-    function onSignIn(googleUser) {
-        // Useful data for your client-side scripts:
-        if(google_login_check == true){
-            var profile = googleUser.getBasicProfile();
-                $('#id_new_sns_id').attr('value', profile.getId());
-                $('#id_sns_username').attr('value', profile.getEmail());
-                $('#id_sns_email').attr('value', profile.getEmail());
-                $('#id_sns_last_name').attr('value', profile.getFamilyName() +profile.getGivenName());
-                $('#id_sns_first_name').attr('value', );
-                $('#id_sns_type').attr('value', 'Google');
-                var id_token = googleUser.getAuthResponse().id_token;
-                $('#id_social_accessToken').attr('value', id_token);
-                document.getElementById('sns-form').submit();
-                // The ID token you need to pass to your backend:
-        }
-      }
-    function google_signOut() {
-        var auth2 = gapi.auth2.getAuthInstance();
-        auth2.signOut().then(function () {
-          console.log('User signed out.');
-        });
-        google_login_check = true;
-      }
-*/
-
-function go_to(location){
-    
-    let loc;
-    let $root_content = $('#root_content');
-    switch(location){
-        case 'feature':
-            loc = $('#feature_page').offset().top - 60 + $root_content.scrollTop();
-            $root_content.animate({scrollTop:loc}, 300);
-            break;
-        case 'price':
-            loc = $('#price_page').offset().top - 60 +  $root_content.scrollTop();
-            $root_content.animate({scrollTop:loc}, 300);
-            break;
-        case 'what':
-            loc = $('#what_page').offset().top - 60 +  $root_content.scrollTop();
-            $root_content.animate({scrollTop:loc}, 300);
-            break;
-    }
-}
-
-function show_description(){
-    $('#description_wrapper').show();
-    go_to("what");
-}
 </script>
 {% endblock %}
