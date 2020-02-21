@@ -303,6 +303,7 @@ class Home {
     }
 
     dom_row_today_plan(data){
+        console.log(data);
         let date = this.today;
         //받아온 데이터에 아무것도 없을 경우
         if(Object.keys(data).length == 0){
@@ -323,14 +324,25 @@ class Home {
                 continue;
             }
             let status = plans[i].state_cd;
-            let member_name = plans[i].member_name;
+            // let member_name = plans[i].member_name;
+            let member_name = plans[i].lecture_name == "" ? plans[i].member_name : plans[i].lecture_name;
             let permission_status = plans[i].permission_state_cd;
-            // if(permission_status == SCHEDULE_APPROVE){
+            let waiting_status = plans[i].lecture_wait_member_num > 0 || plans[i].permission_state_cd == SCHEDULE_WAIT ? ON : OFF;
+            console.log(member_name, plans[i].lecture_wait_member_num, plans[i].permission_state_cd, waiting_status)
+
+            // if(permission_status == SCHEDULE_WAIT){
             //     member_name = '('+APPROVE_SCHEDULE_STATUS[permission_status]+') '+plans[i].member_name;
             // }
-            if(permission_status == SCHEDULE_WAIT){
-                member_name = '('+APPROVE_SCHEDULE_STATUS[permission_status]+') '+plans[i].member_name;
+
+            if(waiting_status == ON){
+                let style = `display:inline-block;border:4px solid orange;border-left-color:transparent;border-top-color:transparent;margin-left:5px`;
+                // let style = `display:inline-block;border:4px solid orange;border-left-color:transparent;border-bottom-color:transparent;margin-left:5px;vertical-align:top`;
+                // let style = `display:inline-block;border:4px solid orange;border-right-color:transparent;border-bottom-color:transparent;margin-left:5px;vertical-align:top`;
+                member_name = member_name + `<div style="${style}"></div>`;
+                // member_name = `<div style="${style}"></div>` + member_name;
             }
+
+
             let type = plans[i].schedule_type;
             let participants = plans[i].lecture_current_member_num + '/' + plans[i].lecture_max_member_num;
             if(type == 1){
@@ -339,7 +351,7 @@ class Home {
             let lecture_color = plans[i].lecture_ing_color_cd;
             let dom = `<article class="today_plan_wrapper" onclick="${this.instance}.popup_plan_view(${plans[i].schedule_id})" ${status != SCHEDULE_NOT_FINISH ? "style='opacity:0.7'":""}>
                             <div>${plans[i].start_time} - ${plans[i].end_time}</div>
-                            <div ${status != SCHEDULE_NOT_FINISH ? "style='text-decoration:line-through;'":""}><div class="today_plan_lecture_color" style="background-color:${lecture_color}"></div>${plans[i].lecture_name == "" ? member_name : plans[i].lecture_name}</div>
+                            <div ${status != SCHEDULE_NOT_FINISH ? "style='text-decoration:line-through;'":""}><div class="today_plan_lecture_color" style="background-color:${lecture_color}"></div>${member_name}</div>
                             <div>${participants}</div>
                         </article>`;
 

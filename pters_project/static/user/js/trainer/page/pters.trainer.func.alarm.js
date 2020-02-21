@@ -100,8 +100,8 @@ class Alarm {
                 let read_check = data.read_check;
                 let alarm_highlight = "";
                 if(this.new_alarms_id_cache.indexOf(alarm_id) != -1){
-                    // alarm_highlight = "var(--bg-for-only-new-notifi)";
-                    alarm_highlight = "linear-gradient(to right, #fe4e654a, transparent)";
+                    alarm_highlight = "var(--bg-for-only-new-notifi)";
+                    // alarm_highlight = "linear-gradient(to right, #fe4e654a, transparent)";
                 }
                 let html = `<article class="alarm_wrapper anim_fade_in_vibe_top" data-alarm_id="${alarm_id}" style="background:${alarm_highlight}">
                                 <div class="alarm_data_u">
