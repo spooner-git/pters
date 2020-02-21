@@ -249,17 +249,18 @@ class Ticket_view{
         let pattern_message = "+ - _ : ()[] 제외 특수문자는 입력 불가";
         let required = "required";
         let sub_html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
-            let auth_inspect = pass_inspector.ticket_update();
-            if(auth_inspect.barrier == BLOCKED){
-                let message = `${auth_inspect.limit_type}`;
-                this.init();
-                show_error_message({title:message});
-                return false;
-            }
+            // let auth_inspect = pass_inspector.ticket_update();
+            // if(auth_inspect.barrier == BLOCKED){
+            //     let message = `${auth_inspect.limit_type}`;
+            //     this.init();
+            //     show_error_message({title:message});
+            //     return false;
+            // }
 
             let user_input_data = input_data;
             this.name = user_input_data;
-            this.send_data();
+            // this.send_data();
+            this.if_user_changed_any_information = true;
         }, pattern, pattern_message, required);
         
         let html = `
