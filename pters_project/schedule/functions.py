@@ -17,7 +17,7 @@ from configs.const import REPEAT_TYPE_2WEAK, ON_SCHEDULE_TYPE, USE, UN_USE, SCHE
     STATE_CD_ABSENCE, STATE_CD_FINISH, STATE_CD_IN_PROGRESS, STATE_CD_NOT_PROGRESS, LECTURE_TYPE_ONE_TO_ONE, \
     AUTH_TYPE_VIEW, GROUP_SCHEDULE, OFF_SCHEDULE, FROM_TRAINEE_LESSON_ALARM_ON, TO_SHARED_TRAINER_LESSON_ALARM_OFF, \
     TO_SHARED_TRAINER_LESSON_ALARM_ON, PERMISSION_STATE_CD_WAIT, \
-    PERMISSION_STATE_CD_APPROVE, ON_SCHEDULE
+    PERMISSION_STATE_CD_APPROVE
 from configs.settings import DEBUG
 from login.models import PushInfoTb
 from trainee.models import MemberTicketTb
@@ -280,13 +280,13 @@ def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
     end_font_color_cd = ''
 
     if lecture_info is not None and lecture_info.lecture_type_cd != LECTURE_TYPE_ONE_TO_ONE:
-        lecture_id = lecture_info.lecture_id
 
         if lecture_schedule_id is not None:
             error = func_check_lecture_available_member_before(class_id, lecture_info, lecture_schedule_id,
                                                                permission_state_cd)
 
     if lecture_info is not None:
+        lecture_id = lecture_info.lecture_id
         max_mem_count = lecture_info.member_num
         ing_color_cd = lecture_info.ing_color_cd
         end_color_cd = lecture_info.end_color_cd
@@ -846,7 +846,8 @@ def func_get_trainer_schedule_all(class_id, start_date, end_date):
             lecture_name = schedule_info.lecture_tb.name
             lecture_current_member_num = schedule_info.lecture_current_member_num
             lecture_wait_member_num = schedule_info.lecture_wait_member_num
-            schedule_type = 2
+            if schedule_info.lecture_tb.lecture_type_cd != LECTURE_TYPE_ONE_TO_ONE:
+                schedule_type = GROUP_SCHEDULE
         except AttributeError:
             lecture_id = ''
             lecture_name = ''
@@ -951,7 +952,7 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
             lecture_name = schedule_info.lecture_tb.name
             lecture_current_member_num = schedule_info.lecture_current_member_num
             if schedule_info.lecture_tb.lecture_type_cd != LECTURE_TYPE_ONE_TO_ONE:
-                schedule_type = str(GROUP_SCHEDULE)
+                schedule_type = GROUP_SCHEDULE
         except AttributeError:
             lecture_id = ''
             lecture_name = ''
@@ -1080,7 +1081,8 @@ def func_get_member_schedule_all_by_member_ticket(class_id, member_id, page):
             lecture_id = lecture_info.lecture_id
             lecture_name = lecture_info.name
             lecture_max_member_num = lecture_info.member_num
-            schedule_type = 2
+            if lecture_info.lecture_type_cd != LECTURE_TYPE_ONE_TO_ONE:
+                schedule_type = GROUP_SCHEDULE
         except AttributeError:
             lecture_id = ''
             lecture_name = '개인수업'
@@ -1177,7 +1179,8 @@ def func_get_member_schedule_all_by_schedule_dt(class_id, member_id, page):
             lecture_id = lecture_info.lecture_id
             lecture_name = lecture_info.name
             lecture_max_member_num = lecture_info.member_num
-            schedule_type = 2
+            if lecture_info.lecture_type_cd != LECTURE_TYPE_ONE_TO_ONE:
+                schedule_type = GROUP_SCHEDULE
         except AttributeError:
             lecture_id = ''
             lecture_name = '개인수업'
@@ -1372,7 +1375,8 @@ def func_get_member_schedule_all_by_monthly(class_id, member_id, page):
             lecture_id = lecture_info.lecture_id
             lecture_name = lecture_info.name
             lecture_max_member_num = lecture_info.member_num
-            schedule_type = 2
+            if lecture_info.lecture_type_cd != LECTURE_TYPE_ONE_TO_ONE:
+                schedule_type = GROUP_SCHEDULE
         except AttributeError:
             lecture_id = ''
             lecture_name = '개인수업'
@@ -1462,7 +1466,8 @@ def func_get_lecture_schedule_all(class_id, lecture_id):
             lecture_name = schedule_info.lecture_tb.name
             lecture_max_member_num = schedule_info.lecture_tb.member_num
             lecture_current_member_num = schedule_info.lecture_current_member_num
-            schedule_type = 2
+            if schedule_info.lecture_tb.lecture_type_cd != LECTURE_TYPE_ONE_TO_ONE:
+                schedule_type = GROUP_SCHEDULE
         except AttributeError:
             lecture_id = ''
             lecture_name = ''
