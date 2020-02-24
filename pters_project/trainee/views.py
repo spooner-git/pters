@@ -1351,6 +1351,8 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
                         permission_state_cd = PERMISSION_STATE_CD_APPROVE
                         log_how = '예약 확정'
                 if lecture_schedule_info is not None and lecture_schedule_info != '':
+                    lecture_schedule_num = ScheduleTb.objects.filter(lecture_schedule_id=lecture_schedule_id,
+                                                                     use=USE).count()
                     if lecture_schedule_num >= lecture_schedule_info.lecture_tb.member_num:
                         permission_state_cd = PERMISSION_STATE_CD_WAIT
                         log_how = '대기 예약'
