@@ -280,9 +280,9 @@ def add_schedule_logic(request):
                             lecture_name = lecture_info.name
                             # 자유형 문제
                             # 개일 레슨인 경우
-                            if lecture_info.lecture_type_cd == LECTURE_TYPE_ONE_TO_ONE:
-                                lecture_info = None
-                                lecture_schedule_id = None
+                            # if lecture_info.lecture_type_cd == LECTURE_TYPE_ONE_TO_ONE:
+                            #     lecture_info = None
+                            #     lecture_schedule_id = None
 
                             schedule_result = func_add_schedule(class_id, member_info['member_ticket_id'], None,
                                                                 lecture_info, lecture_schedule_id,

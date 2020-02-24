@@ -253,8 +253,9 @@ def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
     ing_font_color_cd = ''
     end_font_color_cd = ''
 
-    if lecture_info is not None:
+    if lecture_info is not None and lecture_info.lecture_type_cd != LECTURE_TYPE_ONE_TO_ONE:
         lecture_id = lecture_info.lecture_id
+
         if lecture_schedule_id is not None:
             error = func_check_lecture_available_member_before(class_id, lecture_info, lecture_schedule_id,
                                                                permission_state_cd)
@@ -265,6 +266,11 @@ def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
         end_color_cd = lecture_info.end_color_cd
         ing_font_color_cd = lecture_info.ing_font_color_cd
         end_font_color_cd = lecture_info.end_font_color_cd
+
+        if lecture_info.lecture_type_cd == LECTURE_TYPE_ONE_TO_ONE:
+            lecture_info = None
+            lecture_id = None
+            lecture_schedule_id = None
 
     if str(en_dis_type) == str(OFF_SCHEDULE):
         ing_color_cd = '#d2d1cf'
