@@ -1155,7 +1155,8 @@ def func_get_member_schedule_all_by_schedule_dt(class_id, member_id, page):
         'lecture_tb').filter(
         class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, use=USE, member_ticket_tb__member_id=member_id,
         member_ticket_tb__use=USE).annotate(auth_cd=RawSQL(query_auth,
-                                                           [])).filter(auth_cd=AUTH_TYPE_VIEW).order_by('-start_dt')
+                                                           [])).filter(auth_cd=AUTH_TYPE_VIEW).order_by('start_dt',
+                                                                                                        'reg_dt')
     # paginator = Paginator(member_schedule_data, MEMBER_SCHEDULE_PAGINATION_COUNTER)
     # try:
     #     member_schedule_data = paginator.page(page)
@@ -1250,7 +1251,8 @@ def func_get_permission_wait_schedule_all(class_id, page):
         'member_ticket_tb__member', 'reg_member', 'member_ticket_tb__ticket_tb',
         'lecture_tb').filter(
         class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, permission_state_cd=PERMISSION_STATE_CD_WAIT,
-        use=USE).annotate(auth_cd=RawSQL(query_auth, [])).filter(auth_cd=AUTH_TYPE_VIEW).order_by('-start_dt')
+        use=USE).annotate(auth_cd=RawSQL(query_auth, [])).filter(auth_cd=AUTH_TYPE_VIEW).order_by('start_dt',
+                                                                                                  'reg_dt')
     # paginator = Paginator(member_schedule_data, MEMBER_SCHEDULE_PAGINATION_COUNTER)
     # try:
     #     member_schedule_data = paginator.page(page)
@@ -1351,7 +1353,8 @@ def func_get_member_schedule_all_by_monthly(class_id, member_id, page):
         'lecture_tb').filter(
         class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, use=USE, member_ticket_tb__member_id=member_id,
         member_ticket_tb__use=USE).annotate(auth_cd=RawSQL(query_auth,
-                                                           [])).filter(auth_cd=AUTH_TYPE_VIEW).order_by('-start_dt')
+                                                           [])).filter(auth_cd=AUTH_TYPE_VIEW).order_by('start_dt',
+                                                                                                        'reg_dt')
     # paginator = Paginator(member_schedule_data, MEMBER_SCHEDULE_PAGINATION_COUNTER)
     # try:
     #     member_schedule_data = paginator.page(page)
