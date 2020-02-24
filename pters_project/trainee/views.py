@@ -1307,6 +1307,7 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
             except ObjectDoesNotExist:
                 error = '회원 정보를 불러오지 못했습니다.[0]'
         else:
+            lecture_info = func_get_member_ticket_one_to_one_lecture_info(class_id, member_ticket_id)
             lecture_schedule_id = None
 
     if error is None:
@@ -1594,7 +1595,7 @@ class PopupCalendarPlanReserveView(LoginRequiredMixin, AccessTestMixin, Template
                 context['one_to_one_lecture_time_duration'] = 60
             else:
                 context['one_to_one_lecture_check'] = True
-                lecture_tb_info = ticket_lecture_data[0]
+                lecture_tb_info = ticket_lecture_data[0].lecture_tb
                 context['one_to_one_lecture_time_duration'] = lecture_tb_info.lecture_minute
 
         # try:
