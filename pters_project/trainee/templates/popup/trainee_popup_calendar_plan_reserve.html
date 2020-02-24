@@ -42,7 +42,11 @@
                 <div class="obj_box_full">
                     <div class="obj_table_raw wrapper_ticket_info">
                         <div class="wrapper_ticket_icon_personal obj_table_cell_x3"><img src="/static/common/icon/member_icon_person_black.png"></div>
-                        <div class="wrapper_ticket_name obj_table_cell_x3 obj_font_size_15_weight_normal ">개인 수업</div>
+                        <div class="wrapper_ticket_name obj_table_cell_x3 obj_font_size_15_weight_normal ">개인 수업
+                        {% if request.session.setting_member_private_class_auto_permission == 0 %}
+                            [대기 예약]
+                        {% endif %}
+                        </div>
                         <div class="wrapper_ticket_reserve_avail_count obj_table_cell_x3 obj_font_size_12_weight_normal">(예약 가능: {% if member_ticket_reg_count >= 99999 %}무제한{% else %}{{ member_ticket_avail_count }}  번{% endif %})</div>
                     </div>
                     <div class="wrapper_reserve_form_data">
@@ -70,7 +74,11 @@
                     <div class="obj_box_full">
                         <div class="obj_table_raw wrapper_ticket_info">
                             <div class="wrapper_ticket_icon_personal obj_table_cell_x3"><img src="/static/common/icon/member_icon_people_black.png"></div>
-                            <div class="wrapper_ticket_name obj_table_cell_x3 obj_font_size_15_weight_normal ">{{ lecture_info.lecture_name }}</div>
+                            <div class="wrapper_ticket_name obj_table_cell_x3 obj_font_size_15_weight_normal ">{{ lecture_info.lecture_name }}
+                                {% if request.session.setting_member_public_class_auto_permission == 0 %}
+                                    [대기 예약]
+                                {% endif %}
+                            </div>
                             <div class="wrapper_ticket_reserve_avail_count obj_table_cell_x3 obj_font_size_12_weight_normal">(예약 가능: {% if lecture_info.lecture_member_ticket_reg_count >= 99999 %}무제한{% else %}{{ lecture_info.lecture_member_ticket_avail_count }} 번{% endif %})</div>
                         </div>
                         <div class="wrapper_reserve_form_data">
