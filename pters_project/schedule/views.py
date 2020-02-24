@@ -419,9 +419,9 @@ def delete_schedule_logic(request):
             member_name = schedule_info.member_ticket_tb.member.name
 
             try:
-                lecture_one_to_one = LectureTb.objects.get(class_tb_id=class_id,
-                                                           lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, state_cd='IP',
-                                                           use=USE)
+                lecture_one_to_one = LectureTb.objects.filter(class_tb_id=class_id,
+                                                              lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, state_cd='IP',
+                                                              use=USE).earliest('reg_dt')
                 lecture_name = lecture_one_to_one.name
             except ObjectDoesNotExist:
                 lecture_name = '개인'
@@ -1077,7 +1077,7 @@ def add_repeat_schedule_logic(request):
     # 개인 일정 등록하는 경우
     if error is None:
         if lecture_info is not None and lecture_info.lecture_type_cd == LECTURE_TYPE_ONE_TO_ONE:
-            lecture_id = None
+            # lecture_id = None
             member_id = member_ids[0]
             if member_id == '':
                 error = '회원을 선택해 주세요.'
@@ -1294,7 +1294,7 @@ def add_repeat_schedule_confirm(request):
                 information = '반복 일정 등록이 취소됐습니다.'
 
         else:
-            if lecture_info is not None:
+            if lecture_info is not None and lecture_info.lecture_type_cd != LECTURE_TYPE_ONE_TO_ONE:
                 # func_update_member_schedule_alarm(class_id)
 
                 log_data = LogTb(log_type='LR01', auth_member_id=request.user.id,

@@ -6,7 +6,6 @@ import boto3
 import httplib2
 from awscli.errorhandler import ClientError
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.paginator import Paginator, EmptyPage
 from django.db import InternalError
 from django.db import transaction
 from django.db.models import Q
@@ -17,8 +16,8 @@ from configs import settings
 from configs.const import REPEAT_TYPE_2WEAK, ON_SCHEDULE_TYPE, USE, UN_USE, SCHEDULE_DUPLICATION_DISABLE, \
     STATE_CD_ABSENCE, STATE_CD_FINISH, STATE_CD_IN_PROGRESS, STATE_CD_NOT_PROGRESS, LECTURE_TYPE_ONE_TO_ONE, \
     AUTH_TYPE_VIEW, GROUP_SCHEDULE, OFF_SCHEDULE, FROM_TRAINEE_LESSON_ALARM_ON, TO_SHARED_TRAINER_LESSON_ALARM_OFF, \
-    TO_SHARED_TRAINER_LESSON_ALARM_ON, MEMBER_SCHEDULE_PAGINATION_COUNTER, PERMISSION_STATE_CD_WAIT, \
-    PERMISSION_STATE_CD_APPROVE
+    TO_SHARED_TRAINER_LESSON_ALARM_ON, PERMISSION_STATE_CD_WAIT, \
+    PERMISSION_STATE_CD_APPROVE, ON_SCHEDULE
 from configs.settings import DEBUG
 from login.models import PushInfoTb
 from trainee.models import MemberTicketTb
@@ -27,7 +26,6 @@ from trainer.models import MemberClassTb, ClassMemberTicketTb, LectureTb, Ticket
 from .models import ScheduleTb, RepeatScheduleTb, DeleteScheduleTb, DeleteRepeatScheduleTb, HolidayTb, DailyRecordTb
 
 if DEBUG is False:
-    from kombu.exceptions import OperationalError
     from tasks.tasks import task_send_fire_base_push
 
 
@@ -71,6 +69,34 @@ def func_get_member_ticket_id(class_id, member_id):
             break
 
     return member_ticket_id
+
+
+# 1:1 member_ticket id 조회 - 자유형 문제
+def func_get_member_ticket_one_to_one_lecture_info(class_id, member_ticket_id):
+    today = datetime.date.today()
+    lecture_info = None
+    # 강좌에 해당하는 수강/회원 정보 가져오기
+    class_member_ticket_data = ClassMemberTicketTb.objects.select_related(
+        'member_ticket_tb').filter(class_tb_id=class_id, class_tb__use=USE,  auth_cd=AUTH_TYPE_VIEW,
+                                   member_ticket_tb_id=member_ticket_id,
+                                   member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+                                   member_ticket_tb__member_ticket_avail_count__gt=0,
+                                   member_ticket_tb__use=USE).order_by('member_ticket_tb__start_date',
+                                                                       'member_ticket_tb__reg_dt')
+
+    for class_member_ticket_info in class_member_ticket_data:
+        try:
+            ticket_single_lecture = TicketLectureTb.objects.filter(
+                ticket_tb_id=class_member_ticket_info.member_ticket_tb.ticket_tb_id,
+                ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+                lecture_tb__state_cd=STATE_CD_IN_PROGRESS, lecture_tb__lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE,
+                use=USE).earliest('reg_dt')
+            lecture_info = ticket_single_lecture.lecture_tb
+            break
+        except ObjectDoesNotExist:
+            lecture_info = None
+
+    return lecture_info
 
 
 # 그룹 Lecture Id 조회
@@ -268,8 +294,8 @@ def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
         end_font_color_cd = lecture_info.end_font_color_cd
 
         if lecture_info.lecture_type_cd == LECTURE_TYPE_ONE_TO_ONE:
-            lecture_info = None
-            lecture_id = None
+            # lecture_info = None
+            # lecture_id = None
             lecture_schedule_id = None
 
     if str(en_dis_type) == str(OFF_SCHEDULE):
@@ -880,8 +906,13 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
                                                                                  [])).order_by('start_dt', 'reg_dt')
 
     try:
-        lecture_one_to_one = LectureTb.objects.get(class_tb_id=class_id,
-                                                   lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, state_cd='IP', use=USE)
+        lecture_one_to_one = LectureTb.objects.filter(class_tb_id=class_id,
+                                                      lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE,
+                                                      state_cd='IP', use=USE).earliest('reg_dt')
+        # if len(lecture_one_to_one_data) > 0:
+        #     lecture_one_to_one = lecture_one_to_one_data[0]
+        # else:
+        #     lecture_one_to_one = None
     except ObjectDoesNotExist:
         lecture_one_to_one = None
 
@@ -919,13 +950,14 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
             lecture_id = schedule_info.lecture_tb.lecture_id
             lecture_name = schedule_info.lecture_tb.name
             lecture_current_member_num = schedule_info.lecture_current_member_num
-            schedule_type = '2'
+            if schedule_info.lecture_tb.lecture_type_cd != LECTURE_TYPE_ONE_TO_ONE:
+                schedule_type = str(GROUP_SCHEDULE)
         except AttributeError:
             lecture_id = ''
             lecture_name = ''
             lecture_current_member_num = ''
             if lecture_one_to_one is not None:
-                if str(schedule_type) == '0':
+                if str(schedule_type) == str(OFF_SCHEDULE):
                     lecture_id = ''
                     lecture_name = 'OFF'
                     lecture_current_member_num = 0
@@ -933,6 +965,7 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
                     lecture_id = lecture_one_to_one.lecture_id
                     lecture_name = lecture_one_to_one.name
                     lecture_current_member_num = 1
+
         lecture_schedule_list = []
         lecture_member_schedule_data = ScheduleTb.objects.select_related(
             'member_ticket_tb__member', 'reg_member').filter(class_tb_id=class_id, lecture_schedule_id=schedule_id,
@@ -1222,9 +1255,16 @@ def func_get_permission_wait_schedule_all(class_id, page):
     #     member_schedule_data = []
     # schedule_idx = paginator.count
 
+    # try:
+    #     one_to_one_lecture = LectureTb.objects.get(class_tb_id=class_id, lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE,
+    #                                                use=USE)
+    #     lecture_one_to_one_color_cd = one_to_one_lecture.ing_color_cd
+    # except ObjectDoesNotExist:
+    #     lecture_one_to_one_color_cd = ''
+
     try:
-        one_to_one_lecture = LectureTb.objects.get(class_tb_id=class_id, lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE,
-                                                   use=USE)
+        one_to_one_lecture = LectureTb.objects.filter(class_tb_id=class_id, lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE,
+                                                      use=USE).earliest('reg_dt')
         lecture_one_to_one_color_cd = one_to_one_lecture.ing_color_cd
     except ObjectDoesNotExist:
         lecture_one_to_one_color_cd = ''
@@ -1240,7 +1280,8 @@ def func_get_permission_wait_schedule_all(class_id, page):
             lecture_name = lecture_info.name
             lecture_max_member_num = lecture_info.member_num
             lecture_ing_color_cd = lecture_info.ing_color_cd
-            schedule_type = 2
+            if lecture_info.lecture_type_cd != LECTURE_TYPE_ONE_TO_ONE:
+                schedule_type = GROUP_SCHEDULE
         except AttributeError:
             lecture_id = ''
             lecture_name = '개인수업'

@@ -446,8 +446,8 @@ class Lecture_add{
             return false;
         }
         else{
-            if(this.data.capacity <= 1){
-                show_error_message({title:'정원은 2명보다 크게 설정해주세요.'});
+            if(this.data.capacity < 1){
+                show_error_message({title:'정원은 1명보다 크게 설정해주세요.'});
                 return false;
             }
             if(this.data.lecture_minute == null){

@@ -289,18 +289,18 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
         member_repeat_schedule_list = []
         lecture_member_repeat_schedule_ordered_dict = collections.OrderedDict()
 
-        try:
-            one_to_one_lecture = LectureTb.objects.get(class_tb_id=class_id, lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE,
-                                                       use=USE)
-            member_lecture_ing_color_cd = one_to_one_lecture.ing_color_cd
-            member_lecture_end_color_cd = one_to_one_lecture.end_color_cd
-            member_lecture_ing_font_color_cd = one_to_one_lecture.ing_font_color_cd
-            member_lecture_end_font_color_cd = one_to_one_lecture.end_font_color_cd
-        except ObjectDoesNotExist:
-            member_lecture_ing_color_cd = ''
-            member_lecture_end_color_cd = ''
-            member_lecture_ing_font_color_cd = ''
-            member_lecture_end_font_color_cd = ''
+        # try:
+        #     one_to_one_lecture = LectureTb.objects.filter(class_tb_id=class_id, lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE,
+        #                                                   use=USE).order_by('reg_dt').latest()
+        #     member_lecture_ing_color_cd = one_to_one_lecture.ing_color_cd
+        #     member_lecture_end_color_cd = one_to_one_lecture.end_color_cd
+        #     member_lecture_ing_font_color_cd = one_to_one_lecture.ing_font_color_cd
+        #     member_lecture_end_font_color_cd = one_to_one_lecture.end_font_color_cd
+        # except ObjectDoesNotExist:
+        #     member_lecture_ing_color_cd = ''
+        #     member_lecture_end_color_cd = ''
+        #     member_lecture_ing_font_color_cd = ''
+        #     member_lecture_end_font_color_cd = ''
 
         # OFF 반복 일정 정보 불러오기
         off_repeat_schedule_data = RepeatScheduleTb.objects.select_related(
@@ -310,7 +310,8 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
         # 회원의 반복 일정 정보 불러오기
         member_repeat_schedule_data = RepeatScheduleTb.objects.select_related(
             'member_ticket_tb__member',
-            'reg_member').filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, lecture_tb__isnull=True,
+            'reg_member').filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,
+                                 lecture_tb__lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE,
                                  lecture_schedule_id__isnull=True
                                  ).exclude(end_date__lt=today).order_by('-reg_dt', 'lecture_tb', 'lecture_schedule_id')
 
@@ -318,6 +319,7 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
         lecture_repeat_schedule_data = RepeatScheduleTb.objects.select_related(
             'lecture_tb',
             'reg_member').filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, lecture_tb__isnull=False,
+                                 lecture_tb__lecture_type_cd=LECTURE_TYPE_NORMAL,
                                  lecture_schedule_id__isnull=True
                                  ).exclude(end_date__lt=today).order_by('-reg_dt', 'lecture_tb', 'lecture_schedule_id',)
 
@@ -387,10 +389,10 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
                 'mod_member_name': mod_member_name,
                 'mod_dt': str(member_repeat_schedule_info.mod_dt),
                 'reg_dt': str(member_repeat_schedule_info.reg_dt),
-                'lecture_ing_color_cd': member_lecture_ing_color_cd,
-                'lecture_end_color_cd': member_lecture_end_color_cd,
-                'lecture_ing_font_color_cd': member_lecture_ing_font_color_cd,
-                'lecture_end_font_color_cd': member_lecture_end_font_color_cd,
+                'lecture_ing_color_cd': member_repeat_schedule_info.lecture_tb.ing_color_cd,
+                'lecture_end_color_cd': member_repeat_schedule_info.lecture_tb.end_color_cd,
+                'lecture_ing_font_color_cd': member_repeat_schedule_info.lecture_tb.ing_font_color_cd,
+                'lecture_end_font_color_cd': member_repeat_schedule_info.lecture_tb.end_font_color_cd,
                 'member_id': member_repeat_schedule_info.member_ticket_tb.member.member_id,
                 'member_name': member_repeat_schedule_info.member_ticket_tb.member.name,
                 'member_profile_url': member_profile_url
@@ -2376,10 +2378,12 @@ def add_lecture_info_logic(request):
     lecture_minute = request.POST.get('lecture_minute', 60)
     error = None
     lecture_id = None
-
+    lecture_type_cd = LECTURE_TYPE_NORMAL
+    if member_num == 1 or member_num == '1':
+        lecture_type_cd = LECTURE_TYPE_ONE_TO_ONE
     try:
         with transaction.atomic():
-            lecture_info = LectureTb(class_tb_id=class_id, member_num=member_num, lecture_type_cd=LECTURE_TYPE_NORMAL,
+            lecture_info = LectureTb(class_tb_id=class_id, member_num=member_num, lecture_type_cd=lecture_type_cd,
                                      # member_num_view_flag=member_num_view_flag,
                                      name=name, note=note, ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
                                      ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
@@ -2588,20 +2592,20 @@ def update_lecture_info_logic(request):
         lecture_info.save()
 
     if error is None:
-        if str(lecture_info.lecture_type_cd) == str(LECTURE_TYPE_ONE_TO_ONE):
-            # 오늘 이전의 일정
-            schedule_data_past = ScheduleTb.objects.filter(class_tb_id=class_id, lecture_tb__isnull=True,
-                                                           end_dt__lte=timezone.now(), en_dis_type=ON_SCHEDULE_TYPE)
-            # 오늘 이후의 일정
-            schedule_data_future = ScheduleTb.objects.filter(class_tb_id=class_id, lecture_tb__isnull=True,
-                                                             end_dt__gt=timezone.now(), en_dis_type=ON_SCHEDULE_TYPE)
-        else:
-            # 오늘 이전의 일정
-            schedule_data_past = ScheduleTb.objects.filter(class_tb_id=class_id, lecture_tb_id=lecture_id,
-                                                           end_dt__lte=timezone.now(), en_dis_type=ON_SCHEDULE_TYPE)
-            # 오늘 이후의 일정
-            schedule_data_future = ScheduleTb.objects.filter(class_tb_id=class_id, lecture_tb_id=lecture_id,
-                                                             end_dt__gt=timezone.now(), en_dis_type=ON_SCHEDULE_TYPE)
+        # if str(lecture_info.lecture_type_cd) == str(LECTURE_TYPE_ONE_TO_ONE):
+        #     # 오늘 이전의 일정
+        #     schedule_data_past = ScheduleTb.objects.filter(class_tb_id=class_id, lecture_tb__isnull=True,
+        #                                                    end_dt__lte=timezone.now(), en_dis_type=ON_SCHEDULE_TYPE)
+        #     # 오늘 이후의 일정
+        #     schedule_data_future = ScheduleTb.objects.filter(class_tb_id=class_id, lecture_tb__isnull=True,
+        #                                                      end_dt__gt=timezone.now(), en_dis_type=ON_SCHEDULE_TYPE)
+        # else:
+        # 오늘 이전의 일정
+        schedule_data_past = ScheduleTb.objects.filter(class_tb_id=class_id, lecture_tb_id=lecture_id,
+                                                       end_dt__lte=timezone.now(), en_dis_type=ON_SCHEDULE_TYPE)
+        # 오늘 이후의 일정
+        schedule_data_future = ScheduleTb.objects.filter(class_tb_id=class_id, lecture_tb_id=lecture_id,
+                                                         end_dt__gt=timezone.now(), en_dis_type=ON_SCHEDULE_TYPE)
         if str(update_this_to_all_plans) == str(USE):
             schedule_data_past.update(ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
                                       ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,

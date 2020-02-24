@@ -792,8 +792,12 @@ def func_get_trainer_setting_list(context, trainer_id, class_id, user_id):
         if setting_info.setting_type_cd == 'LT_RES_PUBLIC_CLASS_WAIT_MEMBER_NUM':
             setting_member_public_class_wait_member_num = int(setting_info.setting_info)
     try:
-        lecture_info = LectureTb.objects.get(class_tb_id=class_id, lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, use=USE)
+        lecture_info = LectureTb.objects.filter(class_tb_id=class_id, lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, use=USE).earliest('reg_dt')
+        # if len(lecture_data) > 0:
         one_to_one_lecture_time_duration = lecture_info.lecture_minute
+        # print(str(one_to_one_lecture_time_duration))
+        # else:
+        #     one_to_one_lecture_time_duration = 60
     except ObjectDoesNotExist:
         one_to_one_lecture_time_duration = 60
 
