@@ -301,6 +301,7 @@ def func_setting_data_update(request, group):
         request.session['setting_member_private_class_auto_permission'] = context['setting_member_private_class_auto_permission']
         request.session['setting_member_public_class_auto_permission'] = context['setting_member_public_class_auto_permission']
         request.session['setting_member_public_class_wait_member_num'] = context['setting_member_public_class_wait_member_num']
+        request.session['setting_member_wait_schedule_auto_cancel_time'] = context['setting_member_wait_schedule_auto_cancel_time']
         if group == 'trainee':
             try:
                 setting_data = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_LAN_01')
@@ -514,6 +515,8 @@ def update_finish_schedule_data(request):
     now = timezone.now()
     class_id = request.session.get('class_id', '')
     setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
+    setting_member_wait_schedule_auto_cancel_time \
+        = request.session.get('setting_member_wait_schedule_auto_cancel_time', 0)
     if class_id is not None and class_id != '':
         if str(setting_schedule_auto_finish) != str(AUTO_FINISH_OFF):
             not_finish_schedule_data = ScheduleTb.objects.select_related(
@@ -594,6 +597,7 @@ def update_finish_schedule_data(request):
                     if member_ticket_tb_id is not None:
                         func_refresh_member_ticket_count(not_finish_schedule_info.class_tb_id, member_ticket_tb_id)
         else:
+            now -= datetime.timedelta(minutes=setting_member_wait_schedule_auto_cancel_time)
             not_finish_wait_schedule_data = ScheduleTb.objects.select_related(
                 'member_ticket_tb'
             ).filter(class_tb_id=class_id, state_cd=STATE_CD_NOT_PROGRESS,
