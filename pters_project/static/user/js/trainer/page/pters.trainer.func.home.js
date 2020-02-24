@@ -328,7 +328,7 @@ class Home {
             let member_name = plans[i].lecture_name == "" ? plans[i].member_name : plans[i].lecture_name;
             let permission_status = plans[i].permission_state_cd;
             let waiting_status = plans[i].lecture_wait_member_num > 0 || plans[i].permission_state_cd == SCHEDULE_WAIT ? ON : OFF;
-            console.log(member_name, plans[i].lecture_wait_member_num, plans[i].permission_state_cd, waiting_status)
+            console.log(member_name, plans[i].lecture_wait_member_num, plans[i].permission_state_cd, waiting_status);
 
             // if(permission_status == SCHEDULE_WAIT){
             //     member_name = '('+APPROVE_SCHEDULE_STATUS[permission_status]+') '+plans[i].member_name;

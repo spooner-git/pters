@@ -477,6 +477,9 @@ class Plan_view{
 
         let id = 'select_member_plan_approve';
         let title = this.data.member_id.length == 0 ? '회원*' : this.data.lecture_current_num-permission_wait_num+ '/' + this.data.lecture_max_num +' 명';
+        if(this.data.lecture_current_num-permission_wait_num > this.data.lecture_max_num){
+            title = `<span style="color:var(--font-highlight)">${title}</span>`;
+        }
         let icon = CImg.members();
         let icon_r_visible = SHOW;
         let icon_r_text = "예약 확정 회원 목록";
