@@ -20,4 +20,7 @@ urlpatterns = [
     url(r'^update_daily_data/$', views.update_daily_data_logic, name='update_daily_data'),
     url(r'^update_finish_schedule_data/$', views.update_finish_schedule_data_logic, name='update_finish_schedule_data'),
     url(r'^send_push_alarm/$', views.send_push_alarm_logic, name='send_push_alarm'),
+    url(r'^get_all_schedule_push_alarm_data/$', views.GetAllSchedulePushAlarmDataView.as_view(),
+        name='get_all_schedule_push_alarm_data'),
+
 ]

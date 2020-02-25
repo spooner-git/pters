@@ -26,7 +26,7 @@ from trainer.models import MemberClassTb, ClassMemberTicketTb, LectureTb, Ticket
 from .models import ScheduleTb, RepeatScheduleTb, DeleteScheduleTb, DeleteRepeatScheduleTb, HolidayTb, DailyRecordTb
 
 if DEBUG is False:
-    from tasks.tasks import task_send_fire_base_push
+    from tasks.tasks import task_send_fire_base_push, task_send_fire_base_push_multi
 
 
 def func_get_holiday_schedule(start_date, end_date):
@@ -628,32 +628,39 @@ def func_date_check(class_id, schedule_id, pt_schedule_date, add_start_dt, add_e
 def func_send_push_trainer(member_ticket_id, title, message):
     error = None
     if member_ticket_id is not None and member_ticket_id != '':
+        registration_ids = []
+        multi_badge_counter = -1
         member_ticket_info = MemberTicketTb.objects.select_related(
             'member').filter(member_ticket_id=member_ticket_id, member_auth_cd=AUTH_TYPE_VIEW, use=USE)
 
+        token_data = PushInfoTb.objects.filter(use=USE)
+
         for member_ticket_info in member_ticket_info:
-            token_data = PushInfoTb.objects.filter(member_id=member_ticket_info.member_id, use=USE)
+            # token_data = PushInfoTb.objects.filter(member_id=member_ticket_info.member_id, use=USE)
             for token_info in token_data:
-                if token_info.device_id != 'pc':
-                    token_info.badge_counter += 1
-                    token_info.save()
-                instance_id = token_info.token
-                badge_counter = token_info.badge_counter
-                check_async = False
-                if DEBUG is False:
-                    check_async = True
-                    # from configs.celery import CELERY_WORKING
-                    # try:
-                    #     if CELERY_WORKING:
-                    #         check_async = True
-                    #     else:
-                    #         check_async = False
-                    # except OperationalError:
-                    #     check_async = False
-                if check_async:
-                    error = task_send_fire_base_push.delay(instance_id, title, message, badge_counter)
-                else:
-                    error = send_fire_base_push(instance_id, title, message, badge_counter)
+                if str(token_info.member_id) == str(member_ticket_info.member_id):
+                    if token_info.device_id != 'pc':
+                        token_info.badge_counter += 1
+                        token_info.save()
+                    instance_id = token_info.token
+
+                    if multi_badge_counter == -1:
+                        multi_badge_counter = token_info.badge_counter
+                    if multi_badge_counter > token_info.badge_counter:
+                        multi_badge_counter = token_info.badge_counter
+                    badge_counter = token_info.badge_counter
+
+                    registration_ids.append(instance_id)
+                    #     error = send_fire_base_push(instance_id, title, message, badge_counter)
+
+        check_async = False
+        if DEBUG is False:
+            check_async = True
+        if len(registration_ids) > 0:
+            if check_async:
+                error = task_send_fire_base_push_multi.delay(registration_ids, title, message, multi_badge_counter)
+            else:
+                error = send_fire_base_push_multi(registration_ids, title, message, multi_badge_counter)
 
     return error
 
@@ -662,7 +669,8 @@ def func_send_push_trainer(member_ticket_id, title, message):
 def func_send_push_trainee(class_id, title, message):
     error = None
     if class_id is not None and class_id != '':
-
+        registration_ids = []
+        multi_badge_counter = -1
         member_class_data = MemberClassTb.objects.select_related('class_tb',
                                                                  'member').filter(class_tb_id=class_id,
                                                                                   auth_cd=AUTH_TYPE_VIEW, use=USE)
@@ -672,6 +680,8 @@ def func_send_push_trainee(class_id, title, message):
             lt_pus_to_shared_trainer_lesson_alarm = int(setting_data.setting_info)
         except ObjectDoesNotExist:
             lt_pus_to_shared_trainer_lesson_alarm = TO_SHARED_TRAINER_LESSON_ALARM_OFF
+
+        token_data = PushInfoTb.objects.select_related('member').filter(use=USE)
 
         for member_class_info in member_class_data:
             push_check = False
@@ -690,30 +700,47 @@ def func_send_push_trainee(class_id, title, message):
                     lt_pus_from_trainee_lesson_alarm = FROM_TRAINEE_LESSON_ALARM_ON
 
                 if str(lt_pus_from_trainee_lesson_alarm) == str(FROM_TRAINEE_LESSON_ALARM_ON):
-                    token_data = PushInfoTb.objects.filter(member_id=member_class_info.member_id, use=USE)
+                    # token_data = PushInfoTb.objects.filter(member_id=member_class_info.member_id, use=USE)
                     for token_info in token_data:
-                        if token_info.device_id != 'pc':
-                            token_info.badge_counter += 1
-                            token_info.save()
-                        instance_id = token_info.token
-                        badge_counter = token_info.badge_counter
-                        check_async = False
-                        if DEBUG is False:
-                            check_async = True
-                            # from configs.celery import CELERY_WORKING
-                            # try:
-                            #     if CELERY_WORKING:
-                            #         check_async = True
-                            #     else:
-                            #         check_async = False
-                            # except OperationalError:
-                            #     check_async = False
+                        # print(str(token_info['member_id'])+':'+str(member_class_info.member_id))
 
-                        if check_async:
-                            error = task_send_fire_base_push.delay(instance_id, title, message, badge_counter)
-                        else:
-                            error = send_fire_base_push(instance_id, title, message, badge_counter)
+                        if str(token_info.member_id) == str(member_class_info.member_id):
+                            if token_info.device_id != 'pc':
+                                token_info.badge_counter += 1
+                                token_info.save()
+                            instance_id = token_info.token
+                            if multi_badge_counter == -1:
+                                multi_badge_counter = token_info.badge_counter
+                            if multi_badge_counter > token_info.badge_counter:
+                                multi_badge_counter = token_info.badge_counter
+                            badge_counter = token_info.badge_counter
+                            # if DEBUG is False:
+                            #     check_async = True
+                                # from configs.celery import CELERY_WORKING
+                                # try:
+                                #     if CELERY_WORKING:
+                                #         check_async = True
+                                #     else:
+                                #         check_async = False
+                                # except OperationalError:
+                                #     check_async = False
 
+                            # if check_async:
+                            #     error = task_send_fire_base_push.delay(instance_id, title, message, badge_counter)
+                            # else:
+                            registration_ids.append(instance_id)
+                                # error = send_fire_base_push(instance_id, title, message, badge_counter)
+        # if len(registration_ids) > 0:
+        #     error = send_fire_base_push_multi(registration_ids, title, message, multi_badge_counter)
+
+        check_async = False
+        if DEBUG is False:
+            check_async = True
+        if len(registration_ids) > 0:
+            if check_async:
+                error = task_send_fire_base_push_multi.delay(registration_ids, title, message, multi_badge_counter)
+            else:
+                error = send_fire_base_push_multi(registration_ids, title, message, multi_badge_counter)
     return error
 
 
@@ -721,9 +748,13 @@ def func_send_push_trainee(class_id, title, message):
 def func_send_push_trainer_trainer(class_id, title, message, member_id):
     error = None
     if class_id is not None and class_id != '':
+        registration_ids = []
+        multi_badge_counter = -1
 
         member_class_data = MemberClassTb.objects.select_related('member').filter(class_tb_id=class_id,
                                                                                   auth_cd=AUTH_TYPE_VIEW, use=USE)
+        token_data = PushInfoTb.objects.filter(use=USE)
+
         for member_class_info in member_class_data:
             if str(member_id) != str(member_class_info.member_id):
                 try:
@@ -735,30 +766,46 @@ def func_send_push_trainer_trainer(class_id, title, message, member_id):
 
                 if str(lt_pus_from_trainee_lesson_alarm) == str(FROM_TRAINEE_LESSON_ALARM_ON):
 
-                    token_data = PushInfoTb.objects.filter(member_id=member_class_info.member_id, use=USE)
+                    # token_data = PushInfoTb.objects.filter(member_id=member_class_info.member_id, use=USE)
                     for token_info in token_data:
-                        if token_info.device_id != 'pc':
-                            token_info.badge_counter += 1
-                            token_info.save()
-                        instance_id = token_info.token
-                        badge_counter = token_info.badge_counter
-                        check_async = False
-                        if DEBUG is False:
-                            check_async = True
-                            # from configs.celery import CELERY_WORKING
-                            # try:
-                            #     if CELERY_WORKING:
-                            #         check_async = True
-                            #     else:
-                            #         check_async = False
-                            # except OperationalError:
-                            #     check_async = False
+                        if str(token_info.member_id) == str(member_class_info.member_id):
+                            if token_info.device_id != 'pc':
+                                token_info.badge_counter += 1
+                                token_info.save()
+                            instance_id = token_info.token
+                            if multi_badge_counter == -1:
+                                multi_badge_counter = token_info.badge_counter
+                            if multi_badge_counter > token_info.badge_counter:
+                                multi_badge_counter = token_info.badge_counter
+                            badge_counter = token_info.badge_counter
+                            # if DEBUG is False:
+                            #     check_async = True
+                                # from configs.celery import CELERY_WORKING
+                                # try:
+                                #     if CELERY_WORKING:
+                                #         check_async = True
+                                #     else:
+                                #         check_async = False
+                                # except OperationalError:
+                                #     check_async = False
 
-                        if check_async:
-                            error = task_send_fire_base_push.delay(instance_id, title, message, badge_counter)
-                        else:
-                            error = send_fire_base_push(instance_id, title, message, badge_counter)
+                            # if check_async:
+                            #     error = task_send_fire_base_push.delay(instance_id, title, message, badge_counter)
+                            # else:
+                            registration_ids.append(instance_id)
+                                # error = send_fire_base_push(instance_id, title, message, badge_counter)
 
+        # if len(registration_ids) > 0:
+        #     error = send_fire_base_push_multi(registration_ids, title, message, multi_badge_counter)
+
+        check_async = False
+        if DEBUG is False:
+            check_async = True
+        if len(registration_ids) > 0:
+            if check_async:
+                error = task_send_fire_base_push_multi.delay(registration_ids, title, message, multi_badge_counter)
+            else:
+                error = send_fire_base_push_multi(registration_ids, title, message, multi_badge_counter)
     return error
 
 
@@ -767,6 +814,30 @@ def send_fire_base_push(instance_id, title, message, badge_counter):
     error = None
     data = {
         'to': instance_id,
+        'notification': {
+            'title': title,
+            'body': message,
+            'badge': badge_counter,
+            'sound': 'default'
+        }
+    }
+    body = json.dumps(data)
+    h = httplib2.Http()
+
+    resp, content = h.request("https://fcm.googleapis.com/fcm/send", method="POST", body=body,
+                              headers={'Content-Type': 'application/json;',
+                                       'Authorization': 'key=' + push_server_id})
+
+    if resp['status'] != '200':
+        error = '오류가 발생했습니다.'
+    return error
+
+
+def send_fire_base_push_multi(registration_ids, title, message, badge_counter):
+    push_server_id = getattr(settings, "PTERS_PUSH_SERVER_KEY", '')
+    error = None
+    data = {
+        'registration_ids': registration_ids,
         'notification': {
             'title': title,
             'body': message,
