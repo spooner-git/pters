@@ -13,7 +13,8 @@ class Setting_reserve{
                 capacity_visible:OFF,
                 setting_member_private_class_auto_permission:ON,
                 setting_member_public_class_auto_permission:ON,
-                setting_member_public_class_wait_member_num:0
+                setting_member_public_class_wait_member_num:0,
+                wait_schedule_auto_cancel_time:{value:[], text:[]},
         };
 
         this.data_for_selector = {
@@ -26,6 +27,8 @@ class Setting_reserve{
             available_reserve_time:
                 {value:[0, 30, 60, 120, 180, 240, 300, 360, 420, 480, 540, 600, 660, 720, 1440, 2880], text:["설정 안함", "30분전", "1시간 전", "2시간 전", "3시간 전", "4시간 전", "5시간 전", "6시간 전", "7시간 전", "8시간 전", "9시간 전", "10시간 전", "11시간 전", "12시간 전", "24시간 전", "48시간 전"]},
             available_cancel_time:
+                {value:[0, 30, 60, 120, 180, 240, 300, 360, 420, 480, 540, 600, 660, 720, 1440, 2880], text:["설정 안함", "30분전", "1시간 전", "2시간 전", "3시간 전", "4시간 전", "5시간 전", "6시간 전", "7시간 전", "8시간 전", "9시간 전", "10시간 전", "11시간 전", "12시간 전", "24시간 전", "48시간 전"]},
+            wait_schedule_auto_cancel_time:
                 {value:[0, 30, 60, 120, 180, 240, 300, 360, 420, 480, 540, 600, 660, 720, 1440, 2880], text:["설정 안함", "30분전", "1시간 전", "2시간 전", "3시간 전", "4시간 전", "5시간 전", "6시간 전", "7시간 전", "8시간 전", "9시간 전", "10시간 전", "11시간 전", "12시간 전", "24시간 전", "48시간 전"]}
         };
 
@@ -59,6 +62,10 @@ class Setting_reserve{
             this.data.setting_member_private_class_auto_permission = data.setting_member_private_class_auto_permission;
             this.data.setting_member_public_class_auto_permission = data.setting_member_public_class_auto_permission;
             this.data.setting_member_public_class_wait_member_num = data.setting_member_public_class_wait_member_num;
+
+            this.data.wait_schedule_auto_cancel_time.value[0] = data.setting_member_wait_schedule_auto_cancel_time;
+            this.data.wait_schedule_auto_cancel_time.text[0] = this.data_for_selector.wait_schedule_auto_cancel_time.text[ this.data_for_selector.wait_schedule_auto_cancel_time.value.indexOf(Number(data.setting_member_wait_schedule_auto_cancel_time) ) ];
+
             this.render_content();
         });
         func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
@@ -120,15 +127,17 @@ class Setting_reserve{
                     '</article>' +
                     '<article class="obj_input_box_full">' +
                         this.dom_row_capacity_visible() +
-                        "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>수강 회원님께서 예약 시 일정의 현재 참석자와 정원 숫자를 볼 수 있습니다.</span>" +
+                        "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>수강 회원님께서 예약시 일정의 현재 참석자와 정원 숫자를 볼 수 있습니다.</span>" +
                     '</article>' +
                     '<article class="obj_input_box_full"><div style="margin-bottom:15px;">' +
                         this.dom_row_member_private_class_auto_permission() +
-                       "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>설정 해제시 지난 대기 예약 일정은 자동 취소됩니다.</span></div><div>" +
+                       "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>설정 해제시 수강 회원님께서 예약시 대기 예약으로 등록됩니다.</span></div><div>" +
                         this.dom_row_member_public_class_auto_permission() +
-                       "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>설정 해제시 지난 대기 예약 일정은 자동 취소됩니다.</span></div><div>" +
+                       "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>설정 해제시 수강 회원님께서 예약시 대기 예약으로 등록됩니다.</span></div><div>" +
                         this.dom_row_member_public_class_wait_member_num() +
                        "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>수업 정원 초과시 대기 예약으로 등록됩니다.</span></div>" +
+                        this.dom_row_wait_schedule_auto_cancel_time() +
+                       "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>수업 시작전 대기 예약이 자동 취소되는 시간을 선택할수 있습니다.</span></div>" +
                     '</article>';
         if(this.data.stop_reserve == ON){
             html = this.dom_row_stop_reserve() + 
@@ -380,6 +389,30 @@ class Setting_reserve{
         return html;
     }
 
+    dom_row_wait_schedule_auto_cancel_time(){
+        let id = "wait_schedule_auto_cancel_time";
+        let title = "대기 예약 자동 취소 시간";
+        let icon = DELETE;
+        let icon_r_visible = SHOW;
+        let icon_r_text = this.data.wait_schedule_auto_cancel_time.text.length == 0 ? '' : this.data.wait_schedule_auto_cancel_time.text;
+        let style = {"padding-bottom":"0", "padding-top":"24px;", "padding-right":"10px"};
+        let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            let title = "대기 예약 자동 취소 시간";
+            let install_target = "#wrapper_box_custom_select";
+            let multiple_select = 1;
+            let data = this.data_for_selector.wait_schedule_auto_cancel_time;
+            let selected_data = this.data.wait_schedule_auto_cancel_time;
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, popup_style, null, ()=>{
+                custom_selector = new CustomSelector(title, install_target, multiple_select, data, selected_data, (set_data)=>{
+                    this.data.wait_schedule_auto_cancel_time = set_data;
+                    this.render_content();
+                });
+            });
+        });
+        let html = row;
+        return html;
+    }
 
     dom_row_toolbox(){
         let title = "회원 예약";
@@ -425,7 +458,8 @@ class Setting_reserve{
 
             "setting_member_private_class_auto_permission":this.data.setting_member_private_class_auto_permission, // 개인 수업 예약 자동 수락 기능
             "setting_member_public_class_auto_permission":this.data.setting_member_public_class_auto_permission, // 그룹 수업 예약 자동 수락 기능
-            "setting_member_public_class_wait_member_num":this.data.setting_member_public_class_wait_member_num
+            "setting_member_public_class_wait_member_num":this.data.setting_member_public_class_wait_member_num,
+            "setting_member_wait_schedule_auto_cancel_time": this.data.wait_schedule_auto_cancel_time.value[0]
         };
         
         Setting_reserve_func.update(data, ()=>{
