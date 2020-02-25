@@ -676,7 +676,7 @@ class Plan_view{
 
         let id = 'select_member_plan_wait';
         let title = this.data.member_id.length == 0 ? '대기 회원' : permission_wait_num +' 명';
-        let icon = CImg.members();
+        let icon = CImg.hourglass();
         let icon_r_visible = SHOW;
         let icon_r_text = "대기 예약 회원 목록";
         let style = null;

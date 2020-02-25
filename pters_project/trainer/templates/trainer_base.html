@@ -1043,18 +1043,18 @@
     }
     
     //수강권 가격 입력 오류 1개 이상 의심되면 수정 팝업 띄우기
-    TempForError_func.ajax(
-        "/trainer/get_trainer_member_ticket_price_bug_list/",
-        "GET",
-        "",
-        (data)=>{
-            console.log("가격 입력 에러", data);
-            if(Object.keys(data).length > 0){
-                layer_popup.open_layer_popup(POPUP_BASIC, 'popup_temp_for_error', 100, POPUP_FROM_RIGHT, null, ()=>{
-                temp_for_error = new TempForError('.popup_temp_for_error', 'temp_for_error');});
-            }
-        }
-    ); 
+    // TempForError_func.ajax(
+    //     "/trainer/get_trainer_member_ticket_price_bug_list/",
+    //     "GET",
+    //     "",
+    //     (data)=>{
+    //         console.log("가격 입력 에러", data);
+    //         if(Object.keys(data).length > 0){
+    //             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_temp_for_error', 100, POPUP_FROM_RIGHT, null, ()=>{
+    //             temp_for_error = new TempForError('.popup_temp_for_error', 'temp_for_error');});
+    //         }
+    //     }
+    // ); 
 
 
     //튜토리얼을 본적이 없으면 튜토리얼을 띄우기

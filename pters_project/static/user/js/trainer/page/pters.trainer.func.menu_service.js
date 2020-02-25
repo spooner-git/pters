@@ -79,7 +79,7 @@ class Menu_service {
                     //     this.dom_menu_setting_alarm() + 
                     //     this.dom_menu_setting_attendmode() + 
                        CComponent.dom_tag('서비스', dom_tag_style) + 
-                        this.dom_menu_pters_pass() + 
+                        // this.dom_menu_pters_pass() + 
                         this.dom_menu_service_notice() + 
                         this.dom_menu_service_faq() +
                         this.dom_menu_service_inquiry() +
@@ -268,8 +268,8 @@ class Menu_service {
 
     dom_menu_pters_pass(){
         let id = 'menu_pters_pass';
-        let title = 'PTERS 패스 구매';
-        let icon = CImg.ticket(["var(--img-highlight)"]);
+        let title = 'PTERS 패스';
+        let icon = CImg.ticket();
         let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
