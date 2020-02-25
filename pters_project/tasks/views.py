@@ -1,14 +1,20 @@
 import datetime
 
 import logging
+
+from django.core import serializers
 from django.db.models import Q
 from django.db.models.expressions import RawSQL
+from django.http import JsonResponse
 from django.utils import timezone
 from django.shortcuts import render
 
 # Create your views here.
+from django.views import View
+
 from configs.const import USE, OFF_SCHEDULE_TYPE, UN_USE, AUTO_CANCEL_ON, AUTO_ABSENCE_ON, AUTO_FINISH_ON, \
     ON_SCHEDULE_TYPE, AUTO_FINISH_OFF, STATE_CD_NOT_PROGRESS, STATE_CD_FINISH, STATE_CD_ABSENCE, STATE_CD_IN_PROGRESS
+from login.models import PushInfoTb
 from payment.models import BillingInfoTb, PaymentInfoTb
 from schedule.functions import func_send_push_trainer, func_send_push_trainee, func_refresh_member_ticket_count
 from schedule.models import RepeatScheduleTb, ScheduleTb, DeleteScheduleTb
@@ -204,3 +210,44 @@ def update_daily_data_logic(request):
     func_update_finish_pass_data()
 
     return render(request, 'ajax/task_error_info.html')
+
+
+class GetAllSchedulePushAlarmDataView(View):
+
+    def get(self, request):
+        start_time = timezone.now()
+        alarm_dt = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:00')
+        # 개인 수업 일정
+        # query_common_cd = "SELECT COMMON_CD_NM FROM COMMON_CD_TB WHERE COMMON_CD=`CLASS_TB`.`SUBJECT_CD`"
+        # schedule_data = ScheduleTb.objects.select_related(
+        #     'class_tb', 'lecture_tb',
+        #     'member_ticket_tb__member'
+        # ).filter(alarm_dt__lte=alarm_dt,
+        #          use=USE).annotate(
+        #     class_type_name=RawSQL(query_common_cd, [])).exclude(
+        #     en_dis_type=OFF_SCHEDULE_TYPE)
+        schedule_data = ScheduleTb.objects.select_related(
+            'class_tb__member', 'lecture_tb',
+            'member_ticket_tb__member'
+        ).filter(alarm_dt__lte=alarm_dt, use=USE).exclude(en_dis_type=OFF_SCHEDULE_TYPE)
+        schedule_data = schedule_data.values('schedule_id',
+                                             'class_tb_id',
+                                             'class_tb__member_id',
+                                             'member_ticket_tb_id',
+                                             'start_dt', 'end_dt',
+                                             'lecture_tb__name',
+                                             'member_ticket_tb__member__name')
+        # print(str(schedule_data))
+        mod_dt_value = start_time - datetime.timedelta(days=90)
+        token_data = PushInfoTb.objects.filter(mod_dt__gte=mod_dt_value, use=USE).values('member_id',
+                                                                                         'token', 'badge_counter')
+
+        for schedule_info in schedule_data:
+            token_array = []
+            for token_info in token_data:
+                if token_info['member_id'] == schedule_info['class_tb__member_id']:
+                    token_array.append(token_info)
+            schedule_info['token_data'] = list(token_array)
+        print(str(timezone.now()-start_time))
+        # print(str(schedule_data))
+        return JsonResponse({'results': list(schedule_data)})
