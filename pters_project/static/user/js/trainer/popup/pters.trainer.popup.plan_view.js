@@ -361,8 +361,16 @@ class Plan_view{
             if(this.data.schedule_type != 1){
                 return false;
             }
+            let auth_inspect;
             let user_option = {
                 info:{text:"회원 정보", callback:()=>{
+                    auth_inspect = pass_inspector.member_read();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `${auth_inspect.limit_type}`;
+                        show_error_message({title:message});
+                        return false;
+                    }
+
                     layer_popup.close_layer_popup();
                     let root_content_height = $root_content.height();
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SIMPLE_VIEW, 100*(400/root_content_height), POPUP_FROM_BOTTOM, null, ()=>{
@@ -551,9 +559,15 @@ class Plan_view{
             }
             let temp_html =
                 CComponent.icon_button(member_id, member_name, state_icon_url, icon_button_style, ()=>{
-
+                    let auth_inspect;
                     let user_option = {
                         info:{text:"회원 정보", callback:()=>{
+                            auth_inspect = pass_inspector.member_read();
+                            if(auth_inspect.barrier == BLOCKED){
+                                let message = `${auth_inspect.limit_type}`;
+                                show_error_message({title:message});
+                                return false;
+                            }
                             layer_popup.close_layer_popup();
                             let root_content_height = $root_content.height();
                             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SIMPLE_VIEW, 100*(400/root_content_height), POPUP_FROM_BOTTOM, {'member_id':member_id}, ()=>{
@@ -738,9 +752,15 @@ class Plan_view{
             }
             let temp_html =
                 CComponent.icon_button(member_id, member_name, state_icon_url, icon_button_style, ()=>{
-
+                    let auth_inspect;
                     let user_option = {
                         info:{text:"회원 정보", callback:()=>{
+                            auth_inspect = pass_inspector.member_read();
+                            if(auth_inspect.barrier == BLOCKED){
+                                let message = `${auth_inspect.limit_type}`;
+                                show_error_message({title:message});
+                                return false;
+                            }
                             layer_popup.close_layer_popup();
                             let root_content_height = $root_content.height();
                             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SIMPLE_VIEW, 100*(400/root_content_height), POPUP_FROM_BOTTOM, {'member_id':member_id}, ()=>{
