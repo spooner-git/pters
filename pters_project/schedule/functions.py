@@ -207,9 +207,9 @@ def func_refresh_member_ticket_count(class_id, member_ticket_id):
         member_ticket_info.save()
 
     if error is None:
-        if member_ticket_info.state_cd != check_member_ticket_state_cd:
-            if member_ticket_info.state_cd == STATE_CD_FINISH or member_ticket_info.state_cd == 'RF':
-                func_update_lecture_member_fix_status_cd(class_id, member_ticket_info.member_id)
+        # if member_ticket_info.state_cd != check_member_ticket_state_cd:
+        #     if member_ticket_info.state_cd == STATE_CD_FINISH or member_ticket_info.state_cd == 'RF':
+        func_update_lecture_member_fix_status_cd(class_id, member_ticket_info.member_id)
 
     return error
 

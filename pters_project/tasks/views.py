@@ -248,7 +248,7 @@ class GetAllSchedulePushAlarmDataView(View):
 
         token_data = PushInfoTb.objects.filter(query_member_id, use=USE).values('member_id',
                                                                                 'token', 'badge_counter')
-        print(str(timezone.now()-start_time))
+        # print(str(timezone.now()-start_time))
         # print(str(schedule_data))
         # return JsonResponse({'alarm_schedule': list(schedule_data)})
         return JsonResponse({'alarm_schedule': list(schedule_data), 'token_data': list(token_data)})

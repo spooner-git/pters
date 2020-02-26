@@ -324,7 +324,7 @@ class Home {
             }
             let status = plans[i].state_cd;
             // let member_name = plans[i].member_name;
-            let member_name = plans[i].lecture_name == "" ? plans[i].member_name : plans[i].lecture_name;
+            let member_name = plans[i].schedule_type == "1" ? plans[i].member_name : plans[i].lecture_name;
             let permission_status = plans[i].permission_state_cd;
             let waiting_status = plans[i].lecture_wait_member_num > 0 || plans[i].permission_state_cd == SCHEDULE_WAIT ? ON : OFF;
 

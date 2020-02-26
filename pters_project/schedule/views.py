@@ -1582,8 +1582,6 @@ def delete_repeat_schedule_logic(request):
                                              + '~' + push_info_schedule_end_date[0] + ':' + \
                                              push_info_schedule_end_date[1]
                         log_info = push_schedule_info.replace('~', '/')
-                        print('permission_state_cd:'+str(permission_state_cd))
-                        print('lecture_schedule_id:'+str(lecture_schedule_id))
                         if lecture_schedule_id is not None and lecture_schedule_id != '' and permission_state_cd == PERMISSION_STATE_CD_APPROVE:
                             wait_schedule_data = ScheduleTb.objects.filter(class_tb=class_id,
                                                                            lecture_schedule_id=lecture_schedule_id,
@@ -1596,10 +1594,8 @@ def delete_repeat_schedule_logic(request):
                                                                                permission_state_cd=PERMISSION_STATE_CD_APPROVE,
                                                                                use=USE).count()
 
-                            print('approve_schedule_count:' + str(approve_schedule_count))
                             if len(wait_schedule_data) > 0:
                                 wait_schedule_info = wait_schedule_data[0]
-                                print('wait_schedule_info.max_mem_count:' + str(wait_schedule_info.max_mem_count))
                                 if wait_schedule_info.max_mem_count > approve_schedule_count:
                                     if wait_schedule_info.member_ticket_tb is not None and wait_schedule_info.member_ticket_tb != '':
                                         wait_schedule_info.permission_state_cd = PERMISSION_STATE_CD_APPROVE
