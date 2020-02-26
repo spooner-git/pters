@@ -59,25 +59,30 @@ class CompanyTb(TimeStampedModel):
 # 프로그램 정보
 class ClassTb(TimeStampedModel):
     class_id = models.AutoField(db_column='ID', primary_key=True, null=False)
-    member = models.ForeignKey(MemberTb, on_delete=models.CASCADE)  # Field name made lowercase.
+    member = models.ForeignKey(MemberTb, verbose_name='회원', on_delete=models.CASCADE)  # Field name made lowercase.
     center_tb = models.ForeignKey(CenterTb, on_delete=models.SET_NULL, blank=True, null=True)
-    subject_cd = models.CharField(db_column='SUBJECT_CD', max_length=10, blank=True, default='')
-    subject_detail_nm = models.CharField(db_column='SUBJECT_DETAIL_NM', max_length=20, blank=True, default='')
-    start_date = models.DateField(db_column='START_DATE', blank=True, null=True)  # Field name made lowercase.
-    end_date = models.DateField(db_column='END_DATE', blank=True, null=True)  # Field name made lowercase.
-    class_hour = models.IntegerField(db_column='CLASS_HOUR', blank=True, null=True)  # Field name made lowercase.
-    start_hour_unit = models.IntegerField(db_column='START_HOUR_UNIT', blank=True, null=True)
-    class_member_num = models.IntegerField(db_column='CLASS_MEMBER_NUM', default=1)
-    state_cd = models.CharField(db_column='STATE_CD', max_length=10, blank=True, default='')
+    subject_cd = models.CharField('프로그램 코드', db_column='SUBJECT_CD', max_length=10, blank=True, default='')
+    subject_detail_nm = models.CharField('프로그램명', db_column='SUBJECT_DETAIL_NM', max_length=20, blank=True, default='')
+    start_date = models.DateField('시작일', db_column='START_DATE', blank=True, null=True)  # Field name made lowercase.
+    end_date = models.DateField('종료일', db_column='END_DATE', blank=True, null=True)  # Field name made lowercase.
+    class_hour = models.IntegerField('프로그램프로그램 시간', db_column='CLASS_HOUR', blank=True, null=True)  # Field name made lowercase.
+    start_hour_unit = models.IntegerField('프로그램프로그램 시간 단위', db_column='START_HOUR_UNIT', blank=True, null=True)
+    class_member_num = models.IntegerField('프로그램프로그램 회원수', db_column='CLASS_MEMBER_NUM', default=1)
+    state_cd = models.CharField('상태', db_column='STATE_CD', max_length=10, blank=True, default='')
     schedule_check = models.IntegerField(db_column='SCHEDULE_CHECK', default=1)
-    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
 
     class Meta:
         managed = False
         db_table = 'CLASS_TB'
+        verbose_name = '프로그램'
+        verbose_name_plural = '프로그램'
 
     def __str__(self):
-        return self.member.__str__()+'_class'
+        program_name = self.subject_cd.__str__()
+        program_detail_name = self.subject_detail_nm.__str__()
+        if program_detail_name is not None and program_detail_name != '':
+            program_name = program_detail_name
+        return self.member.__str__()+'/'+program_name+'(프로그램)'
 
     def get_upper_class_type_cd(self):
         try:
@@ -126,31 +131,33 @@ class ClassTb(TimeStampedModel):
 # 강사 <-> 강사 프로그램 연결 정보
 class MemberClassTb(TimeStampedModel):
     member_class_id = models.AutoField(db_column='ID', primary_key=True, null=False)
-    member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
-    class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, null=True)
-    auth_cd = models.CharField(db_column='AUTH_CD', max_length=20, blank=True,
+    member = models.ForeignKey(MemberTb, verbose_name='회원', on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    class_tb = models.ForeignKey(ClassTb, verbose_name='프로그램', on_delete=models.CASCADE, null=True)
+    auth_cd = models.CharField('권한 코드', db_column='AUTH_CD', max_length=20, blank=True,
                                default='')  # Field name made lowercase.
-    mod_member_id = models.CharField(db_column='MOD_MEMBER_ID', max_length=20, blank=True, default='')
-    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
+    mod_member_id = models.CharField('최종수정 회원 ID', db_column='MOD_MEMBER_ID', max_length=20, blank=True, default='')
 
     class Meta:
         managed = False
         db_table = 'MEMBER_CLASS_TB'
+        verbose_name = '강사->프로그램 연결 정보'
+        verbose_name_plural = '강사->프로그램 연결 정보'
 
 
 # 강사 프로그램 <-> 회원 수강권 연결 정보
 class ClassMemberTicketTb(TimeStampedModel):
     class_member_ticket_id = models.AutoField(db_column='ID', primary_key=True, null=False)
-    class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, null=True)
-    member_ticket_tb = models.ForeignKey(MemberTicketTb, db_column='lecture_tb_id',
+    class_tb = models.ForeignKey(ClassTb, verbose_name='프로그램', on_delete=models.CASCADE, null=True)
+    member_ticket_tb = models.ForeignKey(MemberTicketTb, verbose_name='회원 수강권', db_column='lecture_tb_id',
                                          on_delete=models.CASCADE, null=True)  # Field name made lowercase.
-    auth_cd = models.CharField(db_column='AUTH_CD', max_length=20, blank=True, default='')  # Field name made lowercase.
-    mod_member_id = models.CharField(db_column='MOD_MEMBER_ID', max_length=20, blank=True, default='')
-    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
+    auth_cd = models.CharField('권한 코드', db_column='AUTH_CD', max_length=20, blank=True, default='')
+    mod_member_id = models.CharField('최종수정 회원 ID', db_column='MOD_MEMBER_ID', max_length=20, blank=True, default='')
 
     class Meta:
         managed = False
         db_table = 'CLASS_LECTURE_TB'
+        verbose_name = '프로그램->회원 수강권 연결 정보'
+        verbose_name_plural = '프로그램->회원 수강권 연결 정보'
 
     def get_auth_cd_name(self):
 
@@ -161,30 +168,72 @@ class ClassMemberTicketTb(TimeStampedModel):
         return auth_cd_name
 
 
+# 공유 프로그램 권한 정보
+class ProgramAuthTb(TimeStampedModel):
+    product_function_auth_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    class_tb = models.ForeignKey(ClassTb, verbose_name='프로그램', on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    member = models.ForeignKey(MemberTb, verbose_name='회원', on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    function_auth_tb = models.ForeignKey(FunctionAuthTb, verbose_name='기능', on_delete=models.CASCADE, null=True)
+    auth_type_cd = models.CharField('권한', db_column='AUTH_TYPE_CD', max_length=45, blank=True, null=True)
+    enable_flag = models.IntegerField('가능 유무', db_column='ENABLE_FLAG', default=1)
+
+    class Meta:
+        managed = False
+        db_table = 'PROGRAM_AUTH_TB'
+        verbose_name = '공유 프로그램 권한'
+        verbose_name_plural = '공유 프로그램 권한'
+
+
+class ProgramNoticeTb(models.Model):
+    program_notice_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, null=True)
+    class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    notice_type_cd = models.CharField('공지 종류', db_column='NOTICE_TYPE_CD', max_length=20,
+                                      blank=True, default=BOARD_TYPE_CD_NOTICE)
+    title = models.CharField('제목', db_column='TITLE', max_length=45, blank=True, null=True)
+    contents = models.CharField('내용', db_column='CONTENTS', max_length=3000, blank=True, null=True)
+    to_member_type_cd = models.CharField('공지 대상', db_column='TO_MEMBER_TYPE_CD', max_length=20,
+                                         blank=True, null=True, default=TO_MEMBER_BOARD_TYPE_CD_TRAINEE)
+    hits = models.BigIntegerField('조회수', db_column='HITS', default=0)  # Field name made lowercase.
+    reg_dt = models.DateTimeField('최초등록 시각', db_column='REG_DT', blank=True, null=True, auto_now_add=True)
+    mod_dt = models.DateTimeField('최종수정 시각', db_column='MOD_DT', blank=True, null=True, auto_now_add=True)
+    use = models.IntegerField('공개 여부', db_column='USE', default=1)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'PROGRAM_NOTICE_TB'
+        verbose_name = '프로그램 공지'
+        verbose_name_plural = '프로그램 공지'
+
+    def __str__(self):
+        return self.class_tb.__str__()+'-'+self.title.__str__()
+
+
 # 수업 정보
 class LectureTb(TimeStampedModel):
     lecture_id = models.AutoField(db_column='ID', primary_key=True, null=False)
-    class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, blank=True, null=True)
-    ing_color_cd = models.CharField(db_column='ING_COLOR_CD', max_length=20, default='#ffd3d9')
-    end_color_cd = models.CharField(db_column='END_COLOR_CD', max_length=20, default='#d2d1cf')
-    ing_font_color_cd = models.CharField(db_column='ING_FONT_COLOR_CD', max_length=20, default='#282828')
-    end_font_color_cd = models.CharField(db_column='END_FONT_COLOR_CD', max_length=20, default='#282828')
-    state_cd = models.CharField(db_column='STATE_CD', max_length=10, blank=True, null=True)
-    member_num = models.IntegerField(db_column='MEMBER_NUM', default=2)  # Field name made lowercase.
+    class_tb = models.ForeignKey(ClassTb, verbose_name='프로그램', on_delete=models.CASCADE, blank=True, null=True)
+    name = models.CharField('수업명', db_column='NAME', max_length=255, blank=True, null=True, default='')
+    note = models.CharField('설명', db_column='NOTE', max_length=1000, blank=True, null=True, default='')
+    ing_color_cd = models.CharField('진행중 색상', db_column='ING_COLOR_CD', max_length=20, default='#ffd3d9')
+    end_color_cd = models.CharField('종료 색상', db_column='END_COLOR_CD', max_length=20, default='#d2d1cf')
+    ing_font_color_cd = models.CharField('진행중 폰트 색상', db_column='ING_FONT_COLOR_CD', max_length=20, default='#282828')
+    end_font_color_cd = models.CharField('종료 폰트 색상', db_column='END_FONT_COLOR_CD', max_length=20, default='#282828')
+    state_cd = models.CharField('상태', db_column='STATE_CD', max_length=10, blank=True, null=True)
+    member_num = models.IntegerField('정원', db_column='MEMBER_NUM', default=2)  # Field name made lowercase.
     # member_num_view_flag = models.IntegerField(db_column='MEMBER_NUM_VIEW_FLAG', default=LECTURE_MEMBER_NUM_VIEW_ENABLE)
-    lecture_type_cd = models.CharField(db_column='GROUP_TYPE_CD', max_length=20, blank=True, null=True,
+    lecture_type_cd = models.CharField('수업 종류', db_column='GROUP_TYPE_CD', max_length=20, blank=True, null=True,
                                        default=LECTURE_TYPE_ONE_TO_ONE)
-    name = models.CharField(db_column='NAME', max_length=255, blank=True, null=True, default='')
-    note = models.CharField(db_column='NOTE', max_length=1000, blank=True, null=True, default='')
     lecture_minute = models.IntegerField(db_column='GROUP_MINUTE', default=60)  # Field name made lowercase.
-    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
 
     class Meta:
         managed = False
         db_table = 'GROUP_TB'
+        verbose_name = '수업'
+        verbose_name_plural = '수업'
 
     def __str__(self):
-        return self.name.__str__()+'_lecture'
+        return self.class_tb.__str__()+'-'+self.name.__str__()+'(수업)'
 
     def get_state_cd_name(self):
         try:
@@ -198,117 +247,83 @@ class LectureTb(TimeStampedModel):
 # 수강권 정보
 class TicketTb(TimeStampedModel):
     ticket_id = models.AutoField(db_column='ID', primary_key=True, null=False)
-    class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, blank=True, null=True)
-    name = models.CharField(db_column='NAME', max_length=255, blank=True, null=True, default='')
-    ticket_type_cd = models.CharField(db_column='PACKAGE_TYPE_CD', max_length=20, blank=True, null=True, default='')
-    effective_days = models.IntegerField(db_column='EFFECTIVE_DAYS', default=0)
-    price = models.IntegerField(db_column='PRICE', default=0)
-    month_schedule_enable = models.IntegerField(db_column='MONTH_SCHEDULE_ENABLE', default=99999)
-    week_schedule_enable = models.IntegerField(db_column='WEEK_SCHEDULE_ENABLE', default=99999)
-    day_schedule_enable = models.IntegerField(db_column='DAY_SCHEDULE_ENABLE', default=99999)
-    reg_count = models.IntegerField(db_column='REG_COUNT', default=0)
-    state_cd = models.CharField(db_column='STATE_CD', max_length=10, blank=True, null=True)
-    note = models.CharField(db_column='NOTE', max_length=1000, blank=True, null=True, default='')
-    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
+    class_tb = models.ForeignKey(ClassTb, verbose_name='프로그램', on_delete=models.CASCADE, blank=True, null=True)
+    name = models.CharField('수강권명', db_column='NAME', max_length=255, blank=True, null=True, default='')
+    note = models.CharField('설명', db_column='NOTE', max_length=1000, blank=True, null=True, default='')
+    ticket_type_cd = models.CharField('수강권 종류', db_column='PACKAGE_TYPE_CD', max_length=20, blank=True, null=True, default='')
+    effective_days = models.IntegerField('기본 유효기간', db_column='EFFECTIVE_DAYS', default=0)
+    price = models.IntegerField('기본 가격', db_column='PRICE', default=0)
+    reg_count = models.IntegerField('기본 등록횟수', db_column='REG_COUNT', default=0)
+    month_schedule_enable = models.IntegerField('월간 최대 등록가능 횟수', db_column='MONTH_SCHEDULE_ENABLE', default=99999)
+    week_schedule_enable = models.IntegerField('주간 최대 등록가능 횟수', db_column='WEEK_SCHEDULE_ENABLE', default=99999)
+    day_schedule_enable = models.IntegerField('일간 최대 등록가능 횟수', db_column='DAY_SCHEDULE_ENABLE', default=99999)
+    state_cd = models.CharField('상태', db_column='STATE_CD', max_length=10, blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'PACKAGE_TB'
+        verbose_name = '수강권'
+        verbose_name_plural = '수강권'
 
     def __str__(self):
-        return self.name.__str__()+'_ticket'
-
-
-# 수업 <-> 회원 수강권 연결 설정 (이제 사용 안함)
-class LectureMemberTicketTb(TimeStampedModel):
-    lecture_member_ticket_id = models.AutoField(db_column='ID', primary_key=True, null=False)
-    lecture_tb = models.ForeignKey(LectureTb, on_delete=models.CASCADE, db_column='group_tb_id', blank=True, null=True)
-    member_ticket_tb = models.ForeignKey(MemberTicketTb, on_delete=models.CASCADE, db_column='lecture_tb_id',
-                                         blank=True, null=True)
-    fix_state_cd = models.CharField(db_column='FIX_STATE_CD', max_length=20, blank=True, null=True, default='')
-    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
-
-    class Meta:
-        managed = False
-        db_table = 'GROUP_LECTURE_TB'
-
-
-# 수업 <-> 회원 연결 설정 (고정 회원)
-class LectureMemberTb(TimeStampedModel):
-    lecture_member_id = models.AutoField(db_column='ID', primary_key=True, null=False)
-    class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, db_column='class_tb_id', blank=True, null=True)
-    lecture_tb = models.ForeignKey(LectureTb, on_delete=models.CASCADE, db_column='group_tb_id', blank=True,
-                                   null=True)
-    member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, db_column='member_id', blank=True, null=True)
-    fix_state_cd = models.CharField(db_column='FIX_STATE_CD', max_length=20, blank=True, null=True, default='FIX')
-    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
-
-    class Meta:
-        managed = False
-        db_table = 'GROUP_MEMBER_TB'
+        return self.class_tb.__str__()+'-'+self.name.__str__()+'(수강권)'
 
 
 # 수강권 <-> 수업 연결 설정
 class TicketLectureTb(TimeStampedModel):
     ticket_lecture_id = models.AutoField(db_column='ID', primary_key=True, null=False)
-    class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, blank=True, null=True)
-    ticket_tb = models.ForeignKey(TicketTb, on_delete=models.CASCADE, db_column='package_tb_id', blank=True, null=True)
-    lecture_tb = models.ForeignKey(LectureTb, on_delete=models.CASCADE, db_column='group_tb_id', blank=True, null=True)
-    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
+    class_tb = models.ForeignKey(ClassTb, verbose_name='프로그램', on_delete=models.CASCADE, blank=True, null=True)
+    ticket_tb = models.ForeignKey(TicketTb, verbose_name='수강권', on_delete=models.CASCADE, db_column='package_tb_id',
+                                  blank=True, null=True)
+    lecture_tb = models.ForeignKey(LectureTb, verbose_name='수업', on_delete=models.CASCADE, db_column='group_tb_id',
+                                   blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'PACKAGE_GROUP_TB'
+        verbose_name = '수강권->수업 연결 정보'
+        verbose_name_plural = '수강권->수업 연결 정보'
 
 
-class BackgroundImgTb(TimeStampedModel):
-    background_img_id = models.AutoField(db_column='ID', primary_key=True, null=False)
-    class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, null=True)
-    background_img_type_cd = models.CharField(db_column='BACKGROUND_IMG_TYPE_CD', max_length=45, blank=True, default='')
-    url = models.CharField(db_column='URL', max_length=500, blank=True, default='')  # Field name made lowercase.
-    reg_info = models.ForeignKey(MemberTb, on_delete=models.CASCADE, related_name='REG_INFO', null=True)
-    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
+# 수업 <-> 회원 연결 설정 (고정 회원)
+class LectureMemberTb(TimeStampedModel):
+    lecture_member_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    class_tb = models.ForeignKey(ClassTb, verbose_name='프로그램', on_delete=models.CASCADE, db_column='class_tb_id', blank=True, null=True)
+    lecture_tb = models.ForeignKey(LectureTb, verbose_name='수업', on_delete=models.CASCADE, db_column='group_tb_id', blank=True,
+                                   null=True)
+    member = models.ForeignKey(MemberTb, verbose_name='회원', on_delete=models.CASCADE, db_column='member_id', blank=True, null=True)
+    fix_state_cd = models.CharField('고정', db_column='FIX_STATE_CD', max_length=20, blank=True, null=True, default='FIX')
 
     class Meta:
         managed = False
-        db_table = 'BACKGROUND_IMG_TB'
+        db_table = 'GROUP_MEMBER_TB'
+        verbose_name = '수업-고정회원 목록'
+        verbose_name_plural = '수업-고정회원 목록'
 
 
 class SettingTb(TimeStampedModel):
     setting_id = models.AutoField(db_column='ID', primary_key=True, null=False)
-    member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
-    class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, blank=True, null=True)  # Field name made lowercase.
-    member_ticket_tb = models.ForeignKey(MemberTicketTb, on_delete=models.CASCADE, db_column='lecture_tb_id',
-                                         blank=True, null=True)
-    setting_type_cd = models.CharField(db_column='SETTING_TYPE_CD', max_length=10, default='')
-    setting_info = models.CharField(db_column='SETTING_INFO', max_length=255, blank=True, default='')
-    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
+    class_tb = models.ForeignKey(ClassTb, verbose_name='프로그램', on_delete=models.CASCADE, blank=True,
+                                 null=True)  # Field name made lowercase.
+    member_ticket_tb = models.ForeignKey(MemberTicketTb, verbose_name='회원 수강권', on_delete=models.CASCADE,
+                                         db_column='lecture_tb_id', blank=True, null=True)
+    member = models.ForeignKey(MemberTb, verbose_name='회원', on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    setting_type_cd = models.CharField('설정 타입', db_column='SETTING_TYPE_CD', max_length=10, default='')
+    setting_info = models.CharField('설정값', db_column='SETTING_INFO', max_length=255, blank=True, default='')
 
     class Meta:
         managed = False
         db_table = 'SETTING_TB'
+        verbose_name = '설정'
+        verbose_name_plural = '설정'
 
 
-class ProgramAuthTb(TimeStampedModel):
-    product_function_auth_id = models.AutoField(db_column='ID', primary_key=True, null=False)
-    class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
-    member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
-    function_auth_tb = models.ForeignKey(FunctionAuthTb, on_delete=models.CASCADE, null=True)
-    auth_type_cd = models.CharField(db_column='AUTH_TYPE_CD', max_length=45, blank=True, null=True)
-    enable_flag = models.IntegerField(db_column='ENABLE_FLAG', default=1)
-    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
-
-    class Meta:
-        managed = False
-        db_table = 'PROGRAM_AUTH_TB'
-
-
+# ################################################## 아직 사용 안함 ###################################################
 class ProgramGroupTb(TimeStampedModel):
     program_group_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
     name = models.CharField(db_column='NAME', max_length=255, blank=True, null=True)
     note = models.CharField(db_column='NOTE', max_length=1000, blank=True, null=True)
-    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -320,7 +335,6 @@ class ProgramGroupMemberTb(TimeStampedModel):
     class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
     program_group_tb = models.ForeignKey(ProgramGroupTb, on_delete=models.CASCADE, null=True)
     member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, null=True)
-    use = models.IntegerField(db_column='USE', default=1)
 
     class Meta:
         managed = False
@@ -334,14 +348,14 @@ class ProgramBoardTb(TimeStampedModel):
     class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
     to_member_type_cd = models.CharField(db_column='TO_MEMBER_TYPE_CD', max_length=45, blank=True, null=True)
     comment_available = models.IntegerField(db_column='COMMENT_AVAILABLE', default=1)  # Field name made lowercase.
-    anonymous_available = models.IntegerField(db_column='ANONYMOUS_AVAILABLE', default=0)  # Field name made lowercase.
+    anonymous_available = models.IntegerField(db_column='ANONYMOUS_AVAILABLE',
+                                              default=0)  # Field name made lowercase.
     important_flag = models.IntegerField(db_column='IMPORTANT_FLAG', default=0)  # Field name made lowercase.
     auth_type_cd = models.CharField(db_column='AUTH_TYPE_CD', max_length=45, blank=True, null=True)
     push_status = models.IntegerField(db_column='PUSH_STATUS', default=0)  # Field name made lowercase.
     order = models.IntegerField(db_column='ORDER', default=1)  # Field name made lowercase.
     name = models.CharField(db_column='NAME', max_length=100, blank=True, null=True)
     note = models.CharField(db_column='NOTE', max_length=1000, blank=True, null=True)
-    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -356,7 +370,8 @@ class ProgramBoardPostTb(TimeStampedModel):
     upper_post_tb_id = models.CharField(db_column='UPPER_POST_ID', max_length=45, blank=True, null=True)
     member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
     to_member_type_cd = models.CharField(db_column='TO_MEMBER_TYPE_CD', max_length=45, blank=True, null=True)
-    to_program_group_tb = models.ForeignKey(ProgramGroupTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    to_program_group_tb = models.ForeignKey(ProgramGroupTb, on_delete=models.CASCADE,
+                                            null=True)  # Field name made lowercase.
     to_member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, related_name='TO_MEMBER_ID', null=True)
     order = models.IntegerField(db_column='ORDER', default=1)  # Field name made lowercase.
     important_flag = models.IntegerField(db_column='IMPORTANT_FLAG', default=0)  # Field name made lowercase.
@@ -366,7 +381,6 @@ class ProgramBoardPostTb(TimeStampedModel):
     popup_flag = models.IntegerField(db_column='POPUP_FLAG', default=0)  # Field name made lowercase.
     hits = models.BigIntegerField(db_column='HITS', default=0)  # Field name made lowercase.
     get = models.BigIntegerField(db_column='GET', default=0)  # Field name made lowercase.
-    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -383,40 +397,46 @@ class ProgramBoardCommentTb(TimeStampedModel):
     pin_status = models.IntegerField(db_column='PIN_STATUS', default=0)  # Field name made lowercase.
     title = models.CharField(db_column='TITLE', max_length=100, blank=True, null=True)
     comment = models.CharField(db_column='COMMENT', max_length=1000, blank=True, null=True)
-    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
 
     class Meta:
         managed = False
         db_table = 'PROGRAM_BOARD_COMMENT_TB'
 
 
-class ProgramNoticeTb(models.Model):
-    program_notice_id = models.AutoField(db_column='ID', primary_key=True, null=False)
-    member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, null=True)
-    class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
-    notice_type_cd = models.CharField(db_column='NOTICE_TYPE_CD', max_length=20,
-                                      blank=True, default=BOARD_TYPE_CD_NOTICE)
-    title = models.CharField(db_column='TITLE', max_length=45, blank=True, null=True)
-    contents = models.CharField(db_column='CONTENTS', max_length=3000, blank=True, null=True)
-    to_member_type_cd = models.CharField(db_column='TO_MEMBER_TYPE_CD', max_length=20,
-                                         blank=True, null=True, default=TO_MEMBER_BOARD_TYPE_CD_TRAINEE)
-    hits = models.BigIntegerField(db_column='HITS', default=0)  # Field name made lowercase.
-    reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True, auto_now_add=True)
-    mod_dt = models.DateTimeField(db_column='MOD_DT', blank=True, null=True, auto_now_add=True)
-    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
-
-    class Meta:
-        managed = False
-        db_table = 'PROGRAM_NOTICE_TB'
-
-
+# #######################################  이제 사용 안함  ##################################################
+# 수강권 0원 입력 버그 표시 (이제 사용 안함)
 class BugMemberTicketPriceTb(TimeStampedModel):
     bug_member_ticket_price_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
     member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
     bug_check = models.IntegerField(db_column='BUG_CHECK', default=1)
-    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
 
     class Meta:
         managed = False
         db_table = 'BUG_MEMBER_TICKET_PRICE_TB'
+
+
+# 수업 <-> 회원 수강권 연결 설정 (이제 사용 안함)
+class LectureMemberTicketTb(TimeStampedModel):
+    lecture_member_ticket_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    lecture_tb = models.ForeignKey(LectureTb, on_delete=models.CASCADE, db_column='group_tb_id', blank=True, null=True)
+    member_ticket_tb = models.ForeignKey(MemberTicketTb, on_delete=models.CASCADE, db_column='lecture_tb_id',
+                                         blank=True, null=True)
+    fix_state_cd = models.CharField(db_column='FIX_STATE_CD', max_length=20, blank=True, null=True, default='')
+
+    class Meta:
+        managed = False
+        db_table = 'GROUP_LECTURE_TB'
+
+
+# 배경화면 설정 (이제 사용 안함)
+class BackgroundImgTb(TimeStampedModel):
+    background_img_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, null=True)
+    background_img_type_cd = models.CharField(db_column='BACKGROUND_IMG_TYPE_CD', max_length=45, blank=True, default='')
+    url = models.CharField(db_column='URL', max_length=500, blank=True, default='')  # Field name made lowercase.
+    reg_info = models.ForeignKey(MemberTb, on_delete=models.CASCADE, related_name='REG_INFO', null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'BACKGROUND_IMG_TB'
