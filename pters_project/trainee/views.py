@@ -1267,7 +1267,6 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
     schedule_result = {'error': None, 'schedule_id': ''}
     setting_member_private_class_auto_permission = USE
     setting_member_public_class_auto_permission = USE
-    setting_member_public_class_wait_member_num = 0
     lecture_schedule_num = 0
     log_how = '대기 예약'
     # start_date = None
@@ -1290,12 +1289,6 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
             setting_member_public_class_auto_permission = int(setting_info.setting_info)
         except ObjectDoesNotExist:
             setting_member_public_class_auto_permission = USE
-        try:
-            setting_info = SettingTb.objects.get(class_tb_id=class_id,
-                                                 setting_type_cd='LT_RES_PUBLIC_CLASS_WAIT_MEMBER_NUM', use=USE)
-            setting_member_public_class_wait_member_num = int(setting_info.setting_info)
-        except ObjectDoesNotExist:
-            setting_member_public_class_wait_member_num = 0
 
     if error is None:
         if lecture_schedule_id is not None and lecture_schedule_id != '':
@@ -1352,6 +1345,7 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
                         log_how = '예약 확정'
                 if lecture_schedule_info is not None and lecture_schedule_info != '':
                     lecture_schedule_num = ScheduleTb.objects.filter(lecture_schedule_id=lecture_schedule_id,
+                                                                     permission_state_cd=PERMISSION_STATE_CD_APPROVE,
                                                                      use=USE).count()
                     if lecture_schedule_num >= lecture_schedule_info.lecture_tb.member_num:
                         permission_state_cd = PERMISSION_STATE_CD_WAIT
