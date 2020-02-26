@@ -80,7 +80,7 @@ class Plan_view{
     set member (data){
         this.data.member_id = data.id;
         this.data.member_name = data.name;
-        this.init();
+        // this.init();
     }
 
     get member (){
@@ -518,7 +518,7 @@ class Plan_view{
                             Plan_func.delete({"schedule_id":member_schedule_id, "async":false});
                         // }
                     }
-                    
+
                     this.init();
                     try{
                         current_page.init();
@@ -710,7 +710,7 @@ class Plan_view{
                     }
 
                     this.init();
-                    this.render_content();
+                    // this.render_content();
                     try{
                         current_page.init();
                     }catch(e){}
