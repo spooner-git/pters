@@ -83,6 +83,7 @@ class ScheduleTb(TimeStampedModel):
     end_color_cd = models.CharField(db_column='END_COLOR_CD', max_length=20, default='#d2d1cf')
     ing_font_color_cd = models.CharField(db_column='ING_FONT_COLOR_CD', max_length=20, default='#282828')
     end_font_color_cd = models.CharField(db_column='END_FONT_COLOR_CD', max_length=20, default='#282828')
+    push_alarm_data = models.TextField(db_column='PUSH_ALARM_DATA')
     reg_member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, null=True)
     mod_member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, related_name='LAST_MOD_MEMBER_ID', null=True)
     use = models.IntegerField(db_column='USE', default=USE)  # Field name made lowercase.
