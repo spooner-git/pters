@@ -139,12 +139,26 @@ class Plan_daily_record{
     }
 
     event_write_all(schedule_id_array, schedule_name_array){
+        let inspect = pass_inspector.schedule_update();
+                                if(inspect.barrier == BLOCKED){
+                                    let message = `${inspect.limit_type}`;
+                                    // layer_popup.close_layer_popup();
+                                    show_error_message({title:message});
+                                    return false;
+                                }
         Plan_daily_record_func.write_article_all(schedule_id_array, schedule_name_array, ()=>{
             this.init();
         })
     }
 
     event_write(schedule_id, schedule_name){
+        let inspect = pass_inspector.schedule_update();
+                                if(inspect.barrier == BLOCKED){
+                                    let message = `${inspect.limit_type}`;
+                                    // layer_popup.close_layer_popup();
+                                    show_error_message({title:message});
+                                    return false;
+                                }
         Plan_daily_record_func.write_artice(schedule_id, schedule_name, ()=>{
             this.init();
         });
@@ -155,6 +169,13 @@ class Plan_daily_record{
     }
 
     event_delete(schedule_id, schedule_name, callback){
+        let inspect = pass_inspector.schedule_update();
+                                if(inspect.barrier == BLOCKED){
+                                    let message = `${inspect.limit_type}`;
+                                    // layer_popup.close_layer_popup();
+                                    show_error_message({title:message});
+                                    return false;
+                                }
         Plan_daily_record_func.delete_article(schedule_id, schedule_name, ()=>{
             this.init();
         });

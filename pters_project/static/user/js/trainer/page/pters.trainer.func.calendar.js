@@ -1337,6 +1337,14 @@ class Calendar {
         }
         switch(switching){
             case ON:
+                let inspect = pass_inspector.schedule_update();
+                                if(inspect.barrier == BLOCKED){
+                                    let message = `${inspect.limit_type}`;
+                                    // layer_popup.close_layer_popup();
+                                    show_error_message({title:message});
+                                    return false;
+                                }
+
                 this.long_touch = ON;
                 // this.long_touch_target = event;
                 // this.long_touch_schedule_id = event.target.dataset.scheduleid;

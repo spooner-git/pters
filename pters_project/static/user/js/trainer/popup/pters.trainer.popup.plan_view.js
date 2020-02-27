@@ -151,7 +151,6 @@ class Plan_view{
             });
 
             Setting_calendar_func.read((settings)=>{
-
                 this.settings.sign_use = settings.setting_schedule_sign_enable;
                 this.settings.wait_member_limit = settings.setting_member_public_class_wait_member_num;
             });
@@ -380,6 +379,13 @@ class Plan_view{
                 }},
                 daily_record:{text:"일지", callback:()=>{
                     layer_popup.close_layer_popup();
+                    let inspect = pass_inspector.schedule_update();
+                                if(inspect.barrier == BLOCKED){
+                                    let message = `${inspect.limit_type}`;
+                                    // layer_popup.close_layer_popup();
+                                    show_error_message({title:message});
+                                    return false;
+                                }
                     Plan_daily_record_func.write_artice(this.data.member_schedule_id[0], this.data.member_name[0], ()=>{
                         show_error_message({title:`[${this.data.member_name[0]}] 일지 변경사항이 저장 되었습니다.`});
                     }, ()=>{
@@ -493,13 +499,21 @@ class Plan_view{
         let icon_r_text = "예약 확정 회원 목록";
         let style = null;
         let html_member_select = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            //회원 선택 팝업 열기지
+            let inspect = pass_inspector.schedule_update();
+                                if(inspect.barrier == BLOCKED){
+                                    let message = `${inspect.limit_type}`;
+                                    // layer_popup.close_layer_popup();
+                                    show_error_message({title:message});
+                                    return false;
+                                }
+            //회원 선택 팝업 열기
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_PLAN_APPROVE_SELECT, 100, popup_style, {'data':null}, ()=>{
                 let appendix =  {lecture_id:this.data.lecture_id, title:"예약 확정 회원", disable_zero_avail_count:ON, entire_member:SHOW, member_id:this.data.member_id, member_name:this.data.member_name, member_schedule_state:this.data.member_schedule_state, member_schedule_permission_state_cd:this.data.member_schedule_permission_state_cd, wait_member_limit:this.settings.wait_member_limit};
                 member_select_plan_approve = new MemberPlanApproveSelector('#wrapper_box_member_plan_approve_select', this, this.data.lecture_max_num, appendix, (set_data)=>{
                     this.member = set_data;
                     let changed = this.func_update_member();
+                    $("#debug_toolbar").show().text(JSON.stringify(changed));
 
                     for(let i=0; i<changed.add.length; i++){
                         Plan_func.create('/schedule/add_member_lecture_schedule/', {"member_id":changed.add[i], "schedule_id": this.schedule_id, "permission_state_cd":SCHEDULE_APPROVE, "async":false}, ()=>{});
@@ -518,7 +532,6 @@ class Plan_view{
                             Plan_func.delete({"schedule_id":member_schedule_id, "async":false});
                         // }
                     }
-                    
                     this.init();
                     try{
                         current_page.init();
@@ -577,6 +590,13 @@ class Plan_view{
                         }},
                         daily_record:{text:"일지", callback:()=>{
                             layer_popup.close_layer_popup();
+                            let inspect = pass_inspector.schedule_update();
+                                if(inspect.barrier == BLOCKED){
+                                    let message = `${inspect.limit_type}`;
+                                    // layer_popup.close_layer_popup();
+                                    show_error_message({title:message});
+                                    return false;
+                                }
                             Plan_daily_record_func.write_artice(member_schedule_id, member_name, ()=>{
                                 show_error_message({title:`[${member_name}] 일지 변경사항이 저장 되었습니다.`});
                             }, ()=>{
@@ -681,6 +701,13 @@ class Plan_view{
         let icon_r_text = "대기 예약 회원 목록";
         let style = null;
         let html_member_select = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            let inspect = pass_inspector.schedule_update();
+                                if(inspect.barrier == BLOCKED){
+                                    let message = `${inspect.limit_type}`;
+                                    // layer_popup.close_layer_popup();
+                                    show_error_message({title:message});
+                                    return false;
+                                }
             //회원 선택 팝업 열기
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_PLAN_WAIT_SELECT, 100, popup_style, {'data':null}, ()=>{
@@ -770,6 +797,13 @@ class Plan_view{
                         }},
                         daily_record:{text:"일지", callback:()=>{
                             layer_popup.close_layer_popup();
+                            let inspect = pass_inspector.schedule_update();
+                                if(inspect.barrier == BLOCKED){
+                                    let message = `${inspect.limit_type}`;
+                                    // layer_popup.close_layer_popup();
+                                    show_error_message({title:message});
+                                    return false;
+                                }
                             Plan_daily_record_func.write_artice(member_schedule_id, member_name, ()=>{
                                 show_error_message({title:`[${member_name}] 일지 변경사항이 저장 되었습니다.`});
                             }, ()=>{
@@ -1144,6 +1178,13 @@ class Plan_view{
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_ATTEND, 100, popup_style, null, ()=>{
                     member_attend = new Member_attend('.popup_member_attend', this.schedule_id, (data)=>{
+                        let inspect = pass_inspector.schedule_update();
+                                if(inspect.barrier == BLOCKED){
+                                    let message = `${inspect.limit_type}`;
+                                    // layer_popup.close_layer_popup();
+                                    show_error_message({title:message});
+                                    return false;
+                                }
                         let schedule = data.schedule;
                         let set_data = data.member_schedule;
                         //출석체크 팝업에서 완료버튼을 눌렀을때 할 행동
