@@ -514,16 +514,6 @@ class Plan_view{
                     this.member = set_data;
                     let changed = this.func_update_member();
 
-                    for(let i=0; i<changed.add.length; i++){
-                        Plan_func.create('/schedule/add_member_lecture_schedule/', {"member_id":changed.add[i], "schedule_id": this.schedule_id, "permission_state_cd":SCHEDULE_APPROVE, "async":false}, ()=>{});
-                    }
-                    if(set_data.id_other.length > 0){ //전체 회원에서 추가한 것이 있을 때
-                        for(let i=0; i<set_data.id_other.length; i++){
-                            let member_ticket_id = set_data.ticket_id_other[i];
-                            let member_id = set_data.id_other[i];
-                            Plan_func.create('/schedule/add_other_member_lecture_schedule/', {"member_id":member_id, "member_ticket_id": member_ticket_id, "schedule_id": this.schedule_id, "permission_state_cd":SCHEDULE_APPROVE, "async":false}, ()=>{});
-                        }
-                    }
                     for(let j=0; j<changed.del.length; j++){
                         let index = this.data.member_id_original.indexOf(changed.del[j]);
                         let member_schedule_id = this.data.member_schedule_id[index];
@@ -531,6 +521,19 @@ class Plan_view{
                             Plan_func.delete({"schedule_id":member_schedule_id, "async":false});
                         // }
                     }
+
+                    for(let i=0; i<changed.add.length; i++){
+                        Plan_func.create('/schedule/add_member_lecture_schedule/', {"member_id":changed.add[i], "schedule_id": this.schedule_id, "permission_state_cd":SCHEDULE_APPROVE, "async":false}, ()=>{});
+                    }
+
+                    if(set_data.id_other.length > 0){ //전체 회원에서 추가한 것이 있을 때
+                        for(let i=0; i<set_data.id_other.length; i++){
+                            let member_ticket_id = set_data.ticket_id_other[i];
+                            let member_id = set_data.id_other[i];
+                            Plan_func.create('/schedule/add_other_member_lecture_schedule/', {"member_id":member_id, "member_ticket_id": member_ticket_id, "schedule_id": this.schedule_id, "permission_state_cd":SCHEDULE_APPROVE, "async":false}, ()=>{});
+                        }
+                    }
+                    
                     this.init();
                     try{
                         current_page.init();
@@ -708,7 +711,7 @@ class Plan_view{
                 return false;
             }
             if(this.settings.wait_member_limit == 0){
-                show_error_message({title:'설정->회원 예약<br/>대기 허용 정원을 설정해주세요.'});
+                show_error_message({title:`설정 ${CImg.arrow_right("", {"vertical-align":"middle"})} 회원 예약<br/>대기 허용 정원을 설정해주세요.`});
                 return false;
             }
             //회원 선택 팝업 열기
