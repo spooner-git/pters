@@ -367,7 +367,7 @@ class Setting_reserve{
                 user_input_data = 0;
             }
             if(Number(user_input_data) < 0){
-                show_error_message({title:"추가 허용 인원은 0명 이상 설정해주세요."});
+                show_error_message({title:"대기 허용 정원은 0명 이상 설정해주세요."});
                 this.render_content();
                 return false;
             }
@@ -378,7 +378,7 @@ class Setting_reserve{
         let pattern = "[0-9]{0,4}";
         let pattern_message = "";
         let required = "";
-        let title_row = CComponent.text_button ("member_public_class_wait_member_num", '그룹 수업 정원외 대기 허용 인원', {"font-size":"15px", "font-weight":"500", "letter-spacing":"-0.8px"}, ()=>{});
+        let title_row = CComponent.text_button ("member_public_class_wait_member_num", '그룹 수업 대기 허용 정원', {"font-size":"15px", "font-weight":"500", "letter-spacing":"-0.8px"}, ()=>{});
         let member_public_class_wait_member_num_row = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, onfocusout, pattern, pattern_message, required);
         let html = `
             <div style="display:table;width:100%;">

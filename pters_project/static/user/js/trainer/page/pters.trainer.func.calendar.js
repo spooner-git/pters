@@ -1882,7 +1882,6 @@ class Plan_func{
 
     static read_plan(schedule_id, callback, error_callback){
 
-        console.log('read_plan');
         $.ajax({
             url: '/trainer/get_trainer_schedule_info/',
             type : 'GET',
@@ -1890,11 +1889,9 @@ class Plan_func{
             dataType: "JSON",
 
             beforeSend:function (){
-                console.log('read_plan1');
                 // ajax_load_image(SHOW);
             },
             success:function (data){
-                console.log('read_plan2');
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
@@ -1902,11 +1899,9 @@ class Plan_func{
                         return false;
                     }
                 }
-                console.log('read_plan3');
                 if(callback != undefined){
                     callback(data);
                 }
-                console.log('read_plan4');
                 return data;
             },
 

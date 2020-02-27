@@ -701,12 +701,16 @@ class Plan_view{
         let style = null;
         let html_member_select = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             let inspect = pass_inspector.schedule_update();
-                                if(inspect.barrier == BLOCKED){
-                                    let message = `${inspect.limit_type}`;
-                                    // layer_popup.close_layer_popup();
-                                    show_error_message({title:message});
-                                    return false;
-                                }
+            if(inspect.barrier == BLOCKED){
+                let message = `${inspect.limit_type}`;
+                // layer_popup.close_layer_popup();
+                show_error_message({title:message});
+                return false;
+            }
+            if(this.settings.wait_member_limit == 0){
+                show_error_message({title:'설정->회원 예약<br/>대기 허용 정원을 설정해주세요.'});
+                return false;
+            }
             //회원 선택 팝업 열기
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_PLAN_WAIT_SELECT, 100, popup_style, {'data':null}, ()=>{
