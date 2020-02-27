@@ -261,7 +261,6 @@ class ServiceTestLoginView(TemplateView):
         #     schedule_info.save()
         return context
 
-
 class CheckRegistration(TemplateView):
     template_name = 'check_registration.html'
 

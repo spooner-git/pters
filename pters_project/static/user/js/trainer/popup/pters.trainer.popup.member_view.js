@@ -325,7 +325,7 @@ class Member_view{
         let sex = this.dom_row_member_sex_input();
         let ticket = this.dom_row_ticket();
         // let memo = this.dom_row_member_memo_input();
-        let tag_id = this.data.active == 'True' || this.data.active == null ? '아이디' : '아이디 <span style="color:var(--font-highlight);margin-left:3px;">(임시)</span>';
+        let tag_id = this.data.active == 'True' || this.data.active == null ? '아이디' : '아이디 <span style="color:var(--font-highlight);margin-left:3px;">(임시아이디, 비밀번호 0000)</span>';
         let html =
             '<div class="obj_input_box_full">'
                 + CComponent.dom_tag(tag_id) + user_id + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
@@ -789,7 +789,7 @@ class Member_view{
                                 return false;
                             }
                             try{
-                                current_page.init();
+                                current_page.reset();
                             }catch(e){}
                             try{
                                 self.init();
@@ -851,7 +851,7 @@ class Member_view{
                 success_callback();
             }
             try{
-                current_page.init();
+                current_page.reset();
             }catch(e){}
         });
     }
@@ -925,7 +925,7 @@ class Member_view{
 
                         Member_func.delete({"member_id":this.member_id}, ()=>{
                             try{
-                                current_page.init();
+                                current_page.reset();
                             }catch(e){}
                             layer_popup.all_close_layer_popup();
                         });
@@ -950,7 +950,7 @@ class Member_view{
         let forms = document.getElementById(`${this.form_id}`);
         update_check_registration_form(forms);
         let error_info = check_registration_form(forms);
-        console.log(error_info);
+
         if(error_info != ''){
             show_error_message({title:error_info});
             return false;
@@ -1353,7 +1353,6 @@ class Member_simple_view{
 
         let html_to_join = [];
         for(let i=0; i<ticket_length; i++){
-            console.log("1", this.data.ticket[i]);
             let ticket_name = this.data.ticket[i].ticket_name;
             if(this.data.ticket[i].ticket_state == STATE_END_PROGRESS){
                 ticket_name = `<span style="color:var(--font-sub-normal);">${this.data.ticket[i].ticket_name}</span><span style="font-size:13px;"> (비활성)</span>`;

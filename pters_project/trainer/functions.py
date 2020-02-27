@@ -715,6 +715,10 @@ def func_get_trainer_setting_list(context, trainer_id, class_id, user_id):
     setting_trainer_attend_mode_out_lock = str(UN_USE)
     setting_member_lecture_max_num_view_available = USE
     setting_schedule_sign_enable = USE
+    setting_member_private_class_auto_permission = USE
+    setting_member_public_class_auto_permission = USE
+    setting_member_public_class_wait_member_num = 0
+    setting_member_wait_schedule_auto_cancel_time = 0
 
     for setting_info in setting_data:
         if setting_info.setting_type_cd == 'LT_RES_01':
@@ -781,11 +785,22 @@ def func_get_trainer_setting_list(context, trainer_id, class_id, user_id):
         if setting_info.setting_type_cd == 'LT_RES_MEMBER_LECTURE_MAX_NUM_VIEW':
             setting_member_lecture_max_num_view_available = int(setting_info.setting_info)
         if setting_info.setting_type_cd == 'SCHEDULE_SIGN_ENABLE':
-            setting_schedule_sign_enable = setting_info.setting_info
-
+            setting_schedule_sign_enable = int(setting_info.setting_info)
+        if setting_info.setting_type_cd == 'LT_RES_PRIVATE_CLASS_AUTO_PERMISSION':
+            setting_member_private_class_auto_permission = int(setting_info.setting_info)
+        if setting_info.setting_type_cd == 'LT_RES_PUBLIC_CLASS_AUTO_PERMISSION':
+            setting_member_public_class_auto_permission = int(setting_info.setting_info)
+        if setting_info.setting_type_cd == 'LT_RES_PUBLIC_CLASS_WAIT_MEMBER_NUM':
+            setting_member_public_class_wait_member_num = int(setting_info.setting_info)
+        if setting_info.setting_type_cd == 'LT_RES_WAIT_SCHEDULE_AUTO_CANCEL_TIME':
+            setting_member_wait_schedule_auto_cancel_time = int(setting_info.setting_info)
     try:
-        lecture_info = LectureTb.objects.get(class_tb_id=class_id, lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, use=USE)
+        lecture_info = LectureTb.objects.filter(class_tb_id=class_id, lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, use=USE).earliest('reg_dt')
+        # if len(lecture_data) > 0:
         one_to_one_lecture_time_duration = lecture_info.lecture_minute
+        # print(str(one_to_one_lecture_time_duration))
+        # else:
+        #     one_to_one_lecture_time_duration = 60
     except ObjectDoesNotExist:
         one_to_one_lecture_time_duration = 60
 
@@ -849,6 +864,10 @@ def func_get_trainer_setting_list(context, trainer_id, class_id, user_id):
     context['setting_trainer_attend_mode_out_lock'] = setting_trainer_attend_mode_out_lock
     context['setting_member_lecture_max_num_view_available'] = setting_member_lecture_max_num_view_available
     context['setting_schedule_sign_enable'] = setting_schedule_sign_enable
+    context['setting_member_private_class_auto_permission'] = setting_member_private_class_auto_permission
+    context['setting_member_public_class_auto_permission'] = setting_member_public_class_auto_permission
+    context['setting_member_public_class_wait_member_num'] = setting_member_public_class_wait_member_num
+    context['setting_member_wait_schedule_auto_cancel_time'] = setting_member_wait_schedule_auto_cancel_time
     return context
 
 

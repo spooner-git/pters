@@ -14,8 +14,10 @@
     <div class="popup_calendar_plan_reserve_complete">
         <div class="obj_box_popup_topper">
             <div class="wrapper_calendar_plan_reserve_complete_title">
-                <div class="wrapper_popup_title_text obj_font_size_18_weight_900 obj_font_color_white">예약 신청 완료</div>
-                <div class="wrapper_popup_title_date obj_font_size_13_weight_500 obj_font_color_white">{{ schedule_info.class_tb.member.name }} 강사님의 수업에 예약 신청되었습니다.</div>
+                <div class="wrapper_popup_title_text obj_font_size_18_weight_900 obj_font_color_white">
+                    {% if schedule_info.permission_state_cd == 'WP' %}대기 예약 신청{% else %}예약 확정{% endif %} 완료</div>
+                <div class="wrapper_popup_title_date obj_font_size_13_weight_500 obj_font_color_white">
+                    {{ schedule_info.class_tb.member.name }} 강사님의 수업에 {% if schedule_info.permission_state_cd == 'WP' %}대기 예약 신청{% else %}예약 확정{% endif %} 되었습니다.</div>
             </div>
         </div>
         
@@ -31,7 +33,12 @@
                     </div>
                     
                     <div class="wrapper_member_ticket_title obj_font_size_15_weight_500">
-                        ({% if schedule_info.max_mem_count == 1 %}개인{% else %}그룹{% endif %}) {% if schedule_info.max_mem_count == 1 %}개인 수업{% else %}{{ schedule_info.lecture_tb.name }}{% endif %}
+                        ({% if schedule_info.lecture_tb.lecture_type_cd == 'ONE_TO_ONE' %}개인 {% else %}그룹 {% endif %})
+                        {% if schedule_info.lecture_tb %}
+                            {{ schedule_info.lecture_tb.name }}
+                        {% else %}
+                            개인 수업
+                        {% endif %}
                     </div>
                     <div class="wrapper_plan_info">
                         <div class="obj_table_raw obj_font_size_10_weight_500 obj_font_color_light_grey">

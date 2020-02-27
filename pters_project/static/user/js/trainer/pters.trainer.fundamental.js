@@ -568,7 +568,7 @@ class PassInspector{
     constructor(){
         this.data;
         this.trainer_data;
-        this.init();
+        // this.init();
     }
     
     init(){
@@ -972,7 +972,7 @@ class PassInspector{
     }
 
     program_notice_read(){
-        console.log(this.data);
+
         let limit_number = Number(this.data.auth_notice_read.active);
         // let limit_type = "수강권 읽기 권한이 없습니다.";
         let limit_type = `${this.data.auth_notice_read.limit_type}의 공지사항 조회 권한이 없습니다.`;
@@ -1275,6 +1275,40 @@ class help_icon{
 }
 
 
+function clear_badge_counter(){
+    $.ajax({
+        url:'/login/clear_badge_counter/',
+        type:'POST',
+        //dataType : 'html',
+
+        beforeSend:function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+            //alert('before clear_badge_counter afsavf')
+            console.log('before');
+        },
+
+        //통신성공시 처리
+        success:function(){
+            //alert('test')
+            console.log('sucess');
+
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+
+        },
+
+        //통신 실패시 처리
+        error:function(){
+            console.log('error');
+            //alert('error clear_badge_counter')
+            //console.log('error:clear_badge_counter')
+        }
+    });
+}
 
 function update_push_token(token, device_id) {
     $.ajax({

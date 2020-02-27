@@ -40,6 +40,7 @@
         height: auto;
         /* background-color: #ff3b44; */
         background-image: linear-gradient(to right,#ea0e0ed4,#ff6d6d);
+        /* background-image: linear-gradient(45deg,#694EFE,#C0B4FF); */
         border-radius: 8px 8px 0px 0px;
         box-shadow: 0 0 15px 0 rgba(131, 131, 131, 0.25);
         padding-top: 20px;
@@ -294,6 +295,7 @@
     .obj_font_bg_coral_white{
         color: #ff3b44;
         background-color: #ffffff;
+        border: 1px solid #ff3b44;
     }
     .obj_font_bg_grey_trans{
         color: #656565;

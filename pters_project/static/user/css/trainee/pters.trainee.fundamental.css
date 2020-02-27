@@ -142,8 +142,9 @@
         top: 0;
         left: 50%;
         transform: translateX(-50%);
-        background-color: #ff3b44;
+        /* background-color: #ff3b44; */
         background-image: linear-gradient(to right,#ea0e0ed4,#ff6d6d);
+        /* background-image: linear-gradient(45deg,#694EFE,#C0B4FF); */
         box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.25);
         z-index: 1;
 
@@ -256,6 +257,11 @@
     .wrapper_member_ticket_title{
         text-align: center;
     }
+
+    .wrapper_permission_type{
+        text-align: left;
+    }
+
     .wrapper_img_lesson_type{
         text-align: center;
     }

@@ -76,22 +76,25 @@
 
         <div id="wrapper_my_history_detail" style="display:none;">
             <div class="wrapper_my_history_detail_title obj_table_raw obj_font_size_11_weight_normal obj_font_color_light_grey">
-                <div class="wrapper_my_history_detail_member_ticket_count obj_table_cell_x6">회차</div>
-                <div class="wrapper_my_history_detail_member_ticket_date obj_table_cell_x6">일자</div>
-                <div class="wrapper_my_history_detail_member_ticket_week obj_table_cell_x6">요일</div>
-                <div class="wrapper_my_history_detail_member_ticket_time obj_table_cell_x6">진행시간</div>
-                <div class="wrapper_my_history_detail_member_ticket_memo obj_table_cell_x6">메모</div>
-                <div class="wrapper_my_history_detail_member_ticket_status obj_table_cell_x6">상태</div>
+                <div class="wrapper_my_history_detail_member_ticket_count obj_table_cell_x4">회차</div>
+                <div class="wrapper_my_history_detail_member_ticket_date obj_table_cell_x4">일자</div>
+{#                <div class="wrapper_my_history_detail_member_ticket_week obj_table_cell_x6">요일</div>#}
+{#                <div class="wrapper_my_history_detail_member_ticket_time obj_table_cell_x6">진행시간</div>#}
+                <div class="wrapper_my_history_detail_member_ticket_memo obj_table_cell_x4">메모</div>
+                <div class="wrapper_my_history_detail_member_ticket_status obj_table_cell_x4">상태</div>
             </div>
             {% for schedule_info in schedule_data %}
             <div class="wrapper_my_history_detail_info obj_table_raw obj_font_size_11_weight_500">
-                <div class="wrapper_my_history_detail_member_ticket_count obj_table_cell_x6">{{ forloop.revcounter }}</div>
-                <div class="wrapper_my_history_detail_member_ticket_date obj_table_cell_x6">{{ schedule_info.start_dt | date:'Y.m.d' }}</div>
-                <div class="wrapper_my_history_detail_member_ticket_week obj_table_cell_x6">{{ schedule_info.start_dt | date:'l' }}</div>
+                <div class="wrapper_my_history_detail_member_ticket_count obj_table_cell_x4">{{ forloop.revcounter }}</div>
+                <div class="wrapper_my_history_detail_member_ticket_date obj_table_cell_x4">{{ schedule_info.start_dt | date:'Y.m.d (l)' | cut:'요일' }}
+                    <br/>{{ schedule_info.start_dt | time:'H:i' }} ~ {{ schedule_info.end_dt | time:'H:i' }}
+                </div>
+                <!--<div class="wrapper_my_history_detail_member_ticket_week obj_table_cell_x6">{{ schedule_info.start_dt | date:'l' }}</div>
                 <div class="wrapper_my_history_detail_member_ticket_time obj_table_cell_x6">{{ schedule_info.start_dt | time:'H:i' }} ~ {{ schedule_info.end_dt | time:'H:i' }}</div>
-                <!-- 10글자 넘으면 ...으로 처리 -->
-                <div class="wrapper_my_history_detail_member_ticket_memo obj_table_cell_x6">{{ schedule_info.note | truncatechars:10 }}</div>
-                <div class="wrapper_my_history_detail_member_ticket_status obj_table_cell_x6">{{ schedule_info.status }}</div>
+                -->
+                <!-- 20글자 넘으면 ...으로 처리 -->
+                <div class="wrapper_my_history_detail_member_ticket_memo obj_table_cell_x4">{{ schedule_info.note | truncatechars:30 }}</div>
+                <div class="wrapper_my_history_detail_member_ticket_status obj_table_cell_x4">{{ schedule_info.status }}<br/>({{ schedule_info.permission }})</div>
             </div>
             {% endfor %}
         </div>

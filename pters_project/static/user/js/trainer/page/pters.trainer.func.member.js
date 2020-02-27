@@ -45,6 +45,25 @@ class Member {
         });
     }
 
+    reset(list_type){
+        if(current_page_text != this.page_name){
+            return false;
+        }
+
+        if(list_type == undefined){
+            list_type = this.list_type;
+        }
+
+        this.list_type = list_type;
+
+        this.render_upper_box();
+        this.request_member_list(list_type, (jsondata) => {
+            this.received_data_cache = jsondata;
+            this.render_member_list(jsondata, list_type);
+            this.render_upper_box();
+        });
+    }
+
 
     //회원 리스트 서버에서 불러오기
     request_member_list (list_type, callback, load_image, async){
@@ -217,7 +236,6 @@ class Member {
         if(html_temp.length == 0){
             html_temp.push(`<div style="font-size:14px;padding:16px;" class="anim_fade_in_vibe_top">등록된 회원이 없습니다.</div>`);
         }
-        console.log("두번?")
         document.querySelector('#member_content_wrap').innerHTML = html_temp.join("");
     }
 
@@ -645,7 +663,6 @@ class Member_func{
             success:function(data){
                 check_app_version(data.app_version);
                 // let data = JSON.parse(data_);
-                console.log(data);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
                         show_error_message({title:data.messageArray[0]});

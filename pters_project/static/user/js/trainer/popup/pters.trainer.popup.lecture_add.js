@@ -247,7 +247,8 @@ class Lecture_add{
             if(this.data.capacity != null){
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SELECT, 100, popup_style, null, ()=>{
-                    member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.capacity, {'lecture_id':null, "title":"고정 회원 선택"}, (set_data)=>{
+                    let appendix = {'lecture_id':null, "title":"고정 회원 선택", member_id:this.data.fixed_member_id, member_name:this.data.fixed_member_name};
+                    member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.capacity, appendix, (set_data)=>{
                         this.member = set_data;
                         this.render_content();
                     });
@@ -446,7 +447,7 @@ class Lecture_add{
         }
         else{
             if(this.data.capacity <= 1){
-                show_error_message({title:'정원은 2명보다 크게 설정해주세요.'});
+                show_error_message({title:'정원은 1명보다 크게 설정해주세요.'});
                 return false;
             }
             if(this.data.lecture_minute == null){

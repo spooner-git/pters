@@ -122,7 +122,6 @@ class Pters_pass_pay_info{
 
     dom_row_pay_method(){
         let id = "pters_pass_pay_method";
-        console.log(this.data_billing.current);
         let change_test = true;
         let card_name = this.data_billing.current.card_name[0];
         let pay_date_info = ``;

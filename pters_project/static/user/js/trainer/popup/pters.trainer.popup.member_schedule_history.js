@@ -154,9 +154,10 @@ class Member_schedule_history{
                             TimeRobot.to_text(data.end_dt.split(' ')[1], '', SHORT);
                 let schedule_name = data.lecture_name;
                 let attend_status = data.state_cd;
+                let permission_status = data.permission_state_cd;
                 let memo = data.note;
                 let daily_record_id = data.daily_record_id;
-                html = CComponent.schedule_history_row (numbering, schedule_id, date, schedule_name, attend_status, memo, daily_record_id, this.settings.sign_use, ()=>{
+                html = CComponent.schedule_history_row (numbering, schedule_id, date, schedule_name, attend_status, permission_status, memo, daily_record_id, this.settings.sign_use, ()=>{
                     let user_option = {
                         daily_record:{text:"일지", callback:()=>{
                                                                 layer_popup.close_layer_popup();
@@ -217,6 +218,60 @@ class Member_schedule_history{
                                                                 });layer_popup.close_layer_popup();
                                                             }
                                                         }},
+                        permission_approve:{text:"예약 확정", callback:()=>{
+                            layer_popup.close_layer_popup();
+                            let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>예약 확정 하시겠습니까?</span>"};
+                            show_user_confirm (confirm_message, ()=>{
+                                layer_popup.close_layer_popup();
+                                let inspect = pass_inspector.schedule_update();
+                                if(inspect.barrier == BLOCKED){
+                                    let message = `${inspect.limit_type}`;
+                                    // layer_popup.close_layer_popup();
+                                    show_error_message({title:message});
+                                    return false;
+                                }
+                                let send_data = {"schedule_id":schedule_id, "permission_state_cd":SCHEDULE_APPROVE};
+                                Plan_func.permission_status(send_data, ()=>{
+                                    this.init();
+                                    try{
+                                        member_view_popup.init();
+                                    }catch(e){}
+                                    try{
+                                        plan_view_popup.init();
+                                    }catch(e){}
+                                    try{
+                                        current_page.init();
+                                    }catch(e){}
+                                });
+                            });
+                        }},
+                        permission_wait:{text:"대기 예약", callback:()=>{
+                            layer_popup.close_layer_popup();
+                            let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>대기 예약으로 변경 하시겠습니까?</span>"};
+                            show_user_confirm (confirm_message, ()=>{
+                                layer_popup.close_layer_popup();
+                                let inspect = pass_inspector.schedule_update();
+                                if(inspect.barrier == BLOCKED){
+                                    let message = `${inspect.limit_type}`;
+                                    // layer_popup.close_layer_popup();
+                                    show_error_message({title:message});
+                                    return false;
+                                }
+                                let send_data = {"schedule_id":schedule_id, "permission_state_cd":SCHEDULE_WAIT};
+                                Plan_func.permission_status(send_data, ()=>{
+                                    this.init();
+                                    try{
+                                        member_view_popup.init();
+                                    }catch(e){}
+                                    try{
+                                        plan_view_popup.init();
+                                    }catch(e){}
+                                    try{
+                                        current_page.init();
+                                    }catch(e){}
+                                });
+                            });
+                        }},
                         cancel:{text:"일정 취소", callback:()=>{Plan_func.delete({"schedule_id":schedule_id}, ()=>{
                                                             this.init();
                                                             try{
@@ -231,6 +286,15 @@ class Member_schedule_history{
 
                                                         });layer_popup.close_layer_popup();}}
                     };
+                    if(permission_status == SCHEDULE_APPROVE){
+                        delete user_option.permission_approve;
+                    }
+                    if(permission_status == SCHEDULE_WAIT){
+                        delete user_option.permission_wait;
+                    }
+                    if(attend_status == SCHEDULE_FINISH || attend_status == SCHEDULE_ABSENCE){
+                        delete user_option.permission_wait;
+                    }
                     let options_padding_top_bottom = 16;
                     // let button_height = 8 + 8 + 52;
                     let button_height = 52;
@@ -294,6 +358,7 @@ class Member_schedule_history{
                             TimeRobot.to_text(data.end_dt.split(' ')[1], '', SHORT);
             let schedule_name = data.lecture_name;
             let attend_status = data.state_cd;
+            let permission_status = data.permission_state_cd;
             let memo = data.note;
             let daily_record_id = data.daily_record_id;
             let onclick = ()=>{
@@ -357,6 +422,60 @@ class Member_schedule_history{
                                                             });layer_popup.close_layer_popup();
                                                         }
                                                     }},
+                    permission_approve:{text:"예약 확정", callback:()=>{
+                        layer_popup.close_layer_popup();
+                        let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>예약 확정 하시겠습니까?</span>"};
+                        show_user_confirm (confirm_message, ()=>{
+                            layer_popup.close_layer_popup();
+                            let inspect = pass_inspector.schedule_update();
+                            if(inspect.barrier == BLOCKED){
+                                let message = `${inspect.limit_type}`;
+                                // layer_popup.close_layer_popup();
+                                show_error_message({title:message});
+                                return false;
+                            }
+                            let send_data = {"schedule_id":schedule_id, "permission_state_cd":SCHEDULE_APPROVE};
+                            Plan_func.permission_status(send_data, ()=>{
+                                this.init();
+                                try{
+                                    member_view_popup.init();
+                                }catch(e){}
+                                try{
+                                    plan_view_popup.init();
+                                }catch(e){}
+                                try{
+                                    current_page.init();
+                                }catch(e){}
+                            });
+                        });
+                    }},
+                    permission_wait:{text:"대기 예약", callback:()=>{
+                        layer_popup.close_layer_popup();
+                        let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>대기 예약으로 변경 하시겠습니까?</span>"};
+                        show_user_confirm (confirm_message, ()=>{
+                            layer_popup.close_layer_popup();
+                            let inspect = pass_inspector.schedule_update();
+                            if(inspect.barrier == BLOCKED){
+                                let message = `${inspect.limit_type}`;
+                                // layer_popup.close_layer_popup();
+                                show_error_message({title:message});
+                                return false;
+                            }
+                            let send_data = {"schedule_id":schedule_id, "permission_state_cd":SCHEDULE_WAIT};
+                            Plan_func.permission_status(send_data, ()=>{
+                                this.init();
+                                try{
+                                    member_view_popup.init();
+                                }catch(e){}
+                                try{
+                                    plan_view_popup.init();
+                                }catch(e){}
+                                try{
+                                    current_page.init();
+                                }catch(e){}
+                            });
+                        });
+                    }},
                     cancel:{text:"일정 취소", callback:()=>{Plan_func.delete({"schedule_id":schedule_id}, ()=>{
                                                         this.init();
                                                         try{
@@ -371,6 +490,15 @@ class Member_schedule_history{
 
                                                     });layer_popup.close_layer_popup();}}
                 };
+                if(permission_status == SCHEDULE_APPROVE){
+                    delete user_option.permission_approve;
+                }
+                if(permission_status == SCHEDULE_WAIT){
+                    delete user_option.permission_wait;
+                }
+                if(attend_status == SCHEDULE_FINISH || attend_status == SCHEDULE_ABSENCE){
+                    delete user_option.permission_wait;
+                }
                 let options_padding_top_bottom = 16;
                 // let button_height = 8 + 8 + 52;
                 let button_height = 52;
@@ -380,7 +508,7 @@ class Member_schedule_history{
                     option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
                 });
             };
-            let row = CComponent.schedule_history_row (numbering, schedule_id, date, schedule_name, attend_status, memo, daily_record_id, this.settings.sign_use, onclick);
+            let row = CComponent.schedule_history_row (numbering, schedule_id, date, schedule_name, attend_status, permission_status, memo, daily_record_id, this.settings.sign_use, onclick);
             html_to_join.push(row);
         }
         if(html_to_join.length == 0){
@@ -434,9 +562,10 @@ class Member_schedule_history{
                             TimeRobot.to_text(data.end_dt.split(' ')[1], '', SHORT);
                 let schedule_name = data.lecture_name;
                 let attend_status = data.state_cd;
+                let permission_status = data.permission_state_cd;
                 let memo = data.note;
                 let daily_record_id = data.daily_record_id;
-                html = CComponent.schedule_history_row (numbering, schedule_id, date, schedule_name, attend_status, memo, daily_record_id, this.settings.sign_use, ()=>{
+                html = CComponent.schedule_history_row (numbering, schedule_id, date, schedule_name, attend_status, permission_status, memo, daily_record_id, this.settings.sign_use, ()=>{
                     let user_option = {
                         daily_record:{text:"일지", callback:()=>{
                                                                 layer_popup.close_layer_popup();
@@ -497,6 +626,60 @@ class Member_schedule_history{
                                                                 });layer_popup.close_layer_popup();
                                                             }
                                                         }},
+                        permission_approve:{text:"예약 확정", callback:()=>{
+                            layer_popup.close_layer_popup();
+                            let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>예약 확정 하시겠습니까?</span>"};
+                            show_user_confirm (confirm_message, ()=>{
+                                layer_popup.close_layer_popup();
+                                let inspect = pass_inspector.schedule_update();
+                                if(inspect.barrier == BLOCKED){
+                                    let message = `${inspect.limit_type}`;
+                                    // layer_popup.close_layer_popup();
+                                    show_error_message({title:message});
+                                    return false;
+                                }
+                                let send_data = {"schedule_id":schedule_id, "permission_state_cd":SCHEDULE_APPROVE};
+                                Plan_func.permission_status(send_data, ()=>{
+                                    this.init();
+                                    try{
+                                        member_view_popup.init();
+                                    }catch(e){}
+                                    try{
+                                        plan_view_popup.init();
+                                    }catch(e){}
+                                    try{
+                                        current_page.init();
+                                    }catch(e){}
+                                });
+                            });
+                        }},
+                        permission_wait:{text:"대기 예약", callback:()=>{
+                            layer_popup.close_layer_popup();
+                            let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>대기 예약로 변경 하시겠습니까?</span>"};
+                            show_user_confirm (confirm_message, ()=>{
+                                layer_popup.close_layer_popup();
+                                let inspect = pass_inspector.schedule_update();
+                                if(inspect.barrier == BLOCKED){
+                                    let message = `${inspect.limit_type}`;
+                                    // layer_popup.close_layer_popup();
+                                    show_error_message({title:message});
+                                    return false;
+                                }
+                                let send_data = {"schedule_id":schedule_id, "permission_state_cd":SCHEDULE_WAIT};
+                                Plan_func.permission_status(send_data, ()=>{
+                                    this.init();
+                                    try{
+                                        member_view_popup.init();
+                                    }catch(e){}
+                                    try{
+                                        plan_view_popup.init();
+                                    }catch(e){}
+                                    try{
+                                        current_page.init();
+                                    }catch(e){}
+                                });
+                            });
+                        }},
                         cancel:{text:"일정 취소", callback:()=>{Plan_func.delete({"schedule_id":schedule_id}, ()=>{
                                                             this.init();
                                                             try{
@@ -511,6 +694,15 @@ class Member_schedule_history{
 
                                                         });layer_popup.close_layer_popup();}}
                     };
+                    if(permission_status == SCHEDULE_APPROVE){
+                        delete user_option.permission_approve;
+                    }
+                    if(permission_status == SCHEDULE_WAIT){
+                        delete user_option.permission_wait;
+                    }
+                    if(attend_status == SCHEDULE_FINISH || attend_status == SCHEDULE_ABSENCE){
+                        delete user_option.permission_wait;
+                    }
                     let options_padding_top_bottom = 16;
                     // let button_height = 8 + 8 + 52;
                     let button_height = 52;

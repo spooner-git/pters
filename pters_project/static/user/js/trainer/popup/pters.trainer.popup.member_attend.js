@@ -6,7 +6,7 @@ class Member_attend{
         this.received_data;
         this.check_entire = false;
         this.data = {
-            id:{name:null, member_id:null, state_cd:null, image:null, schedule_id:null}
+            id:{name:null, member_id:null, state_cd:null, permission_state_cd:null, image:null, schedule_id:null}
         };
         this.settings = {
             sign_use:OFF
@@ -31,12 +31,16 @@ class Member_attend{
             let member_schedule_id = data.lecture_schedule_data[i].schedule_id;
             let member_id = data.lecture_schedule_data[i].member_id;
             let state = data.lecture_schedule_data[i].state_cd;
+            let permission_state_cd = data.lecture_schedule_data[i].permission_state_cd;
             let member_name = data.lecture_schedule_data[i].member_name;
             let image_url = `https://s3.ap-northeast-2.amazonaws.com/pters-image-master/${member_schedule_id}.png`;
             if(state != SCHEDULE_FINISH){
                 image_url = null;
             }
-            new_data[member_id] = {name:member_name, member_id:member_id, state_cd:state, image:image_url, profile_img: member_profile_img};
+            if(permission_state_cd == SCHEDULE_WAIT){
+                continue;
+            }
+            new_data[member_id] = {name:member_name, member_id:member_id, state_cd:state, permission_state_cd:permission_state_cd, image:image_url, profile_img: member_profile_img};
             //서버로부터 image를 받아오면 image를 null이 아니라 image 주소로
             if(state != SCHEDULE_FINISH){
                 this.check_entire = false;
@@ -45,16 +49,18 @@ class Member_attend{
         if(data.schedule_type == 1){
             let member_profile_img = data.member_profile_url;
             let state = data_.schedule_info[0].state_cd;
+            let permission_state_cd = data_.schedule_info[0].permission_state_cd;
             let image_url = `https://s3.ap-northeast-2.amazonaws.com/pters-image-master/${data.schedule_id}.png`;
             if(state != SCHEDULE_FINISH){
                 image_url = null;
             }
-            new_data[null] = {name:data.member_name, state_cd:data.state_cd, member_id:null, image:image_url, profile_img:member_profile_img};
+            new_data[null] = {name:data.member_name, state_cd:data.state_cd, permission_state_cd:permission_state_cd, member_id:null, image:image_url, profile_img:member_profile_img};
             //서버로부터 image를 받아오면 image를 null이 아니라 image 주소로
         }
 
         this.data = new_data;
         this.schedule_state_cd = data.state_cd;
+        this.schedule_permission_state_cd = data.permission_state_cd;
         if(this.schedule_state_cd == SCHEDULE_FINISH && Object.keys(this.data).length == 0){
             this.check_entire = true;
         }

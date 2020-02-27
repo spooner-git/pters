@@ -452,7 +452,9 @@ function pters_month_calendar(calendar_name, calendar_options){
                 let schedule_id = split[3];
                 let schedule_finish = split[4];
                 let schedule_repeat_id = split[5];
-                let schedule_type = '개별일정';
+                let schedule_permission_status = split[6];
+                let schedule_type = '';
+                let schedule_type_tag = "";
                 let schedule_finish_tag;
 
                 if(type == SCHEDULE_FINISH_ANYWAY){
@@ -472,8 +474,14 @@ function pters_month_calendar(calendar_name, calendar_options){
                 }
 
                 if(schedule_finish==SCHEDULE_NOT_FINISH){
-                    schedule_finish = '예약 완료';
-                    schedule_finish_tag = "obj_font_bg_white_coral";
+                    if(schedule_permission_status==SCHEDULE_WAIT){
+                        schedule_finish = '대기 예약';
+                        schedule_finish_tag = "obj_font_bg_coral_white";
+                    }
+                    else{
+                        schedule_finish = '예약 확정';
+                        schedule_finish_tag = "obj_font_bg_white_coral";
+                    }
                 }
                 else if(schedule_finish==SCHEDULE_FINISH){
                     schedule_finish = '출석';
@@ -485,12 +493,12 @@ function pters_month_calendar(calendar_name, calendar_options){
                 }
                 if(schedule_repeat_id != 'None'){
                     schedule_type = '반복일정';
-                    schedule_finish_tag = "obj_font_bg_coral_trans";
+                    schedule_type_tag = "obj_font_bg_coral_trans";
                 }
 
                 temp_array.push(`<div class="obj_table_raw" data-scheduleid=${schedule_id}>
                                     <div class="obj_table_cell_x2">
-                                            <img src=""><span class="obj_font_size_14_weight_normal">${schedule_name}</span><div class="obj_tag ${schedule_finish_tag} obj_font_size_16_weight_bold">${schedule_finish}</div>
+                                            <img src=""><span class="obj_font_size_14_weight_normal">${schedule_name}</span><div class="obj_tag ${schedule_finish_tag} obj_font_size_16_weight_bold">${schedule_finish}</div><div class="obj_tag ${schedule_type_tag} obj_font_size_16_weight_bold">${schedule_type}</div>
                                         </div>
                                         <div class="obj_table_cell_x2 obj_font_size_14_weight_500">${schedule_time_start}~${schedule_time_end}</div>
                                     </div>
@@ -613,10 +621,11 @@ function pters_month_calendar(calendar_name, calendar_options){
             let schedule_name = json.schedule_lecture_name[j];
             let schedule_finish = json.scheduleFinishArray[j];
             let schedule_repeat_id = json.class_repeat_schedule_id[j];
+            let schedule_permission_status = json.schedulePermissionStateArray[j];
             if(schedule_name.length == 0){
                 schedule_name = "개인 수업";
             }
-            dic[json.classTimeArray_start_date[j].split(' ')[0]].push(schedule_name+' / '+schedule_start_time+' / '+schedule_end_time+' / '+schedule_id+' / '+schedule_finish+' / '+schedule_repeat_id);
+            dic[json.classTimeArray_start_date[j].split(' ')[0]].push(schedule_name+' / '+schedule_start_time+' / '+schedule_end_time+' / '+schedule_id+' / '+schedule_finish+' / '+schedule_repeat_id+' / '+schedule_permission_status);
         }
         return dic;
     }

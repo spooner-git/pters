@@ -365,6 +365,9 @@ input:disabled{
 	width: 24px;
 	vertical-align: middle;
 }
+.select_member_row .cell_member_selected svg{
+	vertical-align: middle;
+}
 .select_member_row .cell_member_selected img{
 	display: none;
 }

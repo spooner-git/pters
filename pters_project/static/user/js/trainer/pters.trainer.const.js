@@ -99,6 +99,9 @@ const SCHEDULE_ABSENCE = 'PC';
 const SCHEDULE_ALL = 3;
 const SCHEDULE_FINISH_ANYWAY = 4;
 
+const SCHEDULE_APPROVE = 'AP';
+const SCHEDULE_WAIT = 'WP';
+
 const AUTOCOMPLETE_ATTEND = 1;
 const AUTOCOMPLETE_ABSENCE = 2;
 const AUTOCOMPLETE_CANCEL = 3;
@@ -184,6 +187,7 @@ const PROGRAM_BOARD_CATEGORY = {use:"공개 여부", type:"분류", open:"공개
 const POPUP_ADDRESS_PLAN_VIEW = 'popup_plan_view';
 const POPUP_ADDRESS_PLAN_ADD = 'popup_plan_add';
 const POPUP_ADDRESS_PLAN_REPEAT_LIST = 'popup_plan_repeat_list';
+const POPUP_ADDRESS_PLAN_PERMISSION_WAIT_LIST = 'popup_plan_permission_wait_list';
 
 const POPUP_ADDRESS_MEMBER_VIEW = 'popup_member_view';
 const POPUP_ADDRESS_MEMBER_SIMPLE_VIEW = 'popup_member_simple_view';
@@ -263,6 +267,8 @@ const POPUP_ADDRESS_DATE_SELECTOR = 'popup_basic_date_selector';
 const POPUP_ADDRESS_SPIN_SELECTOR = 'popup_basic_spin_selector';
 
 const POPUP_ADDRESS_MEMBER_SELECT = 'popup_member_select';
+const POPUP_ADDRESS_MEMBER_PLAN_APPROVE_SELECT = 'popup_member_plan_approve_select';
+const POPUP_ADDRESS_MEMBER_PLAN_WAIT_SELECT = 'popup_member_plan_wait_select';
 const POPUP_ADDRESS_MEMBER_CONTACTS_SELECT = 'popup_member_contacts_select';
 const POPUP_ADDRESS_LECTURE_SELECT = 'popup_lecture_select';
 const POPUP_ADDRESS_TICKET_SELECT = 'popup_ticket_select';
@@ -309,6 +315,7 @@ const COLOR_NAME_CODE = {"#fbf3bd":"바나나", "#dbe6f7":"하늘", "#ffd3d9": "
             };
 const SEX_CODE = {"M": "남성", "W": "여성"};
 const SCHEDULE_STATUS = {"NP" : "진행전", "PC": "결석", "PE": "출석"};
+const APPROVE_SCHEDULE_STATUS = {"AP": "예약 확정", "WP":"대기 예약"};
 const SCHEDULE_STATUS_COLOR = {"NP" : "진행전", "PC": "orange", "PE": "green"};
 const TICKET_STATUS = {"IP": "진행중", "PE": "종료", "RF": "환불"};
 const TICKET_STATUS_COLOR = {"IP": "green", "PE": "var(--font-main)", "RF": "orange"};
