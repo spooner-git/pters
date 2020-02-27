@@ -341,10 +341,11 @@ class Plan_view{
                 lecture_name = '('+APPROVE_SCHEDULE_STATUS[this.data.member_schedule_permission_state_cd[0]]+') '+this.data.member_name;
             }
             if(this.data.member_schedule_state[0] == SCHEDULE_FINISH){
-                // lecture_name = CImg.confirm([this.data.lecture_font_color], {"vertical-align":"middle", "margin-bottom":"5px"}) +this.data.member_name;
+                // lecture_name = CImg.confirm_circle(["green"], {"vertical-align":"middle", "margin-bottom":"5px"}) +this.data.member_name;
                 lecture_name = '(출석) ' +this.data.member_name;
+
             }else if(this.data.member_schedule_state[0] == SCHEDULE_ABSENCE){
-                // lecture_name = CImg.x([this.data.lecture_font_color], {"vertical-align":"middle", "margin-bottom":"5px"}) +this.data.member_name;
+                // lecture_name = CImg.x_circle(["#ff0022"], {"vertical-align":"middle", "margin-bottom":"5px"}) +this.data.member_name;
                 lecture_name = '(결석) ' +this.data.member_name;
             }
             lecture_name += CImg.arrow_expand([this.data.lecture_font_color], {"height":"17px", "width":"17px"});
@@ -565,10 +566,10 @@ class Plan_view{
             let state_icon_url;
             if(state == SCHEDULE_ABSENCE){
                 // state_icon_url = CImg.x(["var(--img-sub1)"], {"vertical-align":"middle", "margin-bottom":"3px"});
-                state_icon_url = CImg.x(["#ff0022"], {"vertical-align":"middle", "margin-bottom":"3px"});
+                state_icon_url = CImg.x_circle(["#ff0022"], {"vertical-align":"middle", "margin-bottom":"3px"});
             }else if(state == SCHEDULE_FINISH){
                 // state_icon_url = CImg.confirm(["var(--img-sub1)"], {"vertical-align":"middle", "margin-bottom":"3px"});
-                state_icon_url = CImg.confirm(["green"], {"vertical-align":"middle", "margin-bottom":"3px"});
+                state_icon_url = CImg.confirm_circle(["green"], {"vertical-align":"middle", "margin-bottom":"3px"});
             }else if(state == SCHEDULE_NOT_FINISH){
                 state_icon_url = DELETE;
             }
@@ -776,10 +777,10 @@ class Plan_view{
             let state_icon_url;
             if(state == SCHEDULE_ABSENCE){
                 // state_icon_url = CImg.x(["var(--img-sub1)"], {"vertical-align":"middle", "margin-bottom":"3px"});
-                state_icon_url = CImg.x(["#ff0022"], {"vertical-align":"middle", "margin-bottom":"3px"});
+                state_icon_url = CImg.x_circle(["#ff0022"], {"vertical-align":"middle", "margin-bottom":"3px"});
             }else if(state == SCHEDULE_FINISH){
                 // state_icon_url = CImg.confirm(["var(--img-sub1)"], {"vertical-align":"middle", "margin-bottom":"3px"});
-                state_icon_url = CImg.confirm(["green"], {"vertical-align":"middle", "margin-bottom":"3px"});
+                state_icon_url = CImg.confirm_circle(["green"], {"vertical-align":"middle", "margin-bottom":"3px"});
             }else if(state == SCHEDULE_NOT_FINISH){
                 state_icon_url = DELETE;
             }

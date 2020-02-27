@@ -81,9 +81,9 @@ class Plan_daily_record{
             let daily_record_id = this.data[i].daily_record_id;
             let attend_icon = "";
             if(state_cd == SCHEDULE_FINISH){
-                attend_icon = CImg.confirm(["green"], {"vertical-align":"middle", "margin-bottom":"3px"});
+                attend_icon = CImg.confirm_circle(["green"], {"vertical-align":"middle", "margin-bottom":"3px"});
             }else if(state_cd == SCHEDULE_ABSENCE){
-                attend_icon = CImg.x(["#ff0022"], {"vertical-align":"middle", "margin-bottom":"3px"});
+                attend_icon = CImg.x_circle(["#ff0022"], {"vertical-align":"middle", "margin-bottom":"3px"});
             }
 
             let button_write = CComponent.button(`daily_record_write_${schedule_id}`, "작성", button_style, ()=>{this.event_write(schedule_id, schedule_name);})
@@ -106,7 +106,7 @@ class Plan_daily_record{
                                     <img src="${profile_img}" style="height:35px;border-radius:50%;vertical-align:middle;margin-bottom:3px;"> 
                                 </div>
                                 <div class="plan_daily_record_member_row_name">
-                                    ${schedule_name} ${attend_icon}
+                                ${attend_icon} ${schedule_name}
                                 </div>
                                 <div class="plan_daily_record_member_row_tools">
                                     ${daily_record_id == null ? button_write : ""}
