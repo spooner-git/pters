@@ -1881,8 +1881,6 @@ class Plan_func{
     }
 
     static read_plan(schedule_id, callback, error_callback){
-
-        console.log('read_plan');
         $.ajax({
             url: '/trainer/get_trainer_schedule_info/',
             type : 'GET',
@@ -1890,11 +1888,9 @@ class Plan_func{
             dataType: "JSON",
 
             beforeSend:function (){
-                console.log('read_plan1');
                 // ajax_load_image(SHOW);
             },
             success:function (data){
-                console.log('read_plan2');
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
@@ -1902,11 +1898,9 @@ class Plan_func{
                         return false;
                     }
                 }
-                console.log('read_plan3');
                 if(callback != undefined){
                     callback(data);
                 }
-                console.log('read_plan4');
                 return data;
             },
 
@@ -1969,7 +1963,6 @@ class Plan_func{
 
     static delete(data, callback, error_callback){
         //데이터 형태 {"schedule_id":""};
-        console.log('delete_function1');
         let async = true;
         if(data.async != undefined){
             async = data.async;
@@ -1982,7 +1975,6 @@ class Plan_func{
             async: async,
     
             beforeSend:function(xhr, settings) {
-                console.log('delete_function2');
                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
                     xhr.setRequestHeader("X-CSRFToken", csrftoken);
                 }
@@ -1995,7 +1987,6 @@ class Plan_func{
     
             //통신성공시 처리
             success:function(data){
-                console.log('delete_function3');
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
@@ -2006,7 +1997,6 @@ class Plan_func{
                 if(callback != undefined){
                     callback();
                 }
-                console.log('delete_function4');
                 
             },
     
