@@ -22,5 +22,4 @@ urlpatterns = [
     url(r'^send_push_alarm/$', views.send_push_alarm_logic, name='send_push_alarm'),
     url(r'^get_all_schedule_push_alarm_data/$', views.GetAllSchedulePushAlarmDataView.as_view(),
         name='get_all_schedule_push_alarm_data'),
-
 ]

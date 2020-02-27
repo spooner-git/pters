@@ -18,8 +18,8 @@ from login.models import PushInfoTb
 from payment.models import BillingInfoTb, PaymentInfoTb
 from schedule.functions import func_send_push_trainer, func_send_push_trainee, func_refresh_member_ticket_count
 from schedule.models import RepeatScheduleTb, ScheduleTb, DeleteScheduleTb
-from trainer.functions import func_update_lecture_member_fix_status_cd
-from trainer.models import ClassMemberTicketTb
+from trainer.functions import func_update_lecture_member_fix_status_cd, func_get_member_lecture_list
+from trainer.models import ClassMemberTicketTb, LectureMemberTb
 
 logger = logging.getLogger(__name__)
 
@@ -252,3 +252,4 @@ class GetAllSchedulePushAlarmDataView(View):
         # print(str(schedule_data))
         # return JsonResponse({'alarm_schedule': list(schedule_data)})
         return JsonResponse({'alarm_schedule': list(schedule_data), 'token_data': list(token_data)})
+
