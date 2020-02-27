@@ -407,7 +407,7 @@ class CComponent{
 
         let icon;
         if(type_for_default_icon == SCHEDULE_WAIT){
-            icon =  CImg.time(["orange"], checked == 0 ? {"display":"none"}:{"display":"inline-block"});
+            icon =  CImg.hourglass(["orange"], checked == 0 ? {"display":"none"}:{"display":"inline-block"});
         }else{
             icon = CImg.confirm(["green"], checked == 0 ? {"display":"none"}:{"display":"inline-block"});
         }
@@ -415,7 +415,7 @@ class CComponent{
         if(member_schedule_permission_state_cd == SCHEDULE_APPROVE){
             icon = CImg.confirm(["green"], checked == 0 ? {"display":"none"}:{"display":"inline-block"});
         }else if(member_schedule_permission_state_cd == SCHEDULE_WAIT){
-            icon =  CImg.time(["orange"], checked == 0 ? {"display":"none"}:{"display":"inline-block"});
+            icon =  CImg.hourglass(["orange"], checked == 0 ? {"display":"none"}:{"display":"inline-block"});
         }
 
         if(member_schedule_permission_state_cd != undefined && member_schedule_permission_state_cd != type_for_default_icon){
@@ -448,7 +448,7 @@ class CComponent{
                     </li>
                     `;
 
-        if(multiple_select > 1){
+        if(multiple_select >= 1){
             $(document).off('click', `#select_member_row_${member_id}`).on('click', `#select_member_row_${member_id}`, function(e){
                 if(clickable == false){
                     return false;
@@ -472,15 +472,16 @@ class CComponent{
                 }
                 $('#select_member_max_num').text(member_select_count);
             });
-        }else if(multiple_select == 1){
-            $(document).off('click', `#select_member_row_${member_id}`).on('click', `#select_member_row_${member_id}`, function(e){
-                if(clickable == false){
-                    return false;
-                }
-                onclick('add_single');
-
-            });
         }
+        // else if(multiple_select == 1){
+        //     $(document).off('click', `#select_member_row_${member_id}`).on('click', `#select_member_row_${member_id}`, function(e){
+        //         if(clickable == false){
+        //             return false;
+        //         }
+        //         onclick('add_single');
+
+        //     });
+        // }
         return html;
     }
     //회원 선택 팝업에 사용되는 행
@@ -1528,6 +1529,34 @@ class CImg{
                     `;
         return svg;
     }
+
+    static confirm_circle(svg_color, style, onclick){
+        if(svg_color == undefined){
+            svg_color = [];
+        }
+        let svg = `
+                    <svg style="${CComponent.data_to_style_code(style)}" ${CImg.data_to_onclick_event(onclick)} xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                        <path d="M0 0h24v24H0V0z" fill="none"/>
+                        <path stroke="var(--bg-main)" fill="${CImg.data_to_svg_color(svg_color[0], "var(--img-main)")}" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.88-11.71L10 14.17l-1.88-1.88c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41l2.59 2.59c.39.39 1.02.39 1.41 0L17.3 9.7c.39-.39.39-1.02 0-1.41-.39-.39-1.03-.39-1.42 0z"/>
+                    </svg>
+                    `;
+        return svg;
+    }
+
+    static x_circle(svg_color, style, onclick){
+        if(svg_color == undefined){
+            svg_color = [];
+        }
+        let svg = `
+                    <svg style="${CComponent.data_to_style_code(style)}" ${CImg.data_to_onclick_event(onclick)} xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                        <path d="M0 0h24v24H0V0z" fill="none"/>
+                        <path stroke="var(--bg-main)" fill="${CImg.data_to_svg_color(svg_color[0], "var(--img-main)")}" d="M13.89 8.7L12 10.59 10.11 8.7c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41L10.59 12 8.7 13.89c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0L12 13.41l1.89 1.89c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41L13.41 12l1.89-1.89c.39-.39.39-1.02 0-1.41-.39-.38-1.03-.38-1.41 0zM12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                    </svg>
+                    `;
+        return svg;
+    }
+
+
 
     static delete(svg_color, style, onclick){
         if(svg_color == undefined){
