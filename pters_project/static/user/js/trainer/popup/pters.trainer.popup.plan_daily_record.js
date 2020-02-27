@@ -23,9 +23,8 @@ class Plan_daily_record{
         if(schedule_type == 0){
             return;
         }
-
         if(schedule_type == 1){
-            if(data.member_schedule_permission_state_cd == SCHEDULE_APPROVE){
+            if(data.permission_state_cd == SCHEDULE_APPROVE){
                 this.data.push(
                     {schedule_id: data.schedule_id, schedule_name: data.member_name, state_cd: data.state_cd, daily_record_id: data.daily_record_id, profile_img:data.member_profile_url,
                      schedule_permission_state_cd: data.member_schedule_permission_state_cd}
