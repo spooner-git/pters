@@ -448,7 +448,7 @@ class CComponent{
                     </li>
                     `;
 
-        if(multiple_select > 1){
+        if(multiple_select >= 1){
             $(document).off('click', `#select_member_row_${member_id}`).on('click', `#select_member_row_${member_id}`, function(e){
                 if(clickable == false){
                     return false;
@@ -472,15 +472,16 @@ class CComponent{
                 }
                 $('#select_member_max_num').text(member_select_count);
             });
-        }else if(multiple_select == 1){
-            $(document).off('click', `#select_member_row_${member_id}`).on('click', `#select_member_row_${member_id}`, function(e){
-                if(clickable == false){
-                    return false;
-                }
-                onclick('add_single');
-
-            });
         }
+        // else if(multiple_select == 1){
+        //     $(document).off('click', `#select_member_row_${member_id}`).on('click', `#select_member_row_${member_id}`, function(e){
+        //         if(clickable == false){
+        //             return false;
+        //         }
+        //         onclick('add_single');
+
+        //     });
+        // }
         return html;
     }
     //회원 선택 팝업에 사용되는 행

@@ -3891,9 +3891,9 @@ class MemberPlanWaitSelector{
                         this.data.name.push(member_name);
                         this.data.id.push(member_id);
                     }
-                    if(this.multiple_select == 1){
-                        this.upper_right_menu();
-                    }
+                    // if(this.multiple_select == 1){
+                    //     this.upper_right_menu();
+                    // }
                 }
             );
             if(checked!=0){
