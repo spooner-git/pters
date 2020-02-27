@@ -1168,7 +1168,8 @@ class Plan_view{
                         show_error_message({title:message});
                         return false;
                     }
-                    
+
+                    layer_popup.close_layer_popup();
                     Plan_func.delete({"schedule_id":this.schedule_id}, ()=>{
                         try{
                             current_page.init();
