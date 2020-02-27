@@ -757,7 +757,7 @@ class Lecture_view{
         }
         else{
             if(this.data.capacity <= 1 && this.data.lecture_type_cd != LECTURE_TYPE_ONE_TO_ONE){
-                show_error_message({title:'정원은 2명보다 크게 설정해주세요.'});
+                show_error_message({title:'정원은 1명보다 크게 설정해주세요.'});
                 return false;
             }
             return true;
