@@ -160,7 +160,6 @@ class Member_schedule_history{
                 html = CComponent.schedule_history_row (numbering, schedule_id, date, schedule_name, attend_status, permission_status, memo, daily_record_id, this.settings.sign_use, ()=>{
                     let user_option = {
                         daily_record:{text:"일지", callback:()=>{
-                            layer_popup.close_layer_popup();
                             let inspect = pass_inspector.schedule_update();
                             if(inspect.barrier == BLOCKED){
                                 let message = `${inspect.limit_type}`;
@@ -168,6 +167,7 @@ class Member_schedule_history{
                                 show_error_message({title:message});
                                 return false;
                             }
+                            layer_popup.close_layer_popup();
                             Plan_daily_record_func.write_artice(schedule_id, schedule_name, ()=>{
                                 this.init();
                                 // show_error_message({title:`[${schedule_name}] 일지 변경사항이 저장 되었습니다.`});
@@ -393,8 +393,6 @@ class Member_schedule_history{
             let onclick = ()=>{
                 let user_option = {
                     daily_record:{text:"일지", callback:()=>{
-                        layer_popup.close_layer_popup();
-
                         let inspect = pass_inspector.schedule_update();
                         if(inspect.barrier == BLOCKED){
                             let message = `${inspect.limit_type}`;
@@ -402,6 +400,7 @@ class Member_schedule_history{
                             show_error_message({title:message});
                             return false;
                         }
+                        layer_popup.close_layer_popup();
                         Plan_daily_record_func.write_artice(schedule_id, schedule_name, ()=>{
                             this.init();
                             // show_error_message({title:`[${schedule_name}] 일지 변경사항이 저장 되었습니다.`});
@@ -631,7 +630,6 @@ class Member_schedule_history{
                 html = CComponent.schedule_history_row (numbering, schedule_id, date, schedule_name, attend_status, permission_status, memo, daily_record_id, this.settings.sign_use, ()=>{
                     let user_option = {
                         daily_record:{text:"일지", callback:()=>{
-                            layer_popup.close_layer_popup();
                             let inspect = pass_inspector.schedule_update();
                             if(inspect.barrier == BLOCKED){
                                 let message = `${inspect.limit_type}`;
@@ -639,6 +637,7 @@ class Member_schedule_history{
                                 show_error_message({title:message});
                                 return false;
                             }
+                            layer_popup.close_layer_popup();
                             Plan_daily_record_func.write_artice(schedule_id, schedule_name, ()=>{
                                 this.init();
                                 // show_error_message({title:`[${schedule_name}] 일지 변경사항이 저장 되었습니다.`});
