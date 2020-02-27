@@ -407,7 +407,7 @@ class CComponent{
 
         let icon;
         if(type_for_default_icon == SCHEDULE_WAIT){
-            icon =  CImg.time(["orange"], checked == 0 ? {"display":"none"}:{"display":"inline-block"});
+            icon =  CImg.hourglass(["orange"], checked == 0 ? {"display":"none"}:{"display":"inline-block"});
         }else{
             icon = CImg.confirm(["green"], checked == 0 ? {"display":"none"}:{"display":"inline-block"});
         }
@@ -415,7 +415,7 @@ class CComponent{
         if(member_schedule_permission_state_cd == SCHEDULE_APPROVE){
             icon = CImg.confirm(["green"], checked == 0 ? {"display":"none"}:{"display":"inline-block"});
         }else if(member_schedule_permission_state_cd == SCHEDULE_WAIT){
-            icon =  CImg.time(["orange"], checked == 0 ? {"display":"none"}:{"display":"inline-block"});
+            icon =  CImg.hourglass(["orange"], checked == 0 ? {"display":"none"}:{"display":"inline-block"});
         }
 
         if(member_schedule_permission_state_cd != undefined && member_schedule_permission_state_cd != type_for_default_icon){
