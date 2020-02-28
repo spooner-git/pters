@@ -1,3 +1,4 @@
+# coding=utf-8
 """pters URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
@@ -50,7 +51,7 @@ urlpatterns = [
         name='get_member_repeat_schedule'),
 
 
-    # 회원 기능 #####################################################################################################
+    # 회원 기능 ##########################################
     # 회원 정보 조회 - refactoring
     url(r'^get_member_info/$', views.GetMemberInfoView.as_view(), name='get_member_info'),
     url(r'^search_member_info/$', views.SearchMemberInfoView.as_view(), name='search_member_info'),

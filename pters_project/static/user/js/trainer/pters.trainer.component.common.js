@@ -399,7 +399,7 @@ class CComponent{
     }
 
     //회원 선택 팝업에 사용되는 행
-    static select_member_plan_row (multiple_select, checked, location, member_id, member_name, member_reg_count, member_avail_count, member_expiry, member_fix_state_cd, member_profile_url, member_schedule_permission_state_cd, type_for_default_icon, clickable, onclick){
+    static select_member_plan_row (multiple_select, checked, location, member_id, member_name, member_reg_count, member_avail_count, member_expiry, member_fix_state_cd, member_profile_url, member_schedule_state, member_schedule_permission_state_cd, type_for_default_icon, clickable, onclick){
         let fix_member_check = '';
         if(member_fix_state_cd==FIX){
             fix_member_check = '고정회원';
@@ -413,7 +413,13 @@ class CComponent{
         }
 
         if(member_schedule_permission_state_cd == SCHEDULE_APPROVE){
-            icon = CImg.confirm(["green"], checked == 0 ? {"display":"none"}:{"display":"inline-block"});
+            // if(member_schedule_state == SCHEDULE_ABSENCE){
+            //     icon = CImg.x_circle(["#ff0022"], {"vertical-align":"middle", "margin-bottom":"3px"});
+            // }else if(member_schedule_state == SCHEDULE_FINISH){
+            //     icon = CImg.confirm_circle(["green"], {"vertical-align":"middle", "margin-bottom":"3px"});
+            // }else{
+                icon = CImg.confirm(["green"], checked == 0 ? {"display":"none"}:{"display":"inline-block"});
+            // }
         }else if(member_schedule_permission_state_cd == SCHEDULE_WAIT){
             icon =  CImg.hourglass(["orange"], checked == 0 ? {"display":"none"}:{"display":"inline-block"});
         }

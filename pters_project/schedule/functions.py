@@ -350,6 +350,82 @@ def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
 
 
 # 일정 등록
+def func_add_schedule_update(class_id, member_ticket_id, repeat_schedule_id,
+                             lecture_info, lecture_schedule_id,
+                             start_datetime, end_datetime,
+                             note, en_dis_type, user_id, permission_state_cd, state_cd, duplication_enable_flag):
+    error = None
+    context = {'error': None, 'schedule_id': ''}
+    if member_ticket_id == '':
+        member_ticket_id = None
+    # if lecture_id == '':
+    lecture_id = None
+    if lecture_schedule_id == '':
+        lecture_schedule_id = None
+    if repeat_schedule_id == '':
+        repeat_schedule_id = None
+
+    max_mem_count = 1
+    ing_color_cd = ''
+    end_color_cd = ''
+    ing_font_color_cd = ''
+    end_font_color_cd = ''
+
+    if lecture_info is not None:
+        lecture_id = lecture_info.lecture_id
+        max_mem_count = lecture_info.member_num
+        ing_color_cd = lecture_info.ing_color_cd
+        end_color_cd = lecture_info.end_color_cd
+        ing_font_color_cd = lecture_info.ing_font_color_cd
+        end_font_color_cd = lecture_info.end_font_color_cd
+
+        if lecture_info.lecture_type_cd == LECTURE_TYPE_ONE_TO_ONE:
+            # lecture_info = None
+            # lecture_id = None
+            lecture_schedule_id = None
+
+    if str(en_dis_type) == str(OFF_SCHEDULE):
+        ing_color_cd = '#d2d1cf'
+        end_color_cd = '#d2d1cf'
+        ing_font_color_cd = '#3b3b3b'
+        end_font_color_cd = '#3b3b3b'
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                add_schedule_info = ScheduleTb(class_tb_id=class_id,
+                                               member_ticket_tb_id=member_ticket_id,
+                                               lecture_tb_id=lecture_id,
+                                               lecture_schedule_id=lecture_schedule_id,
+                                               repeat_schedule_tb_id=repeat_schedule_id,
+                                               start_dt=start_datetime, end_dt=end_datetime,
+                                               state_cd=state_cd, permission_state_cd=permission_state_cd,
+                                               note=note, member_note='', en_dis_type=en_dis_type,
+                                               max_mem_count=max_mem_count,
+                                               ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
+                                               ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
+                                               # Test 용
+                                               # alarm_dt=start_datetime-datetime.timedelta(minutes=5),
+                                               reg_member_id=user_id,
+                                               mod_member_id=user_id)
+                add_schedule_info.save()
+
+                context['schedule_id'] = add_schedule_info.schedule_id
+
+        except TypeError:
+            error = '일정 추가중 오류가 발생했습니다.'
+        except ValueError:
+            error = '일정 추가중 오류가 발생했습니다.'
+
+    if error is None and member_ticket_id is not None:
+        error = func_refresh_member_ticket_count(class_id, member_ticket_id)
+
+    context['error'] = error
+
+    return context
+
+
+# 일정 등록
 def func_add_repeat_schedule(class_id, member_ticket_id, lecture_id, lecture_schedule_id, repeat_type,
                              week_type, start_date, end_date, start_time, end_time, en_dis_type,
                              user_id):

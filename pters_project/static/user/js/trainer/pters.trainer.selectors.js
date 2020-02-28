@@ -3263,6 +3263,7 @@ class MemberPlanApproveSelector{
         this.data.id = this.appendix.member_id.slice();
         this.data.name = this.appendix.member_name.slice();
         this.data.permission_state_cd = this.appendix.member_schedule_permission_state_cd.slice();
+        this.data.schedule_state = this.appendix.member_schedule_state.slice();
 
         this.hide_entire_member_list = true;
 
@@ -3335,6 +3336,7 @@ class MemberPlanApproveSelector{
             let checked =  member_id_idx >= 0 ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
             let clickable = true;
             let member_schedule_permission_state_cd = this.appendix.member_schedule_permission_state_cd[member_id_idx];
+            let member_schedule_state = this.appendix.member_schedule_state[member_id_idx];
             let lecture_member_list = this.received_data_lecture_member.map((el)=>{return el.member_id;});
             if(lecture_member_list.indexOf(member_id) != -1){
                 continue;
@@ -3351,7 +3353,7 @@ class MemberPlanApproveSelector{
             }
 
             let html = CComponent.select_member_plan_row (
-                this.multiple_select, checked, this.unique_instance, member_id, member_name, member_reg_count, member_avail_count, member_expiry, member_fix_state_cd, member_profile_url, member_schedule_permission_state_cd, SCHEDULE_APPROVE, clickable, (add_or_substract)=>{
+                this.multiple_select, checked, this.unique_instance, member_id, member_name, member_reg_count, member_avail_count, member_expiry, member_fix_state_cd, member_profile_url, member_schedule_state, member_schedule_permission_state_cd, SCHEDULE_APPROVE, clickable, (add_or_substract)=>{
                     if(this.appendix.lecture_id != null){
                         let member_id_list = this.received_data_lecture_member.map((el)=>{return el.member_id;});
                         if(member_id_list.indexOf(member_id) == -1){ // 선택한 회원이 수업 리스트의 회원이 아니라면 (전체회원에서 선택했다면)
@@ -3517,6 +3519,7 @@ class MemberPlanApproveSelector{
             let member_profile_url = data.member_profile_url;
             let member_id_idx =  this.data.id.indexOf(member_id);
             let member_schedule_permission_state_cd = this.appendix.member_schedule_permission_state_cd[member_id_idx];
+            let member_schedule_state = this.appendix.member_schedule_state[member_id_idx];
             let checked = member_id_idx >= 0 ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
             let clickable = true;
             if(member_expiry == '9999-12-31'){
@@ -3530,7 +3533,7 @@ class MemberPlanApproveSelector{
                 clickable = false;
             }
             let html = CComponent.select_member_plan_row (
-                this.multiple_select, checked, this.unique_instance, member_id, member_name, member_reg_count, member_avail_count, member_expiry, member_fix_state_cd, member_profile_url, member_schedule_permission_state_cd, SCHEDULE_APPROVE, clickable, (add_or_substract)=>{
+                this.multiple_select, checked, this.unique_instance, member_id, member_name, member_reg_count, member_avail_count, member_expiry, member_fix_state_cd, member_profile_url, member_schedule_state, member_schedule_permission_state_cd, SCHEDULE_APPROVE, clickable, (add_or_substract)=>{
 
                     if(add_or_substract == "add"){
                         this.data.name.push(member_name);
@@ -3690,6 +3693,7 @@ class MemberPlanWaitSelector{
             let clickable = true;
             // let member_schedule_permission_state_cd = SCHEDULE_WAIT;
             let member_schedule_permission_state_cd = this.appendix.member_schedule_permission_state_cd[member_id_idx];
+            let member_schedule_state = this.appendix.member_schedule_state[member_id_idx];
             let lecture_member_list = this.received_data_lecture_member.map((el)=>{return el.member_id;});
             if(lecture_member_list.indexOf(member_id) != -1){
                 continue;
@@ -3706,7 +3710,7 @@ class MemberPlanWaitSelector{
             }
 
             let html = CComponent.select_member_plan_row (
-                this.multiple_select, checked, this.unique_instance, member_id, member_name, member_reg_count, member_avail_count, member_expiry, member_fix_state_cd, member_profile_url, member_schedule_permission_state_cd, SCHEDULE_WAIT, clickable, (add_or_substract)=>{
+                this.multiple_select, checked, this.unique_instance, member_id, member_name, member_reg_count, member_avail_count, member_expiry, member_fix_state_cd, member_profile_url, member_schedule_state, member_schedule_permission_state_cd, SCHEDULE_WAIT, clickable, (add_or_substract)=>{
                     if(this.appendix.lecture_id != null){
                         let member_id_list = this.received_data_lecture_member.map((el)=>{return el.member_id;});
                         if(member_id_list.indexOf(member_id) == -1){ // 선택한 회원이 수업 리스트의 회원이 아니라면 (전체회원에서 선택했다면)
@@ -3863,6 +3867,7 @@ class MemberPlanWaitSelector{
             let member_profile_url = data.member_profile_url;
             let member_id_idx = this.data.id.indexOf(member_id);
             let member_schedule_permission_state_cd = this.appendix.member_schedule_permission_state_cd[member_id_idx];
+            let member_schedule_state = this.appendix.member_schedule_state[member_id_idx];
             let checked = member_id_idx >= 0 ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
             let clickable = true;
             if(member_expiry == '9999-12-31'){
@@ -3877,7 +3882,7 @@ class MemberPlanWaitSelector{
             }
 
             let html = CComponent.select_member_plan_row (
-                this.multiple_select, checked, this.unique_instance, member_id, member_name, member_reg_count, member_avail_count, member_expiry, member_fix_state_cd, member_profile_url, member_schedule_permission_state_cd, SCHEDULE_WAIT, clickable, (add_or_substract)=>{
+                this.multiple_select, checked, this.unique_instance, member_id, member_name, member_reg_count, member_avail_count, member_expiry, member_fix_state_cd, member_profile_url, member_schedule_state, member_schedule_permission_state_cd, SCHEDULE_WAIT, clickable, (add_or_substract)=>{
 
                     if(add_or_substract == "add"){
                         this.data.name.push(member_name);

@@ -66,7 +66,7 @@
 		/* (4) Callback의 처리. 정상적으로 Callback 처리가 완료될 경우 main page로 redirect(또는 Popup close) */
 		window.addEventListener('load', function () {
 		    Kakao.API.request({
-               url: '/v1/user/me',
+               url: '/v2/user/me',
 
                success: function(res) {
                      console.log(res);//<---- 콘솔 로그에 id 정보 출력(id는 res안에 있기 때문에  res.id 로 불러온다)

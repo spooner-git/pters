@@ -510,18 +510,11 @@ class Plan_view{
             //회원 선택 팝업 열기
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_PLAN_APPROVE_SELECT, 100, popup_style, {'data':null}, ()=>{
-                let appendix =  {lecture_id:this.data.lecture_id, title:"예약 확정 회원", disable_zero_avail_count:ON, entire_member:SHOW, member_id:this.data.member_id, member_name:this.data.member_name, member_schedule_state:this.data.member_schedule_state, member_schedule_permission_state_cd:this.data.member_schedule_permission_state_cd, wait_member_limit:this.settings.wait_member_limit};
+                let appendix =  {lecture_id:this.data.lecture_id, title:"예약 확정 회원 목록", disable_zero_avail_count:ON, entire_member:SHOW, member_id:this.data.member_id, member_name:this.data.member_name, member_schedule_state:this.data.member_schedule_state, member_schedule_permission_state_cd:this.data.member_schedule_permission_state_cd, wait_member_limit:this.settings.wait_member_limit};
                 member_select_plan_approve = new MemberPlanApproveSelector('#wrapper_box_member_plan_approve_select', this, this.data.lecture_max_num, appendix, (set_data)=>{
                     this.member = set_data;
                     let changed = this.func_update_member();
 
-                    for(let j=0; j<changed.del.length; j++){
-                        let index = this.data.member_id_original.indexOf(changed.del[j]);
-                        let member_schedule_id = this.data.member_schedule_id[index];
-                        // if(this.data.member_schedule_state[index] != SCHEDULE_ABSENCE){
-                            Plan_func.delete({"schedule_id":member_schedule_id, "async":false});
-                        // }
-                    }
 
                     for(let i=0; i<changed.add.length; i++){
                         Plan_func.create('/schedule/add_member_lecture_schedule/', {"member_id":changed.add[i], "schedule_id": this.schedule_id, "permission_state_cd":SCHEDULE_APPROVE, "async":false}, ()=>{});
@@ -534,7 +527,15 @@ class Plan_view{
                             Plan_func.create('/schedule/add_other_member_lecture_schedule/', {"member_id":member_id, "member_ticket_id": member_ticket_id, "schedule_id": this.schedule_id, "permission_state_cd":SCHEDULE_APPROVE, "async":false}, ()=>{});
                         }
                     }
-                    
+
+                    for(let j=0; j<changed.del.length; j++){
+                        let index = this.data.member_id_original.indexOf(changed.del[j]);
+                        let member_schedule_id = this.data.member_schedule_id[index];
+                        // if(this.data.member_schedule_state[index] != SCHEDULE_ABSENCE){
+                            Plan_func.delete({"schedule_id":member_schedule_id, "async":false});
+                        // }
+                    }
+
                     this.init();
                     try{
                         current_page.init();
@@ -718,18 +719,10 @@ class Plan_view{
             //회원 선택 팝업 열기
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_PLAN_WAIT_SELECT, 100, popup_style, {'data':null}, ()=>{
-                let appendix =  {lecture_id:this.data.lecture_id, title:"대기 예약 회원", disable_zero_avail_count:ON, entire_member:SHOW, member_id:this.data.member_id, member_name:this.data.member_name, member_schedule_state:this.data.member_schedule_state, member_schedule_permission_state_cd:this.data.member_schedule_permission_state_cd};
+                let appendix =  {lecture_id:this.data.lecture_id, title:"대기 예약 회원 목록", disable_zero_avail_count:ON, entire_member:SHOW, member_id:this.data.member_id, member_name:this.data.member_name, member_schedule_state:this.data.member_schedule_state, member_schedule_permission_state_cd:this.data.member_schedule_permission_state_cd};
                 member_select_plan_wait = new MemberPlanWaitSelector('#wrapper_box_member_plan_wait_select', this, this.settings.wait_member_limit, appendix, (set_data)=>{
                     this.member = set_data;
                     let changed = this.func_update_member();
-
-                    for(let j=0; j<changed.del.length; j++){
-                        let index = this.data.member_id_original.indexOf(changed.del[j]);
-                        let member_schedule_id = this.data.member_schedule_id[index];
-                        // if(this.data.member_schedule_state[index] != SCHEDULE_ABSENCE){
-                            Plan_func.delete({"schedule_id":member_schedule_id, "async":false});
-                        // }
-                    }
 
                     for(let i=0; i<changed.add.length; i++){
                         Plan_func.create('/schedule/add_member_lecture_schedule/', {"member_id":changed.add[i], "schedule_id": this.schedule_id, "permission_state_cd":SCHEDULE_WAIT, "async":false}, ()=>{});
@@ -741,6 +734,14 @@ class Plan_view{
                             let member_id = set_data.id_other[i];
                             Plan_func.create('/schedule/add_other_member_lecture_schedule/', {"member_id":member_id, "member_ticket_id": member_ticket_id, "schedule_id": this.schedule_id, "permission_state_cd":SCHEDULE_WAIT, "async":false}, ()=>{});
                         }
+                    }
+
+                    for(let j=0; j<changed.del.length; j++){
+                        let index = this.data.member_id_original.indexOf(changed.del[j]);
+                        let member_schedule_id = this.data.member_schedule_id[index];
+                        // if(this.data.member_schedule_state[index] != SCHEDULE_ABSENCE){
+                            Plan_func.delete({"schedule_id":member_schedule_id, "async":false});
+                        // }
                     }
 
                     this.init();

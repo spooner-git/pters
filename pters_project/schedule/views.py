@@ -18,7 +18,6 @@ from django.utils import timezone
 from django.utils.datastructures import MultiValueDictKeyError
 from django.views import View
 from django.views.generic import TemplateView
-
 from configs.const import ON_SCHEDULE_TYPE, USE, AUTO_FINISH_OFF, AUTO_FINISH_ON, TO_TRAINEE_LESSON_ALARM_ON, \
     TO_TRAINEE_LESSON_ALARM_OFF, SCHEDULE_DUPLICATION_DISABLE, AUTO_ABSENCE_ON, SCHEDULE_DUPLICATION_ENABLE, \
     LECTURE_TYPE_ONE_TO_ONE, STATE_CD_NOT_PROGRESS, PERMISSION_STATE_CD_APPROVE, STATE_CD_FINISH, STATE_CD_ABSENCE, \
@@ -31,9 +30,10 @@ from schedule.functions import func_send_push_trainee, func_send_push_trainer, f
     func_send_push_trainer_trainer
 from trainee.models import MemberTicketTb
 from trainer.models import LectureTb, ClassTb
-from .functions import func_get_member_ticket_id, func_add_schedule, func_refresh_member_ticket_count, func_date_check,\
-    func_get_lecture_member_ticket_id, func_delete_schedule, func_delete_repeat_schedule,\
-    func_get_repeat_schedule_date_list, func_add_repeat_schedule, func_refresh_lecture_status
+from .functions import func_get_member_ticket_id, func_add_schedule, func_add_schedule_update,\
+    func_refresh_member_ticket_count, func_date_check, func_get_lecture_member_ticket_id, func_delete_schedule,\
+    func_delete_repeat_schedule, func_get_repeat_schedule_date_list, func_add_repeat_schedule,\
+    func_refresh_lecture_status
 from .models import ScheduleTb, RepeatScheduleTb, DailyRecordTb
 
 logger = logging.getLogger(__name__)
@@ -2199,12 +2199,12 @@ def add_member_lecture_schedule_logic(request):
                     if permission_state_cd == PERMISSION_STATE_CD_WAIT:
                         state_cd = STATE_CD_NOT_PROGRESS
                         log_how = '대기 예약'
-                    schedule_result = func_add_schedule(class_id, member_ticket_id, None,
-                                                        lecture_info, lecture_schedule_id,
-                                                        schedule_info.start_dt, schedule_info.end_dt,
-                                                        schedule_info.note, ON_SCHEDULE_TYPE,
-                                                        request.user.id, permission_state_cd, state_cd,
-                                                        SCHEDULE_DUPLICATION_ENABLE)
+                    schedule_result = func_add_schedule_update(class_id, member_ticket_id, None,
+                                                               lecture_info, lecture_schedule_id,
+                                                               schedule_info.start_dt, schedule_info.end_dt,
+                                                               schedule_info.note, ON_SCHEDULE_TYPE,
+                                                               request.user.id, permission_state_cd, state_cd,
+                                                               SCHEDULE_DUPLICATION_ENABLE)
                     error = schedule_result['error']
 
                 if error is not None:
@@ -2336,12 +2336,12 @@ def add_other_member_lecture_schedule_logic(request):
                     if permission_state_cd == PERMISSION_STATE_CD_WAIT:
                         state_cd = STATE_CD_NOT_PROGRESS
                         log_how = '대기 예약'
-                    schedule_result = func_add_schedule(class_id, member_ticket_id, None,
-                                                        lecture_info, lecture_schedule_id,
-                                                        schedule_info.start_dt, schedule_info.end_dt,
-                                                        schedule_info.note, ON_SCHEDULE_TYPE,
-                                                        request.user.id, permission_state_cd, state_cd,
-                                                        SCHEDULE_DUPLICATION_ENABLE)
+                    schedule_result = func_add_schedule_update(class_id, member_ticket_id, None,
+                                                               lecture_info, lecture_schedule_id,
+                                                               schedule_info.start_dt, schedule_info.end_dt,
+                                                               schedule_info.note, ON_SCHEDULE_TYPE,
+                                                               request.user.id, permission_state_cd, state_cd,
+                                                               SCHEDULE_DUPLICATION_ENABLE)
                     error = schedule_result['error']
 
                 if error is not None:
