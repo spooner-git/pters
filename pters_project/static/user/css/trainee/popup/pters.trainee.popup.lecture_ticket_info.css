@@ -140,8 +140,12 @@
 	.popup_lecture_ticket_info .wrapper_my_history_detail_info{
 		height: 45px;
 		text-align: center;
+		border-top: 1px solid #f5f2f3;
 	}
 
+	.popup_lecture_ticket_info .obj_table_cell_x5{
+		border-right: 1px solid #f5f2f3;
+	}
 	.popup_lecture_ticket_info .wrapper_my_history_detail_member_ticket_count{
 		width: 20px;
 	}
@@ -156,6 +160,9 @@
 	/*}*/
 	.popup_lecture_ticket_info .wrapper_my_history_detail_member_ticket_memo{
 		width: 120px;
+	}
+	.popup_lecture_ticket_info .wrapper_my_history_detail_member_ticket_record{
+		width: 25px;
 	}
 	.popup_lecture_ticket_info .wrapper_my_history_detail_member_ticket_status{
 		width: 65px;

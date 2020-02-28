@@ -345,7 +345,8 @@ function add_member_info(){
             if(jsondata.messageArray.length > 0){
                 let error_message = '';
                 for(let i=0; i<jsondata.messageArray.length; i++){
-                    error_message += jsondata.messageArray[i] + '<br/>';
+                    error_message += jsondata.messageArray[i];
+                    break;
                 }
                 alert(error_message);
             }else{

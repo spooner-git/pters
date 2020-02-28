@@ -1731,6 +1731,13 @@ class PopupLectureTicketInfoView(LoginRequiredMixin, AccessTestMixin, TemplateVi
                                                                             permission=RawSQL(query_permission,
                                                                                               [])).order_by('-start_dt',
                                                                                                             '-end_dt')
+                schedule_list |= ScheduleTb.objects.filter(member_ticket_tb_id=member_ticket_id,
+                                                           lecture_tb_id=lecture_id,
+                                                           use=USE).annotate(status=RawSQL(query_status,
+                                                                                           []),
+                                                                             permission=RawSQL(query_permission,
+                                                                                               [])).order_by('-start_dt',
+                                                                                                             '-end_dt')
 
         context['class_data'] = class_list
         context['member_ticket_info'] = member_ticket_info

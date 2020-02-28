@@ -409,6 +409,12 @@ def func_add_schedule_update(class_id, member_ticket_id, repeat_schedule_id,
                                                reg_member_id=user_id,
                                                mod_member_id=user_id)
                 add_schedule_info.save()
+                if error is None:
+                    error = func_date_check(class_id, add_schedule_info.schedule_id,
+                                            str(start_datetime).split(' ')[0], start_datetime, end_datetime,
+                                            duplication_enable_flag)
+                    if error is not None:
+                        error = ' 일정이 중복되었습니다.'
 
                 context['schedule_id'] = add_schedule_info.schedule_id
 
