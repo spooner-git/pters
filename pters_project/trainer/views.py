@@ -3926,7 +3926,7 @@ def add_program_info_logic(request):
                                                     lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, member_num=1, use=USE)
                 one_to_one_lecture_info.save()
 
-                ticket_info = TicketTb(class_tb_id=class_info.class_id, name='개인 수업 - 수강권',
+                ticket_info = TicketTb(class_tb_id=class_info.class_id, name='개인 수업 수강권',
                                        state_cd=STATE_CD_IN_PROGRESS, use=USE)
                 ticket_info.save()
 
@@ -3942,7 +3942,7 @@ def add_program_info_logic(request):
                                                lecture_type_cd=LECTURE_TYPE_NORMAL, member_num=2, use=USE)
                 group_lecture_info.save()
 
-                ticket_group_info = TicketTb(class_tb_id=class_info.class_id, name='2:1 그룹 수업 - 수강권',
+                ticket_group_info = TicketTb(class_tb_id=class_info.class_id, name='2:1 그룹 수업 수강권',
                                              state_cd=STATE_CD_IN_PROGRESS, use=USE)
                 ticket_group_info.save()
 

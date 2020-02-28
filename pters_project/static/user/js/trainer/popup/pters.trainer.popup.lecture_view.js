@@ -455,7 +455,7 @@ class Lecture_view{
                         show_error_message({title:message});
                         return false;
                     }
-                    
+
                     let root_content_height = $root_content.height();
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_SIMPLE_VIEW, 100*(251/root_content_height), POPUP_FROM_BOTTOM, {'ticket_id':ticket_id}, ()=>{
                         ticket_simple_view_popup = new Ticket_simple_view('.popup_ticket_simple_view', ticket_id, 'ticket_simple_view_popup');
