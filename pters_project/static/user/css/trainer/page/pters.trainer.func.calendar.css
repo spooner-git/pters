@@ -253,7 +253,8 @@
 	position: relative;
 	height: 60px;
 	text-align: center;
-	font-size: 10px;
+	/* font-size: 10px; */
+	font-size:13px;
 	box-sizing: border-box;
 }
 .week_rows article > span{

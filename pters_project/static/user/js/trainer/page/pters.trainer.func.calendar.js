@@ -1112,11 +1112,47 @@ class Calendar {
 
         let work_time_dom = this.dom_disabled_work_time();
 
+        // let week_html_template = `
+        //                         <div class="week_rows">
+        //                             <div class="week_cal_time_text" onclick="${this.instance}.zoom_week_cal_vertical()">
+        //                                 <div id="current_time_indicator" style="width:1024px;"><div></div></div>
+        //                                 ${ (this.worktime.map( (t) => { return `<article><span>${TimeRobot.to_text(t, 0, 'short')}</span></article>`; } )).join('') }
+        //                             </div>
+        //                             <div onclick="${this.instance}.display_user_click(event, ${_year[0]},${_month[0]},${_date[0]})" class="_week_row_1 week_row" style="${ _year[0]+'-'+_month[0]+'-'+_date[0] == this.today ? "background-color:#fe4e6518" : ""}">
+        //                                 ${work_time_dom[0] == undefined ? "" : work_time_dom[0]}
+        //                                 ${schedules.length > 0 ?  schedules[0].join('') : ""}
+        //                             </div>
+        //                             <div onclick="${this.instance}.display_user_click(event, ${_year[1]},${_month[1]},${_date[1]})" class="_week_row_2 week_row" style="${ _year[1]+'-'+_month[1]+'-'+_date[1] == this.today ? "background-color:#fe4e6518" : ""}">
+        //                                 ${work_time_dom[1] == undefined ? "" : work_time_dom[1]}
+        //                                 ${schedules.length > 0 ?  schedules[1].join('') : ""}
+        //                             </div>
+        //                             <div onclick="${this.instance}.display_user_click(event, ${_year[2]},${_month[2]},${_date[2]})" class="_week_row_3 week_row" style="${ _year[2]+'-'+_month[2]+'-'+_date[2] == this.today ? "background-color:#fe4e6518" : ""}">
+        //                                 ${work_time_dom[2] == undefined ? "" : work_time_dom[2]}
+        //                                 ${schedules.length > 0 ?  schedules[2].join('') : ""}
+        //                             </div>
+        //                             <div onclick="${this.instance}.display_user_click(event, ${_year[3]},${_month[3]},${_date[3]})" class="_week_row_4 week_row" style="${ _year[3]+'-'+_month[3]+'-'+_date[3] == this.today ? "background-color:#fe4e6518" : ""}">
+        //                                 ${work_time_dom[3] == undefined ? "" : work_time_dom[3]}
+        //                                 ${schedules.length > 0 ?  schedules[3].join('') : ""}
+        //                             </div>
+        //                             <div onclick="${this.instance}.display_user_click(event, ${_year[4]},${_month[4]},${_date[4]})" class="_week_row_5 week_row" style="${ _year[4]+'-'+_month[4]+'-'+_date[4] == this.today ? "background-color:#fe4e6518" : ""}">
+        //                                 ${work_time_dom[4] == undefined ? "" : work_time_dom[4]}
+        //                                 ${schedules.length > 0 ?  schedules[4].join('') : ""}
+        //                             </div>
+        //                             <div onclick="${this.instance}.display_user_click(event, ${_year[5]},${_month[5]},${_date[5]})" class="_week_row_6 week_row" style="${ _year[5]+'-'+_month[5]+'-'+_date[5] == this.today ? "background-color:#fe4e6518" : ""}">
+        //                                 ${work_time_dom[5] == undefined ? "" : work_time_dom[5]}
+        //                                 ${schedules.length > 0 ?  schedules[5].join('') : ""}
+        //                             </div>
+        //                             <div onclick="${this.instance}.display_user_click(event, ${_year[6]},${_month[6]},${_date[6]})" class="_week_row_7 week_row" style="${ _year[6]+'-'+_month[6]+'-'+_date[6] == this.today ? "background-color:#fe4e6518" : ""}">
+        //                                 ${work_time_dom[6] == undefined ? "" : work_time_dom[6]}
+        //                                 ${schedules.length > 0 ?  schedules[6].join('') : ""}
+        //                             </div>
+        //                         </div>
+        //                         `;
         let week_html_template = `
                                 <div class="week_rows">
                                     <div class="week_cal_time_text" onclick="${this.instance}.zoom_week_cal_vertical()">
                                         <div id="current_time_indicator" style="width:1024px;"><div></div></div>
-                                        ${ (this.worktime.map( (t) => { return `<article><span>${TimeRobot.to_text(t, 0, 'short')}</span></article>`; } )).join('') }
+                                        ${ (this.worktime.map( (t) => { return `<article><span>${`${t}:00`}</span></article>`; } )).join('') }
                                     </div>
                                     <div onclick="${this.instance}.display_user_click(event, ${_year[0]},${_month[0]},${_date[0]})" class="_week_row_1 week_row" style="${ _year[0]+'-'+_month[0]+'-'+_date[0] == this.today ? "background-color:#fe4e6518" : ""}">
                                         ${work_time_dom[0] == undefined ? "" : work_time_dom[0]}

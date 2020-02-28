@@ -72,7 +72,7 @@ class Program_add_new_member{
     render(){
         let top_left = `<span class="icon_left"><span style="font-weight: 500;" onclick="/login/logout/"></span></span>`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right"><span style="color:var(--font-highlight);font-weight: 500;" onclick="program_add_popup.upper_right_menu()">완료</span></span>`;
+        let top_right = `<span class="icon_right"><span style="color:var(--font-highlight);font-weight: 500;" onclick="program_add_popup.upper_right_menu()">다음</span></span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
         
@@ -100,14 +100,15 @@ class Program_add_new_member{
         let program_category_select_row = this.dom_row_program_category();
         let program_category_sub_select_row = this.dom_row_program_category_sub();
 
-        let html =  '<div class="obj_input_box_full">' +  CComponent.dom_tag('프로그램명') + program_name_input_row + '</div>' + 
-                    '<div class="obj_input_box_full">'+  CComponent.dom_tag('분야') + program_category_select_row + program_category_sub_select_row + '</div>';
+        let html =  
+                    '<div class="obj_input_box_full">'+  CComponent.dom_tag('분야') + program_category_select_row + program_category_sub_select_row + '</div>' + 
+                    '<div class="obj_input_box_full">' +  CComponent.dom_tag('프로그램명') + program_name_input_row + '</div>';
 
         return html;
     }
 
     dom_row_toolbox(){
-        let title = "반갑습니다 <p style='font-size:12px;font-weight:500;color:var(--font-sub-normal);'>본인에게 해당하는 프로그램을 설정해주세요.</p>";
+        let title = "반갑습니다 <p style='font-size:14px;font-weight:500;color:var(--font-sub-normal);'>진행하고자 하는 프로그램을 만들어주세요.<br>입력한 정보는 언제든 다시 수정할 수 있습니다.</p>";
         let html = `
         <div class="program_add_upper_box" style="">
             <div style="display:inline-block;">

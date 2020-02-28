@@ -131,9 +131,9 @@ class Setting_reserve{
                     '</article>' +
                     '<article class="obj_input_box_full"><div style="margin-bottom:15px;">' +
                         this.dom_row_member_private_class_auto_permission() +
-                       "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>설정 해제시 수강 회원님께서 예약시 대기 예약으로 등록됩니다.</span></div><div>" +
+                       "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>기능을 꺼두면 수강 회원님께서 예약시 대기 예약으로만 등록됩니다.</span></div><div>" +
                         this.dom_row_member_public_class_auto_permission() +
-                       "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>설정 해제시 수강 회원님께서 예약시 대기 예약으로 등록됩니다.</span></div><div>" +
+                       "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>기능을 꺼두면 수강 회원님께서 예약시 대기 예약으로만 등록됩니다.</span></div><div>" +
                         this.dom_row_member_public_class_wait_member_num() +
                        "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>수업 정원 초과시 대기 예약으로 등록됩니다.</span></div>" +
                         this.dom_row_wait_schedule_auto_cancel_time() +
@@ -157,7 +157,7 @@ class Setting_reserve{
                                 this.data.stop_reserve = data; // ON or OFF
                                 this.render_content();
                             });
-        let title_row = CComponent.text_button ("stop_reserve_text", '예약 일시 정지', {"font-size":"15px", "font-weight":"500", "letter-spacing":"-0.7px"}, ()=>{});
+        let title_row = CComponent.text_button ("stop_reserve_text", '회원 예약 기능 정지', {"font-size":"15px", "font-weight":"500", "letter-spacing":"-0.7px"}, ()=>{});
         let html = `<article class="obj_input_box_full">
                         <div style="display:table;width:100%;">
                             <div style="display:table-cell;width:auto;vertical-align:middle">${title_row}</div>
