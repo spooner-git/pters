@@ -111,7 +111,6 @@ class Pters_pass_main{
                         this.dom_row_payment_info() + 
                         this.dom_row_cancel_pass() + 
                     '</article>';
-        console.log(this.data.next.name[0]);
 
         if(this.data.next.name[0]!=""){
             html =  '<article class="obj_input_box_full">' +

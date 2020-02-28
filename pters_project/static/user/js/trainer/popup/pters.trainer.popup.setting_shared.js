@@ -61,7 +61,7 @@ class Setting_shared{
     }
 
     dom_row_shared_members(data){
-        console.log(data);
+
         // let member_name = indiv_auth_data.member_info.member_name;
         // let member_user_id = indiv_auth_data.member_info.member_user_id;
         // let member_db_id = indiv_auth_data.member_info.member_id;

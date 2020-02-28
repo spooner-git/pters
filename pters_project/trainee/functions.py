@@ -95,7 +95,9 @@ def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_dat
 def func_get_trainee_lecture_schedule(context, user_id, class_id, start_date, end_date):
     # 내가 속한 그룹 일정 조회
     query = "select count(*) from SCHEDULE_TB as B where B.GROUP_SCHEDULE_ID = `SCHEDULE_TB`.`ID`" \
-            "AND B.STATE_CD !=\'PC\' AND B.USE=1"
+            "AND B.STATE_CD !=\'PC\' AND B.PERMISSION_STATE_CD = 'AP' AND B.USE=1"
+    query_wait = "select count(*) from SCHEDULE_TB as B where B.GROUP_SCHEDULE_ID = `SCHEDULE_TB`.`ID`" \
+                 "AND B.PERMISSION_STATE_CD = 'WP' AND B.USE=1"
     # query_member_auth_cd \
     #     = "select count(A.ID) from LECTURE_TB as A" \
     #       " where A.USE=1 and (SELECT count(B.GROUP_TB_ID) FROM PACKAGE_GROUP_TB as B where B.GROUP_TB_ID = `SCHEDULE_TB`.`GROUP_TB_ID` and B.PACKAGE_TB_ID=A.PACKAGE_TB_ID and B.USE=1)>0" \
@@ -130,7 +132,8 @@ def func_get_trainee_lecture_schedule(context, user_id, class_id, start_date, en
                                  member_ticket_tb__isnull=True,
                                  en_dis_type=ON_SCHEDULE_TYPE, start_dt__gte=start_date,
                                  start_dt__lt=end_date, use=USE
-                                 ).annotate(lecture_current_member_num=RawSQL(query, [])).order_by('start_dt')
+                                 ).annotate(lecture_current_member_num=RawSQL(query, []),
+                                            lecture_wait_member_num=RawSQL(query_wait, [])).order_by('start_dt')
         for lecture_schedule_info in lecture_schedule_data:
             lecture_schedule_info.note = lecture_schedule_info.note.replace('\n', '<br/>')
     context['lecture_schedule_data'] = lecture_schedule_data

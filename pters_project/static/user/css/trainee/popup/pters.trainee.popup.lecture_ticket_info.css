@@ -138,25 +138,32 @@
 	}
 
 	.popup_lecture_ticket_info .wrapper_my_history_detail_info{
-		height: 30px;
+		height: 45px;
 		text-align: center;
+		border-top: 1px solid #f5f2f3;
 	}
 
+	.popup_lecture_ticket_info .obj_table_cell_x5{
+		border-right: 1px solid #f5f2f3;
+	}
 	.popup_lecture_ticket_info .wrapper_my_history_detail_member_ticket_count{
-		width: 30px;
+		width: 20px;
 	}
 	.popup_lecture_ticket_info .wrapper_my_history_detail_member_ticket_date{
-		width: 70px;
-	}
-	.popup_lecture_ticket_info .wrapper_my_history_detail_member_ticket_week{
-		width: 40px;
-	}
-	.popup_lecture_ticket_info .wrapper_my_history_detail_member_ticket_time{
 		width: 75px;
 	}
+	/*.popup_lecture_ticket_info .wrapper_my_history_detail_member_ticket_week{*/
+		/*width: 40px;*/
+	/*}*/
+	/*.popup_lecture_ticket_info .wrapper_my_history_detail_member_ticket_time{*/
+		/*width: 75px;*/
+	/*}*/
 	.popup_lecture_ticket_info .wrapper_my_history_detail_member_ticket_memo{
-		width: 90px;
+		width: 120px;
+	}
+	.popup_lecture_ticket_info .wrapper_my_history_detail_member_ticket_record{
+		width: 25px;
 	}
 	.popup_lecture_ticket_info .wrapper_my_history_detail_member_ticket_status{
-		width: 30px;
+		width: 65px;
 	}

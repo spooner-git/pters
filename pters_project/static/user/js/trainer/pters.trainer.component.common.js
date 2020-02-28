@@ -399,6 +399,98 @@ class CComponent{
     }
 
     //회원 선택 팝업에 사용되는 행
+    static select_member_plan_row (multiple_select, checked, location, member_id, member_name, member_reg_count, member_avail_count, member_expiry, member_fix_state_cd, member_profile_url, member_schedule_state, member_schedule_permission_state_cd, type_for_default_icon, clickable, onclick){
+        let fix_member_check = '';
+        if(member_fix_state_cd==FIX){
+            fix_member_check = '고정회원';
+        }
+
+        let icon;
+        if(type_for_default_icon == SCHEDULE_WAIT){
+            icon =  CImg.hourglass(["orange"], checked == 0 ? {"display":"none"}:{"display":"inline-block"});
+        }else{
+            icon = CImg.confirm(["green"], checked == 0 ? {"display":"none"}:{"display":"inline-block"});
+        }
+
+        if(member_schedule_permission_state_cd == SCHEDULE_APPROVE){
+            // if(member_schedule_state == SCHEDULE_ABSENCE){
+            //     icon = CImg.x_circle(["#ff0022"], {"vertical-align":"middle", "margin-bottom":"3px"});
+            // }else if(member_schedule_state == SCHEDULE_FINISH){
+            //     icon = CImg.confirm_circle(["green"], {"vertical-align":"middle", "margin-bottom":"3px"});
+            // }else{
+                icon = CImg.confirm(["green"], checked == 0 ? {"display":"none"}:{"display":"inline-block"});
+            // }
+        }else if(member_schedule_permission_state_cd == SCHEDULE_WAIT){
+            icon =  CImg.hourglass(["orange"], checked == 0 ? {"display":"none"}:{"display":"inline-block"});
+        }
+
+        if(member_schedule_permission_state_cd != undefined && member_schedule_permission_state_cd != type_for_default_icon){
+            checked = 0;
+        }
+
+        let html = `
+                    <li class="select_member_row smr_${location}" id="select_member_row_${member_id}" ${clickable == false ? "style='opacity:0.6;'": ""}>
+                        <div class="obj_table_raw">
+                            <div style="display:table-cell; width:35px; height:35px; padding-right:10px;">
+                                <img src="${member_profile_url}" style="width:35px; height:35px; border-radius: 50%;">
+                            </div>
+                            <div style="display:table-cell; vertical-align: middle;">
+                                <div class="cell_member_name">
+                                    ${member_name}
+                                </div>
+                                <div class="cell_member_info">
+                                    예약가능 ${member_reg_count >= 99999 ? "제한없음" : member_avail_count + '회'} / ${member_expiry} 까지
+                                </div>
+                            </div>
+                            <div style="display:table-cell; line-height:35px; float:right;">
+                                <div class="cell_member_fix">
+                                    ${fix_member_check}
+                                </div>
+                                <div class="cell_member_selected ${checked == 0 ? '' : 'member_selected'}">
+                                    ${ icon }
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    `;
+
+        if(multiple_select >= 1){
+            $(document).off('click', `#select_member_row_${member_id}`).on('click', `#select_member_row_${member_id}`, function(e){
+                if(clickable == false){
+                    return false;
+                }
+                let member_select_count = $(`.smr_${location} .member_selected`).length;
+                if(!$(this).find('.cell_member_selected').hasClass('member_selected')){
+                    if($(`.smr_${location} .member_selected`).length >= multiple_select){
+                        show_error_message({title:`${multiple_select} 명까지 선택할 수 있습니다.`});
+                        return false;
+                    }
+                    $(this).find('.cell_member_selected').addClass('member_selected');
+                    $(this).find('svg').css('display', 'inline-block');
+                    onclick('add');
+                    member_select_count++;
+
+                }else{
+                    $(this).find('.cell_member_selected').removeClass('member_selected');
+                    $(this).find('svg').css('display', 'none');
+                    onclick('substract');
+                    member_select_count--;
+                }
+                $('#select_member_max_num').text(member_select_count);
+            });
+        }
+        // else if(multiple_select == 1){
+        //     $(document).off('click', `#select_member_row_${member_id}`).on('click', `#select_member_row_${member_id}`, function(e){
+        //         if(clickable == false){
+        //             return false;
+        //         }
+        //         onclick('add_single');
+
+        //     });
+        // }
+        return html;
+    }
+    //회원 선택 팝업에 사용되는 행
     static select_member_contacts_row (checked, location, member_id, member_name, member_phone, member_profile_url, callback){
         let html = `
                     <li class="select_member_contacts_row smr_${location}" id="select_member_contacts_row_${member_id}"  data-name="${member_name}">
@@ -630,7 +722,11 @@ class CComponent{
     }
 
     //회원의 일정 이력에 사용되는 행
-    static schedule_history_row (numbering, schedule_id, date, schedule_name, attend_status, memo, daily_record_id, sign_use, callback){
+    static schedule_history_row (numbering, schedule_id, date, schedule_name, attend_status, permission_status, memo, daily_record_id, sign_use, callback){
+        let permission_status_name = "";
+        if(permission_status == SCHEDULE_WAIT){
+            permission_status_name = '('+APPROVE_SCHEDULE_STATUS[permission_status]+')';
+        }
         let sign_image = `<img src="https://s3.ap-northeast-2.amazonaws.com/pters-image-master/${schedule_id}.png" style="width:100%;max-height:44px;filter:var(--transform-invert);" onerror="this.onerror=null;this.src='/static/common/icon/icon_no_signature.png'">`;
         let tag_daily_record = daily_record_id == null ? "" : "<div style='display:inline-block;font-size:10px;padding:0 2px;border:1px solid var(--font-main);border-radius:5px;margin-left:3px;'>일지</div>";
         let html = `<li class="schedule_history_row" id="schedule_history_row_${schedule_id}">`;
@@ -650,12 +746,12 @@ class CComponent{
 
         let sub_assemble = `<div style="display:flex;">
                                 <div style="flex:1 1 0;">${raw_1} ${raw_2}</div>
-                                <div style="flex-basis:80px;text-align:right;">${attend_status == SCHEDULE_FINISH ? sign_image : ""}</div>
+                                <div style="flex-basis:80px;text-align:right;">${attend_status == SCHEDULE_FINISH ? sign_image : ""}<br/>${permission_status_name}</div>
                             </div>`;
         if(sign_use == OFF){
             sub_assemble = `<div style="display:flex;">
                                 <div style="flex:1 1 0;">${raw_1} ${raw_2}</div>
-                                <div style="flex-basis:80px;text-align:right;"><span style="color:${SCHEDULE_STATUS_COLOR[attend_status]}">${SCHEDULE_STATUS[attend_status]}</span></div>
+                                <div style="flex-basis:80px;text-align:right;"><span style="color:${SCHEDULE_STATUS_COLOR[attend_status]}">${SCHEDULE_STATUS[attend_status]}<br/>${permission_status_name}</span></div>
                             </div>`;
         }
 
@@ -1325,6 +1421,17 @@ class CImg{
         return svg;
     }
 
+    static hourglass(svg_color, style, onclick){
+        if(svg_color == undefined){
+            svg_color = [];
+        }
+        let svg = `<svg style="${CComponent.data_to_style_code(style)}" ${CImg.data_to_onclick_event(onclick)} xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                        <path d="M0 0h24v24H0V0z" fill="none"/>
+                        <path fill="${CImg.data_to_svg_color(svg_color[0], "var(--img-main)")}" d="M8 2c-1.1 0-2 .9-2 2v3.17c0 .53.21 1.04.59 1.42L10 12l-3.42 3.42c-.37.38-.58.89-.58 1.42V20c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2v-3.16c0-.53-.21-1.04-.58-1.41L14 12l3.41-3.4c.38-.38.59-.89.59-1.42V4c0-1.1-.9-2-2-2H8zm8 14.5V19c0 .55-.45 1-1 1H9c-.55 0-1-.45-1-1v-2.5l4-4 4 4zm-4-5l-4-4V5c0-.55.45-1 1-1h6c.55 0 1 .45 1 1v2.5l-4 4z"/>
+                    </svg>`;
+        return svg;
+    }
+
     static repeat(svg_color, style, onclick){
         if(svg_color == undefined){
             svg_color = [];
@@ -1428,6 +1535,34 @@ class CImg{
                     `;
         return svg;
     }
+
+    static confirm_circle(svg_color, style, onclick){
+        if(svg_color == undefined){
+            svg_color = [];
+        }
+        let svg = `
+                    <svg style="${CComponent.data_to_style_code(style)}" ${CImg.data_to_onclick_event(onclick)} xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                        <path d="M0 0h24v24H0V0z" fill="none"/>
+                        <path stroke="var(--bg-main)" fill="${CImg.data_to_svg_color(svg_color[0], "var(--img-main)")}" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.88-11.71L10 14.17l-1.88-1.88c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41l2.59 2.59c.39.39 1.02.39 1.41 0L17.3 9.7c.39-.39.39-1.02 0-1.41-.39-.39-1.03-.39-1.42 0z"/>
+                    </svg>
+                    `;
+        return svg;
+    }
+
+    static x_circle(svg_color, style, onclick){
+        if(svg_color == undefined){
+            svg_color = [];
+        }
+        let svg = `
+                    <svg style="${CComponent.data_to_style_code(style)}" ${CImg.data_to_onclick_event(onclick)} xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                        <path d="M0 0h24v24H0V0z" fill="none"/>
+                        <path stroke="var(--bg-main)" fill="${CImg.data_to_svg_color(svg_color[0], "var(--img-main)")}" d="M13.89 8.7L12 10.59 10.11 8.7c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41L10.59 12 8.7 13.89c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0L12 13.41l1.89 1.89c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41L13.41 12l1.89-1.89c.39-.39.39-1.02 0-1.41-.39-.38-1.03-.38-1.41 0zM12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                    </svg>
+                    `;
+        return svg;
+    }
+
+
 
     static delete(svg_color, style, onclick){
         if(svg_color == undefined){
@@ -1548,7 +1683,6 @@ class CComp{
         
         let html = `<${type} ${style_code} ${attr_code}>${title}</${type}>`;
 
-        console.log(attr.id, event)
         //onclick을 사용하려면 attr에 무조건 id가 부여되어야함
         if(event != undefined && attr != undefined){
             if(attr.id != undefined){

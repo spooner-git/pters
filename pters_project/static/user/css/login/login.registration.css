@@ -232,7 +232,7 @@ body{
 
 .group_select_box_on{
     display:inline-block;
-    width: 146px;
+    width: 48%;
     height: 46px;
     line-height: 46px;
     border-radius: 2px;
@@ -249,7 +249,7 @@ body{
 }
 .group_select_box_off{
     display:inline-block;
-    width: 146px;
+    width: 48%;
     height: 46px;
     line-height: 46px;
     border-radius: 2px;
@@ -297,8 +297,8 @@ body{
     cursor: pointer;
 }
 .contract_select_box{
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     border-radius: 4px;
     border: solid 2px #ccc8c8;
     margin-left: 16px;

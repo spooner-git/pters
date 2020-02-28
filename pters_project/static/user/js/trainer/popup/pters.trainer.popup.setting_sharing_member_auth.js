@@ -65,7 +65,7 @@ class Setting_sharing_member_auth{
     set_initial_data (){
         Setting_sharing_member_auth_func.read({"class_id": this.program_id}, (data)=>{
             let my_auth = data[this.member_db_id];
-            console.log(my_auth);
+            
             if(my_auth != undefined){
                 this.data.schedule.create = my_auth.auth_plan_create != undefined ? my_auth.auth_plan_create : OFF;
                 this.data.schedule.read = my_auth.auth_plan_read != undefined ? my_auth.auth_plan_read : OFF;
@@ -404,8 +404,7 @@ class Setting_sharing_member_auth{
             this.data_sending_now = true;
         }
         let auth_cd = this.shared_status;
-        console.log(this.shared_status);
-        console.log(this.current_shared_status);
+        
         // if(this.current_shared_status==AUTH_TYPE_DELETE){
         //     auth_cd = AUTH_TYPE_WAIT;
         // }

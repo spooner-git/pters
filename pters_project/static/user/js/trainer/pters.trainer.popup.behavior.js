@@ -6,7 +6,7 @@ let layer_popup = (function (){
     let windowHeight = window.innerHeight;
 
     function func_open_layer_popup (popup_name, popup_size, animation_type){
-        console.log("animation_type",animation_type)
+
         // $('.content_page').css('overflow-y', 'hidden');
 
         let $popup_selector;

@@ -297,7 +297,7 @@ class Mypage_modify{
         let data = {
             "first_name":this.data.name, "contents":null, "country":null, "address":null, "sex":null, "birthday":null, "email":this.data.email
         };
-        console.log(data);
+
         Mypage_func.update(data, ()=>{
             try{
                 current_page.init();

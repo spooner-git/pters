@@ -367,7 +367,7 @@ class Menu_settings {
 
     dom_menu_pters_pass(){
         let id = 'menu_pters_pass';
-        let title = 'PTERS 패스 구매';
+        let title = 'PTERS 패스';
         let icon = CImg.ticket();
         let icon_r_visible = NONE;
         let icon_r_text = "";

@@ -23,25 +23,29 @@ class Plan_daily_record{
         if(schedule_type == 0){
             return;
         }
-
         if(schedule_type == 1){
-            this.data.push(
-                {schedule_id: data.schedule_id, schedule_name: data.member_name, state_cd: data.state_cd, daily_record_id: data.daily_record_id, profile_img:data.member_profile_url}
-            );
+            if(data.permission_state_cd == SCHEDULE_APPROVE){
+                this.data.push(
+                    {schedule_id: data.schedule_id, schedule_name: data.member_name, state_cd: data.state_cd, daily_record_id: data.daily_record_id, profile_img:data.member_profile_url,
+                     schedule_permission_state_cd: data.member_schedule_permission_state_cd}
+                );
+            }
         }else if(schedule_type == 2){
             let length = data.lecture_schedule_data.length;
             let data_ = data.lecture_schedule_data;
             for(let i=0; i<length; i++){
-                this.data.push(
-                    {schedule_id: data_[i].schedule_id, schedule_name: data_[i].member_name, state_cd: data_[i].state_cd, daily_record_id:data_[i].daily_record_id, profile_img:data_[i].member_profile_url}
-                );
+                if(data_[i].permission_state_cd == SCHEDULE_APPROVE){
+                    this.data.push(
+                        {schedule_id: data_[i].schedule_id, schedule_name: data_[i].member_name, state_cd: data_[i].state_cd, daily_record_id:data_[i].daily_record_id, profile_img:data_[i].member_profile_url,
+                        schedule_permission_state_cd: data_[i].permission_state_cd}
+                    );
+                }
             }
         }
     }
 
     request_list (callback){
         Plan_func.read_plan(this.schedule_id, (data)=>{
-            console.log("data", data)
             this.set_initial_data(data); // 초기값을 미리 셋팅한다.
             callback(data);
         });
@@ -76,9 +80,9 @@ class Plan_daily_record{
             let daily_record_id = this.data[i].daily_record_id;
             let attend_icon = "";
             if(state_cd == SCHEDULE_FINISH){
-                attend_icon = CImg.confirm(["green"], {"vertical-align":"middle", "margin-bottom":"3px"});
+                attend_icon = CImg.confirm_circle(["green"], {"vertical-align":"middle", "margin-bottom":"3px"});
             }else if(state_cd == SCHEDULE_ABSENCE){
-                attend_icon = CImg.x(["#ff0022"], {"vertical-align":"middle", "margin-bottom":"3px"});
+                attend_icon = CImg.x_circle(["#ff0022"], {"vertical-align":"middle", "margin-bottom":"3px"});
             }
 
             let button_write = CComponent.button(`daily_record_write_${schedule_id}`, "작성", button_style, ()=>{this.event_write(schedule_id, schedule_name);})
@@ -101,7 +105,7 @@ class Plan_daily_record{
                                     <img src="${profile_img}" style="height:35px;border-radius:50%;vertical-align:middle;margin-bottom:3px;"> 
                                 </div>
                                 <div class="plan_daily_record_member_row_name">
-                                    ${schedule_name} ${attend_icon}
+                                ${attend_icon} ${schedule_name}
                                 </div>
                                 <div class="plan_daily_record_member_row_tools">
                                     ${daily_record_id == null ? button_write : ""}
@@ -134,12 +138,26 @@ class Plan_daily_record{
     }
 
     event_write_all(schedule_id_array, schedule_name_array){
+        let inspect = pass_inspector.schedule_update();
+                                if(inspect.barrier == BLOCKED){
+                                    let message = `${inspect.limit_type}`;
+                                    // layer_popup.close_layer_popup();
+                                    show_error_message({title:message});
+                                    return false;
+                                }
         Plan_daily_record_func.write_article_all(schedule_id_array, schedule_name_array, ()=>{
             this.init();
         })
     }
 
     event_write(schedule_id, schedule_name){
+        let inspect = pass_inspector.schedule_update();
+                                if(inspect.barrier == BLOCKED){
+                                    let message = `${inspect.limit_type}`;
+                                    // layer_popup.close_layer_popup();
+                                    show_error_message({title:message});
+                                    return false;
+                                }
         Plan_daily_record_func.write_artice(schedule_id, schedule_name, ()=>{
             this.init();
         });
@@ -150,6 +168,13 @@ class Plan_daily_record{
     }
 
     event_delete(schedule_id, schedule_name, callback){
+        let inspect = pass_inspector.schedule_update();
+                                if(inspect.barrier == BLOCKED){
+                                    let message = `${inspect.limit_type}`;
+                                    // layer_popup.close_layer_popup();
+                                    show_error_message({title:message});
+                                    return false;
+                                }
         Plan_daily_record_func.delete_article(schedule_id, schedule_name, ()=>{
             this.init();
         });
@@ -299,7 +324,7 @@ class Plan_daily_record_func{
                     //작성한 글을 서버 저장한다.
                     let data = {"schedule_id":data_written.schedule_id, "img_list":JSON.stringify(images_uploaded), "title":"",
                                 "contents":data_written.content, "is_member_view":data_written.category_selected.open.value[0]};
-                                console.log(data);
+                                
                     Plan_daily_record_func.create(data, ()=>{
                         // this.init();
                         if(callback != undefined){
@@ -588,7 +613,7 @@ class Plan_daily_record_func{
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
-                        console.log(data.messageArray)
+
                         show_error_message({title:data.messageArray[0]});
                         return false;
                     }

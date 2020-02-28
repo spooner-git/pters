@@ -325,7 +325,7 @@ class Member_view{
         let sex = this.dom_row_member_sex_input();
         let ticket = this.dom_row_ticket();
         // let memo = this.dom_row_member_memo_input();
-        let tag_id = this.data.active == 'True' || this.data.active == null ? '아이디' : '아이디 <span style="color:var(--font-highlight);margin-left:3px;">(임시)</span>';
+        let tag_id = this.data.active == 'True' || this.data.active == null ? '아이디' : '아이디 <span style="color:var(--font-highlight);margin-left:3px;">(임시아이디, 비밀번호 0000)</span>';
         let html =
             '<div class="obj_input_box_full">'
                 + CComponent.dom_tag(tag_id) + user_id + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
@@ -702,12 +702,12 @@ class Member_view{
             //                         CComponent.text_button('note', `특이사항 <span style="display:block; white-space:pre-wrap; font-size:11px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${ticket_note}</span>`, icon_button_style_note_info, (e)=>{e.preventDefault()});
             // let html_ticket_lecture_list = `<div>${html_to_join_lecture_list.join('')}</div>`;
             let icon_button_style_remain_count_info = {"display":"block", "padding":"6px 0 0 38px", "font-size":"11px", "font-weight":"500", "color":"var(--font-sub-normal)", "height":"16px"};
-            let icon_button_style_remain_data_info = {"display":"block", "padding":"6px 0 12px 38px", "font-size":"11px", "font-weight":"500", "color":"var(--font-sub-normal)", "height":"16px"};
+            let icon_button_style_remain_data_info = {"display":"block", "height":"auto", "padding":"6px 0 0 38px", "font-size":"11px", "font-weight":"500", "color":"var(--font-sub-normal)", "height":"16px"};
             let icon_button_style_note_info = {"display":"block", "padding":"6px 0 12px 38px", "font-size":"11px", "font-weight":"500", "color":"var(--font-sub-normal)", "height":"auto"};
             let html_remain_info = CComp.element("div", `등록 <span style="font-size:11px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${this.data.ticket[i].ticket_reg_count >= 99999 ? "무제한" : this.data.ticket[i].ticket_reg_count + '회'}</span>`, icon_button_style_remain_count_info) +
                                     CComp.element("div", `잔여 <span style="font-size:11px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${this.data.ticket[i].ticket_reg_count >= 99999 ? "무제한" : this.data.ticket[i].ticket_rem_count + '회'}</span>`, icon_button_style_remain_count_info) +
                                     CComp.element("div", `예약가능 <span style="font-size:11px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${this.data.ticket[i].ticket_reg_count >= 99999 ? "무제한" : this.data.ticket[i].ticket_avail_count + '회'}</span>`, icon_button_style_remain_count_info) +
-                                    CComp.element("div", `기간 <span style="font-size:11px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${this.data.ticket[i].start_date_text} - ${this.data.ticket[i].end_date_text}</span>`, icon_button_style_remain_count_info) +
+                                    CComp.element("div", `기간 <span style="font-size:11px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${this.data.ticket[i].start_date_text} - ${this.data.ticket[i].end_date_text}</span>`, icon_button_style_remain_data_info) +
                                     //CComp.text_button("div", `남은 기간 <span style="font-size:11px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${this.data.ticket[i].end_date_text}</span>`, icon_button_style_remain_count_info, ()=>{}) +
                                     CComp.element("div", `특이사항 <span style="display:block; white-space:pre-wrap; font-size:11px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${ticket_note}</span>`, icon_button_style_note_info);
             let html_ticket_lecture_list = `<div>${html_to_join_lecture_list.join('')}</div>`;
@@ -789,7 +789,7 @@ class Member_view{
                                 return false;
                             }
                             try{
-                                current_page.init();
+                                current_page.reset();
                             }catch(e){}
                             try{
                                 self.init();
@@ -851,7 +851,7 @@ class Member_view{
                 success_callback();
             }
             try{
-                current_page.init();
+                current_page.reset();
             }catch(e){}
         });
     }
@@ -925,7 +925,7 @@ class Member_view{
 
                         Member_func.delete({"member_id":this.member_id}, ()=>{
                             try{
-                                current_page.init();
+                                current_page.reset();
                             }catch(e){}
                             layer_popup.all_close_layer_popup();
                         });
@@ -950,7 +950,7 @@ class Member_view{
         let forms = document.getElementById(`${this.form_id}`);
         update_check_registration_form(forms);
         let error_info = check_registration_form(forms);
-        console.log(error_info);
+
         if(error_info != ''){
             show_error_message({title:error_info});
             return false;
@@ -1353,7 +1353,6 @@ class Member_simple_view{
 
         let html_to_join = [];
         for(let i=0; i<ticket_length; i++){
-            console.log("1", this.data.ticket[i]);
             let ticket_name = this.data.ticket[i].ticket_name;
             if(this.data.ticket[i].ticket_state == STATE_END_PROGRESS){
                 ticket_name = `<span style="color:var(--font-sub-normal);">${this.data.ticket[i].ticket_name}</span><span style="font-size:13px;"> (비활성)</span>`;

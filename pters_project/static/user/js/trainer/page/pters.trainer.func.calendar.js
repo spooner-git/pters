@@ -108,6 +108,10 @@ class Calendar {
         });
     }
 
+    reset(cal_type){
+        this.init(cal_type);
+    }
+
     //달력에 필요한 최상위 컨테이너가 이미 있는 상태에서 컨테이너 내용(달력)을 재초기화 할때 사용한다.
     init(cal_type){
         if(current_page_text != this.page_name){
@@ -587,13 +591,20 @@ class Calendar {
         let user_option = {
             month:{text:"월간 달력", callback:()=>{this.init("month");layer_popup.close_layer_popup();}},
             week:{text:"주간 달력", callback:()=>{ this.week_zoomed.activate = false; this.init("week");layer_popup.close_layer_popup();}},
-            repeat:{text:"반복 일정 리스트", callback:()=>{
+            repeat:{text:"반복 일정 목록", callback:()=>{
                 layer_popup.close_layer_popup();
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_BOTTOM;
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PLAN_REPEAT_LIST, 100, popup_style, null, ()=>{
                     plan_repeat_list_popup = new Plan_repeat_list('.popup_plan_repeat_list');
                 });
             }},
+            permission:{text:"대기 예약 일정 목록", callback:()=>{
+                layer_popup.close_layer_popup();
+                let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_BOTTOM;
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PLAN_PERMISSION_WAIT_LIST, 100, popup_style, null, ()=>{
+                    plan_permission_wait_list_popup = new Plan_permission_wait_list('.popup_plan_permission_wait_list');
+                });
+            }}
         };
         let options_padding_top_bottom = 16;
         // let button_height = 8 + 8 + 52;
@@ -906,9 +917,9 @@ class Calendar {
                 
                 if(`${_year[i]}-${_month[i]}-${_date[i]}` == this.today){
                     today_marking = `<div class="today_marking" style="top:-4px;"></div>`;
-                    today_text_style = 'color:var(--font-highlight-sub);font-weight:bold;position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);z-index:1';
+                    today_text_style = 'color:var(--fundamental-white);font-weight:bold;position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);z-index:1';
                     if(month_or_week == "month"){
-                        today_text_style = 'color:var(--font-highlight-sub);font-weight:bold;';
+                        today_text_style = 'color:var(--fundamental-white);font-weight:bold;';
                         today_marking = `<div class="today_marking" style="top:-2px; width:20px; height:20px; border-radius:12px;z-index:-1;"></div>`;
                     }
                 }
@@ -1010,6 +1021,7 @@ class Calendar {
                             let start_min = plan_start_split[1];
                             let end_hour = plan_end_split[0];
                             let end_min = plan_end_split[1];
+                            let permission_status = plan.permission_state_cd;
 
                             let plan_start = {full:`${start_hour < work_start ? work_start : start_hour}:${start_min}`, hour:`${start_hour < work_start ? work_start : start_hour}`, minute:`${start_hour < work_start ? 0 : start_min}`};
                             let plan_end = {full:`${end_hour > work_end ? work_end+1 : end_hour }:${end_min}`, hour:`${end_hour > work_end ? work_end+1 : end_hour }`, minute:end_min};
@@ -1046,6 +1058,9 @@ class Calendar {
                                 // let capacity_color = plan.lecture_current_member_num < plan.lecture_max_member_num ? "green" : "#fe4e65";
                                 let capacity_color = "";
                                 plan_capacity_status = '<br>' + `<span style="color:${capacity_color}">(`+plan.lecture_current_member_num + '/' + plan.lecture_max_member_num+')</span>';
+                                // if(plan.lecture_wait_member_num > 0){
+                                //     plan_capacity_status = '<br>' + `<span style="color:${capacity_color}">(`+plan.lecture_current_member_num + '/' + plan.lecture_max_member_num+')+'+plan.lecture_wait_member_num+'</span>';
+                                // }
                                 let plan_height_by_pixel = diff.hour*60+60*diff.min/60;
                                 if(plan_height_by_pixel < 24){
                                     plan_capacity_status = "";
@@ -1069,9 +1084,19 @@ class Calendar {
                                 go_behind = "go_behind";
                             }
 
+                            let something_have_to_do = "";
+                            if(permission_status != SCHEDULE_APPROVE || plan.lecture_wait_member_num > 0){
+                                // if(plan.schedule_type == 2){
+                                //     if(plan.lecture_current_member_num != plan.lecture_max_member_num){
+                                //         something_have_to_do = "anim_blink";
+                                //     }
+                                // }else{
+                                    something_have_to_do = "anim_blink";
+                                // }
+                            }
                             
 
-                            return `<div data-scheduleid="${plan.schedule_id}" onclick="event.stopPropagation();${onclick}" class="calendar_schedule_display_week ${long_touch_active} ${go_behind}" 
+                            return `<div data-scheduleid="${plan.schedule_id}" onclick="event.stopPropagation();${onclick}" class="calendar_schedule_display_week ${long_touch_active} ${go_behind} ${something_have_to_do}" 
                                         style="${styles}" ontouchstart="${this.instance}.longtouchstart(this, ()=>{})" ontouchend="event.stopPropagation();${this.instance}.longtouchend(event)">
                                         ${plan_name}
                                     </div>`;
@@ -1312,6 +1337,14 @@ class Calendar {
         }
         switch(switching){
             case ON:
+                let inspect = pass_inspector.schedule_update();
+                                if(inspect.barrier == BLOCKED){
+                                    let message = `${inspect.limit_type}`;
+                                    // layer_popup.close_layer_popup();
+                                    show_error_message({title:message});
+                                    return false;
+                                }
+
                 this.long_touch = ON;
                 // this.long_touch_target = event;
                 // this.long_touch_schedule_id = event.target.dataset.scheduleid;
@@ -1781,7 +1814,6 @@ class Plan_func{
             //통신성공시 처리
             success:function(data){
                 check_app_version(data.app_version);
-                console.log(data);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
                         show_error_message({title:data.messageArray});
@@ -1849,7 +1881,7 @@ class Plan_func{
     }
 
     static read_plan(schedule_id, callback, error_callback){
-        
+
         $.ajax({
             url: '/trainer/get_trainer_schedule_info/',
             type : 'GET',
@@ -1932,6 +1964,7 @@ class Plan_func{
 
     static delete(data, callback, error_callback){
         //데이터 형태 {"schedule_id":""};
+        console.log('delete_function1');
         let async = true;
         if(data.async != undefined){
             async = data.async;
@@ -1944,6 +1977,7 @@ class Plan_func{
             async: async,
     
             beforeSend:function(xhr, settings) {
+                console.log('delete_function2');
                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
                     xhr.setRequestHeader("X-CSRFToken", csrftoken);
                 }
@@ -1956,6 +1990,7 @@ class Plan_func{
     
             //통신성공시 처리
             success:function(data){
+                console.log('delete_function3');
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
@@ -1966,6 +2001,7 @@ class Plan_func{
                 if(callback != undefined){
                     callback();
                 }
+                console.log('delete_function4');
                 
             },
     
@@ -2078,9 +2114,96 @@ class Plan_func{
         });
     }
 
+    static permission_status(data, callback, error_callback){
+        //데이터 형태 {"schedule_id":"", "state_cd":""};
+        let async = true;
+        if(data.async != undefined){
+            async = data.async;
+        }
+        $.ajax({
+            url:'/schedule/update_schedule_permission_state_cd/',
+            type:'POST',
+            data: data,
+            dataType : 'JSON',
+            async: async,
+
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function(){
+
+            },
+
+            //통신성공시 처리
+            success:function(data){
+                check_app_version(data.app_version);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message({title:data.messageArray});
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(data);
+                }
+
+            },
+
+            //통신 실패시 처리
+            error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
+                // location.reload();
+            }
+        });
+    }
+
     static read_plan_repeat(callback, error_callback){
         $.ajax({
             url: '/trainer/get_repeat_schedule_all/',
+            type : 'GET',
+            // data : {"date":date_, "day":days_},
+            dataType: "JSON",
+
+            beforeSend:function (){
+                // ajax_load_image(SHOW);
+            },
+            success:function (data){
+                check_app_version(data.app_version);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message({title:data.messageArray});
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(data);
+                }
+            },
+
+            complete:function (){
+                // ajax_load_image(HIDE);
+            },
+
+            error:function (){
+                if(error_callback != undefined){
+                    error_callback();
+                }
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
+                // location.reload();
+            }
+        });
+    }
+
+    static read_plan_permission_wait(callback, error_callback){
+        $.ajax({
+            url: '/trainer/get_permission_wait_schedule_all/',
             type : 'GET',
             // data : {"date":date_, "day":days_},
             dataType: "JSON",

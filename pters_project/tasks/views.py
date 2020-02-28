@@ -1,19 +1,25 @@
 import datetime
+import json
 
 import logging
+
 from django.db.models import Q
 from django.db.models.expressions import RawSQL
+from django.http import JsonResponse
 from django.utils import timezone
 from django.shortcuts import render
 
 # Create your views here.
+from django.views import View
+
 from configs.const import USE, OFF_SCHEDULE_TYPE, UN_USE, AUTO_CANCEL_ON, AUTO_ABSENCE_ON, AUTO_FINISH_ON, \
     ON_SCHEDULE_TYPE, AUTO_FINISH_OFF, STATE_CD_NOT_PROGRESS, STATE_CD_FINISH, STATE_CD_ABSENCE, STATE_CD_IN_PROGRESS
+from login.models import PushInfoTb
 from payment.models import BillingInfoTb, PaymentInfoTb
 from schedule.functions import func_send_push_trainer, func_send_push_trainee, func_refresh_member_ticket_count
 from schedule.models import RepeatScheduleTb, ScheduleTb, DeleteScheduleTb
-from trainer.functions import func_update_lecture_member_fix_status_cd
-from trainer.models import ClassMemberTicketTb
+from trainer.functions import func_update_lecture_member_fix_status_cd, func_get_member_lecture_list
+from trainer.models import ClassMemberTicketTb, LectureMemberTb
 
 logger = logging.getLogger(__name__)
 
@@ -204,3 +210,46 @@ def update_daily_data_logic(request):
     func_update_finish_pass_data()
 
     return render(request, 'ajax/task_error_info.html')
+
+
+class GetAllSchedulePushAlarmDataView(View):
+
+    def get(self, request):
+        start_time = timezone.now()
+        alarm_dt = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:00')
+
+        # 알람 관련된 데이터 가져오기
+        alarm_dt = '2020-02-25T14:20:00'
+        schedule_data = ScheduleTb.objects.select_related(
+            'class_tb__member', 'lecture_tb',
+            'member_ticket_tb__member'
+        ).filter(push_alarm_data__contains=alarm_dt, use=USE).exclude(en_dis_type=OFF_SCHEDULE_TYPE)
+        schedule_data = schedule_data.values('schedule_id',
+                                             'class_tb_id',
+                                             'class_tb__member_id',
+                                             'member_ticket_tb_id',
+                                             'start_dt', 'end_dt',
+                                             'lecture_tb__name',
+                                             'push_alarm_data',
+                                             'member_ticket_tb__member__name')
+
+        # schedule 정보에서 push_alarm_data json 타입으로 변경 및 member_id 추출
+        member_ids = []
+        for schedule_info in schedule_data:
+            if schedule_info['push_alarm_data'] is not None and schedule_info['push_alarm_data'] != '':
+                schedule_info['push_alarm_data'] = json.loads(schedule_info['push_alarm_data'])
+            schedule_info['push_alarm_data'] = schedule_info['push_alarm_data'].get(alarm_dt)['member_ids']
+            member_ids.append(schedule_info['push_alarm_data'])
+
+        # 보내야 하는 회원의 token 가져오기
+        query_member_id = Q()
+        for member_id in set(sum(member_ids, [])):
+            query_member_id |= Q(member_id=member_id)
+
+        token_data = PushInfoTb.objects.filter(query_member_id, use=USE).values('member_id',
+                                                                                'token', 'badge_counter')
+        # print(str(timezone.now()-start_time))
+        # print(str(schedule_data))
+        # return JsonResponse({'alarm_schedule': list(schedule_data)})
+        return JsonResponse({'alarm_schedule': list(schedule_data), 'token_data': list(token_data)})
+

@@ -30,6 +30,7 @@ urlpatterns = [
 
     # 일정 완료
     url(r'^update_schedule_state_cd/$', views.update_schedule_state_cd_logic, name='update_schedule_state_cd'),
+    url(r'^update_schedule_permission_state_cd/$', views.update_schedule_permission_state_cd_logic, name='update_schedule_permission_state_cd'),
     # 사인 이미지 업로드
     url(r'^upload_sign_image/$', views.upload_sign_image_logic, name='upload_sign_image'),
     # 일정 메모 수정

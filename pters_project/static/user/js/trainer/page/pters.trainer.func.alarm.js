@@ -101,8 +101,9 @@ class Alarm {
                 let alarm_highlight = "";
                 if(this.new_alarms_id_cache.indexOf(alarm_id) != -1){
                     alarm_highlight = "var(--bg-for-only-new-notifi)";
+                    // alarm_highlight = "linear-gradient(to right, #fe4e654a, transparent)";
                 }
-                let html = `<article class="alarm_wrapper anim_fade_in_vibe_top" data-alarm_id="${alarm_id}" style="background-color:${alarm_highlight}">
+                let html = `<article class="alarm_wrapper anim_fade_in_vibe_top" data-alarm_id="${alarm_id}" style="background:${alarm_highlight}">
                                 <div class="alarm_data_u">
                                     <div>
                                         ${CImg.blank()}
@@ -227,7 +228,6 @@ class Alarm {
         Setting_shared_func.read_request((invited)=>{
             let invited_length = Object.keys(invited).length;
             Alarm_func.read((data)=>{
-                console.log(data);
                 for(let date in data){
                     let length = data[date].length;
                     for(let i=0; i<length; i++){

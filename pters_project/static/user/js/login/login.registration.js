@@ -36,7 +36,7 @@ function select_contract(contract_type) {
     if (contract_type == 'all_contract') {
         if (all_contract.attr('data-valid') == 'false') {
             contract_select_check.attr('data-valid', 'true');
-            contract_select_check.text('v');
+            contract_select_check.html(CImg.confirm(["#fe4e65"]));
         } else {
             contract_select_check.attr('data-valid', 'false');
             contract_select_check.text('');
@@ -44,10 +44,10 @@ function select_contract(contract_type) {
     } else {
         if (contract_selector.attr('data-valid') == 'false') {
             contract_selector.attr('data-valid', 'true');
-            contract_selector.text('v');
+            contract_selector.html(CImg.confirm(["#fe4e65"]));
             if (compare_contract.attr('data-valid') == 'true') {
                 all_contract.attr('data-valid', 'true');
-                all_contract.text('v');
+                all_contract.html(CImg.confirm(["#fe4e65"]));
             }
         } else {
             contract_selector.attr('data-valid', 'false');
@@ -345,7 +345,8 @@ function add_member_info(){
             if(jsondata.messageArray.length > 0){
                 let error_message = '';
                 for(let i=0; i<jsondata.messageArray.length; i++){
-                    error_message += jsondata.messageArray[i] + '<br/>';
+                    error_message += jsondata.messageArray[i];
+                    break;
                 }
                 alert(error_message);
             }else{

@@ -142,7 +142,8 @@ class Lecture_view{
     }
 
     render(){
-        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();lecture_view_popup.clear();">${CImg.arrow_left()}</span>`;
+        // let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();lecture_view_popup.clear();">${CImg.arrow_left()}</span>`;
+        let top_left = `<span class="icon_left" onclick=";lecture_view_popup.upper_left_menu();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
         let top_right = `<span class="icon_right" ${this.data.capacity == 1 && this.data.lecture_type_cd == LECTURE_TYPE_ONE_TO_ONE ? 'style="display:none"' : '' } onclick="lecture_view_popup.upper_right_menu();">${CImg.more()}</span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
@@ -166,7 +167,7 @@ class Lecture_view{
     }
 
     dom_wrapper_top(){
-        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();lecture_view_popup.clear();">${CImg.arrow_left()}</span>`;
+        let top_left = `<span class="icon_left" onclick="lecture_view_popup.upper_left_menu();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
         let top_right = `<span class="icon_right" ${this.data.capacity == 1 && this.data.lecture_type_cd == LECTURE_TYPE_ONE_TO_ONE ? 'style="display:none"' : '' } onclick="lecture_view_popup.upper_right_menu();">${CImg.more()}</span>`;
         return {left: top_left, center:top_center, right:top_right};
@@ -225,17 +226,18 @@ class Lecture_view{
         let pattern_message = "+ - _ :()[] 제외 특수문자는 입력 불가";
         let required = "required";
         let sub_html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
-            let auth_inspect = pass_inspector.lecture_update();
-            if(auth_inspect.barrier == BLOCKED){
-                let message = `${auth_inspect.limit_type}`;
-                this.init();
-                show_error_message({title:message});
-                return false;
-            }
+            // let auth_inspect = pass_inspector.lecture_update();
+            // if(auth_inspect.barrier == BLOCKED){
+            //     let message = `${auth_inspect.limit_type}`;
+            //     this.init();
+            //     show_error_message({title:message});
+            //     return false;
+            // }
 
             let user_input_data = input_data;
             this.name = user_input_data;
-            this.send_data();
+            // this.send_data();
+            this.if_user_changed_any_information = true;
         }, pattern, pattern_message, required);
         let one_to_one_lesson_description = this.data.capacity == 1 && this.data.lecture_type_cd == LECTURE_TYPE_ONE_TO_ONE ? "<div style='font-size:11px;color:var(--font-sub-normal);'>이 수업은 정원 수정, 비활성화 할 수 없습니다.</div>" : "";
         let html = `
@@ -279,7 +281,8 @@ class Lecture_view{
 
                     let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SELECT, 100, popup_style, null, ()=>{
-                        member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.capacity, {'lecture_id':this.lecture_id, "title":"고정 회원 선택"}, (set_data)=>{
+                        let appendix = {'lecture_id':this.lecture_id, "title":"고정 회원 선택", member_id:this.data.fixed_member_id, member_name:this.data.fixed_member_name};
+                        member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.capacity, appendix, (set_data)=>{
                             this.member = set_data;
                             this.send_data();
                         });
@@ -452,7 +455,7 @@ class Lecture_view{
                         show_error_message({title:message});
                         return false;
                     }
-                    
+
                     let root_content_height = $root_content.height();
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_SIMPLE_VIEW, 100*(251/root_content_height), POPUP_FROM_BOTTOM, {'ticket_id':ticket_id}, ()=>{
                         ticket_simple_view_popup = new Ticket_simple_view('.popup_ticket_simple_view', ticket_id, 'ticket_simple_view_popup');
@@ -480,7 +483,8 @@ class Lecture_view{
             if(this.data.capacity != null){
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SELECT, 100, popup_style, null, ()=>{
-                    member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.capacity, {'lecture_id':this.lecture_id}, (set_data)=>{
+                    let appendix = {'lecture_id':this.lecture_id, "title":"고정 회원 선택", member_id:this.data.fixed_member_id, member_name:this.data.fixed_member_name};
+                    member_select = new MemberSelector('#wrapper_box_member_select', this, this.data.capacity, appendix, (set_data)=>{
                         this.member = set_data;
                         this.send_data();
                     });
@@ -561,7 +565,7 @@ class Lecture_view{
                 current_page.init();
             }catch(e){}
             try{
-                lecture_list_popup.init();
+                lecture_list_popup.reset();
             }catch(e){}
         });
     }
@@ -604,7 +608,7 @@ class Lecture_view{
                                 current_page.init();
                             }catch(e){}
                             try{
-                                lecture_list_popup.init();
+                                lecture_list_popup.reset();
                             }catch(e){}
                             layer_popup.close_layer_popup(); //confirm팝업 닫기
                             layer_popup.close_layer_popup(); //option 팝업 닫기
@@ -636,7 +640,7 @@ class Lecture_view{
                                 current_page.init();
                             }catch(e){}
                             try{
-                                lecture_list_popup.init();
+                                lecture_list_popup.reset();
                             }catch(e){}
                             layer_popup.close_layer_popup(); //confirm팝업 닫기
                             layer_popup.close_layer_popup(); //option 팝업 닫기
@@ -666,7 +670,7 @@ class Lecture_view{
                                 current_page.init();
                             }catch(e){}
                             try{
-                                lecture_list_popup.init();
+                                lecture_list_popup.reset();
                             }catch(e){}
                             layer_popup.close_layer_popup(); //confirm팝업 닫기
                             layer_popup.close_layer_popup(); //option 팝업 닫기
@@ -690,6 +694,34 @@ class Lecture_view{
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
             option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
         });
+    }
+
+    upper_left_menu(){
+        if(this.if_user_changed_any_information == true){
+            let inspect = pass_inspector.lecture_update();
+            if(inspect.barrier == BLOCKED){
+                let message = `${inspect.limit_type}`;
+                layer_popup.close_layer_popup();
+                this.clear();
+                show_error_message({title:message});
+                return false;
+            }
+            
+            let user_option = {
+                confirm:{text:"변경사항 적용", callback:()=>{this.send_data();layer_popup.close_layer_popup();layer_popup.close_layer_popup();this.clear();}},
+                cancel:{text:"아무것도 변경하지 않음", callback:()=>{ layer_popup.close_layer_popup();layer_popup.close_layer_popup();this.clear();}}
+            };
+            let options_padding_top_bottom = 16;
+            // let button_height = 8 + 8 + 52;
+            let button_height = 52;
+            let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
+            let root_content_height = $root_content.height();
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
+                option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+            });
+        }else{
+            layer_popup.close_layer_popup();this.clear();
+        }
     }
 
     func_update_fixed_member(){
@@ -719,14 +751,13 @@ class Lecture_view{
         let forms = document.getElementById(`${this.form_id}`);
         update_check_registration_form(forms);
         let error_info = check_registration_form(forms);
-        console.log(error_info);
         if(error_info != ''){
             show_error_message({title:error_info});
             return false;
         }
         else{
             if(this.data.capacity <= 1 && this.data.lecture_type_cd != LECTURE_TYPE_ONE_TO_ONE){
-                show_error_message({title:'정원은 2명보다 크게 설정해주세요.'});
+                show_error_message({title:'정원은 1명보다 크게 설정해주세요.'});
                 return false;
             }
             return true;

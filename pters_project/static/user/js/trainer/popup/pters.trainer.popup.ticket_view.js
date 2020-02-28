@@ -249,17 +249,18 @@ class Ticket_view{
         let pattern_message = "+ - _ : ()[] 제외 특수문자는 입력 불가";
         let required = "required";
         let sub_html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
-            let auth_inspect = pass_inspector.ticket_update();
-            if(auth_inspect.barrier == BLOCKED){
-                let message = `${auth_inspect.limit_type}`;
-                this.init();
-                show_error_message({title:message});
-                return false;
-            }
+            // let auth_inspect = pass_inspector.ticket_update();
+            // if(auth_inspect.barrier == BLOCKED){
+            //     let message = `${auth_inspect.limit_type}`;
+            //     this.init();
+            //     show_error_message({title:message});
+            //     return false;
+            // }
 
             let user_input_data = input_data;
             this.name = user_input_data;
-            this.send_data();
+            // this.send_data();
+            this.if_user_changed_any_information = true;
         }, pattern, pattern_message, required);
         
         let html = `
@@ -301,7 +302,9 @@ class Ticket_view{
 
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SELECT, 100, popup_style, null, ()=>{
-                lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 999, {'title':'수업'}, (set_data)=>{
+                let appendix = {'title':'수업', lecture_id:this.data.lecture_id, lecture_name:this.data.lecture_name, lecture_state_cd:this.data.lecture_state_cd,
+                                max:this.data.lecture_max, type_cd:this.data.lecture_type_cd, color:this.data.lecture_color};
+                lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 999, appendix, (set_data)=>{
                     this.lecture = set_data; //타겟에 선택된 데이터를 set
                     // this.send_data(); wait_here_testing
                     this.if_user_changed_any_information = true;
@@ -747,7 +750,7 @@ class Ticket_view{
                 current_page.init();
             }catch(e){}
             try{
-                ticket_list_popup.init();
+                ticket_list_popup.reset();
             }catch(e){}
         });
     }
@@ -863,7 +866,7 @@ class Ticket_view{
                                 current_page.init();
                             }catch(e){}
                             try{
-                                ticket_list_popup.init();
+                                ticket_list_popup.reset();
                             }catch(e){}
                         }, ()=>{this.data_sending_now = false;});
                         layer_popup.close_layer_popup(); //confirm 팝업 닫기
@@ -919,7 +922,7 @@ class Ticket_view{
                                 current_page.init();
                             }catch(e){}
                             try{
-                                ticket_list_popup.init();
+                                ticket_list_popup.reset();
                             }catch(e){}
                             layer_popup.close_layer_popup(); //confirm팝업 닫기
                             layer_popup.close_layer_popup(); //option 팝업 닫기
@@ -950,7 +953,7 @@ class Ticket_view{
                                 current_page.init();
                             }catch(e){}
                             try{
-                                ticket_list_popup.init();
+                                ticket_list_popup.reset();
                             }catch(e){}
                             layer_popup.close_layer_popup(); //confirm팝업 닫기
                             layer_popup.close_layer_popup(); //option 팝업 닫기
@@ -980,7 +983,7 @@ class Ticket_view{
                                 current_page.init();
                             }catch(e){}
                             try{
-                                ticket_list_popup.init();
+                                ticket_list_popup.reset();
                             }catch(e){}
                             layer_popup.close_layer_popup(); //confirm팝업 닫기
                             layer_popup.close_layer_popup(); //option 팝업 닫기

@@ -34,7 +34,6 @@ class ProgramBoard_list {
         // this.render_loading_image();
         ProgramBoard_func.read_all({}, (data)=>{
             this.board_list = data;
-            console.log(this.board_list);
             this.render();
             func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
         }, ()=>{this.data_sending_now = false;layer_popup.close_layer_popup();program_board_list_popup.clear();});

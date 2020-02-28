@@ -6,7 +6,6 @@ import boto3
 import httplib2
 from awscli.errorhandler import ClientError
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.paginator import Paginator, EmptyPage
 from django.db import InternalError
 from django.db import transaction
 from django.db.models import Q
@@ -17,7 +16,8 @@ from configs import settings
 from configs.const import REPEAT_TYPE_2WEAK, ON_SCHEDULE_TYPE, USE, UN_USE, SCHEDULE_DUPLICATION_DISABLE, \
     STATE_CD_ABSENCE, STATE_CD_FINISH, STATE_CD_IN_PROGRESS, STATE_CD_NOT_PROGRESS, LECTURE_TYPE_ONE_TO_ONE, \
     AUTH_TYPE_VIEW, GROUP_SCHEDULE, OFF_SCHEDULE, FROM_TRAINEE_LESSON_ALARM_ON, TO_SHARED_TRAINER_LESSON_ALARM_OFF, \
-    TO_SHARED_TRAINER_LESSON_ALARM_ON, MEMBER_SCHEDULE_PAGINATION_COUNTER
+    TO_SHARED_TRAINER_LESSON_ALARM_ON, PERMISSION_STATE_CD_WAIT, \
+    PERMISSION_STATE_CD_APPROVE
 from configs.settings import DEBUG
 from login.models import PushInfoTb
 from trainee.models import MemberTicketTb
@@ -26,8 +26,7 @@ from trainer.models import MemberClassTb, ClassMemberTicketTb, LectureTb, Ticket
 from .models import ScheduleTb, RepeatScheduleTb, DeleteScheduleTb, DeleteRepeatScheduleTb, HolidayTb, DailyRecordTb
 
 if DEBUG is False:
-    from kombu.exceptions import OperationalError
-    from tasks.tasks import task_send_fire_base_push
+    from tasks.tasks import task_send_fire_base_push, task_send_fire_base_push_multi
 
 
 def func_get_holiday_schedule(start_date, end_date):
@@ -70,6 +69,34 @@ def func_get_member_ticket_id(class_id, member_id):
             break
 
     return member_ticket_id
+
+
+# 1:1 member_ticket id 조회 - 자유형 문제
+def func_get_member_ticket_one_to_one_lecture_info(class_id, member_ticket_id):
+    today = datetime.date.today()
+    lecture_info = None
+    # 강좌에 해당하는 수강/회원 정보 가져오기
+    class_member_ticket_data = ClassMemberTicketTb.objects.select_related(
+        'member_ticket_tb').filter(class_tb_id=class_id, class_tb__use=USE,  auth_cd=AUTH_TYPE_VIEW,
+                                   member_ticket_tb_id=member_ticket_id,
+                                   member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+                                   member_ticket_tb__member_ticket_avail_count__gt=0,
+                                   member_ticket_tb__use=USE).order_by('member_ticket_tb__start_date',
+                                                                       'member_ticket_tb__reg_dt')
+
+    for class_member_ticket_info in class_member_ticket_data:
+        try:
+            ticket_single_lecture = TicketLectureTb.objects.filter(
+                ticket_tb_id=class_member_ticket_info.member_ticket_tb.ticket_tb_id,
+                ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+                lecture_tb__state_cd=STATE_CD_IN_PROGRESS, lecture_tb__lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE,
+                use=USE).earliest('reg_dt')
+            lecture_info = ticket_single_lecture.lecture_tb
+            break
+        except ObjectDoesNotExist:
+            lecture_info = None
+
+    return lecture_info
 
 
 # 그룹 Lecture Id 조회
@@ -180,9 +207,9 @@ def func_refresh_member_ticket_count(class_id, member_ticket_id):
         member_ticket_info.save()
 
     if error is None:
-        if member_ticket_info.state_cd != check_member_ticket_state_cd:
-            if member_ticket_info.state_cd == STATE_CD_FINISH or member_ticket_info.state_cd == 'RF':
-                func_update_lecture_member_fix_status_cd(class_id, member_ticket_info.member_id)
+        # if member_ticket_info.state_cd != check_member_ticket_state_cd:
+        #     if member_ticket_info.state_cd == STATE_CD_FINISH or member_ticket_info.state_cd == 'RF':
+        func_update_lecture_member_fix_status_cd(class_id, member_ticket_info.member_id)
 
     return error
 
@@ -195,15 +222,16 @@ def func_refresh_lecture_status(lecture_id, lecture_schedule_id, lecture_repeat_
             lecture_schedule_info = ScheduleTb.objects.get(schedule_id=lecture_schedule_id, use=USE)
         except ObjectDoesNotExist:
             lecture_schedule_info = None
-        lecture_schedule_total_count = ScheduleTb.objects.filter(lecture_schedule_id=lecture_schedule_id,
-                                                                 use=USE).count()
+        # lecture_schedule_total_count = ScheduleTb.objects.filter(lecture_schedule_id=lecture_schedule_id,
+        #                                                          use=USE).count()
         lecture_schedule_end_count = ScheduleTb.objects.filter(Q(state_cd=STATE_CD_FINISH)
                                                                | Q(state_cd=STATE_CD_ABSENCE),
                                                                lecture_schedule_id=lecture_schedule_id,
                                                                lecture_tb_id=lecture_id, use=USE).count()
 
         if lecture_schedule_info is not None:
-            if lecture_schedule_total_count == lecture_schedule_end_count:
+            if lecture_schedule_info.lecture_tb.member_num <= lecture_schedule_end_count:
+            # if lecture_schedule_total_count == lecture_schedule_end_count:
                 if lecture_schedule_info.state_cd != STATE_CD_FINISH:
                     lecture_schedule_info.state_cd = STATE_CD_FINISH
                     lecture_schedule_info.save()
@@ -231,41 +259,44 @@ def func_refresh_lecture_status(lecture_id, lecture_schedule_id, lecture_repeat_
 
 # 일정 등록
 def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
-                      lecture_id, lecture_schedule_id,
+                      lecture_info, lecture_schedule_id,
                       start_datetime, end_datetime,
                       note, en_dis_type, user_id, permission_state_cd, state_cd, duplication_enable_flag):
     error = None
     context = {'error': None, 'schedule_id': ''}
     if member_ticket_id == '':
         member_ticket_id = None
-    if lecture_id == '':
-        lecture_id = None
+    # if lecture_id == '':
+    lecture_id = None
     if lecture_schedule_id == '':
         lecture_schedule_id = None
     if repeat_schedule_id == '':
         repeat_schedule_id = None
+
     max_mem_count = 1
     ing_color_cd = ''
     end_color_cd = ''
     ing_font_color_cd = ''
     end_font_color_cd = ''
-    if lecture_id is not None:
-        try:
-            lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
-        except ObjectDoesNotExist:
-            lecture_info = None
-    else:
-        try:
-            lecture_info = LectureTb.objects.get(class_tb_id=class_id,
-                                                 lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, use=USE)
-        except ObjectDoesNotExist:
-            lecture_info = None
+
+    if lecture_info is not None and lecture_info.lecture_type_cd != LECTURE_TYPE_ONE_TO_ONE:
+
+        if lecture_schedule_id is not None:
+            error = func_check_lecture_available_member_before(class_id, lecture_info, lecture_schedule_id,
+                                                               permission_state_cd)
+
     if lecture_info is not None:
+        lecture_id = lecture_info.lecture_id
         max_mem_count = lecture_info.member_num
         ing_color_cd = lecture_info.ing_color_cd
         end_color_cd = lecture_info.end_color_cd
         ing_font_color_cd = lecture_info.ing_font_color_cd
         end_font_color_cd = lecture_info.end_font_color_cd
+
+        if lecture_info.lecture_type_cd == LECTURE_TYPE_ONE_TO_ONE:
+            # lecture_info = None
+            # lecture_id = None
+            lecture_schedule_id = None
 
     if str(en_dis_type) == str(OFF_SCHEDULE):
         ing_color_cd = '#d2d1cf'
@@ -273,40 +304,127 @@ def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
         ing_font_color_cd = '#3b3b3b'
         end_font_color_cd = '#3b3b3b'
 
-    try:
-        with transaction.atomic():
-            add_schedule_info = ScheduleTb(class_tb_id=class_id,
-                                           member_ticket_tb_id=member_ticket_id,
-                                           lecture_tb_id=lecture_id,
-                                           lecture_schedule_id=lecture_schedule_id,
-                                           repeat_schedule_tb_id=repeat_schedule_id,
-                                           start_dt=start_datetime, end_dt=end_datetime,
-                                           state_cd=state_cd, permission_state_cd=permission_state_cd,
-                                           note=note, member_note='', en_dis_type=en_dis_type,
-                                           # Test 용
-                                           max_mem_count=max_mem_count,
-                                           ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
-                                           ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
-                                           # alarm_dt=start_datetime-datetime.timedelta(minutes=5),
-                                           reg_member_id=user_id,
-                                           mod_member_id=user_id)
-            add_schedule_info.save()
-            if member_ticket_id is not None:
-                error = func_refresh_member_ticket_count(class_id, member_ticket_id)
+    if error is None:
+        try:
+            with transaction.atomic():
+                add_schedule_info = ScheduleTb(class_tb_id=class_id,
+                                               member_ticket_tb_id=member_ticket_id,
+                                               lecture_tb_id=lecture_id,
+                                               lecture_schedule_id=lecture_schedule_id,
+                                               repeat_schedule_tb_id=repeat_schedule_id,
+                                               start_dt=start_datetime, end_dt=end_datetime,
+                                               state_cd=state_cd, permission_state_cd=permission_state_cd,
+                                               note=note, member_note='', en_dis_type=en_dis_type,
+                                               max_mem_count=max_mem_count,
+                                               ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
+                                               ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
+                                               # Test 용
+                                               # alarm_dt=start_datetime-datetime.timedelta(minutes=5),
+                                               reg_member_id=user_id,
+                                               mod_member_id=user_id)
+                add_schedule_info.save()
+                if lecture_info is not None:
+                    if lecture_schedule_id is not None:
+                        error = func_check_lecture_available_member_after(class_id, lecture_info, lecture_schedule_id,
+                                                                          permission_state_cd)
+                if error is None:
+                    error = func_date_check(class_id, add_schedule_info.schedule_id,
+                                            str(start_datetime).split(' ')[0], start_datetime, end_datetime,
+                                            duplication_enable_flag)
+                    if error is not None:
+                        error = ' 일정이 중복되었습니다.'
 
-            if error is None:
-                error = func_date_check(class_id, add_schedule_info.schedule_id,
-                                        str(start_datetime).split(' ')[0], start_datetime, end_datetime,
-                                        duplication_enable_flag)
-                if error is not None:
-                    error += ' 일정이 중복되었습니다.'
+                context['schedule_id'] = add_schedule_info.schedule_id
 
-            context['schedule_id'] = add_schedule_info.schedule_id
+        except TypeError:
+            error = '일정 추가중 오류가 발생했습니다.'
+        except ValueError:
+            error = '일정 추가중 오류가 발생했습니다.'
 
-    except TypeError:
-        error = '일정 추가중 오류가 발생했습니다.'
-    except ValueError:
-        error = '일정 추가중 오류가 발생했습니다.'
+    if error is None and member_ticket_id is not None:
+        error = func_refresh_member_ticket_count(class_id, member_ticket_id)
+
+    context['error'] = error
+
+    return context
+
+
+# 일정 등록
+def func_add_schedule_update(class_id, member_ticket_id, repeat_schedule_id,
+                             lecture_info, lecture_schedule_id,
+                             start_datetime, end_datetime,
+                             note, en_dis_type, user_id, permission_state_cd, state_cd, duplication_enable_flag):
+    error = None
+    context = {'error': None, 'schedule_id': ''}
+    if member_ticket_id == '':
+        member_ticket_id = None
+    # if lecture_id == '':
+    lecture_id = None
+    if lecture_schedule_id == '':
+        lecture_schedule_id = None
+    if repeat_schedule_id == '':
+        repeat_schedule_id = None
+
+    max_mem_count = 1
+    ing_color_cd = ''
+    end_color_cd = ''
+    ing_font_color_cd = ''
+    end_font_color_cd = ''
+
+    if lecture_info is not None:
+        lecture_id = lecture_info.lecture_id
+        max_mem_count = lecture_info.member_num
+        ing_color_cd = lecture_info.ing_color_cd
+        end_color_cd = lecture_info.end_color_cd
+        ing_font_color_cd = lecture_info.ing_font_color_cd
+        end_font_color_cd = lecture_info.end_font_color_cd
+
+        if lecture_info.lecture_type_cd == LECTURE_TYPE_ONE_TO_ONE:
+            # lecture_info = None
+            # lecture_id = None
+            lecture_schedule_id = None
+
+    if str(en_dis_type) == str(OFF_SCHEDULE):
+        ing_color_cd = '#d2d1cf'
+        end_color_cd = '#d2d1cf'
+        ing_font_color_cd = '#3b3b3b'
+        end_font_color_cd = '#3b3b3b'
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                add_schedule_info = ScheduleTb(class_tb_id=class_id,
+                                               member_ticket_tb_id=member_ticket_id,
+                                               lecture_tb_id=lecture_id,
+                                               lecture_schedule_id=lecture_schedule_id,
+                                               repeat_schedule_tb_id=repeat_schedule_id,
+                                               start_dt=start_datetime, end_dt=end_datetime,
+                                               state_cd=state_cd, permission_state_cd=permission_state_cd,
+                                               note=note, member_note='', en_dis_type=en_dis_type,
+                                               max_mem_count=max_mem_count,
+                                               ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
+                                               ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
+                                               # Test 용
+                                               # alarm_dt=start_datetime-datetime.timedelta(minutes=5),
+                                               reg_member_id=user_id,
+                                               mod_member_id=user_id)
+                add_schedule_info.save()
+                if error is None:
+                    error = func_date_check(class_id, add_schedule_info.schedule_id,
+                                            str(start_datetime).split(' ')[0], start_datetime, end_datetime,
+                                            duplication_enable_flag)
+                    if error is not None:
+                        error = ' 일정이 중복되었습니다.'
+
+                context['schedule_id'] = add_schedule_info.schedule_id
+
+        except TypeError:
+            error = '일정 추가중 오류가 발생했습니다.'
+        except ValueError:
+            error = '일정 추가중 오류가 발생했습니다.'
+
+    if error is None and member_ticket_id is not None:
+        error = func_refresh_member_ticket_count(class_id, member_ticket_id)
 
     context['error'] = error
 
@@ -494,41 +612,69 @@ def func_update_repeat_schedule(repeat_schedule_id):
 
 
 # 그룹일정 등록전 그룹에 허용 가능 인원 확인
-def func_check_lecture_available_member_before(class_id, lecture_id, lecture_schedule_id):
+def func_check_lecture_available_member_before(class_id, lecture_info, lecture_schedule_id, permission_state_cd):
     error = None
-    lecture_info = None
+    # lecture_info = None
+    # try:
+    #     lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
+    # except ObjectDoesNotExist:
+    #     error = '오류가 발생했습니다.'
 
     try:
-        lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
-
+        setting_info = SettingTb.objects.get(class_tb_id=class_id,
+                                             setting_type_cd='LT_RES_PUBLIC_CLASS_WAIT_MEMBER_NUM', use=USE)
+        setting_member_public_class_wait_member_num = int(setting_info.setting_info)
     except ObjectDoesNotExist:
-        error = '오류가 발생했습니다.'
+        setting_member_public_class_wait_member_num = 0
 
-    schedule_counter = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                 lecture_schedule_id=lecture_schedule_id,
-                                                 use=USE).exclude(state_cd=STATE_CD_ABSENCE).count()
-    if schedule_counter > lecture_info.member_num:
-        error = '정원을 초과했습니다.'
+    schedule_wait_counter = ScheduleTb.objects.filter(class_tb_id=class_id,
+                                                      lecture_schedule_id=lecture_schedule_id,
+                                                      permission_state_cd=PERMISSION_STATE_CD_WAIT,
+                                                      use=USE).count()
+    schedule_approve_counter = ScheduleTb.objects.filter(class_tb_id=class_id,
+                                                         lecture_schedule_id=lecture_schedule_id,
+                                                         permission_state_cd=PERMISSION_STATE_CD_APPROVE,
+                                                         use=USE).exclude(state_cd=STATE_CD_ABSENCE).count()
+    if permission_state_cd == PERMISSION_STATE_CD_APPROVE:
+        if schedule_approve_counter >= lecture_info.member_num:
+            error = '정원을 초과했습니다.'
+    else:
+        if schedule_wait_counter >= setting_member_public_class_wait_member_num:
+            error = '대기 예약 정원을 초과했습니다.'
 
     return error
 
 
 # 그룹일정 등록후 그룹에 허용 가능 인원 확인
-def func_check_lecture_available_member_after(class_id, lecture_id, lecture_schedule_id):
+def func_check_lecture_available_member_after(class_id, lecture_info, lecture_schedule_id, permission_state_cd):
     error = None
-    lecture_info = None
-
+    # lecture_info = None
+    # try:
+    #     lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
+    #
+    # except ObjectDoesNotExist:
+    #     error = '오류가 발생했습니다.'
     try:
-        lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
-
+        setting_info = SettingTb.objects.get(class_tb_id=class_id,
+                                             setting_type_cd='LT_RES_PUBLIC_CLASS_WAIT_MEMBER_NUM', use=USE)
+        setting_member_public_class_wait_member_num = int(setting_info.setting_info)
     except ObjectDoesNotExist:
-        error = '오류가 발생했습니다.'
+        setting_member_public_class_wait_member_num = 0
 
-    schedule_counter = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                 lecture_schedule_id=lecture_schedule_id,
-                                                 use=USE).exclude(state_cd=STATE_CD_ABSENCE).count()
-    if schedule_counter > lecture_info.member_num:
-        error = '정원을 초과했습니다.'
+    schedule_wait_counter = ScheduleTb.objects.filter(class_tb_id=class_id,
+                                                      lecture_schedule_id=lecture_schedule_id,
+                                                      permission_state_cd=PERMISSION_STATE_CD_WAIT,
+                                                      use=USE).count()
+    schedule_approve_counter = ScheduleTb.objects.filter(class_tb_id=class_id,
+                                                         lecture_schedule_id=lecture_schedule_id,
+                                                         permission_state_cd=PERMISSION_STATE_CD_APPROVE,
+                                                         use=USE).exclude(state_cd=STATE_CD_ABSENCE).count()
+    if permission_state_cd == PERMISSION_STATE_CD_APPROVE:
+        if schedule_approve_counter > lecture_info.member_num:
+            error = '정원을 초과했습니다.'
+    else:
+        if schedule_wait_counter > setting_member_public_class_wait_member_num:
+            error = '대기 예약 정원을 초과했습니다.'
 
     return error
 
@@ -564,32 +710,39 @@ def func_date_check(class_id, schedule_id, pt_schedule_date, add_start_dt, add_e
 def func_send_push_trainer(member_ticket_id, title, message):
     error = None
     if member_ticket_id is not None and member_ticket_id != '':
+        registration_ids = []
+        multi_badge_counter = -1
         member_ticket_info = MemberTicketTb.objects.select_related(
             'member').filter(member_ticket_id=member_ticket_id, member_auth_cd=AUTH_TYPE_VIEW, use=USE)
 
+        token_data = PushInfoTb.objects.filter(use=USE)
+
         for member_ticket_info in member_ticket_info:
-            token_data = PushInfoTb.objects.filter(member_id=member_ticket_info.member_id, use=USE)
+            # token_data = PushInfoTb.objects.filter(member_id=member_ticket_info.member_id, use=USE)
             for token_info in token_data:
-                if token_info.device_id != 'pc':
-                    token_info.badge_counter += 1
-                    token_info.save()
-                instance_id = token_info.token
-                badge_counter = token_info.badge_counter
-                check_async = False
-                if DEBUG is False:
-                    check_async = True
-                    # from configs.celery import CELERY_WORKING
-                    # try:
-                    #     if CELERY_WORKING:
-                    #         check_async = True
-                    #     else:
-                    #         check_async = False
-                    # except OperationalError:
-                    #     check_async = False
-                if check_async:
-                    error = task_send_fire_base_push.delay(instance_id, title, message, badge_counter)
-                else:
-                    error = send_fire_base_push(instance_id, title, message, badge_counter)
+                if str(token_info.member_id) == str(member_ticket_info.member_id):
+                    if token_info.device_id != 'pc':
+                        token_info.badge_counter += 1
+                        token_info.save()
+                    instance_id = token_info.token
+
+                    if multi_badge_counter == -1:
+                        multi_badge_counter = token_info.badge_counter
+                    if multi_badge_counter > token_info.badge_counter:
+                        multi_badge_counter = token_info.badge_counter
+                    badge_counter = token_info.badge_counter
+
+                    registration_ids.append(instance_id)
+                    #     error = send_fire_base_push(instance_id, title, message, badge_counter)
+
+        check_async = False
+        if DEBUG is False:
+            check_async = True
+        if len(registration_ids) > 0:
+            if check_async:
+                error = task_send_fire_base_push_multi.delay(registration_ids, title, message, multi_badge_counter)
+            else:
+                error = send_fire_base_push_multi(registration_ids, title, message, multi_badge_counter)
 
     return error
 
@@ -598,7 +751,8 @@ def func_send_push_trainer(member_ticket_id, title, message):
 def func_send_push_trainee(class_id, title, message):
     error = None
     if class_id is not None and class_id != '':
-
+        registration_ids = []
+        multi_badge_counter = -1
         member_class_data = MemberClassTb.objects.select_related('class_tb',
                                                                  'member').filter(class_tb_id=class_id,
                                                                                   auth_cd=AUTH_TYPE_VIEW, use=USE)
@@ -608,6 +762,8 @@ def func_send_push_trainee(class_id, title, message):
             lt_pus_to_shared_trainer_lesson_alarm = int(setting_data.setting_info)
         except ObjectDoesNotExist:
             lt_pus_to_shared_trainer_lesson_alarm = TO_SHARED_TRAINER_LESSON_ALARM_OFF
+
+        token_data = PushInfoTb.objects.select_related('member').filter(use=USE)
 
         for member_class_info in member_class_data:
             push_check = False
@@ -626,30 +782,47 @@ def func_send_push_trainee(class_id, title, message):
                     lt_pus_from_trainee_lesson_alarm = FROM_TRAINEE_LESSON_ALARM_ON
 
                 if str(lt_pus_from_trainee_lesson_alarm) == str(FROM_TRAINEE_LESSON_ALARM_ON):
-                    token_data = PushInfoTb.objects.filter(member_id=member_class_info.member_id, use=USE)
+                    # token_data = PushInfoTb.objects.filter(member_id=member_class_info.member_id, use=USE)
                     for token_info in token_data:
-                        if token_info.device_id != 'pc':
-                            token_info.badge_counter += 1
-                            token_info.save()
-                        instance_id = token_info.token
-                        badge_counter = token_info.badge_counter
-                        check_async = False
-                        if DEBUG is False:
-                            check_async = True
-                            # from configs.celery import CELERY_WORKING
-                            # try:
-                            #     if CELERY_WORKING:
-                            #         check_async = True
-                            #     else:
-                            #         check_async = False
-                            # except OperationalError:
-                            #     check_async = False
+                        # print(str(token_info['member_id'])+':'+str(member_class_info.member_id))
 
-                        if check_async:
-                            error = task_send_fire_base_push.delay(instance_id, title, message, badge_counter)
-                        else:
-                            error = send_fire_base_push(instance_id, title, message, badge_counter)
+                        if str(token_info.member_id) == str(member_class_info.member_id):
+                            if token_info.device_id != 'pc':
+                                token_info.badge_counter += 1
+                                token_info.save()
+                            instance_id = token_info.token
+                            if multi_badge_counter == -1:
+                                multi_badge_counter = token_info.badge_counter
+                            if multi_badge_counter > token_info.badge_counter:
+                                multi_badge_counter = token_info.badge_counter
+                            badge_counter = token_info.badge_counter
+                            # if DEBUG is False:
+                            #     check_async = True
+                                # from configs.celery import CELERY_WORKING
+                                # try:
+                                #     if CELERY_WORKING:
+                                #         check_async = True
+                                #     else:
+                                #         check_async = False
+                                # except OperationalError:
+                                #     check_async = False
 
+                            # if check_async:
+                            #     error = task_send_fire_base_push.delay(instance_id, title, message, badge_counter)
+                            # else:
+                            registration_ids.append(instance_id)
+                                # error = send_fire_base_push(instance_id, title, message, badge_counter)
+        # if len(registration_ids) > 0:
+        #     error = send_fire_base_push_multi(registration_ids, title, message, multi_badge_counter)
+
+        check_async = False
+        if DEBUG is False:
+            check_async = True
+        if len(registration_ids) > 0:
+            if check_async:
+                error = task_send_fire_base_push_multi.delay(registration_ids, title, message, multi_badge_counter)
+            else:
+                error = send_fire_base_push_multi(registration_ids, title, message, multi_badge_counter)
     return error
 
 
@@ -657,9 +830,13 @@ def func_send_push_trainee(class_id, title, message):
 def func_send_push_trainer_trainer(class_id, title, message, member_id):
     error = None
     if class_id is not None and class_id != '':
+        registration_ids = []
+        multi_badge_counter = -1
 
         member_class_data = MemberClassTb.objects.select_related('member').filter(class_tb_id=class_id,
                                                                                   auth_cd=AUTH_TYPE_VIEW, use=USE)
+        token_data = PushInfoTb.objects.filter(use=USE)
+
         for member_class_info in member_class_data:
             if str(member_id) != str(member_class_info.member_id):
                 try:
@@ -671,30 +848,46 @@ def func_send_push_trainer_trainer(class_id, title, message, member_id):
 
                 if str(lt_pus_from_trainee_lesson_alarm) == str(FROM_TRAINEE_LESSON_ALARM_ON):
 
-                    token_data = PushInfoTb.objects.filter(member_id=member_class_info.member_id, use=USE)
+                    # token_data = PushInfoTb.objects.filter(member_id=member_class_info.member_id, use=USE)
                     for token_info in token_data:
-                        if token_info.device_id != 'pc':
-                            token_info.badge_counter += 1
-                            token_info.save()
-                        instance_id = token_info.token
-                        badge_counter = token_info.badge_counter
-                        check_async = False
-                        if DEBUG is False:
-                            check_async = True
-                            # from configs.celery import CELERY_WORKING
-                            # try:
-                            #     if CELERY_WORKING:
-                            #         check_async = True
-                            #     else:
-                            #         check_async = False
-                            # except OperationalError:
-                            #     check_async = False
+                        if str(token_info.member_id) == str(member_class_info.member_id):
+                            if token_info.device_id != 'pc':
+                                token_info.badge_counter += 1
+                                token_info.save()
+                            instance_id = token_info.token
+                            if multi_badge_counter == -1:
+                                multi_badge_counter = token_info.badge_counter
+                            if multi_badge_counter > token_info.badge_counter:
+                                multi_badge_counter = token_info.badge_counter
+                            badge_counter = token_info.badge_counter
+                            # if DEBUG is False:
+                            #     check_async = True
+                                # from configs.celery import CELERY_WORKING
+                                # try:
+                                #     if CELERY_WORKING:
+                                #         check_async = True
+                                #     else:
+                                #         check_async = False
+                                # except OperationalError:
+                                #     check_async = False
 
-                        if check_async:
-                            error = task_send_fire_base_push.delay(instance_id, title, message, badge_counter)
-                        else:
-                            error = send_fire_base_push(instance_id, title, message, badge_counter)
+                            # if check_async:
+                            #     error = task_send_fire_base_push.delay(instance_id, title, message, badge_counter)
+                            # else:
+                            registration_ids.append(instance_id)
+                                # error = send_fire_base_push(instance_id, title, message, badge_counter)
 
+        # if len(registration_ids) > 0:
+        #     error = send_fire_base_push_multi(registration_ids, title, message, multi_badge_counter)
+
+        check_async = False
+        if DEBUG is False:
+            check_async = True
+        if len(registration_ids) > 0:
+            if check_async:
+                error = task_send_fire_base_push_multi.delay(registration_ids, title, message, multi_badge_counter)
+            else:
+                error = send_fire_base_push_multi(registration_ids, title, message, multi_badge_counter)
     return error
 
 
@@ -722,21 +915,53 @@ def send_fire_base_push(instance_id, title, message, badge_counter):
     return error
 
 
+def send_fire_base_push_multi(registration_ids, title, message, badge_counter):
+    push_server_id = getattr(settings, "PTERS_PUSH_SERVER_KEY", '')
+    error = None
+    data = {
+        'registration_ids': registration_ids,
+        'notification': {
+            'title': title,
+            'body': message,
+            'badge': badge_counter,
+            'sound': 'default'
+        }
+    }
+    body = json.dumps(data)
+    h = httplib2.Http()
+
+    resp, content = h.request("https://fcm.googleapis.com/fcm/send", method="POST", body=body,
+                              headers={'Content-Type': 'application/json;',
+                                       'Authorization': 'key=' + push_server_id})
+
+    if resp['status'] != '200':
+        error = '오류가 발생했습니다.'
+    return error
+
+
 def func_get_trainer_schedule_all(class_id, start_date, end_date):
     # 수업에 해당되는 회원의 숫자 불러오기
     query = "select count(B."+ScheduleTb._meta.get_field('schedule_id').column+") from "+ScheduleTb._meta.db_table +\
             " as B where B."+ScheduleTb._meta.get_field('lecture_schedule_id').column+" =`"+ScheduleTb._meta.db_table +\
             "`.`"+ScheduleTb._meta.get_field('schedule_id').column+"` " \
             " AND B."+ScheduleTb._meta.get_field('state_cd').column+" != \'PC\'" \
+            " AND B."+ScheduleTb._meta.get_field('permission_state_cd').column+" = \'AP\'" \
             " AND B."+ScheduleTb._meta.get_field('use').column+"="+str(USE)
+
+    query_wait = "select count(B."+ScheduleTb._meta.get_field('schedule_id').column+") from "+ScheduleTb._meta.db_table +\
+                 " as B where B."+ScheduleTb._meta.get_field('lecture_schedule_id').column+" =`"+ScheduleTb._meta.db_table +\
+                 "`.`"+ScheduleTb._meta.get_field('schedule_id').column+"` " \
+                 " AND B."+ScheduleTb._meta.get_field('permission_state_cd').column+" = \'WP\'" \
+                 " AND B."+ScheduleTb._meta.get_field('use').column+"="+str(USE)
 
     # 그룹 수업에 속한 회원들의 일정은 제외하고 불러온다.
     schedule_data = ScheduleTb.objects.select_related(
         'member_ticket_tb__member', 'reg_member', 'mod_member',
         'lecture_tb').filter(class_tb=class_id, start_dt__gte=start_date, start_dt__lt=end_date,
                              lecture_schedule_id__isnull=True,
-                             use=USE).annotate(lecture_current_member_num=RawSQL(query,
-                                                                                 [])).order_by('start_dt', 'reg_dt')
+                             use=USE).annotate(lecture_current_member_num=RawSQL(query, []),
+                                               lecture_wait_member_num=RawSQL(query_wait, [])).order_by('start_dt',
+                                                                                                        'reg_dt')
 
     ordered_schedule_dict = collections.OrderedDict()
     temp_schedule_date = None
@@ -773,11 +998,14 @@ def func_get_trainer_schedule_all(class_id, start_date, end_date):
             lecture_id = schedule_info.lecture_tb_id
             lecture_name = schedule_info.lecture_tb.name
             lecture_current_member_num = schedule_info.lecture_current_member_num
-            schedule_type = 2
+            lecture_wait_member_num = schedule_info.lecture_wait_member_num
+            if schedule_info.lecture_tb.lecture_type_cd != LECTURE_TYPE_ONE_TO_ONE:
+                schedule_type = GROUP_SCHEDULE
         except AttributeError:
             lecture_id = ''
             lecture_name = ''
             lecture_current_member_num = ''
+            lecture_wait_member_num = ''
         mod_member_id = ''
         mod_member_name = ''
         if schedule_info.mod_member is not None and schedule_info.mod_member != '':
@@ -788,6 +1016,7 @@ def func_get_trainer_schedule_all(class_id, start_date, end_date):
                                    'start_time': schedule_start_time,
                                    'end_time': schedule_end_time,
                                    'state_cd': schedule_info.state_cd,
+                                   'permission_state_cd': schedule_info.permission_state_cd,
                                    'schedule_type': schedule_type,
                                    'note': schedule_info.note,
                                    'reg_member_id': str(schedule_info.reg_member_id),
@@ -805,7 +1034,8 @@ def func_get_trainer_schedule_all(class_id, start_date, end_date):
                                    'lecture_end_color_cd': schedule_info.end_color_cd,
                                    'lecture_end_font_color_cd': schedule_info.end_font_color_cd,
                                    'lecture_max_member_num': schedule_info.max_mem_count,
-                                   'lecture_current_member_num': lecture_current_member_num})
+                                   'lecture_current_member_num': lecture_current_member_num,
+                                   'lecture_wait_member_num': lecture_wait_member_num})
 
         ordered_schedule_dict[schedule_start_date] = date_schedule_list
 
@@ -830,8 +1060,13 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
                                                                                  [])).order_by('start_dt', 'reg_dt')
 
     try:
-        lecture_one_to_one = LectureTb.objects.get(class_tb_id=class_id,
-                                                   lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, state_cd='IP', use=USE)
+        lecture_one_to_one = LectureTb.objects.filter(class_tb_id=class_id,
+                                                      lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE,
+                                                      state_cd='IP', use=USE).earliest('reg_dt')
+        # if len(lecture_one_to_one_data) > 0:
+        #     lecture_one_to_one = lecture_one_to_one_data[0]
+        # else:
+        #     lecture_one_to_one = None
     except ObjectDoesNotExist:
         lecture_one_to_one = None
 
@@ -869,13 +1104,14 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
             lecture_id = schedule_info.lecture_tb.lecture_id
             lecture_name = schedule_info.lecture_tb.name
             lecture_current_member_num = schedule_info.lecture_current_member_num
-            schedule_type = '2'
+            if schedule_info.lecture_tb.lecture_type_cd != LECTURE_TYPE_ONE_TO_ONE:
+                schedule_type = GROUP_SCHEDULE
         except AttributeError:
             lecture_id = ''
             lecture_name = ''
             lecture_current_member_num = ''
             if lecture_one_to_one is not None:
-                if str(schedule_type) == '0':
+                if str(schedule_type) == str(OFF_SCHEDULE):
                     lecture_id = ''
                     lecture_name = 'OFF'
                     lecture_current_member_num = 0
@@ -883,6 +1119,7 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
                     lecture_id = lecture_one_to_one.lecture_id
                     lecture_name = lecture_one_to_one.name
                     lecture_current_member_num = 1
+
         lecture_schedule_list = []
         lecture_member_schedule_data = ScheduleTb.objects.select_related(
             'member_ticket_tb__member', 'reg_member').filter(class_tb_id=class_id, lecture_schedule_id=schedule_id,
@@ -908,6 +1145,7 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
                                      'start_dt': str(lecture_member_schedule_info.start_dt),
                                      'end_dt': str(lecture_member_schedule_info.end_dt),
                                      'state_cd': lecture_member_schedule_info.state_cd,
+                                     'permission_state_cd': lecture_member_schedule_info.permission_state_cd,
                                      'note': lecture_member_schedule_info.note,
                                      'reg_member_id': str(lecture_member_schedule_info.reg_member_id),
                                      'reg_member_name': lecture_member_schedule_info.reg_member.name,
@@ -929,6 +1167,7 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
                                    'start_time': schedule_start_time,
                                    'end_time': schedule_end_time,
                                    'state_cd': schedule_info.state_cd,
+                                   'permission_state_cd': schedule_info.permission_state_cd,
                                    'schedule_type': schedule_type,
                                    'note': schedule_info.note,
                                    'reg_member_id': str(schedule_info.reg_member_id),
@@ -995,7 +1234,8 @@ def func_get_member_schedule_all_by_member_ticket(class_id, member_id, page):
             lecture_id = lecture_info.lecture_id
             lecture_name = lecture_info.name
             lecture_max_member_num = lecture_info.member_num
-            schedule_type = 2
+            if lecture_info.lecture_type_cd != LECTURE_TYPE_ONE_TO_ONE:
+                schedule_type = GROUP_SCHEDULE
         except AttributeError:
             lecture_id = ''
             lecture_name = '개인수업'
@@ -1021,6 +1261,7 @@ def func_get_member_schedule_all_by_member_ticket(class_id, member_id, page):
                          'start_dt': str(member_schedule_info.start_dt),
                          'end_dt': str(end_dt),
                          'state_cd': member_schedule_info.state_cd,
+                         'permission_state_cd': member_schedule_info.permission_state_cd,
                          'note': member_schedule_info.note,
                          'reg_member_id': str(member_schedule_info.reg_member_id),
                          'reg_member_name': member_schedule_info.reg_member.name,
@@ -1067,7 +1308,8 @@ def func_get_member_schedule_all_by_schedule_dt(class_id, member_id, page):
         'lecture_tb').filter(
         class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, use=USE, member_ticket_tb__member_id=member_id,
         member_ticket_tb__use=USE).annotate(auth_cd=RawSQL(query_auth,
-                                                           [])).filter(auth_cd=AUTH_TYPE_VIEW).order_by('-start_dt')
+                                                           [])).filter(auth_cd=AUTH_TYPE_VIEW).order_by('start_dt',
+                                                                                                        'reg_dt')
     # paginator = Paginator(member_schedule_data, MEMBER_SCHEDULE_PAGINATION_COUNTER)
     # try:
     #     member_schedule_data = paginator.page(page)
@@ -1091,7 +1333,8 @@ def func_get_member_schedule_all_by_schedule_dt(class_id, member_id, page):
             lecture_id = lecture_info.lecture_id
             lecture_name = lecture_info.name
             lecture_max_member_num = lecture_info.member_num
-            schedule_type = 2
+            if lecture_info.lecture_type_cd != LECTURE_TYPE_ONE_TO_ONE:
+                schedule_type = GROUP_SCHEDULE
         except AttributeError:
             lecture_id = ''
             lecture_name = '개인수업'
@@ -1118,6 +1361,7 @@ def func_get_member_schedule_all_by_schedule_dt(class_id, member_id, page):
                          'start_dt': str(member_schedule_info.start_dt),
                          'end_dt': str(end_dt),
                          'state_cd': member_schedule_info.state_cd,
+                         'permission_state_cd': member_schedule_info.permission_state_cd,
                          'note': member_schedule_info.note,
                          'reg_member_id': str(member_schedule_info.reg_member_id),
                          'reg_member_name': member_schedule_info.reg_member.name,
@@ -1145,6 +1389,107 @@ def func_get_member_schedule_all_by_schedule_dt(class_id, member_id, page):
     return schedule_list
 
 
+def func_get_permission_wait_schedule_all(class_id, page):
+    # ordered_schedule_dict = collections.OrderedDict()
+    # 회원의 일정중 강사가 볼수 있는 수강정보의 일정을 불러오기 위한 query
+    query_auth = "select " + ClassMemberTicketTb._meta.get_field('auth_cd').column + \
+                 " from " + ClassMemberTicketTb._meta.db_table + \
+                 " as B where B." + ClassMemberTicketTb._meta.get_field('member_ticket_tb').column + " = " \
+                 "`" + ScheduleTb._meta.db_table + "`.`" + \
+                 ScheduleTb._meta.get_field('member_ticket_tb').column + \
+                 "` and B.CLASS_TB_ID = " + str(class_id) + \
+                 " and B." + ClassMemberTicketTb._meta.get_field('use').column + "=" + str(USE)
+
+    member_schedule_data = ScheduleTb.objects.select_related(
+        'member_ticket_tb__member', 'reg_member', 'member_ticket_tb__ticket_tb',
+        'lecture_tb').filter(
+        class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, permission_state_cd=PERMISSION_STATE_CD_WAIT,
+        use=USE).annotate(auth_cd=RawSQL(query_auth, [])).filter(auth_cd=AUTH_TYPE_VIEW).order_by('start_dt',
+                                                                                                  'reg_dt')
+    # paginator = Paginator(member_schedule_data, MEMBER_SCHEDULE_PAGINATION_COUNTER)
+    # try:
+    #     member_schedule_data = paginator.page(page)
+    # except EmptyPage:
+    #     member_schedule_data = []
+    # schedule_idx = paginator.count
+
+    # try:
+    #     one_to_one_lecture = LectureTb.objects.get(class_tb_id=class_id, lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE,
+    #                                                use=USE)
+    #     lecture_one_to_one_color_cd = one_to_one_lecture.ing_color_cd
+    # except ObjectDoesNotExist:
+    #     lecture_one_to_one_color_cd = ''
+
+    try:
+        one_to_one_lecture = LectureTb.objects.filter(class_tb_id=class_id, lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE,
+                                                      use=USE).earliest('reg_dt')
+        lecture_one_to_one_color_cd = one_to_one_lecture.ing_color_cd
+    except ObjectDoesNotExist:
+        lecture_one_to_one_color_cd = ''
+
+    schedule_list = []
+    for member_schedule_info in member_schedule_data:
+        lecture_info = member_schedule_info.lecture_tb
+        schedule_type = member_schedule_info.en_dis_type
+
+        # 그룹 수업인 경우 그룹 정보 할당
+        try:
+            lecture_id = lecture_info.lecture_id
+            lecture_name = lecture_info.name
+            lecture_max_member_num = lecture_info.member_num
+            lecture_ing_color_cd = lecture_info.ing_color_cd
+            if lecture_info.lecture_type_cd != LECTURE_TYPE_ONE_TO_ONE:
+                schedule_type = GROUP_SCHEDULE
+        except AttributeError:
+            lecture_id = ''
+            lecture_name = '개인수업'
+            lecture_max_member_num = '1'
+            lecture_ing_color_cd = lecture_one_to_one_color_cd
+
+        member_name = ''
+        if member_schedule_info.member_ticket_tb is not None and member_schedule_info.member_ticket_tb != '':
+            member_name = member_schedule_info.member_ticket_tb.member.name
+        member_schedule_info_start_dt_split = str(member_schedule_info.start_dt).split(' ')
+        schedule_date = member_schedule_info_start_dt_split[0]
+        schedule_time = member_schedule_info_start_dt_split[1]
+        end_dt_time = str(member_schedule_info.end_dt).split(' ')[1]
+        if end_dt_time == '00:00:00':
+            end_dt_time = '24:00'
+        schedule_time += '~'+end_dt_time
+
+        mod_member_id = ''
+        mod_member_name = ''
+        if member_schedule_info.mod_member is not None and member_schedule_info.mod_member != '':
+            mod_member_id = member_schedule_info.mod_member_id
+            mod_member_name = member_schedule_info.mod_member.name
+        # 일정 정보를 추가하고 수강권에 할당
+        schedule_info = {
+                         # 'schedule_idx': str(schedule_idx),
+                         'schedule_id': str(member_schedule_info.schedule_id),
+                         'lecture_id': str(lecture_id),
+                         'lecture_name': lecture_name,
+                         'lecture_max_member_num': lecture_max_member_num,
+                         'lecture_ing_color_cd': lecture_ing_color_cd,
+                         'member_name': member_name,
+                         'schedule_type': schedule_type,
+                         'schedule_date': schedule_date,
+                         'schedule_time': schedule_time,
+                         'state_cd': member_schedule_info.state_cd,
+                         'permission_state_cd': member_schedule_info.permission_state_cd,
+                         'note': member_schedule_info.note,
+                         'reg_member_id': str(member_schedule_info.reg_member_id),
+                         'reg_member_name': member_schedule_info.reg_member.name,
+                         'mod_member_id': str(mod_member_id),
+                         'mod_member_name': mod_member_name,
+                         'mod_dt': str(member_schedule_info.mod_dt),
+                         'reg_dt': str(member_schedule_info.reg_dt),
+                         }
+        schedule_list.append(schedule_info)
+        # schedule_idx -= 1
+        # ordered_schedule_dict[member_ticket_id] = schedule_list
+    return schedule_list
+
+
 def func_get_member_schedule_all_by_monthly(class_id, member_id, page):
     monthly_schedule_data_dict = collections.OrderedDict()
     # 회원의 일정중 강사가 볼수 있는 수강정보의 일정을 불러오기 위한 query
@@ -1161,7 +1506,8 @@ def func_get_member_schedule_all_by_monthly(class_id, member_id, page):
         'lecture_tb').filter(
         class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, use=USE, member_ticket_tb__member_id=member_id,
         member_ticket_tb__use=USE).annotate(auth_cd=RawSQL(query_auth,
-                                                           [])).filter(auth_cd=AUTH_TYPE_VIEW).order_by('-start_dt')
+                                                           [])).filter(auth_cd=AUTH_TYPE_VIEW).order_by('start_dt',
+                                                                                                        'reg_dt')
     # paginator = Paginator(member_schedule_data, MEMBER_SCHEDULE_PAGINATION_COUNTER)
     # try:
     #     member_schedule_data = paginator.page(page)
@@ -1185,7 +1531,8 @@ def func_get_member_schedule_all_by_monthly(class_id, member_id, page):
             lecture_id = lecture_info.lecture_id
             lecture_name = lecture_info.name
             lecture_max_member_num = lecture_info.member_num
-            schedule_type = 2
+            if lecture_info.lecture_type_cd != LECTURE_TYPE_ONE_TO_ONE:
+                schedule_type = GROUP_SCHEDULE
         except AttributeError:
             lecture_id = ''
             lecture_name = '개인수업'
@@ -1215,6 +1562,7 @@ def func_get_member_schedule_all_by_monthly(class_id, member_id, page):
                          'start_dt': str(member_schedule_info.start_dt),
                          'end_dt': str(end_dt),
                          'state_cd': member_schedule_info.state_cd,
+                         'permission_state_cd': member_schedule_info.permission_state_cd,
                          'note': member_schedule_info.note,
                          'reg_member_id': str(member_schedule_info.reg_member_id),
                          'reg_member_name': member_schedule_info.reg_member.name,
@@ -1274,7 +1622,8 @@ def func_get_lecture_schedule_all(class_id, lecture_id):
             lecture_name = schedule_info.lecture_tb.name
             lecture_max_member_num = schedule_info.lecture_tb.member_num
             lecture_current_member_num = schedule_info.lecture_current_member_num
-            schedule_type = 2
+            if schedule_info.lecture_tb.lecture_type_cd != LECTURE_TYPE_ONE_TO_ONE:
+                schedule_type = GROUP_SCHEDULE
         except AttributeError:
             lecture_id = ''
             lecture_name = ''
@@ -1295,6 +1644,7 @@ def func_get_lecture_schedule_all(class_id, lecture_id):
                                       'start_dt': str(schedule_info.start_dt),
                                       'end_dt': str(end_dt),
                                       'state_cd': schedule_info.state_cd,
+                                      'permission_state_cd': schedule_info.permission_state_cd,
                                       'schedule_type': schedule_type,
                                       'note': schedule_info.note,
                                       'reg_member_id': str(schedule_info.reg_member_id),

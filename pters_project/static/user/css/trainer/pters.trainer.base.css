@@ -99,7 +99,8 @@
     /* Element */
     --border-article: 1px solid #292727;
     --border-article-dark: 1px solid #5c5859;
-    --box-shadow-article: 0 0 24px 0 rgba(10, 10, 10, 0.24);
+    /* --box-shadow-article: 0 0 24px 0 rgba(10, 10, 10, 0.24); */
+    --box-shadow-article: 0 0 24px 0 black;
 
     /* image filter */
     --transform-invert:unset;
@@ -339,6 +340,60 @@
         z-index: 0;
         opacity: 0;
         left: 1%;
+    }
+}
+
+.anim_blink{
+    position: relative;
+    /* animation-name: border-bg-blink;
+	animation-duration: 1s;
+	animation-delay: 0;
+	animation-direction: normal;
+	animation-iteration-count: infinite; 
+    animation-timing-function: ease-in-out; */
+}
+.anim_blink::before{
+    content:"";
+    border:6px solid orange;
+    position: absolute;
+    bottom:0px;
+    right:0px;
+    border-top-color: transparent;
+    border-left-color: transparent;
+    z-index: 1;
+    animation-name: border-bg-blink;
+	animation-duration: 1.5s;
+	animation-delay: 0;
+	animation-direction: normal;
+	animation-iteration-count: infinite; 
+    animation-timing-function: ease-in-out;
+}
+.anim_blink::after{
+    content:"";
+    border:7px solid var(--bg-main);
+    position: absolute;
+    bottom:0px;
+    right:0px;
+    border-top-color: transparent;
+    border-left-color: transparent;
+    z-index: 0;
+    /* animation-name: border-bg-blink;
+	animation-duration: 1s;
+	animation-delay: 0;
+	animation-direction: normal;
+	animation-iteration-count: infinite; 
+    animation-timing-function: ease-in-out; */
+}
+
+@keyframes border-bg-blink{
+    0%{
+        opacity: 1;
+    }
+    60%{
+        opacity: 0.5;
+    }
+    100%{
+        opacity: 1;
     }
 }
 
