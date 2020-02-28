@@ -3905,6 +3905,7 @@ def add_program_info_logic(request):
     if error is None:
         try:
             with transaction.atomic():
+
                 class_info = ClassTb(member_id=request.user.id, center_tb_id=center_id,
                                      subject_cd=subject_cd, start_date=start_date, end_date=end_date,
                                      class_hour=class_hour, start_hour_unit=start_hour_unit,
@@ -3925,13 +3926,43 @@ def add_program_info_logic(request):
                                                     lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, member_num=1, use=USE)
                 one_to_one_lecture_info.save()
 
-                ticket_info = TicketTb(class_tb_id=class_info.class_id, name='개인 수업',
+                ticket_info = TicketTb(class_tb_id=class_info.class_id, name='개인 수업 - 수강권',
                                        state_cd=STATE_CD_IN_PROGRESS, use=USE)
                 ticket_info.save()
 
                 ticket_lecture_info = TicketLectureTb(class_tb_id=class_info.class_id,
                                                       ticket_tb_id=ticket_info.ticket_id,
                                                       lecture_tb_id=one_to_one_lecture_info.lecture_id, use=USE)
+                ticket_lecture_info.save()
+
+                group_lecture_info = LectureTb(class_tb_id=class_info.class_id, name='2:1 그룹 수업',
+                                               ing_color_cd='#d8d6ff', end_color_cd='#d2d1cf',
+                                               ing_font_color_cd='#282828', end_font_color_cd='#282828',
+                                               state_cd=STATE_CD_IN_PROGRESS, lecture_minute=60,
+                                               lecture_type_cd=LECTURE_TYPE_NORMAL, member_num=2, use=USE)
+                group_lecture_info.save()
+
+                ticket_group_info = TicketTb(class_tb_id=class_info.class_id, name='2:1 그룹 수업 - 수강권',
+                                             state_cd=STATE_CD_IN_PROGRESS, use=USE)
+                ticket_group_info.save()
+
+                ticket_lecture_info = TicketLectureTb(class_tb_id=class_info.class_id,
+                                                      ticket_tb_id=ticket_group_info.ticket_id,
+                                                      lecture_tb_id=group_lecture_info.lecture_id, use=USE)
+                ticket_lecture_info.save()
+
+                ticket_total_info = TicketTb(class_tb_id=class_info.class_id, name='통합 수강권',
+                                             state_cd=STATE_CD_IN_PROGRESS, use=USE)
+                ticket_total_info.save()
+
+                ticket_lecture_info = TicketLectureTb(class_tb_id=class_info.class_id,
+                                                      ticket_tb_id=ticket_total_info.ticket_id,
+                                                      lecture_tb_id=one_to_one_lecture_info.lecture_id, use=USE)
+                ticket_lecture_info.save()
+
+                ticket_lecture_info = TicketLectureTb(class_tb_id=class_info.class_id,
+                                                      ticket_tb_id=ticket_total_info.ticket_id,
+                                                      lecture_tb_id=group_lecture_info.lecture_id, use=USE)
                 ticket_lecture_info.save()
 
         except ValueError:

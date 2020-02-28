@@ -233,7 +233,7 @@ body{
 .group_select_box_on{
     display:inline-block;
     width: 146px;
-    height: 46px;
+    height: 48%;
     line-height: 46px;
     border-radius: 2px;
     background-color: #fe4e65;
@@ -250,7 +250,7 @@ body{
 .group_select_box_off{
     display:inline-block;
     width: 146px;
-    height: 46px;
+    height: 48%;
     line-height: 46px;
     border-radius: 2px;
     background-color:#ffffff;

@@ -350,7 +350,7 @@ class Lecture_add{
         }
 
         let data = {
-                    "ticket_name":this.data.name,
+                    "ticket_name":this.data.name+' - 수강권',
                     "lecture_id_list[]":[lecture_id],
                     // "ticket_effective_days":30,
                     // "ticket_reg_count":this.data.count,
