@@ -98,7 +98,11 @@
                 <div class="wrapper_my_history_detail_member_ticket_record obj_table_cell_x5" {% if schedule_info.daily_record_tb.is_member_view %}onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_plan_daily_record', 90, POPUP_FROM_BOTTOM, {'schedule_id':'{{ schedule_info.schedule_id }}'})" style="cursor: pointer;"{% endif %}>
                     {% if schedule_info.daily_record_tb.is_member_view %}확인{% endif %}
                 </div>
-                <div class="wrapper_my_history_detail_member_ticket_status obj_table_cell_x5">{{ schedule_info.status }}<br/>({{ schedule_info.permission }})</div>
+                <div class="wrapper_my_history_detail_member_ticket_status obj_table_cell_x5">
+                    <span style="color:{% if schedule_info.state_cd == 'PE' %}green{% elif schedule_info.state_cd == 'PC' %}red{% else %}black{% endif %}">
+                        {% if schedule_info.state_cd == 'PE' %}출석{% else %}{{ schedule_info.status }}{% endif %}</span>
+                    <br/><span style="{% if schedule_info.permission_state_cd == 'WP' %}color:orange;{% endif %}">({{ schedule_info.permission }})</span>
+                </div>
             </div>
             {% endfor %}
         </div>
