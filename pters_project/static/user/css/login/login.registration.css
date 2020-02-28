@@ -96,9 +96,9 @@ body{
     margin: 0 20px;
     overflow-y:hidden;
     overflow-x:hidden;
-    padding-top:40px;
-    height: calc(100% - 390px);
-    min-height: 300px;
+    /* padding-top:40px; */
+    /* height: calc(100% - 390px); */
+    /* min-height: 300px; */
 }
 .login_foot{
     bottom:0;
@@ -154,6 +154,7 @@ body{
 .pters_download{
     position: absolute;
     bottom: 0;
+    z-index: 1;
 }
 .pters_download img{
     display: none;
