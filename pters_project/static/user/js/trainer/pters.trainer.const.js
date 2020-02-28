@@ -335,7 +335,7 @@ const LECTURE_TYPE_NORMAL = 'NORMAL';
 
 //프로그램 리스트
 const PROGRAM_CATEGORY = {
-    TR:{name:"운동", 
+    TR:{name:"스포츠",
         sub_category:{
             WT:{name:"웨이트 트레이닝"},
             PI:{name:"필라테스"},
