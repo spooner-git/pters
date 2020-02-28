@@ -252,7 +252,7 @@ class Home {
             let title = programs[i].program_subject_type_name;
             let icon = DELETE;
             let icon_r_visible = HIDE;
-            let icon_r_text = `${TEXT.word.change[language]} ${CImg.arrow_right(["var(--img-sub1)"], {"vertical-align":"middle"})}`;
+            let icon_r_text = `${TEXT.word.program[language]} ${TEXT.word.change[language]} ${CImg.arrow_right(["var(--img-sub1)"], {"vertical-align":"middle"})}`;
             let style = {"font-size":"15px", "font-weight":"bold"};
             let onclick = ()=>{
                 let inspect = pass_inspector.program_read();

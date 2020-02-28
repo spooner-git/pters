@@ -296,7 +296,7 @@ class Plan_add{
         <div class="plan_add_bottom_tools_wrap">
             <div class="list_type_tab_wrap">
                 <div onclick="${this.instance}.switch_type('lesson');" class="list_tab_content ${this.list_type == "lesson" ? "tab_selected" : ""}">수업</div>
-                <div onclick="${this.instance}.switch_type('off');" class="list_tab_content ${this.list_type == "off" ? "tab_selected" : ""}">OFF</div>
+                <div onclick="${this.instance}.switch_type('off');" class="list_tab_content ${this.list_type == "off" ? "tab_selected" : ""}">OFF(일반일정)</div>
             </div>
         </div>
         `;
