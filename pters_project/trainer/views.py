@@ -2425,6 +2425,12 @@ def delete_lecture_info_logic(request):
         lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
     except ObjectDoesNotExist:
         error = '오류가 발생했습니다.'
+    if error is None:
+        if lecture_info.lecture_type_cd == LECTURE_TYPE_ONE_TO_ONE:
+            lecture_counter = LectureTb.objects.filter(class_tb_id=class_id,
+                                                       lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, use=USE).count()
+            if lecture_counter == 1:
+                error = '개인 수업을 삭제 할 수 없습니다.'
 
     ticket_lecture_data = TicketLectureTb.objects.filter(lecture_tb_id=lecture_id, use=USE)
 
@@ -2651,7 +2657,14 @@ def update_lecture_status_info_logic(request):
 
     if error is None:
         if lecture_info.lecture_type_cd == LECTURE_TYPE_ONE_TO_ONE:
-            error = '개인 수업은 상태 변경이 불가합니다.'
+            if state_cd == STATE_CD_FINISH:
+                lecture_counter = LectureTb.objects.filter(class_tb_id=class_id,
+                                                           lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE,
+                                                           state_cd=STATE_CD_IN_PROGRESS,
+                                                           use=USE).count()
+                if lecture_counter == 1:
+                    error = '개인 수업을 비활성화 할 수 없습니다.'
+            # error = '개인 수업은 상태 변경이 불가합니다.'
 
     if error is None:
         ticket_lecture_data = TicketLectureTb.objects.filter(class_tb_id=class_id, lecture_tb_id=lecture_id, use=USE)

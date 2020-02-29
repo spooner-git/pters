@@ -153,7 +153,7 @@ class Lecture_view{
         // let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();lecture_view_popup.clear();">${CImg.arrow_left()}</span>`;
         let top_left = `<span class="icon_left" onclick=";lecture_view_popup.upper_left_menu();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right" ${this.data.capacity == 1 && this.data.lecture_type_cd == LECTURE_TYPE_ONE_TO_ONE ? 'style="display:none"' : '' } onclick="lecture_view_popup.upper_right_menu();">${CImg.more()}</span>`;
+        let top_right = `<span class="icon_right" onclick="lecture_view_popup.upper_right_menu();">${CImg.more()}</span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
         
@@ -177,7 +177,7 @@ class Lecture_view{
     dom_wrapper_top(){
         let top_left = `<span class="icon_left" onclick="lecture_view_popup.upper_left_menu();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right" ${this.data.capacity == 1 && this.data.lecture_type_cd == LECTURE_TYPE_ONE_TO_ONE ? 'style="display:none"' : '' } onclick="lecture_view_popup.upper_right_menu();">${CImg.more()}</span>`;
+        let top_right = `<span class="icon_right" onclick="lecture_view_popup.upper_right_menu();">${CImg.more()}</span>`;
         return {left: top_left, center:top_center, right:top_right};
     }
 
@@ -253,7 +253,7 @@ class Lecture_view{
             // this.send_data();
             this.if_user_changed_any_information = true;
         }, pattern, pattern_message, required);
-        let one_to_one_lesson_description = this.data.lecture_type_cd == LECTURE_TYPE_ONE_TO_ONE ? "<div style='font-size:11px;color:var(--font-sub-normal);'>이 수업은 정원 수정, 비활성화 할 수 없습니다.</div>" : "";
+        let one_to_one_lesson_description = this.data.lecture_type_cd == LECTURE_TYPE_ONE_TO_ONE ? "<div style='font-size:11px;color:var(--font-sub-normal);'>이 수업은 정원을 수정 할 수 없습니다.</div>" : "";
         let html = `
         <div class="lecture_view_upper_box">
             <div style="display:inline-block;width:100%;">
