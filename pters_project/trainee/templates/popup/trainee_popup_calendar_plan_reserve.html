@@ -42,22 +42,34 @@
                 <div class="obj_box_full">
                     <div class="obj_table_raw wrapper_ticket_info">
                         <div class="wrapper_ticket_icon_personal obj_table_cell_x3"><img src="/static/common/icon/member_icon_person_black.png"></div>
-                        <div class="wrapper_ticket_name obj_table_cell_x3 obj_font_size_15_weight_normal ">개인 수업
+                        <div class="wrapper_ticket_name obj_table_cell_x3 obj_font_size_13_weight_normal ">
+                            {% if one_to_one_lecture_data|length == 1 %}
+                                {% for one_to_one_lecture_info in one_to_one_lecture_data %}
+                                    {{ one_to_one_lecture_info.lecture_tb.name }}
+                                {% endfor %}
+                            {% else %}
+                                <select class="lecture_selector obj_font_size_14_weight_500 obj_font_color_light_grey"
+                                        title="lecture_select" onchange="refresh_time_selector(this);">
+{#                                    <option selected disabled>수업 선택</option>#}
+                                {% for one_to_one_lecture_info in one_to_one_lecture_data %}
+                                    <option data-lecture_id="{{ one_to_one_lecture_info.lecture_tb_id }}" data-lecture_minute="{{ one_to_one_lecture_info.lecture_tb.lecture_minute }}"
+                                            {% if forloop.first %}selected{% endif %}>
+                                        {{ one_to_one_lecture_info.lecture_tb.name }}
+                                    </option>
+                                {% endfor %}
+                                </select>
+                            {% endif %}
                         {% if request.session.setting_member_private_class_auto_permission == 0 %}
                             [대기 예약]
                         {% endif %}
                         </div>
                         <div class="wrapper_ticket_reserve_avail_count obj_table_cell_x3 obj_font_size_12_weight_normal">(예약 가능: {% if member_ticket_reg_count >= 99999 %}무제한{% else %}{{ member_ticket_avail_count }}  번{% endif %})</div>
                     </div>
-                    <div class="wrapper_reserve_form_data">
+                    <div class="wrapper_reserve_form_data_private">
                         <div class="obj_table_raw">
-                            <select class="obj_font_size_14_weight_500 obj_font_color_light_grey" title="time_select">
+                            <select class="obj_font_size_14_weight_500 obj_font_color_light_grey"  title="time_select">
                                 <option selected disabled>예약 시간 선택</option>
-                                <option data-start="2019-03-04 08:00" data-end="2019-03-04 09:00">08:00 ~ 09:00</option>
-                                <option data-start="2019-03-04 11:00" data-end="2019-03-04 13:00">11:00 ~ 13:00</option>
-                                <option data-start="2019-03-04 21:00" data-end="2019-03-04 22:00">21:00 ~ 22:00</option>
                             </select>
-                            <img src="/static/common/icon/member_icon_expand_more_black.png" class="obj_icon_arrow">
                         </div>
                     </div>
                     <div class="wrapper_reserve_caution obj_font_size_11_weight_500 obj_font_color_grey">
@@ -130,10 +142,12 @@
 {% block popup_base_js %}
     <script type="text/javascript" src={% static_url "user/js/trainee/popup/pters.trainee.popup.calendar_plan_reserve.js" %}></script>
     <script type="text/javascript">
+        let selected_date = `{{ select_date }}`.split(' ')[0];
         let one_to_one_lecture_time_duration = {{ one_to_one_lecture_time_duration }};
+        let one_to_one_lecture_id = {{ one_to_one_lecture_id }};
         $(document).ready(function(){
             $('#form_plan_add').find('input').val('');
-            let selected_date = `{{ select_date }}`.split(' ')[0];
+            $('#form_content_lecture_id').val(one_to_one_lecture_id);
             func_get_ajax_schedule_data_temp(selected_date.replace(/\./gi, '-'), function(schedule_json){
                 func_start_time_dom_draw('select[title="time_select"]', selected_date, schedule_json, setting_info, one_to_one_lecture_time_duration);
                 {#                func_lecture_time_dom_draw('#reserve_form_lecture', selected_date, schedule_json, setting_info);#}
@@ -144,6 +158,18 @@
                 {% endif %}
             {% endif %}
         });
+
+        function refresh_time_selector(data){
+            let selected_option = data.selectedOptions[0];
+            let lecture_time_duration = selected_option.getAttribute('data-lecture_minute');
+            $('#form_plan_add').find('input').val('');
+            $('#form_content_lecture_id').val(selected_option.getAttribute('data-lecture_id'));
+            func_get_ajax_schedule_data_temp(selected_date.replace(/\./gi, '-'), function(schedule_json){
+                func_start_time_dom_draw('select[title="time_select"]', selected_date, schedule_json, setting_info, lecture_time_duration);
+                {#                func_lecture_time_dom_draw('#reserve_form_lecture', selected_date, schedule_json, setting_info);#}
+            });
+
+        }
 
         function cancel_enable_check_func(){
             // 취소 가능 날짜+시간 계산하기

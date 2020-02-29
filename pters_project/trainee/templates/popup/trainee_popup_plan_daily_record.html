@@ -21,7 +21,13 @@
                 <div class="obj_box_full">
                     
                         <div class="obj_table_cell_x2" style="width:auto;">
-                            {% if daily_record_info.schedule_info.lecture_tb %}(그룹) {{ next_schedule_info.lecture_tb.name }}{% else %}(개인) 개인 수업{% endif %}
+                        {% if daily_record_info.schedule_info.lecture_tb.lecture_type_cd == 'NORMAL' %}(그룹) {% else %}(개인) {% endif %}
+                        {% if daily_record_info.schedule_info.lecture_tb %}
+                            {{ daily_record_info.schedule_info.lecture_tb.name }}
+                        {% else %}
+                            개인 수업
+                        {% endif %}
+{#                            {% if daily_record_info.schedule_info.lecture_tb %}(그룹) {{ next_schedule_info.lecture_tb.name }}{% else %}(개인) 개인 수업{% endif %}#}
                         </div>
                 </div>
                 <div class="obj_table_raw obj_box_full">

@@ -1082,9 +1082,16 @@ def add_repeat_schedule_logic(request):
             if member_id == '':
                 error = '회원을 선택해 주세요.'
             else:
-                member_ticket_id = func_get_member_ticket_id(class_id, member_id)
-                if member_ticket_id is None or member_ticket_id == '':
-                    error = '등록할수 있는 일정이 없습니다.'
+                member_ticket_result = func_get_lecture_member_ticket_id(class_id, lecture_info.lecture_id,
+                                                                         member_id)
+                if member_ticket_result['error'] is not None:
+                    error = member_ticket_result['error']
+                else:
+                    member_ticket_id = member_ticket_result['member_ticket_id']
+
+                # member_ticket_id = func_get_member_ticket_id(class_id, member_id)
+                # if member_ticket_id is None or member_ticket_id == '':
+                #     error = '등록할수 있는 일정이 없습니다.'
 
     # 반복 일정 데이터 등록
     if error is None:
@@ -1133,8 +1140,11 @@ def add_repeat_schedule_logic(request):
                 # 개인 일정 추가라면 일정 추가해야할 lecture id 찾기
                 member_ticket_id = None
                 if lecture_info is not None and lecture_info.lecture_type_cd == LECTURE_TYPE_ONE_TO_ONE:
-                    member_ticket_id = func_get_member_ticket_id(class_id, member_id)
-                    if member_ticket_id is not None and member_ticket_id != '':
+                    # member_ticket_id = func_get_member_ticket_id(class_id, member_id)
+                    member_ticket_result = func_get_lecture_member_ticket_id(class_id, lecture_info.lecture_id,
+                                                                             member_id)
+                    if member_ticket_result['error'] is None:
+                        member_ticket_id = member_ticket_result['member_ticket_id']
                         schedule_check = 1
 
                 # OFF 일정이면 바로 등록
@@ -1412,12 +1422,12 @@ def add_repeat_schedule_confirm(request):
                                            class_type_name + ' - 수업 알림',
                                            # trainer_name + '님의 ' +
                                            str(start_date) + '~' + str(end_date)
-                                           + ' [개인] 수업 반복 일정이 등록됐습니다')
+                                           + ' ['+lecture_info.name + '] 반복 일정이 등록됐습니다',)
                 if str(en_dis_type) == str(ON_SCHEDULE_TYPE) and str(setting_to_shared_trainer_lesson_alarm) == str(TO_SHARED_TRAINER_LESSON_ALARM_ON):
                     func_send_push_trainer_trainer(class_id, class_type_name + ' - 수업 알림',
                                                    repeat_schedule_info.member_ticket_tb.member.name + '님의 ' +
                                                    str(start_date) + '~' + str(end_date)
-                                                   + ' [개인] 수업 반복 일정이 등록됐습니다', request.user.id)
+                                                   + ' ['+lecture_info.name + '] 반복 일정이 등록됐습니다', request.user.id)
 
     if error is None:
         if information is not None:

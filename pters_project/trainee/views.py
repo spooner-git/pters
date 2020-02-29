@@ -354,6 +354,7 @@ class ProgramSelectView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 # 일정 추가
 def add_trainee_schedule_logic(request):
     class_id = request.session.get('class_id', '')
+    lecture_id = request.POST.get('lecture_id', '')
     lecture_schedule_id = request.POST.get('lecture_schedule_id', None)
     training_date = request.POST.get('training_date', '')
     # time_duration = request.POST.get('time_duration', '')
@@ -366,6 +367,7 @@ def add_trainee_schedule_logic(request):
     end_date = None
     context = {'push_class_id': None, 'push_title': None, 'push_message': None}
     schedule_info = None
+    lecture_info = None
     member_ticket_id = None
     member_ticket_info = None
     error = None
@@ -398,9 +400,20 @@ def add_trainee_schedule_logic(request):
     #     except ObjectDoesNotExist:
     #         lt_res_member_time_duration = 60
 
+    if lecture_schedule_id == '' or lecture_schedule_id is None:
+        if lecture_id is None or lecture_id == '':
+            error = '오류가 발생했습니다.[-1]'
+
     if error is None:
         if lecture_schedule_id == '' or lecture_schedule_id is None:
-            member_ticket_id = func_get_member_ticket_id(class_id, request.user.id)
+            # member_ticket_id = func_get_member_ticket_id(class_id, request.user.id)
+            member_ticket_result = func_get_lecture_member_ticket_id_from_trainee(
+                class_id, lecture_id, request.user.id)
+
+            if member_ticket_result['error'] is not None:
+                error = member_ticket_result['error']
+            else:
+                member_ticket_id = member_ticket_result['member_ticket_id']
         # 그룹 Lecture Id 조회
         else:
             try:
@@ -433,7 +446,11 @@ def add_trainee_schedule_logic(request):
 
     if error is None:
         if lecture_schedule_id is None or lecture_schedule_id == '':
-            lecture_info = func_get_member_ticket_one_to_one_lecture_info(class_id, member_ticket_id)
+            try:
+                lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
+            except ObjectDoesNotExist:
+                error = '오류가 발생했습니다.[0]'
+            # lecture_info = func_get_member_ticket_one_to_one_lecture_info(class_id, member_ticket_id)
             if lecture_info is not None:
                 time_duration_temp = lecture_info.lecture_minute
             else:
@@ -516,7 +533,7 @@ def add_trainee_schedule_logic(request):
 
     if error is None:
         schedule_result = pt_add_logic_func(training_date, start_date, end_date, request.user.id, member_ticket_id,
-                                            class_id, request, lecture_schedule_id)
+                                            class_id, request, lecture_info, lecture_schedule_id)
         error = schedule_result['error']
         context['schedule_id'] = schedule_result['schedule_id']
     # if error is None:
@@ -1252,7 +1269,7 @@ class AlarmViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
 
 def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
-                      member_ticket_id, class_id, request, lecture_schedule_id):
+                      member_ticket_id, class_id, request, lecture_info, lecture_schedule_id):
 
     class_type_name = request.session.get('class_type_name', '')
     error = None
@@ -1261,7 +1278,7 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
     today = datetime.datetime.today()
     fifteen_days_after = today + datetime.timedelta(days=15)
     lecture_schedule_info = None
-    lecture_info = None
+    # lecture_info = None
     note = ''
     schedule_duplication = SCHEDULE_DUPLICATION_DISABLE
     schedule_result = {'error': None, 'schedule_id': ''}
@@ -1299,9 +1316,9 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
                 note = lecture_schedule_info.note
             except ObjectDoesNotExist:
                 error = '회원 정보를 불러오지 못했습니다.[0]'
-        else:
-            lecture_info = func_get_member_ticket_one_to_one_lecture_info(class_id, member_ticket_id)
-            lecture_schedule_id = None
+        # else:
+        #     lecture_info = func_get_member_ticket_one_to_one_lecture_info(class_id, member_ticket_id)
+        #     lecture_schedule_id = None
 
     if error is None:
         try:
@@ -1375,14 +1392,14 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
         log_info_schedule_start_date = str(start_date).split(':')
         log_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
 
-        lecture_name = '개인 수업'
+        lecture_name = lecture_info.name
         if lecture_schedule_id is not None and lecture_schedule_id != '':
             lecture_name = lecture_schedule_info.get_lecture_name()
             log_data = LogTb(log_type='LS01', auth_member_id=request.user.id,
                              from_member_name=request.user.first_name,
                              class_tb_id=class_id,
                              member_ticket_tb_id=member_ticket_id,
-                             log_info=lecture_schedule_info.get_lecture_name() + ' 수업', log_how=log_how,
+                             log_info=lecture_name + ' 수업', log_how=log_how,
                              log_detail=log_info_schedule_start_date[0] + ':' + log_info_schedule_start_date[1]
                                         + '/' + log_info_schedule_end_date[0] + ':' + log_info_schedule_end_date[1],
                              use=USE)
@@ -1391,7 +1408,7 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
             log_data = LogTb(log_type='LS01', auth_member_id=request.user.id,
                              from_member_name=request.user.first_name,
                              class_tb_id=class_id, member_ticket_tb_id=member_ticket_id,
-                             log_info='개인 수업', log_how=log_how,
+                             log_info=lecture_name, log_how=log_how,
                              log_detail=log_info_schedule_start_date[0] + ':' + log_info_schedule_start_date[1]
                                         + '/' + log_info_schedule_end_date[0] + ':' + log_info_schedule_end_date[1],
                              use=USE)
@@ -1590,11 +1607,12 @@ class PopupCalendarPlanReserveView(LoginRequiredMixin, AccessTestMixin, Template
             if len(ticket_lecture_data) == 0:
                 context['one_to_one_lecture_check'] = False
                 context['one_to_one_lecture_time_duration'] = 60
+                context['one_to_one_lecture_id'] = ''
             else:
                 context['one_to_one_lecture_check'] = True
                 lecture_tb_info = ticket_lecture_data[0].lecture_tb
                 context['one_to_one_lecture_time_duration'] = lecture_tb_info.lecture_minute
-                print(str(lecture_tb_info.lecture_minute))
+                context['one_to_one_lecture_id'] = lecture_tb_info.lecture_id
         # try:
         #     lecture_tb_info = LectureTb.objects.get(class_tb_id=class_id, lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, use=USE)
         #     context['one_to_one_lecture_time_duration'] = lecture_tb_info.lecture_minute
