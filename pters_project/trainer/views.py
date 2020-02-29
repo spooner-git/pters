@@ -997,9 +997,9 @@ def delete_member_info_logic(request):
                 if len(schedule_data) > 0:
                     # 예약된 일정 삭제
                     schedule_data.delete()
-                if len(repeat_schedule_data) > 0:
+                # if len(finish_schedule_data) > 0:
                     # 완료된 일정 비활성화
-                    finish_schedule_data.update(use=UN_USE)
+                    # finish_schedule_data.update(use=UN_USE)
                 if len(repeat_schedule_data) > 0:
                     # 반복일정 삭제
                     repeat_schedule_data.delete()
@@ -2435,32 +2435,32 @@ def delete_lecture_info_logic(request):
         with transaction.atomic():
 
             if error is None:
-                schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                          lecture_tb_id=lecture_id,
-                                                          end_dt__lte=timezone.now(),
-                                                          en_dis_type=ON_SCHEDULE_TYPE
-                                                          ).exclude(Q(state_cd=STATE_CD_FINISH)
-                                                                    | Q(state_cd=STATE_CD_ABSENCE))
+                # schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
+                #                                           lecture_tb_id=lecture_id,
+                #                                           end_dt__lte=timezone.now(),
+                #                                           en_dis_type=ON_SCHEDULE_TYPE
+                #                                           ).exclude(Q(state_cd=STATE_CD_FINISH)
+                #                                                     | Q(state_cd=STATE_CD_ABSENCE))
                 schedule_data_delete = ScheduleTb.objects.filter(class_tb_id=class_id, lecture_tb_id=lecture_id,
-                                                                 end_dt__gt=timezone.now(),
+                                                                 # end_dt__gt=timezone.now(),
                                                                  en_dis_type=ON_SCHEDULE_TYPE
                                                                  ).exclude(Q(state_cd=STATE_CD_FINISH)
                                                                            | Q(state_cd=STATE_CD_ABSENCE))
                 repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
                                                                        lecture_tb_id=lecture_id)
-                schedule_data_finish = ScheduleTb.objects.filter(Q(state_cd=STATE_CD_FINISH)
-                                                                 | Q(state_cd=STATE_CD_ABSENCE),
-                                                                 class_tb_id=class_id,
-                                                                 lecture_tb_id=lecture_id,
-                                                                 en_dis_type=ON_SCHEDULE_TYPE)
-                if len(schedule_data) > 0:
-                    schedule_data.update(state_cd=STATE_CD_FINISH, use=UN_USE)
+                # schedule_data_finish = ScheduleTb.objects.filter(Q(state_cd=STATE_CD_FINISH)
+                #                                                  | Q(state_cd=STATE_CD_ABSENCE),
+                #                                                  class_tb_id=class_id,
+                #                                                  lecture_tb_id=lecture_id,
+                #                                                  en_dis_type=ON_SCHEDULE_TYPE)
+                # if len(schedule_data) > 0:
+                #     schedule_data.update(state_cd=STATE_CD_FINISH)
                 if len(schedule_data_delete) > 0:
                     schedule_data_delete.delete()
                 if len(repeat_schedule_data) > 0:
                     repeat_schedule_data.delete()
-                if len(schedule_data_finish) > 0:
-                    schedule_data_finish.update(use=UN_USE)
+                # if len(schedule_data_finish) > 0:
+                #     schedule_data_finish.update(use=UN_USE)
 
                 # 관련 수간권 회원들 수강정보 업데이트
                 if len(ticket_lecture_data) > 0:

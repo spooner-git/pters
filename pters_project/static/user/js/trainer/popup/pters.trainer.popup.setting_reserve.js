@@ -448,7 +448,7 @@ class Setting_reserve{
         let data = {
             "setting_member_reserve_time_available":'00:00-23:59', //예약 가능 시간대
             "setting_member_reserve_prohibition":this.data.stop_reserve, // 예약 일시 정지
-            "setting_member_time_duration":this.data.time_for_private_reserve.value[0], //개인 수업 예약 시간
+            // "setting_member_time_duration":this.data.time_for_private_reserve.value[0], //개인 수업 예약 시간
             "setting_member_start_time": this.data.start_time_for_private_reserve.value[0], //개인 수업 예약 시작 시각
 
             "setting_member_reserve_date_available":this.data.available_reserve_date.value[0], //예약 가능 날짜

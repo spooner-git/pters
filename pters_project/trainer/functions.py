@@ -635,9 +635,9 @@ def func_delete_member_ticket_info(user_id, class_id, member_ticket_id):
     if error is None:
         schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, member_ticket_tb_id=member_ticket_id,
                                                   state_cd=STATE_CD_NOT_PROGRESS, use=USE)
-        schedule_data_finish = ScheduleTb.objects.filter(Q(state_cd=STATE_CD_FINISH) | Q(state_cd=STATE_CD_ABSENCE),
-                                                         class_tb_id=class_id,
-                                                         member_ticket_tb_id=member_ticket_id, use=USE)
+        # schedule_data_finish = ScheduleTb.objects.filter(Q(state_cd=STATE_CD_FINISH) | Q(state_cd=STATE_CD_ABSENCE),
+        #                                                  class_tb_id=class_id,
+        #                                                  member_ticket_tb_id=member_ticket_id, use=USE)
         repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
                                                                member_ticket_tb_id=member_ticket_id)
 
@@ -647,9 +647,9 @@ def func_delete_member_ticket_info(user_id, class_id, member_ticket_id):
                 if len(schedule_data) > 0:
                     # 예약된 일정 삭제
                     schedule_data.delete()
-                if len(repeat_schedule_data) > 0:
+                # if len(schedule_data_finish) > 0:
                     # 완료된 일정 비활성화
-                    schedule_data_finish.update(use=UN_USE)
+                    # schedule_data_finish.update(use=UN_USE)
                 if len(repeat_schedule_data) > 0:
                     # 반복일정 삭제
                     repeat_schedule_data.delete()
@@ -794,15 +794,15 @@ def func_get_trainer_setting_list(context, trainer_id, class_id, user_id):
             setting_member_public_class_wait_member_num = int(setting_info.setting_info)
         if setting_info.setting_type_cd == 'LT_RES_WAIT_SCHEDULE_AUTO_CANCEL_TIME':
             setting_member_wait_schedule_auto_cancel_time = int(setting_info.setting_info)
-    try:
-        lecture_info = LectureTb.objects.filter(class_tb_id=class_id, lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, use=USE).earliest('reg_dt')
-        # if len(lecture_data) > 0:
-        one_to_one_lecture_time_duration = lecture_info.lecture_minute
-        # print(str(one_to_one_lecture_time_duration))
-        # else:
-        #     one_to_one_lecture_time_duration = 60
-    except ObjectDoesNotExist:
-        one_to_one_lecture_time_duration = 60
+    # try:
+    #     lecture_info = LectureTb.objects.filter(class_tb_id=class_id, lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, use=USE).earliest('reg_dt')
+    #     # if len(lecture_data) > 0:
+    #     one_to_one_lecture_time_duration = lecture_info.lecture_minute
+    #     # print(str(one_to_one_lecture_time_duration))
+    #     # else:
+    #     #     one_to_one_lecture_time_duration = 60
+    # except ObjectDoesNotExist:
+    #     one_to_one_lecture_time_duration = 60
 
     if lt_res_cancel_time == -1:
         lt_res_cancel_time = lt_res_02*60
@@ -845,7 +845,7 @@ def func_get_trainer_setting_list(context, trainer_id, class_id, user_id):
     context['setting_member_reserve_enable_time'] = lt_res_enable_time
     context['setting_member_reserve_cancel_time'] = lt_res_cancel_time
     # context['setting_member_time_duration'] = one_to_one_lecture_time_duration
-    context['one_to_one_lecture_time_duration'] = one_to_one_lecture_time_duration
+    # context['one_to_one_lecture_time_duration'] = one_to_one_lecture_time_duration
     context['setting_member_start_time'] = lt_res_member_start_time
     context['setting_schedule_auto_finish'] = lt_schedule_auto_finish
     context['setting_member_ticket_auto_finish'] = lt_member_ticket_auto_finish
