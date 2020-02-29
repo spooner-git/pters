@@ -38,9 +38,14 @@ class Lecture_view{
                 lecture_state:null,
                 lecture_type_cd:null,
                 active_ticket_length:null,
-                update_this_to_all_plans:null
+                update_this_to_all_plans:null,
+                lecture_start_time:{value:[], text:[]}
         };
 
+        this.data_for_selector = {
+            lecture_start_time:
+                {value:["A-0", "A-30", "E-10", "E-15", "E-20", "E-30"], text:["매시각 정시", "매시각 30분", "10분 마다", "15분 마다", "20분 마다", "30분 마다"]}
+        };
         this.init();
 
     }
@@ -129,6 +134,9 @@ class Lecture_view{
 
             this.data.lecture_state = data.lecture_state_cd;
 
+            this.data.lecture_start_time.value[0] = data.lecture_start_time;
+            this.data.lecture_start_time.text[0] = this.data_for_selector.lecture_start_time.text[ this.data_for_selector.lecture_start_time.value.indexOf(data.lecture_start_time) ];
+
             this.render();
             func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
             // this.init();
@@ -184,9 +192,14 @@ class Lecture_view{
         let color = this.dom_row_color_view();
         let ticket_list = this.dom_row_ticket_list();
         let member_list = this.dom_row_member_list();
+        let lecture_start_time = this.dom_row_lecture_start_time();
 
         let capacity_assembly = '<div class="obj_input_box_full">' + CComponent.dom_tag('정원') + capacity + '</div>';
         let lecture_lecture_minute = '<div class="obj_input_box_full">' + CComponent.dom_tag('기본 수업 시간') + time + '</div>';
+        let lecture_lecture_start_time = '';
+        if(this.data.lecture_type_cd == LECTURE_TYPE_ONE_TO_ONE){
+            lecture_lecture_start_time = '<div class="obj_input_box_full">' + CComponent.dom_tag('회원 예약 시작 시각') + lecture_start_time + '</div>';
+        }
         let color_select_assembly =  '<div class="obj_input_box_full">' + CComponent.dom_tag('색상 태그') + color +  '</div>';
         let ticket_list_assembly = '<div class="obj_input_box_full" style="padding-top:16px;">' + CComponent.dom_tag(`이 수업을 포함하는 수강권 (${this.data.active_ticket_length} 개)`,
                                     {"font-size":"13px", "font-weight":"bold", "letter-spacing":"-0.6px", "padding":"0","padding-bottom":"8px", "color":"var(--font-sub-normal)", "height":"20px"})
@@ -201,6 +214,7 @@ class Lecture_view{
         }
 
         let html =  capacity_assembly +
+                    lecture_lecture_start_time +
                     lecture_lecture_minute +
                     color_select_assembly +
                     ticket_list_assembly +
@@ -239,7 +253,7 @@ class Lecture_view{
             // this.send_data();
             this.if_user_changed_any_information = true;
         }, pattern, pattern_message, required);
-        let one_to_one_lesson_description = this.data.capacity == 1 && this.data.lecture_type_cd == LECTURE_TYPE_ONE_TO_ONE ? "<div style='font-size:11px;color:var(--font-sub-normal);'>이 수업은 정원 수정, 비활성화 할 수 없습니다.</div>" : "";
+        let one_to_one_lesson_description = this.data.lecture_type_cd == LECTURE_TYPE_ONE_TO_ONE ? "<div style='font-size:11px;color:var(--font-sub-normal);'>이 수업은 정원 수정, 비활성화 할 수 없습니다.</div>" : "";
         let html = `
         <div class="lecture_view_upper_box">
             <div style="display:inline-block;width:100%;">
@@ -381,6 +395,33 @@ class Lecture_view{
         let pattern_message = "";
         let required = "";
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, onfocusout, pattern, pattern_message, required);
+        return html;
+    }
+    dom_row_lecture_start_time(){
+        let id = "lecture_start_time";
+        let title = this.data.lecture_start_time.text.length == 0 ? '' : this.data.lecture_start_time.text;
+        let icon = NONE;
+        let icon_r_visible = SHOW;
+        let icon_r_text = "";
+        let style = null;
+        // let style = {"height":"auto", "padding-bottom":"0"};
+
+        let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            let title = "회원 예약 시작 시간";
+            let install_target = "#wrapper_box_custom_select";
+            let multiple_select = 1;
+            let data = this.data_for_selector.lecture_start_time;
+            let selected_data = this.data.lecture_start_time;
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, popup_style, null, ()=>{
+                custom_selector = new CustomSelector(title, install_target, multiple_select, data, selected_data, (set_data)=>{
+                    this.data.lecture_start_time = set_data;
+                    this.render_content();
+                    this.if_user_changed_any_information = true;
+                });
+            });
+        });
+        let html = row;
         return html;
     }
 
@@ -552,6 +593,7 @@ class Lecture_view{
             "end_color_cd":"",
             "ing_font_color_cd":this.data.color_font[0],
             "end_font_color_cd":"",
+            "start_time":this.data.lecture_start_time.value[0],
             "update_this_to_all_plans":this.update_this_to_all_plans
         };
 

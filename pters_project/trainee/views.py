@@ -1608,11 +1608,13 @@ class PopupCalendarPlanReserveView(LoginRequiredMixin, AccessTestMixin, Template
                 context['one_to_one_lecture_check'] = False
                 context['one_to_one_lecture_time_duration'] = 60
                 context['one_to_one_lecture_id'] = ''
+                context['one_to_one_lecture_start_time'] = 'A-0'
             else:
                 context['one_to_one_lecture_check'] = True
                 lecture_tb_info = ticket_lecture_data[0].lecture_tb
                 context['one_to_one_lecture_time_duration'] = lecture_tb_info.lecture_minute
                 context['one_to_one_lecture_id'] = lecture_tb_info.lecture_id
+                context['one_to_one_lecture_start_time'] = lecture_tb_info.start_time
         # try:
         #     lecture_tb_info = LectureTb.objects.get(class_tb_id=class_id, lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, use=USE)
         #     context['one_to_one_lecture_time_duration'] = lecture_tb_info.lecture_minute

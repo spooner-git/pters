@@ -27,6 +27,7 @@ class Lecture_add{
                 color_bg:[],
                 color_font:[],
                 color_name:[],
+                lecture_start_time:{value:["A-0"], text:["매시각 정시"]},
 
                 ticket_id:[],
                 ticket_name:[],
@@ -34,6 +35,10 @@ class Lecture_add{
                 make_ticket:OFF
         };
 
+        this.data_for_selector = {
+            lecture_start_time:
+                {value:["A-0", "A-30", "E-10", "E-15", "E-20", "E-30"], text:["매시각 정시", "매시각 30분", "10분 마다", "15분 마다", "20분 마다", "30분 마다"]}
+        };
         this.init();
     }
 
@@ -142,13 +147,19 @@ class Lecture_add{
         let color = this.dom_row_color_select();
         let ticket = this.dom_row_ticket_select();
         let ticket_make = this.dom_row_ticket_make_select();
+        let lecture_start_time = this.dom_row_lecture_start_time();
+        let lecture_lecture_start_time = '';
+        if(this.data.capacity == 1){
+            lecture_lecture_start_time = '<div class="obj_input_box_full">' + CComponent.dom_tag('회원 예약 시작 시각') + lecture_start_time + '</div>';
+        }
 
         let html =  '<div class="obj_input_box_full">'+CComponent.dom_tag('수업명') + name+'</div>' +
                     '<div class="obj_input_box_full">'+CComponent.dom_tag('정원') + capacity + '</div>' +
+                    lecture_lecture_start_time+
                     '<div class="obj_input_box_full">'+CComponent.dom_tag('기본 수업 시간') + time + '</div>' +
                     '<div class="obj_input_box_full">'+CComponent.dom_tag('색상 태그')+ color+ '</div>' +
-                    '<div class="obj_input_box_full">'+CComponent.dom_tag('생성시 수강권에 추가')+ ticket+ '</div>'
-                     + '<div class="obj_input_box_full">'+CComponent.dom_tag('생성시 같은 이름의 수강권을 함께 생성')+ ticket_make+ '</div>';
+                    '<div class="obj_input_box_full">'+CComponent.dom_tag('생성시 수강권에 추가')+ ticket+ '</div>' +
+                    '<div class="obj_input_box_full">'+CComponent.dom_tag('생성시 같은 이름의 수강권을 함께 생성')+ ticket_make+ '</div>';
 
         return html;
     }
@@ -283,6 +294,33 @@ class Lecture_add{
         return html;
     }
 
+    dom_row_lecture_start_time(){
+        let id = "lecture_start_time";
+        let title = this.data.lecture_start_time.text.length == 0 ? '회원 예약 시작 시간' : this.data.lecture_start_time.text;
+        let icon = NONE;
+        let icon_r_visible = SHOW;
+        let icon_r_text = "";
+        let style = null;
+        // let style = {"height":"auto", "padding-bottom":"0"};
+
+        let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            let title = "회원 예약 시작 시간";
+            let install_target = "#wrapper_box_custom_select";
+            let multiple_select = 1;
+            let data = this.data_for_selector.lecture_start_time;
+            let selected_data = this.data.lecture_start_time;
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, popup_style, null, ()=>{
+                custom_selector = new CustomSelector(title, install_target, multiple_select, data, selected_data, (set_data)=>{
+                    this.data.lecture_start_time = set_data;
+                    this.render_content();
+                });
+            });
+        });
+        let html = row;
+        return html;
+    }
+
     dom_row_color_select(){
         let id = 'input_color_select';
         let title = this.data.color_name.length == 0 ? '색상 태그' : `<span style="background-color:${this.data.color_bg};color:${this.data.color_font};padding:5px;border-radius:4px;">${this.data.color_name}</span>`;
@@ -408,7 +446,8 @@ class Lecture_add{
             "end_color_cd":"",
             "ing_font_color_cd":this.data.color_font[0],
             "end_font_color_cd":"",
-            "lecture_minute":this.data.lecture_minute
+            "lecture_minute":this.data.lecture_minute,
+            "start_time":this.data.lecture_start_time.value[0]
         };
 
         Lecture_func.create(data, (received)=>{

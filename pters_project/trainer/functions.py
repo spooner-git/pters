@@ -364,7 +364,8 @@ def func_get_member_lecture_list(class_id, member_id):
                             'lecture_note': lecture_tb.note,
                             'lecture_max_num': lecture_tb.member_num,
                             # 'lecture_max_member_num_view_flag': lecture_tb.member_num_view_flag,
-                            'lecture_minute': lecture_tb.lecture_minute
+                            'lecture_minute': lecture_tb.lecture_minute,
+                            'lecture_start_time': lecture_tb.start_time
                             }
             member_lecture_list[str(lecture_tb.lecture_id)] = lecture_info
 
@@ -695,7 +696,7 @@ def func_get_trainer_setting_list(context, trainer_id, class_id, user_id):
     lt_res_05 = '7'
     lt_res_cancel_time = -1
     lt_res_enable_time = -1
-    lt_res_member_start_time = 'A-0'
+    # lt_res_member_start_time = 'A-0'
     lt_schedule_auto_finish = AUTO_FINISH_OFF
     lt_member_ticket_auto_finish = AUTO_FINISH_OFF
     lt_lan_01 = 'KOR'
@@ -749,8 +750,8 @@ def func_get_trainer_setting_list(context, trainer_id, class_id, user_id):
             lt_res_enable_time = int(setting_info.setting_info)
         # if setting_info.setting_type_cd == 'LT_RES_MEMBER_TIME_DURATION':
         #     lt_res_member_time_duration = int(setting_info.setting_info)
-        if setting_info.setting_type_cd == 'LT_RES_MEMBER_START_TIME':
-            lt_res_member_start_time = setting_info.setting_info
+        # if setting_info.setting_type_cd == 'LT_RES_MEMBER_START_TIME':
+        #     lt_res_member_start_time = setting_info.setting_info
         if setting_info.setting_type_cd == 'LT_SCHEDULE_AUTO_FINISH':
             lt_schedule_auto_finish = int(setting_info.setting_info)
         if setting_info.setting_type_cd == 'LT_LECTURE_AUTO_FINISH':
@@ -846,7 +847,7 @@ def func_get_trainer_setting_list(context, trainer_id, class_id, user_id):
     context['setting_member_reserve_cancel_time'] = lt_res_cancel_time
     # context['setting_member_time_duration'] = one_to_one_lecture_time_duration
     # context['one_to_one_lecture_time_duration'] = one_to_one_lecture_time_duration
-    context['setting_member_start_time'] = lt_res_member_start_time
+    # context['setting_member_start_time'] = lt_res_member_start_time
     context['setting_schedule_auto_finish'] = lt_schedule_auto_finish
     context['setting_member_ticket_auto_finish'] = lt_member_ticket_auto_finish
     context['setting_to_trainee_lesson_alarm'] = lt_pus_to_trainee_lesson_alarm
@@ -1021,6 +1022,7 @@ def func_get_lecture_info(class_id, lecture_id, user_id):
                         'lecture_end_font_color_cd': lecture_tb.end_font_color_cd,
                         'lecture_type_cd': lecture_tb.lecture_type_cd,
                         'lecture_minute': lecture_tb.lecture_minute,
+                        'lecture_start_time': lecture_tb.start_time,
                         'lecture_member_list': member_list}
     else:
         lecture_info = None

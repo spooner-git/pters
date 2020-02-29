@@ -2376,6 +2376,7 @@ def add_lecture_info_logic(request):
     ing_font_color_cd = request.POST.get('ing_font_color_cd', '#282828')
     end_font_color_cd = request.POST.get('end_font_color_cd', '#282828')
     lecture_minute = request.POST.get('lecture_minute', 60)
+    start_time = request.POST.get('start_time', 'A-0')
     error = None
     lecture_id = None
     lecture_type_cd = LECTURE_TYPE_NORMAL
@@ -2387,7 +2388,8 @@ def add_lecture_info_logic(request):
                                      # member_num_view_flag=member_num_view_flag,
                                      name=name, note=note, ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
                                      ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
-                                     lecture_minute=lecture_minute, state_cd=STATE_CD_IN_PROGRESS, use=USE)
+                                     lecture_minute=lecture_minute, state_cd=STATE_CD_IN_PROGRESS,
+                                     start_time=start_time, use=USE)
 
             lecture_info.save()
             lecture_id = lecture_info.lecture_id
@@ -2525,6 +2527,7 @@ def update_lecture_info_logic(request):
     ing_font_color_cd = request.POST.get('ing_font_color_cd', '')
     end_font_color_cd = request.POST.get('end_font_color_cd', '')
     lecture_minute = request.POST.get('lecture_minute', 60)
+    start_time = request.POST.get('start_time', '')
     update_this_to_all_plans = request.POST.get('update_this_to_all_plans', UN_USE)
     lecture_info = None
     error = None
@@ -2561,6 +2564,8 @@ def update_lecture_info_logic(request):
 
         if lecture_minute == '' or lecture_minute is None:
             lecture_minute = lecture_info.lecture_minute
+        if start_time == '' or start_time is None:
+            start_time = lecture_info.start_time
 
     if error is None:
         try:
@@ -2589,6 +2594,7 @@ def update_lecture_info_logic(request):
         lecture_info.ing_font_color_cd = ing_font_color_cd
         lecture_info.end_font_color_cd = end_font_color_cd
         lecture_info.lecture_minute = lecture_minute
+        lecture_info.start_time = start_time
         lecture_info.save()
 
     if error is None:
@@ -4894,7 +4900,7 @@ def update_setting_reserve_logic(request):
                                                           MEMBER_RESERVE_PROHIBITION_ON)
     setting_member_reserve_date_available = request.POST.get('setting_member_reserve_date_available', '7')
     # setting_member_time_duration = request.POST.get('setting_member_time_duration', '60')
-    setting_member_start_time = request.POST.get('setting_member_start_time', 'A-0')
+    # setting_member_start_time = request.POST.get('setting_member_start_time', 'A-0')
     setting_member_private_class_auto_permission = request.POST.get('setting_member_private_class_auto_permission', USE)
     setting_member_public_class_auto_permission = request.POST.get('setting_member_public_class_auto_permission', USE)
     setting_member_public_class_wait_member_num = request.POST.get('setting_member_public_class_wait_member_num', 0)
@@ -4915,8 +4921,8 @@ def update_setting_reserve_logic(request):
         setting_member_reserve_date_available = '7'
     # if setting_member_time_duration is None or setting_member_time_duration == '':
     #     setting_member_time_duration = '60'
-    if setting_member_start_time is None or setting_member_start_time == '':
-        setting_member_start_time = 'A-0'
+    # if setting_member_start_time is None or setting_member_start_time == '':
+    #     setting_member_start_time = 'A-0'
     if setting_member_private_class_auto_permission is None or setting_member_private_class_auto_permission == '':
         setting_member_private_class_auto_permission = USE
     if setting_member_public_class_auto_permission is None or setting_member_public_class_auto_permission == '':
@@ -4927,13 +4933,13 @@ def update_setting_reserve_logic(request):
         setting_member_wait_schedule_auto_cancel_time = 0
 
     setting_type_cd_data = ['LT_RES_MEMBER_LECTURE_MAX_NUM_VIEW', 'LT_RES_01', 'LT_RES_03', 'LT_RES_05',
-                            'LT_RES_CANCEL_TIME', 'LT_RES_ENABLE_TIME', 'LT_RES_MEMBER_START_TIME',
+                            'LT_RES_CANCEL_TIME', 'LT_RES_ENABLE_TIME',
                             'LT_RES_PRIVATE_CLASS_AUTO_PERMISSION', 'LT_RES_PUBLIC_CLASS_AUTO_PERMISSION',
                             'LT_RES_PUBLIC_CLASS_WAIT_MEMBER_NUM', 'LT_RES_WAIT_SCHEDULE_AUTO_CANCEL_TIME']
     setting_info_data = [setting_member_lecture_max_num_view_available, setting_member_reserve_time_available,
                          setting_member_reserve_prohibition,
                          setting_member_reserve_date_available, setting_member_reserve_cancel_time,
-                         setting_member_reserve_enable_time, setting_member_start_time,
+                         setting_member_reserve_enable_time,
                          setting_member_private_class_auto_permission, setting_member_public_class_auto_permission,
                          setting_member_public_class_wait_member_num, setting_member_wait_schedule_auto_cancel_time]
     error = update_program_setting_data(class_id, setting_type_cd_data, setting_info_data)
@@ -4946,7 +4952,7 @@ def update_setting_reserve_logic(request):
         request.session['setting_member_reserve_cancel_time'] = setting_member_reserve_cancel_time
         request.session['setting_member_reserve_date_available'] = setting_member_reserve_date_available
         # request.session['setting_member_time_duration'] = setting_member_time_duration
-        request.session['setting_member_start_time'] = setting_member_start_time
+        # request.session['setting_member_start_time'] = setting_member_start_time
         request.session['setting_member_private_class_auto_permission'] = setting_member_private_class_auto_permission
         request.session['setting_member_public_class_auto_permission'] = setting_member_public_class_auto_permission
         request.session['setting_member_public_class_wait_member_num'] = setting_member_public_class_wait_member_num

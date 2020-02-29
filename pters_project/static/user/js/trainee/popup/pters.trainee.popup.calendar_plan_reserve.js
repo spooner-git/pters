@@ -130,7 +130,7 @@ let object_time = new Date();
 let currentTime = time_h_m_to_hh_mm(object_time.getHours()+':'+object_time.getMinutes());
 let currentDate = date_format_yyyy_m_d_to_yyyy_mm_dd(`${object_time.getFullYear()}-${object_time.getMonth()+1}-${object_time.getDate()}`, '-');
 
-function func_start_time_calc(selected_date, schedule_json, setting_info, one_to_one_lecture_time_duration){ //offAddOkArray 채우기 : 시작시간 리스트 채우기!!!!
+function func_start_time_calc(selected_date, schedule_json, setting_info, one_to_one_lecture_time_duration, lecture_start_time){ //offAddOkArray 채우기 : 시작시간 리스트 채우기!!!!
     //let allplans = [];
     let plan_time = [];
 
@@ -230,7 +230,7 @@ function func_start_time_calc(selected_date, schedule_json, setting_info, one_to
 
     //offAddOkArray = []
     let addOkArrayList = [];
-    let start_option = setting_info.setting_member_start_time;
+    let start_option = lecture_start_time;
     for(let t=0; t<semiresult.length; t++){
         //if(Number(semiresult[t].split(':')[1])%time_unit == 0){  //몇분 간격으로 시작시간을 보여줄 것인지?
         if(selected_date == currentDate){                                                                   //선택한 날짜가 오늘일 경우
@@ -282,9 +282,9 @@ function func_start_time_calc(selected_date, schedule_json, setting_info, one_to
 }
 
 
-function func_start_time_dom_draw(target_html, selected_date, schedule_json, setting_info, one_to_one_lecture_time_duration){
+function func_start_time_dom_draw(target_html, selected_date, schedule_json, setting_info, one_to_one_lecture_time_duration, lecture_start_time){
     // offAddOkArray의 값을 가져와서 시작시간에 리스트 ex) let offAddOkArray = [5,6,8,11,15,19,21]
-    let sArraySet =  func_start_time_calc(selected_date, schedule_json, setting_info, one_to_one_lecture_time_duration); //DB로 부터 데이터 받아서 선택된 날짜의 offAddOkArray 채우기
+    let sArraySet =  func_start_time_calc(selected_date, schedule_json, setting_info, one_to_one_lecture_time_duration, lecture_start_time); //DB로 부터 데이터 받아서 선택된 날짜의 offAddOkArray 채우기
     let addOkArray = sArraySet.addOkArray;
     let $target_html = $(target_html);
 
