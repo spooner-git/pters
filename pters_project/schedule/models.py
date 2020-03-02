@@ -72,6 +72,7 @@ class ScheduleTb(TimeStampedModel):
     lecture_schedule_id = models.IntegerField('상위 일정 ID', db_column='GROUP_SCHEDULE_ID', blank=True, null=True, default='')
     repeat_schedule_tb = models.ForeignKey(RepeatScheduleTb, verbose_name='반복일정', on_delete=models.SET_DEFAULT, null=True, default='')
     daily_record_tb = models.ForeignKey('schedule.DailyRecordTb', verbose_name='일지', on_delete=models.SET_NULL, null=True, default='')
+    schedule_alarm_tb = models.ForeignKey('schedule.ScheduleAlarmTb', verbose_name='PUSH 알람', on_delete=models.SET_NULL, null=True, default='')
     start_dt = models.DateTimeField('시작 일시', db_column='START_DT', blank=True, null=True)  # Field name made lowercase.
     end_dt = models.DateTimeField('종료 일시', db_column='END_DT', blank=True, null=True)  # Field name made lowercase.
     state_cd = models.CharField('진행 상태', db_column='STATE_CD', max_length=10, blank=True, default='NP')
@@ -217,7 +218,7 @@ class DailyRecordTb(TimeStampedModel):
 
 
 class ScheduleAlarmTb(TimeStampedModel):
-    daily_record_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    schedule_alarm_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     class_tb = models.ForeignKey(ClassTb, verbose_name='프로그램', on_delete=models.CASCADE, null=True)
     member_ids = models.CharField('회원 ID 리스트', db_column='MEMBER_IDS', max_length=255, blank=True, default='')
     schedule_tb = models.ForeignKey(ScheduleTb, verbose_name='일정', on_delete=models.CASCADE, null=True)

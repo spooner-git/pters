@@ -225,8 +225,10 @@ class GetAllSchedulePushAlarmDataView(View):
             'schedule_tb__member_ticket_tb__member').filter(alarm_dt=alarm_dt, use=USE)
         # schedule 정보에서 push_alarm_data json 타입으로 변경 및 member_id 추출
         member_ids = []
+        token_data = []
         for alarm_schedule_info in alarm_schedule_data:
             member_ids.append(alarm_schedule_info.member_id)
+            alarm_schedule_info.messages = 'test'
 
         # 보내야 하는 회원의 token 가져오기
         query_member_id = Q()

@@ -718,6 +718,7 @@ def func_get_trainer_setting_list(context, class_id, user_id):
     setting_member_public_class_auto_permission = USE
     setting_member_public_class_wait_member_num = 0
     setting_member_wait_schedule_auto_cancel_time = 0
+    setting_schedule_alarm_minute = '-1'
 
     for setting_info in setting_data:
         if setting_info.setting_type_cd == 'LT_RES_01':
@@ -763,6 +764,9 @@ def func_get_trainer_setting_list(context, class_id, user_id):
         if setting_info.setting_type_cd == 'LT_PUS_FROM_TRAINEE_LESSON_ALARM':
             if str(user_id) == str(setting_info.member_id):
                 lt_pus_from_trainee_lesson_alarm = int(setting_info.setting_info)
+        if setting_info.setting_type_cd == 'LT_PUSH_SCHEDULE_ALARM_MINUTE':
+            if str(user_id) == str(setting_info.member_id):
+                setting_schedule_alarm_minute = setting_info.setting_info
         if setting_info.setting_type_cd == 'LT_ADMIN_PASSWORD':
             setting_admin_password = setting_info.setting_info
         if setting_info.setting_type_cd == 'LT_ATTEND_CLASS_PREV_DISPLAY_TIME':
@@ -868,6 +872,8 @@ def func_get_trainer_setting_list(context, class_id, user_id):
     context['setting_member_public_class_auto_permission'] = setting_member_public_class_auto_permission
     context['setting_member_public_class_wait_member_num'] = setting_member_public_class_wait_member_num
     context['setting_member_wait_schedule_auto_cancel_time'] = setting_member_wait_schedule_auto_cancel_time
+    context['setting_schedule_alarm_minute'] = setting_schedule_alarm_minute
+
     return context
 
 

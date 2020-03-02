@@ -302,6 +302,9 @@ def func_setting_data_update(request, group):
         request.session['setting_member_public_class_auto_permission'] = context['setting_member_public_class_auto_permission']
         request.session['setting_member_public_class_wait_member_num'] = context['setting_member_public_class_wait_member_num']
         request.session['setting_member_wait_schedule_auto_cancel_time'] = context['setting_member_wait_schedule_auto_cancel_time']
+
+        request.session['setting_schedule_alarm_minute'] = context['setting_schedule_alarm_minute']
+
         if group == 'trainee':
             try:
                 setting_data = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_LAN_01')
@@ -604,7 +607,7 @@ def update_finish_schedule_data(request):
         #     now -= datetime.timedelta(minutes=int(setting_member_wait_schedule_auto_cancel_time))
         not_finish_wait_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                                   permission_state_cd=PERMISSION_STATE_CD_WAIT,
-                                                                  en_dis_type=ON_SCHEDULE_TYPE, end_dt__lte=now,
+                                                                  en_dis_type=ON_SCHEDULE_TYPE, start_dt__lte=now,
                                                                   use=USE)
         not_finish_wait_schedule_data.delete()
 
