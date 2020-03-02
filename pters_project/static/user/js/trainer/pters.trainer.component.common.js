@@ -1626,6 +1626,30 @@ class CImg{
         return svg;
     }
 
+    static fold(svg_color, style, onclick){
+        if(svg_color == undefined){
+            svg_color = [];
+        }
+        let svg = `<svg style="${CComponent.data_to_style_code(style)}" ${CImg.data_to_onclick_event(onclick)} xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                        <path d="M24 0v24H0V0h24z" fill="none" opacity=".87"/>
+                        <path fill="${CImg.data_to_svg_color(svg_color[1], "var(--img-main)")}" d="M8.12 19.3c.39.39 1.02.39 1.41 0L12 16.83l2.47 2.47c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41l-3.17-3.17c-.39-.39-1.02-.39-1.41 0l-3.17 3.17c-.4.38-.4 1.02-.01 1.41zm7.76-14.6c-.39-.39-1.02-.39-1.41 0L12 7.17 9.53 4.7c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.03 0 1.42l3.17 3.17c.39.39 1.02.39 1.41 0l3.17-3.17c.4-.39.4-1.03.01-1.42z"/>
+                    </svg>`;
+                    
+        return svg;
+    }
+
+    static unfold(svg_color, style, onclick){
+        if(svg_color == undefined){
+            svg_color = [];
+        }
+        let svg = `<svg style="${CComponent.data_to_style_code(style)}" ${CImg.data_to_onclick_event(onclick)} xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                        <path d="M0 0h24v24H0V0z" fill="none"/>
+                        <path fill="${CImg.data_to_svg_color(svg_color[1], "var(--img-main)")}" d="M12 5.83l2.46 2.46c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41L12.7 3.7c-.39-.39-1.02-.39-1.41 0L8.12 6.88c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0L12 5.83zm0 12.34l-2.46-2.46c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41l3.17 3.18c.39.39 1.02.39 1.41 0l3.17-3.17c.39-.39.39-1.02 0-1.41-.39-.39-1.02-.39-1.41 0L12 18.17z"/>
+                    </svg>`;
+                    
+        return svg;
+    }
+
 
     static data_to_svg_color(data, original){
         if(data == undefined || data == "" || data == null){

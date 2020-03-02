@@ -19,6 +19,8 @@ class Ticket{
         this.sort_value_text = '수강권명 가나다순';
 
         this.received_data_cache = null; // 재랜더링시 스크롤 위치를 기억하도록 먼저 이전 데이터를 그려주기 위해
+
+        this.toggle_ticket_lectures_display = ON;
     }
 
     init(){
@@ -137,6 +139,9 @@ class Ticket{
             let data = whole_data[i];
             let ticket_id = data.ticket_id;
             let ticket_name = data.ticket_name;
+            let ticket_price = data.ticket_price;
+            let ticket_reg_count = data.ticket_reg_count;
+            let ticket_effective_days = data.ticket_effective_days;
             let ticket_note = data.ticket_note != undefined ? data.ticket_note : "";
             let ticket_member_number = data.ticket_ing_member_num;
             let ticket_end_member_number = data.ticket_end_member_num;
@@ -174,8 +179,11 @@ class Ticket{
                                 </div>
                                 <div class="ticket_note">${ticket_note}</div>
                             </div>
+                            <div class="ticket_data_m">
+                                <div>${ticket_reg_count != 99999 ? ticket_reg_count + " 회" : "횟수 무제한" } / ${ticket_effective_days != 99999 ? ticket_effective_days + " 일간" : "소진시까지"} / ${UnitRobot.numberWithCommas(ticket_price)} 원</div>
+                            </div>
                             <div class="ticket_data_b">
-                                <div class="ticket_lectures">
+                                <div class="ticket_lectures" style="display:${this.toggle_ticket_lectures_display == ON ? "" : "none"}">
                                     ${ticket_lectures_included_name_html.length != 0 ? ticket_lectures_included_name_html.join('') : "<span style='color:var(--font-highlight);text-decoration:underline'>포함된 수업이 없습니다.</span>"}
                                 </div>
                             </div>
@@ -213,6 +221,9 @@ class Ticket{
                             <div style="display:inline-block; color:var(--font-highlight); font-weight:900;">${this.data_length}</div>
                         </div>
                         <div class="ticket_tools_wrap">
+                            <div class="fold_ticket_lecture_list" onclick="${this.instance}.fold_ticket_lecture_list()">
+                                ${this.toggle_ticket_lectures_display == ON ? CImg.fold("", {"vertical-align":"middle", "margin-bottom":"4px"}) : CImg.unfold("", {"vertical-align":"middle", "margin-bottom":"4px"})}
+                            </div>
                             <div class="search_ticket" onclick="${this.instance}.search_tool_visible(event, this);">
                                 ${CImg.search()}
                             </div>
@@ -294,6 +305,15 @@ class Ticket{
                 // el.style.display = 'none';
             }
         });
+    }
+
+    fold_ticket_lecture_list(){
+        if(this.toggle_ticket_lectures_display == ON){
+            this.toggle_ticket_lectures_display = OFF;
+        }else{
+            this.toggle_ticket_lectures_display = ON;
+        }
+        this.render();
     }
 
     //수강권 리스트 서버에서 불러오기
