@@ -66,9 +66,9 @@ class Menu {
 
         let sub_assembly_menu = 
                                 CComponent.dom_tag('운영', dom_tag_style) + 
-                                this.dom_menu_program() + 
-                                this.dom_menu_calendar() + 
-                                this.dom_menu_member() + 
+                                // this.dom_menu_program() +
+                                // this.dom_menu_calendar() +
+                                // this.dom_menu_member() +
                                 this.dom_menu_lecture() +
                                 this.dom_menu_ticket() + 
                                 this.dom_menu_statistics() +

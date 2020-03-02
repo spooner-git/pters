@@ -909,7 +909,7 @@ def func_send_push_notice(to_member_type_cd, class_id, title, message):
         member_data = func_get_member_ing_list(class_id, None, '')
     elif to_member_type_cd == TO_END_TRAINEE:
         member_data = func_get_member_end_list(class_id, None, '')
-    print(str(len(member_data)))
+
     for member_info in member_data:
         for token_info in token_data:
             if str(token_info.member_id) == str(member_info['member_id']):
