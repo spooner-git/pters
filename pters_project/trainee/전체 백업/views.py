@@ -769,7 +769,7 @@ def lecture_processing(request):
                 request.session['class_type_name'] = class_info.get_class_type_cd_name()
                 request.session['class_center_name'] = class_info.get_center_name()
 
-            context = func_get_trainer_setting_list(context, class_info.member_id, class_id, request.user.id)
+            context = func_get_trainer_setting_list(context, class_id, request.user.id)
             request.session['setting_member_reserve_time_available'] = context['lt_res_01']
             request.session['setting_member_reserve_time_prohibition'] = context['lt_res_02']
             request.session['setting_member_reserve_prohibition'] = context['lt_res_03']

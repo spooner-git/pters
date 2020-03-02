@@ -261,7 +261,7 @@ def func_setting_data_update(request, group):
                 request.session['class_type_name'] += ' - ' + class_info.member.name
             request.session['class_center_name'] = class_info.get_center_name()
             request.session['trainer_name'] = class_info.member.name
-        context = func_get_trainer_setting_list(context, trainer_id, class_id, request.user.id)
+        context = func_get_trainer_setting_list(context, class_id, request.user.id)
         request.session['setting_member_reserve_time_available'] = context['setting_member_reserve_time_available']
         request.session['setting_member_reserve_prohibition'] = context['setting_member_reserve_prohibition']
 

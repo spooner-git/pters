@@ -149,7 +149,7 @@ class ProgramNotice_list {
         let id = data.program_notice_id;
         let title = data.program_notice_title;
         let content = data.program_notice_contents;
-        let target = PROGRAM_BOARD_TARGET[data.program_notice_to_member_type_cd];
+        let to_member_type_cd = data.program_notice_to_member_type_cd;
         let reg_dt = data.program_notice_reg_dt;
         let mod_dt = data.program_notice_mod_dt;
         let reg_member_name = data.program_notice_reg_member_name;
@@ -164,7 +164,7 @@ class ProgramNotice_list {
                                 <div class="program_notice_article_id" style="width:5%;display:table-cell;vertical-align:middle;">
                                     ${numbering}
                                 </div>
-                                <div style="width:80%;display:table-cell;padding-left:10px;">
+                                <div style="width:60%;display:table-cell;">
                                     <div class="program_notice_article_upper">
                                         <div class="program_notice_article_title">${title}</div>
                                     </div>
@@ -172,8 +172,13 @@ class ProgramNotice_list {
                                         <div class="program_notice_article_reg_date">등록일:${reg_date}, 조회수:${hits}</div>
                                     </div>
                                 </div>
-                                <div style="width:10%;display:table-cell;vertical-align:middle;">
+                                <div style="width:15%;display:table-cell;vertical-align:middle;">
+                                    <div class="program_notice_article_upper">
                                         <div class="program_notice_article_use" style="color:${PROGRAM_BOARD_USE[use].color}">${PROGRAM_BOARD_USE[use].text}</div>
+                                    </div>
+                                    <div class="program_notice_article_bottom">
+                                        <div class="program_notice_article_use">(${PROGRAM_BOARD_TARGET[to_member_type_cd]})</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -189,16 +194,21 @@ class ProgramNotice_list {
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_WRITER_UPDATE, 100, popup_style, null, ()=>{
                 let external_data = {   title:title, content:content, id:id, reg_dt:reg_dt, mod_dt:mod_dt,reg_member_name:reg_member_name,
                                         category:[
-                                            {id:"use", title:"공개 여부", data: {text:["공개", "비공개"], value:[ON, OFF]} }
+                                            {id:"use", title:"공개 여부", data: {text:["공개", "비공개"], value:[ON, OFF]} },
+                                            {id:"to_member_type_cd", title:"공지 대상", data: {text:["전체 회원", "진행중 회원", "종료된 회원"], value:["trainee", "ing_trainee", "end_trainee"]} },
+                                            {id:"push_use", title:"푸시 알림", data: {text:["미알림", "알림"], value:[OFF, ON]} }
                                         ],
                                         category_selected:{
-                                            use:{text:[PROGRAM_BOARD_USE[use].text], value:[use]}
+                                            use:{text:[PROGRAM_BOARD_USE[use].text], value:[use]},
+                                            to_member_type_cd:{text:[PROGRAM_BOARD_TARGET[to_member_type_cd]], value:[to_member_type_cd]},
+                                            push_use:{text:[], value:[]}
                                         },
                                         new_check:false
                 };
                 board_writer = new BoardWriter("공지 수정", '.popup_board_writer_update', 'board_writer', external_data, (data_written)=>{
                     let data = {"program_notice_id":data_written.id, "notice_type_cd":NOTICE, "title":data_written.title,
-                                "contents":data_written.content, "to_member_type_cd":'trainee',
+                                "contents":data_written.content, "to_member_type_cd":data_written.category_selected.to_member_type_cd.value[0],
+                                "push_use":data_written.category_selected.push_use.value[0],
                                 "use":data_written.category_selected.use.value[0]};
                     ProgramNotice_func.update(data, ()=>{
                         this.init();
@@ -243,16 +253,21 @@ class ProgramNotice_list {
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_WRITER, 100, POPUP_FROM_BOTTOM, null, ()=>{
             let external_data = {   
                                         category:[
-                                            {id:"use", title:"공개 여부", data: {text:["공개", "비공개"], value:[ON, OFF]} }
+                                            {id:"use", title:"공개 여부", data: {text:["공개", "비공개"], value:[ON, OFF]} },
+                                            {id:"to_member_type_cd", title:"공개 대상", data: {text:["전체 회원", "진행중 회원", "종료된 회원"], value:["trainee", "ing_trainee", "end_trainee"]} },
+                                            {id:"push_use", title:"푸시 알림", data: {text:["미알림", "알림"], value:[OFF, ON]} }
                                         ],
                                         category_selected:{
-                                            use:{text:[], value:[]}
+                                            use:{text:[], value:[]},
+                                            to_member_type_cd:{text:[], value:[]},
+                                            push_use:{text:[], value:[]}
                                         },
                                         new_check:true
             };
             board_writer = new BoardWriter("새 공지사항", '.popup_board_writer', 'board_writer', external_data, (data_written)=>{
                 let data = {"notice_type_cd": NOTICE, "title":data_written.title,
-                            "contents":data_written.content, "to_member_type_cd":'trainee',
+                            "contents":data_written.content, "to_member_type_cd":data_written.category_selected.to_member_type_cd.value[0],
+                            "push_use":data_written.category_selected.push_use.value[0],
                             "use":data_written.category_selected.use.value[0]};
                 ProgramNotice_func.create(data, ()=>{
                     this.init();

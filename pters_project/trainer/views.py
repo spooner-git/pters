@@ -34,28 +34,28 @@ from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO
     GROUP_SCHEDULE, SCHEDULE_DUPLICATION_ENABLE, LECTURE_TYPE_ONE_TO_ONE, STATE_CD_IN_PROGRESS, STATE_CD_NOT_PROGRESS, \
     STATE_CD_ABSENCE, STATE_CD_FINISH, PERMISSION_STATE_CD_APPROVE, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, AUTH_TYPE_DELETE, \
     LECTURE_TYPE_NORMAL, SHOW, SORT_TICKET_TYPE, SORT_TICKET_NAME, SORT_TICKET_MEMBER_COUNT, SORT_TICKET_CREATE_DATE, \
-    SORT_LECTURE_NAME, SORT_LECTURE_MEMBER_COUNT, SORT_LECTURE_CAPACITY_COUNT, SORT_LECTURE_CREATE_DATE, ON_SCHEDULE, \
+    SORT_LECTURE_NAME, SORT_LECTURE_MEMBER_COUNT, SORT_LECTURE_CAPACITY_COUNT, SORT_LECTURE_CREATE_DATE, \
     CALENDAR_TIME_SELECTOR_BASIC, SORT_END_DATE, SORT_MEMBER_TICKET, SORT_SCHEDULE_DT, STATE_CD_REFUND, \
     SORT_SCHEDULE_MONTHLY, SHARED_PROGRAM, MY_PROGRAM, PROGRAM_SELECT, PROGRAM_LECTURE_CONNECT_DELETE, \
-    PROGRAM_LECTURE_CONNECT_ACCEPT, LECTURE_MEMBER_NUM_VIEW_ENABLE, BOARD_TYPE_CD_NOTICE
+    PROGRAM_LECTURE_CONNECT_ACCEPT, BOARD_TYPE_CD_NOTICE
 from board.models import BoardTb, QATb, NoticeTb
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 from schedule.functions import func_refresh_member_ticket_count, func_get_trainer_attend_schedule, \
     func_get_lecture_member_ticket_id, func_get_trainer_schedule_all, func_get_trainer_schedule_info, \
     func_get_lecture_schedule_all, func_get_member_schedule_all_by_member_ticket, \
     func_get_member_schedule_all_by_schedule_dt, func_get_member_schedule_all_by_monthly, \
-    func_get_permission_wait_schedule_all, func_add_schedule
+    func_get_permission_wait_schedule_all, func_add_schedule, func_send_push_notice
 from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb
 from stats.functions import get_sales_data
 from trainee.models import MemberTicketTb
 from payment.models import PaymentInfoTb, ProductFunctionAuthTb
 from .functions import func_get_trainer_setting_list, \
     func_get_member_ing_list, func_get_member_end_list, func_get_class_member_ing_list, func_get_class_member_end_list,\
-    func_get_member_info, func_get_member_from_member_ticket_list, \
-    func_check_member_connection_info, func_get_member_lecture_list, \
-    func_get_member_ticket_list, func_get_lecture_info, func_add_member_ticket_info, func_get_ticket_info, \
-    func_delete_member_ticket_info, func_update_lecture_member_fix_status_cd, update_user_setting_data, \
-    update_program_setting_data, func_get_member_ticket_info, func_get_trainer_info, update_alarm_setting_data
+    func_get_member_info, func_get_member_from_member_ticket_list, func_check_member_connection_info,\
+    func_get_member_lecture_list, func_get_member_ticket_list, func_get_lecture_info, func_add_member_ticket_info,\
+    func_get_ticket_info, func_delete_member_ticket_info, func_update_lecture_member_fix_status_cd,\
+    update_user_setting_data, update_program_setting_data, func_get_member_ticket_info, func_get_trainer_info,\
+    update_alarm_setting_data
 from .models import ClassMemberTicketTb, LectureTb, ClassTb, MemberClassTb, BackgroundImgTb, \
     SettingTb, TicketTb, TicketLectureTb, CenterTrainerTb, LectureMemberTb, ProgramAuthTb, ProgramBoardTb, \
     ProgramNoticeTb, BugMemberTicketPriceTb
@@ -1404,7 +1404,7 @@ class PushSettingView(LoginRequiredMixin, AccessTestMixin, View):
         # context = super(PushSettingView, self).get_context_data(**kwargs)
         class_id = request.session.get('class_id', '')
         # class_hour = request.session.get('class_hour')
-        context = func_get_trainer_setting_list(context, request.user.id, class_id, request.user.id)
+        context = func_get_trainer_setting_list(context, class_id, request.user.id)
 
         return render(request, self.template_name, context)
 
@@ -2064,7 +2064,8 @@ def update_member_ticket_info_logic(request):
     refund_price = request.POST.get('refund_price', '')
     refund_date = request.POST.get('refund_date', '')
     member_ticket_reg_count = request.POST.get('member_ticket_reg_count', '')
-    # NONE : 선택 안함 / CASH : 현금 , CARD : 카드 , TRANS : 계좌 이체 , CASH+CARD : 현금 + 카드, CARD + TRANS : 카드 + 계좌 이체, CASH + TRANS : 현금 + 계좌 이체
+    # NONE : 선택 안함 / CASH : 현금 , CARD : 카드 , TRANS : 계좌 이체 , CASH+CARD : 현금 + 카드,
+    # CARD + TRANS : 카드 + 계좌 이체, CASH + TRANS : 현금 + 계좌 이체
     pay_method = request.POST.get('pay_method', 'NONE')
     class_id = request.session.get('class_id', '')
     error = None
@@ -5488,9 +5489,10 @@ class AddProgramNoticeInfoView(LoginRequiredMixin, AccessTestMixin, View):
         title = request.POST.get('title', '')
         contents = request.POST.get('contents', '')
         to_member_type_cd = request.POST.get('to_member_type_cd')
+        push_use = request.POST.get('push_use', str(UN_USE))
         use = request.POST.get('use', USE)
         class_id = request.session.get('class_id')
-
+        class_name = request.session.get('class_type_name', '')
         context = {}
         error = None
 
@@ -5502,7 +5504,10 @@ class AddProgramNoticeInfoView(LoginRequiredMixin, AccessTestMixin, View):
                                                   class_tb_id=class_id, title=title, contents=contents,
                                                   to_member_type_cd=to_member_type_cd, use=use)
             program_notice_info.save()
-
+        if error is None:
+            if str(use) == str(USE) and str(push_use) == str(USE):
+                error = func_send_push_notice(to_member_type_cd, class_id,
+                                              '[공지사항] - ' + class_name, title)
         if error is not None:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
             # messages.error(request, error)
@@ -5519,9 +5524,10 @@ class UpdateProgramNoticeInfoView(LoginRequiredMixin, AccessTestMixin, View):
         title = request.POST.get('title', '')
         contents = request.POST.get('contents', '')
         to_member_type_cd = request.POST.get('to_member_type_cd')
+        push_use = request.POST.get('push_use', str(UN_USE))
         use = request.POST.get('use', USE)
-        # class_id = request.session.get('class_id')
-
+        class_id = request.session.get('class_id')
+        class_name = request.session.get('class_type_name', '')
         context = {}
         error = None
         program_notice_info = None
@@ -5547,6 +5553,11 @@ class UpdateProgramNoticeInfoView(LoginRequiredMixin, AccessTestMixin, View):
             program_notice_info.mod_dt = timezone.now()
             program_notice_info.use = use
             program_notice_info.save()
+
+        if error is None:
+            if str(use) == str(USE) and str(push_use) == str(USE):
+                error = func_send_push_notice(to_member_type_cd, class_id,
+                                              '[공지사항] - ' + class_name, title)
 
         if error is not None:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
@@ -5898,6 +5909,7 @@ class PopupLectureView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         lecture_id = self.request.GET.get('lecture_id')
         context['lecture_info'] = func_get_lecture_info(class_id, lecture_id, self.request.user.id)
         return context
+
 
 class PopupLectureSimpleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'popup/trainer_popup_lecture_simple_view.html'

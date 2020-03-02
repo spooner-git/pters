@@ -17,16 +17,18 @@ from configs.const import REPEAT_TYPE_2WEAK, ON_SCHEDULE_TYPE, USE, UN_USE, SCHE
     STATE_CD_ABSENCE, STATE_CD_FINISH, STATE_CD_IN_PROGRESS, STATE_CD_NOT_PROGRESS, LECTURE_TYPE_ONE_TO_ONE, \
     AUTH_TYPE_VIEW, GROUP_SCHEDULE, OFF_SCHEDULE, FROM_TRAINEE_LESSON_ALARM_ON, TO_SHARED_TRAINER_LESSON_ALARM_OFF, \
     TO_SHARED_TRAINER_LESSON_ALARM_ON, PERMISSION_STATE_CD_WAIT, \
-    PERMISSION_STATE_CD_APPROVE
+    PERMISSION_STATE_CD_APPROVE, TO_ALL_TRAINEE, TO_ING_TRAINEE, TO_END_TRAINEE
 from configs.settings import DEBUG
 from login.models import PushInfoTb
 from trainee.models import MemberTicketTb
-from trainer.functions import func_update_lecture_member_fix_status_cd
+from trainer.functions import func_update_lecture_member_fix_status_cd, func_get_member_ing_list, \
+    func_get_member_end_list
 from trainer.models import MemberClassTb, ClassMemberTicketTb, LectureTb, TicketLectureTb, SettingTb
 from .models import ScheduleTb, RepeatScheduleTb, DeleteScheduleTb, DeleteRepeatScheduleTb, HolidayTb, DailyRecordTb
 
 if DEBUG is False:
-    from tasks.tasks import task_send_fire_base_push, task_send_fire_base_push_multi
+    from tasks.tasks import task_send_fire_base_push, task_send_fire_base_push_multi, \
+        task_send_fire_base_push_multi_without_badge
 
 
 def func_get_holiday_schedule(start_date, end_date):
@@ -714,12 +716,12 @@ def func_send_push_trainer(member_ticket_id, title, message):
     if member_ticket_id is not None and member_ticket_id != '':
         registration_ids = []
         multi_badge_counter = -1
-        member_ticket_info = MemberTicketTb.objects.select_related(
+        member_ticket_data = MemberTicketTb.objects.select_related(
             'member').filter(member_ticket_id=member_ticket_id, member_auth_cd=AUTH_TYPE_VIEW, use=USE)
 
         token_data = PushInfoTb.objects.filter(use=USE)
 
-        for member_ticket_info in member_ticket_info:
+        for member_ticket_info in member_ticket_data:
             # token_data = PushInfoTb.objects.filter(member_id=member_ticket_info.member_id, use=USE)
             for token_info in token_data:
                 if str(token_info.member_id) == str(member_ticket_info.member_id):
@@ -893,6 +895,43 @@ def func_send_push_trainer_trainer(class_id, title, message, member_id):
     return error
 
 
+# # 강사 -> 회원 공지 push 메시지 전달
+def func_send_push_notice(to_member_type_cd, class_id, title, message):
+    error = None
+    registration_ids = []
+    member_data = []
+    token_data = PushInfoTb.objects.filter(use=USE)
+
+    if to_member_type_cd == TO_ALL_TRAINEE:
+        member_data = func_get_member_ing_list(class_id, None, '')
+        member_data += func_get_member_end_list(class_id, None, '')
+    elif to_member_type_cd == TO_ING_TRAINEE:
+        member_data = func_get_member_ing_list(class_id, None, '')
+    elif to_member_type_cd == TO_END_TRAINEE:
+        member_data = func_get_member_end_list(class_id, None, '')
+    print(str(len(member_data)))
+    for member_info in member_data:
+        for token_info in token_data:
+            if str(token_info.member_id) == str(member_info['member_id']):
+                if token_info.device_id != 'pc':
+                    token_info.badge_counter += 1
+                    token_info.save()
+                instance_id = token_info.token
+
+                registration_ids.append(instance_id)
+
+    check_async = False
+    if DEBUG is False:
+        check_async = True
+    if len(registration_ids) > 0:
+        if check_async:
+            error = task_send_fire_base_push_multi_without_badge.delay(registration_ids, title, message)
+        else:
+            error = send_fire_base_push_multi_without_badge(registration_ids, title, message)
+
+    return error
+
+
 def send_fire_base_push(instance_id, title, message, badge_counter):
     push_server_id = getattr(settings, "PTERS_PUSH_SERVER_KEY", '')
     error = None
@@ -926,6 +965,29 @@ def send_fire_base_push_multi(registration_ids, title, message, badge_counter):
             'title': title,
             'body': message,
             'badge': badge_counter,
+            'sound': 'default'
+        }
+    }
+    body = json.dumps(data)
+    h = httplib2.Http()
+
+    resp, content = h.request("https://fcm.googleapis.com/fcm/send", method="POST", body=body,
+                              headers={'Content-Type': 'application/json;',
+                                       'Authorization': 'key=' + push_server_id})
+
+    if resp['status'] != '200':
+        error = '오류가 발생했습니다.'
+    return error
+
+
+def send_fire_base_push_multi_without_badge(registration_ids, title, message):
+    push_server_id = getattr(settings, "PTERS_PUSH_SERVER_KEY", '')
+    error = None
+    data = {
+        'registration_ids': registration_ids,
+        'notification': {
+            'title': title,
+            'body': message,
             'sound': 'default'
         }
     }

@@ -1,8 +1,6 @@
 import collections
 import datetime
 
-import boto3
-from awscli.errorhandler import ClientError
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import IntegrityError
 from django.db import InternalError
@@ -10,17 +8,17 @@ from django.db import transaction
 from django.db.models import Q
 from django.db.models.expressions import RawSQL
 
+from configs import DEBUG
 from configs.const import USE, UN_USE, AUTO_FINISH_OFF, FROM_TRAINEE_LESSON_ALARM_ON, \
     TO_TRAINEE_LESSON_ALARM_OFF, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, STATE_CD_IN_PROGRESS, STATE_CD_FINISH,\
-    STATE_CD_ABSENCE, AUTH_TYPE_DELETE, STATE_CD_NOT_PROGRESS, SHOW, CALENDAR_TIME_SELECTOR_BASIC, \
-    LECTURE_TYPE_ONE_TO_ONE, ING_MEMBER_TRUE, ING_MEMBER_FALSE, FROM_TRAINEE_LESSON_ALARM_OFF, \
+    AUTH_TYPE_DELETE, STATE_CD_NOT_PROGRESS, SHOW, CALENDAR_TIME_SELECTOR_BASIC, ING_MEMBER_TRUE, ING_MEMBER_FALSE, \
     TO_SHARED_TRAINER_LESSON_ALARM_OFF
 
 from login.models import MemberTb
 from schedule.models import ScheduleTb, RepeatScheduleTb
 from trainee.models import MemberTicketTb
 from .models import ClassMemberTicketTb, LectureTb, SettingTb, TicketLectureTb, TicketTb, LectureMemberTb, MemberClassTb
-from configs import settings
+
 
 # 전체 회원 id 정보 가져오기
 def func_get_class_member_id_list(class_id):
@@ -680,7 +678,7 @@ def func_delete_member_ticket_info(user_id, class_id, member_ticket_id):
 
 
 # 강사의 셋팅 정보 가져오기
-def func_get_trainer_setting_list(context, trainer_id, class_id, user_id):
+def func_get_trainer_setting_list(context, class_id, user_id):
     today = datetime.date.today()
     lt_res_01 = '00:00-24:00'
     lt_res_02 = 0
@@ -796,7 +794,8 @@ def func_get_trainer_setting_list(context, trainer_id, class_id, user_id):
         if setting_info.setting_type_cd == 'LT_RES_WAIT_SCHEDULE_AUTO_CANCEL_TIME':
             setting_member_wait_schedule_auto_cancel_time = int(setting_info.setting_info)
     # try:
-    #     lecture_info = LectureTb.objects.filter(class_tb_id=class_id, lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, use=USE).earliest('reg_dt')
+    #     lecture_info = LectureTb.objects.filter(class_tb_id=class_id,
+    # lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, use=USE).earliest('reg_dt')
     #     # if len(lecture_data) > 0:
     #     one_to_one_lecture_time_duration = lecture_info.lecture_minute
     #     # print(str(one_to_one_lecture_time_duration))

@@ -21,7 +21,7 @@ from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, DEL_SCHEDULE, USE, UN_
     SCHEDULE_DUPLICATION_ENABLE, LECTURE_TYPE_ONE_TO_ONE, STATE_CD_IN_PROGRESS, STATE_CD_FINISH, STATE_CD_ABSENCE, \
     STATE_CD_NOT_PROGRESS, PERMISSION_STATE_CD_APPROVE, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, AUTH_TYPE_DELETE, \
     PERMISSION_STATE_CD_WAIT, TO_TRAINEE_LESSON_ALARM_ON, TO_SHARED_TRAINER_LESSON_ALARM_ON, TO_TRAINEE_LESSON_ALARM_OFF, \
-    TO_SHARED_TRAINER_LESSON_ALARM_OFF
+    TO_SHARED_TRAINER_LESSON_ALARM_OFF, TO_END_TRAINEE, TO_ING_TRAINEE, TO_ALL_TRAINEE
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 from schedule.functions import func_get_member_ticket_id, func_add_schedule, func_refresh_member_ticket_count, \
     func_get_lecture_member_ticket_id_from_trainee, func_send_push_trainee, func_get_holiday_schedule, \
@@ -184,7 +184,7 @@ class TraineeMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
             if class_info is not None:
                 func_setting_data_update(self.request, 'trainee')
-                context = func_get_trainer_setting_list(context, class_info.member_id, class_id, class_info.member_id)
+                context = func_get_trainer_setting_list(context, class_id, class_info.member_id)
                 cancel_prohibition_time = context['setting_member_reserve_cancel_time']
                 # 근접 취소 시간 확인
                 cancel_disable_time = timezone.now() + datetime.timedelta(minutes=cancel_prohibition_time)
@@ -262,9 +262,25 @@ class TraineeProgramNoticeView(LoginRequiredMixin, AccessTestMixin, TemplateView
                     " where B.PROGRAM_NOTICE_TB_ID = `PROGRAM_NOTICE_TB`.`ID`" \
                     " and B.MEMBER_ID="+str(self.request.user.id)+" and B.USE=1"
 
-            program_notice_data = ProgramNoticeTb.objects.filter(
-                class_tb_id=class_id, to_member_type_cd='trainee',
-                use=USE).annotate(read=RawSQL(query, [])).order_by('-reg_dt')
+            member_ticket_num = ClassMemberTicketTb.objects.select_related(
+                'member_ticket_tb__member',
+                'member_ticket_tb__ticket_tb'
+            ).filter(class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__member_id=self.request.user.id,
+                     member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+                     member_ticket_tb__ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+                     member_ticket_tb__use=USE, member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW, use=USE
+                     ).count()
+
+            to_member_type_cd = Q(to_member_type_cd=TO_ALL_TRAINEE)
+            if member_ticket_num == 0:
+                to_member_type_cd |= Q(to_member_type_cd=TO_END_TRAINEE)
+            else:
+                to_member_type_cd |= Q(to_member_type_cd=TO_ING_TRAINEE)
+
+            program_notice_data = ProgramNoticeTb.objects.filter(to_member_type_cd,
+                                                                 class_tb_id=class_id,
+                                                                 use=USE).annotate(read=RawSQL(query,
+                                                                                               [])).order_by('-reg_dt')
             context['program_notice_data'] = program_notice_data
 
             check_alarm_program_notice_qa_comment(context, class_id, self.request.user.id)
@@ -792,7 +808,7 @@ class GetTraineeScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             context = func_get_class_member_ticket_count(context, class_id, self.request.user.id)
 
             if trainer_id != '' and trainer_id is not None:
-                context = func_get_trainer_setting_list(context, trainer_id, class_id, trainer_id)
+                context = func_get_trainer_setting_list(context, class_id, trainer_id)
 
             if context['error'] is not None:
                 logger.error(self.request.user.first_name + '[' + str(self.request.user.id) + ']' + context['error'])
@@ -1552,7 +1568,7 @@ class PopupCalendarPlanView(TemplateView):
                 class_info = None
 
             if class_info is not None:
-                context = func_get_trainer_setting_list(context, class_info.member_id, class_id, class_info.member_id)
+                context = func_get_trainer_setting_list(context, class_id, class_info.member_id)
                 cancel_prohibition_time = context['setting_member_reserve_cancel_time']
                 # 근접 예약 시간 확인
                 cancel_disable_time = timezone.now() + datetime.timedelta(minutes=cancel_prohibition_time)
@@ -1683,7 +1699,7 @@ class PopupCalendarPlanReserveCompleteView(LoginRequiredMixin, AccessTestMixin, 
 
         if schedule_info is not None:
 
-            context = func_get_trainer_setting_list(context, class_info.member_id, class_id, class_info.member_id)
+            context = func_get_trainer_setting_list(context, class_id, class_info.member_id)
             cancel_prohibition_time = context['setting_member_reserve_cancel_time']
             # 근접 취소 시간 확인
             cancel_disable_time = timezone.now() + datetime.timedelta(minutes=cancel_prohibition_time)
@@ -2060,11 +2076,25 @@ class TestPageView(TemplateView):
 def check_alarm_program_notice_qa_comment(context, class_id, user_id):
     query = "select count(B.ID) from QA_COMMENT_TB as B where B.QA_TB_ID = `QA_TB`.`ID` and B.READ=0 and B.USE=1"
 
+    member_ticket_num = ClassMemberTicketTb.objects.select_related(
+        'member_ticket_tb__member',
+        'member_ticket_tb__ticket_tb'
+    ).filter(class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__member_id=user_id,
+             member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+             member_ticket_tb__ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+             member_ticket_tb__use=USE, member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW, use=USE
+             ).count()
+
+    to_member_type_cd = Q(to_member_type_cd=TO_ALL_TRAINEE)
+    if member_ticket_num == 0:
+        to_member_type_cd |= Q(to_member_type_cd=TO_END_TRAINEE)
+    else:
+        to_member_type_cd |= Q(to_member_type_cd=TO_ING_TRAINEE)
+
     context['check_qa_comment'] = QATb.objects.filter(
         member_id=user_id, status_type_cd='QA_COMPLETE',
         use=USE).annotate(qa_comment=RawSQL(query, [])).filter(qa_comment__gt=0).count()
-    program_notice_count = ProgramNoticeTb.objects.filter(class_tb_id=class_id,
-                                                          to_member_type_cd='trainee', use=USE).count()
+    program_notice_count = ProgramNoticeTb.objects.filter(to_member_type_cd, class_tb_id=class_id, use=USE).count()
     program_notice_read_count = ProgramNoticeHistoryTb.objects.filter(class_tb_id=class_id,
                                                                       member_id=user_id,
                                                                       use=USE).count()

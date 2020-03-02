@@ -5800,7 +5800,11 @@ class BoardWriter{
         let html_to_join = [];
         for(let i=0; i<length; i++){
             // let html = CComponent.dom_tag(this.data.category[i].title)+ this.dom_row_category(this.data.category[i]);
-            let html = this.dom_row_category(this.data.category[i]);
+            let style = {};
+            if(i>0){
+                style = {"border-top":"var(--border-article)"}
+            }
+            let html = this.dom_row_category(this.data.category[i], style);
             html_to_join.push(html);
         }
 
@@ -5840,7 +5844,7 @@ class BoardWriter{
         return html;
     }
 
-    dom_row_category(data){
+    dom_row_category(data, style){
         let category_id = data.id;
         let category_title = this.data.category_selected[category_id].text.length == 0 ? data.title: this.data.category_selected[category_id].text;
         let category_inner_title = data.title;
@@ -5851,7 +5855,10 @@ class BoardWriter{
         let icon = DELETE;
         let icon_r_visible = SHOW;
         let icon_r_text = "";
-        let style = this.data.category_selected[category_id].text.length == 0 ? {"color":"var(--font-inactive)"} : null;
+
+        if(this.data.category_selected[category_id].text.length == 0){
+            style["color"]="var(--font-inactive)";
+        }
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             // let title = this.data.category_selected[category_id].text;
             let install_target = "#wrapper_box_custom_select";
