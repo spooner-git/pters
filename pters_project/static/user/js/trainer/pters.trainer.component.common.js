@@ -246,7 +246,7 @@ class CComponent{
                             </div>
                             <div class="cell_ticket_info">
                                 <div>${ticket_name}</div>
-                                <div style="display:none">가격 - ${ticket_price}원 / 횟수 - ${ticket_reg_count} / 유효기간 - ${ticket_effective_days}일</div>
+                                <div style="font-size:12px;color:var(--font-sub-normal);line-height:20px">${UnitRobot.numberWithCommas(ticket_price)} 원 / ${ticket_reg_count != 99999 ? ticket_reg_count+" 회" : "횟수 무제한"} / ${ticket_effective_days != 99999 ? ticket_effective_days+" 일간" : "소진시까지"}</div>
                             </div>
                             <div class="cell_ticket_selected ${checked == 0 ? '' : 'ticket_selected'}">
                                 ${CImg.confirm("", checked == 0 ? {"display":"none"} : {"display":"block"})}

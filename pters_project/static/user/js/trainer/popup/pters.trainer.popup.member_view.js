@@ -717,7 +717,7 @@ class Member_view{
                 //     html_ticket_name + html_ticket_lecture_list + html_remain_info +
                 // `</div>`
                 CComp.container("div", 
-                    html_ticket_name + html_ticket_lecture_list + html_remain_info, 
+                    html_ticket_name + html_remain_info + html_ticket_lecture_list, 
                     null, 
                     {class:"member_current_ticket_article", id:`member_current_ticket_article_${ticket_id}`}, 
                     {"type":"click", "exe":(e)=>{
