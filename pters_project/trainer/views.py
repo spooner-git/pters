@@ -4786,12 +4786,15 @@ def update_setting_push_to_me_logic(request):
 
         schedule_data = ScheduleTb.objects.select_related(
             'schedule_alarm_tb').filter(class_tb_id=class_id, start_dt__gte=alarm_time, lecture_schedule_id__isnull=True,
+                                        en_dis_type='1',
                                         use=USE)
         for schedule_info in schedule_data:
             alarm_dt = schedule_info.start_dt - datetime.timedelta(minutes=int(setting_schedule_alarm_minute))
             if schedule_info.schedule_alarm_tb is None or schedule_info.schedule_alarm_tb == '':
                 schedule_alarm_info = ScheduleAlarmTb(class_tb_id=class_id, schedule_tb_id=schedule_info.schedule_id,
-                                                      alarm_dt=alarm_dt, member_ids=request.user.id, use=USE)
+                                                      alarm_dt=alarm_dt, member_ids=request.user.id,
+                                                      alarm_minute=setting_schedule_alarm_minute,
+                                                      use=USE)
                 schedule_alarm_info.save()
                 schedule_info.schedule_alarm_tb_id = schedule_alarm_info.schedule_alarm_id
                 schedule_info.save()
@@ -4799,6 +4802,7 @@ def update_setting_push_to_me_logic(request):
                 if not str(request.user.id) in schedule_info.schedule_alarm_tb.member_ids:
                     schedule_info.schedule_alarm_tb.member_ids += ','+str(request.user.id)
                 schedule_info.schedule_alarm_tb.alarm_dt = alarm_dt
+                schedule_info.schedule_alarm_tb.alarm_minute = setting_schedule_alarm_minute
                 schedule_info.schedule_alarm_tb.save()
 
     if error is None:
