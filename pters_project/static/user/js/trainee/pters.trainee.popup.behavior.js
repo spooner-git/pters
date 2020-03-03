@@ -94,6 +94,7 @@ let layer_popup = (function(){
 
             if(call_method == POPUP_AJAX_CALL){
                 func_get_popup_ajax(popup_name, data);
+                console.log(data);
             }else if(call_method==POPUP_BASIC){
                 func_set_popup_basic(popup_name, data)
             }else if(call_method==POPUP_INNER_HTML){
