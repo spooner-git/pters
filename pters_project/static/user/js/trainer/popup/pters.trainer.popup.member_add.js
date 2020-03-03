@@ -777,10 +777,16 @@ class Member_add{
     }
 
     dom_row_ticket_pay_method_select(){
+        // let option_data = {
+        //     value:["NONE", "CASH", "CARD", "TRANS", "CASH+CARD", "CARD+TRANS", "CASH+TRANS"],
+        //     text:["선택 안함", "현금", "카드", "계좌이체", "현금 + 카드", "카드 + 계좌 이체", "현금 + 계좌 이체"]
+        // };
         let option_data = {
-            value:["NONE", "CASH", "CARD", "TRANS", "CASH+CARD", "CARD+TRANS", "CASH+TRANS"],
-            text:["선택 안함", "현금", "카드", "계좌이체", "현금 + 카드", "카드 + 계좌 이체", "현금 + 계좌 이체"]
+            value:Object.keys(TICKET_PAY_METHOD),
+            text:Object.values(TICKET_PAY_METHOD)
         };
+
+        // console.log(Object.keys(TICKET_PAY_METHOD), Object.values(TICKET_PAY_METHOD))
 
         let id = 'input_ticket_pay_method_select';
         let title = this.data.pay_method.value[0] == "NONE" ? '지불 방법' : this.data.pay_method.text[0];
