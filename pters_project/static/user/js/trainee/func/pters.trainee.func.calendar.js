@@ -481,7 +481,7 @@ function pters_month_calendar(calendar_name, calendar_options){
                 if(schedule_finish==SCHEDULE_NOT_FINISH){
                     if(schedule_permission_status==SCHEDULE_WAIT){
                         schedule_finish = '대기 예약';
-                        schedule_finish_tag = "obj_font_bg_coral_white";
+                        schedule_finish_tag = "obj_font_bg_orange_white";
                     }
                     else{
                         schedule_finish = '예약 확정';
