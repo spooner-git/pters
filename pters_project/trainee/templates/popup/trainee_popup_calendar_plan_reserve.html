@@ -145,8 +145,8 @@
     <script type="text/javascript" src={% static_url "user/js/trainee/popup/pters.trainee.popup.calendar_plan_reserve.js" %}></script>
     <script type="text/javascript">
         let selected_date = `{{ select_date }}`.split(' ')[0];
-        let one_to_one_lecture_time_duration = {{ one_to_one_lecture_time_duration }};
-        let one_to_one_lecture_id = {{ one_to_one_lecture_id }};
+        let one_to_one_lecture_time_duration = '{{ one_to_one_lecture_time_duration }}';
+        let one_to_one_lecture_id = '{{ one_to_one_lecture_id }}';
         let one_to_one_lecture_start_time = "{{ one_to_one_lecture_start_time }}";
         $(document).ready(function(){
             $('#form_plan_add').find('input').val('');
