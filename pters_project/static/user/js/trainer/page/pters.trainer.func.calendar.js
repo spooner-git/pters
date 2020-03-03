@@ -1077,7 +1077,7 @@ class Calendar {
                             }
 
                             
-                            let styles = `width:${100/cell_divide}%;height:${height}%;top:${top}%;left:${cell_index*100/cell_divide}%;background-color:${plan_status_color};${plan_font_style};display:${display}`;
+                            let styles = `width:calc(${100/cell_divide}% - 1px);height:calc(${height}% - 3px);top:calc(${top}% + 2px);left:${cell_index*100/cell_divide}%;background-color:${plan_status_color};${plan_font_style};display:${display}`;
                             let long_touch_active = this.long_touch_schedule_id == plan.schedule_id ? "long_touch_active" : "";
                             let go_behind =  "";
                             if(this.long_touch == ON && this.long_touch_schedule_id != plan.schedule_id){

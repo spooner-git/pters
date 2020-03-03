@@ -308,7 +308,8 @@
 .calendar_schedule_display_week{
 	position: absolute;
 	background-color: var(--bg-highlight);
-	border: 1px solid var(--bg-main);
+	/* border: 1px solid var(--bg-main); */
+	border: 1px solid transparent;
 	box-sizing: border-box;
 	padding-left: 3px;
 	/* font-size: 10px; */
