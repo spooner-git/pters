@@ -2460,7 +2460,7 @@ class Plan_calc{
         let start_array = [];
         let end_array = [];
         let duplicate_dic = {};
-    
+
         jsondata.forEach((plan) => {
             let start_time = plan.start_time;
             let end_time = plan.end_time;
@@ -2470,7 +2470,6 @@ class Plan_calc{
             start_array.push(start_time);
             end_array.push(end_time);
         });
-    
         //중복일정을 큰 덩어리로 가져오기
         let clear_result = Plan_calc.merge_duplicated_time(start_array, end_array);
         let clear_start_date = clear_result.clear_start_array;
@@ -2486,7 +2485,7 @@ class Plan_calc{
                 }
             }
         }
-    
+
         //겹치지 않는 합쳐진 일정
         let pp = 0;
         for(let plan in duplicate_dic){
@@ -2494,7 +2493,7 @@ class Plan_calc{
             let temp_cell_divide;
     
             // 겹치는 일정 sorting
-            let array_sorted = duplicate_dic[plan].sort();
+            let array_sorted = duplicate_dic[plan];
     
             for(let i=0; i<array_sorted.length; i++){
                 // 기본값 셋팅
@@ -2510,8 +2509,8 @@ class Plan_calc{
                     }
                     let ref_split = array_sorted[i].split(' ~ ');
                     let comp_split = array_sorted[j].split(' ~ ');
-    
                     if(Plan_calc.know_whether_plans_has_duplicates(ref_split[0], ref_split[1], comp_split[0], comp_split[1]) > 0){ //겹칠때
+                        // console.log('test')
                         check_duplication = true;
                     }else{ //겹치지 않을때
                         let index_move = 0;
@@ -2523,10 +2522,8 @@ class Plan_calc{
                             let index_loc = temp_index.indexOf(temp_index[j], index_move);
                             index_move = index_loc + 1;
                             if(i != index_loc){
-    
                                 // let ref_split = array_sorted[i].split(' ~ ');
                                 let comp_split = array_sorted[index_loc].split(' ~ ');
-    
                                 if(Plan_calc.know_whether_plans_has_duplicates(ref_split[0], ref_split[1], comp_split[0], comp_split[1]) > 0){
                                     check++;
                                 }

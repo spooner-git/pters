@@ -229,7 +229,7 @@ class GetAllSchedulePushAlarmDataView(View):
         for alarm_schedule_info in alarm_schedule_data:
             member_ids.append(alarm_schedule_info.member_id)
             alarm_schedule_info.messages = 'test'
-
+        print(str(len(alarm_schedule_data)))
         # 보내야 하는 회원의 token 가져오기
         query_member_id = Q()
         for member_id in set(sum(member_ids, [])):
