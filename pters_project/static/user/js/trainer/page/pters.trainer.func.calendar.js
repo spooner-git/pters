@@ -723,13 +723,13 @@ class Calendar {
             $('.week_rows article').css('height', '180px');
             // $('#week_zoom_vertical_button').css({'background-image':'url(/static/common/icon/icon_zoom_out_black.png)'});
             $('#week_zoom_vertical_button').html(CImg.zoom_out());
-            $('.week_rows > .week_row').css({'background-image': 'url(/static/user/res/new/calendar_hour_long2.png?v)', 'background-size': '30px 180px'});
+            $('.week_rows > .week_row').css({'background-image': 'url(/static/user/res/new/calendar_hour_long2.png?v20200303)', 'background-size': '100% 180px'});
         }else if(this.week_zoomed.vertical.activate == true){
             this.week_zoomed.vertical.activate = false;
             $('.week_rows article').css('height', '60px');
             // $('#week_zoom_vertical_button').css({'background-image':'url(/static/common/icon/icon_zoom_in_black.png)'});
             $('#week_zoom_vertical_button').html(CImg.zoom_in());
-            $('.week_rows > .week_row').css({'background-image': 'url(/static/user/res/new/calendar_hour_short.png?v2)', 'background-size': '30px 60px'});
+            $('.week_rows > .week_row').css({'background-image': 'url(/static/user/res/new/calendar_hour_short.png?v20200303)', 'background-size': '100% 60px'});
         }
         this.relocate_current_time_indicator();
     }
