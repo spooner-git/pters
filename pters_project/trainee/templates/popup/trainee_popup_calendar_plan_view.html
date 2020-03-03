@@ -17,10 +17,14 @@
         <div class="wrapper_box_next_plan">
             {% for schedule_info in schedule_data %}
             <div class="obj_box_full">
-                <div class="obj_box_full_grey">
-                    <!-- <div class="wrapper_tag">
-                        <div class="obj_tag obj_font_bg_white_black">예약완료</div>
-                    </div> -->
+                <div class="obj_box_full_grey" style="position:relative">
+                    {% if schedule_info.permission_state_cd == 'WP' %}
+                        <div style="position:absolute;top:0;right:0;border:30px solid orange;border-top-right-radius:5px;border-left-color:transparent;border-bottom-color:transparent;"></div>
+                        <div style="position:absolute;top:0;right:0;border:15px solid #fafafa;border-top-right-radius:5px;border-left-color:transparent;border-bottom-color:transparent;"></div>
+                    {% else %}
+                        <!-- <div style="position:absolute;top:0;right:0;border:30px solid green;border-top-right-radius:5px;border-left-color:transparent;border-bottom-color:transparent;"></div>
+                        <div style="position:absolute;top:0;right:0;border:15px solid #fafafa;border-top-right-radius:5px;border-left-color:transparent;border-bottom-color:transparent;"></div> -->
+                    {% endif %}
                     <div  class="wrapper_permission_type">
                         {% if schedule_info.permission_state_cd == 'WP' %}
                             <div class="obj_tag obj_font_bg_coral_white obj_font_size_16_weight_bold" style="font-size:10px; line-height:15px; height:15px;">대기 예약</div>

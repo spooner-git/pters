@@ -121,7 +121,8 @@ const TICKET_PAY_METHOD = {
     "TRANS":"계좌이체",
     "CASH+CARD":"현금 + 카드",
     "CARD+TRANS":"카드 + 계좌 이체",
-    "CASH+TRANS":"현금 + 계좌 이체"
+    "CASH+TRANS":"현금 + 계좌 이체",
+    "CARD+CARD":"카드 + 카드"
 };
 
 // 일지 공개 타입
