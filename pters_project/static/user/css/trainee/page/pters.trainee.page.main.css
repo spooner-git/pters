@@ -111,10 +111,9 @@
 		margin: 0;
 	}
 
-	
-
 	.trainee_main .wrapper_current_ticket .obj_table_raw{
-		padding: 15px 0;
+		/* padding: 15px 0; */
+		padding: 0;
 	}
 	.trainee_main .wrapper_current_ticket .obj_table_cell_x3{
 		height: 40px;
