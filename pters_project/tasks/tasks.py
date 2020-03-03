@@ -78,6 +78,7 @@ def task_send_fire_base_push_multi_without_badge(registration_ids, title, messag
 
 @shared_task
 def task_send_aws_lambda_for_push_alarm(data):
+    error = None
     pters_aws_push_api_key = getattr(settings, "PTERS_AWS_PUSH_API_KEY", '')
     body = json.dumps(data)
     h = httplib2.Http()

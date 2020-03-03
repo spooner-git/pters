@@ -17,14 +17,15 @@ from configs.const import REPEAT_TYPE_2WEAK, ON_SCHEDULE_TYPE, USE, UN_USE, SCHE
     STATE_CD_ABSENCE, STATE_CD_FINISH, STATE_CD_IN_PROGRESS, STATE_CD_NOT_PROGRESS, LECTURE_TYPE_ONE_TO_ONE, \
     AUTH_TYPE_VIEW, GROUP_SCHEDULE, OFF_SCHEDULE, FROM_TRAINEE_LESSON_ALARM_ON, TO_SHARED_TRAINER_LESSON_ALARM_OFF, \
     TO_SHARED_TRAINER_LESSON_ALARM_ON, PERMISSION_STATE_CD_WAIT, \
-    PERMISSION_STATE_CD_APPROVE, TO_ALL_TRAINEE, TO_ING_TRAINEE, TO_END_TRAINEE
+    PERMISSION_STATE_CD_APPROVE, TO_ALL_TRAINEE, TO_ING_TRAINEE, TO_END_TRAINEE, GROUP_TRAINEE, GROUP_TRAINER
 from configs.settings import DEBUG
 from login.models import PushInfoTb
 from trainee.models import MemberTicketTb
 from trainer.functions import func_update_lecture_member_fix_status_cd, func_get_member_ing_list, \
     func_get_member_end_list
 from trainer.models import MemberClassTb, ClassMemberTicketTb, LectureTb, TicketLectureTb, SettingTb
-from .models import ScheduleTb, RepeatScheduleTb, DeleteScheduleTb, DeleteRepeatScheduleTb, HolidayTb, DailyRecordTb
+from .models import ScheduleTb, RepeatScheduleTb, DeleteScheduleTb, DeleteRepeatScheduleTb, HolidayTb, DailyRecordTb, \
+    ScheduleAlarmTb
 
 if DEBUG is False:
     from tasks.tasks import task_send_fire_base_push, task_send_fire_base_push_multi, \
@@ -263,8 +264,7 @@ def func_refresh_lecture_status(lecture_id, lecture_schedule_id, lecture_repeat_
 
 # 일정 등록
 def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
-                      lecture_info, lecture_schedule_id,
-                      start_datetime, end_datetime,
+                      lecture_info, lecture_schedule_id, start_datetime, end_datetime,
                       note, en_dis_type, user_id, permission_state_cd, state_cd, duplication_enable_flag):
     error = None
     context = {'error': None, 'schedule_id': ''}
@@ -282,6 +282,7 @@ def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
     end_color_cd = ''
     ing_font_color_cd = ''
     end_font_color_cd = ''
+    alarm_setting_data = None
 
     if lecture_info is not None and lecture_info.lecture_type_cd != LECTURE_TYPE_ONE_TO_ONE:
 
@@ -307,6 +308,8 @@ def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
         end_color_cd = '#d2d1cf'
         ing_font_color_cd = '#3b3b3b'
         end_font_color_cd = '#3b3b3b'
+    else:
+        alarm_setting_data = func_get_program_alarm_data(class_id)
 
     if error is None:
         try:
@@ -327,18 +330,57 @@ def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
                                                reg_member_id=user_id,
                                                mod_member_id=user_id)
                 add_schedule_info.save()
+                schedule_id = add_schedule_info.schedule_id
+
+                if str(en_dis_type) != OFF_SCHEDULE:
+                    for alarm_setting_info in alarm_setting_data:
+                        if member_ticket_id is not None:
+                            if lecture_schedule_id is None:
+                                # 1:1 수업
+                                if add_schedule_info.member_ticket_tb.member_id != alarm_setting_info.member_id:
+                                    if alarm_setting_info.user_group == GROUP_TRAINEE:
+                                        continue
+                            else:
+                                # 그룹 수업 - 회원 포함
+                                if add_schedule_info.member_ticket_tb.member_id != alarm_setting_info.member_id:
+                                    if alarm_setting_info.user_group == GROUP_TRAINER:
+                                        continue
+                        # 그룹 수업 껍데기
+                        else:
+                            if alarm_setting_info.user_group == GROUP_TRAINEE:
+                                continue
+
+                        setting_schedule_alarm_minute = alarm_setting_info.setting_info
+                        alarm_dt = start_datetime - datetime.timedelta(minutes=int(setting_schedule_alarm_minute))
+                        try:
+                            schedule_alarm_info = ScheduleAlarmTb.objects.get(schedule_tb_id=schedule_id,
+                                                                              alarm_dt=alarm_dt)
+                            if not str(user_id) in schedule_alarm_info.member_ids:
+                                schedule_alarm_info.member_ids += ','+str(alarm_setting_info.member_id)
+                                schedule_alarm_info.save()
+                        except ObjectDoesNotExist:
+                            schedule_alarm_info = ScheduleAlarmTb(class_tb_id=class_id,
+                                                                  schedule_tb_id=schedule_id,
+                                                                  alarm_dt=alarm_dt,
+                                                                  member_ids=alarm_setting_info.member_id,
+                                                                  alarm_minute=setting_schedule_alarm_minute,
+                                                                  use=USE)
+                            schedule_alarm_info.save()
+                            add_schedule_info.schedule_alarm_tb_id = schedule_alarm_info.schedule_alarm_id
+                            add_schedule_info.save()
+
                 if lecture_info is not None:
                     if lecture_schedule_id is not None:
                         error = func_check_lecture_available_member_after(class_id, lecture_info, lecture_schedule_id,
                                                                           permission_state_cd)
                 if error is None:
-                    error = func_date_check(class_id, add_schedule_info.schedule_id,
+                    error = func_date_check(class_id, schedule_id,
                                             str(start_datetime).split(' ')[0], start_datetime, end_datetime,
                                             duplication_enable_flag)
                     if error is not None:
                         error = ' 일정이 중복되었습니다.'
 
-                context['schedule_id'] = add_schedule_info.schedule_id
+                context['schedule_id'] = schedule_id
 
         except TypeError:
             error = '일정 추가중 오류가 발생했습니다.'
@@ -368,7 +410,7 @@ def func_add_schedule_update(class_id, member_ticket_id, repeat_schedule_id,
         lecture_schedule_id = None
     if repeat_schedule_id == '':
         repeat_schedule_id = None
-
+    alarm_setting_data = None
     max_mem_count = 1
     ing_color_cd = ''
     end_color_cd = ''
@@ -393,6 +435,8 @@ def func_add_schedule_update(class_id, member_ticket_id, repeat_schedule_id,
         end_color_cd = '#d2d1cf'
         ing_font_color_cd = '#3b3b3b'
         end_font_color_cd = '#3b3b3b'
+    else:
+        alarm_setting_data = func_get_program_alarm_data(class_id)
 
     if error is None:
         try:
@@ -413,6 +457,33 @@ def func_add_schedule_update(class_id, member_ticket_id, repeat_schedule_id,
                                                reg_member_id=user_id,
                                                mod_member_id=user_id)
                 add_schedule_info.save()
+                schedule_id = add_schedule_info.schedule_id
+                if str(en_dis_type) != OFF_SCHEDULE:
+                    for alarm_setting_info in alarm_setting_data:
+                        # 그룹 수업 - 회원 포함
+                        if add_schedule_info.member_ticket_tb.member_id != alarm_setting_info.member_id:
+                            if alarm_setting_info.user_group == GROUP_TRAINEE:
+                                continue
+
+                        setting_schedule_alarm_minute = alarm_setting_info.setting_info
+                        alarm_dt = start_datetime - datetime.timedelta(minutes=int(setting_schedule_alarm_minute))
+                        try:
+                            schedule_alarm_info = ScheduleAlarmTb.objects.get(schedule_tb_id=schedule_id,
+                                                                              alarm_dt=alarm_dt)
+                            if not str(user_id) in schedule_alarm_info.member_ids:
+                                schedule_alarm_info.member_ids += ','+str(alarm_setting_info.member_id)
+                                schedule_alarm_info.save()
+                        except ObjectDoesNotExist:
+                            schedule_alarm_info = ScheduleAlarmTb(class_tb_id=class_id,
+                                                                  schedule_tb_id=schedule_id,
+                                                                  alarm_dt=alarm_dt,
+                                                                  member_ids=alarm_setting_info.member_id,
+                                                                  alarm_minute=setting_schedule_alarm_minute,
+                                                                  use=USE)
+                            schedule_alarm_info.save()
+                            add_schedule_info.schedule_alarm_tb_id = schedule_alarm_info.schedule_alarm_id
+                            add_schedule_info.save()
+
                 if error is None:
                     error = func_date_check(class_id, add_schedule_info.schedule_id,
                                             str(start_datetime).split(' ')[0], start_datetime, end_datetime,
@@ -1889,3 +1960,13 @@ def func_delete_daily_record_content_image_logic(file_name):
         else:
             error_code = None
     return error_code
+
+
+def func_get_program_alarm_data(class_id):
+    query_user_group = "SELECT group_id FROM auth_user_groups WHERE user_id=`SETTING_TB`.`MEMBER_ID`"
+    setting_data = SettingTb.objects.select_related(
+        'member__user').filter(class_tb_id=class_id,
+                               setting_type_cd='LT_PUSH_SCHEDULE_ALARM_MINUTE').exclude(
+        setting_info='-1').annotate(user_group=RawSQL(query_user_group, []))
+
+    return setting_data
