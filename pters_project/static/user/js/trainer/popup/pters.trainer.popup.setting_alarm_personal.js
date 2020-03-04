@@ -133,7 +133,7 @@ class Setting_alarm_personal{
         let icon = DELETE;
         let icon_r_visible = SHOW;
         let icon_r_text = this.data.setting_schedule_alarm_minute.text.length == 0 ? '' : this.data.setting_schedule_alarm_minute.text;
-        let style = {"padding-bottom":"0", "padding-top":"24px;"};
+        let style = null;
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             let title = "PUSH 알림 시간";
             let install_target = "#wrapper_box_custom_select";
