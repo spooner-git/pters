@@ -355,6 +355,7 @@
     .func_radio_element_button{
         display: table-cell;
         text-align: center;
+        width: 40px;
     }
     .func_radio_element_button > div.func_radio_element_button_outer{
         position: relative;
