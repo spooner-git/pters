@@ -11,6 +11,13 @@ let layer_popup = (function(){
         let popup_data = {"popup_name":popup_name, "popup_size":popup_size, "animation_type":animation_type};
         //똑같은 팝업 여러개 못뜨도록
         let $popup_name_selector = $(`.${popup_name}`);
+        if(animation_type == POPUP_FROM_PAGE){
+                let $this_popup =  $(`.${popup_data.popup_name}`).parents('.popup_mobile');
+                $this_popup.addClass("anim_pulse");
+                setTimeout(()=>{
+                    $this_popup.removeClass("anim_pulse");
+                }, 300);
+        }
 
         if($popup_name_selector.length == 1){
             popup_array.push(popup_data);
