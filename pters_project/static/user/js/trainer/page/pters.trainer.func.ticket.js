@@ -184,7 +184,7 @@ class Ticket{
                             </div>
                             <div class="ticket_data_b">
                                 <div class="ticket_lectures" style="display:${this.toggle_ticket_lectures_display == ON ? "" : "none"}">
-                                    ${ticket_lectures_included_name_html.length != 0 ? ticket_lectures_included_name_html.join('') : "<span style='color:var(--font-highlight);text-decoration:underline'>포함된 수업이 없습니다.</span>"}
+                                    ${ticket_lectures_included_name_html.length != 0 ? ticket_lectures_included_name_html.join('') : "<span style='color:var(--font-highlight);'><img src='/static/common/icon/icon_stopmark.png' style='width:15px;height:15px;vertical-align:middle;margin-bottom:4px;'> 포함된 수업이 없습니다.</span>"}
                                 </div>
                             </div>
                         </article>`;
