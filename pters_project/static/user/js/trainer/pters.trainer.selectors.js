@@ -5374,6 +5374,128 @@ class CustomSelector{
     }
 }
 
+class TimeInputMethodSelector{
+    constructor(title, install_target, selected_data, callback){
+        this.title = title;
+        this.target = {install:install_target};
+        this.unique_instance = install_target.replace(/#./gi, "");
+        this.callback = callback;
+        this.selected_data = selected_data;
+        this.data = {
+            value:[],
+            text:[]
+        };
+        // this.init();
+        this.set_initial_data();
+    }
+
+    init(){
+        this.render();
+    }
+
+    set_initial_data(){
+        this.data.value = this.selected_data.value;
+        this.data.text = this.selected_data.text;
+        this.init();
+    }
+
+    clear(){
+        setTimeout(()=>{
+            document.querySelector(this.target.install).innerHTML = "";
+        }, 300);
+    }
+
+    render(){
+        let top_left = `<span class="icon_left" onclick="custom_selector.upper_right_menu();">${CImg.arrow_left()}</span>`;
+        let top_center = `<span class="icon_center">
+                            <span id="">${this.title}</span>
+                          </span>`;
+        let top_right = `<span class="icon_right">
+                            <span style="color:var(--font-highlight);font-weight: 500;" onclick="custom_selector.upper_right_menu();">${this.multiple_select == 1 ? '' : '완료'}</span>
+                        </span>`;
+        let content =   `<section>${this.dom_list()}</section>`;
+        
+        let html = PopupBase.base(top_left, top_center, top_right, content, "");
+
+        document.querySelector(this.target.install).innerHTML = html;
+    }
+
+    dom_list (){
+
+        let row_basic_selector = this.element_basic();
+        let row_classic_selector = this.element_classic();
+
+        let html = row_basic_selector + row_classic_selector;
+
+        return html;
+    }
+
+    element_basic(){
+        let html = `
+                    <div>
+                        ${CComponent.radio_button("time_input_select_new", this.data.value[0] == BASIC ? ON : OFF, {"transform":"scale(1.2)", "display":"inline-block", "margin-right":"5px"}, ()=>{})}
+                        <span>기본</span>
+                        <p style="font-size:12px">시작과 종료시간을 각각 상세하게 설정 합니다. <br>겹치는 일정을 상관없이 모두 표기해 줍니다.</p>
+                    </div>
+                    <div>
+                        <img src="/static/common/img/time_input_method/calendar_time_input_type_new.png?v2" style="width:100%">
+                    </div>
+                    `;
+        let selected_or_not = this.data.value[0] == BASIC ? {"background-color": "#fe4e6530", "border-color": "var(--bg-highlight)"} : {};
+        let style = {"margin":"10px auto", "padding":"15px", "box-shadow":"var(--box-shadow-article)", "max-width":"350px"}
+        let comp = CComp.container(
+            "div",
+            html,
+            {...style, ...selected_or_not},
+            {id:"input_method_new"},
+            {type:"click", exe:()=>{
+                this.data.value[0] = BASIC;
+                this.data.text[0] = "기본";
+                this.render();
+            }}
+        );
+        return comp;
+    }
+
+    element_classic(){
+        let html = `
+                    <div>
+                        ${CComponent.radio_button("time_input_select_classic", this.data.value[0] == CLASSIC ? ON : OFF, {"transform":"scale(1.2)", "display":"inline-block", "margin-right":"5px"}, ()=>{})}
+                        <span>클래식</span><span style="color:var(--font-highlight);font-size:11px;"> (베타)</span>
+                        <p style="font-size:12px">시작과 종료시각을 한번에 설정 합니다. <br>겹치는 일정은 필터링 할 수 있습니다.</p>
+                    </div>
+                    <div>
+                        <img src="/static/common/img/time_input_method/calendar_time_input_type_classic.png?v2" style="width:100%">
+                    </div>
+                    `;
+        let selected_or_not = this.data.value[0] == CLASSIC ? {"background-color": "#fe4e6530", "border-color": "var(--bg-highlight)"} : {};
+        let style = {"margin":"10px auto", "padding":"15px", "box-shadow":"var(--box-shadow-article)", "max-width":"350px"}
+        let comp = CComp.container(
+            "div",
+            html,
+            {...style, ...selected_or_not},
+            {id:"input_method_classic"},
+            {type:"click", exe:()=>{
+                this.data.value[0] = CLASSIC;
+                this.data.text[0] = "클래식";
+                this.render();
+            }}
+        );
+        return comp;
+    }
+
+    request_list (callback){
+        // this.received_data = color_data;
+        // callback();
+    }
+
+    upper_right_menu(){
+        this.callback(this.data);
+        layer_popup.close_layer_popup();
+        this.clear();
+    }
+}
+
 class PasswordFourDigitInput{
     constructor(title, install_target, original_data, callback){
         this.title = title;
