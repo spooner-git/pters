@@ -217,7 +217,7 @@ class Ticket_view{
         let ticket_memo_assembly = '<div class="obj_input_box_full">'+CComponent.dom_tag('설명')+memo+ '</div>';
         let ticket_member_list_assembly = '<div class="obj_input_box_full" style="padding-top:16px;">'+CComponent.dom_tag(`수강권 보유 회원 (${this.data.member_id.length} 명)`, 
                                             {"font-size":"13px", "font-weight":"bold", "letter-spacing":"-0.6px", "padding":"0", "padding-bottom":"8px", "color":"var(--font-sub-normal)", "height":"20px"}) + 
-                                            `${this.data.lecture_id.length == 0 && this.data.name != null ? "<span style='color:var(--font-highlight);font-size:12px;font-weight:bold;'>포함된 수업이 없어, 수강권 보유 회원들이 일정을 등록할 수 없습니다.</span>" : ""}` +
+                                            `${this.data.lecture_id.length == 0 && this.data.name != null ? "<span style='color:var(--font-highlight);font-size:12px;font-weight:bold;'><img src='/static/common/icon/icon_stopmark.png' style='width:15px;height:15px;vertical-align:middle;margin-bottom:4px;'> 포함된 수업이 없어, 수강권 보유 회원들이 일정을 등록할 수 없습니다.</span>" : ""}` +
                                             member_list+ '</div>';
 
         if(this.data.ticket_state == STATE_END_PROGRESS){

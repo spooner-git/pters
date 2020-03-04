@@ -507,7 +507,7 @@ class Lecture_view{
         }
         this.data.active_ticket_length = length - progress_end_ticket;
 
-        let html = `<div>${html_to_join.join('')}</div>`;
+        let html = `<div>${html_to_join.length > 0 ? html_to_join.join('') : "<span style='color:var(--font-highlight);font-size:12px;font-weight:bold;'><img src='/static/common/icon/icon_stopmark.png' style='width:15px;height:15px;vertical-align:middle;margin-bottom:4px;'> 이 수업을 포함한 수강권이 없습니다.</span>"}</div>`;
 
         return html;
     }

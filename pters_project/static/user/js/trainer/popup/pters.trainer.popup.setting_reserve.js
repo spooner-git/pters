@@ -395,7 +395,7 @@ class Setting_reserve{
         let icon = DELETE;
         let icon_r_visible = SHOW;
         let icon_r_text = this.data.wait_schedule_auto_cancel_time.text.length == 0 ? '' : this.data.wait_schedule_auto_cancel_time.text;
-        let style = {"padding-bottom":"0", "padding-top":"24px;", "padding-right":"10px"};
+        let style = {"padding-bottom":"0", "padding-top":"24px;"};
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             let title = "대기 예약 자동 취소 시간";
             let install_target = "#wrapper_box_custom_select";

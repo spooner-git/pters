@@ -2,10 +2,14 @@ class Setting_calendar{
     constructor(install_target){
         this.target = {install: install_target, toolbox:'section_setting_calendar_toolbox', content:'section_setting_calendar_content'};
         this.data_sending_now = false;
+        this.TIME_INPUT_SELECTOR = {
+            0:"기본",
+            1:"클래식"
+        };
 
         this.data = {
             start_day:null,
-            calendar_time_input_type: BASIC,
+            calendar_time_input_type: {value:[], text:[]},
             calendar_basic_select_time:{value:[], text:[]},
             sing_use:OFF
         };
@@ -28,7 +32,8 @@ class Setting_calendar{
     set_initial_data (){
         Setting_calendar_func.read((data)=>{
             this.data.start_day = data.setting_week_start_date;
-            this.data.calendar_time_input_type = Number(data.setting_calendar_time_selector_type);
+            this.data.calendar_time_input_type.value[0] = Number(data.setting_calendar_time_selector_type);
+            this.data.calendar_time_input_type.text[0] = this.TIME_INPUT_SELECTOR[Number(data.setting_calendar_time_selector_type)];
             this.data.sing_use = data.setting_schedule_sign_enable;
             let current_calendar_basic_select_time = Number(data.setting_calendar_basic_select_time);
 
@@ -50,7 +55,6 @@ class Setting_calendar{
     render(){
         let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();setting_calendar_popup.clear();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
-        // let top_right = `<span class="icon_right" onclick="setting_calendar_popup.upper_right_menu();">${CImg.confirm()}</span>`;
         let top_right = `<span class="icon_right" onclick="setting_calendar_popup.upper_right_menu();"><span style="color:var(--font-highlight);font-weight: 500;">저장</span></span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
@@ -75,10 +79,10 @@ class Setting_calendar{
     }
     
     dom_assembly_content(){
-        let html =  '<article class="obj_input_box_full" style="padding:0;">' +
+        let html =  '<article class="obj_input_box_full" style="padding-right:10px;">' +
                         this.dom_row_start_day_setting() + 
                     '</article>' +
-                    '<article class="obj_input_box_full" style="padding-top:5px;">' +
+                    '<article class="obj_input_box_full" style="padding-top:5px;padding-right:10px;">' +
                         this.dom_row_calendar_basic_select_time() + 
                         "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>달력 클릭/OFF 일정 클릭시 선택되는 기본 시간입니다.</span>" +
                     '</article>' +
@@ -86,10 +90,8 @@ class Setting_calendar{
                         this.dom_row_sign_use() + 
                         "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>출석 처리 시 서명을 입력받을 수 있습니다.</span>" +
                     '</article>' +
-                    '<article class="obj_input_box_full">' +
-                        this.dom_row_calendar_title() +
-                        this.dom_row_calendar_time_input_type_new() + 
-                        this.dom_row_calendar_time_input_type_classic() +
+                    '<article class="obj_input_box_full" style="padding-top:5px;padding-right:10px;">' +
+                    this.dom_row_select_time_input_method() +
                     '</article>';
         return html;
     }
@@ -127,7 +129,7 @@ class Setting_calendar{
 
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
 
-        let html = `<article class="setting_worktime_wrapper obj_input_box_full" style="padding-right:10px;">
+        let html = `<article class="setting_worktime_wrapper">
                         ${row}
                     </article>
                     `;
@@ -180,16 +182,24 @@ class Setting_calendar{
         return html;
     }
 
-    dom_row_calendar_title(){
-        
-        let id = "calendar_title";
+    dom_row_select_time_input_method(){
+        let id = "calendar_basic_select_time";
         let title = "시간 입력 방식";
         let icon = DELETE;
-        let icon_r_visible = NONE;
-        let icon_r_text = "";
-        let style = null;
+        let icon_r_visible = SHOW;
+        let icon_r_text = this.data.calendar_time_input_type.text;
+        let style = {"height":"auto", "padding-bottom":"0"};
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            
+            let title = "시간 입력 방식";
+            let install_target = "#wrapper_box_custom_select";
+            let selected_data = this.data.calendar_time_input_type;
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, popup_style, null, ()=>{
+                custom_selector = new TimeInputMethodSelector(title, install_target, selected_data, (set_data)=>{
+                    this.data.calendar_time_input_type = set_data;
+                    this.render_content();
+                });
+            });
         });
         let html = `<article class="setting_worktime_wrapper">
                         ${row}
@@ -197,47 +207,6 @@ class Setting_calendar{
                     `;
         return html;
     }
-
-    dom_row_calendar_time_input_type_new(){
-        let selected_or_not = this.data.calendar_time_input_type == BASIC ? "selected" : "";
-        let html = `<div class="select_wrap ${selected_or_not}" id="input_method_new">
-                        <div class="select_indicator">
-                            ${CComponent.radio_button("time_input_select_new", this.data.calendar_time_input_type == BASIC ? ON : OFF, {"transform":"scale(1.2)", "display":"inline-block", "margin-right":"5px"}, ()=>{})}
-                            <span>기본</span>
-                            <p>시작과 종료시간을 각각 상세하게 설정 합니다. <br>겹치는 일정을 상관없이 모두 표기해 줍니다.</p>
-                        </div>
-                        <div>
-                            <img src="/static/common/img/time_input_method/calendar_time_input_type_new.png?v2">
-                        </div>
-                    </div>`;
-        $(document).off('click', '#input_method_new').on('click', '#input_method_new', (e)=>{
-            e.stopPropagation();
-            this.data.calendar_time_input_type = BASIC; 
-            this.render_content();
-        });
-        return html;
-    }
-
-    dom_row_calendar_time_input_type_classic(){
-        let selected_or_not = this.data.calendar_time_input_type == CLASSIC ? "selected" : "";
-        let html = `<div class="select_wrap ${selected_or_not}" id="input_method_classic">
-                        <div class="select_indicator">
-                            ${CComponent.radio_button("time_input_select_classic", this.data.calendar_time_input_type == CLASSIC ? ON : OFF, {"transform":"scale(1.2)", "display":"inline-block", "margin-right":"5px"}, ()=>{})}
-                            <span>클래식</span><span style="color:var(--font-highlight);font-size:11px;"> (베타)</span>
-                            <p>시작과 종료시각을 한번에 설정 합니다. <br>겹치는 일정은 필터링 할 수 있습니다.</p>
-                        </div>
-                        <div>
-                            <img src="/static/common/img/time_input_method/calendar_time_input_type_classic.png?v2">
-                        </div>
-                    </div>`;
-        $(document).off('click', '#input_method_classic').on('click', '#input_method_classic', (e)=>{
-            e.stopPropagation();
-            this.data.calendar_time_input_type = CLASSIC; 
-            this.render_content();
-        });
-        return html;
-    }
-
 
 
     dom_row_toolbox(){
@@ -272,7 +241,7 @@ class Setting_calendar{
         }
         let data = {
             "setting_week_start_date":this.data.start_day,
-            "setting_calendar_time_selector_type":this.data.calendar_time_input_type,
+            "setting_calendar_time_selector_type":this.data.calendar_time_input_type.value[0],
             "setting_calendar_basic_select_time":this.data.calendar_basic_select_time.value[0],
             "setting_schedule_sign_enable": this.data.sing_use
         };
