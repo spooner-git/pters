@@ -381,9 +381,9 @@ class Member_view{
 
     dom_row_profile_image(){
         let id = "member_profile_image";
-        let title = `<img src="${this.data.profile_img}" style="width:75px;height:75px;border-radius:50%;">`;
+        let title = `<img src="${this.data.profile_img}" style="width:100px;height:100px;border-radius:50%;">`;
         if(this.data.profile_img == null){
-            title = CImg.blank("", {"width":"75px", "height":"75px"});
+            title = CImg.blank("", {"width":"100px", "height":"100px"});
         }
         let style = {"height":"auto"};
         let onclick = ()=>{
