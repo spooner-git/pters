@@ -260,13 +260,14 @@ class SendAllSchedulePushAlarmDataView(View):
     def get(self, request):
         # start_time = timezone.now()
         error = None
-        # alarm_dt = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:00')
+        alarm_dt = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:00')
 
         # 알람 관련된 데이터 가져오기
         query_common_cd = "SELECT COMMON_CD_NM FROM COMMON_CD_TB WHERE COMMON_CD=`CLASS_TB`.`SUBJECT_CD`"
         alarm_schedule_data = ScheduleAlarmTb.objects.select_related(
             'class_tb__member', 'schedule_tb__lecture_tb',
-            'schedule_tb__member_ticket_tb__member').filter(use=USE).annotate(class_type_name=RawSQL(query_common_cd,
+            'schedule_tb__member_ticket_tb__member').filter(alarm_dt=alarm_dt,
+                                                            use=USE).annotate(class_type_name=RawSQL(query_common_cd,
                                                                                                      []))
         # schedule 정보에서 push_alarm_data json 타입으로 변경 및 member_id 추출
         schedule_list = []
@@ -348,3 +349,19 @@ def send_aws_lambda_for_push_alarm(data):
     if resp['status'] != '200':
         error = '오류가 발생했습니다.'
     return error
+
+
+class SendWaitScheduleCancelPushAlarmDataView(View):
+
+    def get(self, request):
+        # now += datetime.timedelta(minutes=int(setting_member_wait_schedule_auto_cancel_time))
+
+        # except TypeError:
+        #     now -= datetime.timedelta(minutes=int(setting_member_wait_schedule_auto_cancel_time))
+        # not_finish_wait_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
+        #                                                           permission_state_cd=PERMISSION_STATE_CD_WAIT,
+        #                                                           en_dis_type=ON_SCHEDULE_TYPE, start_dt__lte=now,
+        #                                                           use=USE)
+        # not_finish_wait_schedule_data.delete()
+        # logger.error('[push task 에러]'+error)
+        return JsonResponse()

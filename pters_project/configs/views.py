@@ -518,8 +518,8 @@ def update_finish_schedule_data(request):
     now = timezone.now()
     class_id = request.session.get('class_id', '')
     setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
-    setting_member_wait_schedule_auto_cancel_time \
-        = request.session.get('setting_member_wait_schedule_auto_cancel_time', 0)
+    # setting_member_wait_schedule_auto_cancel_time \
+    #     = request.session.get('setting_member_wait_schedule_auto_cancel_time', 0)
     if class_id is not None and class_id != '':
         if str(setting_schedule_auto_finish) != str(AUTO_FINISH_OFF):
             not_finish_schedule_data = ScheduleTb.objects.select_related(
@@ -599,16 +599,5 @@ def update_finish_schedule_data(request):
                     # member_ticket_tb_id = delete_schedule_info.member_ticket_tb_id
                     if member_ticket_tb_id is not None:
                         func_refresh_member_ticket_count(not_finish_schedule_info.class_tb_id, member_ticket_tb_id)
-        # else:
-        # try:
-        now += datetime.timedelta(minutes=int(setting_member_wait_schedule_auto_cancel_time))
-
-        # except TypeError:
-        #     now -= datetime.timedelta(minutes=int(setting_member_wait_schedule_auto_cancel_time))
-        not_finish_wait_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                                  permission_state_cd=PERMISSION_STATE_CD_WAIT,
-                                                                  en_dis_type=ON_SCHEDULE_TYPE, start_dt__lte=now,
-                                                                  use=USE)
-        not_finish_wait_schedule_data.delete()
 
     return render(request, 'ajax/task_error_info.html')
