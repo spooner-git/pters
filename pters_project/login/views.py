@@ -43,7 +43,7 @@ from registration.backends.hmac.views import RegistrationView, REGISTRATION_SALT
 from registration.forms import RegistrationForm
 
 from configs.const import USE, UN_USE, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, ACTIVATE, ON_SCHEDULE_TYPE, STATE_CD_FINISH, \
-    STATE_CD_ABSENCE
+    STATE_CD_ABSENCE, AUTH_TYPE_DELETE
 from configs import settings
 from configs.functions import func_delete_profile_image_logic
 from payment.functions import func_cancel_period_billing_schedule
@@ -886,32 +886,38 @@ def out_member_logic(request):
 
                 if error is None:
                     if group_name == 'trainer':
-                        member_class_data = MemberClassTb.objects.filter(member_id=member_id, auth_cd=AUTH_TYPE_VIEW)
+                        member_class_data = MemberClassTb.objects.select_related(
+                            'class_tb__member').filter(member_id=member_id, auth_cd=AUTH_TYPE_VIEW)
                         for member_class_info in member_class_data:
                             class_id = member_class_info.class_tb_id
-                            now = timezone.now()
-                            class_member_ticket_data = MemberTicketTb.objects.select_related(
-                                'ticket_tb').filter(ticket_tb__class_tb_id=class_id)
 
-                            schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                                      end_dt__lte=now,
-                                                                      use=USE).exclude(Q(state_cd=STATE_CD_FINISH)
-                                                                                       | Q(state_cd=STATE_CD_ABSENCE))
-                            schedule_data_delete = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                                             end_dt__gt=now,
-                                                                             use=USE).exclude(Q(state_cd=STATE_CD_FINISH)
-                                                                                              | Q(state_cd=STATE_CD_ABSENCE))
-                            repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id)
+                            if str(member_class_info.class_tb.member_id) == str(request.user.id):
+                                now = timezone.now()
+                                class_member_ticket_data = MemberTicketTb.objects.select_related(
+                                    'ticket_tb').filter(ticket_tb__class_tb_id=class_id)
 
-                            if len(schedule_data) > 0:
-                                schedule_data.update(state_cd=STATE_CD_FINISH)
-                            if len(schedule_data_delete) > 0:
-                                schedule_data_delete.delete()
-                            if len(repeat_schedule_data) > 0:
-                                repeat_schedule_data.delete()
+                                schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
+                                                                          end_dt__lte=now,
+                                                                          use=USE).exclude(Q(state_cd=STATE_CD_FINISH)
+                                                                                           | Q(state_cd=STATE_CD_ABSENCE))
+                                schedule_data_delete = ScheduleTb.objects.filter(class_tb_id=class_id,
+                                                                                 end_dt__gt=now,
+                                                                                 use=USE).exclude(Q(state_cd=STATE_CD_FINISH)
+                                                                                                  | Q(state_cd=STATE_CD_ABSENCE))
+                                repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id)
 
-                            class_member_ticket_data.update(member_ticket_avail_count=0, member_ticket_rem_count=0,
-                                                            state_cd=STATE_CD_FINISH)
+                                if len(schedule_data) > 0:
+                                    schedule_data.update(state_cd=STATE_CD_FINISH)
+                                if len(schedule_data_delete) > 0:
+                                    schedule_data_delete.delete()
+                                if len(repeat_schedule_data) > 0:
+                                    repeat_schedule_data.delete()
+
+                                class_member_ticket_data.update(member_ticket_avail_count=0, member_ticket_rem_count=0,
+                                                                state_cd=STATE_CD_FINISH)
+                            member_class_info.auth_cd = AUTH_TYPE_DELETE
+                            member_class_info.use = UN_USE
+                            member_class_info.save()
 
                     member.contents = str(user.username) + ':' + str(member.phone) + ':' + str(member.phone_is_active)\
                                       + ':' + str(user.id)
