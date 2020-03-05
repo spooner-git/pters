@@ -164,7 +164,7 @@ class ProgramNotice_list {
                                 <div class="program_notice_article_id" style="width:5%;display:table-cell;vertical-align:middle;">
                                     ${numbering}
                                 </div>
-                                <div style="width:60%;display:table-cell;">
+                                <div style="width:80%;display:table-cell;">
                                     <div class="program_notice_article_upper">
                                         <div class="program_notice_article_title">${title}</div>
                                     </div>
@@ -172,7 +172,7 @@ class ProgramNotice_list {
                                         <div class="program_notice_article_reg_date">등록일:${reg_date}, 조회수:${hits}</div>
                                     </div>
                                 </div>
-                                <div style="width:15%;display:table-cell;vertical-align:middle;">
+                                <div style="width:15%;min-width:70px;display:table-cell;vertical-align:middle;">
                                     <div class="program_notice_article_upper">
                                         <div class="program_notice_article_use" style="color:${PROGRAM_BOARD_USE[use].color}">${PROGRAM_BOARD_USE[use].text}</div>
                                     </div>

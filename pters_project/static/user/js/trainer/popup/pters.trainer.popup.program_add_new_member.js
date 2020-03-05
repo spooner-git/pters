@@ -208,6 +208,7 @@ class Program_add_new_member{
                     "class_hour":60, "start_hour_unit":1, "class_member_num":1
         };
 
+        layer_popup.close_layer_popup();
         Program_func.create(data, ()=>{
             // program_list_popup.init();
             // this.clear();

@@ -173,6 +173,7 @@ class ProgramNotice {
         let title = data.program_notice_title;
         let content = data.program_notice_contents;
         let to_member_type_cd = data.program_notice_to_member_type_cd;
+        // let target = PROGRAM_BOARD_TARGET[data.program_notice_to_member_type_cd];
         let reg_dt = data.program_notice_reg_dt;
         let mod_dt = data.program_notice_mod_dt;
         let reg_member_name = data.program_notice_reg_member_name;
@@ -194,7 +195,7 @@ class ProgramNotice {
                                         <div class="program_notice_article_reg_date">등록일:${reg_date}, 조회수:${hits}</div>
                                     </div>
                                 </div>
-                                <div style="width:15%;display:table-cell;vertical-align:middle;">
+                                <div style="width:15%;min-width:70px;display:table-cell;vertical-align:middle;">
                                     <div class="program_notice_article_upper">
                                         <div class="program_notice_article_use" style="color:${PROGRAM_BOARD_USE[use].color}">${PROGRAM_BOARD_USE[use].text}</div>
                                     </div>
@@ -237,6 +238,7 @@ class ProgramNotice {
                     });
                 });
             });
+
         });
 
         return html;
@@ -339,7 +341,7 @@ class ProgramNotice_func{
             url:'/trainer/add_program_notice_info/',
             type:'POST',
             data: data,
-            dataType : 'html',
+            dataType : 'JSON',
     
             beforeSend:function(xhr, settings) {
                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -353,8 +355,9 @@ class ProgramNotice_func{
             },
     
             //통신성공시 처리
-            success:function(data_){
-                let data = JSON.parse(data_);
+            success:function(data){
+                // console.log(data_);
+                // let data = JSON.parse(data_);
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
@@ -546,7 +549,7 @@ class ProgramNotice_func{
             url:'/trainer/update_program_notice_info/',
             type:'POST',
             data: data,
-            dataType : 'html',
+            dataType : 'JSON',
     
             beforeSend:function(xhr, settings) {
                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -560,8 +563,8 @@ class ProgramNotice_func{
             },
     
             //통신성공시 처리
-            success:function(data_){
-                let data = JSON.parse(data_);
+            success:function(data){
+                // let data = JSON.parse(data_);
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
@@ -583,7 +586,7 @@ class ProgramNotice_func{
                     error_callback();
                 }
                 show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
-                location.reload();
+                // location.reload();
             }
         });
     }
