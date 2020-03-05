@@ -332,7 +332,7 @@ def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
                 add_schedule_info.save()
                 schedule_id = add_schedule_info.schedule_id
 
-                if str(en_dis_type) != OFF_SCHEDULE:
+                if str(en_dis_type) != str(OFF_SCHEDULE):
                     for alarm_setting_info in alarm_setting_data:
                         if member_ticket_id is not None:
                             if lecture_schedule_id is None:
@@ -449,7 +449,7 @@ def func_add_schedule_update(class_id, member_ticket_id, repeat_schedule_id,
                                                mod_member_id=user_id)
                 add_schedule_info.save()
                 schedule_id = add_schedule_info.schedule_id
-                if str(en_dis_type) != OFF_SCHEDULE:
+                if str(en_dis_type) != str(OFF_SCHEDULE):
                     for alarm_setting_info in alarm_setting_data:
                         # 그룹 수업 - 회원 포함
                         if add_schedule_info.member_ticket_tb.member_id != alarm_setting_info.member_id:
