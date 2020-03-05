@@ -5917,20 +5917,29 @@ class BoardWriter{
         return html;
     }
 
+    // dom_assembly_category(){
+    //     let length = this.data.category.length;
+    //     let html_to_join = [];
+    //     for(let i=0; i<length; i++){
+    //         let style = {};
+    //         if(i>0){
+    //             style = {"border-top":"var(--border-article)"}
+    //         }
+    //         let html = this.dom_row_category(this.data.category[i], style);
+    //         html_to_join.push(html);
+    //     }
+
+    //     return '<div class="obj_input_box_full">'+html_to_join.join("") + '</div>';
+    // }
+
     dom_assembly_category(){
         let length = this.data.category.length;
         let html_to_join = [];
         for(let i=0; i<length; i++){
-            // let html = CComponent.dom_tag(this.data.category[i].title)+ this.dom_row_category(this.data.category[i]);
-            let style = {};
-            if(i>0){
-                style = {"border-top":"var(--border-article)"}
-            }
-            let html = this.dom_row_category(this.data.category[i], style);
+            let html = this.dom_row_category(this.data.category[i]);
             html_to_join.push(html);
         }
-
-        return '<div class="obj_input_box_full" style="padding:8px 20px;">'+html_to_join.join("") + '</div>';
+        return html_to_join.join("");
     }
 
     dom_row_subject_input(){
@@ -5966,38 +5975,68 @@ class BoardWriter{
         return html;
     }
 
-    dom_row_category(data, style){
+    dom_row_category(data){
         let category_id = data.id;
-        let category_title = this.data.category_selected[category_id].text.length == 0 ? data.title: this.data.category_selected[category_id].text;
-        let category_inner_title = data.title;
-        let option_data = data.data;
+        let category_title = data.title;
+        let category_data = data.data;
 
         let id = `dom_row_category_${category_id}`;
         let title = category_title;
         let icon = DELETE;
         let icon_r_visible = SHOW;
-        let icon_r_text = "";
-
-        if(this.data.category_selected[category_id].text.length == 0){
-            style["color"]="var(--font-inactive)";
-        }
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            // let title = this.data.category_selected[category_id].text;
+        let icon_r_text = this.data.category_selected[category_id].text.length == 0 ? '' : this.data.category_selected[category_id].text;
+        let style = {"display":"inline-block", 'padding':"16px", "padding-right":"0", "width":`${ this.data.category.length > 1 ? "50%" : "100%"}`, "height":"56px", "font-size":"14px", "box-sizing":"border-box"};
+        let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            let title = category_title;
             let install_target = "#wrapper_box_custom_select";
             let multiple_select = 1;
-            let data = option_data;
+            let data = category_data;
             let selected_data = this.data.category_selected[category_id];
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, popup_style, null, ()=>{
-                custom_selector = new CustomSelector(category_inner_title, install_target, multiple_select, data, selected_data, (set_data)=>{
+                custom_selector = new CustomSelector(title, install_target, multiple_select, data, selected_data, (set_data)=>{
                     this.data.category_selected[category_id] = set_data;
                     this.render_category_selector();
                     this.if_user_changed_any_information = true;
                 });
             });
         });
+        let html = row;
         return html;
     }
+
+    // dom_row_category(data, style){
+    //     let category_id = data.id;
+    //     let category_title = this.data.category_selected[category_id].text.length == 0 ? data.title: this.data.category_selected[category_id].text;
+    //     let category_inner_title = data.title;
+    //     let option_data = data.data;
+
+    //     let id = `dom_row_category_${category_id}`;
+    //     let title = category_title;
+    //     let icon = DELETE;
+    //     let icon_r_visible = SHOW;
+    //     let icon_r_text = "";
+
+    //     if(this.data.category_selected[category_id].text.length == 0){
+    //         style["color"]="var(--font-inactive)";
+    //     }
+    //     let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+    //         // let title = this.data.category_selected[category_id].text;
+    //         let install_target = "#wrapper_box_custom_select";
+    //         let multiple_select = 1;
+    //         let data = option_data;
+    //         let selected_data = this.data.category_selected[category_id];
+    //         let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+    //         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, popup_style, null, ()=>{
+    //             custom_selector = new CustomSelector(category_inner_title, install_target, multiple_select, data, selected_data, (set_data)=>{
+    //                 this.data.category_selected[category_id] = set_data;
+    //                 this.render_category_selector();
+    //                 this.if_user_changed_any_information = true;
+    //             });
+    //         });
+    //     });
+    //     return html;
+    // }
 
 
     dom_row_reg_mod_date(){
