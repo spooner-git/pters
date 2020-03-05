@@ -54,7 +54,6 @@ class Calendar {
             }else{
                 clearInterval(interval);
             }
-            
         }, 60000);
 
         this.long_touch = OFF;
@@ -1688,7 +1687,9 @@ class Calendar {
         el.id = `page${page_num}`;
         el.style.transform = 'translateX(100%)';
         el.classList.add('pages');
-        document.getElementById(target).appendChild(el);
+        // document.getElementById(target).appendChild(el);
+        let _target = document.getElementById(target);
+        _target.insertBefore(el, _target.childNodes[0]);
     
         let el_prev = document.getElementById(`page${page_num-1}`);
         
