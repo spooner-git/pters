@@ -202,7 +202,8 @@ class Plan_repeat_list{
                     layer_popup.close_layer_popup();
                     let message = {
                         title:`정말 ${repeat_name}의 반복 일정을 취소하시겠습니까?`,
-                        comment:`<img src="/static/common/icon/icon_stopmark.png" style="width:25px;"><br>
+                        comment:`${CImg.warning(["#fe4e65"], {"vertical-align":"middle", "margin-bottom":"4px"})}
+                                <br>
                                 <div style="text-align:center;margin-top:5px;">
                                     하위에 다른 반복일정이 존재할 경우 함께 취소됩니다. <br>
                                     과거일정은 보존되지만, 등록한 미래일정은 취소됩니다.

@@ -217,7 +217,7 @@ class Ticket_view{
         let ticket_memo_assembly = '<div class="obj_input_box_full">'+CComponent.dom_tag('설명')+memo+ '</div>';
         let ticket_member_list_assembly = '<div class="obj_input_box_full" style="padding-top:16px;">'+CComponent.dom_tag(`수강권 보유 회원 (${this.data.member_id.length} 명)`, 
                                             {"font-size":"13px", "font-weight":"bold", "letter-spacing":"-0.6px", "padding":"0", "padding-bottom":"8px", "color":"var(--font-sub-normal)", "height":"20px"}) + 
-                                            `${this.data.lecture_id.length == 0 && this.data.name != null ? "<span style='color:var(--font-highlight);font-size:12px;font-weight:bold;'><img src='/static/common/icon/icon_stopmark.png' style='width:15px;height:15px;vertical-align:middle;margin-bottom:4px;'> 포함된 수업이 없어, 수강권 보유 회원들이 일정을 등록할 수 없습니다.</span>" : ""}` +
+                                            `${this.data.lecture_id.length == 0 && this.data.name != null ? `<span style='color:var(--font-highlight);font-size:12px;font-weight:bold;'>${CImg.warning(["#fe4e65"], {"vertical-align":"middle", "width":"20px", "height":"20px", "margin-bottom":"4px"})} 포함된 수업이 없어, 수강권 보유 회원들이 일정을 등록할 수 없습니다.</span>` : ""}` +
                                             member_list+ '</div>';
 
         if(this.data.ticket_state == STATE_END_PROGRESS){
@@ -942,7 +942,9 @@ class Ticket_view{
                     }
                     let message = {
                         title:`"${this.data.name}" <br>수강권을 비활성화 하시겠습니까?`,
-                        comment:`<img src="/static/common/icon/icon_stopmark.png" style="width:25px;"><br>
+                        comment:`
+                                ${CImg.warning(["#fe4e65"], {"vertical-align":"middle", "margin-bottom":"4px"})}
+                                <br>
                                 <span style="color:var(--font-highlight); font-size:12px;">이 수강권을 가진 회원들에게서 수강권이 삭제됩니다. <br>
                                 과거 일정은 완료 처리, 미래 일정은 삭제됩니다. <br>
                                 이 수강권 하나만 가진 회원은 종료탭으로 이동됩니다.</span>`
@@ -974,7 +976,8 @@ class Ticket_view{
                     let message = {
                         title:`"${this.data.name}" <br> 수강권을 영구 삭제 하시겠습니까?`,
                         comment:`데이터를 복구할 수 없습니다. <br><br>
-                                <img src="/static/common/icon/icon_stopmark.png" style="width:25px;"><br>
+                                ${CImg.warning(["#fe4e65"], {"vertical-align":"middle", "margin-bottom":"4px"})}
+                                <br>
                                 <span style="color:var(--font-highlight); font-size:12px;">수강권과 연결된 수업, 회원에게서 <br>이 수강권과 관련된 정보가 모두 삭제됩니다.</span>`
                     };
                     show_user_confirm(message, ()=>{

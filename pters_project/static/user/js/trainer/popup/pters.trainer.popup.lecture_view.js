@@ -507,7 +507,7 @@ class Lecture_view{
         }
         this.data.active_ticket_length = length - progress_end_ticket;
 
-        let html = `<div>${html_to_join.length > 0 ? html_to_join.join('') : "<span style='color:var(--font-highlight);font-size:12px;font-weight:bold;'><img src='/static/common/icon/icon_stopmark.png' style='width:15px;height:15px;vertical-align:middle;margin-bottom:4px;'> 이 수업을 포함한 수강권이 없습니다.</span>"}</div>`;
+        let html = `<div>${html_to_join.length > 0 ? html_to_join.join('') : `<span style='color:var(--font-highlight);font-size:12px;font-weight:bold;'>${CImg.warning(["#fe4e65"], {"vertical-align":"middle", "width":"20px", "height":"20px", "margin-bottom":"4px"})} 이 수업을 포함한 수강권이 없습니다.</span>`}</div>`;
 
         return html;
     }
@@ -670,7 +670,8 @@ class Lecture_view{
                     }
                     let message = {
                         title:`"${this.data.name}" <br>수업을 비활성화 하시겠습니까?`,
-                        comment:`<img src="/static/common/icon/icon_stopmark.png" style="width:25px;"><br>
+                        comment:`${CImg.warning(["#fe4e65"], {"vertical-align":"middle", "margin-bottom":"4px"})}
+                                <br>
                                 <span style="color:var(--font-highlight); font-size:12px;">
                                 이 수업으로 일정을 등록 할 수 없게 됩니다.<br>
                                 과거 일정은 완료 처리, 미래 일정은 삭제됩니다. <br>
@@ -703,7 +704,8 @@ class Lecture_view{
                     let message = {
                         title:`"${this.data.name}" <br> 수업을 영구 삭제 하시겠습니까?`,
                         comment:`데이터를 복구할 수 없습니다.<br><br>
-                                <img src="/static/common/icon/icon_stopmark.png" style="width:25px;"><br>
+                                ${CImg.warning(["#fe4e65"], {"vertical-align":"middle", "margin-bottom":"4px"})}
+                                <br>
                                 <span style="color:var(--font-highlight); font-size:12px;">이 수업을 포함하는 수강권에서 수업이 삭제됩니다.</span>`
                     }
                     show_user_confirm(message, ()=>{

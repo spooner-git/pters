@@ -310,7 +310,8 @@ class ProgramNotice_view{
                     }
                     let message = {
                         title:`"${this.data.name}" <br>게시판을 비활성화 하시겠습니까?`,
-                        comment:`<img src="/static/common/icon/icon_stopmark.png" style="width:25px;"><br>
+                        comment:`${CImg.warning(["#fe4e65"], {"vertical-align":"middle", "margin-bottom":"4px"})}
+                                <br>
                                 <span style="color:var(--font-highlight); font-size:12px;">
                                 이 게시판에 게시글을 등록 할 수 없게 됩니다.<br>
                                 회원들이 더 이상 게시글을 확인할수 없습니다.</span>`
@@ -342,7 +343,7 @@ class ProgramNotice_view{
                     let message = {
                         title:`"${this.data.name}" <br> 게시판을 영구 삭제 하시겠습니까?`,
                         comment:`데이터를 복구할 수 없습니다.<br><br>
-                                <img src="/static/common/icon/icon_stopmark.png" style="width:25px;"><br>
+                                ${CImg.warning(["#fe4e65"], {"vertical-align":"middle", "margin-bottom":"4px"})}<br>
                                 <span style="color:var(--font-highlight); font-size:12px;">이 게시판에 등록된 게시글이 삭제됩니다.</span>`
                     }
                     show_user_confirm(message, ()=>{
