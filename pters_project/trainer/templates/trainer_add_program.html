@@ -156,9 +156,9 @@
 
     history.pushState(null, null, '#Main');
     window.addEventListener("hashchange", function(e){
-        // if(layer_popup.stack.length > 0){
-        //     layer_popup.close_layer_popup();
-        // }
+        if(layer_popup.stack.length > 0){
+            layer_popup.close_layer_popup();
+        }
         history.pushState(null, null, '#Main');
     });
 
