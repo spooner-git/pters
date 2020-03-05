@@ -28,7 +28,7 @@ from .models import ScheduleTb, RepeatScheduleTb, DeleteScheduleTb, DeleteRepeat
     ScheduleAlarmTb
 
 if DEBUG is False:
-    from tasks.tasks import task_send_fire_base_push, task_send_fire_base_push_multi, \
+    from tasks.tasks import task_send_fire_base_push_multi, \
         task_send_fire_base_push_multi_without_badge
 
 

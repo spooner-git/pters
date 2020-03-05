@@ -263,12 +263,20 @@ class SendAllSchedulePushAlarmDataView(View):
         alarm_dt = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:00')
 
         # 알람 관련된 데이터 가져오기
+        # query_common_cd = "SELECT COMMON_CD_NM FROM COMMON_CD_TB WHERE COMMON_CD=`CLASS_TB`.`SUBJECT_CD`"
+        # alarm_schedule_data = ScheduleAlarmTb.objects.select_related(
+        #     'class_tb__member', 'schedule_tb__lecture_tb',
+        #     'schedule_tb__member_ticket_tb__member').filter(alarm_dt=alarm_dt,
+        #                                                     use=USE).annotate(class_type_name=RawSQL(query_common_cd,
+        #                                                                                              []))
+
         query_common_cd = "SELECT COMMON_CD_NM FROM COMMON_CD_TB WHERE COMMON_CD=`CLASS_TB`.`SUBJECT_CD`"
-        alarm_schedule_data = ScheduleAlarmTb.objects.select_related(
-            'class_tb__member', 'schedule_tb__lecture_tb',
-            'schedule_tb__member_ticket_tb__member').filter(alarm_dt=alarm_dt,
-                                                            use=USE).annotate(class_type_name=RawSQL(query_common_cd,
-                                                                                                     []))
+        alarm_schedule_data = ScheduleTb.objects.select_related(
+            'class_tb__member', 'lecture_tb',
+            'member_ticket_tb__member').filter(push_alarm_data__contain=str(alarm_dt),
+                                               use=USE).annotate(class_type_name=RawSQL(query_common_cd,
+                                                                                        []))
+
         # schedule 정보에서 push_alarm_data json 타입으로 변경 및 member_id 추출
         schedule_list = []
         # 보내야 하는 회원의 token 가져오기
@@ -277,49 +285,62 @@ class SendAllSchedulePushAlarmDataView(View):
         for alarm_schedule_info in alarm_schedule_data:
             registration_ids = []
 
-            class_type_name = alarm_schedule_info.class_type_name
-            if alarm_schedule_info.class_tb.subject_detail_nm != '':
-                class_type_name = alarm_schedule_info.class_tb.subject_detail_nm
-            alarm_title = class_type_name + ' - 일정 알림'
+            push_alarm_data = json.loads(alarm_schedule_info.push_alarm_data)
+            try:
+                member_ids = push_alarm_data[str(alarm_dt)]["member_ids"]
 
-            log_info_schedule_start_date = str(alarm_schedule_info.schedule_tb.start_dt).split(':')
-            log_info_schedule_end_date = str(alarm_schedule_info.schedule_tb.end_dt).split(' ')[1].split(':')
-            log_info_schedule_start_date = log_info_schedule_start_date[0] + ':' + log_info_schedule_start_date[1]
-            log_info_schedule_end_date = log_info_schedule_end_date[0] + ':' + log_info_schedule_end_date[1]
+                alarm_dt = datetime.datetime.strptime(str(alarm_dt), '%Y-%m-%d %H:%M')
+                alarm_minute = int((schedule_info.start_dt - alarm_dt).seconds/60)
+                class_type_name = alarm_schedule_info.class_type_name
+                if alarm_schedule_info.class_tb.subject_detail_nm != '':
+                    class_type_name = alarm_schedule_info.class_tb.subject_detail_nm
+                alarm_title = class_type_name + ' - 일정 알림'
 
-            alarm_message = log_info_schedule_start_date + '~' + log_info_schedule_end_date + ' '
-            if str(alarm_schedule_info.schedule_tb.en_dis_type) != OFF_SCHEDULE_TYPE:
-                if alarm_schedule_info.schedule_tb.lecture_tb is not None\
-                        and alarm_schedule_info.schedule_tb.lecture_tb != '':
-                    alarm_message += '[' + alarm_schedule_info.schedule_tb.lecture_tb.name + '] '
+                log_info_schedule_start_date = str(alarm_schedule_info.start_dt).split(':')
+                log_info_schedule_end_date = str(alarm_schedule_info.end_dt).split(' ')[1].split(':')
+                log_info_schedule_start_date = log_info_schedule_start_date[0] + ':' + log_info_schedule_start_date[1]
+                log_info_schedule_end_date = log_info_schedule_end_date[0] + ':' + log_info_schedule_end_date[1]
 
-                if alarm_schedule_info.schedule_tb.member_ticket_tb is not None\
-                        and alarm_schedule_info.schedule_tb.member_ticket_tb != '':
-                    alarm_message += alarm_schedule_info.schedule_tb.member_ticket_tb.member.name + ' 회원님 '
+                alarm_message = log_info_schedule_start_date + '~' + log_info_schedule_end_date + ' '
+                if str(alarm_schedule_info.en_dis_type) != OFF_SCHEDULE_TYPE:
+                    if alarm_schedule_info.lecture_tb is not None\
+                            and alarm_schedule_info.lecture_tb != '':
+                        alarm_message += '[' + alarm_schedule_info.lecture_tb.name + '] '
 
-                if alarm_schedule_info.alarm_minute == 0:
-                    alarm_message += '일정 시작 시간 입니다.'
-                elif alarm_schedule_info.alarm_minute < 60:
-                    alarm_message += '일정 ' + str(alarm_schedule_info.alarm_minute) + '분 전입니다.'
-                elif alarm_schedule_info.alarm_minute < 1440:
-                    alarm_message += '일정 ' + str(int(alarm_schedule_info.alarm_minute/60)) + '시간 전입니다.'
-                else:
-                    alarm_message += '일정 ' + str(int(alarm_schedule_info.alarm_minute/60/24)) + '일 전입니다.'
+                    if alarm_schedule_info.member_ticket_tb is not None\
+                            and alarm_schedule_info.member_ticket_tb != '':
+                        alarm_message += alarm_schedule_info.member_ticket_tb.member.name + ' 회원님 '
 
-            for token_info in token_data:
-                member_id_list = alarm_schedule_info.member_ids.split(',')
-                try:
-                    member_id_list.index(token_info['member_id'])
-                    registration_ids.append(token_info['token'])
-                except ValueError:
-                    continue
+                    if alarm_minute == 0:
+                        alarm_message += '일정 시작 시간 입니다.'
+                    elif alarm_minute < 60:
+                        alarm_message += '일정 ' + str(alarm_minute) + '분 전입니다.'
+                    elif alarm_minute < 1440:
+                        alarm_message += '일정 ' + str(int(alarm_minute/60)) + '시간 전입니다.'
+                    else:
+                        alarm_message += '일정 ' + str(int(alarm_minute/60/24)) + '일 전입니다.'
 
-            schedule_info = {
-                'registration_ids': registration_ids,
-                'title': alarm_title,
-                'message': alarm_message
-            }
-            schedule_list.append(schedule_info)
+                for token_info in token_data:
+                    # member_id_list = alarm_schedule_info.member_ids.split(',')
+                    # try:
+                    #     member_id_list.index(token_info['member_id'])
+                    #     registration_ids.append(token_info['token'])
+                    # except ValueError:
+                    #     continue
+                    try:
+                        member_ids.index(token_info['member_id'])
+                        registration_ids.append(token_info['token'])
+                    except ValueError:
+                        continue
+
+                schedule_info = {
+                    'registration_ids': registration_ids,
+                    'title': alarm_title,
+                    'message': alarm_message
+                }
+                schedule_list.append(schedule_info)
+            except ValueError:
+                continue
 
         check_async = False
         if DEBUG is False:
