@@ -548,7 +548,7 @@ class ProgramNotice_func{
             url:'/trainer/update_program_notice_info/',
             type:'POST',
             data: data,
-            dataType : 'html',
+            dataType : 'json',
     
             beforeSend:function(xhr, settings) {
                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
