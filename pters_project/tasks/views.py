@@ -273,7 +273,7 @@ class SendAllSchedulePushAlarmDataView(View):
         query_common_cd = "SELECT COMMON_CD_NM FROM COMMON_CD_TB WHERE COMMON_CD=`CLASS_TB`.`SUBJECT_CD`"
         alarm_schedule_data = ScheduleTb.objects.select_related(
             'class_tb__member', 'lecture_tb',
-            'member_ticket_tb__member').filter(push_alarm_data__contain=str(alarm_dt),
+            'member_ticket_tb__member').filter(push_alarm_data__contains=str(alarm_dt),
                                                use=USE).annotate(class_type_name=RawSQL(query_common_cd,
                                                                                         []))
 
