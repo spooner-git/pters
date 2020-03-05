@@ -4777,18 +4777,17 @@ def update_setting_push_to_me_logic(request):
     now = timezone.now()
 
     schedule_alarm_data = ScheduleAlarmTb.objects.select_related(
-        'schedule_alarm_tb').filter(class_tb_id=class_id, alarm_dt__gte=now, member_id=request.user.id,
-                                    use=USE)
+        'schedule_tb').filter(class_tb_id=class_id, alarm_dt__gte=now, member_id=request.user.id, use=USE)
     if setting_schedule_alarm_minute == '-1':
         schedule_alarm_data.delete()
     else:
         alarm_time = now + datetime.timedelta(minutes=int(setting_schedule_alarm_minute))
         alarm_time = alarm_time.strftime('%Y-%m-%d %H:%M:00')
 
-        schedule_data = ScheduleTb.objects.select_related(
-            'schedule_alarm_tb').filter(class_tb_id=class_id, start_dt__gte=alarm_time, lecture_schedule_id__isnull=True,
-                                        en_dis_type='1',
-                                        use=USE)
+        schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, start_dt__gte=alarm_time,
+                                                  lecture_schedule_id__isnull=True,
+                                                  en_dis_type='1',
+                                                  use=USE)
         for schedule_info in schedule_data:
             alarm_dt = schedule_info.start_dt - datetime.timedelta(minutes=int(setting_schedule_alarm_minute))
             # if schedule_info.push_alarm_data is not None and schedule_info.push_alarm_data != '':
@@ -4826,9 +4825,9 @@ def update_setting_push_to_me_logic(request):
             new_reg_test = True
             for schedule_alarm_info in schedule_alarm_data:
                 if str(schedule_alarm_info.schedule_tb_id) == str(schedule_info.schedule_id):
-                    schedule_info.schedule_alarm_tb.alarm_dt = alarm_dt
-                    schedule_info.schedule_alarm_tb.alarm_minute = setting_schedule_alarm_minute
-                    schedule_info.schedule_alarm_tb.save()
+                    schedule_alarm_info.alarm_dt = alarm_dt
+                    schedule_alarm_info.alarm_minute = setting_schedule_alarm_minute
+                    schedule_alarm_info.save()
                     new_reg_test = False
                     break
 
