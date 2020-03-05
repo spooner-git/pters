@@ -6265,7 +6265,7 @@ class BoardWriter{
                 }
             }
             if(selected_value_ok == false){
-                show_error_message({title:category_type + "를 선택해주세요."});
+                show_error_message({title:category_type + " 옵션을 선택해주세요."});
                 return false;
             }
         }
