@@ -407,19 +407,22 @@
     //     history.go(1);
     // });
 
-    history.pushState(null, null, '#Main');
+    // history.pushState(null, null, '#Main');
     // window.addEventListener("hashchange", function(e){
     //     if(layer_popup.stack.length > 0){
     //         layer_popup.close_layer_popup();
     //     }
     //     history.pushState(null, null, '#Main');
     // });
-    $(window).on("hashchange", function(){
-        if(layer_popup.stack.length > 0){
-            layer_popup.close_layer_popup();
-        }
+    window.onload = ()=>{
         history.pushState(null, null, '#Main');
-    });
+        window.addEventListener("hashchange", function(e){
+            if(layer_popup.stack.length > 0){
+                layer_popup.close_layer_popup();
+            }
+            history.pushState(null, null, '#Main');
+        });
+    }
 
     var user_email = '{{ request.user.email }}';
     var user_name = '{{ request.user.first_name }}';
