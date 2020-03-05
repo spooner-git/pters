@@ -282,6 +282,7 @@ class SendAllSchedulePushAlarmDataView(View):
         # 보내야 하는 회원의 token 가져오기
         token_data = PushInfoTb.objects.filter(use=USE).values('member_id', 'token', 'badge_counter')
 
+        schedule_test = {}
         for alarm_schedule_info in alarm_schedule_data:
             registration_ids = []
             schedule_info = alarm_schedule_info.schedule_tb
@@ -329,15 +330,33 @@ class SendAllSchedulePushAlarmDataView(View):
                     #     registration_ids.append(token_info['token'])
                     # except ValueError:
                     #     continue
+                try:
+                    schedule_test[alarm_schedule_info.class_tb_id]
 
-                schedule_info = {
-                    'registration_ids': registration_ids,
-                    'title': alarm_title,
-                    'message': alarm_message
-                }
-                schedule_list.append(schedule_info)
+                except KeyError:
+                    schedule_test[alarm_schedule_info.class_tb_id] = {
+                        'registration_ids': [],
+                        'title': alarm_title,
+                        'message': alarm_message
+
+                    }
+                schedule_test[alarm_schedule_info.class_tb_id]['registration_ids'] += registration_ids
+                # schedule_info = {
+                #     'registration_ids': registration_ids,
+                #     'title': alarm_title,
+                #     'message': alarm_message
+                # }
             except ValueError:
                 continue
+
+        for schedule_test_info in schedule_test:
+            if len(schedule_test[schedule_test_info]['registration_ids']) > 0:
+                schedule_info = {
+                    'registration_ids': schedule_test[schedule_test_info]['registration_ids'],
+                    'title': schedule_test[schedule_test_info]['title'],
+                    'message': schedule_test[schedule_test_info]['message']
+                }
+                schedule_list.append(schedule_info)
 
         check_async = False
         if DEBUG is False:
