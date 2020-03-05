@@ -6236,6 +6236,11 @@ class BoardWriter{
                         program_notice_list_popup.init();
                     }catch(e){
                     }
+                    try{
+                        current_page.init();
+                    }catch(e){
+                        
+                    }
                     layer_popup.close_layer_popup();
                     layer_popup.close_layer_popup();
                     this.clear();
