@@ -5623,8 +5623,7 @@ class UpdateProgramNoticeInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
         if error is None:
             if str(use) == str(USE) and str(push_use) == str(USE):
-                error = func_send_push_notice(to_member_type_cd, class_id,
-                                              '[공지사항] - ' + class_name, title)
+                func_send_push_notice(to_member_type_cd, class_id, '[공지사항] - ' + class_name, title)
 
         if error is not None:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
