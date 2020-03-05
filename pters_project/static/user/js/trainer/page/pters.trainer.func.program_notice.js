@@ -181,14 +181,13 @@ class ProgramNotice {
         let hits = data.program_notice_hits; //조회수
         let use = data.program_notice_use; //공개여부
 
-
         let html = `<article id="program_notice_article_${id}" class="program_notice_article anim_fade_in_vibe_top">
                         <div style="display:table; width:100%;">
                             <div style="display:table-row;">
                                 <div class="program_notice_article_id" style="width:5%;display:table-cell;vertical-align:middle;">
                                     ${numbering}
                                 </div>
-                                <div style="width:80%;display:table-cell;padding-left:10px;">
+                                <div style="width:60%;display:table-cell;">
                                     <div class="program_notice_article_upper">
                                         <div class="program_notice_article_title">${title}</div>
                                     </div>

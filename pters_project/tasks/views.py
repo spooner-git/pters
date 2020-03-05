@@ -354,6 +354,19 @@ def send_aws_lambda_for_push_alarm(data):
 class SendWaitScheduleCancelPushAlarmDataView(View):
 
     def get(self, request):
+        now = timezone.now()
+        query_setting_wait_schedule_auto_finish = "SELECT A.SETTING_INFO FROM SETTING_TB AS A" \
+                                                  " WHERE A.CLASS_TB_ID=`SCHEDULE_TB`.`CLASS_TB_ID`" \
+                                                  " AND A.SETTING_TYPE_CD = \'LT_RES_WAIT_SCHEDULE_AUTO_CANCEL_TIME\' " \
+                                                  " AND A.USE=1"
+        # 지난 수강권 처리
+        # class_member_ticket_data = ClassMemberTicketTb.objects.select_related(
+        #     'member_ticket_tb__ticket_tb').filter(
+        #     auth_cd='VIEW', member_ticket_tb__end_date__lt=datetime.date.today(),
+        #     member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS, member_ticket_tb__use=USE,
+        #     use=USE).annotate(setting_ticket_auto_finish=RawSQL(query_setting_ticket_auto_finish,
+        #                                                         [])).filter(setting_ticket_auto_finish=USE)
+
         # now += datetime.timedelta(minutes=int(setting_member_wait_schedule_auto_cancel_time))
 
         # except TypeError:
