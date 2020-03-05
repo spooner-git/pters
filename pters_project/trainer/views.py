@@ -3717,7 +3717,7 @@ class GetTicketEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                    'ticket_month_schedule_enable': ticket_info.month_schedule_enable,
                                                    'ticket_week_schedule_enable': ticket_info.week_schedule_enable,
                                                    'ticket_day_schedule_enable': ticket_info.day_schedule_enable,
-                                                   'ticket_reg_dt': ticket_tb.reg_dt,
+                                                   'ticket_reg_dt': ticket_info.reg_dt,
                                                    'ticket_lecture_list': [],
                                                    'ticket_lecture_state_cd_list': [],
                                                    'ticket_lecture_id_list': [],
