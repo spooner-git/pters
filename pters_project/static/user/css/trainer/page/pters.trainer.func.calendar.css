@@ -103,7 +103,7 @@
 		/* font-size: 18px; */
 	}
 	
-.pages{
+#calendar_wrap .pages{
 	position: absolute;
 	top: 60px;
 	width: 100%;
@@ -111,6 +111,12 @@
 	background-color: var(--bg-main);
 	z-index: 1;
 	padding-bottom: 56px;
+}
+
+@media(min-width:600px){
+	#calendar_wrap .pages{
+		padding-bottom: 0;
+	}
 }
 
 .week_upper_float_tool{

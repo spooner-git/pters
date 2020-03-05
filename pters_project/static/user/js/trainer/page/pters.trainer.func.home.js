@@ -573,7 +573,7 @@ class Home {
                 ,
                 initial_page:`<div style="height:100%;">
                                 <div id="home_display_panel"></div>
-                                <div id="home_content_wrap" class="pages"></div>
+                                <div id="home_content_wrap" class=""></div>
                             </div>`
             }
         );

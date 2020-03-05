@@ -268,7 +268,7 @@ class Alarm {
                 ,
                 initial_page:`<div>
                                 <div id="alarm_display_panel"></div>
-                                <div id="alarm_content_wrap" class="pages" style="top:unset;left:unset;background-color:unset;position:relative;min-height:calc(100% - 68px)"></div>
+                                <div id="alarm_content_wrap" class="" style="top:unset;left:unset;background-color:unset;position:relative;min-height:calc(100% - 68px)"></div>
                                 </div>`
             }
         );

@@ -92,7 +92,7 @@ class Ticket{
                         <div id="ticket_display_panel">
                             ${this.dom_assembly_toolbox()}
                         </div>
-                        <div id="ticket_content_wrap" class="pages" style="">
+                        <div id="ticket_content_wrap" class="" style="">
                             ${this.dom_assembly_content()}
                         </div>
                     </div>`;

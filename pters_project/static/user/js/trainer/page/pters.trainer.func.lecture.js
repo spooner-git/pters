@@ -94,7 +94,7 @@ class Lecture {
                         <div id="lecture_display_panel">
                             ${this.dom_assembly_toolbox()}
                         </div>
-                        <div id="lecture_content_wrap" class="pages">
+                        <div id="lecture_content_wrap" class="">
                             ${this.dom_assembly_content()}
                         </div>
                     </div>`;

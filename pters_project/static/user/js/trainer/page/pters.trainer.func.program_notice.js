@@ -55,7 +55,7 @@ class ProgramNotice {
                         <div id="program_notice_display_panel">
                             ${this.dom_assembly_toolbox()}
                         </div>
-                        <div id="program_notice_content_wrap" class="pages">
+                        <div id="program_notice_content_wrap" class="">
                             ${this.dom_assembly_content()}
                         </div>
                     </div>`;
