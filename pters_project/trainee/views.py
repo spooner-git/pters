@@ -1709,6 +1709,71 @@ class PopupCalendarPlanReserveCompleteView(LoginRequiredMixin, AccessTestMixin, 
         return context
 
 
+class PopupMemberTicketInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'popup/trainee_popup_member_ticket_info.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PopupMemberTicketInfoView, self).get_context_data(**kwargs)
+        member_ticket_id = self.request.GET.get('member_ticket_id')
+
+        error = None
+        member_ticket_info = None
+        ticket_info = None
+        schedule_list = None
+
+        class_list = ClassMemberTicketTb.objects.select_related(
+            'class_tb__member').filter(member_ticket_tb_id=member_ticket_id, auth_cd=AUTH_TYPE_VIEW,
+                                       member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW, use=USE)
+
+        for class_info in class_list:
+            if class_info.class_tb.member.phone is not None and class_info.class_tb.member.phone != '':
+                class_info.class_tb.member.phone = class_info.class_tb.member.phone[0:3] + '-' + \
+                                                   class_info.class_tb.member.phone[3:7] + '-' +\
+                                                   class_info.class_tb.member.phone[7:11]
+            if class_info.class_tb.member.profile_url is None or class_info.class_tb.member.profile_url == '':
+                class_info.class_tb.member.profile_url = '/static/common/icon/icon_account.png'
+        try:
+            member_ticket_info = MemberTicketTb.objects.get(member_ticket_id=member_ticket_id)
+
+        except ObjectDoesNotExist:
+            error = '수강권 정보를 불러오지 못했습니다.'
+
+        if error is None:
+
+            member_ticket_abs_count = ScheduleTb.objects.filter(member_ticket_tb_id=member_ticket_id,
+                                                                state_cd=STATE_CD_ABSENCE, use=USE).count()
+            member_ticket_info.member_ticket_abs_count = member_ticket_abs_count
+        if error is None:
+            query_status = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `SCHEDULE_TB`.`STATE_CD`"
+            query_permission = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `SCHEDULE_TB`.`PERMISSION_STATE_CD`"
+            # 자유형 문제
+            schedule_list = ScheduleTb.objects.select_related(
+                'lecture_tb').filter(member_ticket_tb_id=member_ticket_id,
+                                     use=USE).annotate(status=RawSQL(query_status,
+                                                                     []),
+                                                       permission=RawSQL(query_permission,
+                                                                         [])).order_by('-start_dt', '-end_dt')
+
+        if error is None:
+            try:
+                ticket_info = TicketTb.objects.get(ticket_id=member_ticket_info.ticket_tb_id)
+            except ObjectDoesNotExist:
+                error = '수강권 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            ticket_info.ticket_lecture_data = TicketLectureTb.objects.select_related(
+                'lecture_tb'
+            ).filter(ticket_tb_id=member_ticket_info.ticket_tb_id, ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+                     lecture_tb__state_cd=STATE_CD_IN_PROGRESS, lecture_tb__use=USE,
+                     use=USE).order_by('lecture_tb__reg_dt')
+        context['ticket_info'] = ticket_info
+        context['class_data'] = class_list
+        context['member_ticket_info'] = member_ticket_info
+        context['schedule_data'] = schedule_list
+
+        return context
+
+
 class PopupLectureTicketInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'popup/trainee_popup_lecture_ticket_info.html'
 
