@@ -549,7 +549,7 @@ class ProgramNotice_func{
             url:'/trainer/update_program_notice_info/',
             type:'POST',
             data: data,
-            dataType : 'json',
+            dataType : 'JSON',
     
             beforeSend:function(xhr, settings) {
                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -586,7 +586,7 @@ class ProgramNotice_func{
                     error_callback();
                 }
                 show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
-                location.reload();
+                // location.reload();
             }
         });
     }
