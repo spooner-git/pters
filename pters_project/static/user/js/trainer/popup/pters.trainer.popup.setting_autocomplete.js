@@ -134,18 +134,27 @@ class Setting_autocomplete{
         let checked = complete_type == AUTOCOMPLETE_ATTEND ? ON : OFF;
         let style = {"display":"inline-block"};
         let checkbox = CComponent.radio_button (id, checked, style, (data)=>{
-            if(data == ON){
-                this.data.plan.complete_type = AUTOCOMPLETE_ATTEND;
-                this.render_content();
-            }
         });
 
         let title = CComponent.text_button ("ntd", '출석(횟수 차감됨)', {"font-size":"15px", "font-weight":"500", "letter-spacing":"-0.7px"}, ()=>{});
-        
-        let html = `<div style="display:table;width:100%;height:52px;">
-                        <div style="display:table-cell;width:auto;vertical-align:middle">${title}</div>
-                        <div style="display:table-cell;width:50px;vertical-align:middle;text-align:right;">${checkbox}</div>
-                    </div>`;
+
+        let html = CComp.container(
+            "div",
+            `<div style="display:table-cell;width:auto;vertical-align:middle">${title}</div>
+            <div style="display:table-cell;width:50px;vertical-align:middle;text-align:right;">${checkbox}</div>`,
+            {"display":"table", "width":"100%", "height":"52px"},
+            {"id":"autocomplete_type_attend_select"},
+            {"type":"click", "exe":()=>{
+                    if(this.data.plan.complete_type != AUTOCOMPLETE_ATTEND){
+                        show_user_confirm({title:`${CImg.warning(["#fe4e65"], {"vertical-align":"middle", "margin-bottom":"4px"})}<span style='color:#fe4e65'>주의!</span>`, comment:"현재 등록된 과거 일정 중 <br>완료되지 않은 일정이 모두 <span style='font-weight:bold;color:#fe4e65'>출석 처리</span> 됩니다. <br><br> 계속 진행할까요?"}, ()=>{
+                            this.data.plan.complete_type = AUTOCOMPLETE_ATTEND;
+                            this.render_content();
+                            layer_popup.close_layer_popup();
+                        });
+                    }
+                }
+            }
+        );
         return html;
     }
 
@@ -155,18 +164,27 @@ class Setting_autocomplete{
         let checked = complete_type == AUTOCOMPLETE_ABSENCE ? ON : OFF;
         let style = {"display":"inline-block"};
         let checkbox = CComponent.radio_button (id, checked, style, (data)=>{
-            if(data == ON){
-                this.data.plan.complete_type = AUTOCOMPLETE_ABSENCE;
-                this.render_content();
-            }
         });
 
         let title = CComponent.text_button ("ntd", '결석 (횟수 차감됨)', {"font-size":"15px", "font-weight":"500", "letter-spacing":"-0.7px"}, ()=>{});
         
-        let html = `<div style="display:table;width:100%;height:52px;">
-                        <div style="display:table-cell;width:auto;vertical-align:middle">${title}</div>
-                        <div style="display:table-cell;width:50px;vertical-align:middle;text-align:right;">${checkbox}</div>
-                    </div>`;
+        let html = CComp.container(
+            "div",
+            `<div style="display:table-cell;width:auto;vertical-align:middle">${title}</div>
+            <div style="display:table-cell;width:50px;vertical-align:middle;text-align:right;">${checkbox}</div>`,
+            {"display":"table", "width":"100%", "height":"52px"},
+            {"id":"autocomplete_type_absence_select"},
+            {"type":"click", "exe":()=>{
+                    if(this.data.plan.complete_type != AUTOCOMPLETE_ABSENCE){
+                        show_user_confirm({title:`${CImg.warning(["#fe4e65"], {"vertical-align":"middle", "margin-bottom":"4px"})}<span style='color:#fe4e65'>주의!</span>`, comment:"현재 등록된 과거 일정 중 <br>완료되지 않은 일정이 모두 <span style='font-weight:bold;color:#fe4e65'>결석 처리</span> 됩니다. <br><br> 계속 진행할까요?"}, ()=>{
+                            this.data.plan.complete_type = AUTOCOMPLETE_ABSENCE;
+                            this.render_content();
+                            layer_popup.close_layer_popup();
+                        });
+                    }
+                }
+            }
+        );
         return html;
     }
 
@@ -176,18 +194,28 @@ class Setting_autocomplete{
         let checked = complete_type == AUTOCOMPLETE_CANCEL ? ON : OFF;
         let style = {"display":"inline-block"};
         let checkbox = CComponent.radio_button (id, checked, style, (data)=>{
-            if(data == ON){
-                this.data.plan.complete_type = AUTOCOMPLETE_CANCEL;
-                this.render_content();
-            }
+
         });
 
         let title = CComponent.text_button ("ntd", '취소 (횟수 차감 되지 않음)', {"font-size":"15px", "font-weight":"500", "letter-spacing":"-0.7px"}, ()=>{});
         
-        let html = `<div style="display:table;width:100%;height:52px;">
-                        <div style="display:table-cell;width:auto;vertical-align:middle">${title}</div>
-                        <div style="display:table-cell;width:50px;vertical-align:middle;text-align:right;">${checkbox}</div>
-                    </div>`;
+        let html = CComp.container(
+            "div",
+            `<div style="display:table-cell;width:auto;vertical-align:middle">${title}</div>
+            <div style="display:table-cell;width:50px;vertical-align:middle;text-align:right;">${checkbox}</div>`,
+            {"display":"table", "width":"100%", "height":"52px"},
+            {"id":"autocomplete_type_cancel_select"},
+            {"type":"click", "exe":()=>{
+                    if(this.data.plan.complete_type != AUTOCOMPLETE_CANCEL){
+                        show_user_confirm({title:`${CImg.warning(["#fe4e65"], {"vertical-align":"middle", "margin-bottom":"4px"})}<span style='color:#fe4e65'>주의!</span>`, comment:"현재 등록된 과거 일정 중 <br>완료되지 않은 일정이 모두 <span style='font-weight:bold;color:#fe4e65'>자동 삭제</span> 됩니다.<br>또, 현재보다 과거에 일정을 등록할 수 없게 됩니다. <br><br> 계속 진행할까요?"}, ()=>{
+                            this.data.plan.complete_type = AUTOCOMPLETE_CANCEL;
+                            this.render_content();
+                            layer_popup.close_layer_popup();
+                        });
+                    }
+                }
+            }
+        );
         return html;
     }
 
