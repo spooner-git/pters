@@ -341,7 +341,7 @@ class ProgramNotice_func{
             url:'/trainer/add_program_notice_info/',
             type:'POST',
             data: data,
-            dataType : 'html',
+            dataType : 'JSON',
     
             beforeSend:function(xhr, settings) {
                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -355,8 +355,9 @@ class ProgramNotice_func{
             },
     
             //통신성공시 처리
-            success:function(data_){
-                let data = JSON.parse(data_);
+            success:function(data){
+                // console.log(data_);
+                // let data = JSON.parse(data_);
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
@@ -562,8 +563,8 @@ class ProgramNotice_func{
             },
     
             //통신성공시 처리
-            success:function(data_){
-                let data = JSON.parse(data_);
+            success:function(data){
+                // let data = JSON.parse(data_);
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
