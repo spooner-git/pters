@@ -154,6 +154,14 @@
     // });
     //팝업이 떠있을때, 팝업을 스크롤하면, 뒤의 root_content 항목이 스크롤되서 위치에서 벗어난 현상 해결
 
+    history.pushState(null, null, '#Main');
+    window.addEventListener("hashchange", function(e){
+        // if(layer_popup.stack.length > 0){
+        //     layer_popup.close_layer_popup();
+        // }
+        history.pushState(null, null, '#Main');
+    });
+
 
     // 팝업 인스턴스
     var program_add_popup;
