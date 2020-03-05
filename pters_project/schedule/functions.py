@@ -352,22 +352,13 @@ def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
 
                         setting_schedule_alarm_minute = alarm_setting_info.setting_info
                         alarm_dt = start_datetime - datetime.timedelta(minutes=int(setting_schedule_alarm_minute))
-                        try:
-                            schedule_alarm_info = ScheduleAlarmTb.objects.get(schedule_tb_id=schedule_id,
-                                                                              alarm_dt=alarm_dt)
-                            if not str(user_id) in schedule_alarm_info.member_ids:
-                                schedule_alarm_info.member_ids += ','+str(alarm_setting_info.member_id)
-                                schedule_alarm_info.save()
-                        except ObjectDoesNotExist:
-                            schedule_alarm_info = ScheduleAlarmTb(class_tb_id=class_id,
-                                                                  schedule_tb_id=schedule_id,
-                                                                  alarm_dt=alarm_dt,
-                                                                  member_ids=alarm_setting_info.member_id,
-                                                                  alarm_minute=setting_schedule_alarm_minute,
-                                                                  use=USE)
-                            schedule_alarm_info.save()
-                            add_schedule_info.schedule_alarm_tb_id = schedule_alarm_info.schedule_alarm_id
-                            add_schedule_info.save()
+                        schedule_alarm_info = ScheduleAlarmTb(class_tb_id=class_id,
+                                                              schedule_tb_id=schedule_id,
+                                                              alarm_dt=alarm_dt,
+                                                              member_id=alarm_setting_info.member_id,
+                                                              alarm_minute=setting_schedule_alarm_minute,
+                                                              use=USE)
+                        schedule_alarm_info.save()
 
                 if lecture_info is not None:
                     if lecture_schedule_id is not None:
@@ -467,22 +458,22 @@ def func_add_schedule_update(class_id, member_ticket_id, repeat_schedule_id,
 
                         setting_schedule_alarm_minute = alarm_setting_info.setting_info
                         alarm_dt = start_datetime - datetime.timedelta(minutes=int(setting_schedule_alarm_minute))
-                        try:
-                            schedule_alarm_info = ScheduleAlarmTb.objects.get(schedule_tb_id=schedule_id,
-                                                                              alarm_dt=alarm_dt)
-                            if not str(user_id) in schedule_alarm_info.member_ids:
-                                schedule_alarm_info.member_ids += ','+str(alarm_setting_info.member_id)
-                                schedule_alarm_info.save()
-                        except ObjectDoesNotExist:
-                            schedule_alarm_info = ScheduleAlarmTb(class_tb_id=class_id,
-                                                                  schedule_tb_id=schedule_id,
-                                                                  alarm_dt=alarm_dt,
-                                                                  member_ids=alarm_setting_info.member_id,
-                                                                  alarm_minute=setting_schedule_alarm_minute,
-                                                                  use=USE)
-                            schedule_alarm_info.save()
-                            add_schedule_info.schedule_alarm_tb_id = schedule_alarm_info.schedule_alarm_id
-                            add_schedule_info.save()
+                        # try:
+                        #     schedule_alarm_info = ScheduleAlarmTb.objects.get(schedule_tb_id=schedule_id,
+                        #                                                       alarm_dt=alarm_dt)
+                        #     if not str(user_id) in schedule_alarm_info.member_ids:
+                        #         schedule_alarm_info.member_ids += ','+str(alarm_setting_info.member_id)
+                        #         schedule_alarm_info.save()
+                        # except ObjectDoesNotExist:
+                        schedule_alarm_info = ScheduleAlarmTb(class_tb_id=class_id,
+                                                              schedule_tb_id=schedule_id,
+                                                              alarm_dt=alarm_dt,
+                                                              member_id=alarm_setting_info.member_id,
+                                                              alarm_minute=setting_schedule_alarm_minute,
+                                                              use=USE)
+                        schedule_alarm_info.save()
+                        # add_schedule_info.schedule_alarm_tb_id = schedule_alarm_info.schedule_alarm_id
+                        # add_schedule_info.save()
 
                 if error is None:
                     error = func_date_check(class_id, add_schedule_info.schedule_id,

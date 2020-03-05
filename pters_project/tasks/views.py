@@ -263,19 +263,19 @@ class SendAllSchedulePushAlarmDataView(View):
         alarm_dt = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:00')
 
         # 알람 관련된 데이터 가져오기
-        # query_common_cd = "SELECT COMMON_CD_NM FROM COMMON_CD_TB WHERE COMMON_CD=`CLASS_TB`.`SUBJECT_CD`"
-        # alarm_schedule_data = ScheduleAlarmTb.objects.select_related(
-        #     'class_tb__member', 'schedule_tb__lecture_tb',
-        #     'schedule_tb__member_ticket_tb__member').filter(alarm_dt=alarm_dt,
-        #                                                     use=USE).annotate(class_type_name=RawSQL(query_common_cd,
-        #                                                                                              []))
-
         query_common_cd = "SELECT COMMON_CD_NM FROM COMMON_CD_TB WHERE COMMON_CD=`CLASS_TB`.`SUBJECT_CD`"
-        alarm_schedule_data = ScheduleTb.objects.select_related(
-            'class_tb__member', 'lecture_tb',
-            'member_ticket_tb__member').filter(push_alarm_data__contains=str(alarm_dt),
-                                               use=USE).annotate(class_type_name=RawSQL(query_common_cd,
-                                                                                        []))
+        alarm_schedule_data = ScheduleAlarmTb.objects.select_related(
+            'class_tb__member', 'schedule_tb__lecture_tb',
+            'schedule_tb__member_ticket_tb__member').filter(alarm_dt=alarm_dt,
+                                                            use=USE).annotate(class_type_name=RawSQL(query_common_cd,
+                                                                                                     []))
+
+        # query_common_cd = "SELECT COMMON_CD_NM FROM COMMON_CD_TB WHERE COMMON_CD=`CLASS_TB`.`SUBJECT_CD`"
+        # alarm_schedule_data = ScheduleTb.objects.select_related(
+        #     'class_tb__member', 'lecture_tb',
+        #     'member_ticket_tb__member').filter(push_alarm_data__contains=str(alarm_dt),
+        #                                        use=USE).annotate(class_type_name=RawSQL(query_common_cd,
+        #                                                                                 []))
 
         # schedule 정보에서 push_alarm_data json 타입으로 변경 및 member_id 추출
         schedule_list = []
@@ -284,32 +284,33 @@ class SendAllSchedulePushAlarmDataView(View):
 
         for alarm_schedule_info in alarm_schedule_data:
             registration_ids = []
-
-            push_alarm_data = json.loads(alarm_schedule_info.push_alarm_data)
+            schedule_info = alarm_schedule_info.schedule_tb
+            # push_alarm_data = json.loads(schedule_info.push_alarm_data)
             try:
-                member_ids = push_alarm_data[str(alarm_dt)]["member_ids"]
+                # member_ids = push_alarm_data[str(alarm_dt)]["member_ids"]
 
-                alarm_dt = datetime.datetime.strptime(str(alarm_dt), '%Y-%m-%d %H:%M')
-                alarm_minute = int((schedule_info.start_dt - alarm_dt).seconds/60)
+                # alarm_dt = datetime.datetime.strptime(str(alarm_dt), '%Y-%m-%d %H:%M')
+                # alarm_minute = int((schedule_info.start_dt - alarm_dt).seconds/60)
+                alarm_minute = alarm_schedule_info.alarm_minute
                 class_type_name = alarm_schedule_info.class_type_name
-                if alarm_schedule_info.class_tb.subject_detail_nm != '':
-                    class_type_name = alarm_schedule_info.class_tb.subject_detail_nm
+                if schedule_info.class_tb.subject_detail_nm != '':
+                    class_type_name = schedule_info.class_tb.subject_detail_nm
                 alarm_title = class_type_name + ' - 일정 알림'
 
-                log_info_schedule_start_date = str(alarm_schedule_info.start_dt).split(':')
-                log_info_schedule_end_date = str(alarm_schedule_info.end_dt).split(' ')[1].split(':')
+                log_info_schedule_start_date = str(schedule_info.start_dt).split(':')
+                log_info_schedule_end_date = str(schedule_info.end_dt).split(' ')[1].split(':')
                 log_info_schedule_start_date = log_info_schedule_start_date[0] + ':' + log_info_schedule_start_date[1]
                 log_info_schedule_end_date = log_info_schedule_end_date[0] + ':' + log_info_schedule_end_date[1]
 
                 alarm_message = log_info_schedule_start_date + '~' + log_info_schedule_end_date + ' '
-                if str(alarm_schedule_info.en_dis_type) != OFF_SCHEDULE_TYPE:
-                    if alarm_schedule_info.lecture_tb is not None\
-                            and alarm_schedule_info.lecture_tb != '':
-                        alarm_message += '[' + alarm_schedule_info.lecture_tb.name + '] '
+                if str(schedule_info.en_dis_type) != OFF_SCHEDULE_TYPE:
+                    if schedule_info.lecture_tb is not None\
+                            and schedule_info.lecture_tb != '':
+                        alarm_message += '[' + schedule_info.lecture_tb.name + '] '
 
-                    if alarm_schedule_info.member_ticket_tb is not None\
-                            and alarm_schedule_info.member_ticket_tb != '':
-                        alarm_message += alarm_schedule_info.member_ticket_tb.member.name + ' 회원님 '
+                    if schedule_info.member_ticket_tb is not None\
+                            and schedule_info.member_ticket_tb != '':
+                        alarm_message += schedule_info.member_ticket_tb.member.name + ' 회원님 '
 
                     if alarm_minute == 0:
                         alarm_message += '일정 시작 시간 입니다.'
@@ -321,17 +322,13 @@ class SendAllSchedulePushAlarmDataView(View):
                         alarm_message += '일정 ' + str(int(alarm_minute/60/24)) + '일 전입니다.'
 
                 for token_info in token_data:
-                    # member_id_list = alarm_schedule_info.member_ids.split(',')
+                    if str(alarm_schedule_info.member_id) == str(token_info['member_id']):
+                        registration_ids.append(token_info['token'])
                     # try:
-                    #     member_id_list.index(token_info['member_id'])
+                    #     member_ids.index(token_info['member_id'])
                     #     registration_ids.append(token_info['token'])
                     # except ValueError:
                     #     continue
-                    try:
-                        member_ids.index(token_info['member_id'])
-                        registration_ids.append(token_info['token'])
-                    except ValueError:
-                        continue
 
                 schedule_info = {
                     'registration_ids': registration_ids,

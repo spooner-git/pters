@@ -220,7 +220,7 @@ class DailyRecordTb(TimeStampedModel):
 class ScheduleAlarmTb(TimeStampedModel):
     schedule_alarm_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     class_tb = models.ForeignKey(ClassTb, verbose_name='프로그램', on_delete=models.CASCADE, null=True)
-    member_ids = models.CharField('회원 ID 리스트', db_column='MEMBER_IDS', max_length=255, blank=True, default='')
+    member_id = models.CharField('회원 ID', db_column='MEMBER_ID', max_length=255, blank=True, default='')
     schedule_tb = models.ForeignKey(ScheduleTb, verbose_name='일정', on_delete=models.CASCADE, null=True)
     alarm_dt = models.DateTimeField('PUSH 알람 일시', db_column='alarm_dt', blank=True)
     alarm_minute = models.IntegerField('알람 시각', db_column='ALARM_MINUTE', default=0)
