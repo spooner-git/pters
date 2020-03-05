@@ -269,6 +269,7 @@ class ProgramNotice_list {
                             "contents":data_written.content, "to_member_type_cd":data_written.category_selected.to_member_type_cd.value[0],
                             "push_use":data_written.category_selected.push_use.value[0],
                             "use":data_written.category_selected.use.value[0]};
+
                 ProgramNotice_func.create(data, ()=>{
                     this.init();
                 });

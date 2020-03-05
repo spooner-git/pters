@@ -172,12 +172,12 @@ class Setting_alarm_personal{
     }
 
     send_data(){
-        let auth_inspect = pass_inspector.setting_update();
-        if(auth_inspect.barrier == BLOCKED){
-            let message = `${auth_inspect.limit_type}`;
-            show_error_message({title:message});
-            return false;
-        }
+        // let auth_inspect = pass_inspector.setting_update();
+        // if(auth_inspect.barrier == BLOCKED){
+        //     let message = `${auth_inspect.limit_type}`;
+        //     show_error_message({title:message});
+        //     return false;
+        // }
 
         if(this.data_sending_now == true){
             return false;
