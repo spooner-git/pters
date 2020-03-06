@@ -1572,9 +1572,9 @@ def delete_repeat_schedule_logic(request):
                     repeat_schedule_tb_id=repeat_schedule_info.repeat_schedule_id, start_dt__gt=timezone.now())
                 if repeat_schedule_info.member_ticket_tb is None or repeat_schedule_info.member_ticket_tb == '':
                     for schedule_info in schedule_data:
-                        func_delete_daily_record_content_image_logic(
-                            'https://s3.ap-northeast-2.amazonaws.com/pters-image-master/daily-record/'
-                            + str(request.user.id) + '_' + str(class_id) + '/' + str(schedule_info.schedule_id) + '/')
+                        # func_delete_daily_record_content_image_logic(
+                        #     'https://s3.ap-northeast-2.amazonaws.com/pters-image-master/daily-record/'
+                        #     + str(request.user.id) + '_' + str(class_id) + '/' + str(schedule_info.schedule_id) + '/')
                         schedule_info.delete()
                 else:
                     delete_member_ticket_id_data = {}
@@ -1588,11 +1588,11 @@ def delete_repeat_schedule_logic(request):
                         member_ticket_id = schedule_info.member_ticket_tb_id
                         delete_member_ticket_id_data[member_ticket_id] = member_ticket_id
 
-                        daily_record_info = DailyRecordTb.objects.filter(schedule_tb_id=schedule_info.schedule_id)
-                        daily_record_info.delete()
-                        func_delete_daily_record_content_image_logic(
-                            'https://s3.ap-northeast-2.amazonaws.com/pters-image-master/daily-record/'
-                            + str(request.user.id) + '_' + str(class_id) + '/' + str(schedule_info.schedule_id) + '/')
+                        # daily_record_info = DailyRecordTb.objects.filter(schedule_tb_id=schedule_info.schedule_id)
+                        # daily_record_info.delete()
+                        # func_delete_daily_record_content_image_logic(
+                        #     'https://s3.ap-northeast-2.amazonaws.com/pters-image-master/daily-record/'
+                        #     + str(request.user.id) + '_' + str(class_id) + '/' + str(schedule_info.schedule_id) + '/')
 
                         schedule_info.delete()
 
