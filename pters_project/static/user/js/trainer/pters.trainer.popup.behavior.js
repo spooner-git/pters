@@ -465,3 +465,39 @@ function show_user_confirm (message, callback){
                                   'popup_comment':message.comment,
                                   'onclick_function':()=>{callback();}});
 }
+
+
+class Loading{
+    static show(message){
+        Loading.install(message);
+    }
+
+    static hide(){
+        Loading.remove();
+    }
+
+    static install(message){
+        if(message == undefined){
+            message = `<div style="position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);text-align:center;color:var(--fundamental-white);width:100%;max-width:250px;background-color:black;border-radius:10px;padding:20px 10px;">
+                        <img src="/static/common/loading.svg">
+                        <div style="font-size:12px;color:var(--fundamental-white);word-break:keep-all">사용자 데이터의 중요 작업을 진행합니다.<br>데이터가 많은 경우 최대 2~4분까지 소요될 수 있습니다.</div>
+                    </div>`;
+        }
+        let style = `position:fixed;width:100%;height:100%;top:0;left:0;background-color:var(--bg-for-only-shade);opacity:0.8;z-index:1500;`;
+        if($('#loading_image').length == 0){
+            $('body').append(
+                `<div id="loading_image" style="${style}">
+                    <div>
+                        ${message}
+                    </div>
+                </div>`
+            );
+        }
+    }
+
+    static remove(){
+        if($('#loading_image').length != 0){
+            $('#loading_image').remove();
+        }
+    }
+}
