@@ -211,6 +211,13 @@ class Plan_repeat_list{
                     }
                     show_user_confirm(message, ()=>{
                         layer_popup.close_layer_popup();
+                        let inspect = pass_inspector.schedule_delete();
+                        if(inspect.barrier == BLOCKED){
+                            let message = `${inspect.limit_type}`;
+                            show_error_message({title:message});
+                            return false;
+                        }
+
                         Loading.show(`${repeat_name}의 반복 일정을 삭제 중입니다.<br>일정이 많은 경우 최대 2~4분까지 소요될 수 있습니다.`);
                         Plan_func.delete_plan_repeat({"repeat_schedule_id":repeat_id}, ()=>{
                             Loading.hide();
@@ -247,6 +254,12 @@ class Plan_repeat_list{
             let user_option = {
                 delete:{text:"삭제", callback:()=>{
                     layer_popup.close_layer_popup();
+                    let inspect = pass_inspector.schedule_delete();
+                    if(inspect.barrier == BLOCKED){
+                        let message = `${inspect.limit_type}`;
+                        show_error_message({title:message});
+                        return false;
+                    }
                     show_user_confirm({title:`정말 ${member_name}회원님의 반복 일정을 취소하시겠습니까?`}, ()=>{
                         layer_popup.close_layer_popup();
                         Loading.show(`${member_name}님의 반복 일정을 삭제 중입니다.<br>일정이 많은 경우 최대 2~4분까지 소요될 수 있습니다.`);
