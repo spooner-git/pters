@@ -1739,7 +1739,6 @@ def delete_repeat_schedule_logic(request):
         except InternalError:
             error = '반복일정 삭제중 오류가 발생했습니다.[8]'
         except ValidationError:
-            print(str(error))
             error = '반복일정 삭제중 오류가 발생했습니다.[9]'
 
     if error is not None:
