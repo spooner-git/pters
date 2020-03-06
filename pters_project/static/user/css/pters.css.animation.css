@@ -1,0 +1,229 @@
+
+
+.anim_pulse{
+	animation-name: pulse;
+	animation-duration: 0.4s;
+	animation-delay: 0;
+	animation-direction: normal;
+	animation-iteration-count: 1; 
+	animation-timing-function: ease-out;
+}
+
+@keyframes pulse{
+    0%{
+        transform:scale(1)  
+    }
+    20%{
+        transform:scale(1.05)  
+    }
+    30%{
+        transform:scale(1.1)
+    }
+    80%{
+        transform:scale(1);
+    }
+}
+
+@keyframes pulse-strong{
+    0%{
+        transform:scale(1.1)  
+    }
+    20%{
+        transform:scale(1.2)  
+    }
+    30%{
+        transform:scale(1.15)
+    }
+    100%{
+        transform:scale(1);
+    }
+}
+
+.anim_fade_in_vibe_top{
+	animation-name: fade-in-vibe-top;
+	animation-duration: 0.4s;
+	animation-delay: 0;
+	animation-direction: normal;
+	animation-iteration-count: 1; 
+	animation-timing-function: ease-out;
+}
+
+@keyframes fade-in-vibe-top{
+    0%{opacity: 0;
+        transform:translateY(-10px);    
+    }
+    100%{opacity: 1;
+        transform:translateY(0px);
+    }
+}
+
+.anim_fade_in{
+    animation-name: fade-in;
+	animation-duration: 0.3s;
+	animation-delay: 0;
+	animation-direction: normal;
+	animation-iteration-count: 1; 
+	animation-timing-function: ease-out;
+}
+
+@keyframes fade-in{
+    0%{opacity: 0;  
+    }
+    100%{opacity: 1;
+    }
+}
+
+.anim_fade_out{
+    animation-name: fade-out;
+	animation-duration: 0.3s;
+	animation-delay: 0;
+	animation-direction: normal;
+	animation-iteration-count: 1; 
+	animation-timing-function: ease-out;
+}
+
+@keyframes fade-out{
+    0%{opacity: 1;  
+    }
+    100%{opacity: 0;
+    }
+}
+
+
+.anim_page_to_right{
+    animation-name: appear-to-right;
+	animation-duration: 0.3s;
+	animation-delay: 0;
+	animation-direction: normal;
+	animation-iteration-count: 1; 
+	animation-timing-function: ease-out;
+}
+
+@keyframes appear-to-right{
+    0%{
+        transform: translateX(-50px);
+    }
+    100%{
+        transform: translateX(0px);
+    }
+}
+
+.anim_page_to_left{
+    animation-name: appear-to-left;
+	animation-duration: 0.3s;
+	animation-delay: 0;
+	animation-direction: normal;
+	animation-iteration-count: 1; 
+	animation-timing-function: ease-out;
+}
+
+@keyframes appear-to-left{
+    0%{
+        transform: translateX(0px);
+    }
+    100%{
+        transform: translateX(-50px);
+    }
+}
+
+.anim_paging_next{
+    animation-name: paging-next;
+	animation-duration: 0.2s;
+	animation-delay: 0;
+	animation-direction: normal;
+	animation-iteration-count: 1; 
+	animation-timing-function: ease-in-out;
+}
+
+@keyframes paging-next{
+    0%{
+        transform: scale(1);
+        z-index: 1500;
+        opacity: 0.3;
+        right:8%;
+    }
+    100%{
+        transform: scale(1.2);
+        z-index: 0;
+        opacity: 0;
+        right:1%;
+    }
+}
+
+.anim_paging_prev{
+    animation-name: paging-prev;
+	animation-duration: 0.2s;
+	animation-delay: 0;
+	animation-direction: normal;
+	animation-iteration-count: 1; 
+	animation-timing-function: ease-in-out;
+}
+
+@keyframes paging-prev{
+    0%{
+        transform: scale(1);
+        z-index: 1500;
+        opacity: 0.3;
+        left: 8%;
+    }
+    100%{
+        transform: scale(1.2);
+        z-index: 0;
+        opacity: 0;
+        left: 1%;
+    }
+}
+
+.anim_blink{
+    position: relative;
+    /* animation-name: border-bg-blink;
+	animation-duration: 1s;
+	animation-delay: 0;
+	animation-direction: normal;
+	animation-iteration-count: infinite; 
+    animation-timing-function: ease-in-out; */
+}
+.anim_blink::before{
+    content:"";
+    border:6px solid orange;
+    position: absolute;
+    bottom:0px;
+    right:0px;
+    border-top-color: transparent;
+    border-left-color: transparent;
+    z-index: 1;
+    animation-name: border-bg-blink;
+	animation-duration: 1.5s;
+	animation-delay: 0;
+	animation-direction: normal;
+	animation-iteration-count: infinite; 
+    animation-timing-function: ease-in-out;
+}
+.anim_blink::after{
+    content:"";
+    border:7px solid var(--bg-main);
+    position: absolute;
+    bottom:0px;
+    right:0px;
+    border-top-color: transparent;
+    border-left-color: transparent;
+    z-index: 0;
+    /* animation-name: border-bg-blink;
+	animation-duration: 1s;
+	animation-delay: 0;
+	animation-direction: normal;
+	animation-iteration-count: infinite; 
+    animation-timing-function: ease-in-out; */
+}
+
+@keyframes border-bg-blink{
+    0%{
+        opacity: 1;
+    }
+    60%{
+        opacity: 0.5;
+    }
+    100%{
+        opacity: 1;
+    }
+}

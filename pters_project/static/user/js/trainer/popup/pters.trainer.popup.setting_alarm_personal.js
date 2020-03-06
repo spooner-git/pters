@@ -4,7 +4,14 @@ class Setting_alarm_personal{
         this.data_sending_now = false;
 
         this.data = {
-            push_to_me: OFF
+            push_to_me: OFF,
+            setting_change_all: OFF,
+            setting_schedule_alarm_minute:{value:[], text:[]}
+        };
+
+        this.data_for_selector = {
+            setting_schedule_alarm_minute:
+                {value:[-1, 0, 5, 10, 15, 20, 30, 60, 120, 1440, 2880], text:["설정 안함", "시작", "5분전", "10분전", "15분전", "20분전", "30분전", "1시간 전", "2시간 전", "1일 전", "2일 전"]}
         };
 
         this.init();
@@ -19,6 +26,8 @@ class Setting_alarm_personal{
     set_initial_data (){
         Setting_alarm_personal_func.read((data)=>{
             this.data.push_to_me = data.setting_from_trainee_lesson_alarm;
+            this.data.setting_schedule_alarm_minute.value[0] = data.setting_schedule_alarm_minute;
+            this.data.setting_schedule_alarm_minute.text[0] = this.data_for_selector.setting_schedule_alarm_minute.text[ this.data_for_selector.setting_schedule_alarm_minute.value.indexOf(Number(data.setting_schedule_alarm_minute) ) ];
             this.render_content();
         });
         func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
@@ -58,12 +67,12 @@ class Setting_alarm_personal{
     }
     
     dom_assembly_content(){
-        // let row_push_to_member = this.dom_row_push_to_member();
-        let row_push_to_me = this.dom_row_push_to_me();
 
-        // let html = row_push_to_member + row_push_to_me;
-        let html = row_push_to_me;
-
+        let html = this.dom_row_push_to_me() +
+                    '<article class="obj_input_box_full">' +
+                        this.dom_row_setting_schedule_alarm_minute_input() +
+                       // "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>일정 시작전 PUSH 알림</span>"+
+                    '</article>';
         return html;
     }
 
@@ -118,6 +127,31 @@ class Setting_alarm_personal{
         return html;
     }
 
+    dom_row_setting_schedule_alarm_minute_input(){
+        let id = "setting_schedule_alarm_minute";
+        let title = "일정 시작전 PUSH 알림";
+        let icon = DELETE;
+        let icon_r_visible = SHOW;
+        let icon_r_text = this.data.setting_schedule_alarm_minute.text.length == 0 ? '' : this.data.setting_schedule_alarm_minute.text;
+        let style = null;
+        let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            let title = "PUSH 알림 시간";
+            let install_target = "#wrapper_box_custom_select";
+            let multiple_select = 1;
+            let data = this.data_for_selector.setting_schedule_alarm_minute;
+            let selected_data = this.data.setting_schedule_alarm_minute;
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, popup_style, null, ()=>{
+                custom_selector = new CustomSelector(title, install_target, multiple_select, data, selected_data, (set_data)=>{
+                    this.data.setting_schedule_alarm_minute = set_data;
+                    this.render_content();
+                });
+            });
+        });
+        let html = row;
+        return html;
+    }
+
     art_data(start_time, end_time){
         let merged;
         if(start_time == null && end_time == null){
@@ -138,12 +172,12 @@ class Setting_alarm_personal{
     }
 
     send_data(){
-        let auth_inspect = pass_inspector.setting_update();
-        if(auth_inspect.barrier == BLOCKED){
-            let message = `${auth_inspect.limit_type}`;
-            show_error_message({title:message});
-            return false;
-        }
+        // let auth_inspect = pass_inspector.setting_update();
+        // if(auth_inspect.barrier == BLOCKED){
+        //     let message = `${auth_inspect.limit_type}`;
+        //     show_error_message({title:message});
+        //     return false;
+        // }
 
         if(this.data_sending_now == true){
             return false;
@@ -152,7 +186,8 @@ class Setting_alarm_personal{
         }
 
         let data = {
-            "setting_from_trainee_lesson_alarm":this.data.push_to_me
+            "setting_from_trainee_lesson_alarm":this.data.push_to_me,
+            "setting_schedule_alarm_minute":this.data.setting_schedule_alarm_minute.value[0]
         };
         
         Setting_alarm_personal_func.update(data, ()=>{

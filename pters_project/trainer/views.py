@@ -1,6 +1,7 @@
 # Create your views here.
 import collections
 import datetime
+import json
 import logging
 import random
 import urllib
@@ -34,28 +35,28 @@ from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO
     GROUP_SCHEDULE, SCHEDULE_DUPLICATION_ENABLE, LECTURE_TYPE_ONE_TO_ONE, STATE_CD_IN_PROGRESS, STATE_CD_NOT_PROGRESS, \
     STATE_CD_ABSENCE, STATE_CD_FINISH, PERMISSION_STATE_CD_APPROVE, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, AUTH_TYPE_DELETE, \
     LECTURE_TYPE_NORMAL, SHOW, SORT_TICKET_TYPE, SORT_TICKET_NAME, SORT_TICKET_MEMBER_COUNT, SORT_TICKET_CREATE_DATE, \
-    SORT_LECTURE_NAME, SORT_LECTURE_MEMBER_COUNT, SORT_LECTURE_CAPACITY_COUNT, SORT_LECTURE_CREATE_DATE, ON_SCHEDULE, \
+    SORT_LECTURE_NAME, SORT_LECTURE_MEMBER_COUNT, SORT_LECTURE_CAPACITY_COUNT, SORT_LECTURE_CREATE_DATE, \
     CALENDAR_TIME_SELECTOR_BASIC, SORT_END_DATE, SORT_MEMBER_TICKET, SORT_SCHEDULE_DT, STATE_CD_REFUND, \
     SORT_SCHEDULE_MONTHLY, SHARED_PROGRAM, MY_PROGRAM, PROGRAM_SELECT, PROGRAM_LECTURE_CONNECT_DELETE, \
-    PROGRAM_LECTURE_CONNECT_ACCEPT, LECTURE_MEMBER_NUM_VIEW_ENABLE, BOARD_TYPE_CD_NOTICE
+    PROGRAM_LECTURE_CONNECT_ACCEPT, BOARD_TYPE_CD_NOTICE
 from board.models import BoardTb, QATb, NoticeTb
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 from schedule.functions import func_refresh_member_ticket_count, func_get_trainer_attend_schedule, \
     func_get_lecture_member_ticket_id, func_get_trainer_schedule_all, func_get_trainer_schedule_info, \
     func_get_lecture_schedule_all, func_get_member_schedule_all_by_member_ticket, \
     func_get_member_schedule_all_by_schedule_dt, func_get_member_schedule_all_by_monthly, \
-    func_get_permission_wait_schedule_all, func_add_schedule
-from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb
+    func_get_permission_wait_schedule_all, func_add_schedule, func_send_push_notice
+from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb, ScheduleAlarmTb
 from stats.functions import get_sales_data
 from trainee.models import MemberTicketTb
 from payment.models import PaymentInfoTb, ProductFunctionAuthTb
 from .functions import func_get_trainer_setting_list, \
     func_get_member_ing_list, func_get_member_end_list, func_get_class_member_ing_list, func_get_class_member_end_list,\
-    func_get_member_info, func_get_member_from_member_ticket_list, \
-    func_check_member_connection_info, func_get_member_lecture_list, \
-    func_get_member_ticket_list, func_get_lecture_info, func_add_member_ticket_info, func_get_ticket_info, \
-    func_delete_member_ticket_info, func_update_lecture_member_fix_status_cd, update_user_setting_data, \
-    update_program_setting_data, func_get_member_ticket_info, func_get_trainer_info, update_alarm_setting_data
+    func_get_member_info, func_get_member_from_member_ticket_list, func_check_member_connection_info,\
+    func_get_member_lecture_list, func_get_member_ticket_list, func_get_lecture_info, func_add_member_ticket_info,\
+    func_get_ticket_info, func_delete_member_ticket_info, func_update_lecture_member_fix_status_cd,\
+    update_user_setting_data, update_program_setting_data, func_get_member_ticket_info, func_get_trainer_info,\
+    update_alarm_setting_data
 from .models import ClassMemberTicketTb, LectureTb, ClassTb, MemberClassTb, BackgroundImgTb, \
     SettingTb, TicketTb, TicketLectureTb, CenterTrainerTb, LectureMemberTb, ProgramAuthTb, ProgramBoardTb, \
     ProgramNoticeTb, BugMemberTicketPriceTb
@@ -997,9 +998,9 @@ def delete_member_info_logic(request):
                 if len(schedule_data) > 0:
                     # 예약된 일정 삭제
                     schedule_data.delete()
-                if len(repeat_schedule_data) > 0:
+                # if len(finish_schedule_data) > 0:
                     # 완료된 일정 비활성화
-                    finish_schedule_data.update(use=UN_USE)
+                    # finish_schedule_data.update(use=UN_USE)
                 if len(repeat_schedule_data) > 0:
                     # 반복일정 삭제
                     repeat_schedule_data.delete()
@@ -1404,7 +1405,7 @@ class PushSettingView(LoginRequiredMixin, AccessTestMixin, View):
         # context = super(PushSettingView, self).get_context_data(**kwargs)
         class_id = request.session.get('class_id', '')
         # class_hour = request.session.get('class_hour')
-        context = func_get_trainer_setting_list(context, request.user.id, class_id, request.user.id)
+        context = func_get_trainer_setting_list(context, class_id, request.user.id)
 
         return render(request, self.template_name, context)
 
@@ -2064,7 +2065,8 @@ def update_member_ticket_info_logic(request):
     refund_price = request.POST.get('refund_price', '')
     refund_date = request.POST.get('refund_date', '')
     member_ticket_reg_count = request.POST.get('member_ticket_reg_count', '')
-    # NONE : 선택 안함 / CASH : 현금 , CARD : 카드 , TRANS : 계좌 이체 , CASH+CARD : 현금 + 카드, CARD + TRANS : 카드 + 계좌 이체, CASH + TRANS : 현금 + 계좌 이체
+    # NONE : 선택 안함 / CASH : 현금 , CARD : 카드 , TRANS : 계좌 이체 , CASH+CARD : 현금 + 카드,
+    # CARD + TRANS : 카드 + 계좌 이체, CASH + TRANS : 현금 + 계좌 이체
     pay_method = request.POST.get('pay_method', 'NONE')
     class_id = request.session.get('class_id', '')
     error = None
@@ -2376,6 +2378,7 @@ def add_lecture_info_logic(request):
     ing_font_color_cd = request.POST.get('ing_font_color_cd', '#282828')
     end_font_color_cd = request.POST.get('end_font_color_cd', '#282828')
     lecture_minute = request.POST.get('lecture_minute', 60)
+    start_time = request.POST.get('start_time', 'A-0')
     error = None
     lecture_id = None
     lecture_type_cd = LECTURE_TYPE_NORMAL
@@ -2387,7 +2390,8 @@ def add_lecture_info_logic(request):
                                      # member_num_view_flag=member_num_view_flag,
                                      name=name, note=note, ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
                                      ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
-                                     lecture_minute=lecture_minute, state_cd=STATE_CD_IN_PROGRESS, use=USE)
+                                     lecture_minute=lecture_minute, state_cd=STATE_CD_IN_PROGRESS,
+                                     start_time=start_time, use=USE)
 
             lecture_info.save()
             lecture_id = lecture_info.lecture_id
@@ -2423,6 +2427,12 @@ def delete_lecture_info_logic(request):
         lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
     except ObjectDoesNotExist:
         error = '오류가 발생했습니다.'
+    if error is None:
+        if lecture_info.lecture_type_cd == LECTURE_TYPE_ONE_TO_ONE:
+            lecture_counter = LectureTb.objects.filter(class_tb_id=class_id,
+                                                       lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, use=USE).count()
+            if lecture_counter == 1:
+                error = '개인 수업을 삭제 할 수 없습니다.'
 
     ticket_lecture_data = TicketLectureTb.objects.filter(lecture_tb_id=lecture_id, use=USE)
 
@@ -2435,32 +2445,32 @@ def delete_lecture_info_logic(request):
         with transaction.atomic():
 
             if error is None:
-                schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                          lecture_tb_id=lecture_id,
-                                                          end_dt__lte=timezone.now(),
-                                                          en_dis_type=ON_SCHEDULE_TYPE
-                                                          ).exclude(Q(state_cd=STATE_CD_FINISH)
-                                                                    | Q(state_cd=STATE_CD_ABSENCE))
+                # schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
+                #                                           lecture_tb_id=lecture_id,
+                #                                           end_dt__lte=timezone.now(),
+                #                                           en_dis_type=ON_SCHEDULE_TYPE
+                #                                           ).exclude(Q(state_cd=STATE_CD_FINISH)
+                #                                                     | Q(state_cd=STATE_CD_ABSENCE))
                 schedule_data_delete = ScheduleTb.objects.filter(class_tb_id=class_id, lecture_tb_id=lecture_id,
-                                                                 end_dt__gt=timezone.now(),
+                                                                 # end_dt__gt=timezone.now(),
                                                                  en_dis_type=ON_SCHEDULE_TYPE
                                                                  ).exclude(Q(state_cd=STATE_CD_FINISH)
                                                                            | Q(state_cd=STATE_CD_ABSENCE))
                 repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
                                                                        lecture_tb_id=lecture_id)
-                schedule_data_finish = ScheduleTb.objects.filter(Q(state_cd=STATE_CD_FINISH)
-                                                                 | Q(state_cd=STATE_CD_ABSENCE),
-                                                                 class_tb_id=class_id,
-                                                                 lecture_tb_id=lecture_id,
-                                                                 en_dis_type=ON_SCHEDULE_TYPE)
-                if len(schedule_data) > 0:
-                    schedule_data.update(state_cd=STATE_CD_FINISH, use=UN_USE)
+                # schedule_data_finish = ScheduleTb.objects.filter(Q(state_cd=STATE_CD_FINISH)
+                #                                                  | Q(state_cd=STATE_CD_ABSENCE),
+                #                                                  class_tb_id=class_id,
+                #                                                  lecture_tb_id=lecture_id,
+                #                                                  en_dis_type=ON_SCHEDULE_TYPE)
+                # if len(schedule_data) > 0:
+                #     schedule_data.update(state_cd=STATE_CD_FINISH)
                 if len(schedule_data_delete) > 0:
                     schedule_data_delete.delete()
                 if len(repeat_schedule_data) > 0:
                     repeat_schedule_data.delete()
-                if len(schedule_data_finish) > 0:
-                    schedule_data_finish.update(use=UN_USE)
+                # if len(schedule_data_finish) > 0:
+                #     schedule_data_finish.update(use=UN_USE)
 
                 # 관련 수간권 회원들 수강정보 업데이트
                 if len(ticket_lecture_data) > 0:
@@ -2525,6 +2535,7 @@ def update_lecture_info_logic(request):
     ing_font_color_cd = request.POST.get('ing_font_color_cd', '')
     end_font_color_cd = request.POST.get('end_font_color_cd', '')
     lecture_minute = request.POST.get('lecture_minute', 60)
+    start_time = request.POST.get('start_time', '')
     update_this_to_all_plans = request.POST.get('update_this_to_all_plans', UN_USE)
     lecture_info = None
     error = None
@@ -2561,6 +2572,8 @@ def update_lecture_info_logic(request):
 
         if lecture_minute == '' or lecture_minute is None:
             lecture_minute = lecture_info.lecture_minute
+        if start_time == '' or start_time is None:
+            start_time = lecture_info.start_time
 
     if error is None:
         try:
@@ -2589,6 +2602,7 @@ def update_lecture_info_logic(request):
         lecture_info.ing_font_color_cd = ing_font_color_cd
         lecture_info.end_font_color_cd = end_font_color_cd
         lecture_info.lecture_minute = lecture_minute
+        lecture_info.start_time = start_time
         lecture_info.save()
 
     if error is None:
@@ -2645,7 +2659,14 @@ def update_lecture_status_info_logic(request):
 
     if error is None:
         if lecture_info.lecture_type_cd == LECTURE_TYPE_ONE_TO_ONE:
-            error = '개인 수업은 상태 변경이 불가합니다.'
+            if state_cd == STATE_CD_FINISH:
+                lecture_counter = LectureTb.objects.filter(class_tb_id=class_id,
+                                                           lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE,
+                                                           state_cd=STATE_CD_IN_PROGRESS,
+                                                           use=USE).count()
+                if lecture_counter == 1:
+                    error = '개인 수업을 비활성화 할 수 없습니다.'
+            # error = '개인 수업은 상태 변경이 불가합니다.'
 
     if error is None:
         ticket_lecture_data = TicketLectureTb.objects.filter(class_tb_id=class_id, lecture_tb_id=lecture_id, use=USE)
@@ -3696,7 +3717,7 @@ class GetTicketEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                    'ticket_month_schedule_enable': ticket_info.month_schedule_enable,
                                                    'ticket_week_schedule_enable': ticket_info.week_schedule_enable,
                                                    'ticket_day_schedule_enable': ticket_info.day_schedule_enable,
-                                                   'ticket_reg_dt': ticket_tb.reg_dt,
+                                                   'ticket_reg_dt': ticket_info.reg_dt,
                                                    'ticket_lecture_list': [],
                                                    'ticket_lecture_state_cd_list': [],
                                                    'ticket_lecture_id_list': [],
@@ -4745,15 +4766,81 @@ def update_setting_push_logic(request):
 # 강사 예약허용시간 setting 업데이트 api
 def update_setting_push_to_me_logic(request):
     setting_from_trainee_lesson_alarm = request.POST.get('setting_from_trainee_lesson_alarm', '1')
+    setting_schedule_alarm_minute = request.POST.get('setting_schedule_alarm_minute', '-1')
     class_id = request.session.get('class_id', '')
 
-    setting_type_cd_data = ['LT_PUS_FROM_TRAINEE_LESSON_ALARM']
-    setting_info_data = [setting_from_trainee_lesson_alarm]
+    setting_type_cd_data = ['LT_PUS_FROM_TRAINEE_LESSON_ALARM', 'LT_PUSH_SCHEDULE_ALARM_MINUTE']
+    setting_info_data = [setting_from_trainee_lesson_alarm, setting_schedule_alarm_minute]
 
     error = update_alarm_setting_data(class_id, request.user.id, setting_type_cd_data, setting_info_data)
 
+    now = timezone.now()
+
+    schedule_alarm_data = ScheduleAlarmTb.objects.select_related(
+        'schedule_tb').filter(class_tb_id=class_id, alarm_dt__gte=now, member_id=request.user.id, use=USE)
+    if setting_schedule_alarm_minute == '-1':
+        schedule_alarm_data.delete()
+    else:
+        alarm_time = now + datetime.timedelta(minutes=int(setting_schedule_alarm_minute))
+        alarm_time = alarm_time.strftime('%Y-%m-%d %H:%M:00')
+
+        schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, start_dt__gte=alarm_time,
+                                                  lecture_schedule_id__isnull=True,
+                                                  en_dis_type='1',
+                                                  use=USE)
+        for schedule_info in schedule_data:
+            alarm_dt = schedule_info.start_dt - datetime.timedelta(minutes=int(setting_schedule_alarm_minute))
+            # if schedule_info.push_alarm_data is not None and schedule_info.push_alarm_data != '':
+            #     if '"'+str(request.user.id)+'"' in schedule_info.push_alarm_data:
+            #         if ', "'+str(request.user.id)+'"' in schedule_info.push_alarm_data:
+            #             schedule_info.push_alarm_data\
+            #                 = schedule_info.push_alarm_data.replace(', "' + str(request.user.id) + '"', '')
+            #         if '"'+str(request.user.id)+'"' in schedule_info.push_alarm_data:
+            #             schedule_info.push_alarm_data\
+            #                 = schedule_info.push_alarm_data.replace('"' + str(request.user.id) + '"', '')
+            #
+            #     push_alarm_data = json.loads(schedule_info.push_alarm_data)
+            #
+            #     if str(alarm_dt) in schedule_info.push_alarm_data:
+            #
+            #         try:
+            #             push_alarm_data[str(alarm_dt)]['member_ids'].index(str(request.user.id))
+            #         except ValueError:
+            #             push_alarm_data[str(alarm_dt)]['member_ids'].append(str(request.user.id))
+            #             schedule_info.push_alarm_data = str(push_alarm_data).replace("'", '"')
+            #
+            #     else:
+            #         push_alarm_data[str(alarm_dt)] = {"member_ids": [str(request.user.id)]}
+            #         schedule_info.push_alarm_data = str(push_alarm_data).replace("'", '"')
+            # else:
+            #     alarm_info = {
+            #         str(alarm_dt): {
+            #             "member_ids": [
+            #                 str(request.user.id)
+            #             ]
+            #         }
+            #     }
+            #     schedule_info.push_alarm_data = str(alarm_info).replace("'", '"')
+            # schedule_info.save()
+            new_reg_test = True
+            for schedule_alarm_info in schedule_alarm_data:
+                if str(schedule_alarm_info.schedule_tb_id) == str(schedule_info.schedule_id):
+                    schedule_alarm_info.alarm_dt = alarm_dt
+                    schedule_alarm_info.alarm_minute = setting_schedule_alarm_minute
+                    schedule_alarm_info.save()
+                    new_reg_test = False
+                    break
+
+            if new_reg_test:
+                schedule_alarm_info = ScheduleAlarmTb(class_tb_id=class_id, schedule_tb_id=schedule_info.schedule_id,
+                                                      alarm_dt=alarm_dt, member_id=request.user.id,
+                                                      alarm_minute=setting_schedule_alarm_minute,
+                                                      use=USE)
+                schedule_alarm_info.save()
+
     if error is None:
         request.session['setting_from_trainee_lesson_alarm'] = int(setting_from_trainee_lesson_alarm)
+        request.session['setting_schedule_alarm_minute'] = setting_schedule_alarm_minute
     else:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
@@ -4894,7 +4981,7 @@ def update_setting_reserve_logic(request):
                                                           MEMBER_RESERVE_PROHIBITION_ON)
     setting_member_reserve_date_available = request.POST.get('setting_member_reserve_date_available', '7')
     # setting_member_time_duration = request.POST.get('setting_member_time_duration', '60')
-    setting_member_start_time = request.POST.get('setting_member_start_time', 'A-0')
+    # setting_member_start_time = request.POST.get('setting_member_start_time', 'A-0')
     setting_member_private_class_auto_permission = request.POST.get('setting_member_private_class_auto_permission', USE)
     setting_member_public_class_auto_permission = request.POST.get('setting_member_public_class_auto_permission', USE)
     setting_member_public_class_wait_member_num = request.POST.get('setting_member_public_class_wait_member_num', 0)
@@ -4915,8 +5002,8 @@ def update_setting_reserve_logic(request):
         setting_member_reserve_date_available = '7'
     # if setting_member_time_duration is None or setting_member_time_duration == '':
     #     setting_member_time_duration = '60'
-    if setting_member_start_time is None or setting_member_start_time == '':
-        setting_member_start_time = 'A-0'
+    # if setting_member_start_time is None or setting_member_start_time == '':
+    #     setting_member_start_time = 'A-0'
     if setting_member_private_class_auto_permission is None or setting_member_private_class_auto_permission == '':
         setting_member_private_class_auto_permission = USE
     if setting_member_public_class_auto_permission is None or setting_member_public_class_auto_permission == '':
@@ -4927,13 +5014,13 @@ def update_setting_reserve_logic(request):
         setting_member_wait_schedule_auto_cancel_time = 0
 
     setting_type_cd_data = ['LT_RES_MEMBER_LECTURE_MAX_NUM_VIEW', 'LT_RES_01', 'LT_RES_03', 'LT_RES_05',
-                            'LT_RES_CANCEL_TIME', 'LT_RES_ENABLE_TIME', 'LT_RES_MEMBER_START_TIME',
+                            'LT_RES_CANCEL_TIME', 'LT_RES_ENABLE_TIME',
                             'LT_RES_PRIVATE_CLASS_AUTO_PERMISSION', 'LT_RES_PUBLIC_CLASS_AUTO_PERMISSION',
                             'LT_RES_PUBLIC_CLASS_WAIT_MEMBER_NUM', 'LT_RES_WAIT_SCHEDULE_AUTO_CANCEL_TIME']
     setting_info_data = [setting_member_lecture_max_num_view_available, setting_member_reserve_time_available,
                          setting_member_reserve_prohibition,
                          setting_member_reserve_date_available, setting_member_reserve_cancel_time,
-                         setting_member_reserve_enable_time, setting_member_start_time,
+                         setting_member_reserve_enable_time,
                          setting_member_private_class_auto_permission, setting_member_public_class_auto_permission,
                          setting_member_public_class_wait_member_num, setting_member_wait_schedule_auto_cancel_time]
     error = update_program_setting_data(class_id, setting_type_cd_data, setting_info_data)
@@ -4946,7 +5033,7 @@ def update_setting_reserve_logic(request):
         request.session['setting_member_reserve_cancel_time'] = setting_member_reserve_cancel_time
         request.session['setting_member_reserve_date_available'] = setting_member_reserve_date_available
         # request.session['setting_member_time_duration'] = setting_member_time_duration
-        request.session['setting_member_start_time'] = setting_member_start_time
+        # request.session['setting_member_start_time'] = setting_member_start_time
         request.session['setting_member_private_class_auto_permission'] = setting_member_private_class_auto_permission
         request.session['setting_member_public_class_auto_permission'] = setting_member_public_class_auto_permission
         request.session['setting_member_public_class_wait_member_num'] = setting_member_public_class_wait_member_num
@@ -5469,9 +5556,10 @@ class AddProgramNoticeInfoView(LoginRequiredMixin, AccessTestMixin, View):
         title = request.POST.get('title', '')
         contents = request.POST.get('contents', '')
         to_member_type_cd = request.POST.get('to_member_type_cd')
+        push_use = request.POST.get('push_use', str(UN_USE))
         use = request.POST.get('use', USE)
         class_id = request.session.get('class_id')
-
+        class_name = request.session.get('class_type_name', '')
         context = {}
         error = None
 
@@ -5483,7 +5571,10 @@ class AddProgramNoticeInfoView(LoginRequiredMixin, AccessTestMixin, View):
                                                   class_tb_id=class_id, title=title, contents=contents,
                                                   to_member_type_cd=to_member_type_cd, use=use)
             program_notice_info.save()
-
+        if error is None:
+            if str(use) == str(USE) and str(push_use) == str(USE):
+                error = func_send_push_notice(to_member_type_cd, class_id,
+                                              '[공지사항] - ' + class_name, title)
         if error is not None:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
             # messages.error(request, error)
@@ -5500,9 +5591,10 @@ class UpdateProgramNoticeInfoView(LoginRequiredMixin, AccessTestMixin, View):
         title = request.POST.get('title', '')
         contents = request.POST.get('contents', '')
         to_member_type_cd = request.POST.get('to_member_type_cd')
+        push_use = request.POST.get('push_use', str(UN_USE))
         use = request.POST.get('use', USE)
-        # class_id = request.session.get('class_id')
-
+        class_id = request.session.get('class_id')
+        class_name = request.session.get('class_type_name', '')
         context = {}
         error = None
         program_notice_info = None
@@ -5528,6 +5620,10 @@ class UpdateProgramNoticeInfoView(LoginRequiredMixin, AccessTestMixin, View):
             program_notice_info.mod_dt = timezone.now()
             program_notice_info.use = use
             program_notice_info.save()
+
+        if error is None:
+            if str(use) == str(USE) and str(push_use) == str(USE):
+                func_send_push_notice(to_member_type_cd, class_id, '[공지사항] - ' + class_name, title)
 
         if error is not None:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
@@ -5879,6 +5975,7 @@ class PopupLectureView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         lecture_id = self.request.GET.get('lecture_id')
         context['lecture_info'] = func_get_lecture_info(class_id, lecture_id, self.request.user.id)
         return context
+
 
 class PopupLectureSimpleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'popup/trainer_popup_lecture_simple_view.html'

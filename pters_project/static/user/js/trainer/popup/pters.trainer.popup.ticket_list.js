@@ -20,6 +20,9 @@ class Ticket_list {
         this.sort_value_text = '수강권명 가나다순';
 
         this.received_data_cache = null; // 재랜더링시 스크롤 위치를 기억하도록 먼저 이전 데이터를 그려주기 위해
+
+        this.toggle_ticket_lectures_display = ON;
+
         this.init();
     }
 
@@ -65,6 +68,9 @@ class Ticket_list {
         let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();ticket_list_popup.clear();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
         let top_right = `<span class="icon_right">
+                                <span  onclick="${this.instance}.fold_ticket_lecture_list()">
+                                    ${this.toggle_ticket_lectures_display == ON ? CImg.fold("", {"vertical-align":"middle"}) : CImg.unfold("", {"vertical-align":"middle"})}
+                                </span>
                                 <span class=".search_lecture" onclick="${this.instance}.search_tool_visible(event, this)">
                                     ${CImg.search("", {"vertical-align":"middle"})}
                                 </span>
@@ -121,6 +127,9 @@ class Ticket_list {
             let data = whole_data[i];
             let ticket_id = data.ticket_id;
             let ticket_name = data.ticket_name;
+            let ticket_price = data.ticket_price;
+            let ticket_reg_count = data.ticket_reg_count;
+            let ticket_effective_days = data.ticket_effective_days;
             let ticket_note = data.ticket_note != undefined ? data.ticket_note : "";
             let ticket_member_number = data.ticket_ing_member_num;
             let ticket_end_member_number = data.ticket_end_member_num;
@@ -156,9 +165,12 @@ class Ticket_list {
                                 </div>
                                 <div class="ticket_note">${ticket_note}</div>
                             </div>
+                            <div class="ticket_data_m">
+                                <div>${ticket_reg_count != 99999 ? ticket_reg_count + " 회" : "횟수 무제한" } / ${ticket_effective_days != 99999 ? ticket_effective_days + " 일간" : "소진시까지"} / ${UnitRobot.numberWithCommas(ticket_price)} 원</div>
+                            </div>
                             <div class="ticket_data_b">
-                                <div class="ticket_lectures">
-                                    ${ticket_lectures_included_name_html.length != 0 ? ticket_lectures_included_name_html.join('') : "<span style='color:var(--font-highlight);text-decoration:underline'>포함된 수업이 없습니다.</span>"}
+                                <div class="ticket_lectures" style="display:${this.toggle_ticket_lectures_display == ON ? "" : "none"}">
+                                    ${ticket_lectures_included_name_html.length != 0 ? ticket_lectures_included_name_html.join('') : `<span style='color:var(--font-highlight);'>${CImg.warning(["#fe4e65"], {"vertical-align":"middle", "width":"20px", "height":"20px", "margin-bottom":"4px"})} 포함된 수업이 없습니다.</span>`}
                                 </div>
                             </div>
                         </article>`;
@@ -277,6 +289,15 @@ class Ticket_list {
                 el.style.display = 'none';
             }
         });
+    }
+
+    fold_ticket_lecture_list(){
+        if(this.toggle_ticket_lectures_display == ON){
+            this.toggle_ticket_lectures_display = OFF;
+        }else{
+            this.toggle_ticket_lectures_display = ON;
+        }
+        this.render();
     }
 
     //수강권 리스트 서버에서 불러오기

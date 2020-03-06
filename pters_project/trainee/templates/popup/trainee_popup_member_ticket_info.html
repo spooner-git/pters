@@ -1,41 +1,28 @@
 {% extends "popup/trainee_base_popup.html" %}
 {% load static_url %}
 {% block popup_base_css %}
-    <link rel="stylesheet" href={% static_url "user/css/trainee/popup/pters.trainee.popup.lecture_ticket_info.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/trainee/popup/pters.trainee.popup.member_ticket_info.css" %}>
 {% endblock %}
 {% block popup_base_wrapper_top %}
 {% endblock %}
     <!-- pters.trainee.popup.plan_view.css -->
 
 {% block popup_base_contents %}
-    <div class="popup_lecture_ticket_info">
+    <div class="popup_member_ticket_info">
         <div class="obj_box_popup_topper">
 {#            <div class="obj_font_size_12_weight_500 obj_font_color_white">{{ member_ticket_info.ticket_tb.ticket_type_cd_nm }}</div>#}
             <div class="wrapper_my_ticket_title">
-            {% if lecture_info.member_num == 1 %}
-                <img src="{% static_url "common/icon/member_icon_person_black.png" %}">
-            {% else %}
-                <img src="{% static_url "common/icon/member_icon_people_black.png" %}">
-            {% endif %}
-                <div class="obj_font_size_18_weight_bold obj_font_color_white">{{ lecture_info.name }}</div>
-                <div class="obj_font_size_13_weight_500 obj_font_color_white" style="float:right">수업</div>
+                <div class="obj_font_size_18_weight_bold obj_font_color_white">{{ member_ticket_info.ticket_tb.name }}</div>
+                <div class="obj_font_size_13_weight_500 obj_font_color_white" style="float:right">수강권</div>
             </div>
 
             <div class="wrapper_my_ticket_tab obj_font_color_white obj_font_size_13_weight_normal">
                 <div id="ticket_basic_info" class="wrapper_my_ticket_basic_info" onclick="ticket_basic_info();">기본 정보</div>
                 <div id="ticket_lesson_history" class="wrapper_my_ticket_lesson_history" onclick="ticket_lesson_history();">일정 내역</div>
+                <div id="ticket_lecture_list" class="wrapper_my_ticket_lecture_list" onclick="ticket_lecture_list();">참여가능 수업</div>
             </div>
         </div>
         <div id="wrapper_my_ticket_detail">
-            <div class="wrapper_my_ticket_name obj_box_full">
-                <div class="wrapper_my_ticket_detail_date_title obj_font_size_11_weight_normal obj_font_color_light_grey">
-                    <div class="obj_table_raw">수강권</div>
-                </div>
-                <div class="wrapper_my_ticket_detail_date_info obj_font_size_14_weight_500">
-                    <div class="obj_table_raw">{{ member_ticket_info.ticket_tb.name }}</div>
-                </div>
-            </div>
-
             <div class="wrapper_my_ticket_detail_date obj_box_full">
                 <div class="wrapper_my_ticket_detail_date_title obj_font_size_11_weight_normal obj_font_color_light_grey">
                     <div class="obj_table_raw">시작일</div>
@@ -60,6 +47,7 @@
                     <div class="obj_table_raw">{{ member_ticket_info.member_ticket_avail_count }} 회</div>
                 </div>
             </div>
+
             {% for class_info in class_data %}
             <div class="obj_table_raw wrapper_my_ticket_detail_teacher obj_box_full">
                 <div class="obj_table_cell_x3" style="width:75px;">
@@ -78,6 +66,7 @@
         <div id="wrapper_my_history_detail" style="display:none;">
             <div class="wrapper_my_history_detail_title obj_table_raw obj_font_size_11_weight_normal obj_font_color_light_grey">
                 <div class="wrapper_my_history_detail_member_ticket_count obj_table_cell_x5">회차</div>
+{#                <div class="wrapper_my_history_detail_member_ticket_lecture obj_table_cell_x6">수업</div>#}
                 <div class="wrapper_my_history_detail_member_ticket_date obj_table_cell_x5">일자</div>
 {#                <div class="wrapper_my_history_detail_member_ticket_week obj_table_cell_x6">요일</div>#}
 {#                <div class="wrapper_my_history_detail_member_ticket_time obj_table_cell_x6">진행시간</div>#}
@@ -88,7 +77,10 @@
             {% for schedule_info in schedule_data %}
             <div class="wrapper_my_history_detail_info obj_table_raw obj_font_size_11_weight_500">
                 <div class="wrapper_my_history_detail_member_ticket_count obj_table_cell_x5">{{ forloop.revcounter }}</div>
-                <div class="wrapper_my_history_detail_member_ticket_date obj_table_cell_x5">{{ schedule_info.start_dt | date:'Y.m.d (l)' | cut:'요일' }}
+{#                <div class="wrapper_my_history_detail_member_ticket_lecture obj_table_cell_x6"></div>#}
+                <div class="wrapper_my_history_detail_member_ticket_date obj_table_cell_x5">
+                    <span class="obj_font_size_12_weight_bold">{{ schedule_info.lecture_tb.name | truncatechars:10 }}</span>
+                    <br/>{{ schedule_info.start_dt | date:'Y.m.d (l)' | cut:'요일' }}
                     <br/>{{ schedule_info.start_dt | time:'H:i' }} ~ {{ schedule_info.end_dt | time:'H:i' }}
                 </div>
                 <!--<div class="wrapper_my_history_detail_member_ticket_week obj_table_cell_x6">{{ schedule_info.start_dt | date:'l' }}</div>
@@ -108,6 +100,20 @@
             {% endfor %}
         </div>
 
+        <div id="wrapper_my_lecture_list_detail" style="display:none;">
+             {% for ticket_lecture_info in ticket_info.ticket_lecture_data %}
+                <div class="wrapper_my_ticket_detail_date obj_box_full">
+                    <div class="wrapper_my_ticket_detail_date_title obj_font_size_11_weight_normal obj_font_color_light_grey">
+                        <div class="obj_table_raw">수업 종류</div>
+                        <div class="obj_table_raw">수업명</div>
+                    </div>
+                    <div class="wrapper_my_ticket_detail_date_info obj_font_size_14_weight_500">
+                        <div class="obj_table_raw">{% if ticket_lecture_info.lecture_tb.lecture_type_cd == 'ONE_TO_ONE' %}개인 수업{% else %}그룹 수업{% endif %}</div>
+                        <div class="obj_table_raw">{{ ticket_lecture_info.lecture_tb.name }}</div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
 
     </div>
 {% endblock %}
@@ -125,29 +131,41 @@
                 alert('{{ message }}');
             {% endif %}
         {% endfor %}
-        
-        console.log('123')
-    });
-    func_set_webkit_overflow_scrolling('.popup_lecture_ticket_info');
 
-    //popup_lecture_ticket_info_swipe_close();
+    });
+    func_set_webkit_overflow_scrolling('.popup_member_ticket_info');
+
+    //popup_member_ticket_info_swipe_close();
     function ticket_basic_info(){
         $('#ticket_basic_info').addClass('ticket_info_selected');
         $('#ticket_lesson_history').removeClass('ticket_info_selected');
+        $('#ticket_lecture_list').removeClass('ticket_info_selected');
         $('#wrapper_my_ticket_detail').show();
         $('#wrapper_my_history_detail').hide();
+        $('#wrapper_my_lecture_list_detail').hide();
     }
     function ticket_lesson_history(){
         $('#ticket_basic_info').removeClass('ticket_info_selected');
         $('#ticket_lesson_history').addClass('ticket_info_selected');
+        $('#ticket_lecture_list').removeClass('ticket_info_selected');
         $('#wrapper_my_ticket_detail').hide();
         $('#wrapper_my_history_detail').show();
+        $('#wrapper_my_lecture_list_detail').hide();
 
     }
-    function popup_lecture_ticket_info_swipe_close(){
+    function ticket_lecture_list(){
+        $('#ticket_basic_info').removeClass('ticket_info_selected');
+        $('#ticket_lesson_history').removeClass('ticket_info_selected');
+        $('#ticket_lecture_list').addClass('ticket_info_selected');
+        $('#wrapper_my_ticket_detail').hide();
+        $('#wrapper_my_history_detail').hide();
+        $('#wrapper_my_lecture_list_detail').show();
+
+    }
+    function popup_member_ticket_info_swipe_close(){
         let ts;
         let tsy;
-        let selector_body = $('.popup_lecture_ticket_info');
+        let selector_body = $('.popup_member_ticket_info');
         selector_body.bind("touchstart", function(e){
             ts = e.originalEvent.touches[0].clientX;
             tsy = e.originalEvent.touches[0].clientY;

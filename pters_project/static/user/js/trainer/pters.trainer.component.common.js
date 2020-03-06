@@ -246,7 +246,7 @@ class CComponent{
                             </div>
                             <div class="cell_ticket_info">
                                 <div>${ticket_name}</div>
-                                <div style="display:none">가격 - ${ticket_price}원 / 횟수 - ${ticket_reg_count} / 유효기간 - ${ticket_effective_days}일</div>
+                                <div style="font-size:12px;color:var(--font-sub-normal);line-height:20px">${UnitRobot.numberWithCommas(ticket_price)} 원 / ${ticket_reg_count != 99999 ? ticket_reg_count+" 회" : "횟수 무제한"} / ${ticket_effective_days != 99999 ? ticket_effective_days+" 일간" : "소진시까지"}</div>
                             </div>
                             <div class="cell_ticket_selected ${checked == 0 ? '' : 'ticket_selected'}">
                                 ${CImg.confirm("", checked == 0 ? {"display":"none"} : {"display":"block"})}
@@ -954,6 +954,13 @@ class CImg{
         return svg;
     }
 
+    static warning(svg_color, style, onclick){
+        let svg =  `<svg style="${CComponent.data_to_style_code(style)}" ${CImg.data_to_onclick_event(onclick)} xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                        <path fill="${CImg.data_to_svg_color(svg_color[0], "var(--img-main)")}" d="M4.47 21h15.06c1.54 0 2.5-1.67 1.73-3L13.73 4.99c-.77-1.33-2.69-1.33-3.46 0L2.74 18c-.77 1.33.19 3 1.73 3zM12 14c-.55 0-1-.45-1-1v-2c0-.55.45-1 1-1s1 .45 1 1v2c0 .55-.45 1-1 1zm1 4h-2v-2h2v2z"/>
+                    </svg>`;
+        return svg;
+    }
+
     static account(svg_color, style, onclick){
         if(svg_color == undefined){
             svg_color = [];
@@ -1621,6 +1628,30 @@ class CImg{
         let svg = `<svg style="${CComponent.data_to_style_code(style)}" ${CImg.data_to_onclick_event(onclick)} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                         <path fill="none" d="M0 0h24v24H0V0z"/>
                         <path fill="${CImg.data_to_svg_color(svg_color[1], "var(--img-main)")}" d="M14.06 9.02l.92.92L5.92 19H5v-.92l9.06-9.06M17.66 3c-.25 0-.51.1-.7.29l-1.83 1.83 3.75 3.75 1.83-1.83c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29zm-3.6 3.19L3 17.25V21h3.75L17.81 9.94l-3.75-3.75z"/>
+                    </svg>`;
+                    
+        return svg;
+    }
+
+    static fold(svg_color, style, onclick){
+        if(svg_color == undefined){
+            svg_color = [];
+        }
+        let svg = `<svg style="${CComponent.data_to_style_code(style)}" ${CImg.data_to_onclick_event(onclick)} xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                        <path d="M24 0v24H0V0h24z" fill="none" opacity=".87"/>
+                        <path fill="${CImg.data_to_svg_color(svg_color[1], "var(--img-main)")}" d="M8.12 19.3c.39.39 1.02.39 1.41 0L12 16.83l2.47 2.47c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41l-3.17-3.17c-.39-.39-1.02-.39-1.41 0l-3.17 3.17c-.4.38-.4 1.02-.01 1.41zm7.76-14.6c-.39-.39-1.02-.39-1.41 0L12 7.17 9.53 4.7c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.03 0 1.42l3.17 3.17c.39.39 1.02.39 1.41 0l3.17-3.17c.4-.39.4-1.03.01-1.42z"/>
+                    </svg>`;
+                    
+        return svg;
+    }
+
+    static unfold(svg_color, style, onclick){
+        if(svg_color == undefined){
+            svg_color = [];
+        }
+        let svg = `<svg style="${CComponent.data_to_style_code(style)}" ${CImg.data_to_onclick_event(onclick)} xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                        <path d="M0 0h24v24H0V0z" fill="none"/>
+                        <path fill="${CImg.data_to_svg_color(svg_color[1], "var(--img-main)")}" d="M12 5.83l2.46 2.46c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41L12.7 3.7c-.39-.39-1.02-.39-1.41 0L8.12 6.88c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0L12 5.83zm0 12.34l-2.46-2.46c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41l3.17 3.18c.39.39 1.02.39 1.41 0l3.17-3.17c.39-.39.39-1.02 0-1.41-.39-.39-1.02-.39-1.41 0L12 18.17z"/>
                     </svg>`;
                     
         return svg;

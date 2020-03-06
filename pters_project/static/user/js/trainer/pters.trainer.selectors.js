@@ -5374,6 +5374,128 @@ class CustomSelector{
     }
 }
 
+class TimeInputMethodSelector{
+    constructor(title, install_target, selected_data, callback){
+        this.title = title;
+        this.target = {install:install_target};
+        this.unique_instance = install_target.replace(/#./gi, "");
+        this.callback = callback;
+        this.selected_data = selected_data;
+        this.data = {
+            value:[],
+            text:[]
+        };
+        // this.init();
+        this.set_initial_data();
+    }
+
+    init(){
+        this.render();
+    }
+
+    set_initial_data(){
+        this.data.value = this.selected_data.value;
+        this.data.text = this.selected_data.text;
+        this.init();
+    }
+
+    clear(){
+        setTimeout(()=>{
+            document.querySelector(this.target.install).innerHTML = "";
+        }, 300);
+    }
+
+    render(){
+        let top_left = `<span class="icon_left" onclick="custom_selector.upper_right_menu();">${CImg.arrow_left()}</span>`;
+        let top_center = `<span class="icon_center">
+                            <span id="">${this.title}</span>
+                          </span>`;
+        let top_right = `<span class="icon_right">
+                            <span style="color:var(--font-highlight);font-weight: 500;" onclick="custom_selector.upper_right_menu();">${this.multiple_select == 1 ? '' : '완료'}</span>
+                        </span>`;
+        let content =   `<section>${this.dom_list()}</section>`;
+        
+        let html = PopupBase.base(top_left, top_center, top_right, content, "");
+
+        document.querySelector(this.target.install).innerHTML = html;
+    }
+
+    dom_list (){
+
+        let row_basic_selector = this.element_basic();
+        let row_classic_selector = this.element_classic();
+
+        let html = row_basic_selector + row_classic_selector;
+
+        return html;
+    }
+
+    element_basic(){
+        let html = `
+                    <div>
+                        ${CComponent.radio_button("time_input_select_new", this.data.value[0] == BASIC ? ON : OFF, {"transform":"scale(1.2)", "display":"inline-block", "margin-right":"5px"}, ()=>{})}
+                        <span>기본</span>
+                        <p style="font-size:12px">시작과 종료시간을 각각 상세하게 설정 합니다. <br>겹치는 일정을 상관없이 모두 표기해 줍니다.</p>
+                    </div>
+                    <div>
+                        <img src="/static/common/img/time_input_method/calendar_time_input_type_new.png?v2" style="width:100%">
+                    </div>
+                    `;
+        let selected_or_not = this.data.value[0] == BASIC ? {"background-color": "#fe4e6530", "border-color": "var(--bg-highlight)"} : {};
+        let style = {"margin":"10px auto", "padding":"15px", "box-shadow":"var(--box-shadow-article)", "max-width":"350px"}
+        let comp = CComp.container(
+            "div",
+            html,
+            {...style, ...selected_or_not},
+            {id:"input_method_new"},
+            {type:"click", exe:()=>{
+                this.data.value[0] = BASIC;
+                this.data.text[0] = "기본";
+                this.render();
+            }}
+        );
+        return comp;
+    }
+
+    element_classic(){
+        let html = `
+                    <div>
+                        ${CComponent.radio_button("time_input_select_classic", this.data.value[0] == CLASSIC ? ON : OFF, {"transform":"scale(1.2)", "display":"inline-block", "margin-right":"5px"}, ()=>{})}
+                        <span>클래식</span><span style="color:var(--font-highlight);font-size:11px;"> (베타)</span>
+                        <p style="font-size:12px">시작과 종료시각을 한번에 설정 합니다. <br>겹치는 일정은 필터링 할 수 있습니다.</p>
+                    </div>
+                    <div>
+                        <img src="/static/common/img/time_input_method/calendar_time_input_type_classic.png?v2" style="width:100%">
+                    </div>
+                    `;
+        let selected_or_not = this.data.value[0] == CLASSIC ? {"background-color": "#fe4e6530", "border-color": "var(--bg-highlight)"} : {};
+        let style = {"margin":"10px auto", "padding":"15px", "box-shadow":"var(--box-shadow-article)", "max-width":"350px"}
+        let comp = CComp.container(
+            "div",
+            html,
+            {...style, ...selected_or_not},
+            {id:"input_method_classic"},
+            {type:"click", exe:()=>{
+                this.data.value[0] = CLASSIC;
+                this.data.text[0] = "클래식";
+                this.render();
+            }}
+        );
+        return comp;
+    }
+
+    request_list (callback){
+        // this.received_data = color_data;
+        // callback();
+    }
+
+    upper_right_menu(){
+        this.callback(this.data);
+        layer_popup.close_layer_popup();
+        this.clear();
+    }
+}
+
 class PasswordFourDigitInput{
     constructor(title, install_target, original_data, callback){
         this.title = title;
@@ -5795,16 +5917,29 @@ class BoardWriter{
         return html;
     }
 
+    // dom_assembly_category(){
+    //     let length = this.data.category.length;
+    //     let html_to_join = [];
+    //     for(let i=0; i<length; i++){
+    //         let style = {};
+    //         if(i>0){
+    //             style = {"border-top":"var(--border-article)"}
+    //         }
+    //         let html = this.dom_row_category(this.data.category[i], style);
+    //         html_to_join.push(html);
+    //     }
+
+    //     return '<div class="obj_input_box_full">'+html_to_join.join("") + '</div>';
+    // }
+
     dom_assembly_category(){
         let length = this.data.category.length;
         let html_to_join = [];
         for(let i=0; i<length; i++){
-            // let html = CComponent.dom_tag(this.data.category[i].title)+ this.dom_row_category(this.data.category[i]);
             let html = this.dom_row_category(this.data.category[i]);
             html_to_join.push(html);
         }
-
-        return '<div class="obj_input_box_full" style="padding:8px 20px;">'+html_to_join.join("") + '</div>';
+        return html_to_join.join("");
     }
 
     dom_row_subject_input(){
@@ -5842,33 +5977,66 @@ class BoardWriter{
 
     dom_row_category(data){
         let category_id = data.id;
-        let category_title = this.data.category_selected[category_id].text.length == 0 ? data.title: this.data.category_selected[category_id].text;
-        let category_inner_title = data.title;
-        let option_data = data.data;
+        let category_title = data.title;
+        let category_data = data.data;
 
         let id = `dom_row_category_${category_id}`;
         let title = category_title;
         let icon = DELETE;
         let icon_r_visible = SHOW;
-        let icon_r_text = "";
-        let style = this.data.category_selected[category_id].text.length == 0 ? {"color":"var(--font-inactive)"} : null;
-        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            // let title = this.data.category_selected[category_id].text;
+        let icon_r_text = this.data.category_selected[category_id].text.length == 0 ? '' : this.data.category_selected[category_id].text;
+        let style = {"display":"inline-block", 'padding':"16px", "padding-right":"0", "width":`${ this.data.category.length > 1 ? "50%" : "100%"}`, "height":"56px", "font-size":"14px", "box-sizing":"border-box"};
+        let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            let title = category_title;
             let install_target = "#wrapper_box_custom_select";
             let multiple_select = 1;
-            let data = option_data;
+            let data = category_data;
             let selected_data = this.data.category_selected[category_id];
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, popup_style, null, ()=>{
-                custom_selector = new CustomSelector(category_inner_title, install_target, multiple_select, data, selected_data, (set_data)=>{
+                custom_selector = new CustomSelector(title, install_target, multiple_select, data, selected_data, (set_data)=>{
                     this.data.category_selected[category_id] = set_data;
                     this.render_category_selector();
                     this.if_user_changed_any_information = true;
                 });
             });
         });
+        let html = row;
         return html;
     }
+
+    // dom_row_category(data, style){
+    //     let category_id = data.id;
+    //     let category_title = this.data.category_selected[category_id].text.length == 0 ? data.title: this.data.category_selected[category_id].text;
+    //     let category_inner_title = data.title;
+    //     let option_data = data.data;
+
+    //     let id = `dom_row_category_${category_id}`;
+    //     let title = category_title;
+    //     let icon = DELETE;
+    //     let icon_r_visible = SHOW;
+    //     let icon_r_text = "";
+
+    //     if(this.data.category_selected[category_id].text.length == 0){
+    //         style["color"]="var(--font-inactive)";
+    //     }
+    //     let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+    //         // let title = this.data.category_selected[category_id].text;
+    //         let install_target = "#wrapper_box_custom_select";
+    //         let multiple_select = 1;
+    //         let data = option_data;
+    //         let selected_data = this.data.category_selected[category_id];
+    //         let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+    //         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_CUSTOM_SELECT, 100, popup_style, null, ()=>{
+    //             custom_selector = new CustomSelector(category_inner_title, install_target, multiple_select, data, selected_data, (set_data)=>{
+    //                 this.data.category_selected[category_id] = set_data;
+    //                 this.render_category_selector();
+    //                 this.if_user_changed_any_information = true;
+    //             });
+    //         });
+    //     });
+    //     return html;
+    // }
 
 
     dom_row_reg_mod_date(){
@@ -6068,6 +6236,11 @@ class BoardWriter{
                         program_notice_list_popup.init();
                     }catch(e){
                     }
+                    try{
+                        current_page.init();
+                    }catch(e){
+                        
+                    }
                     layer_popup.close_layer_popup();
                     layer_popup.close_layer_popup();
                     this.clear();
@@ -6097,7 +6270,7 @@ class BoardWriter{
                 }
             }
             if(selected_value_ok == false){
-                show_error_message({title:category_type + "를 선택해주세요."});
+                show_error_message({title:category_type + " 옵션을 선택해주세요."});
                 return false;
             }
         }

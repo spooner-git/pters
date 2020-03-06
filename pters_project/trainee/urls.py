@@ -101,7 +101,12 @@ urlpatterns = [
     # 회원 일정 팝업 예약 완료 페이지
     url(r'^popup_calendar_plan_reserve_complete/$', views.PopupCalendarPlanReserveCompleteView.as_view(),
         name='popup_calendar_plan_reserve_complete'),
+
     # 회원 수강권 정보 팝업 페이지
+    url(r'^popup_member_ticket_info/$', views.PopupMemberTicketInfoView.as_view(),
+        name='popup_member_ticket_info'),
+
+    # 회원 수업 정보 팝업 페이지
     url(r'^popup_lecture_ticket_info/$', views.PopupLectureTicketInfoView.as_view(),
         name='popup_lecture_ticket_info'),
     url(r'^popup_ticket_info/$', views.PopupTicketInfoView.as_view(),

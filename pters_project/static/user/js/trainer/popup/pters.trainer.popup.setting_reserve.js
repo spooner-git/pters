@@ -6,7 +6,7 @@ class Setting_reserve{
         this.data = {
                 stop_reserve:OFF,
                 time_for_private_reserve:{value:[], text:[]},
-                start_time_for_private_reserve:{value:[], text:[]},
+                // start_time_for_private_reserve:{value:[], text:[]},
                 available_reserve_date:{value:[], text:[]},
                 available_reserve_time:{value:[], text:[]},
                 available_cancel_time:{value:[], text:[]},
@@ -20,8 +20,8 @@ class Setting_reserve{
         this.data_for_selector = {
             time_for_private_reserve : 
                 {value:[10, 15, 20, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300], text:["10분", "15분", "20분", "30분", "1시간", "1시간 30분", "2시간", "2시간 30분", "3시간", "3시간 30분", "4시간", "4시간 30분", "5시간"]},
-            start_time_for_private_reserve:
-                {value:["A-0", "A-30", "E-10", "E-15", "E-20", "E-30"], text:["매시각 정시", "매시각 30분", "10분 마다", "15분 마다", "20분 마다", "30분 마다"]},
+            // start_time_for_private_reserve:
+            //     {value:["A-0", "A-30", "E-10", "E-15", "E-20", "E-30"], text:["매시각 정시", "매시각 30분", "10분 마다", "15분 마다", "20분 마다", "30분 마다"]},
             available_reserve_date:
                 {value:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], text:["당일까지", "1일 전부터", "2일 전부터", "3일 전부터", "4일 전부터", "5일 전부터", "6일 전부터", "7일 전부터", "8일 전부터", "9일 전부터", "10일 전부터", "11일 전부터", "12일 전부터", "13일 전부터", "14일 전부터"]},
             available_reserve_time:
@@ -45,8 +45,8 @@ class Setting_reserve{
         Setting_reserve_func.read((data)=>{
             this.data.stop_reserve = data.setting_member_reserve_prohibition;
 
-            this.data.start_time_for_private_reserve.value[0] = data.setting_member_start_time;
-            this.data.start_time_for_private_reserve.text[0] = this.data_for_selector.start_time_for_private_reserve.text[ this.data_for_selector.start_time_for_private_reserve.value.indexOf(data.setting_member_start_time) ];
+            // this.data.start_time_for_private_reserve.value[0] = data.setting_member_start_time;
+            // this.data.start_time_for_private_reserve.text[0] = this.data_for_selector.start_time_for_private_reserve.text[ this.data_for_selector.start_time_for_private_reserve.value.indexOf(data.setting_member_start_time) ];
 
             this.data.available_reserve_date.value[0] = data.setting_member_reserve_date_available;
             this.data.available_reserve_date.text[0] = this.data_for_selector.available_reserve_date.text[ this.data_for_selector.available_reserve_date.value.indexOf(Number(data.setting_member_reserve_date_available) ) ];
@@ -116,10 +116,10 @@ class Setting_reserve{
         //                 this.dom_row_available_cancel_time() +
         //             '</article>';
         let html = this.dom_row_stop_reserve() + 
-                    '<article class="obj_input_box_full" style="padding-top:5px;">' +
-                       this.dom_row_start_time_for_private_reserve() +
-                       "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>수강 회원님께서 선택 가능한 시작 시각</span>" +
-                    '</article>' +
+                    // '<article class="obj_input_box_full" style="padding-top:5px;">' +
+                    //    this.dom_row_start_time_for_private_reserve() +
+                    //    "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>수강 회원님께서 선택 가능한 시작 시각</span>" +
+                    // '</article>' +
                     '<article class="obj_input_box_full">' +
                         this.dom_row_available_reserve_date() + 
                         this.dom_row_available_reserve_time() + 
@@ -395,7 +395,7 @@ class Setting_reserve{
         let icon = DELETE;
         let icon_r_visible = SHOW;
         let icon_r_text = this.data.wait_schedule_auto_cancel_time.text.length == 0 ? '' : this.data.wait_schedule_auto_cancel_time.text;
-        let style = {"padding-bottom":"0", "padding-top":"24px;", "padding-right":"10px"};
+        let style = {"padding-bottom":"0", "padding-top":"24px;"};
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             let title = "대기 예약 자동 취소 시간";
             let install_target = "#wrapper_box_custom_select";
@@ -448,8 +448,8 @@ class Setting_reserve{
         let data = {
             "setting_member_reserve_time_available":'00:00-23:59', //예약 가능 시간대
             "setting_member_reserve_prohibition":this.data.stop_reserve, // 예약 일시 정지
-            "setting_member_time_duration":this.data.time_for_private_reserve.value[0], //개인 수업 예약 시간
-            "setting_member_start_time": this.data.start_time_for_private_reserve.value[0], //개인 수업 예약 시작 시각
+            // "setting_member_time_duration":this.data.time_for_private_reserve.value[0], //개인 수업 예약 시간
+            // "setting_member_start_time": this.data.start_time_for_private_reserve.value[0], //개인 수업 예약 시작 시각
 
             "setting_member_reserve_date_available":this.data.available_reserve_date.value[0], //예약 가능 날짜
             "setting_member_reserve_enable_time":this.data.available_reserve_time.value[0], //예약 가능 시간

@@ -103,7 +103,7 @@
 		/* font-size: 18px; */
 	}
 	
-.pages{
+#calendar_wrap .pages{
 	position: absolute;
 	top: 60px;
 	width: 100%;
@@ -111,6 +111,12 @@
 	background-color: var(--bg-main);
 	z-index: 1;
 	padding-bottom: 56px;
+}
+
+@media(min-width:600px){
+	#calendar_wrap .pages{
+		padding-bottom: 0;
+	}
 }
 
 .week_upper_float_tool{
@@ -244,8 +250,9 @@
 	/* display: table-cell; */
 	/* width: 12.5%; */
 	/* background-color: #ffffff; */
-	background-image: url("/static/user/res/new/calendar_hour_short.png?v2");
-	background-size: 30px 60px;
+	background-image: url("/static/user/res/new/calendar_hour_short.png?v20200303");
+	/* background-size: 30px 60px; */
+	background-size: 100% 60px;
 	background-position: top;
 	border-left: var(--border-article);
 }
@@ -307,7 +314,8 @@
 .calendar_schedule_display_week{
 	position: absolute;
 	background-color: var(--bg-highlight);
-	border: 1px solid var(--bg-main);
+	/* border: 1px solid var(--bg-main); */
+	/* border: 1px solid transparent; */
 	box-sizing: border-box;
 	padding-left: 3px;
 	/* font-size: 10px; */
@@ -319,6 +327,7 @@
 	line-height: 10px;
 	padding: 2px;
 	cursor: pointer;
+	border-radius: 3px;
 }
 .calendar_schedule_display_week:active{
 	/* border-color: #858282; */
@@ -365,17 +374,27 @@
 	position: absolute;
 	height: 1px;
 	left: 100%;
-	z-index: 0;
-	opacity: 0.5;
+	z-index: 1;
+	/* opacity: 0.5; */
+	opacity: 1;
 	background-color:var(--bg-highlight);
 }
 	#current_time_indicator > div{
-		position: absolute;
+		/* position: absolute;
 		width: 6px;
 		height: 6px;
 		border-radius: 3px;
 		top: -3px;
 		left: -3px;
 		opacity: 0.5;
-		background-color: var(--bg-highlight);
+		background-color: var(--bg-highlight); */
+		position: absolute;
+		
+		top: -5px;
+		left: -11px;
+		opacity: 1;
+		border: 5px solid var(--bg-highlight);
+		border-left-color: transparent;
+		border-top-color: transparent;
+		transform: rotate(-45deg);
 	}

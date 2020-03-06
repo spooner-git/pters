@@ -418,7 +418,7 @@ class Member {
                 ,
                 initial_page:` <div>
                                     <div id="member_display_panel"></div>
-                                    <div id="member_content_wrap" class="pages"></div>
+                                    <div id="member_content_wrap" class=""></div>
                                 </div>`
             }
         );

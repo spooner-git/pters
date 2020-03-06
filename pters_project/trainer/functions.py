@@ -1,8 +1,6 @@
 import collections
 import datetime
 
-import boto3
-from awscli.errorhandler import ClientError
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import IntegrityError
 from django.db import InternalError
@@ -10,17 +8,17 @@ from django.db import transaction
 from django.db.models import Q
 from django.db.models.expressions import RawSQL
 
+from configs import DEBUG
 from configs.const import USE, UN_USE, AUTO_FINISH_OFF, FROM_TRAINEE_LESSON_ALARM_ON, \
     TO_TRAINEE_LESSON_ALARM_OFF, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, STATE_CD_IN_PROGRESS, STATE_CD_FINISH,\
-    STATE_CD_ABSENCE, AUTH_TYPE_DELETE, STATE_CD_NOT_PROGRESS, SHOW, CALENDAR_TIME_SELECTOR_BASIC, \
-    LECTURE_TYPE_ONE_TO_ONE, ING_MEMBER_TRUE, ING_MEMBER_FALSE, FROM_TRAINEE_LESSON_ALARM_OFF, \
+    AUTH_TYPE_DELETE, STATE_CD_NOT_PROGRESS, SHOW, CALENDAR_TIME_SELECTOR_BASIC, ING_MEMBER_TRUE, ING_MEMBER_FALSE, \
     TO_SHARED_TRAINER_LESSON_ALARM_OFF
 
 from login.models import MemberTb
 from schedule.models import ScheduleTb, RepeatScheduleTb
 from trainee.models import MemberTicketTb
 from .models import ClassMemberTicketTb, LectureTb, SettingTb, TicketLectureTb, TicketTb, LectureMemberTb, MemberClassTb
-from configs import settings
+
 
 # 전체 회원 id 정보 가져오기
 def func_get_class_member_id_list(class_id):
@@ -364,7 +362,8 @@ def func_get_member_lecture_list(class_id, member_id):
                             'lecture_note': lecture_tb.note,
                             'lecture_max_num': lecture_tb.member_num,
                             # 'lecture_max_member_num_view_flag': lecture_tb.member_num_view_flag,
-                            'lecture_minute': lecture_tb.lecture_minute
+                            'lecture_minute': lecture_tb.lecture_minute,
+                            'lecture_start_time': lecture_tb.start_time
                             }
             member_lecture_list[str(lecture_tb.lecture_id)] = lecture_info
 
@@ -635,9 +634,9 @@ def func_delete_member_ticket_info(user_id, class_id, member_ticket_id):
     if error is None:
         schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, member_ticket_tb_id=member_ticket_id,
                                                   state_cd=STATE_CD_NOT_PROGRESS, use=USE)
-        schedule_data_finish = ScheduleTb.objects.filter(Q(state_cd=STATE_CD_FINISH) | Q(state_cd=STATE_CD_ABSENCE),
-                                                         class_tb_id=class_id,
-                                                         member_ticket_tb_id=member_ticket_id, use=USE)
+        # schedule_data_finish = ScheduleTb.objects.filter(Q(state_cd=STATE_CD_FINISH) | Q(state_cd=STATE_CD_ABSENCE),
+        #                                                  class_tb_id=class_id,
+        #                                                  member_ticket_tb_id=member_ticket_id, use=USE)
         repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
                                                                member_ticket_tb_id=member_ticket_id)
 
@@ -647,9 +646,9 @@ def func_delete_member_ticket_info(user_id, class_id, member_ticket_id):
                 if len(schedule_data) > 0:
                     # 예약된 일정 삭제
                     schedule_data.delete()
-                if len(repeat_schedule_data) > 0:
+                # if len(schedule_data_finish) > 0:
                     # 완료된 일정 비활성화
-                    schedule_data_finish.update(use=UN_USE)
+                    # schedule_data_finish.update(use=UN_USE)
                 if len(repeat_schedule_data) > 0:
                     # 반복일정 삭제
                     repeat_schedule_data.delete()
@@ -679,7 +678,7 @@ def func_delete_member_ticket_info(user_id, class_id, member_ticket_id):
 
 
 # 강사의 셋팅 정보 가져오기
-def func_get_trainer_setting_list(context, trainer_id, class_id, user_id):
+def func_get_trainer_setting_list(context, class_id, user_id):
     today = datetime.date.today()
     lt_res_01 = '00:00-24:00'
     lt_res_02 = 0
@@ -695,7 +694,7 @@ def func_get_trainer_setting_list(context, trainer_id, class_id, user_id):
     lt_res_05 = '7'
     lt_res_cancel_time = -1
     lt_res_enable_time = -1
-    lt_res_member_start_time = 'A-0'
+    # lt_res_member_start_time = 'A-0'
     lt_schedule_auto_finish = AUTO_FINISH_OFF
     lt_member_ticket_auto_finish = AUTO_FINISH_OFF
     lt_lan_01 = 'KOR'
@@ -719,6 +718,7 @@ def func_get_trainer_setting_list(context, trainer_id, class_id, user_id):
     setting_member_public_class_auto_permission = USE
     setting_member_public_class_wait_member_num = 0
     setting_member_wait_schedule_auto_cancel_time = 0
+    setting_schedule_alarm_minute = '-1'
 
     for setting_info in setting_data:
         if setting_info.setting_type_cd == 'LT_RES_01':
@@ -749,8 +749,8 @@ def func_get_trainer_setting_list(context, trainer_id, class_id, user_id):
             lt_res_enable_time = int(setting_info.setting_info)
         # if setting_info.setting_type_cd == 'LT_RES_MEMBER_TIME_DURATION':
         #     lt_res_member_time_duration = int(setting_info.setting_info)
-        if setting_info.setting_type_cd == 'LT_RES_MEMBER_START_TIME':
-            lt_res_member_start_time = setting_info.setting_info
+        # if setting_info.setting_type_cd == 'LT_RES_MEMBER_START_TIME':
+        #     lt_res_member_start_time = setting_info.setting_info
         if setting_info.setting_type_cd == 'LT_SCHEDULE_AUTO_FINISH':
             lt_schedule_auto_finish = int(setting_info.setting_info)
         if setting_info.setting_type_cd == 'LT_LECTURE_AUTO_FINISH':
@@ -764,6 +764,9 @@ def func_get_trainer_setting_list(context, trainer_id, class_id, user_id):
         if setting_info.setting_type_cd == 'LT_PUS_FROM_TRAINEE_LESSON_ALARM':
             if str(user_id) == str(setting_info.member_id):
                 lt_pus_from_trainee_lesson_alarm = int(setting_info.setting_info)
+        if setting_info.setting_type_cd == 'LT_PUSH_SCHEDULE_ALARM_MINUTE':
+            if str(user_id) == str(setting_info.member_id):
+                setting_schedule_alarm_minute = setting_info.setting_info
         if setting_info.setting_type_cd == 'LT_ADMIN_PASSWORD':
             setting_admin_password = setting_info.setting_info
         if setting_info.setting_type_cd == 'LT_ATTEND_CLASS_PREV_DISPLAY_TIME':
@@ -794,15 +797,16 @@ def func_get_trainer_setting_list(context, trainer_id, class_id, user_id):
             setting_member_public_class_wait_member_num = int(setting_info.setting_info)
         if setting_info.setting_type_cd == 'LT_RES_WAIT_SCHEDULE_AUTO_CANCEL_TIME':
             setting_member_wait_schedule_auto_cancel_time = int(setting_info.setting_info)
-    try:
-        lecture_info = LectureTb.objects.filter(class_tb_id=class_id, lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, use=USE).earliest('reg_dt')
-        # if len(lecture_data) > 0:
-        one_to_one_lecture_time_duration = lecture_info.lecture_minute
-        # print(str(one_to_one_lecture_time_duration))
-        # else:
-        #     one_to_one_lecture_time_duration = 60
-    except ObjectDoesNotExist:
-        one_to_one_lecture_time_duration = 60
+    # try:
+    #     lecture_info = LectureTb.objects.filter(class_tb_id=class_id,
+    # lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, use=USE).earliest('reg_dt')
+    #     # if len(lecture_data) > 0:
+    #     one_to_one_lecture_time_duration = lecture_info.lecture_minute
+    #     # print(str(one_to_one_lecture_time_duration))
+    #     # else:
+    #     #     one_to_one_lecture_time_duration = 60
+    # except ObjectDoesNotExist:
+    #     one_to_one_lecture_time_duration = 60
 
     if lt_res_cancel_time == -1:
         lt_res_cancel_time = lt_res_02*60
@@ -845,8 +849,8 @@ def func_get_trainer_setting_list(context, trainer_id, class_id, user_id):
     context['setting_member_reserve_enable_time'] = lt_res_enable_time
     context['setting_member_reserve_cancel_time'] = lt_res_cancel_time
     # context['setting_member_time_duration'] = one_to_one_lecture_time_duration
-    context['one_to_one_lecture_time_duration'] = one_to_one_lecture_time_duration
-    context['setting_member_start_time'] = lt_res_member_start_time
+    # context['one_to_one_lecture_time_duration'] = one_to_one_lecture_time_duration
+    # context['setting_member_start_time'] = lt_res_member_start_time
     context['setting_schedule_auto_finish'] = lt_schedule_auto_finish
     context['setting_member_ticket_auto_finish'] = lt_member_ticket_auto_finish
     context['setting_to_trainee_lesson_alarm'] = lt_pus_to_trainee_lesson_alarm
@@ -868,6 +872,8 @@ def func_get_trainer_setting_list(context, trainer_id, class_id, user_id):
     context['setting_member_public_class_auto_permission'] = setting_member_public_class_auto_permission
     context['setting_member_public_class_wait_member_num'] = setting_member_public_class_wait_member_num
     context['setting_member_wait_schedule_auto_cancel_time'] = setting_member_wait_schedule_auto_cancel_time
+    context['setting_schedule_alarm_minute'] = setting_schedule_alarm_minute
+
     return context
 
 
@@ -1021,6 +1027,7 @@ def func_get_lecture_info(class_id, lecture_id, user_id):
                         'lecture_end_font_color_cd': lecture_tb.end_font_color_cd,
                         'lecture_type_cd': lecture_tb.lecture_type_cd,
                         'lecture_minute': lecture_tb.lecture_minute,
+                        'lecture_start_time': lecture_tb.start_time,
                         'lecture_member_list': member_list}
     else:
         lecture_info = None
