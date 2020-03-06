@@ -1491,6 +1491,7 @@ def delete_repeat_schedule_logic(request):
                         # 반복일정에 해당하는 일정 불러오기
                         lecture_member_schedule_data = ScheduleTb.objects.select_related(
                             'member_ticket_tb__member').filter(
+                            class_tb_id=class_id,
                             repeat_schedule_tb_id=lecture_member_repeat_schedule_info.repeat_schedule_id,
                             start_dt__gt=timezone.now())
                         # 반복일정에 해당하는 회원 수강정보 저장
@@ -1572,6 +1573,7 @@ def delete_repeat_schedule_logic(request):
 
                 # 반복일정에 해당하는 일정 불러오기
                 schedule_data = ScheduleTb.objects.select_related('member_ticket_tb__member').filter(
+                    class_tb_id=class_id,
                     repeat_schedule_tb_id=repeat_schedule_info.repeat_schedule_id, start_dt__gt=timezone.now())
 
                 # OFF or 그룹 껍데기인 경우 일정 삭제하기
@@ -1583,24 +1585,30 @@ def delete_repeat_schedule_logic(request):
                     # 껍데기인 경우 속한 일정 삭제하기
                     if str(repeat_schedule_info.en_dis_type) == str(ON_SCHEDULE_TYPE):
                         query_lecture_schedule_id = Q()
-                        delete_lecture_schedule_member_ticket_id_data = {}
+                        lecture_schedule_counter = 0
                         for schedule_info in schedule_data:
                             query_lecture_schedule_id |= Q(lecture_schedule_id=schedule_info.schedule_id)
+                            lecture_schedule_counter += 1
 
-                        lecture_schedule_data = ScheduleTb.objects.filter(query_lecture_schedule_id,
-                                                                          class_tb=class_id, use=USE)
+                        if lecture_schedule_counter > 0:
 
-                        for lecture_schedule_info in lecture_schedule_data:
-                            temp_member_ticket_id = lecture_schedule_info.member_ticket_tb_id
-                            delete_lecture_schedule_member_ticket_id_data[temp_member_ticket_id] = temp_member_ticket_id
+                            delete_lecture_schedule_member_ticket_id_data = {}
+                            lecture_schedule_data = ScheduleTb.objects.filter(query_lecture_schedule_id,
+                                                                              class_tb=class_id, use=USE)
 
-                        lecture_schedule_data.delete()
+                            for lecture_schedule_info in lecture_schedule_data:
+                                temp_member_ticket_id = lecture_schedule_info.member_ticket_tb_id
+
+                                if temp_member_ticket_id is not None and temp_member_ticket_id != '':
+                                    delete_lecture_schedule_member_ticket_id_data[temp_member_ticket_id] = temp_member_ticket_id
+
+                            lecture_schedule_data.delete()
+                            for delete_member_ticket_id_info in delete_lecture_schedule_member_ticket_id_data:
+                                error = func_refresh_member_ticket_count(class_id, delete_member_ticket_id_info)
+                                if error is not None:
+                                    break
                         schedule_data.delete()
 
-                        for delete_member_ticket_id_info in delete_lecture_schedule_member_ticket_id_data:
-                            error = func_refresh_member_ticket_count(class_id, delete_member_ticket_id_info)
-                            if error is not None:
-                                break
                     else:
                         # OFF 일정은 일괄 삭제
                         schedule_data.delete()
@@ -1731,6 +1739,7 @@ def delete_repeat_schedule_logic(request):
         except InternalError:
             error = '반복일정 삭제중 오류가 발생했습니다.[8]'
         except ValidationError:
+            print(str(error))
             error = '반복일정 삭제중 오류가 발생했습니다.[9]'
 
     if error is not None:

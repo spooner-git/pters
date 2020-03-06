@@ -172,14 +172,14 @@ def func_refresh_member_ticket_count(class_id, member_ticket_id):
     check_member_ticket_state_cd = ''
 
     if member_ticket_id is None or member_ticket_id == '':
-        error = '수강정보를 불러오지 못했습니다.'
+        error = '수강정보를 불러오지 못했습니다.[0]'
 
     if error is None:
         try:
             member_ticket_info = MemberTicketTb.objects.get(member_ticket_id=member_ticket_id, use=USE)
             check_member_ticket_state_cd = member_ticket_info.state_cd
         except ObjectDoesNotExist:
-            error = '수강정보를 불러오지 못했습니다.'
+            error = '수강정보를 불러오지 못했습니다.[1]'
 
     if error is None:
         schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, member_ticket_tb_id=member_ticket_id,
@@ -188,7 +188,7 @@ def func_refresh_member_ticket_count(class_id, member_ticket_id):
             member_ticket_info.member_ticket_avail_count = member_ticket_info.member_ticket_reg_count\
                                                            - len(schedule_data)
         else:
-            error = '오류가 발생했습니다.'
+            error = '오류가 발생했습니다.[0]'
 
         end_schedule_counter = schedule_data.filter(Q(state_cd=STATE_CD_FINISH) | Q(state_cd=STATE_CD_ABSENCE),
                                                     class_tb_id=class_id,
@@ -204,7 +204,7 @@ def func_refresh_member_ticket_count(class_id, member_ticket_id):
                 member_ticket_info.member_ticket_rem_count = 0
 
         else:
-            error = '오류가 발생했습니다.'
+            error = '오류가 발생했습니다.[1]'
 
     if error is None:
         member_ticket_info.save()
