@@ -189,13 +189,14 @@ class Setting_alarm_personal{
             "setting_from_trainee_lesson_alarm":this.data.push_to_me,
             "setting_schedule_alarm_minute":this.data.setting_schedule_alarm_minute.value[0]
         };
-        
+        Loading.show();
         Setting_alarm_personal_func.update(data, ()=>{
             this.data_sending_now = false;
             this.set_initial_data();
             show_error_message({title:'설정이 저장되었습니다.'});
+            Loading.hide();
             // this.render_content();
-        }, ()=>{this.data_sending_now = false;});
+        }, ()=>{this.data_sending_now = false;Loading.hide();});
     }
 
     upper_right_menu(){

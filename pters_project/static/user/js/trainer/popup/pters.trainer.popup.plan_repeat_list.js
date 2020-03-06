@@ -211,7 +211,9 @@ class Plan_repeat_list{
                     }
                     show_user_confirm(message, ()=>{
                         layer_popup.close_layer_popup();
+                        Loading.show(`${repeat_name}의 반복 일정을 삭제 중입니다.<br>일정이 많은 경우 최대 2~4분까지 소요될 수 있습니다.`);
                         Plan_func.delete_plan_repeat({"repeat_schedule_id":repeat_id}, ()=>{
+                            Loading.hide();
                             try{
                                 current_page.init();
                             }catch(e){}
@@ -219,7 +221,7 @@ class Plan_repeat_list{
                                 this.init();
                             }catch(e){}
                             layer_popup.close_layer_popup();
-                        });
+                        }, ()=>{Loading.hide();});
                     });
                 }}
             };
@@ -247,7 +249,9 @@ class Plan_repeat_list{
                     layer_popup.close_layer_popup();
                     show_user_confirm({title:`정말 ${member_name}회원님의 반복 일정을 취소하시겠습니까?`}, ()=>{
                         layer_popup.close_layer_popup();
+                        Loading.show(`${member_name}님의 반복 일정을 삭제 중입니다.<br>일정이 많은 경우 최대 2~4분까지 소요될 수 있습니다.`);
                         Plan_func.delete_plan_repeat({"repeat_schedule_id":repeat_id}, ()=>{
+                            Loading.hide();
                             try{
                                 current_page.init();
                             }catch(e){}
@@ -255,7 +259,7 @@ class Plan_repeat_list{
                                 this.init();
                             }catch(e){}
                             layer_popup.close_layer_popup();
-                        });
+                        }, ()=>{Loading.hide();});
                     });
                 }}
             };
