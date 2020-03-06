@@ -734,10 +734,12 @@ class Plan_add{
                 let confirm_url = '/schedule/add_repeat_schedule_confirm/';
                 
                 layer_popup.close_layer_popup();
+                Loading.show("반복 일정을 배치중입니다.<br>일정이 많은 경우 최대 2~4분까지 소요될 수 있습니다.");
                 Plan_func.create(url, data, (received)=>{
                     let repeat_schedule_id = received.repeat_schedule_id;
                     let repeat_confirm = 1;
                     let confirm_data = {"repeat_schedule_id":repeat_schedule_id, "repeat_confirm":repeat_confirm, "member_ids":this.data.member_id};
+                    Loading.hide();
                     Plan_func.create(confirm_url, confirm_data, ()=>{
                         this.data_sending_now = false;
                         // layer_popup.close_layer_popup();
@@ -745,7 +747,7 @@ class Plan_add{
                             current_page.init();
                         }catch(e){}
                     }, ()=>{this.data_sending_now = false;});
-                }, ()=>{this.data_sending_now = false;});
+                }, ()=>{this.data_sending_now = false;Loading.hide();});
             }   
         };
 
