@@ -1811,6 +1811,9 @@ class Plan_func{
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
                         show_error_message({title:data.messageArray});
+                        if(error_callback != undefined){
+                            error_callback();
+                        }
                         return false;
                     }
                 }
@@ -2256,6 +2259,9 @@ class Plan_func{
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
                         show_error_message({title:data.messageArray});
+                        if(error_callback != undefined){
+                            error_callback();
+                        }
                         return false;
                     }
                 }
