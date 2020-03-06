@@ -337,17 +337,17 @@ def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
                         if member_ticket_id is not None:
                             if lecture_schedule_id is None:
                                 # 1:1 수업
-                                if add_schedule_info.member_ticket_tb.member_id != alarm_setting_info.member_id:
-                                    if alarm_setting_info.user_group == GROUP_TRAINEE:
+                                if str(add_schedule_info.member_ticket_tb.member_id) != str(alarm_setting_info.member_id):
+                                    if str(alarm_setting_info.user_group) == GROUP_TRAINEE:
                                         continue
                             else:
                                 # 그룹 수업 - 회원 포함
-                                if add_schedule_info.member_ticket_tb.member_id != alarm_setting_info.member_id:
-                                    if alarm_setting_info.user_group == GROUP_TRAINER:
+                                if str(add_schedule_info.member_ticket_tb.member_id) != str(alarm_setting_info.member_id):
+                                    if str(alarm_setting_info.user_group) == GROUP_TRAINER:
                                         continue
                         # 그룹 수업 껍데기
                         else:
-                            if alarm_setting_info.user_group == GROUP_TRAINEE:
+                            if str(alarm_setting_info.user_group) == GROUP_TRAINEE:
                                 continue
 
                         setting_schedule_alarm_minute = alarm_setting_info.setting_info
@@ -451,9 +451,20 @@ def func_add_schedule_update(class_id, member_ticket_id, repeat_schedule_id,
                 schedule_id = add_schedule_info.schedule_id
                 if str(en_dis_type) != str(OFF_SCHEDULE):
                     for alarm_setting_info in alarm_setting_data:
-                        # 그룹 수업 - 회원 포함
-                        if add_schedule_info.member_ticket_tb.member_id != alarm_setting_info.member_id:
-                            if alarm_setting_info.user_group == GROUP_TRAINEE:
+                        if member_ticket_id is not None:
+                            if lecture_schedule_id is None:
+                                # 1:1 수업
+                                if str(add_schedule_info.member_ticket_tb.member_id) != str(alarm_setting_info.member_id):
+                                    if str(alarm_setting_info.user_group) == GROUP_TRAINEE:
+                                        continue
+                            else:
+                                # 그룹 수업 - 회원 포함
+                                if str(add_schedule_info.member_ticket_tb.member_id) != str(alarm_setting_info.member_id):
+                                    if str(alarm_setting_info.user_group) == GROUP_TRAINER:
+                                        continue
+                        # 그룹 수업 껍데기
+                        else:
+                            if str(alarm_setting_info.user_group) == GROUP_TRAINEE:
                                 continue
 
                         setting_schedule_alarm_minute = alarm_setting_info.setting_info
