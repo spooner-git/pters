@@ -92,7 +92,7 @@ def func_update_finish_pass_data():
             billing_info.save()
 
 
-# 수업 알림 push 처리
+# 일정 알림 push 처리
 def send_push_alarm_logic(request):
 
     from configs.celery import update_celery_status
@@ -120,7 +120,7 @@ def send_push_alarm_logic(request):
         # 개인 수업 일정
         class_tb_id = schedule_info.class_tb_id
         member_ticket_tb_id = schedule_info.member_ticket_tb_id
-        push_title = class_type_name+' - 수업 알림'
+        push_title = class_type_name+' - 일정 알림'
         push_message = push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1] + '~'\
                        + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]\
                        + ' ' + minute_message + '전 입니다.'
@@ -128,7 +128,7 @@ def send_push_alarm_logic(request):
 
             func_send_push_trainer(member_ticket_tb_id, push_title,
                                    ' [개인] 수업 '+push_message)
-            func_send_push_trainee(class_tb_id, class_type_name+' - 수업 알림',
+            func_send_push_trainee(class_tb_id, class_type_name+' - 일정 알림',
                                    ' [개인] 수업 '+push_message)
 
         else:

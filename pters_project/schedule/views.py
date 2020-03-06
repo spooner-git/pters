@@ -258,7 +258,7 @@ def add_schedule_logic(request):
                         # ###################################### 로그/푸시 처리 ######################################
                         if str(en_dis_type) == str(ON_SCHEDULE_TYPE):
                             if str(setting_to_shared_trainer_lesson_alarm) == str(TO_SHARED_TRAINER_LESSON_ALARM_ON):
-                                func_send_push_trainer_trainer(class_id, class_type_name + ' - 수업 알림',
+                                func_send_push_trainer_trainer(class_id, class_type_name + ' - 일정 알림',
                                                                log_info_schedule_start_date + '~'
                                                                + log_info_schedule_end_date
                                                                + ' [' + lecture_info.name + '] 수업이 등록됐습니다',
@@ -304,12 +304,12 @@ def add_schedule_logic(request):
                                   use=USE).save()
 
                             if str(setting_to_trainee_lesson_alarm) == str(TO_TRAINEE_LESSON_ALARM_ON):
-                                func_send_push_trainer(member_info['member_ticket_id'], class_type_name + ' - 수업 알림',
+                                func_send_push_trainer(member_info['member_ticket_id'], class_type_name + ' - 일정 알림',
                                                        log_info_schedule_start_date + '~' + log_info_schedule_end_date
                                                        + ' [' + lecture_name + '] 수업이 등록됐습니다')
 
                             if str(setting_to_shared_trainer_lesson_alarm) == str(TO_SHARED_TRAINER_LESSON_ALARM_ON):
-                                func_send_push_trainer_trainer(class_id, class_type_name + ' - 수업 알림',
+                                func_send_push_trainer_trainer(class_id, class_type_name + ' - 일정 알림',
                                                                member_info['member_name'] + '님의 ' +
                                                                log_info_schedule_start_date + '~'
                                                                + log_info_schedule_end_date
@@ -427,7 +427,7 @@ def delete_schedule_logic(request):
                 lecture_name = '개인'
 
             if str(setting_to_trainee_lesson_alarm) == str(TO_TRAINEE_LESSON_ALARM_ON):
-                func_send_push_trainer(member_ticket_id, class_type_name + ' - 수업 알림',
+                func_send_push_trainer(member_ticket_id, class_type_name + ' - 일정 알림',
                                        push_schedule_info + ' [' +lecture_name + '] 수업이 취소됐습니다.')
 
         # 그룹 레슨 + 회원 일정인 경우
@@ -436,7 +436,7 @@ def delete_schedule_logic(request):
             member_name = schedule_info.member_ticket_tb.member.name
 
             if str(setting_to_trainee_lesson_alarm) == str(TO_TRAINEE_LESSON_ALARM_ON):
-                func_send_push_trainer(member_ticket_id, class_type_name + ' - 수업 알림',
+                func_send_push_trainer(member_ticket_id, class_type_name + ' - 일정 알림',
                                        push_schedule_info + ' ['+lecture_name+'] 수업이 취소됐습니다.')
 
             if schedule_info.permission_state_cd == PERMISSION_STATE_CD_APPROVE:
@@ -459,10 +459,10 @@ def delete_schedule_logic(request):
                             member_ticket_id = wait_schedule_info.member_ticket_tb_id
                             member_name = wait_schedule_info.member_ticket_tb.member.name
                             if str(setting_to_trainee_lesson_alarm) == str(TO_TRAINEE_LESSON_ALARM_ON):
-                                func_send_push_trainer(member_ticket_id, class_type_name + ' - 수업 알림',
+                                func_send_push_trainer(member_ticket_id, class_type_name + ' - 일정 알림',
                                                        push_schedule_info + ' ['+lecture_name+'] 수업이 예약 확정됐습니다.')
                             if str(setting_to_shared_trainer_lesson_alarm) == str(TO_SHARED_TRAINER_LESSON_ALARM_ON):
-                                func_send_push_trainer_trainer(class_id, class_type_name + ' - 수업 알림',
+                                func_send_push_trainer_trainer(class_id, class_type_name + ' - 일정 알림',
                                                                member_name + '님의 ' + push_schedule_info
                                                                + ' ['+lecture_name+'] 수업이 예약 확정됐습니다.',
                                                                request.user.id)
@@ -473,11 +473,11 @@ def delete_schedule_logic(request):
 
         if str(setting_to_shared_trainer_lesson_alarm) == str(TO_SHARED_TRAINER_LESSON_ALARM_ON):
             if member_name != '' and member_name is not None:
-                func_send_push_trainer_trainer(class_id, class_type_name + ' - 수업 알림', member_name + '님의 '
+                func_send_push_trainer_trainer(class_id, class_type_name + ' - 일정 알림', member_name + '님의 '
                                                + push_schedule_info + ' [' + lecture_name + '] 수업이 취소됐습니다.',
                                                request.user.id)
             else:
-                func_send_push_trainer_trainer(class_id, class_type_name + ' - 수업 알림',
+                func_send_push_trainer_trainer(class_id, class_type_name + ' - 일정 알림',
                                                push_schedule_info + ' [' + lecture_name + '] 수업이 취소됐습니다.',
                                                request.user.id)
 
@@ -513,10 +513,10 @@ def delete_schedule_logic(request):
 
             if temp_error is None:
                 if str(setting_to_trainee_lesson_alarm) == str(TO_TRAINEE_LESSON_ALARM_ON):
-                    func_send_push_trainer(member_ticket_id, class_type_name + ' - 수업 알림',
+                    func_send_push_trainer(member_ticket_id, class_type_name + ' - 일정 알림',
                                            push_schedule_info + ' ['+lecture_name+'] 수업이 취소됐습니다.')
                 if str(setting_to_shared_trainer_lesson_alarm) == str(TO_SHARED_TRAINER_LESSON_ALARM_ON):
-                    func_send_push_trainer_trainer(class_id, class_type_name + ' - 수업 알림', member_name + '님의 '
+                    func_send_push_trainer_trainer(class_id, class_type_name + ' - 일정 알림', member_name + '님의 '
                                                    + push_schedule_info + ' ['+lecture_name+'] 수업이 취소됐습니다.',
                                                    request.user.id)
 
@@ -639,14 +639,14 @@ def update_schedule_logic(request):
                     if str(setting_to_trainee_lesson_alarm) == str(TO_TRAINEE_LESSON_ALARM_ON):
                         log_detail_info = log_detail_info.replace('/', '~')
                         func_send_push_trainer(schedule_info.member_ticket_tb_id,
-                                               class_type_name + ' - 수업 알림',
+                                               class_type_name + ' - 일정 알림',
                                                # trainer_name + '님의 ' +
                                                log_detail_info
                                                + ' [' + lecture_name + '] 수업이 변경됐습니다')
                     if str(setting_to_shared_trainer_lesson_alarm) == str(TO_SHARED_TRAINER_LESSON_ALARM_ON):
                         log_detail_info = log_detail_info.replace('/', '~')
                         func_send_push_trainer_trainer(class_id,
-                                                       class_type_name + ' - 수업 알림',
+                                                       class_type_name + ' - 일정 알림',
                                                        schedule_info.member_ticket_tb.member.name + '님의 ' +
                                                        log_detail_info
                                                         + ' [' + lecture_name + '] 수업이 변경됐습니다', request.user.id)
@@ -654,7 +654,7 @@ def update_schedule_logic(request):
                     if schedule_info.en_dis_type == ON_SCHEDULE_TYPE and str(setting_to_shared_trainer_lesson_alarm) == str(TO_SHARED_TRAINER_LESSON_ALARM_ON):
                         log_detail_info = log_detail_info.replace('/', '~')
                         func_send_push_trainer_trainer(class_id,
-                                                       class_type_name + ' - 수업 알림',
+                                                       class_type_name + ' - 일정 알림',
                                                        log_detail_info
                                                         + ' [' + lecture_name + '] 수업이 변경됐습니다', request.user.id)
 
@@ -797,15 +797,15 @@ def update_schedule_state_cd_logic(request):
             log_data.member_ticket_tb_id = member_ticket_info.member_ticket_id
             if str(setting_to_trainee_lesson_alarm) == str(TO_TRAINEE_LESSON_ALARM_ON):
                 func_send_push_trainer(schedule_info.member_ticket_tb_id,
-                                       class_type_name + ' - 수업 알림',
+                                       class_type_name + ' - 일정 알림',
                                        # trainer_name + '님의 ' +
                                        push_info)
             if str(setting_to_shared_trainer_lesson_alarm) == str(TO_SHARED_TRAINER_LESSON_ALARM_ON):
-                func_send_push_trainer_trainer(class_id, class_type_name + ' - 수업 알림',
+                func_send_push_trainer_trainer(class_id, class_type_name + ' - 일정 알림',
                                                member_name + '님의 ' + push_info, request.user.id)
         else:
             if schedule_info.en_dis_type == ON_SCHEDULE_TYPE and str(setting_to_shared_trainer_lesson_alarm) == str(TO_SHARED_TRAINER_LESSON_ALARM_ON):
-                func_send_push_trainer_trainer(class_id, class_type_name + ' - 수업 알림',
+                func_send_push_trainer_trainer(class_id, class_type_name + ' - 일정 알림',
                                                push_info, request.user.id)
 
         log_data.save()
@@ -910,15 +910,15 @@ def update_schedule_permission_state_cd_logic(request):
             log_data.member_ticket_tb_id = member_ticket_info.member_ticket_id
             if str(setting_to_trainee_lesson_alarm) == str(TO_TRAINEE_LESSON_ALARM_ON):
                 func_send_push_trainer(schedule_info.member_ticket_tb_id,
-                                       class_type_name + ' - 수업 알림',
+                                       class_type_name + ' - 일정 알림',
                                        # trainer_name + '님의 ' +
                                        push_info)
             if str(setting_to_shared_trainer_lesson_alarm) == str(TO_SHARED_TRAINER_LESSON_ALARM_ON):
-                func_send_push_trainer_trainer(class_id, class_type_name + ' - 수업 알림',
+                func_send_push_trainer_trainer(class_id, class_type_name + ' - 일정 알림',
                                                member_name + '님의 ' + push_info, request.user.id)
         else:
             if schedule_info.en_dis_type == ON_SCHEDULE_TYPE and str(setting_to_shared_trainer_lesson_alarm) == str(TO_SHARED_TRAINER_LESSON_ALARM_ON):
-                func_send_push_trainer_trainer(class_id, class_type_name + ' - 수업 알림',
+                func_send_push_trainer_trainer(class_id, class_type_name + ' - 일정 알림',
                                                push_info, request.user.id)
 
         log_data.save()
@@ -1405,13 +1405,13 @@ def add_repeat_schedule_confirm(request):
                             log_data.save()
                             if str(setting_to_trainee_lesson_alarm) == str(TO_TRAINEE_LESSON_ALARM_ON):
                                 func_send_push_trainer(repeat_member_ticket_id,
-                                                       class_type_name + ' - 수업 알림',
+                                                       class_type_name + ' - 일정 알림',
                                                        # trainer_name + '님의 ' +
                                                        str(start_date) + '~' + str(end_date)
                                                        + ' ['+lecture_info.name + '] 반복 일정이 등록됐습니다')
                             if str(setting_to_shared_trainer_lesson_alarm) == str(TO_SHARED_TRAINER_LESSON_ALARM_ON):
                                 func_send_push_trainer_trainer(class_id,
-                                                               class_type_name + ' - 수업 알림',
+                                                               class_type_name + ' - 일정 알림',
                                                                member_info.name + '님의 ' +
                                                                str(start_date) + '~' + str(end_date)
                                                                + ' ['+lecture_info.name + '] 반복 일정이 등록됐습니다',
@@ -1419,7 +1419,7 @@ def add_repeat_schedule_confirm(request):
                         else:
                             if str(en_dis_type) == str(ON_SCHEDULE_TYPE) and str(setting_to_shared_trainer_lesson_alarm) == str(TO_SHARED_TRAINER_LESSON_ALARM_ON):
                                 func_send_push_trainer_trainer(class_id,
-                                                               class_type_name + ' - 수업 알림',
+                                                               class_type_name + ' - 일정 알림',
                                                                str(start_date) + '~' + str(end_date)
                                                                + ' ['+lecture_info.name + '] 반복 일정이 등록됐습니다',
                                                                request.user.id)
@@ -1428,12 +1428,12 @@ def add_repeat_schedule_confirm(request):
             else:
                 if str(en_dis_type) == str(ON_SCHEDULE_TYPE) and str(setting_to_trainee_lesson_alarm) == str(TO_TRAINEE_LESSON_ALARM_ON):
                     func_send_push_trainer(member_ticket_id,
-                                           class_type_name + ' - 수업 알림',
+                                           class_type_name + ' - 일정 알림',
                                            # trainer_name + '님의 ' +
                                            str(start_date) + '~' + str(end_date)
                                            + ' ['+lecture_info.name + '] 반복 일정이 등록됐습니다',)
                 if str(en_dis_type) == str(ON_SCHEDULE_TYPE) and str(setting_to_shared_trainer_lesson_alarm) == str(TO_SHARED_TRAINER_LESSON_ALARM_ON):
-                    func_send_push_trainer_trainer(class_id, class_type_name + ' - 수업 알림',
+                    func_send_push_trainer_trainer(class_id, class_type_name + ' - 일정 알림',
                                                    repeat_schedule_info.member_ticket_tb.member.name + '님의 ' +
                                                    str(start_date) + '~' + str(end_date)
                                                    + ' ['+lecture_info.name + '] 반복 일정이 등록됐습니다', request.user.id)
@@ -1530,13 +1530,13 @@ def delete_repeat_schedule_logic(request):
 
                             if str(setting_to_trainee_lesson_alarm) == str(TO_TRAINEE_LESSON_ALARM_ON):
                                 func_send_push_trainer(member_ticket_id,
-                                                       class_type_name + ' - 수업 알림',
+                                                       class_type_name + ' - 일정 알림',
                                                        # trainer_name + '님의 '+
                                                        str(start_date) + '~' + str(end_date)
                                                        + ' ['+lecture_name + '] 반복 일정이 취소됐습니다')
                             if str(setting_to_shared_trainer_lesson_alarm) == str(TO_SHARED_TRAINER_LESSON_ALARM_ON):
-                                func_send_push_trainer(class_id,
-                                                       class_type_name + ' - 수업 알림',
+                                func_send_push_trainer_trainer(class_id,
+                                                       class_type_name + ' - 일정 알림',
                                                        member_name + '님의 '+
                                                        str(start_date) + '~' + str(end_date)
                                                        + ' ['+lecture_name + '] 반복 일정이 취소됐습니다', request.user.id)
@@ -1650,13 +1650,13 @@ def delete_repeat_schedule_logic(request):
                                     member_name = wait_schedule_info.member_ticket_tb.member.name
                                     if str(setting_to_trainee_lesson_alarm) == str(TO_TRAINEE_LESSON_ALARM_ON):
                                         func_send_push_trainer(temp_wait_member_ticket_id,
-                                                               class_type_name + ' - 수업 알림',
+                                                               class_type_name + ' - 일정 알림',
                                                                # trainer_name + '님의 ' +
                                                                push_schedule_info
                                                                + ' [' + lecture_name + '] 수업이 예약 확정됐습니다.')
                                     if str(setting_to_shared_trainer_lesson_alarm) == str(
                                             TO_SHARED_TRAINER_LESSON_ALARM_ON):
-                                        func_send_push_trainer_trainer(class_id, class_type_name + ' - 수업 알림',
+                                        func_send_push_trainer_trainer(class_id, class_type_name + ' - 일정 알림',
                                                                        member_name + '님의 ' + push_schedule_info
                                                                        + ' [' + lecture_name + '] 수업이 예약 확정됐습니다.',
                                                                        request.user.id)
@@ -1698,19 +1698,19 @@ def delete_repeat_schedule_logic(request):
                             log_data.save()
                             if str(setting_to_trainee_lesson_alarm) == str(TO_TRAINEE_LESSON_ALARM_ON):
                                 func_send_push_trainer(member_ticket_id,
-                                                       class_type_name + ' - 수업 알림',
+                                                       class_type_name + ' - 일정 알림',
                                                        # trainer_name + '님의 ' +
                                                        str(start_date) + '~' + str(end_date)
                                                        + ' [' + lecture_name + '] 반복 일정을 취소됐습니다')
                             if str(setting_to_shared_trainer_lesson_alarm) == str(TO_SHARED_TRAINER_LESSON_ALARM_ON):
-                                func_send_push_trainer_trainer(class_id, class_type_name + ' - 수업 알림',
+                                func_send_push_trainer_trainer(class_id, class_type_name + ' - 일정 알림',
                                                                member_name + '님의 ' +
                                                                str(start_date) + '~' + str(end_date)
                                                                + ' [' + lecture_name + '] 반복 일정을 취소됐습니다',
                                                                request.user.id)
                         else:
                             if str(setting_to_shared_trainer_lesson_alarm) == str(TO_SHARED_TRAINER_LESSON_ALARM_ON):
-                                func_send_push_trainer_trainer(class_id, class_type_name + ' - 수업 알림',
+                                func_send_push_trainer_trainer(class_id, class_type_name + ' - 일정 알림',
                                                                str(start_date) + '~' + str(end_date)
                                                                + ' [' + lecture_name + '] 반복 일정을 취소됐습니다',
                                                                request.user.id)
@@ -1856,7 +1856,7 @@ def delete_repeat_schedule_logic2(request):
 
         if str(en_dis_type) == str(ON_SCHEDULE_TYPE) and str(setting_to_trainee_lesson_alarm) == str(TO_TRAINEE_LESSON_ALARM_ON):
             push_member_ticket_id.append(member_ticket_id)
-            push_title.append(class_type_name + ' - 수업 알림')
+            push_title.append(class_type_name + ' - 일정 알림')
             push_message_info = trainer_name + '님이 ' + str(start_date)\
                                 + '~' + str(end_date) + ' [개인] 수업 반복 일정을 취소했습니다'
             if lecture_id is not None and lecture_id == '':
@@ -2116,7 +2116,7 @@ def finish_lecture_schedule_logic(request):
                 push_info_schedule_start_date = str(start_date).split(':')
                 push_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
                 push_member_ticket_id.append(member_lecture_schedule_info.member_ticket_tb_id)
-                push_title.append(class_type_name + ' - 수업 알림')
+                push_title.append(class_type_name + ' - 일정 알림')
                 if member_lecture_schedule_info.lecture_tb_id is not None \
                         and member_lecture_schedule_info.lecture_tb_id != '':
 
@@ -2285,13 +2285,13 @@ def add_member_lecture_schedule_logic(request):
     if error is None:
         if str(setting_to_trainee_lesson_alarm) == str(TO_TRAINEE_LESSON_ALARM_ON):
             func_send_push_trainer(member_ticket_id,
-                                   class_type_name + ' - 수업 알림',
+                                   class_type_name + ' - 일정 알림',
                                    # trainer_name + '님의 ' +
                                    log_info_schedule_start_dt + '~' + log_info_schedule_end_dt
                                    + ' ['+lecture_info.name+'] 수업이 '+log_how+'됐습니다.')
 
         if str(setting_to_shared_trainer_lesson_alarm) == str(TO_SHARED_TRAINER_LESSON_ALARM_ON):
-            func_send_push_trainer_trainer(class_id,  class_type_name + ' - 수업 알림',
+            func_send_push_trainer_trainer(class_id,  class_type_name + ' - 일정 알림',
                                            member_info.name + '님의 ' +
                                            log_info_schedule_start_dt + '~' + log_info_schedule_end_dt
                                            + ' ['+lecture_info.name+'] 수업이 '+log_how+'됐습니다.', request.user.id)
@@ -2422,13 +2422,13 @@ def add_other_member_lecture_schedule_logic(request):
         log_info_schedule_end_date = log_info_schedule_end_date[0] + ':' + log_info_schedule_end_date[1]
         if str(setting_to_trainee_lesson_alarm) == str(TO_TRAINEE_LESSON_ALARM_ON):
             func_send_push_trainer(member_ticket_id,
-                                   class_type_name + ' - 수업 알림',
+                                   class_type_name + ' - 일정 알림',
                                    # trainer_name + '님의 ' +
                                    log_info_schedule_start_date + '~'
                                    + log_info_schedule_end_date
                                    + ' [' + lecture_info.name + '] 수업이 '+log_how+'됐습니다')
         if str(setting_to_shared_trainer_lesson_alarm) == str(TO_SHARED_TRAINER_LESSON_ALARM_ON):
-            func_send_push_trainer_trainer(class_id, class_type_name + ' - 수업 알림',
+            func_send_push_trainer_trainer(class_id, class_type_name + ' - 일정 알림',
                                            member_info.name + '님의 ' + log_info_schedule_start_date + '~'
                                            + log_info_schedule_end_date
                                            + ' [' + lecture_info.name + '] 수업이 '+log_how+'됐습니다', request.user.id)

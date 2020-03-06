@@ -718,7 +718,7 @@ def delete_trainee_schedule_logic(request):
         #     lt_pus_from_trainee_lesson_alarm = FROM_TRAINEE_LESSON_ALARM_ON
         # if str(lt_pus_from_trainee_lesson_alarm) == str(FROM_TRAINEE_LESSON_ALARM_ON):
         func_send_push_trainee(class_id,
-                               class_type_name + ' - 수업 알림',
+                               class_type_name + ' - 일정 알림',
                                request.user.first_name + '님이 '
                                + push_schedule_info
                                + ' ['+lecture_name + '] 수업을 예약 취소했습니다.')
@@ -745,12 +745,12 @@ def delete_trainee_schedule_logic(request):
                             member_name = wait_schedule_info.member_ticket_tb.member.name
                             if str(setting_to_trainee_lesson_alarm) == str(TO_TRAINEE_LESSON_ALARM_ON):
                                 func_send_push_trainer(member_ticket_id,
-                                                       class_type_name + ' - 수업 알림',
+                                                       class_type_name + ' - 일정 알림',
                                                        # trainer_name + '님의 ' +
                                                        push_schedule_info
                                                        + ' ['+lecture_name+'] 수업이 예약 확정됐습니다.')
                             if str(setting_to_shared_trainer_lesson_alarm) == str(TO_SHARED_TRAINER_LESSON_ALARM_ON):
-                                func_send_push_trainer_trainer(class_id, class_type_name + ' - 수업 알림',
+                                func_send_push_trainer_trainer(class_id, class_type_name + ' - 일정 알림',
                                                                member_name + '님의 '
                                                                + push_schedule_info
                                                                + ' ['+lecture_name+'] 수업이 예약 확정됐습니다.',
@@ -1433,7 +1433,7 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
         push_info_schedule_start_date = str(start_date).split(':')
         push_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
 
-        func_send_push_trainee(class_id, class_type_name + ' - 수업 알림',
+        func_send_push_trainee(class_id, class_type_name + ' - 일정 알림',
                                request.user.first_name + '님이 '
                                + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
