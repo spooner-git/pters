@@ -4938,9 +4938,8 @@ class DatePickerSelector{
 }
 
 class RepeatSelector{
-    constructor(install_target, target_instance, data_from_external, callback){
+    constructor(install_target, data_from_external, callback){
         this.target = {install:install_target};
-        this.target_instance = target_instance;
         this.unique_instance = install_target.replace(/#./gi, "");
         this.data_from_external = data_from_external;
         this.callback = callback;
@@ -4986,7 +4985,7 @@ class RepeatSelector{
     }
 
     set_initial_data(){
-        this.data = this.target_instance.repeat;
+        this.data = this.data_from_external.repeat;
         this.init();
     }
 
@@ -4997,9 +4996,9 @@ class RepeatSelector{
     }
 
     render(){
-        let top_left = `<span class="icon_left" onclick="repeat_select.upper_right_menu();">${CImg.arrow_left()}</span>`;
+        let top_left = `<span class="icon_left" onclick="repeat_select.upper_left_menu();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span>반복 일정</span></span>`;
-        let top_right = `<span class="icon_right"><span style="color:var(--font-highlight);font-weight: 500;">&nbsp;</span></span>`;
+        let top_right = `<span class="icon_right" onclick="repeat_select.upper_right_menu();"><span style="color:var(--font-highlight);font-weight: 500;">저장</span></span>`;
         let content =   `<section>${this.dom_list()}</section>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
@@ -5041,7 +5040,7 @@ class RepeatSelector{
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_day_select', 100, popup_style, null, ()=>{
-                day_select = new DaySelector('#wrapper_box_day_select', this, 7, (set_data)=>{
+                day_select = new DaySelector('#wrapper_box_day_select', {day:this.data.day}, 7, (set_data)=>{
                     this.day = set_data.day;
                     if(set_data.day.length > 0){
                         this.power = ON;
@@ -5071,7 +5070,10 @@ class RepeatSelector{
         });
         return html;
     }
-
+    upper_left_menu(){
+        layer_popup.close_layer_popup();
+        this.clear();
+    }
     upper_right_menu(){
         if(this.data.power == OFF){
             this.data.day = [];
@@ -5094,9 +5096,9 @@ class RepeatSelector{
 }
 
 class DaySelector{
-    constructor(install_target, target_instance, multiple_select, callback){
+    constructor(install_target, data_from_external, multiple_select, callback){
         this.target = {install:install_target};
-        this.target_instance = target_instance;
+        this.data_from_external = data_from_external;
         this.unique_instance = install_target.replace(/#./gi,"");
         this.callback = callback;
         this.received_data;
@@ -5114,7 +5116,7 @@ class DaySelector{
     }
 
     set_initial_data(){
-        this.data.day = this.target_instance.day;
+        this.data.day = this.data_from_external.day;
         this.init();
     }
 
@@ -5125,7 +5127,7 @@ class DaySelector{
     }
 
     render(){
-        let top_left = `<span class="icon_left" onclick="day_select.upper_right_menu();">${CImg.arrow_left()}</span>`;
+        let top_left = `<span class="icon_left" onclick="day_select.upper_left_menu();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span id="">&nbsp;</span></span>`;
         let top_right = `<span class="icon_right" onclick="day_select.upper_right_menu();"><span style="color:var(--font-highlight);font-weight: 500;">완료</span></span>`;
         let content =   `<section>${this.dom_list()}</section>`;
@@ -5178,6 +5180,11 @@ class DaySelector{
             }
         }
         return news;
+    }
+
+    upper_left_menu(){
+        layer_popup.close_layer_popup();
+        this.clear();
     }
 
     upper_right_menu(){
