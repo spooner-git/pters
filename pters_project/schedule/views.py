@@ -1582,11 +1582,25 @@ def delete_repeat_schedule_logic(request):
                         #     + str(request.user.id) + '_' + str(class_id) + '/' + str(schedule_info.schedule_id) + '/')
                     # 껍데기인 경우 속한 일정 삭제하기
                     if str(repeat_schedule_info.en_dis_type) == str(ON_SCHEDULE_TYPE):
+                        query_lecture_schedule_id = Q()
+                        delete_lecture_schedule_member_ticket_id_data = {}
                         for schedule_info in schedule_data:
-                            lecture_schedule_data = ScheduleTb.objects.filter(
-                                class_tb=class_id, lecture_schedule_id=schedule_info.schedule_id, use=USE)
-                            lecture_schedule_data.delete()
-                            schedule_info.delete()
+                            query_lecture_schedule_id |= Q(lecture_schedule_id=schedule_info.schedule_id)
+
+                        lecture_schedule_data = ScheduleTb.objects.filter(query_lecture_schedule_id,
+                                                                          class_tb=class_id, use=USE)
+
+                        for lecture_schedule_info in lecture_schedule_data:
+                            temp_member_ticket_id = lecture_schedule_info.member_ticket_tb_id
+                            delete_lecture_schedule_member_ticket_id_data[temp_member_ticket_id] = temp_member_ticket_id
+
+                        lecture_schedule_data.delete()
+                        schedule_data.delete()
+
+                        for delete_member_ticket_id_info in delete_lecture_schedule_member_ticket_id_data:
+                            error = func_refresh_member_ticket_count(class_id, delete_member_ticket_id_info)
+                            if error is not None:
+                                break
                     else:
                         # OFF 일정은 일괄 삭제
                         schedule_data.delete()
