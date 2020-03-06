@@ -64,7 +64,7 @@
         </div>
 
         <div id="wrapper_my_history_detail" style="display:none;">
-            <div class="wrapper_my_history_detail_title obj_table_raw obj_font_size_11_weight_normal obj_font_color_light_grey">
+            <div class="wrapper_my_history_detail_title obj_table_raw obj_font_size_11_weight_normal obj_font_color_light_grey" style="display:none;">
                 <div class="wrapper_my_history_detail_member_ticket_count obj_table_cell_x5">회차</div>
 {#                <div class="wrapper_my_history_detail_member_ticket_lecture obj_table_cell_x6">수업</div>#}
                 <div class="wrapper_my_history_detail_member_ticket_date obj_table_cell_x5">일자</div>
@@ -75,7 +75,7 @@
                 <div class="wrapper_my_history_detail_member_ticket_status obj_table_cell_x5">상태</div>
             </div>
             {% for schedule_info in schedule_data %}
-            <div class="wrapper_my_history_detail_info obj_table_raw obj_font_size_11_weight_500">
+            <!-- <div class="wrapper_my_history_detail_info obj_table_raw obj_font_size_11_weight_500">
                 <div class="wrapper_my_history_detail_member_ticket_count obj_table_cell_x5">{{ forloop.revcounter }}</div>
 {#                <div class="wrapper_my_history_detail_member_ticket_lecture obj_table_cell_x6"></div>#}
                 <div class="wrapper_my_history_detail_member_ticket_date obj_table_cell_x5">
@@ -83,10 +83,6 @@
                     <br/>{{ schedule_info.start_dt | date:'Y.m.d (l)' | cut:'요일' }}
                     <br/>{{ schedule_info.start_dt | time:'H:i' }} ~ {{ schedule_info.end_dt | time:'H:i' }}
                 </div>
-                <!--<div class="wrapper_my_history_detail_member_ticket_week obj_table_cell_x6">{{ schedule_info.start_dt | date:'l' }}</div>
-                <div class="wrapper_my_history_detail_member_ticket_time obj_table_cell_x6">{{ schedule_info.start_dt | time:'H:i' }} ~ {{ schedule_info.end_dt | time:'H:i' }}</div>
-                -->
-                <!-- 20글자 넘으면 ...으로 처리 -->
                 <div class="wrapper_my_history_detail_member_ticket_memo obj_table_cell_x5">{{ schedule_info.note | truncatechars:40 }}</div>
                 <div class="wrapper_my_history_detail_member_ticket_record obj_table_cell_x5" {% if schedule_info.daily_record_tb.is_member_view %}onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_plan_daily_record', 90, POPUP_FROM_BOTTOM, {'schedule_id':'{{ schedule_info.schedule_id }}'})" style="cursor: pointer;"{% endif %}>
                     {% if schedule_info.daily_record_tb.is_member_view %}확인{% endif %}
@@ -96,13 +92,56 @@
                         {% if schedule_info.state_cd == 'PE' %}출석{% else %}{{ schedule_info.status }}{% endif %}</span>
                     <br/><span style="{% if schedule_info.permission_state_cd == 'WP' %}color:orange;{% endif %}">({{ schedule_info.permission }})</span>
                 </div>
+            </div> -->
+            <div class="obj_font_size_11_weight_500" style="border-top:1px solid #f5f2f3;padding:7px 5px;">
+                <div  style="display:flex">
+                    <div style="flex-basis:43px">
+                        <div>{{ forloop.revcounter }}회차</div>
+                    </div>
+
+                    <div style="text-align:left;flex:1 1 0;overflow:hidden;text-overflow: ellipsis;white-space: nowrap;">
+                        <span class="obj_font_size_13_weight_bold">{{ schedule_info.lecture_tb.name}}</span>
+                        <div>
+                            {{ schedule_info.start_dt | date:'Y.m.d (l)' | cut:'요일' }} {{ schedule_info.start_dt | time:'H:i' }} ~ {{ schedule_info.end_dt | time:'H:i' }}
+                        </div>
+                    </div>
+
+                    <div style="flex-basis:55px;text-align:center;word-break: keep-all;">
+                        <div class="" {% if schedule_info.daily_record_tb.is_member_view %}onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_plan_daily_record', 90, POPUP_FROM_BOTTOM, {'schedule_id':'{{ schedule_info.schedule_id }}'})" style="border:1px solid #cccccc;border-radius:5px;cursor: pointer;"{% endif %}>
+                            {% if schedule_info.daily_record_tb.is_member_view %}일지 확인{% endif %}
+                        </div>
+                    </div>
+    
+                    <div style="flex-basis:55px;text-align: center;">
+                        <div>
+                            <span style="color:{% if schedule_info.state_cd == 'PE' %}green{% elif schedule_info.state_cd == 'PC' %}red{% else %}black{% endif %}">
+                            {% if schedule_info.state_cd == 'PE' %}출석{% else %}{{ schedule_info.status }}{% endif %}</span>
+                            <br/>
+                            <span style="{% if schedule_info.permission_state_cd == 'WP' %}color:orange;{% endif %}">
+                            {% if schedule_info.state_cd == 'NP' %}({{ schedule_info.permission }}){% else %}{% endif %}
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                </div>
+
+                <div style="display:flex" class="obj_font_color_grey">
+                    <div style="flex-basis:43px;"></div>
+                    <div style="flex:1 1 0;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;padding:3px 20px 0 0">
+                        {{ schedule_info.note | truncatechars:40 }}
+                    </div>
+                    <div style="flex-basis:55px;"></div>
+                </div>
+                
+
             </div>
             {% endfor %}
         </div>
 
         <div id="wrapper_my_lecture_list_detail" style="display:none;">
              {% for ticket_lecture_info in ticket_info.ticket_lecture_data %}
-                <div class="wrapper_my_ticket_detail_date obj_box_full">
+                <!-- <div class="wrapper_my_ticket_detail_date obj_box_full">
                     <div class="wrapper_my_ticket_detail_date_title obj_font_size_11_weight_normal obj_font_color_light_grey">
                         <div class="obj_table_raw">수업 종류</div>
                         <div class="obj_table_raw">수업명</div>
@@ -110,6 +149,16 @@
                     <div class="wrapper_my_ticket_detail_date_info obj_font_size_14_weight_500">
                         <div class="obj_table_raw">{% if ticket_lecture_info.lecture_tb.lecture_type_cd == 'ONE_TO_ONE' %}개인 수업{% else %}그룹 수업{% endif %}</div>
                         <div class="obj_table_raw">{{ ticket_lecture_info.lecture_tb.name }}</div>
+                    </div>
+                </div> -->
+                <div class="wrapper_my_ticket_detail_date obj_box_full" style="display:flex">
+                    <div class="obj_font_size_11_weight_normal obj_font_color_light_grey" style="flex-basis:70px;">
+                        <div style="height:30px;line-height:30px;">수업 종류</div>
+                        <div style="height:30px;line-height:30px;">수업명</div>
+                    </div>
+                    <div class="obj_font_size_14_weight_500" style="flex: 1 1 0;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+                        <div style="height:30px;line-height:30px;">{% if ticket_lecture_info.lecture_tb.lecture_type_cd == 'ONE_TO_ONE' %}개인 수업{% else %}그룹 수업{% endif %}</div>
+                        <div style="height:30px;line-height:30px;overflow: hidden;text-overflow: ellipsis;">{{ ticket_lecture_info.lecture_tb.name }}</div>
                     </div>
                 </div>
             {% endfor %}
