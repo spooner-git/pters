@@ -26,7 +26,7 @@
 		.popup_member_ticket_info .wrapper_my_ticket_tab >  div{
 			display:inline-block;
 			text-align: center;
-			width:60px;
+			width:80px;
 			line-height: 32px;
 			border-bottom: 3px solid transparent;
 			margin-right:10px;
@@ -148,7 +148,10 @@
 		/* border-right: 1px solid #f5f2f3; */
 	}
 	.popup_member_ticket_info .wrapper_my_history_detail_member_ticket_count{
-		width: 20px;
+		width: 15px;
+	}
+	.popup_member_ticket_info .wrapper_my_history_detail_member_ticket_lecture{
+		width: 50px;
 	}
 	.popup_member_ticket_info .wrapper_my_history_detail_member_ticket_date{
 		width: 75px;
@@ -160,11 +163,11 @@
 		/*width: 75px;*/
 	/*}*/
 	.popup_member_ticket_info .wrapper_my_history_detail_member_ticket_memo{
-		width: 120px;
+		width: 110px;
 	}
 	.popup_member_ticket_info .wrapper_my_history_detail_member_ticket_record{
 		width: 25px;
 	}
 	.popup_member_ticket_info .wrapper_my_history_detail_member_ticket_status{
-		width: 65px;
+		width: 50px;
 	}
