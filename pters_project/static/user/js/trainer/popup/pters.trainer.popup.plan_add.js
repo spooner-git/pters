@@ -742,14 +742,14 @@ class Plan_add{
                     let repeat_schedule_id = received.repeat_schedule_id;
                     let repeat_confirm = 1;
                     let confirm_data = {"repeat_schedule_id":repeat_schedule_id, "repeat_confirm":repeat_confirm, "member_ids":this.data.member_id};
-                    Loading.hide();
                     Plan_func.create(confirm_url, confirm_data, ()=>{
+                        Loading.hide();
                         this.data_sending_now = false;
                         // layer_popup.close_layer_popup();
                         try{
                             current_page.init();
                         }catch(e){}
-                    }, ()=>{this.data_sending_now = false;});
+                    }, ()=>{this.data_sending_now = false;Loading.hide();});
                 }, ()=>{this.data_sending_now = false;Loading.hide();});
             }   
         };
