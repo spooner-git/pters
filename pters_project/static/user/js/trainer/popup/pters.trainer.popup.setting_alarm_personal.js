@@ -68,10 +68,14 @@ class Setting_alarm_personal{
     
     dom_assembly_content(){
 
-        let html = this.dom_row_push_to_me() +
+        let html =
+                    '<article class="obj_input_box_full">' +
+                        this.dom_row_push_to_me() +
+                       "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>일정 변경 사항을 PUSH로 알려줍니다.</span>"+
+                    '</article>' +
                     '<article class="obj_input_box_full">' +
                         this.dom_row_setting_schedule_alarm_minute_input() +
-                       // "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>일정 시작전 PUSH 알림</span>"+
+                       "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>OFF 일정을 제외한 수업 일정을 PUSH로 알려줍니다.</span>"+
                     '</article>';
         return html;
     }
@@ -118,12 +122,10 @@ class Setting_alarm_personal{
                                 this.render_content();
                             });
         let title_row = CComponent.text_button ("ntd", '(나에게) 현재 프로그램 PUSH 알림', {"font-size":"15px", "font-weight":"500", "letter-spacing":"-0.8px"}, ()=>{});
-        let html = `<article class="obj_input_box_full">
-                        <div style="display:table;width:100%;">
-                            <div style="display:table-cell;width:auto;vertical-align:middle">${title_row}</div>
-                            <div style="display:table-cell;width:50px;vertical-align:middle">${push_to_me_toggle}</div>
-                        </div>
-                    </article>`;
+        let html = `<div style="display:table;width:100%;">
+                        <div style="display:table-cell;width:auto;vertical-align:middle">${title_row}</div>
+                        <div style="display:table-cell;width:50px;vertical-align:middle">${push_to_me_toggle}</div>
+                    </div>`;
         return html;
     }
 
