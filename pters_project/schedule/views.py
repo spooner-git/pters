@@ -1692,12 +1692,14 @@ def delete_repeat_schedule_logic(request):
                                 func_send_push_trainer_trainer(class_id, class_type_name + ' - 수업 알림',
                                                                member_name + '님의 ' +
                                                                str(start_date) + '~' + str(end_date)
-                                                               + ' [' + lecture_name + '] 반복 일정을 취소됐습니다')
+                                                               + ' [' + lecture_name + '] 반복 일정을 취소됐습니다',
+                                                               request.user.id)
                         else:
                             if str(setting_to_shared_trainer_lesson_alarm) == str(TO_SHARED_TRAINER_LESSON_ALARM_ON):
                                 func_send_push_trainer_trainer(class_id, class_type_name + ' - 수업 알림',
                                                                str(start_date) + '~' + str(end_date)
-                                                               + ' [' + lecture_name + '] 반복 일정을 취소됐습니다')
+                                                               + ' [' + lecture_name + '] 반복 일정을 취소됐습니다',
+                                                               request.user.id)
 
                             log_data = LogTb(log_type='LR02', auth_member_id=request.user.id,
                                              from_member_name=trainer_name,

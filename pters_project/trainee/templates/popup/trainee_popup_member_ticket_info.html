@@ -41,10 +41,10 @@
                     <div class="obj_table_raw">예약 가능 횟수</div>
                 </div>
                 <div class="wrapper_my_ticket_detail_count_info obj_font_size_14_weight_500" style="text-align: right;">
-                    <div class="obj_table_raw">{{ member_ticket_info.member_ticket_reg_count }} 회</div>
-                    <div class="obj_table_raw">{{ member_ticket_info.member_ticket_rem_count }} 회</div>
+                    <div class="obj_table_raw">{% if member_ticket_info.member_ticket_reg_count >= 99999 %}무제한{% else %}{{ member_ticket_info.member_ticket_reg_count }} 회{% endif %}</div>
+                    <div class="obj_table_raw">{% if member_ticket_info.member_ticket_reg_count >= 99999 %}무제한{% else %}{{ member_ticket_info.member_ticket_rem_count }} 회{% endif %}</div>
                     <div class="obj_table_raw">{{ member_ticket_info.member_ticket_abs_count }} 회</div>
-                    <div class="obj_table_raw">{{ member_ticket_info.member_ticket_avail_count }} 회</div>
+                    <div class="obj_table_raw">{% if member_ticket_info.member_ticket_reg_count >= 99999 %}무제한{% else %}{{ member_ticket_info.member_ticket_avail_count }} 회{% endif %}</div>
                 </div>
             </div>
 
