@@ -71,7 +71,7 @@ class Setting_alarm_personal{
         let html = this.dom_row_push_to_me() +
                     '<article class="obj_input_box_full">' +
                         this.dom_row_setting_schedule_alarm_minute_input() +
-                       // "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>일정 시작전 PUSH 알림</span>"+
+                       "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>OFF 일정을 제외한 수업 일정을 PUSH로 알려줍니다.</span>"+
                     '</article>';
         return html;
     }
