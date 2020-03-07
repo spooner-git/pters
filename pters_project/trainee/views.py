@@ -756,8 +756,7 @@ def delete_trainee_schedule_logic(request):
                             member_ticket_id = wait_schedule_info.member_ticket_tb_id
                             member_name = wait_schedule_info.member_ticket_tb.member.name
                             if str(setting_to_trainee_lesson_alarm) == str(TO_TRAINEE_LESSON_ALARM_ON):
-                                func_send_push_trainer(member_ticket_id,
-                                                       class_type_name + ' - 일정 알림',
+                                func_send_push_trainer(class_id, member_ticket_id, class_type_name + ' - 일정 알림',
                                                        # trainer_name + '님의 ' +
                                                        push_schedule_info
                                                        + ' ['+lecture_name+'] 수업이 예약 확정됐습니다.')

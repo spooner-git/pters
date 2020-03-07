@@ -784,16 +784,23 @@ def func_date_check(class_id, schedule_id, pt_schedule_date, add_start_dt, add_e
 
 
 # # 강사 -> 회원 push 메시지 전달
-def func_send_push_trainer(member_ticket_id, title, message):
+def func_send_push_trainer(class_id, member_ticket_id, title, message):
     error = None
     if member_ticket_id is not None and member_ticket_id != '':
         registration_ids = []
         multi_badge_counter = -1
+        query_trainee_push_setting = "SELECT count(*) FROM SETTING_TB AS A" \
+                                     " WHERE A.CLASS_TB_ID="+str(class_id) + \
+                                     " AND A.SETTING_TYPE_CD = \'LT_PUSH_FROM_TRAINER_LESSON_ALARM\' " \
+                                     " AND A.MEMBER_ID=`LECTURE_TB`.`MEMBER_ID`" \
+                                     " AND A.SETTING_INFO='1'"\
+                                     " AND A.USE=1"
         member_ticket_data = MemberTicketTb.objects.select_related(
-            'member').filter(member_ticket_id=member_ticket_id, member_auth_cd=AUTH_TYPE_VIEW, use=USE)
+            'member').filter(member_ticket_id=member_ticket_id, member_auth_cd=AUTH_TYPE_VIEW,
+                             use=USE).annotate(trainee_push_setting=RawSQL(query_trainee_push_setting,
+                                                                           [])).filter(trainee_push_setting__gte=1)
 
         token_data = PushInfoTb.objects.filter(use=USE)
-
         for member_ticket_info in member_ticket_data:
             # token_data = PushInfoTb.objects.filter(member_id=member_ticket_info.member_id, use=USE)
             for token_info in token_data:

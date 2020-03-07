@@ -126,7 +126,7 @@ def send_push_alarm_logic(request):
                        + ' ' + minute_message + '전 입니다.'
         if schedule_info.lecture_tb is None:
 
-            func_send_push_trainer(member_ticket_tb_id, push_title,
+            func_send_push_trainer(class_tb_id, member_ticket_tb_id, push_title,
                                    ' [개인] 수업 '+push_message)
             func_send_push_trainee(class_tb_id, class_type_name+' - 일정 알림',
                                    ' [개인] 수업 '+push_message)
@@ -138,7 +138,7 @@ def send_push_alarm_logic(request):
                                        ' [' + schedule_info.lecture_tb.name + '] '+push_message)
             # 그룹의 회원 수업 일정
             else:
-                func_send_push_trainer(member_ticket_tb_id, push_title,
+                func_send_push_trainer(class_tb_id, member_ticket_tb_id, push_title,
                                        ' [' + schedule_info.lecture_tb.name + '] '+push_message)
 
     return render(request, 'ajax/task_error_info.html')
