@@ -29,7 +29,7 @@ from .models import ScheduleTb, RepeatScheduleTb, DeleteScheduleTb, DeleteRepeat
 
 if DEBUG is False:
     from tasks.tasks import task_send_fire_base_push_multi, \
-        task_send_fire_base_push_multi_without_badge
+        task_send_fire_base_push_multi_without_badge, task_send_fire_base_push, task_send_fire_base_push_without_badge
 
 
 def func_get_holiday_schedule(start_date, end_date):
@@ -793,13 +793,12 @@ def func_send_push_trainer(class_id, member_ticket_id, title, message):
                                      " WHERE A.CLASS_TB_ID="+str(class_id) + \
                                      " AND A.SETTING_TYPE_CD = \'LT_PUSH_FROM_TRAINER_LESSON_ALARM\' " \
                                      " AND A.MEMBER_ID=`LECTURE_TB`.`MEMBER_ID`" \
-                                     " AND A.SETTING_INFO='1'"\
+                                     " AND A.SETTING_INFO='0'"\
                                      " AND A.USE=1"
         member_ticket_data = MemberTicketTb.objects.select_related(
             'member').filter(member_ticket_id=member_ticket_id, member_auth_cd=AUTH_TYPE_VIEW,
                              use=USE).annotate(trainee_push_setting=RawSQL(query_trainee_push_setting,
-                                                                           [])).filter(trainee_push_setting__gte=1)
-
+                                                                           [])).filter(trainee_push_setting=0)
         token_data = PushInfoTb.objects.filter(use=USE)
         for member_ticket_info in member_ticket_data:
             # token_data = PushInfoTb.objects.filter(member_id=member_ticket_info.member_id, use=USE)
@@ -823,6 +822,12 @@ def func_send_push_trainer(class_id, member_ticket_id, title, message):
         if DEBUG is False:
             check_async = True
         if len(registration_ids) > 0:
+            # if len(registration_ids) == 1:
+            #     if check_async:
+            #         error = task_send_fire_base_push.delay(registration_ids, title, message, multi_badge_counter)
+            #     else:
+            #         error = send_fire_base_push(registration_ids, title, message, multi_badge_counter)
+            # else:
             if check_async:
                 error = task_send_fire_base_push_multi.delay(registration_ids, title, message, multi_badge_counter)
             else:
@@ -903,6 +908,12 @@ def func_send_push_trainee(class_id, title, message):
         if DEBUG is False:
             check_async = True
         if len(registration_ids) > 0:
+            # if len(registration_ids) == 1:
+            #     if check_async:
+            #         error = task_send_fire_base_push.delay(registration_ids, title, message, multi_badge_counter)
+            #     else:
+            #         error = send_fire_base_push(registration_ids, title, message, multi_badge_counter)
+            # else:
             if check_async:
                 error = task_send_fire_base_push_multi.delay(registration_ids, title, message, multi_badge_counter)
             else:
@@ -968,6 +979,13 @@ def func_send_push_trainer_trainer(class_id, title, message, member_id):
         if DEBUG is False:
             check_async = True
         if len(registration_ids) > 0:
+
+            # if len(registration_ids) == 1:
+            #     if check_async:
+            #         error = task_send_fire_base_push.delay(registration_ids, title, message, multi_badge_counter)
+            #     else:
+            #         error = send_fire_base_push(registration_ids, title, message, multi_badge_counter)
+            # else:
             if check_async:
                 error = task_send_fire_base_push_multi.delay(registration_ids, title, message, multi_badge_counter)
             else:
@@ -1004,6 +1022,13 @@ def func_send_push_notice(to_member_type_cd, class_id, title, message):
     if DEBUG is False:
         check_async = True
     if len(registration_ids) > 0:
+
+        # if len(registration_ids) == 1:
+        #     if check_async:
+        #         error = task_send_fire_base_push_without_badge.delay(registration_ids, title, message)
+        #     else:
+        #         error = send_fire_base_push_without_badge(registration_ids, title, message)
+        # else:
         if check_async:
             error = task_send_fire_base_push_multi_without_badge.delay(registration_ids, title, message)
         else:
@@ -1021,6 +1046,29 @@ def send_fire_base_push(instance_id, title, message, badge_counter):
             'title': title,
             'body': message,
             'badge': badge_counter,
+            'sound': 'default'
+        }
+    }
+    body = json.dumps(data)
+    h = httplib2.Http()
+
+    resp, content = h.request("https://fcm.googleapis.com/fcm/send", method="POST", body=body,
+                              headers={'Content-Type': 'application/json;',
+                                       'Authorization': 'key=' + push_server_id})
+
+    if resp['status'] != '200':
+        error = '오류가 발생했습니다.'
+    return error
+
+
+def send_fire_base_push_without_badge(instance_id, title, message):
+    push_server_id = getattr(settings, "PTERS_PUSH_SERVER_KEY", '')
+    error = None
+    data = {
+        'to': instance_id,
+        'notification': {
+            'title': title,
+            'body': message,
             'sound': 'default'
         }
     }
