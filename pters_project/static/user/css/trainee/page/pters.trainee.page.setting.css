@@ -57,3 +57,35 @@
 		line-height: 20px;
 		margin-bottom: 15px;
 	}
+	.trainee_setting .obj_box_full select{
+		-webkit-appearance:none;
+		width: 80px;
+		border: 1px solid #e6e6e6;
+		border-radius: 0;
+		padding: 6px 5px;
+		background-color: transparent;
+	}
+	.trainee_setting .schedule_push_selector{
+		-webkit-appearance:none;
+		/*width: 60%;*/
+		/*height: 30px;*/
+		/*line-height: 30px;*/
+		/*padding-top: 0;*/
+		/*padding-bottom: 0;*/
+		padding-left: 10px;
+		background: url('/static/common/icon/icon_arrow_expand_grey.png') no-repeat right;
+		background-size: 18px 18px;
+		color:black;
+	}
+	.trainee_setting .push_enable_selector{
+		-webkit-appearance:none;
+		/*width: 60%;*/
+		/*height: 30px;*/
+		/*line-height: 30px;*/
+		/*padding-top: 0;*/
+		/*padding-bottom: 0;*/
+		padding-left: 10px;
+		background: url('/static/common/icon/icon_arrow_expand_grey.png') no-repeat right;
+		background-size: 18px 18px;
+		color:black;
+	}
