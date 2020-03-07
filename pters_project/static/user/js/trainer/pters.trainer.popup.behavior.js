@@ -13,7 +13,7 @@ let layer_popup = (function (){
         let popup_data = {"popup_name":popup_name, "popup_size":popup_size, "animation_type":animation_type, "call_method":call_method};
         //똑같은 팝업 여러개 못뜨도록
         let $popup_name_selector = $(`.${popup_name}`);
-        if(animation_type == POPUP_FROM_RIGHT && windowWidth <= 650){
+        if(animation_type == POPUP_FROM_RIGHT && windowWidth <= 650 && popup_size == 100){
             if(popup_array.length > 0){
                 let $last_popup =  $(`.${popup_array[popup_array.length - 1].popup_name}`).parents('.popup_mobile');
                 $last_popup.addClass("anim_page_to_left");
@@ -171,7 +171,7 @@ let layer_popup = (function (){
                 setTimeout(function(){
                     func_set_popup_position($(`.${popup_name}`).parents('.popup_mobile'), animation_type, popup_size);
 
-                    let popup_data = func_open_layer_popup(popup_name, popup_size, animation_type);
+                    let popup_data = func_open_layer_popup(popup_name, popup_size, animation_type, call_method);
                     if(popup_data!=undefined && Object.keys(popup_data).length > 0){
                         func_animation_set(OPEN, popup_data);
                     }
@@ -249,7 +249,7 @@ function func_get_popup_ajax (popup_name, data, callback, error_callback){
             },
 
             success: function (data) {
-                $('body').prepend(`<div id="${popup_name}">${data}</div>`);
+                $('#content_wrapper').prepend(`<div id="${popup_name}">${data}</div>`);
                 callback();
             },
 
@@ -289,6 +289,7 @@ function func_set_popup_position ($popup_selector, animation_type, popup_size){
             }
             break;
         case POPUP_FROM_RIGHT:
+            console.log("right")
             translate_x = windowWidth;
             width = popup_size;
             if(windowWidth > MAX_WIDTH) {

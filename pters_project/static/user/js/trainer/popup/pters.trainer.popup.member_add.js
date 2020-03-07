@@ -199,7 +199,7 @@ class Member_add{
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
         
-        let html = PopupBase.base(top_left, top_center, top_right, content, "", this.instance);
+        let html = PopupBase.base(top_left, top_center, top_right, content, "");
 
         document.querySelector(this.target.install).innerHTML = html;
         document.querySelector('.popup_member_add .wrapper_top').style.border = 0;

@@ -1,4 +1,7 @@
 /*(공통) 모든 페이지에서 사용할 수 있는 오브젝트, 폰트스타일*/
+#content_wrapper{
+    height: 100vh;
+}
     .content_page{
         position: fixed;
         top: 50px;
@@ -10,7 +13,7 @@
         -webkit-overflow-scrolling: touch;
         z-index: 0;
         background-color: #f7f5f6;
-        /*height: 100%;*/
+        height: calc(100% - 50px);
     }
 
 /* 박스 */

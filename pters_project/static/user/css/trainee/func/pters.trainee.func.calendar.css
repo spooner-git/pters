@@ -1,6 +1,7 @@
 /* calender  */
 	.pters_calendar{
 		overflow-y: hidden;
+		height: 100%;
 	}
 		.pters_calendar .obj_font_size_20_weight_bold{
 			line-height: 30px;

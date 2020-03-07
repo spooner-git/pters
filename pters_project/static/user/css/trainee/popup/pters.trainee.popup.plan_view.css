@@ -1,6 +1,16 @@
+#popup_calendar_plan_view .popup_mobile.popup_full{
+	background-color: #f2f2f2;
+	border-bottom-left-radius: 0;
+}
 	#popup_calendar_plan_view .popup_mobile .wrapper_top{
-		height: 50px;
+		/* height: 50px; */
 		margin-bottom: 10px;
+	}
+
+	#popup_calendar_plan_view .wrapper_popup_title_text{
+
+		height: 35px;
+		line-height: 35px;
 	}
 
 	.popup_calendar_plan_view{
@@ -10,25 +20,7 @@
 		.popup_calendar_plan_view .wrapper_calendar_plan_view_title{
 				padding: 0 20px;
 			}
-			.popup_calendar_plan_view .wrapper_popup_title_text{
-				position: absolute;
-				top: 20px;
-				height: 35px;
-				line-height: 35px;
-			}
-			.popup_calendar_plan_view .obj_font_size_14_weight_500{
-
-				
-				height: 20px;
-				line-height: 20px;
-			}
-			.popup_calendar_plan_view .wrapper_calendar_plan_view_title .wrapper_popup_title_date{
-				position: absolute;
-				top: 55px;
-
-			}
-
-
+			
 		.popup_calendar_plan_view > .obj_box_full{
 			margin-top: 30px;
 			margin-bottom: 30px;

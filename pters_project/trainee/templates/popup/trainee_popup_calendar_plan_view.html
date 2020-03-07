@@ -6,14 +6,14 @@
     <!-- pters.trainee.popup.plan_view.css -->
     <link rel="stylesheet" href={% static_url "user/css/trainee/popup/pters.trainee.popup.plan_view.css" %}>
 {% endblock %}
+{% block popup_base_wrapper_top_left %}
+    <div class="wrapper_calendar_plan_view_title">
+        <div class="wrapper_popup_title_text obj_font_size_18_weight_900">{{ date_format | date:'Y.m.d (l)'|cut:"요일" }} </div>
+        <div class="wrapper_popup_title_date obj_font_size_13_weight_500"><span class="obj_font_color_pters_red">{{ schedule_data | length }}개</span>의 수업이 있습니다.</div>
+    </div>
+{% endblock %}
 {% block popup_base_contents %}
     <div class="popup_calendar_plan_view">
-        <div class="wrapper_calendar_plan_view_title">
-            <div class="wrapper_popup_title_text obj_font_size_18_weight_900">{{ date_format | date:'Y.m.d (l)'|cut:"요일" }} </div>
-            <div class="wrapper_popup_title_date obj_font_size_13_weight_500"><span class="obj_font_color_pters_red">{{ schedule_data | length }}개</span>의 수업이 있습니다.</div>
-        </div>
-
-
         <div class="wrapper_box_next_plan">
             {% for schedule_info in schedule_data %}
             <div class="obj_box_full">
