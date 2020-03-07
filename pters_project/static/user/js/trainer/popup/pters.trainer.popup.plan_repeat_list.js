@@ -202,7 +202,8 @@ class Plan_repeat_list{
                     layer_popup.close_layer_popup();
                     let message = {
                         title:`정말 ${repeat_name}의 반복 일정을 취소하시겠습니까?`,
-                        comment:`<img src="/static/common/icon/icon_stopmark.png" style="width:25px;"><br>
+                        comment:`${CImg.warning(["#fe4e65"], {"vertical-align":"middle", "margin-bottom":"4px"})}
+                                <br>
                                 <div style="text-align:center;margin-top:5px;">
                                     하위에 다른 반복일정이 존재할 경우 함께 취소됩니다. <br>
                                     과거일정은 보존되지만, 등록한 미래일정은 취소됩니다.
@@ -210,7 +211,16 @@ class Plan_repeat_list{
                     }
                     show_user_confirm(message, ()=>{
                         layer_popup.close_layer_popup();
+                        let inspect = pass_inspector.schedule_delete();
+                        if(inspect.barrier == BLOCKED){
+                            let message = `${inspect.limit_type}`;
+                            show_error_message({title:message});
+                            return false;
+                        }
+
+                        Loading.show(`${repeat_name}의 반복 일정을 삭제 중입니다.<br>일정이 많은 경우 최대 2~4분까지 소요될 수 있습니다.`);
                         Plan_func.delete_plan_repeat({"repeat_schedule_id":repeat_id}, ()=>{
+                            Loading.hide();
                             try{
                                 current_page.init();
                             }catch(e){}
@@ -218,7 +228,7 @@ class Plan_repeat_list{
                                 this.init();
                             }catch(e){}
                             layer_popup.close_layer_popup();
-                        });
+                        }, ()=>{Loading.hide();});
                     });
                 }}
             };
@@ -244,9 +254,17 @@ class Plan_repeat_list{
             let user_option = {
                 delete:{text:"삭제", callback:()=>{
                     layer_popup.close_layer_popup();
+                    let inspect = pass_inspector.schedule_delete();
+                    if(inspect.barrier == BLOCKED){
+                        let message = `${inspect.limit_type}`;
+                        show_error_message({title:message});
+                        return false;
+                    }
                     show_user_confirm({title:`정말 ${member_name}회원님의 반복 일정을 취소하시겠습니까?`}, ()=>{
                         layer_popup.close_layer_popup();
+                        Loading.show(`${member_name}님의 반복 일정을 삭제 중입니다.<br>일정이 많은 경우 최대 2~4분까지 소요될 수 있습니다.`);
                         Plan_func.delete_plan_repeat({"repeat_schedule_id":repeat_id}, ()=>{
+                            Loading.hide();
                             try{
                                 current_page.init();
                             }catch(e){}
@@ -254,7 +272,7 @@ class Plan_repeat_list{
                                 this.init();
                             }catch(e){}
                             layer_popup.close_layer_popup();
-                        });
+                        }, ()=>{Loading.hide();});
                     });
                 }}
             };

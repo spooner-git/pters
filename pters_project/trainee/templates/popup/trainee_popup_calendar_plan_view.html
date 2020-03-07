@@ -17,15 +17,20 @@
         <div class="wrapper_box_next_plan">
             {% for schedule_info in schedule_data %}
             <div class="obj_box_full">
-                <div class="obj_box_full_grey">
-                    <!-- <div class="wrapper_tag">
-                        <div class="obj_tag obj_font_bg_white_black">예약완료</div>
-                    </div> -->
+                <div class="obj_box_full_grey" style="position:relative">
+                    {% if schedule_info.permission_state_cd == 'WP' %}
+                        <div style="position:absolute;top:0;right:0;border:35px solid orange;border-top-right-radius:5px;border-left-color:transparent;border-bottom-color:transparent;"></div>
+                        <div style="position:absolute;top:0;right:0;border:20px solid #fafafa;border-top-right-radius:5px;border-left-color:transparent;border-bottom-color:transparent;"></div>
+                        <span style="position:absolute;top:20px;right:1px;transform: rotate(45deg);font-size:11px;color:#ffffff;font-weight:500">확정 대기중</span>
+                    {% else %}
+                        <!-- <div style="position:absolute;top:0;right:0;border:30px solid green;border-top-right-radius:5px;border-left-color:transparent;border-bottom-color:transparent;"></div>
+                        <div style="position:absolute;top:0;right:0;border:15px solid #fafafa;border-top-right-radius:5px;border-left-color:transparent;border-bottom-color:transparent;"></div> -->
+                    {% endif %}
                     <div  class="wrapper_permission_type">
                         {% if schedule_info.permission_state_cd == 'WP' %}
-                            <div class="obj_tag obj_font_bg_coral_white obj_font_size_16_weight_bold" style="font-size:10px; line-height:15px; height:15px;">대기 예약</div>
+                            <div class="obj_tag obj_font_bg_orange_white obj_font_size_16_weight_bold" style="font-size:11px; line-height:20px; height:20px;">대기 예약</div>
                         {% else %}
-                            <div class="obj_tag obj_font_bg_white_coral obj_font_size_16_weight_bold" style="font-size:10px; line-height:15px; height:15px;">예약 확정</div>
+                            <div class="obj_tag obj_font_bg_white_coral obj_font_size_16_weight_bold" style="font-size:11px; line-height:20px; height:20px;">예약 확정</div>
                         {% endif %}
                     </div>
                     <div  class="wrapper_img_lesson_type">
@@ -155,7 +160,11 @@
     {% now "Y-m-d" as todays_date %}
 
     {% if date_format|date:"Y-m-d" >= todays_date and avail_end_date|date:"Y-m-d" >= date_format|date:"Y-m-d"%}
-        <div class="obj_button_big obj_font_bg_white_coral" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_reserve', 90, POPUP_FROM_BOTTOM, {'select_date':'{{ date_format| date:'Y-m-d' }}'})">예약 추가하기</div>
+        {% if request.session.setting_member_reserve_prohibition == '1' %}
+            <div class="obj_button_big obj_font_bg_pink_white" onclick="layer_popup.all_close_layer_popup()">확인</div>
+        {% else %}
+            <div class="obj_button_big obj_font_bg_white_coral" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_reserve', 90, POPUP_FROM_BOTTOM, {'select_date':'{{ date_format| date:'Y-m-d' }}'})">예약 추가하기</div>
+        {% endif %}
     {% else %}
         <div class="obj_button_big obj_font_bg_pink_white" onclick="layer_popup.all_close_layer_popup()">확인</div>
     {% endif %}

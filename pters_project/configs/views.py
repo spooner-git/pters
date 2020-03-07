@@ -261,7 +261,7 @@ def func_setting_data_update(request, group):
                 request.session['class_type_name'] += ' - ' + class_info.member.name
             request.session['class_center_name'] = class_info.get_center_name()
             request.session['trainer_name'] = class_info.member.name
-        context = func_get_trainer_setting_list(context, trainer_id, class_id, request.user.id)
+        context = func_get_trainer_setting_list(context, class_id, request.user.id)
         request.session['setting_member_reserve_time_available'] = context['setting_member_reserve_time_available']
         request.session['setting_member_reserve_prohibition'] = context['setting_member_reserve_prohibition']
 
@@ -277,7 +277,7 @@ def func_setting_data_update(request, group):
         request.session['setting_member_reserve_enable_time'] = context['setting_member_reserve_enable_time']
         request.session['setting_member_reserve_cancel_time'] = context['setting_member_reserve_cancel_time']
         # request.session['setting_member_time_duration'] = context['setting_member_time_duration']
-        request.session['setting_member_start_time'] = context['setting_member_start_time']
+        # request.session['setting_member_start_time'] = context['setting_member_start_time']
         request.session['setting_schedule_auto_finish'] = context['setting_schedule_auto_finish']
         request.session['setting_member_ticket_auto_finish'] = context['setting_member_ticket_auto_finish']
         request.session['setting_to_trainee_lesson_alarm'] = context['setting_to_trainee_lesson_alarm']
@@ -292,7 +292,7 @@ def func_setting_data_update(request, group):
 
         request.session['setting_calendar_basic_select_time'] = context['setting_calendar_basic_select_time']
         request.session['setting_calendar_time_selector_type'] = context['setting_calendar_time_selector_type']
-        request.session['one_to_one_lecture_time_duration'] = context['one_to_one_lecture_time_duration']
+        # request.session['one_to_one_lecture_time_duration'] = context['one_to_one_lecture_time_duration']
         request.session['setting_trainer_statistics_lock'] = context['setting_trainer_statistics_lock']
         request.session['setting_trainer_attend_mode_out_lock'] = context['setting_trainer_attend_mode_out_lock']
 
@@ -302,6 +302,9 @@ def func_setting_data_update(request, group):
         request.session['setting_member_public_class_auto_permission'] = context['setting_member_public_class_auto_permission']
         request.session['setting_member_public_class_wait_member_num'] = context['setting_member_public_class_wait_member_num']
         request.session['setting_member_wait_schedule_auto_cancel_time'] = context['setting_member_wait_schedule_auto_cancel_time']
+
+        request.session['setting_schedule_alarm_minute'] = context['setting_schedule_alarm_minute']
+
         if group == 'trainee':
             try:
                 setting_data = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_LAN_01')
@@ -515,8 +518,8 @@ def update_finish_schedule_data(request):
     now = timezone.now()
     class_id = request.session.get('class_id', '')
     setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
-    setting_member_wait_schedule_auto_cancel_time \
-        = request.session.get('setting_member_wait_schedule_auto_cancel_time', 0)
+    # setting_member_wait_schedule_auto_cancel_time \
+    #     = request.session.get('setting_member_wait_schedule_auto_cancel_time', 0)
     if class_id is not None and class_id != '':
         if str(setting_schedule_auto_finish) != str(AUTO_FINISH_OFF):
             not_finish_schedule_data = ScheduleTb.objects.select_related(
@@ -596,16 +599,5 @@ def update_finish_schedule_data(request):
                     # member_ticket_tb_id = delete_schedule_info.member_ticket_tb_id
                     if member_ticket_tb_id is not None:
                         func_refresh_member_ticket_count(not_finish_schedule_info.class_tb_id, member_ticket_tb_id)
-        # else:
-        # try:
-        now += datetime.timedelta(minutes=int(setting_member_wait_schedule_auto_cancel_time))
-
-        # except TypeError:
-        #     now -= datetime.timedelta(minutes=int(setting_member_wait_schedule_auto_cancel_time))
-        not_finish_wait_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                                  permission_state_cd=PERMISSION_STATE_CD_WAIT,
-                                                                  en_dis_type=ON_SCHEDULE_TYPE, end_dt__lte=now,
-                                                                  use=USE)
-        not_finish_wait_schedule_data.delete()
 
     return render(request, 'ajax/task_error_info.html')

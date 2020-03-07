@@ -272,11 +272,17 @@
                 <div id="wrapper_lesson_now_info_name">
                     <p class="lesson_date">{{ schedule_info.start_dt | date:"Y.m.d (l)" |cut:"요일" }} {{ schedule_info.start_dt | time:"H:i" }} - {{ schedule_info.end_dt | time:"H:i" }}</p>
                     <p class="lesson_name">
+                    {% if schedule_info.lecture_tb.lecture_type_cd == 'NORMAL' %}(그룹) {% else %}(개인) {% endif %}
                         {% if schedule_info.lecture_tb %}
-                            [그룹] {{ schedule_info.lecture_tb.name }}
+                            {{ schedule_info.lecture_tb.name }}
                         {% else %}
-                            [개인] 개인 수업
+                            개인 수업
                         {% endif %}
+{#                        {% if schedule_info.lecture_tb %}#}
+{#                            [그룹] {{ schedule_info.lecture_tb.name }}#}
+{#                        {% else %}#}
+{#                            [개인] 개인 수업#}
+{#                        {% endif %}#}
                    </p>
                 </div>
             </div>

@@ -167,6 +167,12 @@
         letter-spacing: -0.3px;
     }
 
+    .obj_font_size_10_weight_normal{
+        font-size: 10px;
+        font-weight: normal;
+        letter-spacing: -0.3px;
+    }
+
 
 /* 글자 색상 */
     .obj_font_color_black{
@@ -296,6 +302,11 @@
         color: #ff3b44;
         background-color: #ffffff;
         border: 1px solid #ff3b44;
+    }
+    .obj_font_bg_orange_white{
+        color: orange;
+        background-color: #ffffff;
+        border: 1px solid orange;
     }
     .obj_font_bg_grey_trans{
         color: #656565;

@@ -13,6 +13,7 @@
         <div class="obj_box_popup_topper">
 {#            <div class="obj_font_size_12_weight_500 obj_font_color_white">{{ member_ticket_info.ticket_tb.ticket_type_cd_nm }}</div>#}
             <div class="wrapper_my_ticket_title">
+                <div class="obj_font_size_13_weight_500 obj_font_color_white" style="float:right">수강권</div>
                 <div class="obj_font_size_18_weight_bold obj_font_color_white">{{ ticket_info.name }}</div>
             </div>
 
@@ -30,7 +31,7 @@
                             <div class="obj_table_raw">수업명</div>
                         </div>
                         <div class="wrapper_my_ticket_detail_date_info obj_font_size_14_weight_500">
-                            <div class="obj_table_raw">{% if ticket_lecture_info.lecture_tb.member_num == 1 %}개인 수업{% else %}그룹 수업{% endif %}</div>
+                            <div class="obj_table_raw">{% if ticket_lecture_info.lecture_tb.lecture_type_cd == 'ONE_TO_ONE' %}개인 수업{% else %}그룹 수업{% endif %}</div>
                             <div class="obj_table_raw">{{ ticket_lecture_info.lecture_tb.name }}</div>
                         </div>
                     </div>

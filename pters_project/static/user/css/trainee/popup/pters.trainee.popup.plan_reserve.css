@@ -48,6 +48,14 @@
 			padding-left: 20px;
 		}
 
+		.popup_calendar_plan_reserve .wrapper_reserve_form_data_private .obj_table_raw .obj_font_size_14_weight_500{
+			height: 50px;
+			line-height: 50px;
+			padding-top: 0;
+			padding-bottom: 0;
+			padding-left: 20px;
+		}
+
 		.popup_calendar_plan_reserve > .obj_box_full{
 			margin-bottom: 10px;
 			padding: 10px 20px;
@@ -79,6 +87,25 @@
 		.wrapper_ticket_info > .wrapper_ticket_name{
 			width: auto;
 		}
+		.wrapper_ticket_info > .wrapper_ticket_name > .lecture_selector{
+			width: 60%;
+			height: 30px;
+			line-height: 30px;
+			padding-top: 0;
+			padding-bottom: 0;
+			padding-left: 10px;
+			background: url('/static/common/icon/icon_arrow_expand_grey.png') no-repeat right;
+			background-size: 24px 24px;
+			color:black;
+		}
+		.wrapper_ticket_info > .wrapper_ticket_name .obj_icon_arrow{
+			position: absolute;
+			padding: 3px 0;
+			/*right: 10px;*/
+			filter: opacity(50%);
+			left: 35%;
+			/*z-index: -1;*/
+		}
 		.wrapper_ticket_info > .wrapper_ticket_reserve_avail_count{
 			text-align: center;
 			width: 105px;
@@ -109,16 +136,22 @@
 		.wrapper_reserve_form .wrapper_reserve_form_title{
 			width: 95px;
 		}
+		.wrapper_reserve_form .wrapper_reserve_form_data_private{
+			position: relative;
+			width: auto;
+			background: url('/static/common/icon/icon_arrow_expand_grey.png') no-repeat right;
+			background-size: 24px 24px;
+		}
 		.wrapper_reserve_form .wrapper_reserve_form_data{
 			position: relative;
 			width: auto;
 		}
 		.wrapper_reserve_form .wrapper_reserve_form_data .obj_icon_arrow{
 			position: absolute;
-			padding: 6px 0;
-			right: 0;
+			padding: 13px 0;
+			right: 10px;
 			filter: opacity(50%);
-			z-index: -1;
+			/*z-index: -1;*/
 		}
 		.wrapper_reserve_form .obj_table_raw select{
 			-webkit-appearance:none;

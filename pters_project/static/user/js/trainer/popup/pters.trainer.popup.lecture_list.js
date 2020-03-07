@@ -135,6 +135,7 @@ class Lecture_list {
                                 </div>
                                 <div class="lecture_data_c">
                                     <div class="lecture_name">
+                                        ${data.lecture_ticket_list.length > 0 ? "" : CImg.warning(["#fe4e65"], {"vertical-align":"middle", "width":"20px", "height":"20px", "margin-bottom":"4px"})}
                                         ${lecture_name} 
                                     </div>
                                     <div class="lecture_note">

@@ -121,7 +121,8 @@ const TICKET_PAY_METHOD = {
     "TRANS":"계좌이체",
     "CASH+CARD":"현금 + 카드",
     "CARD+TRANS":"카드 + 계좌 이체",
-    "CASH+TRANS":"현금 + 계좌 이체"
+    "CASH+TRANS":"현금 + 계좌 이체",
+    "CARD+CARD":"카드 + 카드"
 };
 
 // 일지 공개 타입
@@ -178,8 +179,9 @@ const PROGRAM_BOARD_USAGE = 'SYS_USAGE';
 const PROGRAM_BOARD_UPDATE_HISTORY = 'UPDATE_HISTORY';
 const PROGRAM_BOARD_TYPE = {NOTICE:"공지사항", BOARD:"게시판"};
 const PROGRAM_BOARD_USE = {1:{text:"공개", color:"green"}, 0:{text:"비공개", color:"#676767"} };
-const PROGRAM_BOARD_TARGET = {ALL:"전체", trainer:"강사", trainee:"수강회원"};
-const PROGRAM_BOARD_CATEGORY = {use:"공개 여부", type:"분류", open:"공개 범위"};
+const PROGRAM_BOARD_TARGET = {ALL:"전체", trainer:"강사", trainee:"전체 회원",
+                              ing_trainee:"진행중 회원", end_trainee:"종료된 회원"};
+const PROGRAM_BOARD_CATEGORY = {use:"공개 여부", type:"분류", open:"공개 범위", push_use:"푸시 알림", to_member_type_cd:"공지 대상"};
 
 /* 팝업 주소 */
 

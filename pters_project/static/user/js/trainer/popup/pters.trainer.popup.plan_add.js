@@ -616,7 +616,10 @@ class Plan_add{
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_REPEAT_SELECT, 100, popup_style, null, ()=>{
-                repeat_select = new RepeatSelector('#wrapper_box_repeat_select', this, {repeat_start_date:this.data.date, start_day:this.date_start}, (set_data)=>{
+                let repeat = {
+                    "day":this.data.repeat.day.slice(), "power":this.data.repeat.power, "repeat_end":{year:this.data.repeat.repeat_end.year, month:this.data.repeat.repeat_end.month, date:this.data.repeat.repeat_end.date}
+                };
+                repeat_select = new RepeatSelector('#wrapper_box_repeat_select', {repeat_start_date:this.data.date, start_day:this.date_start, repeat:repeat}, (set_data)=>{
                     this.repeat = set_data;
                     this.render_content();
                 });
@@ -734,18 +737,20 @@ class Plan_add{
                 let confirm_url = '/schedule/add_repeat_schedule_confirm/';
                 
                 layer_popup.close_layer_popup();
+                Loading.show("반복 일정을 배치중입니다.<br>일정이 많은 경우 최대 2~4분까지 소요될 수 있습니다.");
                 Plan_func.create(url, data, (received)=>{
                     let repeat_schedule_id = received.repeat_schedule_id;
                     let repeat_confirm = 1;
                     let confirm_data = {"repeat_schedule_id":repeat_schedule_id, "repeat_confirm":repeat_confirm, "member_ids":this.data.member_id};
                     Plan_func.create(confirm_url, confirm_data, ()=>{
+                        Loading.hide();
                         this.data_sending_now = false;
                         // layer_popup.close_layer_popup();
                         try{
                             current_page.init();
                         }catch(e){}
-                    }, ()=>{this.data_sending_now = false;});
-                }, ()=>{this.data_sending_now = false;});
+                    }, ()=>{this.data_sending_now = false;Loading.hide();});
+                }, ()=>{this.data_sending_now = false;Loading.hide();});
             }   
         };
 

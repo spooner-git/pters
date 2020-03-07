@@ -3,6 +3,7 @@ class Alarm {
         this.page_name = "alarm";
         this.targetHTML = targetHTML;
         this.instance = instance;
+        this.target = {install:"#alarm_content_wrap"};
 
         this.sharing_invite = {};
 
@@ -19,13 +20,15 @@ class Alarm {
 
         let component = this.static_component();
         document.querySelector(this.targetHTML).innerHTML = component.initial_page;
+        this.render_loading_image();
 
-
+        this.paging = 0;
         this.render_upper_box();
         Setting_shared_func.read_request((data)=>{
             this.sharing_invite = data;
             Alarm_func.read((jsondata) => {
                 // this.render_list(jsondata);
+                $('#alarm_content_wrap').html("<div id='alarm_content'></div>");
                 this.data = this.dom_list(jsondata);
                 this.render_list(this.data);
                 this.render_upper_box();
@@ -33,9 +36,15 @@ class Alarm {
                 this.new_alarms_id_cache = [];
             });
         }, ()=>{});
-        
     }
 
+    render_loading_image(){
+        document.querySelector(this.target.install).innerHTML = 
+            `<div style="position:fixed;top:50%;left:50%;transform:translate(-50%, -50%);text-align:center;">
+                <img src="/static/common/loading.svg">
+                <div style="font-size:12px;color:var(--font-sub-normal);word-break:keep-all">사용자 데이터를 불러오고 있습니다.</div>
+            </div>`;
+    }
 
     //상단을 렌더링
     render_upper_box (){
@@ -57,11 +66,11 @@ class Alarm {
         let page_data = data.slice(this.paging*40, (this.paging*40)+40);
         let node = document.createElement("div");
         node.setAttribute('id', `alarm_paging_${this.paging}`);
-        document.querySelector('#alarm_content_wrap').appendChild(node);
+        document.querySelector('#alarm_content_wrap > #alarm_content').appendChild(node);
 
         let node2 = document.createElement("div");
         node2.setAttribute('id', `alarm_paging_${this.paging + 1}`);
-        document.querySelector('#alarm_content_wrap').appendChild(node2);
+        document.querySelector('#alarm_content_wrap > #alarm_content').appendChild(node2);
 
         let more = `<div style="text-align:center;font-size:12px;font-weight:500;height:30px;line-height:30px;background-color:var(--bg-light);" onclick="alarm.render_more();">더 보기</div>`;
         if(page_data.length < 40){
@@ -259,7 +268,7 @@ class Alarm {
                 ,
                 initial_page:`<div>
                                 <div id="alarm_display_panel"></div>
-                                <div id="alarm_content_wrap" class="pages" style="top:unset;left:unset;background-color:unset;position:relative;min-height:calc(100% - 68px)"></div>
+                                <div id="alarm_content_wrap" class="" style="top:unset;left:unset;background-color:unset;position:relative;min-height:calc(100% - 68px)"></div>
                                 </div>`
             }
         );

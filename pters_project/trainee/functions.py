@@ -763,7 +763,7 @@ def func_check_select_date_reserve_setting(class_id, trainer_id, select_date):
 
     # 예약 정지 상태 확인
     if reserve_stop == MEMBER_RESERVE_PROHIBITION_ON:
-        error = '강사님이 예약 기능을 일시 정지하셨습니다.<br/>강사님께 직접 문의해주세요.'
+        error = '강사님이 예약 기능을 정지하셨습니다.<br/>강사님께 직접 문의해주세요.'
 
     # 예약 가능 일자 확인
     if error is None:

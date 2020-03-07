@@ -12,8 +12,8 @@
     background-color: #ffffff;
 
     width: 300px;
-    border: 1px solid #cccccc;
-    border-radius: 5px;
+    border: 1px solid #f5f2f3;
+    border-radius: 10px;
 }
 
 .wrapper_popup_basic_comment{
@@ -46,6 +46,7 @@
 .wrapper_popup_basic_comment > div > .popup_title{
     margin: 0;
     font-size: 14px;
+    font-weight: bold;
 }
 .wrapper_popup_basic_comment > div > .popup_comment{
     margin-bottom: 0;
@@ -56,13 +57,14 @@
 
 .wrapper_popup_basic_buttons{
     text-align: center;
-    border-top: 1px solid #cccccc;
-    height: 45px;
+    border-top: 1px solid #f5f2f3;
+    height: 52px;
+    line-height: 52px;
 }
 
     .wrapper_popup_basic_buttons .popup_basic_cancel{
         cursor: pointer;
-        border-right: 1px solid #cccccc;
+        border-right: 1px solid #f5f2f3;
     }
 
     .wrapper_popup_basic_buttons .popup_basic_confirm{

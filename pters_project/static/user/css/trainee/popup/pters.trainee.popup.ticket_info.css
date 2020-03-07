@@ -52,7 +52,7 @@
 	}
 
 	.popup_ticket_info .wrapper_my_ticket_detail_date{
-		
+		padding:0 20px;
 	}
 		.popup_ticket_info .wrapper_my_ticket_detail_date .obj_table_raw{
 			height: 30px;
@@ -66,7 +66,8 @@
 	}
 	.popup_ticket_info .wrapper_my_ticket_detail_date_info{
 		display: inline-block;
-		width: 100px;
+		/* width: 100px; */
+		width: auto;
 		height: auto;
 	}
 

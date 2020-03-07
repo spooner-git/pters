@@ -225,6 +225,8 @@ class LectureTb(TimeStampedModel):
     lecture_type_cd = models.CharField('수업 종류', db_column='GROUP_TYPE_CD', max_length=20, blank=True, null=True,
                                        default=LECTURE_TYPE_ONE_TO_ONE)
     lecture_minute = models.IntegerField(db_column='GROUP_MINUTE', default=60)  # Field name made lowercase.
+    start_time = models.CharField('수업 시작 시각', db_column='START_TIME', max_length=20, blank=True,
+                                  default='A-0')
 
     class Meta:
         managed = False

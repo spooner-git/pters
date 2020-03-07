@@ -368,7 +368,12 @@ function pters_month_calendar(calendar_name, calendar_options){
         let temp_array = [];
         for(let i=0; i<length; i++){
             temp_array.push(`#calendar_plan_cell_${avail_date_array[i]}`);
-            $(`#calendar_plan_cell_${avail_date_array[i]}`).parent('.obj_table_cell_x7').css('background-color', 'rgba(255, 59, 68, 0.07)').attr('onclick', `layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_reserve', 90, POPUP_FROM_BOTTOM, {'select_date':'${avail_date_array[i]}'})`);
+            if(setting_info.setting_member_reserve_prohibition=='1'){
+                $(`#calendar_plan_cell_${avail_date_array[i]}`).parent('.obj_table_cell_x7').css('background-color', 'rgba(255, 59, 68, 0.07)').attr('onclick', `show_error_message({title:'강사님이 예약기능을 일시정지했습니다.'})`);
+            }
+            else{
+                $(`#calendar_plan_cell_${avail_date_array[i]}`).parent('.obj_table_cell_x7').css('background-color', 'rgba(255, 59, 68, 0.07)').attr('onclick', `layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_reserve', 90, POPUP_FROM_BOTTOM, {'select_date':'${avail_date_array[i]}'})`);
+            }
         }
         let $first_day = $(`${temp_array.shift()}`);
         $first_day.siblings('div.calendar_date_number').css({'height':'20px', 'width':'20px', 'border-radius':'50%', 'background-color':'#ff3b44', 'margin':'0 auto', 'color':'#ffffff'});
@@ -476,7 +481,7 @@ function pters_month_calendar(calendar_name, calendar_options){
                 if(schedule_finish==SCHEDULE_NOT_FINISH){
                     if(schedule_permission_status==SCHEDULE_WAIT){
                         schedule_finish = '대기 예약';
-                        schedule_finish_tag = "obj_font_bg_coral_white";
+                        schedule_finish_tag = "obj_font_bg_orange_white";
                     }
                     else{
                         schedule_finish = '예약 확정';

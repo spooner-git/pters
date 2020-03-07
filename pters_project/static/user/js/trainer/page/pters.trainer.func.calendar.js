@@ -54,7 +54,6 @@ class Calendar {
             }else{
                 clearInterval(interval);
             }
-            
         }, 60000);
 
         this.long_touch = OFF;
@@ -723,13 +722,13 @@ class Calendar {
             $('.week_rows article').css('height', '180px');
             // $('#week_zoom_vertical_button').css({'background-image':'url(/static/common/icon/icon_zoom_out_black.png)'});
             $('#week_zoom_vertical_button').html(CImg.zoom_out());
-            $('.week_rows > .week_row').css({'background-image': 'url(/static/user/res/new/calendar_hour_long2.png?v)', 'background-size': '30px 180px'});
+            $('.week_rows > .week_row').css({'background-image': 'url(/static/user/res/new/calendar_hour_long2.png?v20200303)', 'background-size': '100% 180px'});
         }else if(this.week_zoomed.vertical.activate == true){
             this.week_zoomed.vertical.activate = false;
             $('.week_rows article').css('height', '60px');
             // $('#week_zoom_vertical_button').css({'background-image':'url(/static/common/icon/icon_zoom_in_black.png)'});
             $('#week_zoom_vertical_button').html(CImg.zoom_in());
-            $('.week_rows > .week_row').css({'background-image': 'url(/static/user/res/new/calendar_hour_short.png?v2)', 'background-size': '30px 60px'});
+            $('.week_rows > .week_row').css({'background-image': 'url(/static/user/res/new/calendar_hour_short.png?v20200303)', 'background-size': '100% 60px'});
         }
         this.relocate_current_time_indicator();
     }
@@ -1077,7 +1076,7 @@ class Calendar {
                             }
 
                             
-                            let styles = `width:${100/cell_divide}%;height:${height}%;top:${top}%;left:${cell_index*100/cell_divide}%;background-color:${plan_status_color};${plan_font_style};display:${display}`;
+                            let styles = `width:calc(${100/cell_divide}% - 1px);height:calc(${height}% - 3px);top:calc(${top}% + 2px);left:${cell_index*100/cell_divide}%;background-color:${plan_status_color};${plan_font_style};display:${display}`;
                             let long_touch_active = this.long_touch_schedule_id == plan.schedule_id ? "long_touch_active" : "";
                             let go_behind =  "";
                             if(this.long_touch == ON && this.long_touch_schedule_id != plan.schedule_id){
@@ -1112,42 +1111,6 @@ class Calendar {
 
         let work_time_dom = this.dom_disabled_work_time();
 
-        // let week_html_template = `
-        //                         <div class="week_rows">
-        //                             <div class="week_cal_time_text" onclick="${this.instance}.zoom_week_cal_vertical()">
-        //                                 <div id="current_time_indicator" style="width:1024px;"><div></div></div>
-        //                                 ${ (this.worktime.map( (t) => { return `<article><span>${TimeRobot.to_text(t, 0, 'short')}</span></article>`; } )).join('') }
-        //                             </div>
-        //                             <div onclick="${this.instance}.display_user_click(event, ${_year[0]},${_month[0]},${_date[0]})" class="_week_row_1 week_row" style="${ _year[0]+'-'+_month[0]+'-'+_date[0] == this.today ? "background-color:#fe4e6518" : ""}">
-        //                                 ${work_time_dom[0] == undefined ? "" : work_time_dom[0]}
-        //                                 ${schedules.length > 0 ?  schedules[0].join('') : ""}
-        //                             </div>
-        //                             <div onclick="${this.instance}.display_user_click(event, ${_year[1]},${_month[1]},${_date[1]})" class="_week_row_2 week_row" style="${ _year[1]+'-'+_month[1]+'-'+_date[1] == this.today ? "background-color:#fe4e6518" : ""}">
-        //                                 ${work_time_dom[1] == undefined ? "" : work_time_dom[1]}
-        //                                 ${schedules.length > 0 ?  schedules[1].join('') : ""}
-        //                             </div>
-        //                             <div onclick="${this.instance}.display_user_click(event, ${_year[2]},${_month[2]},${_date[2]})" class="_week_row_3 week_row" style="${ _year[2]+'-'+_month[2]+'-'+_date[2] == this.today ? "background-color:#fe4e6518" : ""}">
-        //                                 ${work_time_dom[2] == undefined ? "" : work_time_dom[2]}
-        //                                 ${schedules.length > 0 ?  schedules[2].join('') : ""}
-        //                             </div>
-        //                             <div onclick="${this.instance}.display_user_click(event, ${_year[3]},${_month[3]},${_date[3]})" class="_week_row_4 week_row" style="${ _year[3]+'-'+_month[3]+'-'+_date[3] == this.today ? "background-color:#fe4e6518" : ""}">
-        //                                 ${work_time_dom[3] == undefined ? "" : work_time_dom[3]}
-        //                                 ${schedules.length > 0 ?  schedules[3].join('') : ""}
-        //                             </div>
-        //                             <div onclick="${this.instance}.display_user_click(event, ${_year[4]},${_month[4]},${_date[4]})" class="_week_row_5 week_row" style="${ _year[4]+'-'+_month[4]+'-'+_date[4] == this.today ? "background-color:#fe4e6518" : ""}">
-        //                                 ${work_time_dom[4] == undefined ? "" : work_time_dom[4]}
-        //                                 ${schedules.length > 0 ?  schedules[4].join('') : ""}
-        //                             </div>
-        //                             <div onclick="${this.instance}.display_user_click(event, ${_year[5]},${_month[5]},${_date[5]})" class="_week_row_6 week_row" style="${ _year[5]+'-'+_month[5]+'-'+_date[5] == this.today ? "background-color:#fe4e6518" : ""}">
-        //                                 ${work_time_dom[5] == undefined ? "" : work_time_dom[5]}
-        //                                 ${schedules.length > 0 ?  schedules[5].join('') : ""}
-        //                             </div>
-        //                             <div onclick="${this.instance}.display_user_click(event, ${_year[6]},${_month[6]},${_date[6]})" class="_week_row_7 week_row" style="${ _year[6]+'-'+_month[6]+'-'+_date[6] == this.today ? "background-color:#fe4e6518" : ""}">
-        //                                 ${work_time_dom[6] == undefined ? "" : work_time_dom[6]}
-        //                                 ${schedules.length > 0 ?  schedules[6].join('') : ""}
-        //                             </div>
-        //                         </div>
-        //                         `;
         let week_html_template = `
                                 <div class="week_rows">
                                     <div class="week_cal_time_text" onclick="${this.instance}.zoom_week_cal_vertical()">
@@ -1543,8 +1506,8 @@ class Calendar {
                                                 </div>
                                             </div>
                                             <div class="cal_tools_wrap_parent">
-                                                <div class="cal_pc_tools_wrap" onclick="${this.instance}.move_month('prev')">${CImg.arrow_left("", {"width":"28px", "vertical-align":"middle", "margin-bottom":"4px", "transform":"rotate(90deg)"})}</div>
-                                                <div class="cal_pc_tools_wrap" onclick="${this.instance}.move_month('next')">${CImg.arrow_left("", {"width":"28px", "vertical-align":"middle", "margin-bottom":"4px", "transform":"rotate(270deg)"})}</div>
+                                                <div class="cal_pc_tools_wrap" onclick="${this.instance}.move_month('prev')">${CImg.arrow_expand("", {"width":"28px", "vertical-align":"middle", "margin-bottom":"4px", "transform":"rotate(90deg)"})}</div>
+                                                <div class="cal_pc_tools_wrap" onclick="${this.instance}.move_month('next')">${CImg.arrow_expand("", {"width":"28px", "vertical-align":"middle", "margin-bottom":"4px", "transform":"rotate(270deg)"})}</div>
                                                 <div class="go_today" onclick="${this.instance}.go_month()">${CImg.today("", {"width":"28px", "vertical-align":"middle", "margin-bottom":"4px"})}</div>
                                                 <div class="add_plan" onclick="${this.instance}.add_plan_button()">${CImg.plus("", {"width":"28px", "vertical-align":"middle", "margin-bottom":"4px"})}</div>
                                             </div>
@@ -1587,13 +1550,6 @@ class Calendar {
                                   </div>
                                   `
                 ,
-                // "initial_page":`<div id="${this.subtargetHTML}">
-                //                     <div id="cal_display_panel">
-                //                         <span></span>
-                //                     </div>
-                //                     <div id="page${this.current_page_num}" class="pages" style="left:0px;">
-                //                     </div>
-                //                 </div>`
                 "initial_page":`<div id="${this.subtargetHTML}">
                                     <div id="cal_display_panel">
                                         <span></span>
@@ -1731,7 +1687,9 @@ class Calendar {
         el.id = `page${page_num}`;
         el.style.transform = 'translateX(100%)';
         el.classList.add('pages');
-        document.getElementById(target).appendChild(el);
+        // document.getElementById(target).appendChild(el);
+        let _target = document.getElementById(target);
+        _target.insertBefore(el, _target.childNodes[0]);
     
         let el_prev = document.getElementById(`page${page_num-1}`);
         
@@ -1853,6 +1811,9 @@ class Plan_func{
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
                         show_error_message({title:data.messageArray});
+                        if(error_callback != undefined){
+                            error_callback();
+                        }
                         return false;
                     }
                 }
@@ -2298,6 +2259,9 @@ class Plan_func{
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
                         show_error_message({title:data.messageArray});
+                        if(error_callback != undefined){
+                            error_callback();
+                        }
                         return false;
                     }
                 }
@@ -2460,7 +2424,7 @@ class Plan_calc{
         let start_array = [];
         let end_array = [];
         let duplicate_dic = {};
-    
+
         jsondata.forEach((plan) => {
             let start_time = plan.start_time;
             let end_time = plan.end_time;
@@ -2470,7 +2434,6 @@ class Plan_calc{
             start_array.push(start_time);
             end_array.push(end_time);
         });
-    
         //중복일정을 큰 덩어리로 가져오기
         let clear_result = Plan_calc.merge_duplicated_time(start_array, end_array);
         let clear_start_date = clear_result.clear_start_array;
@@ -2486,7 +2449,7 @@ class Plan_calc{
                 }
             }
         }
-    
+
         //겹치지 않는 합쳐진 일정
         let pp = 0;
         for(let plan in duplicate_dic){
@@ -2494,7 +2457,7 @@ class Plan_calc{
             let temp_cell_divide;
     
             // 겹치는 일정 sorting
-            let array_sorted = duplicate_dic[plan].sort();
+            let array_sorted = duplicate_dic[plan];
     
             for(let i=0; i<array_sorted.length; i++){
                 // 기본값 셋팅
@@ -2510,8 +2473,8 @@ class Plan_calc{
                     }
                     let ref_split = array_sorted[i].split(' ~ ');
                     let comp_split = array_sorted[j].split(' ~ ');
-    
                     if(Plan_calc.know_whether_plans_has_duplicates(ref_split[0], ref_split[1], comp_split[0], comp_split[1]) > 0){ //겹칠때
+                        // console.log('test')
                         check_duplication = true;
                     }else{ //겹치지 않을때
                         let index_move = 0;
@@ -2523,10 +2486,8 @@ class Plan_calc{
                             let index_loc = temp_index.indexOf(temp_index[j], index_move);
                             index_move = index_loc + 1;
                             if(i != index_loc){
-    
                                 // let ref_split = array_sorted[i].split(' ~ ');
                                 let comp_split = array_sorted[index_loc].split(' ~ ');
-    
                                 if(Plan_calc.know_whether_plans_has_duplicates(ref_split[0], ref_split[1], comp_split[0], comp_split[1]) > 0){
                                     check++;
                                 }

@@ -890,7 +890,6 @@ def out_member_logic(request):
                             'class_tb__member').filter(member_id=member_id, auth_cd=AUTH_TYPE_VIEW)
                         for member_class_info in member_class_data:
                             class_id = member_class_info.class_tb_id
-
                             if str(member_class_info.class_tb.member_id) == str(request.user.id):
                                 now = timezone.now()
                                 class_member_ticket_data = MemberTicketTb.objects.select_related(
@@ -1065,7 +1064,7 @@ def clear_badge_counter_logic(request):
     if push_token is None or push_token == '':
         error = 'Push 정보를 가져올 수 없습니다'
 
-    logger.info(request.user.first_name + '[' + str(request.user.id) + ']' + push_token)
+    # logger.info('[' + str(request.user.id) + ']' + push_token)
     if error is None:
         try:
             token_data = PushInfoTb.objects.get(token=push_token, use=USE)
