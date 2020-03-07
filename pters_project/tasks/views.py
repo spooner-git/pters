@@ -296,9 +296,9 @@ class SendAllSchedulePushAlarmDataView(View):
                 class_type_name = alarm_schedule_info.class_type_name
                 if schedule_info.class_tb.subject_detail_nm != '':
                     class_type_name = schedule_info.class_tb.subject_detail_nm
-                alarm_title = class_type_name + ' - 일정 알림'
+                alarm_title = class_type_name + ' - 일정 '
 
-                log_info_schedule_start_date = str(schedule_info.start_dt).split(':')
+                log_info_schedule_start_date = str(schedule_info.start_dt).split(' ')[1].split(':')
                 log_info_schedule_end_date = str(schedule_info.end_dt).split(' ')[1].split(':')
                 log_info_schedule_start_date = log_info_schedule_start_date[0] + ':' + log_info_schedule_start_date[1]
                 log_info_schedule_end_date = log_info_schedule_end_date[0] + ':' + log_info_schedule_end_date[1]
@@ -314,13 +314,14 @@ class SendAllSchedulePushAlarmDataView(View):
                         alarm_message += schedule_info.member_ticket_tb.member.name + ' 회원님 '
 
                     if alarm_minute == 0:
-                        alarm_message += '일정 시작 시간 입니다.'
+                        alarm_title += '시작 알림'
                     elif alarm_minute < 60:
-                        alarm_message += '일정 ' + str(alarm_minute) + '분 전입니다.'
+                        alarm_title += str(alarm_minute) + '분 전 알림'
                     elif alarm_minute < 1440:
-                        alarm_message += '일정 ' + str(int(alarm_minute/60)) + '시간 전입니다.'
+                        alarm_title += str(int(alarm_minute/60)) + '시간 전 알림'
                     else:
-                        alarm_message += '일정 ' + str(int(alarm_minute/60/24)) + '일 전입니다.'
+                        alarm_title += str(int(alarm_minute/60)) + '일 전 알림'
+                    alarm_message += '일정'
 
                 for token_info in token_data:
                     if str(alarm_schedule_info.member_id) == str(token_info['member_id']):
