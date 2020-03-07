@@ -8,7 +8,7 @@ from django.utils import timezone
 
 from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, USE, MEMBER_RESERVE_PROHIBITION_ON, LECTURE_TYPE_ONE_TO_ONE, \
     STATE_CD_IN_PROGRESS, STATE_CD_ABSENCE, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, AUTH_TYPE_DELETE, \
-    MEMBER_RESERVE_PROHIBITION_OFF
+    MEMBER_RESERVE_PROHIBITION_OFF, FROM_TRAINER_LESSON_ALARM_ON
 from login.models import CommonCdTb
 from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb
 from trainer.models import ClassTb, ClassMemberTicketTb, SettingTb, TicketLectureTb
@@ -911,3 +911,23 @@ def func_check_select_time_reserve_setting(class_id, trainer_id, start_date, end
                     error = error_comment+' 취소가 가능합니다.'
 
     return error
+
+
+# 회원의 셋팅 정보 가져오기
+def func_get_trainee_setting_list(context, class_id, user_id):
+    # today = datetime.date.today()
+    # lt_lan_01 = 'KOR'
+    setting_push_from_trainer_lesson_alarm = FROM_TRAINER_LESSON_ALARM_ON
+    setting_schedule_alarm_minute = '-1'
+    setting_data = SettingTb.objects.filter(class_tb_id=class_id, member_id=user_id, use=USE)
+
+    for setting_info in setting_data:
+        if setting_info.setting_type_cd == 'LT_PUSH_FROM_TRAINER_LESSON_ALARM':
+            setting_push_from_trainer_lesson_alarm = int(setting_info.setting_info)
+        if setting_info.setting_type_cd == 'LT_PUSH_SCHEDULE_ALARM_MINUTE':
+            setting_schedule_alarm_minute = setting_info.setting_info
+
+    context['setting_push_from_trainer_lesson_alarm'] = setting_push_from_trainer_lesson_alarm
+    context['setting_schedule_alarm_minute'] = setting_schedule_alarm_minute
+
+    return context

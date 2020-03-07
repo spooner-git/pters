@@ -26,8 +26,8 @@ from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 from schedule.functions import func_get_member_ticket_id, func_add_schedule, func_refresh_member_ticket_count, \
     func_get_lecture_member_ticket_id_from_trainee, func_send_push_trainee, func_get_holiday_schedule, \
     func_send_push_trainer_trainer, func_send_push_trainer, func_get_member_ticket_one_to_one_lecture_info
-from schedule.models import ScheduleTb, DeleteScheduleTb, DailyRecordTb
-from trainer.functions import func_get_trainer_setting_list
+from schedule.models import ScheduleTb, DeleteScheduleTb, DailyRecordTb, ScheduleAlarmTb
+from trainer.functions import func_get_trainer_setting_list, update_alarm_setting_data
 from trainer.models import ClassMemberTicketTb,  ClassTb, SettingTb, LectureTb, TicketLectureTb,\
     TicketTb, ProgramNoticeTb
 from .functions import func_get_class_member_ticket_count, func_get_member_ticket_list, func_get_class_list, \
@@ -35,7 +35,7 @@ from .functions import func_get_class_member_ticket_count, func_get_member_ticke
     func_get_trainee_on_repeat_schedule, func_check_select_time_reserve_setting, \
     func_get_member_ticket_connection_list, func_get_trainee_next_schedule_by_class_id,\
     func_get_trainee_select_schedule, func_get_trainee_ing_member_ticket_list, func_check_select_date_reserve_setting, \
-    func_get_trainee_ticket_list, func_get_class_list_only_view
+    func_get_trainee_ticket_list, func_get_class_list_only_view, func_get_trainee_setting_list
 from .models import MemberTicketTb, ProgramNoticeHistoryTb
 
 logger = logging.getLogger(__name__)
@@ -360,6 +360,7 @@ class TraineeSettingView(LoginRequiredMixin, AccessTestMixin, View):
         context = {}
         error = None
         class_id = request.session.get('class_id', '')
+        func_get_trainee_setting_list(context, class_id, request.user.id)
 
         return render(request, self.template_name, context)
 
@@ -2185,3 +2186,57 @@ def check_alarm_program_notice_qa_comment(context, class_id, user_id):
         class_tb_id=class_id, member_ticket_tb__member_id=user_id, reg_dt__gte=seven_days_ago,
         member_read=0, use=USE).order_by('-reg_dt').count()
     context['check_np_member_ticket_counts'] = func_get_class_list(context, user_id)['np_member_ticket_counts']
+
+
+# 회원 알림 setting 업데이트 api
+def update_trainee_setting_push_logic(request):
+    setting_from_trainer_lesson_alarm = request.POST.get('setting_from_trainer_lesson_alarm', '1')
+    setting_schedule_alarm_minute = request.POST.get('setting_schedule_alarm_minute', '-1')
+    class_id = request.session.get('class_id', '')
+
+    setting_type_cd_data = ['LT_PUSH_FROM_TRAINER_LESSON_ALARM', 'LT_PUSH_SCHEDULE_ALARM_MINUTE']
+    setting_info_data = [setting_from_trainer_lesson_alarm, setting_schedule_alarm_minute]
+
+    error = update_alarm_setting_data(class_id, request.user.id, setting_type_cd_data, setting_info_data)
+
+    now = timezone.now()
+
+    schedule_alarm_data = ScheduleAlarmTb.objects.select_related(
+        'schedule_tb').filter(class_tb_id=class_id, alarm_dt__gte=now, member_id=request.user.id, use=USE)
+
+    if setting_schedule_alarm_minute == '-1':
+        schedule_alarm_data.delete()
+    else:
+        alarm_time = now + datetime.timedelta(minutes=int(setting_schedule_alarm_minute))
+        alarm_time = alarm_time.strftime('%Y-%m-%d %H:%M:00')
+
+        schedule_data = ScheduleTb.objects.select_related(
+            'member_ticket_tb').filter(class_tb_id=class_id, start_dt__gte=alarm_time,
+                                       member_ticket_tb__member_id=request.user.id, use=USE)
+        for schedule_info in schedule_data:
+            alarm_dt = schedule_info.start_dt - datetime.timedelta(minutes=int(setting_schedule_alarm_minute))
+
+            new_reg_test = True
+            for schedule_alarm_info in schedule_alarm_data:
+                if str(schedule_alarm_info.schedule_tb_id) == str(schedule_info.schedule_id):
+                    schedule_alarm_info.alarm_dt = alarm_dt
+                    schedule_alarm_info.alarm_minute = setting_schedule_alarm_minute
+                    schedule_alarm_info.save()
+                    new_reg_test = False
+                    break
+
+            if new_reg_test:
+                schedule_alarm_info = ScheduleAlarmTb(class_tb_id=class_id, schedule_tb_id=schedule_info.schedule_id,
+                                                      alarm_dt=alarm_dt, member_id=request.user.id,
+                                                      alarm_minute=setting_schedule_alarm_minute,
+                                                      use=USE)
+                schedule_alarm_info.save()
+
+    if error is None:
+        request.session['setting_from_trainer_lesson_alarm'] = int(setting_from_trainer_lesson_alarm)
+        request.session['setting_schedule_alarm_minute'] = setting_schedule_alarm_minute
+    else:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+    return render(request, 'ajax/trainee_error_ajax.html')

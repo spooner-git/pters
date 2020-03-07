@@ -707,7 +707,6 @@ def func_get_trainer_setting_list(context, class_id, user_id):
     avail_date_list = []
     setting_week_start_date = 'SUN'
     setting_holiday_hide = SHOW
-    setting_data = SettingTb.objects.filter(class_tb_id=class_id, use=USE)
     setting_calendar_basic_select_time = 60
     setting_calendar_time_selector_type = CALENDAR_TIME_SELECTOR_BASIC
     setting_trainer_statistics_lock = UN_USE
@@ -719,6 +718,7 @@ def func_get_trainer_setting_list(context, class_id, user_id):
     setting_member_public_class_wait_member_num = 0
     setting_member_wait_schedule_auto_cancel_time = 0
     setting_schedule_alarm_minute = '-1'
+    setting_data = SettingTb.objects.filter(class_tb_id=class_id, use=USE)
 
     for setting_info in setting_data:
         if setting_info.setting_type_cd == 'LT_RES_01':

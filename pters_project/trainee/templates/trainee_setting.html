@@ -13,7 +13,11 @@
 
         <div class="wrapper_box_basic_info">
             <div class="obj_box_full">
-                <div class="wrapper_sub_title obj_font_size_18_weight_900">설정
+                <div class="wrapper_sub_title obj_font_size_18_weight_900">
+                    설정
+                    <span class="obj_font_size_12_weight_500 obj_font_color_pters_red" style="float:right" onclick="">
+                        저장
+                    </span>
                 </div>
             </div>
         </div>
@@ -27,8 +31,8 @@
                     <div class="cell_icon" style="float:right;">
                         <select class="push_enable_selector obj_font_size_14_weight_500 obj_font_color_light_grey"
                                 title="push_enable_select">
-                            <option data-push-enable="0">끄기</option>
-                            <option data-push-enable="1">켜기</option>
+                            <option data-push-enable="0" {% if setting_push_from_trainer_lesson_alarm == 0 %}selected{% endif %}>끄기</option>
+                            <option data-push-enable="1" {% if setting_push_from_trainer_lesson_alarm == 1 %}selected{% endif %}>켜기</option>
                         </select>
                     </div>
                 </div>
@@ -47,14 +51,14 @@
                         <div class="cell_icon">
                             <select class="schedule_push_selector obj_font_size_14_weight_500 obj_font_color_light_grey"
                                     title="schedule_push_select">
-                                <option data-schedule-push-time="-1">설정 안함</option>
-                                <option data-schedule-push-time="0">시작</option>
-                                <option data-schedule-push-time="5">5분전</option>
-                                <option data-schedule-push-time="10">10분전</option>
-                                <option data-schedule-push-time="15">15분전</option>
-                                <option data-schedule-push-time="30">30분전</option>
-                                <option data-schedule-push-time="60">1시간 전</option>
-                                <option data-schedule-push-time="120">2시간 전</option>
+                                <option data-schedule-push-time="-1" {% if setting_schedule_alarm_minute == '-1' %}selected{% endif %}>설정 안함</option>
+                                <option data-schedule-push-time="0" {% if setting_schedule_alarm_minute == '0' %}selected{% endif %}>시작</option>
+                                <option data-schedule-push-time="5" {% if setting_schedule_alarm_minute == '5' %}selected{% endif %}>5분전</option>
+                                <option data-schedule-push-time="10" {% if setting_schedule_alarm_minute == '10' %}selected{% endif %}>10분전</option>
+                                <option data-schedule-push-time="15" {% if setting_schedule_alarm_minute == '15' %}selected{% endif %}>15분전</option>
+                                <option data-schedule-push-time="30" {% if setting_schedule_alarm_minute == '30' %}selected{% endif %}>30분전</option>
+                                <option data-schedule-push-time="60" {% if setting_schedule_alarm_minute == '60' %}selected{% endif %}>1시간 전</option>
+                                <option data-schedule-push-time="120" {% if setting_schedule_alarm_minute == '120' %}selected{% endif %}>2시간 전</option>
                             </select>
                         </div>
                     </div>
