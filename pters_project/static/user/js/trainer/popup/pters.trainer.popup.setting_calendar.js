@@ -183,7 +183,7 @@ class Setting_calendar{
     }
 
     dom_row_select_time_input_method(){
-        let id = "calendar_basic_select_time";
+        let id = "calendar_select_time_input_method";
         let title = "시간 입력 방식";
         let icon = DELETE;
         let icon_r_visible = SHOW;
