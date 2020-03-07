@@ -4786,6 +4786,7 @@ def update_setting_push_to_me_logic(request):
 
         schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, start_dt__gte=alarm_time,
                                                   lecture_schedule_id__isnull=True,
+                                                  permission_state_cd=PERMISSION_STATE_CD_APPROVE,
                                                   en_dis_type='1',
                                                   use=USE)
         for schedule_info in schedule_data:

@@ -361,7 +361,6 @@ class TraineeSettingView(LoginRequiredMixin, AccessTestMixin, View):
         error = None
         class_id = request.session.get('class_id', '')
         func_get_trainee_setting_list(context, class_id, request.user.id)
-
         return render(request, self.template_name, context)
 
 
@@ -2190,12 +2189,11 @@ def check_alarm_program_notice_qa_comment(context, class_id, user_id):
 
 # 회원 알림 setting 업데이트 api
 def update_trainee_setting_push_logic(request):
-    setting_from_trainer_lesson_alarm = request.POST.get('setting_from_trainer_lesson_alarm', '1')
+    setting_push_from_trainer_lesson_alarm = request.POST.get('setting_push_from_trainer_lesson_alarm', '1')
     setting_schedule_alarm_minute = request.POST.get('setting_schedule_alarm_minute', '-1')
     class_id = request.session.get('class_id', '')
-
     setting_type_cd_data = ['LT_PUSH_FROM_TRAINER_LESSON_ALARM', 'LT_PUSH_SCHEDULE_ALARM_MINUTE']
-    setting_info_data = [setting_from_trainer_lesson_alarm, setting_schedule_alarm_minute]
+    setting_info_data = [setting_push_from_trainer_lesson_alarm, setting_schedule_alarm_minute]
 
     error = update_alarm_setting_data(class_id, request.user.id, setting_type_cd_data, setting_info_data)
 
@@ -2212,7 +2210,9 @@ def update_trainee_setting_push_logic(request):
 
         schedule_data = ScheduleTb.objects.select_related(
             'member_ticket_tb').filter(class_tb_id=class_id, start_dt__gte=alarm_time,
-                                       member_ticket_tb__member_id=request.user.id, use=USE)
+                                       member_ticket_tb__member_id=request.user.id,
+                                       permission_state_cd=PERMISSION_STATE_CD_APPROVE,
+                                       use=USE)
         for schedule_info in schedule_data:
             alarm_dt = schedule_info.start_dt - datetime.timedelta(minutes=int(setting_schedule_alarm_minute))
 
@@ -2233,10 +2233,10 @@ def update_trainee_setting_push_logic(request):
                 schedule_alarm_info.save()
 
     if error is None:
-        request.session['setting_from_trainer_lesson_alarm'] = int(setting_from_trainer_lesson_alarm)
+        request.session['setting_push_from_trainer_lesson_alarm'] = int(setting_push_from_trainer_lesson_alarm)
         request.session['setting_schedule_alarm_minute'] = setting_schedule_alarm_minute
     else:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
 
-    return render(request, 'ajax/trainee_error_ajax.html')
+    return render(request, 'ajax/trainee_error_info.html')

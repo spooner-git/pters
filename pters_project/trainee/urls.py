@@ -85,6 +85,8 @@ urlpatterns = [
 
     # 설정 페이지
     url(r'^trainee_setting/$', views.TraineeSettingView.as_view(), name='trainee_setting'),
+    url(r'^update_trainee_setting_push', views.update_trainee_setting_push_logic, name='update_trainee_setting_push'),
+
 
     # 회원 탈퇴 페이지
     # url(r'^delete_trainee_account/$', views.DeleteTraineeAccountView.as_view(), name='delete_trainee_account'),

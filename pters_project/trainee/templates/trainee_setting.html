@@ -15,7 +15,7 @@
             <div class="obj_box_full">
                 <div class="wrapper_sub_title obj_font_size_18_weight_900">
                     설정
-                    <span class="obj_font_size_12_weight_500 obj_font_color_pters_red" style="float:right" onclick="">
+                    <span class="obj_font_size_12_weight_500 obj_font_color_pters_red" style="float:right" onclick="func_send_trainee_setting();">
                         저장
                     </span>
                 </div>
@@ -31,8 +31,8 @@
                     <div class="cell_icon" style="float:right;">
                         <select class="push_enable_selector obj_font_size_14_weight_500 obj_font_color_light_grey"
                                 title="push_enable_select">
-                            <option data-push-enable="0" {% if setting_push_from_trainer_lesson_alarm == 0 %}selected{% endif %}>끄기</option>
-                            <option data-push-enable="1" {% if setting_push_from_trainer_lesson_alarm == 1 %}selected{% endif %}>켜기</option>
+                            <option value="0" {% if setting_push_from_trainer_lesson_alarm == 0 %}selected{% endif %}>끄기</option>
+                            <option value="1" {% if setting_push_from_trainer_lesson_alarm == 1 %}selected{% endif %}>켜기</option>
                         </select>
                     </div>
                 </div>
@@ -51,14 +51,14 @@
                         <div class="cell_icon">
                             <select class="schedule_push_selector obj_font_size_14_weight_500 obj_font_color_light_grey"
                                     title="schedule_push_select">
-                                <option data-schedule-push-time="-1" {% if setting_schedule_alarm_minute == '-1' %}selected{% endif %}>설정 안함</option>
-                                <option data-schedule-push-time="0" {% if setting_schedule_alarm_minute == '0' %}selected{% endif %}>시작</option>
-                                <option data-schedule-push-time="5" {% if setting_schedule_alarm_minute == '5' %}selected{% endif %}>5분전</option>
-                                <option data-schedule-push-time="10" {% if setting_schedule_alarm_minute == '10' %}selected{% endif %}>10분전</option>
-                                <option data-schedule-push-time="15" {% if setting_schedule_alarm_minute == '15' %}selected{% endif %}>15분전</option>
-                                <option data-schedule-push-time="30" {% if setting_schedule_alarm_minute == '30' %}selected{% endif %}>30분전</option>
-                                <option data-schedule-push-time="60" {% if setting_schedule_alarm_minute == '60' %}selected{% endif %}>1시간 전</option>
-                                <option data-schedule-push-time="120" {% if setting_schedule_alarm_minute == '120' %}selected{% endif %}>2시간 전</option>
+                                <option value="-1" {% if setting_schedule_alarm_minute == '-1' %}selected{% endif %}>설정 안함</option>
+                                <option value="0" {% if setting_schedule_alarm_minute == '0' %}selected{% endif %}>시작</option>
+                                <option value="5" {% if setting_schedule_alarm_minute == '5' %}selected{% endif %}>5분전</option>
+                                <option value="10" {% if setting_schedule_alarm_minute == '10' %}selected{% endif %}>10분전</option>
+                                <option value="15" {% if setting_schedule_alarm_minute == '15' %}selected{% endif %}>15분전</option>
+                                <option value="30" {% if setting_schedule_alarm_minute == '30' %}selected{% endif %}>30분전</option>
+                                <option value="60" {% if setting_schedule_alarm_minute == '60' %}selected{% endif %}>1시간 전</option>
+                                <option value="120" {% if setting_schedule_alarm_minute == '120' %}selected{% endif %}>2시간 전</option>
                             </select>
                         </div>
                     </div>
@@ -66,9 +66,11 @@
             </article>
         </section>
     </div>
-
-
-
+    <form id="form_trainee_setting"  action="{% url 'trainee:update_trainee_setting_push' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="setting_push_from_trainer_lesson_alarm" id="id_setting_push_from_trainer_lesson_alarm" value="{{ setting_push_from_trainer_lesson_alarm }}">
+        <input type="hidden" name="setting_schedule_alarm_minute" id="id_setting_schedule_alarm_minute" value="{{ setting_schedule_alarm_minute }}">
+    </form>
 {% endblock %}
 
 {% block local_js_footer %}
@@ -84,6 +86,53 @@
             {% endif %}
         {% endfor %}
         });
+
+        $('.push_enable_selector').change(function(){
+            $('#id_setting_push_from_trainer_lesson_alarm').val($(this).val());
+        });
+        $('.schedule_push_selector').change(function(){
+            $('#id_setting_schedule_alarm_minute').val($(this).val());
+        });
+
+        function func_send_trainee_setting(){
+            $.ajax({
+                url : "/trainee/update_trainee_setting_push/",
+                type:'POST',
+                data: $('#form_trainee_setting').serialize(),
+                dataType : 'json',
+
+                beforeSend:function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                },
+
+                //보내기후 팝업창 닫기
+                complete:function(){
+
+                },
+
+                //통신성공시 처리
+                success:function(data){
+                    if(data.messageArray != undefined){
+                        if(data.messageArray.length > 0){
+                            show_error_message({title:data.messageArray[0]});
+                            return false;
+                        }
+                    }
+                    // alert('문의 발송 완료');
+                    show_error_message({title:"설정 완료"});
+                    layer_popup.close_layer_popup();
+                },
+
+                //통신 실패시 처리
+                error:function(){
+                    show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
+                    // location.reload();
+                }
+            });
+        }
+
     </script>
 
 {% endblock %}
