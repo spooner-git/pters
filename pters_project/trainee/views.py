@@ -352,6 +352,18 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
         return render(request, self.template_name, context)
 
 
+class TraineeSettingView(LoginRequiredMixin, AccessTestMixin, View):
+    template_name = 'trainee_setting.html'
+
+    def get(self, request):
+        # context = super(MyPageView, self).get_context_data(**kwargs)
+        context = {}
+        error = None
+        class_id = request.session.get('class_id', '')
+
+        return render(request, self.template_name, context)
+
+
 class ProgramSelectView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'trainee_program.html'
 

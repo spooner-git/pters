@@ -1,0 +1,83 @@
+{% extends "trainee_base.html" %}
+{% load static_url %}
+
+{% block local_css %}
+    <link rel="stylesheet" href={% static_url "common/css/croppie.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.component.common.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/trainee/page/pters.trainee.page.setting.css" %}>
+{% endblock %}
+
+{% block content %}
+
+    <div class="trainee_setting">
+
+        <div class="wrapper_box_basic_info">
+            <div class="obj_box_full">
+                <div class="wrapper_sub_title obj_font_size_18_weight_900">설정
+                </div>
+            </div>
+        </div>
+
+        <section id="section_setting_alarm_personal_content" class="popup_content">
+            <article class="obj_box_full">
+                <div style="display:table;width:100%;">
+                    <div style="display:table-cell;width:auto;vertical-align:middle">
+                        <span id="text_button_ntd" style="cursor:pointer;padding:3px 0;font-size:15px;font-weight:500;letter-spacing:-0.8px">(나에게) 현재 프로그램 PUSH 알림</span>
+                    </div>
+                    <div style="display:table-cell;width:50px;vertical-align:middle">
+                        <div id="toggle_button_push_to_me" style="" class="toggle_button toggle_button_active">
+                            <div class="toggle_button_ball toggle_button_ball_active">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <span style="font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal">
+                    일정 변경 사항을 PUSH로 알려줍니다.
+                </span>
+            </article>
+            <article class="obj_box_full">
+                <li class="create_row" id="c_r_setting_schedule_alarm_minute" style="">
+                    <div style="display:flex;">
+                        <div class="cell_title" style="display:none">
+                        </div>
+                        <div class="cell_content">
+                            <div class="cell_text">일정 시작전 PUSH 알림</div>
+                        </div>
+                        <div class="cell_icon">
+                            <span class="cell_text">설정 안함</span>
+                            <svg style="vertical-align:middle" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <g id="아이콘/들어가기/999696" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <polygon id="Path-2" fill="var(--img-sub1)" points="15.0710678 11.6568542 9.41421356 17.3137085 8 15.8994949 12.2426407 11.6568542 8 7.41421356 9.41421356 6">
+                                    </polygon>
+                                </g>
+                            </svg>
+                        </div>
+                    </div>
+                </li>
+                <span style="font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal">
+                    OFF 일정을 제외한 수업 일정을 PUSH로 알려줍니다.
+                </span>
+            </article>
+        </section>
+    </div>
+
+
+
+{% endblock %}
+
+{% block local_js_footer %}
+    <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.component.common.js" %}></script>
+    <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.base.js" %}></script>
+    <script type="text/javascript">
+    	//Nav바에 현재 페이지에 밑줄 표기
+
+        window.addEventListener('load', function () {
+        {% for message in messages %}
+            {% if message.tags == "error" %}
+                alert('{{ message }}');
+            {% endif %}
+        {% endfor %}
+        });
+    </script>
+
+{% endblock %}
