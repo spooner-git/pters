@@ -267,6 +267,7 @@ class SendAllSchedulePushAlarmDataView(View):
         alarm_schedule_data = ScheduleAlarmTb.objects.select_related(
             'class_tb__member', 'schedule_tb__lecture_tb',
             'schedule_tb__member_ticket_tb__member').filter(alarm_dt=alarm_dt,
+                                                            schedule_tb__permission_state_cd=PERMISSION_STATE_CD_APPROVE,
                                                             use=USE).annotate(class_type_name=RawSQL(query_common_cd,
                                                                                                      []))
 
@@ -358,6 +359,11 @@ class SendAllSchedulePushAlarmDataView(View):
                     'message': schedule_test[schedule_test_info]['message']
                 }
                 schedule_list.append(schedule_info)
+
+        # 우선 현재 시간 지난 대기 일정 조회후 다 지우고 메시지 날리기
+
+        # 프로그램에 설정된 대기 취소 시간 목록 불러오기
+        # 프로그램마다 1일전 예약 대기 일정 부터 조회후 조건에 맞으면 지우고 메시지 날리기
 
         check_async = False
         if DEBUG is False:
