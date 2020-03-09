@@ -366,12 +366,12 @@ class SendAllSchedulePushAlarmDataView(View):
                 if not_finish_wait_schedule_info.lecture_tb is not None\
                         and not_finish_wait_schedule_info.lecture_tb != '':
                     cancel_message += '[' + not_finish_wait_schedule_info.lecture_tb.name + '] '
+                #
+                # if not_finish_wait_schedule_info.member_ticket_tb is not None\
+                #         and not_finish_wait_schedule_info.member_ticket_tb != '':
+                #     cancel_message += not_finish_wait_schedule_info.member_ticket_tb.member.name + ' 회원님 '
 
-                if not_finish_wait_schedule_info.member_ticket_tb is not None\
-                        and not_finish_wait_schedule_info.member_ticket_tb != '':
-                    cancel_message += not_finish_wait_schedule_info.member_ticket_tb.member.name + ' 회원님 '
-
-                cancel_message += '일정'
+                # cancel_message += '일정'
 
                 try:
                     push_alarm_list['cancel_'+str(not_finish_wait_schedule_info.class_tb_id)]
