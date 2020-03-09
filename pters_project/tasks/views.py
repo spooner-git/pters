@@ -337,7 +337,8 @@ class SendAllSchedulePushAlarmDataView(View):
                                     " WHERE CLASS_TB_ID=`SCHEDULE_TB`.`CLASS_TB_ID`" \
                                     " and SETTING_TYPE_CD='LT_RES_WAIT_SCHEDULE_AUTO_CANCEL_TIME'"
 
-        not_finish_wait_schedule_data = ScheduleTb.objects.filter(
+        not_finish_wait_schedule_data = ScheduleTb.objects.select_related('class_tb', 'lecture_tb',
+                                                                          'member_ticket_tb__member').filter(
             permission_state_cd=PERMISSION_STATE_CD_WAIT, en_dis_type=ON_SCHEDULE_TYPE,
             start_dt__lte=not_finish_wait_schedule_time,
             use=USE).annotate(wait_cancel_setting=RawSQL('IFNULL(('+query_wait_cancel_setting+' ), 0)', []),
@@ -348,19 +349,18 @@ class SendAllSchedulePushAlarmDataView(View):
             check_time = now + datetime.timedelta(minutes=int(not_finish_wait_schedule_info.wait_cancel_setting))
             if not_finish_wait_schedule_info.start_dt <= check_time:
                 for token_info in token_data:
-                    if str(not_finish_wait_schedule_info.member_id) == str(token_info['member_id']):
+                    if str(not_finish_wait_schedule_info.member_ticket_tb.member_id) == str(token_info['member_id']):
                         not_finish_registration_ids.append(token_info['token'])
 
                 class_type_name = not_finish_wait_schedule_info.class_type_name
-                if schedule_info.class_tb.subject_detail_nm != '':
-                    class_type_name = schedule_info.class_tb.subject_detail_nm
+                if not_finish_wait_schedule_info.class_tb.subject_detail_nm != '':
+                    class_type_name = not_finish_wait_schedule_info.class_tb.subject_detail_nm
                 cancel_title = class_type_name + ' - 대기 예약 취소 알림'
 
-                log_info_schedule_start_date = str(schedule_info.start_dt).split(' ')[1].split(':')
-                log_info_schedule_end_date = str(schedule_info.end_dt).split(' ')[1].split(':')
+                log_info_schedule_start_date = str(not_finish_wait_schedule_info.start_dt).split(' ')[1].split(':')
+                log_info_schedule_end_date = str(not_finish_wait_schedule_info.end_dt).split(' ')[1].split(':')
                 log_info_schedule_start_date = log_info_schedule_start_date[0] + ':' + log_info_schedule_start_date[1]
                 log_info_schedule_end_date = log_info_schedule_end_date[0] + ':' + log_info_schedule_end_date[1]
-
                 cancel_message = log_info_schedule_start_date + '~' + log_info_schedule_end_date + ' '
 
                 if not_finish_wait_schedule_info.lecture_tb is not None\
@@ -374,10 +374,10 @@ class SendAllSchedulePushAlarmDataView(View):
                 cancel_message += '일정'
 
                 try:
-                    push_alarm_list[not_finish_wait_schedule_info.class_tb_id]
+                    push_alarm_list['cancel_'+str(not_finish_wait_schedule_info.class_tb_id)]
 
                 except KeyError:
-                    push_alarm_list[not_finish_wait_schedule_info.class_tb_id] = {
+                    push_alarm_list['cancel_'+str(not_finish_wait_schedule_info.class_tb_id)] = {
                         'registration_ids': [],
                         'title': cancel_title,
                         'message': cancel_message
@@ -386,6 +386,7 @@ class SendAllSchedulePushAlarmDataView(View):
                 push_alarm_list['cancel_'+str(not_finish_wait_schedule_info.class_tb_id)]['registration_ids']\
                     += not_finish_registration_ids
                 not_finish_wait_schedule_info.delete()
+
         for push_alarm_info in push_alarm_list:
             if len(push_alarm_list[push_alarm_info]['registration_ids']) > 0:
                 schedule_info = {
