@@ -251,10 +251,10 @@ class Plan_view{
                             ${CImg.attend_check([this.data.lecture_font_color], this.data.schedule_type == 0 ? {"display":"none"} : null, `plan_view_popup.upper_right_menu(1)`)}
                             ${CImg.delete([this.data.lecture_font_color], null, `plan_view_popup.upper_right_menu(0)`)}
                         </span>`;
-        let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;background-color:${this.data.lecture_color}">${this.dom_assembly_toolbox()}</section>
+        let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;background-color:${this.data.lecture_color}"></section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
-        
-        let html = PopupBase.base(top_left, top_center, top_right, content, "");
+        let top_content = this.dom_assembly_toolbox();
+        let html = PopupBase.base(top_left, top_center, top_right, content, "", top_content);
 
         document.querySelector(this.target.install).innerHTML = html;
         document.querySelector('.popup_plan_view .wrapper_top').style.backgroundColor = this.data.lecture_color;
@@ -268,7 +268,7 @@ class Plan_view{
     }
     
     render_content(){
-        document.getElementById(this.target.toolbox).innerHTML = this.dom_assembly_toolbox();
+        // document.getElementById(this.target.toolbox).innerHTML = this.dom_assembly_toolbox();
         document.querySelector(`${this.target.install} .wrapper_top`).innerHTML = PopupBase.wrapper_top(this.dom_wrapper_top().left, this.dom_wrapper_top().center, this.dom_wrapper_top().right);
         document.getElementById(this.target.content).innerHTML = this.dom_assembly_content();
     }
@@ -478,7 +478,7 @@ class Plan_view{
         let text_button = CComponent.text_button(id, title, style, onclick);
 
         let html = `
-                    <div class="info_popup_title_wrap" style="height:24px;background-color:${this.data.lecture_color}">
+                    <div class="info_popup_title_wrap" style="height:24px;background-color:${this.data.lecture_color};padding:4px 16px 20px 60px;text-align:left;">
                         <div class="info_popup_title" style="display:inline-block;width:100%;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;line-height:24px;font-size:20px;font-weight:bold;letter-spacing:-1px;color:${this.data.lecture_font_color}">
                             ${text_button}
                         </div>

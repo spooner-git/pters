@@ -21,7 +21,7 @@ function pters_month_calendar(calendar_name, calendar_options){
     }
     let design_options = calendar_options.design_options;
 
-    const nav_height = parseInt($('body').css('padding-top'), 10);
+    const nav_height = 50;
     const calendar_height = $(window).height() - nav_height - 5;
     const calendar_toolbox_height = 61;
     const calendar_month_day_name_text_height = 40;
@@ -42,7 +42,7 @@ function pters_month_calendar(calendar_name, calendar_options){
     function func_month_calendar_basic_size(calendar_height){
         //달력을 감싸는 wrapper의 높이를 창크기에 맞춘다. (스크롤링 영역을 달력 안쪽으로만 잡기 위해서)
         // $('.content_page').css("overflow-y", "hidden");
-        $('.pters_calendar').css({"height":calendar_height});
+        // $('.pters_calendar').css({"height":calendar_height});
     }
 
     function func_draw_month_calendar_size(calendar_height, calendar_toolbox_height, calendar_month_day_name_text_height){
@@ -186,8 +186,9 @@ function pters_month_calendar(calendar_name, calendar_options){
                                             </div>`;
 
 
-        let time_line_height = calendar_height  - calendar_toolbox_height - calendar_month_day_name_text_height - calendar_month_week_row_total_height - calendar_timeline_toolbox_height;
+        let time_line_height = calendar_height - calendar_toolbox_height - calendar_month_day_name_text_height - calendar_month_week_row_total_height - calendar_timeline_toolbox_height;
         time_line_height = time_line_height + "px";
+        console.log(time_line_height)
         //상단의 연월 표기, 일월화수목 표기, 달력숫자를 합쳐서 화면에 그린다.
         $targetHTML.html(`${month_calendar_upper_tool}
                          <div class="obj_box_full ${calendar_name}_wrapper_month_cal">

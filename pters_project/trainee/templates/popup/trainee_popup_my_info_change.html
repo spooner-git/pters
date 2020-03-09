@@ -4,11 +4,14 @@
     <!-- pters.trainee.popup.plan_view.css -->
     <link rel="stylesheet" href={% static_url "user/css/trainee/popup/pters.trainee.popup.myinfo_change.css" %}>
 {% endblock %}
+{% block popup_base_wrapper_top_left %}
+<div class="wrapper_popup_title">
+    <div class="wrapper_popup_title_text obj_font_size_18_weight_900">내 정보 </div>
+</div>
+{% endblock %}
 {% block popup_base_contents %}
     <div class="popup_my_info_change">
-        <div class="wrapper_popup_title">
-            <div class="wrapper_popup_title_text obj_font_size_18_weight_900">내 정보 </div>
-        </div>
+        
 
         <div class="obj_box_full">
             <form id="form_my_info">

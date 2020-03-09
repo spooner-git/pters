@@ -108,10 +108,9 @@
        /* background-color: #f7f5f6;*/
     }
     body{
-        padding-top: 50px;
+        /* padding-top: 50px; */
         margin: 0;
         overflow: hidden;
-        /*height: 100%;*/
     }
 
 /*Ajax 로드 이미지*/
