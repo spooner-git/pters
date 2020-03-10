@@ -292,6 +292,8 @@ const POPUP_ADDRESS_PTERS_PASS_PAY_INFO = 'popup_pters_pass_pay_info';
 const POPUP_ADDRESS_PTERS_PASS_SHOP = 'popup_pters_pass_shop';
 const POPUP_ADDRESS_PTERS_PASS_SHOP_AGREEMENT = 'popup_pters_pass_shop_agreement';
 const POPUP_ADDRESS_PTERS_PASS_PAY_CANCEL = 'popup_pters_pass_pay_cancel';
+
+const POPUP_ADDRESS_MY_COUPON_BOX = 'popup_my_coupon_box';
 // User Input 팝업
 
 // PassInspector

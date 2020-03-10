@@ -75,6 +75,7 @@ class Mypage{
         let my_phone = this.dom_row_my_phone();
         let my_email = this.dom_row_my_email();
         let my_pass = this.dom_row_my_pass();
+        let my_coupon_box = this.dom_row_my_coupon_box();
         let profile_change = this.dom_row_profile_change();
         let password_change = this.dom_row_password_change();
         let leave_pters = this.dom_row_leave_pters();
@@ -82,7 +83,7 @@ class Mypage{
 
 
         let html =  '<section id="basic_info_wrap">'+ my_id + my_name + my_phone + my_email + '</section>' + 
-                    '<section id="pass_info_wrap">'+ my_pass + '</section>' + 
+                    '<section id="pass_info_wrap">'+ my_pass + my_coupon_box + '</section>' + 
                     '<section id="edit_info_wrap">'+ profile_change + password_change + leave_pters + logout + '</section>';
 
 
@@ -173,6 +174,21 @@ class Mypage{
         let style = null;
         let onclick = ()=>{
             sideGoPopup('pters_pass_main');
+        };
+
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
+        return html;
+    }
+
+    dom_row_my_coupon_box(){
+        let id = "my_coupon";
+        let title = "쿠폰함";
+        let icon = DELETE;
+        let icon_r_visible = SHOW;
+        let icon_r_text = ``;
+        let style = null;
+        let onclick = ()=>{
+            sideGoPopup('my_coupon_box');
         };
 
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
