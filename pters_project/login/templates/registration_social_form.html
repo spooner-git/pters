@@ -37,6 +37,21 @@
                 </div>
                 <div style="height: 1px;background:#f5f2f3; margin-top: 20px; margin-bottom: 20px;"></div>
 
+                <!-- 추천인 아이디 입력 영역 -->
+                <div id="recommend_user_input_wrap">
+                    <div style="margin-top:8px;">
+                        <div id="wrapper_recommend_id_confirm" style="width: 225px; border: solid 1px #d6d2d2; display:inline-block">
+                            <input class="pters_login_input" type="text" name="recommend_username" id="id_recommend_username" placeholder="추천인 아이디" minlength="4" maxlength="40" title="아이디"
+                            pattern="[a-zA-Z0-9-._@]{4,40}" onkeyup="limit_char_auto_correction(event.target);" data-error-message="아이디 : 필수 입력입니다." data-valid="true">
+                        </div>
+                        <div class="activation_button" id="recommend_id_confirm_button" onclick="check_recommend_id();" style="pointer-events:;">확인</div>
+                        <div class="input_description">
+                            <div class="input_description_text" id="recommend_id_confirm"></div>
+                        </div>
+                    </div>
+                    <div style="width:100%; height: 1px;background:#f5f2f3; margin-top: 20px; margin-bottom: 20px;"></div>
+                </div>
+
                 <!-- 약관 동의 영역 -->
                 <div class="contract">
                     <span class="all_contract">전체 약관에 동의</span>
