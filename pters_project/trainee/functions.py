@@ -150,7 +150,8 @@ def func_get_trainee_off_schedule(context, class_id, start_date, end_date):
         start_dt__lt=end_date, use=USE).exclude(state_cd=STATE_CD_ABSENCE).order_by('start_dt')
 
     for schedule_info in schedule_data:
-        schedule_info.note = schedule_info.note.replace('\n', '<br/>')
+        if schedule_info.note is not None and schedule_info.note !='':
+            schedule_info.note = schedule_info.note.replace('\n', '<br/>')
     context['off_schedule_data'] = schedule_data
 
     return context
