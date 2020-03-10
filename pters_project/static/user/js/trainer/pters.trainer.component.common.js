@@ -1748,6 +1748,14 @@ class CComp{
         return html;
     }
 
+    static img(src, style, attr){
+        let style_code = CComp.data_to_style_code(style);
+        let attr_code = CComp.data_to_attr_code(attr);
+        let html = `<img src=${src} style="${style_code};" ${attr_code}>`;
+        
+        return html;
+    }
+
     static text(title, style, attr){
         let style_code = CComp.data_to_style_code(style);
         let attr_code = CComp.data_to_attr_code(attr);
