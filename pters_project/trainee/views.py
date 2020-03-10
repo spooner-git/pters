@@ -2084,7 +2084,8 @@ class PopupInquiryHistoryView(TemplateView):
             # if qa_info.read == 0 and qa_info.status_type_cd == 'QA_COMPLETE':
             #     qa_info.read = 1
             #     qa_info.save()
-            qa_info.contents = qa_info.contents.replace('\n', '<br/>')
+            if qa_info.contents is not None and qa_info.contents != '':
+                qa_info.contents = qa_info.contents.replace('\n', '<br/>')
         context['qa_data'] = qa_list
 
         return context
