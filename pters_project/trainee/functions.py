@@ -135,7 +135,8 @@ def func_get_trainee_lecture_schedule(context, user_id, class_id, start_date, en
                                  ).annotate(lecture_current_member_num=RawSQL(query, []),
                                             lecture_wait_member_num=RawSQL(query_wait, [])).order_by('start_dt')
         for lecture_schedule_info in lecture_schedule_data:
-            lecture_schedule_info.note = lecture_schedule_info.note.replace('\n', '<br/>')
+            if lecture_schedule_info.note is not None and lecture_schedule_info.note != '':
+                lecture_schedule_info.note = lecture_schedule_info.note.replace('\n', '<br/>')
     context['lecture_schedule_data'] = lecture_schedule_data
 
     return context
@@ -150,7 +151,8 @@ def func_get_trainee_off_schedule(context, class_id, start_date, end_date):
         start_dt__lt=end_date, use=USE).exclude(state_cd=STATE_CD_ABSENCE).order_by('start_dt')
 
     for schedule_info in schedule_data:
-        schedule_info.note = schedule_info.note.replace('\n', '<br/>')
+        if schedule_info.note is not None and schedule_info.note != '':
+            schedule_info.note = schedule_info.note.replace('\n', '<br/>')
     context['off_schedule_data'] = schedule_data
 
     return context
