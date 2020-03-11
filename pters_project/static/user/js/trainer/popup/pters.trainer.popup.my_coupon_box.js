@@ -5,8 +5,10 @@ class My_coupon_box{
         
 
         this.data = {
-            
+            promotion_code:null
         };
+
+        this.tab = "coupon";
 
         this.init();
     }
@@ -18,7 +20,7 @@ class My_coupon_box{
     }
 
     set_initial_data (){
-        my_coupon_box_func.read((data)=>{
+        My_coupon_box_func.read((data)=>{
             
             this.render_content();
         });
@@ -58,9 +60,13 @@ class My_coupon_box{
     }
     
     dom_assembly_content(){
-        let html =  '<article class="obj_input_box_full">' +
-                        this.dom_row_coupon_list() + 
-                    '</article>';
+        let html =  `<article class="obj_input_box_full">
+                        ${
+                            this.tab == "coupon"
+                            ? this.dom_row_coupon_list()
+                            : this.dom_row_promotion_code_input()
+                        }
+                    </article>`;
         return html;
     }
 
@@ -120,22 +126,122 @@ class My_coupon_box{
         return html;
     }
 
+    dom_row_promotion_code_input(){
+        let input = CComp.element("div", this.element_promotion_code_input(), {"flex":"1 1 0"});
+        let button = CComp.element("div", this.element_promotion_code_confirm_button(), {"flex-basis":"80px", "padding-left":"10px"} );
+
+        let html = 
+        CComp.container(
+            "div",
+            input + button,
+            {"display":"flex"}
+        );
+        return html;
+    }
+
+    element_promotion_code_input(){
+        let id = 'promotion_code_input';
+        let title = "";
+        let placeholder = '코드 입력';
+        let icon = DELETE;
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
+        let style = {"border":"var(--border-article-dark)", "border-radius":"4px", "padding":"12px", "margin-bottom":"10px"};
+        let disabled = false;
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{1,20}";
+        let pattern_message = "특수문자는 입력 불가";
+        let required = "required";
+        let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
+            this.data.promotion_code = input_data;
+            
+        }, pattern, pattern_message, required);
+        return html;
+    }
+
+    element_promotion_code_confirm_button(){
+        let html = 
+        CComp.button(
+            "promotion_code_confirm",
+            "확인",
+            {"border":"var(--border-article-dark)", "border-radius":"4px", "padding":"12px 0", "height":"28px", "line-height":"28px"},
+            null,
+            ()=>{
+                if(this.data.promotion_code != null){
+                    My_coupon_box_func.promotion_code_check(this.data.promotion_code, (data)=>{
+                        console.log(data);
+                        show_user_confirm(
+                            {title:`[${data.product_name}] 쿠폰`, comment:`이 쿠폰을 내 쿠폰함에 보관하겠습니까?`},
+                            ()=>{
+                                layer_popup.close_layer_popup();
+                                show_error_message({title:"내 쿠폰에서 확인해주세요"});
+                            }
+                        );
+                    });
+                }else{
+                    show_error_message(
+                        {title:"정확한 프로모션 코드를 입력해주세요."}
+                    );
+                }
+                
+            }
+        );
+        return html;
+    }
+
 
     dom_row_toolbox(){
-        let title = "내 쿠폰";
-        let description = "<p style='font-size:14px;font-weight:500;'>적립된 쿠폰 내역입니다.</p>";
+
+        let title_text = "내 쿠폰";
+        let description1 = "<p style='font-size:14px;font-weight:500;'>적립된 쿠폰 내역입니다.</p>";
+        let title2_text = "프로모션 코드";
+        let description2 = "<p style='font-size:14px;font-weight:500;'>프로모션 코드를 입력해 쿠폰을 수령합니다.</p>";
+        let title = 
+        CComp.element(
+            "span",
+            title_text,
+            {"color":this.tab == "coupon" ? "var(--font-main)" : "var(--font-inactive)"},
+            {id:"tab_select_coupon", class:"sales_type_select_text_button"},
+            {
+                type:"click",
+                exe:()=>{
+                    this.switch("coupon");
+                }
+            }
+        );
+
+        let title2 = 
+        CComp.element(
+            "span",
+            title2_text,
+            {"color":this.tab == "promotion_code" ? "var(--font-main)" : "var(--font-inactive)"},
+            {id:"tab_select_promotion_code", class:"sales_type_select_text_button"},
+            {
+                type:"click",
+                exe:()=>{
+                    this.switch("promotion_code");
+                }
+            }
+        );
+
+
         let html = `
-        <div class="" style="">
-            <div style="display:inline-block;">
-                <span style="display:inline-block;font-size:23px;font-weight:bold">
-                    ${title}
-                    ${description}
-                </span>
-                <span style="display:none;">${title}</span>
-            </div>
-        </div>
-        `;
+                    <div class="lecture_view_upper_box">
+                        <div style="display:inline-block;">
+                            ${title}
+                            <div style="display:inline-block;background-color:var(--bg-light);width:2px;height:16px;margin:0 10px;"></div>
+                            ${title2}
+                            <span style="display:none">${this.tab=="coupon"? "매출 통계" : "회원 통계"}</span>
+                            ${this.tab == "coupon" ? description1 : description2}
+                        </div>
+                    </div>
+                    `;
         return html;
+    }
+
+    switch(tab){
+        this.tab = tab;
+        this.render();
+        func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
     }
 
     send_data(){
@@ -154,7 +260,7 @@ class My_coupon_box{
         let data = {
             
         };
-        my_coupon_box_func.activate(data, ()=>{
+        My_coupon_box_func.activate(data, ()=>{
             this.data_sending_now = false;
             this.set_initial_data();
             show_error_message({title:'쿠폰을 사용하였습니다.'});
@@ -166,7 +272,8 @@ class My_coupon_box{
     }
 }
 
-class my_coupon_box_func{
+
+class My_coupon_box_func{
     static activate(data, callback, error_callback){
         //my_coupon_box_time_selector_type, my_coupon_box_basic_select_time
         $.ajax({
@@ -250,6 +357,44 @@ class my_coupon_box_func{
                 }
                 console.log('server error');
                 show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
+            }
+        });
+    }
+
+    static promotion_code_check(promotion_code, callback){
+        $.ajax({
+            url: "/payment/get_coupon_product_info/",
+            method: "GET",
+            data: {
+                "coupon_cd": promotion_code
+            },
+            dataType: "html",
+    
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+    
+            success:function(data){
+                var jsondata = JSON.parse(data);
+                let msg;
+                check_app_version(jsondata.app_version);
+    
+                if(jsondata.messageArray.length>0){
+                    this.coupon_html = "";
+                    msg = jsondata.messageArray;
+                    show_error_message({title:msg});
+                }else {
+                    callback(jsondata);
+                }
+            },
+    
+            complete:function(){
+            },
+    
+            error:function(){
+                console.log('server error');
             }
         });
     }

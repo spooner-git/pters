@@ -181,11 +181,13 @@ class Mypage{
     }
 
     dom_row_my_coupon_box(){
+        let my_coupon_number = 3;
+
         let id = "my_coupon";
         let title = "쿠폰함";
         let icon = DELETE;
         let icon_r_visible = SHOW;
-        let icon_r_text = ``;
+        let icon_r_text = my_coupon_number > 0 ? `${my_coupon_number} 개` : `0 개`;
         let style = null;
         let onclick = ()=>{
             sideGoPopup('my_coupon_box');
