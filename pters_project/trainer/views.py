@@ -3861,7 +3861,7 @@ class GetProgramListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                 shared_program_flag = MY_PROGRAM
                 share_member_num = 0
                 if str(program_info.class_tb.member.member_id) != str(request.user.id):
-                    program_subject_type_name += ' - ' + program_info.class_tb.member.name
+                    # program_subject_type_name += ' - ' + program_info.class_tb.member.name
                     shared_program_flag = SHARED_PROGRAM
                 else:
                     share_member_num = MemberClassTb.objects.filter(class_tb_id=program_info.class_tb.class_id,
