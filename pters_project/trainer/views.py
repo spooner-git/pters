@@ -557,7 +557,11 @@ class GetLectureRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, 
                 'lecture_tb', 'reg_member').filter(class_tb_id=class_id,
                                                    lecture_tb_id=lecture_id).exclude(end_date__lt=today).order_by('start_date')
 
+            week_order = ['SUN', 'MON', 'TUE', 'WED', 'THS', 'FRI', 'SAT']
+            week_order = {key: i for i, key in enumerate(week_order)}
             for lecture_repeat_schedule_info in lecture_repeat_schedule_data:
+                week_data = lecture_repeat_schedule_info.week_info.split('/')
+                week_data = sorted(week_data, key=lambda week_info: week_order.get(week_info))
 
                 mod_member_id = ''
                 mod_member_name = ''
@@ -570,6 +574,7 @@ class GetLectureRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, 
                                            'end_date': lecture_repeat_schedule_info.end_date,
                                            'start_time': lecture_repeat_schedule_info.start_time,
                                            'end_time': lecture_repeat_schedule_info.end_time,
+                                           'week_info': "/".join(week_data),
                                            'time_duration': lecture_repeat_schedule_info.time_duration,
                                            'state_cd': lecture_repeat_schedule_info.state_cd,
                                         #    'lecture_repeat_schedule_id':
@@ -619,6 +624,8 @@ class GetMemberRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, View):
             ).annotate(auth_cd=RawSQL(query_auth, [])).filter(auth_cd=AUTH_TYPE_VIEW).exclude(end_date__lt=today).order_by('start_date')
 
             # 반복일정 정보 셋팅
+            week_order = ['SUN', 'MON', 'TUE', 'WED', 'THS', 'FRI', 'SAT']
+            week_order = {key: i for i, key in enumerate(week_order)}
             for member_repeat_schedule_info in member_repeat_schedule_data:
                 schedule_type = 1
                 try:
@@ -633,6 +640,9 @@ class GetMemberRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, View):
                     lecture_max_member_num = ''
                     # lecture_max_member_num_view_flag = ''
 
+                week_data = member_repeat_schedule_info.week_info.split('/')
+                week_data = sorted(week_data, key=lambda week_info: week_order.get(week_info))
+
                 mod_member_id = ''
                 mod_member_name = ''
                 if member_repeat_schedule_info.mod_member is not None and member_repeat_schedule_info.mod_member != '':
@@ -640,6 +650,7 @@ class GetMemberRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, View):
                     mod_member_name = member_repeat_schedule_info.mod_member.name
                 member_repeat_schedule = {'repeat_schedule_id': member_repeat_schedule_info.repeat_schedule_id,
                                           'repeat_type_cd': member_repeat_schedule_info.repeat_type_cd,
+                                          'week_info': "/".join(week_data),
                                           'start_date': member_repeat_schedule_info.start_date,
                                           'end_date': member_repeat_schedule_info.end_date,
                                           'start_time': member_repeat_schedule_info.start_time,
