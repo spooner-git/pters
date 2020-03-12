@@ -251,12 +251,12 @@ class Home {
             let id = "home_selected_program";
             let title = 
                 programs[i].shared_program_flag == ON 
-                ? programs[i].program_subject_type_name + ' <span style="font-size:12px;font-weight:500">(' + programs[i].program_program_owner_name+')</span>'
+                ? programs[i].program_subject_type_name + ' <div style="font-size:12px;font-weight:500">(' + programs[i].program_program_owner_name+')</div>'
                 : programs[i].program_subject_type_name;
             let icon = DELETE;
             let icon_r_visible = HIDE;
             let icon_r_text = `${TEXT.word.program[language]} ${TEXT.word.change[language]} ${CImg.arrow_right(["var(--img-sub1)"], {"vertical-align":"middle"})}`;
-            let style = {"font-size":"15px", "font-weight":"bold"};
+            let style = {"font-size":"15px", "font-weight":"bold", "height":"auto"};
             let onclick = ()=>{
                 let inspect = pass_inspector.program_read();
                 if(inspect.barrier == BLOCKED){
