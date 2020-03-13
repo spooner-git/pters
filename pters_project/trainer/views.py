@@ -585,6 +585,7 @@ class GetLectureRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, 
                                            'reg_member_name': lecture_repeat_schedule_info.reg_member.name,
                                            'mod_member_id': mod_member_id,
                                            'mod_member_name': mod_member_name,
+                                           'lecture_ing_color_cd': lecture_repeat_schedule_info.lecture_tb.ing_color_cd,
                                            'mod_dt': str(lecture_repeat_schedule_info.mod_dt),
                                            'reg_dt': str(lecture_repeat_schedule_info.reg_dt)}
                 lecture_repeat_schedule_list.append(lecture_repeat_schedule)
@@ -670,6 +671,7 @@ class GetMemberRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, View):
                                           'lecture_id': lecture_id,
                                           'lecture_name': lecture_name,
                                           'lecture_max_member_num': lecture_max_member_num,
+                                          'lecture_ing_color_cd': member_repeat_schedule_info.lecture_tb.ing_color_cd,
                                           # 'lecture_max_member_num_view_flag': lecture_max_member_num_view_flag,
                                           'schedule_type': schedule_type}
                 member_repeat_schedule_list.append(member_repeat_schedule)
