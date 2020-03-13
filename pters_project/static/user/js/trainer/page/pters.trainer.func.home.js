@@ -251,7 +251,7 @@ class Home {
             let id = "home_selected_program";
             let title = 
                 programs[i].shared_program_flag == ON 
-                ? programs[i].program_subject_type_name + ' <div style="font-size:12px;font-weight:500">(' + programs[i].program_program_owner_name+')</div>'
+                ? programs[i].program_subject_type_name + ' <div style="font-size:12px;font-weight:500">(공유자: ' + programs[i].program_program_owner_name+')</div>'
                 : programs[i].program_subject_type_name;
             let icon = DELETE;
             let icon_r_visible = HIDE;

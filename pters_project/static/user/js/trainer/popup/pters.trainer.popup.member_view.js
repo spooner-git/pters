@@ -816,7 +816,7 @@ class Member_view{
             html_to_join.push(
                 this.dom_row_repeat_item(
                     data.repeat_schedule_id,
-                    "#fe4e65",
+                    data.lecture_ing_color_cd,
                     data.week_info.split('/').map((item)=>{
                         return DAYNAME_MATCH[item];
                     }).join('') + ' ' + data.start_time+' - '+data.end_time,
@@ -856,7 +856,7 @@ class Member_view{
     dom_row_repeat_item(repeat_id, color, repeat_name, repeat_day, repeat_period, repeat_time){
         let html = `<div id="repeat_item_${repeat_id}" style="display:flex;width:100%;height:60px;padding:8px 0px;box-sizing:border-box;cursor:pointer;">
                         <div style="flex-basis:16px;">
-                            <div style="float:left;width:4px;height:32px;background-color:${color}"></div>
+                            <div style="float:left;width:4px;height:100%;background-color:${color}"></div>
                         </div>
                         <div style="flex:1 1 0">
                             <div style="font-size:16px;font-weight:500;letter-spacing:-0.7px;color:var(--font-base);">${repeat_name}</div>
