@@ -38,7 +38,7 @@ from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO
     SORT_LECTURE_NAME, SORT_LECTURE_MEMBER_COUNT, SORT_LECTURE_CAPACITY_COUNT, SORT_LECTURE_CREATE_DATE, \
     CALENDAR_TIME_SELECTOR_BASIC, SORT_END_DATE, SORT_MEMBER_TICKET, SORT_SCHEDULE_DT, STATE_CD_REFUND, \
     SORT_SCHEDULE_MONTHLY, SHARED_PROGRAM, MY_PROGRAM, PROGRAM_SELECT, PROGRAM_LECTURE_CONNECT_DELETE, \
-    PROGRAM_LECTURE_CONNECT_ACCEPT, BOARD_TYPE_CD_NOTICE
+    PROGRAM_LECTURE_CONNECT_ACCEPT, BOARD_TYPE_CD_NOTICE, ON_SCHEDULE
 from board.models import BoardTb, QATb, NoticeTb
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 from schedule.functions import func_refresh_member_ticket_count, func_get_trainer_attend_schedule, \
@@ -577,8 +577,8 @@ class GetLectureRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, 
                                            'week_info': "/".join(week_data),
                                            'time_duration': lecture_repeat_schedule_info.time_duration,
                                            'state_cd': lecture_repeat_schedule_info.state_cd,
-                                        #    'lecture_repeat_schedule_id':
-                                        #        lecture_repeat_schedule_info.lecture_repeat_schedule_id,
+                                           'lecture_repeat_schedule_id':
+                                               lecture_repeat_schedule_info.lecture_schedule_id,
                                            'lecture_id': lecture_repeat_schedule_info.lecture_tb.lecture_id,
                                            'lecture_name': lecture_repeat_schedule_info.lecture_tb.name,
                                            'reg_member_id': lecture_repeat_schedule_info.reg_member_id,
@@ -586,6 +586,9 @@ class GetLectureRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, 
                                            'mod_member_id': mod_member_id,
                                            'mod_member_name': mod_member_name,
                                            'lecture_ing_color_cd': lecture_repeat_schedule_info.lecture_tb.ing_color_cd,
+                                           'lecture_end_color_cd': lecture_repeat_schedule_info.lecture_tb.end_color_cd,
+                                           'lecture_ing_font_color_cd': lecture_repeat_schedule_info.lecture_tb.ing_font_color_cd,
+                                           'lecture_end_font_color_cd': lecture_repeat_schedule_info.lecture_tb.end_font_color_cd,
                                            'mod_dt': str(lecture_repeat_schedule_info.mod_dt),
                                            'reg_dt': str(lecture_repeat_schedule_info.reg_dt)}
                 lecture_repeat_schedule_list.append(lecture_repeat_schedule)
@@ -628,17 +631,26 @@ class GetMemberRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, View):
             week_order = ['SUN', 'MON', 'TUE', 'WED', 'THS', 'FRI', 'SAT']
             week_order = {key: i for i, key in enumerate(week_order)}
             for member_repeat_schedule_info in member_repeat_schedule_data:
-                schedule_type = 1
+                schedule_type = ON_SCHEDULE
                 try:
                     lecture_id = member_repeat_schedule_info.lecture_tb.lecture_id
                     lecture_name = member_repeat_schedule_info.lecture_tb.name
                     lecture_max_member_num = member_repeat_schedule_info.lecture_tb.member_num
+                    lecture_ing_color_cd = member_repeat_schedule_info.lecture_tb.ing_color_cd
+                    lecture_end_color_cd = member_repeat_schedule_info.lecture_tb.end_color_cd
+                    lecture_ing_font_color_cd = member_repeat_schedule_info.lecture_tb.ing_font_color_cd
+                    lecture_end_font_color_cd = member_repeat_schedule_info.lecture_tb.end_font_color_cd
                     # lecture_max_member_num_view_flag = member_repeat_schedule_info.lecture_tb.member_num_view_flag
-                    schedule_type = 2
+                    if member_repeat_schedule_info.lecture_tb.lecture_type_cd != LECTURE_TYPE_ONE_TO_ONE:
+                        schedule_type = GROUP_SCHEDULE
                 except AttributeError:
                     lecture_id = ''
                     lecture_name = ''
                     lecture_max_member_num = ''
+                    lecture_ing_color_cd = ''
+                    lecture_end_color_cd = ''
+                    lecture_ing_font_color_cd = ''
+                    lecture_end_font_color_cd = ''
                     # lecture_max_member_num_view_flag = ''
 
                 week_data = member_repeat_schedule_info.week_info.split('/')
@@ -664,14 +676,17 @@ class GetMemberRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, View):
                                           'mod_member_name': mod_member_name,
                                           'mod_dt': str(member_repeat_schedule_info.mod_dt),
                                           'reg_dt': str(member_repeat_schedule_info.reg_dt),
-                                        #   'lecture_repeat_schedule_id':
-                                        #       member_repeat_schedule_info.lecture_repeat_schedule_id,
+                                          'lecture_repeat_schedule_id':
+                                              member_repeat_schedule_info.lecture_schedule_id,
                                           'member_id': member_repeat_schedule_info.member_ticket_tb.member.member_id,
                                           'member_name': member_repeat_schedule_info.member_ticket_tb.member.name,
                                           'lecture_id': lecture_id,
                                           'lecture_name': lecture_name,
                                           'lecture_max_member_num': lecture_max_member_num,
-                                          'lecture_ing_color_cd': member_repeat_schedule_info.lecture_tb.ing_color_cd,
+                                          'lecture_ing_color_cd': lecture_ing_color_cd,
+                                          'lecture_end_color_cd': lecture_end_color_cd,
+                                          'lecture_ing_font_color_cd': lecture_ing_font_color_cd,
+                                          'lecture_end_font_color_cd': lecture_end_font_color_cd,
                                           # 'lecture_max_member_num_view_flag': lecture_max_member_num_view_flag,
                                           'schedule_type': schedule_type}
                 member_repeat_schedule_list.append(member_repeat_schedule)

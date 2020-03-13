@@ -1759,6 +1759,7 @@ def func_get_lecture_schedule_all(class_id, lecture_id):
             lecture_name = schedule_info.lecture_tb.name
             lecture_max_member_num = schedule_info.lecture_tb.member_num
             lecture_current_member_num = schedule_info.lecture_current_member_num
+            lecture_ing_color_cd = schedule_info.lecture_tb.ing_color_cd
             if schedule_info.lecture_tb.lecture_type_cd != LECTURE_TYPE_ONE_TO_ONE:
                 schedule_type = GROUP_SCHEDULE
         except AttributeError:
