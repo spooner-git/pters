@@ -306,10 +306,9 @@ class Alarm {
         this.render_upper_box();
         Setting_shared_func.read_request((data)=>{
             this.sharing_invite = data;
-            Alarm_func.read((jsondata) => {
-                let demo = {max_page:5, this_page:1};
-                this.max_page = demo.max_page;
-                this.this_page = demo.this_page;
+            Alarm_func.read({"this_page": 1}, (jsondata) => {
+                this.max_page = jsondata.max_page;
+                this.this_page = jsondata.this_page;
 
                 $('#alarm_content_wrap').html("<div id='alarm_content'></div>");
                 this.data = jsondata;
@@ -522,7 +521,7 @@ class Alarm {
         let UNREAD = 0;
         Setting_shared_func.read_request((invited)=>{
             let invited_length = Object.keys(invited).length;
-            Alarm_func.read((data)=>{
+            Alarm_func.read({"this_page": 1}, (data)=>{
                 for(let date in data){
                     let length = data[date].length;
                     for(let i=0; i<length; i++){
@@ -560,7 +559,7 @@ class Alarm {
 
                     this.page_loading_ing = true;
                     this.append_loading_image(ON);
-                    Alarm_func.read((jsondata) => {
+                    Alarm_func.read({"this_page":this.this_page}, (jsondata) => {
                         this.this_page++;
                         this.append_loading_image(OFF);
                         this.append_list(jsondata);
@@ -584,10 +583,12 @@ class Alarm {
 }
 
 class Alarm_func{
-    static read(callback, error_callback){
+    static read(data, callback, error_callback){
         //알림 리스트 서버에서 불러오기
+        
         $.ajax({
             url:"/trainer/alarm/",
+            data:data,
             dataType : 'JSON',
             beforeSend:function (){
                 // ajax_load_image(SHOW);
