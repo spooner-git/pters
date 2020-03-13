@@ -833,7 +833,7 @@ class CComponent{
         let sub_assemble = `<div style="display:flex;">
                             <div style="flex:1 1 0;">${raw_1} ${raw_2}</div>
                             <div style="flex-basis:80px;text-align:right;">
-                                <span style="color:${SCHEDULE_STATUS_COLOR[attend_status]}">${SCHEDULE_STATUS[attend_status]}<br/>${permission_status_name}</span>
+                                <span style="color:${LECTURE_SCHEDULE_STATUS_COLOR[attend_status]}">${LECTURE_SCHEDULE_STATUS[attend_status]}<br/>${permission_status_name}</span>
                             </div>
                         </div>`;
         
