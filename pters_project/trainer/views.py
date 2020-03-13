@@ -547,61 +547,171 @@ class GetLectureRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, 
         class_id = request.session.get('class_id', '')
         lecture_id = self.request.GET.get('lecture_id', '')
         error = None
-        lecture_repeat_schedule_list = []
         today = datetime.date.today()
+        lecture_info = None
+        lecture_repeat_schedule_list = []
+        member_repeat_schedule_list = []
+        lecture_member_repeat_schedule_ordered_dict = collections.OrderedDict()
 
         if lecture_id == '':
-            error = '수업 정보를 불러오지 못했습니다.'
-
+            error = '수업 정보를 불러오지 못했습니다.[1]'
         if error is None:
-            # 그룹 반복 일정 정보 불러오기
-            lecture_repeat_schedule_data = RepeatScheduleTb.objects.select_related(
-                'member_ticket_tb__member', 'lecture_tb',
-                'reg_member').filter(class_tb_id=class_id,
-                                     lecture_tb_id=lecture_id).exclude(end_date__lt=today).order_by('start_date')
+            try:
+                lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
+            except ObjectDoesNotExist:
+                error = '수업 정보를 불러오지 못했습니다.[2]'
+        if error is None:
 
             week_order = ['SUN', 'MON', 'TUE', 'WED', 'THS', 'FRI', 'SAT']
             week_order = {key: i for i, key in enumerate(week_order)}
-            for lecture_repeat_schedule_info in lecture_repeat_schedule_data:
-                week_data = lecture_repeat_schedule_info.week_info.split('/')
-                week_data = sorted(week_data, key=lambda week_info: week_order.get(week_info))
 
-                mod_member_id = ''
-                mod_member_name = ''
-                member_id = ''
-                member_name = ''
-                if lecture_repeat_schedule_info.mod_member is not None and lecture_repeat_schedule_info.mod_member != '':
-                    mod_member_id = lecture_repeat_schedule_info.mod_member_id
-                    mod_member_name = lecture_repeat_schedule_info.mod_member.name
-                if lecture_repeat_schedule_info.member_ticket_tb is not None and lecture_repeat_schedule_info.member_ticket_tb != '':
-                    member_id = lecture_repeat_schedule_info.member_ticket_tb.member_id
-                    member_name = lecture_repeat_schedule_info.member_ticket_tb.member.name
-                lecture_repeat_schedule = {'repeat_schedule_id': lecture_repeat_schedule_info.repeat_schedule_id,
-                                           'repeat_type_cd': lecture_repeat_schedule_info.repeat_type_cd,
-                                           'start_date': lecture_repeat_schedule_info.start_date,
-                                           'end_date': lecture_repeat_schedule_info.end_date,
-                                           'start_time': lecture_repeat_schedule_info.start_time,
-                                           'end_time': lecture_repeat_schedule_info.end_time,
-                                           'week_info': "/".join(week_data),
-                                           'time_duration': lecture_repeat_schedule_info.time_duration,
-                                           'state_cd': lecture_repeat_schedule_info.state_cd,
-                                           'lecture_repeat_schedule_id':
-                                               lecture_repeat_schedule_info.lecture_schedule_id,
-                                           'lecture_id': lecture_repeat_schedule_info.lecture_tb.lecture_id,
-                                           'lecture_name': lecture_repeat_schedule_info.lecture_tb.name,
-                                           'member_id': member_id,
-                                           'member_name': member_name,
-                                           'reg_member_id': lecture_repeat_schedule_info.reg_member_id,
-                                           'reg_member_name': lecture_repeat_schedule_info.reg_member.name,
-                                           'mod_member_id': mod_member_id,
-                                           'mod_member_name': mod_member_name,
-                                           'lecture_ing_color_cd': lecture_repeat_schedule_info.lecture_tb.ing_color_cd,
-                                           'lecture_end_color_cd': lecture_repeat_schedule_info.lecture_tb.end_color_cd,
-                                           'lecture_ing_font_color_cd': lecture_repeat_schedule_info.lecture_tb.ing_font_color_cd,
-                                           'lecture_end_font_color_cd': lecture_repeat_schedule_info.lecture_tb.end_font_color_cd,
-                                           'mod_dt': str(lecture_repeat_schedule_info.mod_dt),
-                                           'reg_dt': str(lecture_repeat_schedule_info.reg_dt)}
-                lecture_repeat_schedule_list.append(lecture_repeat_schedule)
+            if lecture_info.lecture_type_cd == LECTURE_TYPE_ONE_TO_ONE:
+                # 1:1 수업 회원의 반복 일정 정보 불러오기
+                member_repeat_schedule_data = RepeatScheduleTb.objects.select_related(
+                    'member_ticket_tb__member', 'lecture_tb',
+                    'reg_member').filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,
+                                         lecture_tb_id=lecture_id,
+                                         lecture_schedule_id__isnull=True
+                                         ).exclude(end_date__lt=today).order_by('-reg_dt', 'lecture_tb',
+                                                                                'lecture_schedule_id')
+
+                for member_repeat_schedule_info in member_repeat_schedule_data:
+                    member_profile_url = '/static/common/icon/icon_account.png'
+                    if member_repeat_schedule_info.member_ticket_tb.member.profile_url is not None \
+                            and member_repeat_schedule_info.member_ticket_tb.member.profile_url != '':
+                        member_profile_url = member_repeat_schedule_info.member_ticket_tb.member.profile_url
+
+                    week_data = member_repeat_schedule_info.week_info.split('/')
+                    week_data = sorted(week_data, key=lambda week_info: week_order.get(week_info))
+
+                    mod_member_id = ''
+                    mod_member_name = ''
+                    if member_repeat_schedule_info.mod_member is not None and member_repeat_schedule_info.mod_member != '':
+                        mod_member_id = member_repeat_schedule_info.mod_member_id
+                        mod_member_name = member_repeat_schedule_info.mod_member.name
+                    member_repeat_schedule = {
+                        'repeat_schedule_id': member_repeat_schedule_info.repeat_schedule_id,
+                        'repeat_type_cd': member_repeat_schedule_info.repeat_type_cd,
+                        'week_info': "/".join(week_data),
+                        'start_date': member_repeat_schedule_info.start_date,
+                        'end_date': member_repeat_schedule_info.end_date,
+                        'start_time': member_repeat_schedule_info.start_time,
+                        'end_time': member_repeat_schedule_info.end_time,
+                        'time_duration': member_repeat_schedule_info.time_duration,
+                        'state_cd': member_repeat_schedule_info.state_cd,
+                        'reg_member_id': member_repeat_schedule_info.reg_member_id,
+                        'reg_member_name': member_repeat_schedule_info.reg_member.name,
+                        'mod_member_id': mod_member_id,
+                        'mod_member_name': mod_member_name,
+                        'mod_dt': str(member_repeat_schedule_info.mod_dt),
+                        'reg_dt': str(member_repeat_schedule_info.reg_dt),
+                        'lecture_id': member_repeat_schedule_info.lecture_tb.lecture_id,
+                        'lecture_name': member_repeat_schedule_info.lecture_tb.name,
+                        'lecture_max_member_num': member_repeat_schedule_info.lecture_tb.member_num,
+                        'lecture_ing_color_cd': member_repeat_schedule_info.lecture_tb.ing_color_cd,
+                        'lecture_end_color_cd': member_repeat_schedule_info.lecture_tb.end_color_cd,
+                        'lecture_ing_font_color_cd': member_repeat_schedule_info.lecture_tb.ing_font_color_cd,
+                        'lecture_end_font_color_cd': member_repeat_schedule_info.lecture_tb.end_font_color_cd,
+                        'member_id': member_repeat_schedule_info.member_ticket_tb.member.member_id,
+                        'member_name': member_repeat_schedule_info.member_ticket_tb.member.name,
+                        'member_profile_url': member_profile_url
+
+                    }
+                    member_repeat_schedule_list.append(member_repeat_schedule)
+                lecture_repeat_schedule_list = member_repeat_schedule_list
+            else:
+                # 수업 껍데기 반복 일정 정보 불러오기
+                lecture_repeat_schedule_data = RepeatScheduleTb.objects.select_related(
+                    'lecture_tb',
+                    'reg_member').filter(class_tb_id=class_id, lecture_tb_id=lecture_id,
+                                         en_dis_type=ON_SCHEDULE_TYPE,
+                                         lecture_schedule_id__isnull=True
+                                         ).exclude(end_date__lt=today).order_by('-reg_dt', 'lecture_tb',
+                                                                                'lecture_schedule_id', )
+
+                # 수업에 속한 회원의 반복 일정 정보 불러오기
+                lecture_member_repeat_schedule_data = RepeatScheduleTb.objects.select_related(
+                    'lecture_tb', 'member_ticket_tb__member', 'reg_member').filter(
+                    class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, lecture_tb_id=lecture_id,
+                    lecture_schedule_id__isnull=False).exclude(end_date__lt=today).order_by('-reg_dt', 'lecture_tb',
+                                                                                            'lecture_schedule_id')
+
+                for lecture_repeat_schedule_info in lecture_repeat_schedule_data:
+                    week_data = lecture_repeat_schedule_info.week_info.split('/')
+                    week_data = sorted(week_data, key=lambda week_info: week_order.get(week_info))
+
+                    mod_member_id = ''
+                    mod_member_name = ''
+                    if lecture_repeat_schedule_info.mod_member is not None and lecture_repeat_schedule_info.mod_member != '':
+                        mod_member_id = lecture_repeat_schedule_info.mod_member_id
+                        mod_member_name = lecture_repeat_schedule_info.mod_member.name
+                    lecture_member_repeat_schedule_ordered_dict[lecture_repeat_schedule_info.repeat_schedule_id] = {
+                        'repeat_schedule_id': lecture_repeat_schedule_info.repeat_schedule_id,
+                        'repeat_type_cd': lecture_repeat_schedule_info.repeat_type_cd,
+                        'week_info': "/".join(week_data),
+                        'start_date': lecture_repeat_schedule_info.start_date,
+                        'end_date': lecture_repeat_schedule_info.end_date,
+                        'start_time': lecture_repeat_schedule_info.start_time,
+                        'end_time': lecture_repeat_schedule_info.end_time,
+                        'time_duration': lecture_repeat_schedule_info.time_duration,
+                        'state_cd': lecture_repeat_schedule_info.state_cd,
+                        'reg_member_id': lecture_repeat_schedule_info.reg_member_id,
+                        'reg_member_name': lecture_repeat_schedule_info.reg_member.name,
+                        'mod_member_id': mod_member_id,
+                        'mod_member_name': mod_member_name,
+                        'mod_dt': str(lecture_repeat_schedule_info.mod_dt),
+                        'reg_dt': str(lecture_repeat_schedule_info.reg_dt),
+                        'lecture_id': lecture_repeat_schedule_info.lecture_tb.lecture_id,
+                        'lecture_name': lecture_repeat_schedule_info.lecture_tb.name,
+                        'lecture_max_member_num': lecture_repeat_schedule_info.lecture_tb.member_num,
+                        # 'lecture_max_member_num_view_flag': lecture_repeat_schedule_info.lecture_tb.member_num_view_flag,
+                        'lecture_ing_color_cd': lecture_repeat_schedule_info.lecture_tb.ing_color_cd,
+                        'lecture_end_color_cd': lecture_repeat_schedule_info.lecture_tb.end_color_cd,
+                        'lecture_ing_font_color_cd': lecture_repeat_schedule_info.lecture_tb.ing_font_color_cd,
+                        'lecture_end_font_color_cd': lecture_repeat_schedule_info.lecture_tb.end_font_color_cd,
+                        'lecture_member_repeat_schedule_list': []
+                    }
+
+                for lecture_member_repeat_schedule_info in lecture_member_repeat_schedule_data:
+                    member_profile_url = '/static/common/icon/icon_account.png'
+                    if lecture_member_repeat_schedule_info.member_ticket_tb.member.profile_url is not None \
+                            and lecture_member_repeat_schedule_info.member_ticket_tb.member.profile_url != '':
+                        member_profile_url = lecture_member_repeat_schedule_info.member_ticket_tb.member.profile_url
+
+                    week_data = lecture_member_repeat_schedule_info.week_info.split('/')
+                    week_data = sorted(week_data, key=lambda week_info: week_order.get(week_info))
+
+                    mod_member_id = ''
+                    mod_member_name = ''
+                    if lecture_member_repeat_schedule_info.mod_member is not None and lecture_member_repeat_schedule_info.mod_member != '':
+                        mod_member_id = lecture_member_repeat_schedule_info.mod_member_id
+                        mod_member_name = lecture_member_repeat_schedule_info.mod_member.name
+                    lecture_member_repeat_schedule_dict = {
+                        'repeat_schedule_id': lecture_member_repeat_schedule_info.repeat_schedule_id,
+                        'repeat_type_cd': lecture_member_repeat_schedule_info.repeat_type_cd,
+                        'week_info': "/".join(week_data),
+                        'start_date': lecture_member_repeat_schedule_info.start_date,
+                        'end_date': lecture_member_repeat_schedule_info.end_date,
+                        'start_time': lecture_member_repeat_schedule_info.start_time,
+                        'end_time': lecture_member_repeat_schedule_info.end_time,
+                        'time_duration': lecture_member_repeat_schedule_info.time_duration,
+                        'state_cd': lecture_member_repeat_schedule_info.state_cd,
+                        'reg_member_id': lecture_member_repeat_schedule_info.reg_member_id,
+                        'reg_member_name': lecture_member_repeat_schedule_info.reg_member.name,
+                        'mod_member_id': mod_member_id,
+                        'mod_member_name': mod_member_name,
+                        'mod_dt': str(lecture_member_repeat_schedule_info.mod_dt),
+                        'reg_dt': str(lecture_member_repeat_schedule_info.reg_dt),
+                        'member_id': lecture_member_repeat_schedule_info.member_ticket_tb.member.member_id,
+                        'member_name': lecture_member_repeat_schedule_info.member_ticket_tb.member.name,
+                        'member_profile_url': member_profile_url
+                    }
+                    lecture_schedule_id = lecture_member_repeat_schedule_info.lecture_schedule_id
+                    lecture_member_repeat_schedule_ordered_dict[
+                        lecture_schedule_id]['lecture_member_repeat_schedule_list'].append(
+                        lecture_member_repeat_schedule_dict)
+
+                lecture_repeat_schedule_list = lecture_member_repeat_schedule_ordered_dict
         else:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
             messages.error(request, error)
@@ -1552,6 +1662,7 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, View):
         today = datetime.date.today()
         three_days_ago = today - datetime.timedelta(days=3)
         ordered_alarm_dict = collections.OrderedDict()
+        ordered_alarm_data_dict = collections.OrderedDict()
         alarm_data = LogTb.objects.select_related('auth_member').filter(class_tb_id=class_id,
                                                                         reg_dt__gte=three_days_ago,
                                                                         use=USE).order_by('-reg_dt')
@@ -1635,8 +1746,8 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, View):
                                         'read_check': alarm_info.log_read,
                                         'reg_dt': alarm_info.reg_dt,
                                         'reg_member_name': alarm_info.auth_member.name})
-                ordered_alarm_dict[alarm_date] = date_alarm_list
-
+                ordered_alarm_data_dict[alarm_date] = date_alarm_list
+            ordered_alarm_dict['alarm_data'] = ordered_alarm_data_dict
         return JsonResponse(ordered_alarm_dict, json_dumps_params={'ensure_ascii': True})
 
 
