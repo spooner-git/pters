@@ -554,8 +554,9 @@ class GetLectureRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, 
         if error is None:
             # 그룹 반복 일정 정보 불러오기
             lecture_repeat_schedule_data = RepeatScheduleTb.objects.select_related(
-                'lecture_tb', 'reg_member').filter(class_tb_id=class_id,
-                                                   lecture_tb_id=lecture_id).exclude(end_date__lt=today).order_by('start_date')
+                'member_ticket_tb__member', 'lecture_tb',
+                'reg_member').filter(class_tb_id=class_id,
+                                     lecture_tb_id=lecture_id).exclude(end_date__lt=today).order_by('start_date')
 
             week_order = ['SUN', 'MON', 'TUE', 'WED', 'THS', 'FRI', 'SAT']
             week_order = {key: i for i, key in enumerate(week_order)}
@@ -565,9 +566,14 @@ class GetLectureRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, 
 
                 mod_member_id = ''
                 mod_member_name = ''
+                member_id = ''
+                member_name = ''
                 if lecture_repeat_schedule_info.mod_member is not None and lecture_repeat_schedule_info.mod_member != '':
                     mod_member_id = lecture_repeat_schedule_info.mod_member_id
                     mod_member_name = lecture_repeat_schedule_info.mod_member.name
+                if lecture_repeat_schedule_info.member_ticket_tb is not None and lecture_repeat_schedule_info.member_ticket_tb != '':
+                    member_id = lecture_repeat_schedule_info.member_ticket_tb.member_id
+                    member_name = lecture_repeat_schedule_info.member_ticket_tb.member.name
                 lecture_repeat_schedule = {'repeat_schedule_id': lecture_repeat_schedule_info.repeat_schedule_id,
                                            'repeat_type_cd': lecture_repeat_schedule_info.repeat_type_cd,
                                            'start_date': lecture_repeat_schedule_info.start_date,
@@ -581,6 +587,8 @@ class GetLectureRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, 
                                                lecture_repeat_schedule_info.lecture_schedule_id,
                                            'lecture_id': lecture_repeat_schedule_info.lecture_tb.lecture_id,
                                            'lecture_name': lecture_repeat_schedule_info.lecture_tb.name,
+                                           'member_id': member_id,
+                                           'member_name': member_name,
                                            'reg_member_id': lecture_repeat_schedule_info.reg_member_id,
                                            'reg_member_name': lecture_repeat_schedule_info.reg_member.name,
                                            'mod_member_id': mod_member_id,
