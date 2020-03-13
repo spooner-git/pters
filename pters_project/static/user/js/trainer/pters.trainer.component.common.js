@@ -1752,8 +1752,8 @@ class CComp{
         if(callback != undefined && attr != undefined){
             if(attr.id != undefined){
                 $(`#${attr.id}`).off("scroll").on("scroll", function(e){
+                    console.log("scroll!!")
                     if(callback != undefined){
-                        
                         let container_height = Number($(this).height());
                         let scroll_position = Number($(this).scrollTop());
                         let scroll_height = Number($(this).prop("scrollHeight"));
@@ -1766,6 +1766,19 @@ class CComp{
         }
 
         return html;
+    }
+
+    static scroll_container_event_install(id, callback){
+        $(`#${id}`).off("scroll").on("scroll", function(e){
+            if(callback != undefined){
+                let container_height = Number($(this).height());
+                let scroll_position = Number($(this).scrollTop());
+                let scroll_height = Number($(this).prop("scrollHeight"));
+                if( container_height+scroll_position >= scroll_height-50){
+                    callback(e);
+                }
+            }
+        });
     }
 
     static element(type, title, style, attr, event){
