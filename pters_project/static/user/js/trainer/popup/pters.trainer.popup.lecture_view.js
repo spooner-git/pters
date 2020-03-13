@@ -216,13 +216,14 @@ class Lecture_view{
         }
         let color_select_assembly =  '<div class="obj_input_box_full">' + CComponent.dom_tag('색상 태그') + color +  '</div>';
         let ticket_list_assembly = '<div class="obj_input_box_full" style="padding-top:16px;">' + CComponent.dom_tag(`이 수업을 포함하는 수강권 (${this.data.active_ticket_length} 개)`,
-                                    {"font-size":"13px", "font-weight":"bold", "letter-spacing":"-0.6px", "padding":"0","padding-bottom":"8px", "color":"var(--font-sub-normal)", "height":"20px"})
+                                    {"letter-spacing":"-0.6px", "padding":"0", "padding-left":"40px", "height":"20px"})
                                     + ticket_list + '</div>';
-        let member_list_assembly = '<div class="obj_input_box_full" style="padding-top:20px; border:0;">' + CComponent.dom_tag(`진행중 회원 (${this.data.member_number} 명)`,
-        {"font-size":"13px", "font-weight":"bold", "letter-spacing":"-0.6px", "padding":"0","padding-bottom":"8px", "color":"var(--font-sub-normal)", "height":"20px"})
+        let member_list_assembly = '<div class="obj_input_box_full" style="padding-top:20px;">' 
+                                    // + CComponent.dom_tag(`진행중 회원 (${this.data.member_number} 명)`,
+                                    // {"font-size":"13px", "font-weight":"bold", "letter-spacing":"-0.6px", "padding":"0", "padding-bottom":"8px", "color":"var(--font-sub-normal)", "height":"20px"})
         + member_list + '</div>';
 
-        let repeat_info_assembly = '<div class="obj_input_box_full">' + CComponent.dom_tag('반복 일정 목록', {"padding-left":"0"}) + repeat + '</div>';
+        let repeat_info_assembly = '<div class="obj_input_box_full" style="padding-right:18px">' + repeat + '</div>';
 
         if(this.data.lecture_state == STATE_END_PROGRESS){
             ticket_list_assembly = "";
@@ -234,17 +235,21 @@ class Lecture_view{
             lecture_lecture_start_time +
             lecture_lecture_minute +
             color_select_assembly +
-            ticket_list_assembly +
-            member_list_assembly;
+            ticket_list_assembly;
 
         let tab_repeat_info =
             repeat_info_assembly;
+
+        let tab_members_info=
+            member_list_assembly;
 
         let selected_tab;
         if(this.list_type == "basic_info"){
             selected_tab = tab_basic_info;
         }else if(this.list_type == "repeat_info"){
             selected_tab = tab_repeat_info;
+        }else if(this.list_type == "members_info"){
+            selected_tab = tab_members_info;
         }
 
 
@@ -301,9 +306,11 @@ class Lecture_view{
 
     dom_row_list_type_tab(){
         let html = 
-        `<div class="list_type_tab_wrap" style="width:100%;padding-bottom:10px;text-align:right">
-            ${CComp.element("div", "기본 정보", {"padding":"5px 15px"}, {id:"tab_select_basic_info", class:`list_tab_content ${this.list_type == "basic_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("basic_info");}})}
-            ${CComp.element("div", "반복일정", {"padding":"5px 15px"}, {id:"tab_select_repeat_info", class:`list_tab_content ${this.list_type == "repeat_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("repeat_info");}})}
+        `<div class="list_type_tab_wrap" style="width:100%;padding-left:10px;text-align:left;box-sizing:border-box;height:auto;margin-top:20px">
+            ${CComp.element("div", "기본 정보", {"padding":"5px 10px", "text-align":"center"}, {id:"tab_select_basic_info", class:`list_tab_content ${this.list_type == "basic_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("basic_info");}})}
+            ${CComp.element("div", "일정", {"padding":"5px 10px", "text-align":"center"}, {id:"tab_select_repeat_info", class:`list_tab_content ${this.list_type == "repeat_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("repeat_info");}})}
+            ${CComp.element("div", `진행중 회원(${this.data.member_number})`, {"padding":"5px 10px", "text-align":"center"}, {id:"tab_select_members_info", class:`list_tab_content ${this.list_type == "members_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("members_info");}})}
+
         </div>`;
         return html;
     }
@@ -320,6 +327,11 @@ class Lecture_view{
             
             case "repeat_info":
                 this.list_type = "repeat_info";
+                this.render();
+            break;
+
+            case "members_info":
+                this.list_type = "members_info";
                 this.render();
             break;
         }
@@ -566,7 +578,7 @@ class Lecture_view{
         }
         this.data.active_ticket_length = length - progress_end_ticket;
 
-        let html = `<div>${html_to_join.length > 0 ? html_to_join.join('') : `<span style='color:var(--font-highlight);font-size:12px;font-weight:bold;'>${CImg.warning(["#fe4e65"], {"vertical-align":"middle", "width":"20px", "height":"20px", "margin-bottom":"4px"})} 이 수업을 포함한 수강권이 없습니다.</span>`}</div>`;
+        let html = `<div style="padding-left:40px">${html_to_join.length > 0 ? html_to_join.join('') : `<span style='color:var(--font-highlight);font-size:12px;font-weight:bold;'>${CImg.warning(["#fe4e65"], {"vertical-align":"middle", "width":"20px", "height":"20px", "margin-bottom":"4px"})} 이 수업을 포함한 수강권이 없습니다.</span>`}</div>`;
 
         return html;
     }
@@ -657,6 +669,30 @@ class Lecture_view{
                 )
             );
         }
+        html_to_join.unshift(
+            `<div style="margin-top:10px;margin-bottom:10px;height:33px;">`+
+                // CComp.button("add_new_schedule", `${CImg.plus([""], {"vertical-align":"middle", "margin-bottom":"3px", "margin-right":"2px", "width":"18px"})} 새 일정`, {"font-size":"12px", "float":"left", "padding-left":"0"}, null, ()=>{
+                //     let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_BOTTOM;
+                //     let data = {
+                //         user_selected_date: {year:this.current_year, month:this.current_month, date:this.current_date},
+                //         user_selected_time: {hour:this.current_hour, minute:this.current_minute, hour2:this.current_hour, minute2:this.current_minute},
+                //         user_selected_plan : {schedule_id:"", date:{year:null, month:null, date:null}}
+                //     };
+                //     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PLAN_ADD, 100, popup_style, null, ()=>{
+                //         plan_add_popup = new Plan_add('.popup_plan_add', data, "plan_add_popup");
+                //     });
+                // }) +
+                CComp.button("view_schedule_history", `${CImg.list([""], {"vertical-align":"middle", "margin-bottom":"3px", "margin-right":"2px", "width":"18px"})} 일정 이력`, {"font-size":"12px", "float":"right", "padding-right":"0"}, null, ()=>{
+                    // let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                    // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_SCHEDULE_HISTORY, 100, popup_style, null, ()=>{
+                    //     member_schedule_history = new Member_schedule_history('.popup_member_schedule_history', this.member_id, null);
+                    // });
+                }) +
+            `</div>
+            <div>${CComponent.dom_tag('반복 일정', {"padding-left":"0", "padding-top":"0"})}</div>
+            ${html_to_join.length == 0 ? `<div style="font-size:12px;color:var(--font-sub-dark);padding:5px;">설정된 반복 일정이 없습니다.</div>` : ""}
+            `
+        );
         return html_to_join.join("");
     }
 

@@ -161,6 +161,7 @@ class Plan_add{
     }
 
     set_initial_data(data){
+        console.log(data);
         this.user_data = data;
         let user_data_date = this.user_data.user_selected_date;
         this.data.date = user_data_date.year == null ? null : {year: user_data_date.year, month:user_data_date.month, date:user_data_date.date};
