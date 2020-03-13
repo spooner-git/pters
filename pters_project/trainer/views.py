@@ -13,6 +13,8 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.core.paginator import EmptyPage
+from django.core.paginator import Paginator
 from django.db import IntegrityError, InternalError, transaction
 from django.db.models import Q
 from django.db.models.expressions import RawSQL
@@ -1543,6 +1545,7 @@ class ManageWorkView(LoginRequiredMixin, AccessTestMixin, View):
 class AlarmView(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
+        page = request.GET.get('this_page', 1)
         class_id = self.request.session.get('class_id', '')
         error = None
 
@@ -1558,6 +1561,14 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, View):
         ordered_alarm_dict['check_qa_comment'] = QATb.objects.filter(
             member_id=request.user.id, status_type_cd='QA_COMPLETE',
             use=USE).annotate(qa_comment=RawSQL(query, [])).filter(qa_comment__gt=0).count()
+        paginator = Paginator(alarm_data, 20)
+        try:
+            alarm_data = paginator.page(page)
+        except EmptyPage:
+            alarm_data = []
+
+        ordered_alarm_dict['max_page'] = paginator.num_pages
+        ordered_alarm_dict['this_page'] = page
 
         if error is None:
             temp_alarm_date = None

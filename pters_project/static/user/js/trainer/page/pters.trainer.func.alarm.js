@@ -307,9 +307,9 @@ class Alarm {
         Setting_shared_func.read_request((data)=>{
             this.sharing_invite = data;
             Alarm_func.read((jsondata) => {
-                let demo = {max_page:5, this_page:1};
-                this.max_page = demo.max_page;
-                this.this_page = demo.this_page;
+                // let demo = {max_page:5, this_page:1};
+                this.max_page = jsondata.max_page;
+                this.this_page = jsondata.this_page;
 
                 $('#alarm_content_wrap').html("<div id='alarm_content'></div>");
                 this.data = jsondata;
