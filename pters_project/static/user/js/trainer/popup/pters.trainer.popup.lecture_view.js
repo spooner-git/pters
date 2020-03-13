@@ -653,9 +653,9 @@ class Lecture_view{
 
     dom_row_repeat(){
         let html_to_join = [];
-        let length = this.data.repeat.length;
-        for(let i=0; i<length; i++){
-            let data = this.data.repeat[i];
+        let length = Object.keys(this.data.repeat).length;
+        for(let repeat in this.data.repeat){
+            let data = this.data.repeat[repeat];
             let html_repeat_parent =
                 this.dom_row_repeat_item(
                     data.repeat_schedule_id,
@@ -663,21 +663,25 @@ class Lecture_view{
                     data.week_info.split('/').map((item)=>{
                         return DAYNAME_MATCH[item];
                     }).join('') + ' ' + data.start_time+' - '+data.end_time,
-                    "",
+                    data.member_name != undefined ? data.member_name : "",
                     data.start_date+' - '+data.end_date,
                     ""
                 );
-            
+            if(data.lecture_member_repeat_schedule_list == undefined){
+                html_to_join.push(html_repeat_parent);
+                continue;
+            }
+
             let length = data.lecture_member_repeat_schedule_list.length;
             let html_to_join_participants = [];
             for(let j=0; j<length; j++){
-                let data = data.lecture_member_repeat_schedule_list[j];
+                let data2 = data.lecture_member_repeat_schedule_list[j];
                 html_to_join_participants.push(
                     this.dom_row_repeat_participants(
-                        data.repeat_schedule_id, 
-                        data.member_id, 
-                        data.member_name, 
-                        data.member_profile_url)
+                        data2.repeat_schedule_id, 
+                        data2.member_id, 
+                        data2.member_name, 
+                        data2.member_profile_url)
                 );
             }
             let html_repeat_participants = '<div style="margin-bottom:20px;">' + html_to_join_participants.join("") + '</div>';
@@ -776,7 +780,7 @@ class Lecture_view{
     }
 
     dom_row_repeat_participants(repeat_id, member_id, member_name, member_photo){
-        let html = `<div id="repeat_item_${repeat_id}" style="display:flex;width:100%;height:32px;padding:0 36px;box-sizing:border-box;cursor:pointer;">
+        let html = `<div id="repeat_item_${repeat_id}" style="display:flex;width:100%;height:32px;padding:0 15px;box-sizing:border-box;cursor:pointer;">
                         <div style="flex-basis:24px;"><img src="${member_photo}" style="border-radius:50%;width:20px;vertical-align:middle;"></div>
                         <div style="flex:1 1 0;font-size:14px;font-weight:500;letter-spacing:-0.6px;color:var(--font-main);line-height:32px;">${member_name}</div>
                     </div>`;
