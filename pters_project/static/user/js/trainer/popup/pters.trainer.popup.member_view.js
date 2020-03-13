@@ -418,7 +418,7 @@ class Member_view{
 
     dom_row_list_type_tab(){
         let html = 
-        `<div class="list_type_tab_wrap" style="width:100%;padding-left:10px;text-align:left;box-sizing:border-box;height:auto">
+        `<div class="list_type_tab_wrap" style="width:100%;padding-left:40px;text-align:left;box-sizing:border-box;height:auto">
             ${CComp.element("div", "기본 정보", {"padding":"5px 10px", "text-align":"center"}, {id:"tab_select_basic_info", class:`list_tab_content ${this.list_type == "basic_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("basic_info");}})}
             ${CComp.element("div", "수강권", {"padding":"5px 10px", "text-align":"center"}, {id:"tab_select_ticket_info", class:`list_tab_content ${this.list_type == "ticket_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("ticket_info");}})}
             ${CComp.element("div", "일정", {"padding":"5px 10px", "text-align":"center"}, {id:"tab_select_repeat_info", class:`list_tab_content ${this.list_type == "repeat_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("repeat_info");}})}
