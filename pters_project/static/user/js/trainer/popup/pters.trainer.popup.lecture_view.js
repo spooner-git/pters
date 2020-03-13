@@ -656,7 +656,7 @@ class Lecture_view{
         let length = this.data.repeat.length;
         for(let i=0; i<length; i++){
             let data = this.data.repeat[i];
-            html_to_join.push(
+            let html_repeat_parent =
                 this.dom_row_repeat_item(
                     data.repeat_schedule_id,
                     data.lecture_ing_color_cd,
@@ -666,8 +666,25 @@ class Lecture_view{
                     "",
                     data.start_date+' - '+data.end_date,
                     ""
-                )
-            );
+                );
+            
+            let length = data.lecture_member_repeat_schedule_list.length;
+            let html_to_join_participants = [];
+            for(let j=0; j<length; j++){
+                let data = data.lecture_member_repeat_schedule_list[j];
+                html_to_join_participants.push(
+                    this.dom_row_repeat_participants(
+                        data.repeat_schedule_id, 
+                        data.member_id, 
+                        data.member_name, 
+                        data.member_profile_url)
+                );
+            }
+            let html_repeat_participants = '<div style="margin-bottom:20px;">' + html_to_join_participants.join("") + '</div>';
+            if(length == 0){
+                html_repeat_participants = '';
+            }
+            html_to_join.push(html_repeat_parent + html_repeat_participants);
         }
         html_to_join.unshift(
             `<div style="margin-top:10px;margin-bottom:10px;height:33px;">`+
@@ -755,6 +772,49 @@ class Lecture_view{
             });
         });
 
+        return html;
+    }
+
+    dom_row_repeat_participants(repeat_id, member_id, member_name, member_photo){
+        let html = `<div id="repeat_item_${repeat_id}" style="display:flex;width:100%;height:32px;padding:0 36px;box-sizing:border-box;cursor:pointer;">
+                        <div style="flex-basis:24px;"><img src="${member_photo}" style="border-radius:50%;width:20px;vertical-align:middle;"></div>
+                        <div style="flex:1 1 0;font-size:14px;font-weight:500;letter-spacing:-0.6px;color:var(--font-main);line-height:32px;">${member_name}</div>
+                    </div>`;
+        $(document).off('click', `#repeat_item_${repeat_id}`).on('click', `#repeat_item_${repeat_id}`, function(e){
+            let user_option = {
+                delete:{text:"삭제", callback:()=>{
+                    layer_popup.close_layer_popup();
+                    let inspect = pass_inspector.schedule_delete();
+                    if(inspect.barrier == BLOCKED){
+                        let message = `${inspect.limit_type}`;
+                        show_error_message({title:message});
+                        return false;
+                    }
+                    show_user_confirm({title:`정말 ${member_name}회원님의 반복 일정을 취소하시겠습니까?`}, ()=>{
+                        layer_popup.close_layer_popup();
+                        Loading.show(`${member_name}님의 반복 일정을 삭제 중입니다.<br>일정이 많은 경우 최대 2~4분까지 소요될 수 있습니다.`);
+                        Plan_func.delete_plan_repeat({"repeat_schedule_id":repeat_id}, ()=>{
+                            Loading.hide();
+                            try{
+                                current_page.init();
+                            }catch(e){}
+                            try{
+                                this.init();
+                            }catch(e){}
+                            layer_popup.close_layer_popup();
+                        }, ()=>{Loading.hide();});
+                    });
+                }}
+            };
+            let options_padding_top_bottom = 16;
+            // let button_height = 8 + 8 + 52;
+            let button_height = 52;
+            let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
+            let root_content_height = $root_content.height();
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
+                option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+            });
+        });
         return html;
     }
 
