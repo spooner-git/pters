@@ -704,10 +704,10 @@ class Lecture_view{
                 //     });
                 // }) +
                 CComp.button("view_schedule_history", `${CImg.list([""], {"vertical-align":"middle", "margin-bottom":"3px", "margin-right":"2px", "width":"18px"})} 일정 이력`, {"font-size":"12px", "float":"right", "padding-right":"0"}, null, ()=>{
-                    // let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
-                    // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_SCHEDULE_HISTORY, 100, popup_style, null, ()=>{
-                    //     member_schedule_history = new Member_schedule_history('.popup_member_schedule_history', this.member_id, null);
-                    // });
+                    let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_LECTURE_SCHEDULE_HISTORY, 100, popup_style, null, ()=>{
+                        lecture_schedule_history = new Lecture_schedule_history('.popup_lecture_schedule_history', this.lecture_id, null);
+                    });
                 }) +
             `</div>
             <div>${CComponent.dom_tag('반복 일정', {"padding-left":"0", "padding-top":"0"})}</div>

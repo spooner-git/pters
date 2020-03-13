@@ -1042,7 +1042,6 @@ class Member_func{
             }
         });
     }
-    
 
     static repeat_list(data, callback, error_callback){
         //데이터 형태 {"member_id":""};

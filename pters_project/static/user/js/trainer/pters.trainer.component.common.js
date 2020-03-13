@@ -810,6 +810,45 @@ class CComponent{
         return html;
     }
 
+    //회원의 일정 이력에 사용되는 행
+    static lecture_schedule_history_row (numbering, schedule_id, date, schedule_name, attend_status, permission_status, memo, member_num, max_num, callback){
+        let permission_status_name = "";
+        if(permission_status == SCHEDULE_WAIT){
+            permission_status_name = '('+APPROVE_SCHEDULE_STATUS[permission_status]+')';
+        }
+        let html = `<li class="schedule_history_row" id="schedule_history_row_${schedule_id}">`;
+        let raw_1 = `<div class="obj_table_raw">
+                        <div class="cell_schedule_num">${numbering}</div>
+                        <div class="cell_schedule_info">${schedule_name}</div>
+                        <div class="cell_schedule_attend">${member_num} / ${max_num}</div>
+                    </div>`;
+        let raw_2 = `<div class="obj_table_raw table_date_info">
+                        <div class="cell_schedule_info">${date}</div>
+                    </div>`;
+        let raw_3 = `<div class="obj_table_raw table_memo_info">
+                        <div class="cell_schedule_num"></div>
+                        <div class="cell_schedule_info">${memo}</div>
+                    </div>`;
+        
+        let sub_assemble = `<div style="display:flex;">
+                            <div style="flex:1 1 0;">${raw_1} ${raw_2}</div>
+                            <div style="flex-basis:80px;text-align:right;">
+                                <span style="color:${SCHEDULE_STATUS_COLOR[attend_status]}">${SCHEDULE_STATUS[attend_status]}<br/>${permission_status_name}</span>
+                            </div>
+                        </div>`;
+        
+
+        html += sub_assemble;
+        if(memo != ''){
+            html += raw_3;
+        }
+        html += '</li>';
+        $(document).off('click', `#schedule_history_row_${schedule_id}`).on('click', `#schedule_history_row_${schedule_id}`, function(){
+            callback();
+        });
+        return html;
+    }
+
     static no_data_row(text, style){
         let html = `<li class="no_data_row" style="${CComponent.data_to_style_code(style)}">
                         <div class="obj_table_raw">
