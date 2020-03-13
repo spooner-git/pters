@@ -132,162 +132,192 @@ class Lecture_schedule_history{
             let memo = data.note;
             let daily_record_id = null;
             let onclick = ()=>{
+                return false;
                 let user_option = {
-                    daily_record:{text:"일지", callback:()=>{
-                            let inspect = pass_inspector.schedule_update();
-                            if(inspect.barrier == BLOCKED){
-                                let message = `${inspect.limit_type}`;
-                                // layer_popup.close_layer_popup();
-                                show_error_message({title:message});
-                                return false;
-                            }
-                            layer_popup.close_layer_popup();
-                            Plan_daily_record_func.write_artice(schedule_id, schedule_name, ()=>{
-                                this.init();
-                                // show_error_message({title:`[${schedule_name}] 일지 변경사항이 저장 되었습니다.`});
-                            }, ()=>{
-                                show_error_message({title:`<span style="color:var(--font-highlight)">일지 변경사항 저장에 실패 하였습니다.</span>`});
-                            });
-                        }
-                    },
-                    absence:{text:"결석", callback:()=>{
+                    // daily_record:{text:"일지", callback:()=>{
+                    //         let inspect = pass_inspector.schedule_update();
+                    //         if(inspect.barrier == BLOCKED){
+                    //             let message = `${inspect.limit_type}`;
+                    //             // layer_popup.close_layer_popup();
+                    //             show_error_message({title:message});
+                    //             return false;
+                    //         }
+                    //         layer_popup.close_layer_popup();
+                    //         Plan_daily_record_func.write_artice(schedule_id, schedule_name, ()=>{
+                    //             this.init();
+                    //             // show_error_message({title:`[${schedule_name}] 일지 변경사항이 저장 되었습니다.`});
+                    //         }, ()=>{
+                    //             show_error_message({title:`<span style="color:var(--font-highlight)">일지 변경사항 저장에 실패 하였습니다.</span>`});
+                    //         });
+                    //     }
+                    // },
+                    // absence:{text:"결석", callback:()=>{
 
-                            let inspect = pass_inspector.schedule_update();
-                            if(inspect.barrier == BLOCKED){
-                                let message = `${inspect.limit_type}`;
-                                // layer_popup.close_layer_popup();
-                                show_error_message({title:message});
-                                return false;
-                            }
-                            Plan_func.status({"schedule_id":schedule_id, "state_cd":SCHEDULE_ABSENCE}, ()=>{
-                                this.init();
-                                try{
-                                    member_view_popup.init();
-                                }catch(e){}
-                                try{
-                                    plan_view_popup.init();
-                                }catch(e){}
-                                try{
-                                    current_page.init();
-                                }catch(e){}
+                    //         let inspect = pass_inspector.schedule_update();
+                    //         if(inspect.barrier == BLOCKED){
+                    //             let message = `${inspect.limit_type}`;
+                    //             // layer_popup.close_layer_popup();
+                    //             show_error_message({title:message});
+                    //             return false;
+                    //         }
+                    //         Plan_func.status({"schedule_id":schedule_id, "state_cd":SCHEDULE_ABSENCE}, ()=>{
+                    //             this.init();
+                    //             try{
+                    //                 member_view_popup.init();
+                    //             }catch(e){}
+                    //             try{
+                    //                 plan_view_popup.init();
+                    //             }catch(e){}
+                    //             try{
+                    //                 current_page.init();
+                    //             }catch(e){}
 
-                            });
-                            layer_popup.close_layer_popup();
-                        }
-                    },
-                    attend:{text:"출석", callback:()=>{
+                    //         });
+                    //         layer_popup.close_layer_popup();
+                    //     }
+                    // },
+                    // attend:{text:"출석", callback:()=>{
 
-                            let inspect = pass_inspector.schedule_update();
-                            if(inspect.barrier == BLOCKED){
-                                let message = `${inspect.limit_type}`;
-                                // layer_popup.close_layer_popup();
-                                show_error_message({title:message});
-                                return false;
-                            }
+                    //         let inspect = pass_inspector.schedule_update();
+                    //         if(inspect.barrier == BLOCKED){
+                    //             let message = `${inspect.limit_type}`;
+                    //             // layer_popup.close_layer_popup();
+                    //             show_error_message({title:message});
+                    //             return false;
+                    //         }
                             
-                            Plan_func.status({"schedule_id":schedule_id, "state_cd":SCHEDULE_FINISH}, ()=>{
-                                this.init();
-                                try{
-                                    member_view_popup.init();
-                                }catch(e){}
-                                try{
-                                    plan_view_popup.init();
-                                }catch(e){}
-                                try{
-                                    current_page.init();
-                                }catch(e){}
+                    //         Plan_func.status({"schedule_id":schedule_id, "state_cd":SCHEDULE_FINISH}, ()=>{
+                    //             this.init();
+                    //             try{
+                    //                 member_view_popup.init();
+                    //             }catch(e){}
+                    //             try{
+                    //                 plan_view_popup.init();
+                    //             }catch(e){}
+                    //             try{
+                    //                 current_page.init();
+                    //             }catch(e){}
 
-                            });layer_popup.close_layer_popup();
+                    //         });layer_popup.close_layer_popup();
                             
-                        }
-                    },
-                    permission_approve:{text:"예약 확정", callback:()=>{
-                            layer_popup.close_layer_popup();
-                            let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>예약 확정 하시겠습니까?</span>"};
-                            show_user_confirm (confirm_message, ()=>{
-                                layer_popup.close_layer_popup();
-                                let inspect = pass_inspector.schedule_update();
-                                if(inspect.barrier == BLOCKED){
-                                    let message = `${inspect.limit_type}`;
-                                    // layer_popup.close_layer_popup();
-                                    show_error_message({title:message});
-                                    return false;
-                                }
-                                let send_data = {"schedule_id":schedule_id, "permission_state_cd":SCHEDULE_APPROVE};
-                                Plan_func.permission_status(send_data, ()=>{
-                                    this.init();
-                                    try{
-                                        member_view_popup.init();
-                                    }catch(e){}
-                                    try{
-                                        plan_view_popup.init();
-                                    }catch(e){}
-                                    try{
-                                        current_page.init();
-                                    }catch(e){}
-                                });
-                            });
-                        }
-                    },
-                    permission_wait:{text:"대기 예약", callback:()=>{
-                            layer_popup.close_layer_popup();
-                            let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>대기 예약으로 변경 하시겠습니까?</span>"};
-                            show_user_confirm (confirm_message, ()=>{
-                                layer_popup.close_layer_popup();
-                                let inspect = pass_inspector.schedule_update();
-                                if(inspect.barrier == BLOCKED){
-                                    let message = `${inspect.limit_type}`;
-                                    // layer_popup.close_layer_popup();
-                                    show_error_message({title:message});
-                                    return false;
-                                }
-                                let send_data = {"schedule_id":schedule_id, "permission_state_cd":SCHEDULE_WAIT};
-                                Plan_func.permission_status(send_data, ()=>{
-                                    this.init();
-                                    try{
-                                        member_view_popup.init();
-                                    }catch(e){}
-                                    try{
-                                        plan_view_popup.init();
-                                    }catch(e){}
-                                    try{
-                                        current_page.init();
-                                    }catch(e){}
-                                });
-                            });
-                        }
-                    },
-                    cancel:{text:"일정 취소", callback:()=>{
+                    //     }
+                    // },
+                    // permission_approve:{text:"예약 확정", callback:()=>{
+                    //         layer_popup.close_layer_popup();
+                    //         let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>예약 확정 하시겠습니까?</span>"};
+                    //         show_user_confirm (confirm_message, ()=>{
+                    //             layer_popup.close_layer_popup();
+                    //             let inspect = pass_inspector.schedule_update();
+                    //             if(inspect.barrier == BLOCKED){
+                    //                 let message = `${inspect.limit_type}`;
+                    //                 // layer_popup.close_layer_popup();
+                    //                 show_error_message({title:message});
+                    //                 return false;
+                    //             }
+                    //             let send_data = {"schedule_id":schedule_id, "permission_state_cd":SCHEDULE_APPROVE};
+                    //             Plan_func.permission_status(send_data, ()=>{
+                    //                 this.init();
+                    //                 try{
+                    //                     member_view_popup.init();
+                    //                 }catch(e){}
+                    //                 try{
+                    //                     plan_view_popup.init();
+                    //                 }catch(e){}
+                    //                 try{
+                    //                     current_page.init();
+                    //                 }catch(e){}
+                    //             });
+                    //         });
+                    //     }
+                    // },
+                    // permission_wait:{text:"대기 예약", callback:()=>{
+                    //         layer_popup.close_layer_popup();
+                    //         let confirm_message = {title:"예약 상태 변경", comment:"<span style='color:var(--font-highlight);'>대기 예약으로 변경 하시겠습니까?</span>"};
+                    //         show_user_confirm (confirm_message, ()=>{
+                    //             layer_popup.close_layer_popup();
+                    //             let inspect = pass_inspector.schedule_update();
+                    //             if(inspect.barrier == BLOCKED){
+                    //                 let message = `${inspect.limit_type}`;
+                    //                 // layer_popup.close_layer_popup();
+                    //                 show_error_message({title:message});
+                    //                 return false;
+                    //             }
+                    //             let send_data = {"schedule_id":schedule_id, "permission_state_cd":SCHEDULE_WAIT};
+                    //             Plan_func.permission_status(send_data, ()=>{
+                    //                 this.init();
+                    //                 try{
+                    //                     member_view_popup.init();
+                    //                 }catch(e){}
+                    //                 try{
+                    //                     plan_view_popup.init();
+                    //                 }catch(e){}
+                    //                 try{
+                    //                     current_page.init();
+                    //                 }catch(e){}
+                    //             });
+                    //         });
+                    //     }
+                    // },
+                    // cancel:{text:"일정 취소", callback:()=>{
 
-                            let inspect = pass_inspector.schedule_delete();
-                            if(inspect.barrier == BLOCKED){
-                                let message = `${inspect.limit_type}`;
-                                // layer_popup.close_layer_popup();
-                                show_error_message({title:message});
-                                return false;
-                            }
-                            show_user_confirm({title:`정말 취소하시겠습니까?`}, ()=>{
+                    //         let inspect = pass_inspector.schedule_delete();
+                    //         if(inspect.barrier == BLOCKED){
+                    //             let message = `${inspect.limit_type}`;
+                    //             // layer_popup.close_layer_popup();
+                    //             show_error_message({title:message});
+                    //             return false;
+                    //         }
+                    //         show_user_confirm({title:`정말 취소하시겠습니까?`}, ()=>{
 
-                                layer_popup.close_layer_popup();
+                    //             layer_popup.close_layer_popup();
 
-                                Plan_func.delete({"schedule_id":schedule_id}, ()=>{
+                    //             Plan_func.delete({"schedule_id":schedule_id}, ()=>{
 
-                                this.init();
-                                try{
-                                    member_view_popup.init();
-                                }catch(e){}
-                                try{
-                                    plan_view_popup.init();
-                                }catch(e){}
-                                try{
-                                    current_page.init();
-                                }catch(e){}
+                    //             this.init();
+                    //             try{
+                    //                 member_view_popup.init();
+                    //             }catch(e){}
+                    //             try{
+                    //                 plan_view_popup.init();
+                    //             }catch(e){}
+                    //             try{
+                    //                 current_page.init();
+                    //             }catch(e){}
 
-                                });
-                            });
-                            layer_popup.close_layer_popup();
-                        }
-                    }
+                    //             });
+                    //         });
+                    //         layer_popup.close_layer_popup();
+                    //     }
+                    // },
+
+                    // open:{text:"일정 보기", callback:()=>{
+
+                    //         let inspect = pass_inspector.schedule_read();
+                    //         if(inspect.barrier == BLOCKED){
+                    //             let message = `${inspect.limit_type}`;
+                    //             // layer_popup.close_layer_popup();
+                    //             show_error_message({title:message});
+                    //             return false;
+                    //         }
+                            
+                    //         // layer_popup.close_layer_popup();
+
+                    //         let data_to_send = {
+                    //             "schedule_id":schedule_id,
+                    //             "date":{
+                    //                 "year":data.start_dt.split(" ")[0].split('-')[0],
+                    //                 "month":data.start_dt.split(" ")[0].split('-')[1],
+                    //                 "date":data.start_dt.split(" ")[0].split('-')[2]
+                    //             }
+                    //         }
+
+                    //         let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                    //         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PLAN_VIEW, 100, popup_style, {'schedule_id':schedule_id}, ()=>{
+                    //             plan_view_popup = new Plan_view('.popup_plan_view', data_to_send, "plan_view_popup");
+                    //         });
+
+                    //     }
+                    // }
                 };
                 if(permission_status == SCHEDULE_APPROVE){
                     delete user_option.permission_approve;
