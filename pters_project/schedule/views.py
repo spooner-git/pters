@@ -1449,6 +1449,177 @@ def add_repeat_schedule_confirm(request):
     # return render(request, 'ajax/schedule_error_info.html')
 
 
+def add_member_repeat_schedule_to_lecture_schedule_logic(request):
+
+    repeat_schedule_id = request.POST.get('repeat_schedule_id')
+    member_ids = request.POST.getlist('member_ids[]', '')
+    class_id = request.session.get('class_id', '')
+    class_type_name = request.session.get('class_type_name', '')
+    setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
+                                                          TO_TRAINEE_LESSON_ALARM_OFF)
+    setting_to_shared_trainer_lesson_alarm = request.session.get('setting_to_shared_trainer_lesson_alarm',
+                                                                 TO_SHARED_TRAINER_LESSON_ALARM_OFF)
+    trainer_name = request.session.get('trainer_name', '')
+    error = None
+    repeat_schedule_info = None
+    start_date = None
+    end_date = None
+    en_dis_type = None
+    information = None
+    member_ticket_id = ''
+    lecture_info = None
+    context = {'messageArray': ''}
+
+    if repeat_schedule_id == '':
+        error = '반복 일정을 선택해주세요.'
+
+    if error is None:
+        try:
+            repeat_schedule_info = RepeatScheduleTb.objects.get(repeat_schedule_id=repeat_schedule_id)
+        except ObjectDoesNotExist:
+            error = '반복 일정이 존재하지 않습니다'
+
+    if error is None:
+        lecture_info = repeat_schedule_info.lecture_tb
+
+    if error is None:
+        start_date = repeat_schedule_info.start_date
+        end_date = repeat_schedule_info.end_date
+        en_dis_type = repeat_schedule_info.en_dis_type
+
+    if error is None:
+        if str(en_dis_type) == str(ON_SCHEDULE_TYPE):
+            member_ticket_info = repeat_schedule_info.member_ticket_tb
+            if member_ticket_info is not None:
+                member_ticket_id = member_ticket_info.member_ticket_id
+
+    if error is None:
+        if lecture_info is not None and lecture_info.lecture_type_cd != LECTURE_TYPE_ONE_TO_ONE:
+
+            schedule_data = ScheduleTb.objects.filter(repeat_schedule_tb_id=repeat_schedule_id, use=USE)
+
+            for lecture_member_id in member_ids:
+                try:
+                    member_info = MemberTb.objects.get(member_id=lecture_member_id)
+                except ObjectDoesNotExist:
+                    member_info = None
+
+                if member_info is not None:
+                    repeat_member_ticket_id = None
+                    repeat_member_ticket_result = func_get_lecture_member_ticket_id(class_id, lecture_info.lecture_id,
+                                                                             member_info.member_id)
+                    if repeat_member_ticket_result['error'] is not None:
+                        error = repeat_member_ticket_result['error']
+                    else:
+                        repeat_member_ticket_id = repeat_member_ticket_result['member_ticket_id']
+
+                    if error is None:
+                        if repeat_member_ticket_id is not None and repeat_member_ticket_id != '':
+                            error_temp = None
+                            try:
+                                with transaction.atomic():
+                                    repeat_schedule_result = func_add_repeat_schedule(repeat_schedule_info.class_tb_id,
+                                                                                      repeat_member_ticket_id,
+                                                                                      repeat_schedule_info.lecture_tb_id,
+                                                                                      repeat_schedule_info.repeat_schedule_id,
+                                                                                      repeat_schedule_info.repeat_type_cd,
+                                                                                      repeat_schedule_info.week_info,
+                                                                                      repeat_schedule_info.start_date,
+                                                                                      repeat_schedule_info.end_date,
+                                                                                      repeat_schedule_info.start_time,
+                                                                                      repeat_schedule_info.end_time,
+                                                                                      repeat_schedule_info.en_dis_type,
+                                                                                      request.user.id)
+                                    member_repeat_schedule_info = repeat_schedule_result['schedule_info']
+                                    for schedule_info in schedule_data:
+                                        member_ticket_id = None
+                                        member_ticket_result = func_get_lecture_member_ticket_id(class_id,
+                                                                                                 lecture_info.lecture_id,
+                                                                                                 member_info.member_id)
+                                        if member_ticket_result['error'] is None:
+                                            member_ticket_id = member_ticket_result['member_ticket_id']
+                                            state_cd = STATE_CD_NOT_PROGRESS
+                                            permission_state_cd = PERMISSION_STATE_CD_APPROVE
+                                            schedule_result = func_add_schedule(
+                                                class_id, member_ticket_id,
+                                                member_repeat_schedule_info.repeat_schedule_id,
+                                                lecture_info, schedule_info.schedule_id,
+                                                schedule_info.start_dt, schedule_info.end_dt,
+                                                schedule_info.note,
+                                                ON_SCHEDULE_TYPE, request.user.id, permission_state_cd,
+                                                state_cd, SCHEDULE_DUPLICATION_ENABLE)
+
+                                            error_temp = schedule_result['error']
+
+                                            if error_temp is not None:
+                                                raise InternalError
+
+                            except TypeError:
+                                error = '오류가 발생했습니다.[1]'
+                            except ValueError:
+                                error = '오류가 발생했습니다.[2]'
+                            except IntegrityError:
+                                error = '오류가 발생했습니다.[3]'
+                            except InternalError:
+                                error = error_temp
+
+                    if error is None:
+                        if repeat_member_ticket_id is not None and repeat_member_ticket_id != '':
+                            log_data = LogTb(log_type='LR01', auth_member_id=request.user.id,
+                                             from_member_name=trainer_name,
+                                             to_member_name=member_info.name,
+                                             class_tb_id=class_id,
+                                             member_ticket_tb_id=repeat_member_ticket_id,
+                                             log_info=lecture_info.name,
+                                             log_how='반복 일정 등록',
+                                             log_detail=str(start_date) + '/' + str(end_date), use=USE)
+                            log_data.save()
+                            if str(setting_to_trainee_lesson_alarm) == str(TO_TRAINEE_LESSON_ALARM_ON):
+                                func_send_push_trainer(repeat_member_ticket_id,
+                                                       class_type_name + ' - 일정 알림',
+                                                       # trainer_name + '님의 ' +
+                                                       str(start_date) + '~' + str(end_date)
+                                                       + ' ['+lecture_info.name + '] 반복 일정이 등록됐습니다')
+                            if str(setting_to_shared_trainer_lesson_alarm) == str(TO_SHARED_TRAINER_LESSON_ALARM_ON):
+                                func_send_push_trainer_trainer(class_id,
+                                                               class_type_name + ' - 일정 알림',
+                                                               member_info.name + '님의 ' +
+                                                               str(start_date) + '~' + str(end_date)
+                                                               + ' ['+lecture_info.name + '] 반복 일정이 등록됐습니다',
+                                                               request.user.id)
+                        else:
+                            if str(en_dis_type) == str(ON_SCHEDULE_TYPE) and str(setting_to_shared_trainer_lesson_alarm) == str(TO_SHARED_TRAINER_LESSON_ALARM_ON):
+                                func_send_push_trainer_trainer(class_id,
+                                                               class_type_name + ' - 일정 알림',
+                                                               str(start_date) + '~' + str(end_date)
+                                                               + ' ['+lecture_info.name + '] 반복 일정이 등록됐습니다',
+                                                               request.user.id)
+
+            information = '반복 일정 등록이 완료됐습니다.'
+        else:
+            if str(en_dis_type) == str(ON_SCHEDULE_TYPE) and str(setting_to_trainee_lesson_alarm) == str(TO_TRAINEE_LESSON_ALARM_ON):
+                func_send_push_trainer(member_ticket_id,
+                                       class_type_name + ' - 일정 알림',
+                                       # trainer_name + '님의 ' +
+                                       str(start_date) + '~' + str(end_date)
+                                       + ' ['+lecture_info.name + '] 반복 일정이 등록됐습니다',)
+            if str(en_dis_type) == str(ON_SCHEDULE_TYPE) and str(setting_to_shared_trainer_lesson_alarm) == str(TO_SHARED_TRAINER_LESSON_ALARM_ON):
+                func_send_push_trainer_trainer(class_id, class_type_name + ' - 일정 알림',
+                                               repeat_schedule_info.member_ticket_tb.member.name + '님의 ' +
+                                               str(start_date) + '~' + str(end_date)
+                                               + ' ['+lecture_info.name + '] 반복 일정이 등록됐습니다', request.user.id)
+
+    if error is None:
+        if information is not None:
+            messages.info(request, information)
+    else:
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
+        # messages.error(request, error)
+        context['messageArray'] = error
+    return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+    # return render(request, 'ajax/schedule_error_info.html')
+
+
 def delete_repeat_schedule_logic(request):
 
     repeat_schedule_id = request.POST.get('repeat_schedule_id', '')
