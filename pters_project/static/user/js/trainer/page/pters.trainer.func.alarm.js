@@ -521,11 +521,11 @@ class Alarm {
         Setting_shared_func.read_request((invited)=>{
             let invited_length = Object.keys(invited).length;
             Alarm_func.read({"this_page": 1}, (data)=>{
-                for(let date in data){
-                    let length = data[date].length;
+                for(let date in data.alarm_data){
+                    let length = data.alarm_data[date].length;
                     for(let i=0; i<length; i++){
-                        let read_check = data[date][i].read_check;
-                        let alarm_id = data[date][i].alarm_id;
+                        let read_check = data.alarm_data[date][i].read_check;
+                        let alarm_id = data.alarm_data[date][i].alarm_id;
                         if(read_check == UNREAD){
                             this.new_alarms_id_cache.push(alarm_id);
                         }
