@@ -384,6 +384,7 @@
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.password_modify.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.leave_pters.js" %}></script>
 
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.my_coupon_box.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.pters_pass_main.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.pters_pass_pay_info.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.pters_pass_shop.js" %}></script>
@@ -575,6 +576,7 @@
     var service_about_us_popup;
 
     var pters_pass_main_popup;
+    var my_coupon_box_popup;
     var pters_pass_pay_info_popup;
     var pters_pass_shop_popup;
     var pters_pass_shop_agreement_popup;
@@ -999,6 +1001,12 @@
                 open = ()=>{
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_MAIN, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     pters_pass_main_popup = new Pters_pass_main('.popup_pters_pass_main')});
+                    };
+            break;
+            case 'my_coupon_box':
+                open = ()=>{
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MY_COUPON_BOX, 100, POPUP_FROM_RIGHT, null, ()=>{
+                                                    my_coupon_box_popup = new My_coupon_box('.popup_my_coupon_box')});
                     };
             break;
             case 'helper':

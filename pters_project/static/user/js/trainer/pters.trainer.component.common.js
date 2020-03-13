@@ -1728,6 +1728,32 @@ class CComp{
         return html;
     }
 
+    static scroll_container(type, title, style, attr, callback){
+        let style_code = style == null ? "" : `style="${CComp.data_to_style_code(style)}"`;
+        let attr_code = CComp.data_to_attr_code(attr);
+        
+        let html = `<${type} ${style_code} ${attr_code}>${title}</${type}>`;
+
+        //onclick을 사용하려면 attr에 무조건 id가 부여되어야함
+        if(callback != undefined && attr != undefined){
+            if(attr.id != undefined){
+                $(`#${attr.id}`).off("scroll").on("scroll", function(e){
+                    if(callback != undefined){
+                        
+                        let container_height = Number($(this).height());
+                        let scroll_position = Number($(this).scrollTop());
+                        let scroll_height = Number($(this).prop("scrollHeight"));
+                        if( container_height+scroll_position >= scroll_height-50){
+                            callback(e);
+                        }
+                    }
+                });
+            }
+        }
+
+        return html;
+    }
+
     static element(type, title, style, attr, event){
         let style_code = style == null ? "" : `style="${CComp.data_to_style_code(style)}"`;
         let attr_code = CComp.data_to_attr_code(attr);
@@ -1745,6 +1771,14 @@ class CComp{
             }
         }
 
+        return html;
+    }
+
+    static img(src, style, attr){
+        let style_code = CComp.data_to_style_code(style);
+        let attr_code = CComp.data_to_attr_code(attr);
+        let html = `<img src=${src} style="${style_code};" ${attr_code}>`;
+        
         return html;
     }
 

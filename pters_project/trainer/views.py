@@ -546,6 +546,7 @@ class GetLectureRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, 
         lecture_id = self.request.GET.get('lecture_id', '')
         error = None
         lecture_repeat_schedule_list = []
+        today = datetime.date.today()
 
         if lecture_id == '':
             error = '수업 정보를 불러오지 못했습니다.'
@@ -554,9 +555,13 @@ class GetLectureRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, 
             # 그룹 반복 일정 정보 불러오기
             lecture_repeat_schedule_data = RepeatScheduleTb.objects.select_related(
                 'lecture_tb', 'reg_member').filter(class_tb_id=class_id,
-                                                   lecture_tb_id=lecture_id).order_by('start_date')
+                                                   lecture_tb_id=lecture_id).exclude(end_date__lt=today).order_by('start_date')
 
+            week_order = ['SUN', 'MON', 'TUE', 'WED', 'THS', 'FRI', 'SAT']
+            week_order = {key: i for i, key in enumerate(week_order)}
             for lecture_repeat_schedule_info in lecture_repeat_schedule_data:
+                week_data = lecture_repeat_schedule_info.week_info.split('/')
+                week_data = sorted(week_data, key=lambda week_info: week_order.get(week_info))
 
                 mod_member_id = ''
                 mod_member_name = ''
@@ -569,10 +574,13 @@ class GetLectureRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, 
                                            'end_date': lecture_repeat_schedule_info.end_date,
                                            'start_time': lecture_repeat_schedule_info.start_time,
                                            'end_time': lecture_repeat_schedule_info.end_time,
+                                           'week_info': "/".join(week_data),
                                            'time_duration': lecture_repeat_schedule_info.time_duration,
                                            'state_cd': lecture_repeat_schedule_info.state_cd,
-                                           'lecture_repeat_schedule_id':
-                                               lecture_repeat_schedule_info.lecture_repeat_schedule_id,
+                                        #    'lecture_repeat_schedule_id':
+                                        #        lecture_repeat_schedule_info.lecture_repeat_schedule_id,
+                                           'lecture_id': lecture_repeat_schedule_info.lecture_tb.lecture_id,
+                                           'lecture_name': lecture_repeat_schedule_info.lecture_tb.name,
                                            'reg_member_id': lecture_repeat_schedule_info.reg_member_id,
                                            'reg_member_name': lecture_repeat_schedule_info.reg_member.name,
                                            'mod_member_id': mod_member_id,
@@ -595,6 +603,7 @@ class GetMemberRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, View):
         member_id = self.request.GET.get('member_id', '')
         error = None
         member_repeat_schedule_list = []
+        today = datetime.date.today()
 
         if member_id == '':
             error = '회원 정보를 불러오지 못했습니다.'
@@ -607,14 +616,16 @@ class GetMemberRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, View):
                          "`"+RepeatScheduleTb._meta.db_table+"`.`" + \
                          RepeatScheduleTb._meta.get_field('member_ticket_tb').column + \
                          "` and B.CLASS_TB_ID = " + str(class_id) + \
-                         " and B."+ClassMemberTicketTb._meta.get_field('use').column+"="+USE
+                         " and B."+ClassMemberTicketTb._meta.get_field('use').column+"="+str(USE)
             member_repeat_schedule_data = RepeatScheduleTb.objects.select_related(
                 'member_ticket_tb__member',
                 'lecture_tb').filter(
                 class_tb_id=class_id, member_ticket_tb__member_id=member_id
-            ).annotate(auth_cd=RawSQL(query_auth, [])).filter(auth_cd=AUTH_TYPE_VIEW).order_by('start_date')
+            ).annotate(auth_cd=RawSQL(query_auth, [])).filter(auth_cd=AUTH_TYPE_VIEW).exclude(end_date__lt=today).order_by('start_date')
 
             # 반복일정 정보 셋팅
+            week_order = ['SUN', 'MON', 'TUE', 'WED', 'THS', 'FRI', 'SAT']
+            week_order = {key: i for i, key in enumerate(week_order)}
             for member_repeat_schedule_info in member_repeat_schedule_data:
                 schedule_type = 1
                 try:
@@ -629,6 +640,9 @@ class GetMemberRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, View):
                     lecture_max_member_num = ''
                     # lecture_max_member_num_view_flag = ''
 
+                week_data = member_repeat_schedule_info.week_info.split('/')
+                week_data = sorted(week_data, key=lambda week_info: week_order.get(week_info))
+
                 mod_member_id = ''
                 mod_member_name = ''
                 if member_repeat_schedule_info.mod_member is not None and member_repeat_schedule_info.mod_member != '':
@@ -636,6 +650,7 @@ class GetMemberRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, View):
                     mod_member_name = member_repeat_schedule_info.mod_member.name
                 member_repeat_schedule = {'repeat_schedule_id': member_repeat_schedule_info.repeat_schedule_id,
                                           'repeat_type_cd': member_repeat_schedule_info.repeat_type_cd,
+                                          'week_info': "/".join(week_data),
                                           'start_date': member_repeat_schedule_info.start_date,
                                           'end_date': member_repeat_schedule_info.end_date,
                                           'start_time': member_repeat_schedule_info.start_time,
@@ -648,8 +663,10 @@ class GetMemberRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, View):
                                           'mod_member_name': mod_member_name,
                                           'mod_dt': str(member_repeat_schedule_info.mod_dt),
                                           'reg_dt': str(member_repeat_schedule_info.reg_dt),
-                                          'lecture_repeat_schedule_id':
-                                              member_repeat_schedule_info.lecture_repeat_schedule_id,
+                                        #   'lecture_repeat_schedule_id':
+                                        #       member_repeat_schedule_info.lecture_repeat_schedule_id,
+                                          'member_id': member_repeat_schedule_info.member_ticket_tb.member.member_id,
+                                          'member_name': member_repeat_schedule_info.member_ticket_tb.member.name,
                                           'lecture_id': lecture_id,
                                           'lecture_name': lecture_name,
                                           'lecture_max_member_num': lecture_max_member_num,
@@ -3861,7 +3878,7 @@ class GetProgramListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                 shared_program_flag = MY_PROGRAM
                 share_member_num = 0
                 if str(program_info.class_tb.member.member_id) != str(request.user.id):
-                    program_subject_type_name += ' - ' + program_info.class_tb.member.name
+                    # program_subject_type_name += ' - ' + program_info.class_tb.member.name
                     shared_program_flag = SHARED_PROGRAM
                 else:
                     share_member_num = MemberClassTb.objects.filter(class_tb_id=program_info.class_tb.class_id,

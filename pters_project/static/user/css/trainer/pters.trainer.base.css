@@ -178,6 +178,15 @@
 	animation-timing-function: ease-out;
 }
 
+.anim_pulse_strong{
+    animation-name: pulse-strong;
+	animation-duration: 0.4s;
+	animation-delay: 0;
+	animation-direction: normal;
+	animation-iteration-count: 1; 
+	animation-timing-function: ease-out;
+}
+
 @keyframes pulse{
     0%{
         transform:scale(1)  

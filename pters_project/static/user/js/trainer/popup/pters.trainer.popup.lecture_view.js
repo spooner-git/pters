@@ -46,6 +46,9 @@ class Lecture_view{
             lecture_start_time:
                 {value:["A-0", "A-30", "E-10", "E-15", "E-20", "E-30"], text:["매시각 정시", "매시각 30분", "10분 마다", "15분 마다", "20분 마다", "30분 마다"]}
         };
+
+        this.list_type = "basic_info";
+
         this.init();
 
     }
@@ -137,8 +140,18 @@ class Lecture_view{
             this.data.lecture_start_time.value[0] = data.lecture_start_time;
             this.data.lecture_start_time.text[0] = this.data_for_selector.lecture_start_time.text[ this.data_for_selector.lecture_start_time.value.indexOf(data.lecture_start_time) ];
 
-            this.render();
-            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
+            Lecture_func.repeat_list(
+                {"lecture_id":this.lecture_id}, (data)=>{
+                    let repeat_list = data.lecture_repeat_schedule_data; //array
+                    this.data.repeat = repeat_list;
+                    
+                    this.render();
+                    func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
+                }
+            );
+
+
+            
             // this.init();
         });   
     }
@@ -193,6 +206,7 @@ class Lecture_view{
         let ticket_list = this.dom_row_ticket_list();
         let member_list = this.dom_row_member_list();
         let lecture_start_time = this.dom_row_lecture_start_time();
+        let repeat = this.dom_row_repeat();
 
         let capacity_assembly = '<div class="obj_input_box_full">' + CComponent.dom_tag('정원') + capacity + '</div>';
         let lecture_lecture_minute = '<div class="obj_input_box_full">' + CComponent.dom_tag('기본 수업 시간') + time + '</div>';
@@ -208,17 +222,35 @@ class Lecture_view{
         {"font-size":"13px", "font-weight":"bold", "letter-spacing":"-0.6px", "padding":"0","padding-bottom":"8px", "color":"var(--font-sub-normal)", "height":"20px"})
         + member_list + '</div>';
 
+        let repeat_info_assembly = '<div class="obj_input_box_full">' + CComponent.dom_tag('반복 일정 목록', {"padding-left":"0"}) + repeat + '</div>';
+
         if(this.data.lecture_state == STATE_END_PROGRESS){
             ticket_list_assembly = "";
             member_list_assembly = "";
         }
 
-        let html =  capacity_assembly +
-                    lecture_lecture_start_time +
-                    lecture_lecture_minute +
-                    color_select_assembly +
-                    ticket_list_assembly +
-                    member_list_assembly;
+        let tab_basic_info = 
+            capacity_assembly +
+            lecture_lecture_start_time +
+            lecture_lecture_minute +
+            color_select_assembly +
+            ticket_list_assembly +
+            member_list_assembly;
+
+        let tab_repeat_info =
+            repeat_info_assembly;
+
+        let selected_tab;
+        if(this.list_type == "basic_info"){
+            selected_tab = tab_basic_info;
+        }else if(this.list_type == "repeat_info"){
+            selected_tab = tab_repeat_info;
+        }
+
+
+        let html =  
+            this.dom_row_list_type_tab() +
+            selected_tab;
 
         return html;
     }
@@ -265,6 +297,32 @@ class Lecture_view{
         </div>
         `;
         return html;
+    }
+
+    dom_row_list_type_tab(){
+        let html = 
+        `<div class="list_type_tab_wrap" style="width:100%;padding-bottom:10px;text-align:right">
+            ${CComp.element("div", "기본 정보", {"padding":"5px 15px"}, {id:"tab_select_basic_info", class:`list_tab_content ${this.list_type == "basic_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("basic_info");}})}
+            ${CComp.element("div", "반복일정", {"padding":"5px 15px"}, {id:"tab_select_repeat_info", class:`list_tab_content ${this.list_type == "repeat_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("repeat_info");}})}
+        </div>`;
+        return html;
+    }
+
+    switch_type(type){
+        if(type == this.list_type){
+            return false;
+        }
+        switch(type){
+            case "basic_info":
+                this.list_type = "basic_info";
+                this.render();
+            break;
+            
+            case "repeat_info":
+                this.list_type = "repeat_info";
+                this.render();
+            break;
+        }
     }
 
     dom_row_capacity_view(){
@@ -397,6 +455,7 @@ class Lecture_view{
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, onfocusout, pattern, pattern_message, required);
         return html;
     }
+
     dom_row_lecture_start_time(){
         let id = "lecture_start_time";
         let title = this.data.lecture_start_time.text.length == 0 ? '' : this.data.lecture_start_time.text;
@@ -578,6 +637,89 @@ class Lecture_view{
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SIMPLE_VIEW, 100*(400/root_content_height), POPUP_FROM_BOTTOM, {'member_id':member_id},()=>{
             member_simple_view_popup = new Member_simple_view('.popup_member_simple_view', member_id, 'member_simple_view_popup');
         });
+    }
+
+    dom_row_repeat(){
+        let html_to_join = [];
+        let length = this.data.repeat.length;
+        for(let i=0; i<length; i++){
+            let data = this.data.repeat[i];
+            html_to_join.push(
+                this.dom_row_repeat_item(
+                    data.repeat_schedule_id,
+                    "#fe4e65",
+                    data.week_info.split('/').map((item)=>{
+                        return DAYNAME_MATCH[item];
+                    }).join('') + ' ' + data.start_time+' - '+data.end_time,
+                    data.lecture_name,
+                    data.start_date+' - '+data.end_date,
+                    ""
+                )
+            );
+        }
+        return html_to_join.join("");
+    }
+
+    dom_row_repeat_item(repeat_id, color, repeat_name, repeat_day, repeat_period, repeat_time){
+        let html = `<div id="repeat_item_${repeat_id}" style="display:flex;width:100%;height:60px;padding:8px 0px;box-sizing:border-box;cursor:pointer;">
+                        <div style="flex-basis:16px;">
+                            <div style="float:left;width:4px;height:32px;background-color:${color}"></div>
+                        </div>
+                        <div style="flex:1 1 0">
+                            <div style="font-size:16px;font-weight:500;letter-spacing:-0.7px;color:var(--font-base);">${repeat_name}</div>
+                            <div style="font-size:12px;font-weight:500;letter-spacing:-0.5px;color:var(--font-sub-normal);">${repeat_day} / ${repeat_time} / ${repeat_period}</div>
+                        </div>
+                        <div style="flex-basis:30px;">
+                            ${CImg.more("", {"vertical-align":"top"})}
+                        </div>
+                    </div>`;
+        $(document).off('click', `#repeat_item_${repeat_id}`).on('click', `#repeat_item_${repeat_id}`, function(e){
+            let user_option = {
+                delete:{text:"삭제", callback:()=>{
+                    layer_popup.close_layer_popup();
+                    let message = {
+                        title:`정말 ${repeat_name}의 반복 일정을 취소하시겠습니까?`,
+                        comment:`${CImg.warning(["#fe4e65"], {"vertical-align":"middle", "margin-bottom":"4px"})}
+                                <br>
+                                <div style="text-align:center;margin-top:5px;">
+                                    하위에 다른 반복일정이 존재할 경우 함께 취소됩니다. <br>
+                                    과거일정은 보존되지만, 등록한 미래일정은 취소됩니다.
+                                </div>`
+                    }
+                    show_user_confirm(message, ()=>{
+                        layer_popup.close_layer_popup();
+                        let inspect = pass_inspector.schedule_delete();
+                        if(inspect.barrier == BLOCKED){
+                            let message = `${inspect.limit_type}`;
+                            show_error_message({title:message});
+                            return false;
+                        }
+
+                        Loading.show(`${repeat_name}의 반복 일정을 삭제 중입니다.<br>일정이 많은 경우 최대 2~4분까지 소요될 수 있습니다.`);
+                        Plan_func.delete_plan_repeat({"repeat_schedule_id":repeat_id}, ()=>{
+                            Loading.hide();
+                            try{
+                                current_page.init();
+                            }catch(e){}
+                            try{
+                                this.init();
+                            }catch(e){}
+                            layer_popup.close_layer_popup();
+                        }, ()=>{Loading.hide();});
+                    });
+                }}
+            };
+            let options_padding_top_bottom = 16;
+            // let button_height = 8 + 8 + 52;
+            let button_height = 52;
+            let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
+            let root_content_height = $root_content.height();
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
+                option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+            });
+        });
+
+        return html;
     }
 
     send_data(){
