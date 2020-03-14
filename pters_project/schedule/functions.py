@@ -1301,6 +1301,8 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
             mod_member_name = schedule_info.mod_member.name
         # array 에 값을 추가후 dictionary 에 추가
         date_schedule_list.append({'schedule_id': str(schedule_info.schedule_id),
+                                   'start_dt': str(schedule_info.start_dt).split(' ')[0],
+                                   'end_dt': str(schedule_info.end_dt).split(' ')[0],
                                    'start_time': schedule_start_time,
                                    'end_time': schedule_end_time,
                                    'state_cd': schedule_info.state_cd,
