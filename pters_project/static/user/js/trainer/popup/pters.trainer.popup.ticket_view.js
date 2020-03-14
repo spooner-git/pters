@@ -232,17 +232,21 @@ class Ticket_view{
         let tab_basic_info = 
             lecture_list_assembly +
             ticket_memo_assembly +
-            ticket_basic_info_assembly +
-            ticket_additional_setting_assembly;
+            ticket_basic_info_assembly;
 
-        let tab_members_info=
+        let tab_members_info =
             ticket_member_list_assembly;
+
+        let tab_reserve_info =
+            ticket_additional_setting_assembly;
 
         let selected_tab;
         if(this.list_type == "basic_info"){
             selected_tab = tab_basic_info;
         }else if(this.list_type == "members_info"){
             selected_tab = tab_members_info;
+        }else if(this.list_type == "reserve_info"){
+            selected_tab = tab_reserve_info;
         }
 
 
@@ -297,9 +301,10 @@ class Ticket_view{
 
     dom_row_list_type_tab(){
         let html = 
-        `<div class="list_type_tab_wrap" style="width:100%;padding-left:10px;text-align:left;box-sizing:border-box;height:auto">
-            ${CComp.element("div", "기본 정보", {"padding":"5px 10px", "text-align":"center"}, {id:"tab_select_basic_info", class:`list_tab_content ${this.list_type == "basic_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("basic_info");}})}
-            ${CComp.element("div", `보유 회원(${this.data.member_id.length})`, {"padding":"5px 10px", "text-align":"center"}, {id:"tab_select_members_info", class:`list_tab_content ${this.list_type == "members_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("members_info");}})}
+        `<div class="list_type_tab_wrap" style="width:100%;padding-left:45px;text-align:left;box-sizing:border-box;height:auto">
+            ${CComp.element("div", "기본 정보", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_basic_info", class:`list_tab_content ${this.list_type == "basic_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("basic_info");}})}
+            ${CComp.element("div", `기타 설정`, {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_reserve_info", class:`list_tab_content ${this.list_type == "reserve_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("reserve_info");}})}
+            ${CComp.element("div", `보유 회원(${this.data.member_id.length})`, {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_members_info", class:`list_tab_content ${this.list_type == "members_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("members_info");}})}
         </div>`;
         return html;
     }
@@ -316,6 +321,11 @@ class Ticket_view{
 
             case "members_info":
                 this.list_type = "members_info";
+                this.render();
+            break;
+
+            case "reserve_info":
+                this.list_type = "reserve_info";
                 this.render();
             break;
         }
@@ -621,7 +631,8 @@ class Ticket_view{
             title = "제한 없음";
         }
         let placeholder = `제한 없음`;
-        let icon = NONE;
+        // let icon = NONE;
+        let icon = CImg.time();
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;

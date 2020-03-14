@@ -306,11 +306,9 @@ class Alarm {
         this.render_upper_box();
         Setting_shared_func.read_request((data)=>{
             this.sharing_invite = data;
-            Alarm_func.read((jsondata) => {
-                // let demo = {max_page:5, this_page:1};
-                this.max_page = jsondata.max_page;
-                this.this_page = jsondata.this_page;
-
+            Alarm_func.read({"this_page": 1}, (jsondata) => {
+                this.max_page = Number(jsondata.max_page);
+                this.this_page = Number(jsondata.this_page);
                 $('#alarm_content_wrap').html("<div id='alarm_content'></div>");
                 this.data = jsondata;
                 this.render_list(jsondata);
@@ -374,11 +372,11 @@ class Alarm {
 
     dom_list (jsondata){
         let html_temp = [];
-        for(let date in jsondata){
-            let length = this.data[date].length;
+        for(let date in jsondata.alarm_data){
+            let length = jsondata.alarm_data[date].length;
             for (let i=0; i<length; i++){
                 
-                let data = jsondata[date][i];
+                let data = jsondata.alarm_data[date][i];
                 let alarm_id = data.alarm_id;
                 let alarm_reg_member = data.reg_member_name;
                 let alarm_from = data.alarm_from_member_name;
@@ -522,12 +520,12 @@ class Alarm {
         let UNREAD = 0;
         Setting_shared_func.read_request((invited)=>{
             let invited_length = Object.keys(invited).length;
-            Alarm_func.read((data)=>{
-                for(let date in data){
-                    let length = data[date].length;
+            Alarm_func.read({"this_page": 1}, (data)=>{
+                for(let date in data.alarm_data){
+                    let length = data.alarm_data[date].length;
                     for(let i=0; i<length; i++){
-                        let read_check = data[date][i].read_check;
-                        let alarm_id = data[date][i].alarm_id;
+                        let read_check = data.alarm_data[date][i].read_check;
+                        let alarm_id = data.alarm_data[date][i].alarm_id;
                         if(read_check == UNREAD){
                             this.new_alarms_id_cache.push(alarm_id);
                         }
@@ -560,8 +558,8 @@ class Alarm {
 
                     this.page_loading_ing = true;
                     this.append_loading_image(ON);
-                    Alarm_func.read((jsondata) => {
-                        this.this_page++;
+                    this.this_page++;
+                    Alarm_func.read({"this_page":this.this_page}, (jsondata) => {
                         this.append_loading_image(OFF);
                         this.append_list(jsondata);
                         this.page_loading_ing = false;
@@ -584,10 +582,12 @@ class Alarm {
 }
 
 class Alarm_func{
-    static read(callback, error_callback){
+    static read(data, callback, error_callback){
         //알림 리스트 서버에서 불러오기
+        
         $.ajax({
             url:"/trainer/alarm/",
+            data:data,
             dataType : 'JSON',
             beforeSend:function (){
                 // ajax_load_image(SHOW);

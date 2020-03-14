@@ -306,10 +306,10 @@ class Lecture_view{
 
     dom_row_list_type_tab(){
         let html = 
-        `<div class="list_type_tab_wrap" style="width:100%;padding-left:10px;text-align:left;box-sizing:border-box;height:auto;margin-top:20px">
-            ${CComp.element("div", "기본 정보", {"padding":"5px 10px", "text-align":"center"}, {id:"tab_select_basic_info", class:`list_tab_content ${this.list_type == "basic_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("basic_info");}})}
-            ${CComp.element("div", "일정", {"padding":"5px 10px", "text-align":"center"}, {id:"tab_select_repeat_info", class:`list_tab_content ${this.list_type == "repeat_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("repeat_info");}})}
-            ${CComp.element("div", `진행중 회원(${this.data.member_number})`, {"padding":"5px 10px", "text-align":"center"}, {id:"tab_select_members_info", class:`list_tab_content ${this.list_type == "members_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("members_info");}})}
+        `<div class="list_type_tab_wrap" style="width:100%;padding-left:45px;text-align:left;box-sizing:border-box;height:auto;margin-top:20px">
+            ${CComp.element("div", "기본 정보", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_basic_info", class:`list_tab_content ${this.list_type == "basic_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("basic_info");}})}
+            ${CComp.element("div", "일정", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_repeat_info", class:`list_tab_content ${this.list_type == "repeat_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("repeat_info");}})}
+            ${CComp.element("div", `진행중 회원(${this.data.member_number})`, {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_members_info", class:`list_tab_content ${this.list_type == "members_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("members_info");}})}
 
         </div>`;
         return html;
@@ -653,21 +653,42 @@ class Lecture_view{
 
     dom_row_repeat(){
         let html_to_join = [];
-        let length = this.data.repeat.length;
-        for(let i=0; i<length; i++){
-            let data = this.data.repeat[i];
-            html_to_join.push(
+        let length = Object.keys(this.data.repeat).length;
+        for(let repeat in this.data.repeat){
+            let data = this.data.repeat[repeat];
+            let html_repeat_parent =
                 this.dom_row_repeat_item(
                     data.repeat_schedule_id,
                     data.lecture_ing_color_cd,
                     data.week_info.split('/').map((item)=>{
                         return DAYNAME_MATCH[item];
                     }).join('') + ' ' + data.start_time+' - '+data.end_time,
-                    "",
+                    data.member_name != undefined ? data.member_name : "",
                     data.start_date+' - '+data.end_date,
                     ""
-                )
-            );
+                );
+            if(data.lecture_member_repeat_schedule_list == undefined){
+                html_to_join.push(html_repeat_parent);
+                continue;
+            }
+
+            let length = data.lecture_member_repeat_schedule_list.length;
+            let html_to_join_participants = [];
+            for(let j=0; j<length; j++){
+                let data2 = data.lecture_member_repeat_schedule_list[j];
+                html_to_join_participants.push(
+                    this.dom_row_repeat_participants(
+                        data2.repeat_schedule_id, 
+                        data2.member_id, 
+                        data2.member_name, 
+                        data2.member_profile_url)
+                );
+            }
+            let html_repeat_participants = '<div style="margin-bottom:20px;">' + html_to_join_participants.join("") + '</div>';
+            if(length == 0){
+                html_repeat_participants = '';
+            }
+            html_to_join.push(html_repeat_parent + html_repeat_participants);
         }
         html_to_join.unshift(
             `<div style="margin-top:10px;margin-bottom:10px;height:33px;">`+
@@ -683,10 +704,10 @@ class Lecture_view{
                 //     });
                 // }) +
                 CComp.button("view_schedule_history", `${CImg.list([""], {"vertical-align":"middle", "margin-bottom":"3px", "margin-right":"2px", "width":"18px"})} 일정 이력`, {"font-size":"12px", "float":"right", "padding-right":"0"}, null, ()=>{
-                    // let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
-                    // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_SCHEDULE_HISTORY, 100, popup_style, null, ()=>{
-                    //     member_schedule_history = new Member_schedule_history('.popup_member_schedule_history', this.member_id, null);
-                    // });
+                    let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_LECTURE_SCHEDULE_HISTORY, 100, popup_style, null, ()=>{
+                        lecture_schedule_history = new Lecture_schedule_history('.popup_lecture_schedule_history', this.lecture_id, null);
+                    });
                 }) +
             `</div>
             <div>${CComponent.dom_tag('반복 일정', {"padding-left":"0", "padding-top":"0"})}</div>
@@ -755,6 +776,49 @@ class Lecture_view{
             });
         });
 
+        return html;
+    }
+
+    dom_row_repeat_participants(repeat_id, member_id, member_name, member_photo){
+        let html = `<div id="repeat_item_${repeat_id}" style="display:flex;width:100%;height:32px;padding:0 15px;box-sizing:border-box;cursor:pointer;">
+                        <div style="flex-basis:24px;"><img src="${member_photo}" style="border-radius:50%;width:20px;vertical-align:middle;"></div>
+                        <div style="flex:1 1 0;font-size:14px;font-weight:500;letter-spacing:-0.6px;color:var(--font-main);line-height:32px;">${member_name}</div>
+                    </div>`;
+        $(document).off('click', `#repeat_item_${repeat_id}`).on('click', `#repeat_item_${repeat_id}`, function(e){
+            let user_option = {
+                delete:{text:"삭제", callback:()=>{
+                    layer_popup.close_layer_popup();
+                    let inspect = pass_inspector.schedule_delete();
+                    if(inspect.barrier == BLOCKED){
+                        let message = `${inspect.limit_type}`;
+                        show_error_message({title:message});
+                        return false;
+                    }
+                    show_user_confirm({title:`정말 ${member_name}회원님의 반복 일정을 취소하시겠습니까?`}, ()=>{
+                        layer_popup.close_layer_popup();
+                        Loading.show(`${member_name}님의 반복 일정을 삭제 중입니다.<br>일정이 많은 경우 최대 2~4분까지 소요될 수 있습니다.`);
+                        Plan_func.delete_plan_repeat({"repeat_schedule_id":repeat_id}, ()=>{
+                            Loading.hide();
+                            try{
+                                current_page.init();
+                            }catch(e){}
+                            try{
+                                this.init();
+                            }catch(e){}
+                            layer_popup.close_layer_popup();
+                        }, ()=>{Loading.hide();});
+                    });
+                }}
+            };
+            let options_padding_top_bottom = 16;
+            // let button_height = 8 + 8 + 52;
+            let button_height = 52;
+            let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
+            let root_content_height = $root_content.height();
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
+                option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+            });
+        });
         return html;
     }
 
