@@ -5576,7 +5576,7 @@ class AddProgramNoticeInfoView(LoginRequiredMixin, AccessTestMixin, View):
                 error = func_send_push_notice(to_member_type_cd, class_id,
                                               '[공지사항] - ' + class_name, title)
         if error is not None:
-            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+            logger.error('[' + str(request.user.id) + ']' + error)
             # messages.error(request, error)
             context['messageArray'] = error
 
