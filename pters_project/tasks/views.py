@@ -364,7 +364,7 @@ class SendAllSchedulePushAlarmDataView(View):
             check_async = True
         if len(schedule_list) > 0:
             if check_async:
-                error = task_send_aws_lambda_for_push_alarm.delay({'alarm_schedule': list(schedule_list)})
+                task_send_aws_lambda_for_push_alarm.delay({'alarm_schedule': list(schedule_list)})
             else:
                 error = send_aws_lambda_for_push_alarm({'alarm_schedule': list(schedule_list)})
 
