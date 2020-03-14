@@ -817,7 +817,7 @@ def func_send_push_trainer(member_ticket_id, title, message):
             check_async = True
         if len(registration_ids) > 0:
             if check_async:
-                error = task_send_fire_base_push_multi.delay(registration_ids, title, message, multi_badge_counter)
+                task_send_fire_base_push_multi.delay(registration_ids, title, message, multi_badge_counter)
             else:
                 error = send_fire_base_push_multi(registration_ids, title, message, multi_badge_counter)
 
@@ -897,7 +897,7 @@ def func_send_push_trainee(class_id, title, message):
             check_async = True
         if len(registration_ids) > 0:
             if check_async:
-                error = task_send_fire_base_push_multi.delay(registration_ids, title, message, multi_badge_counter)
+                task_send_fire_base_push_multi.delay(registration_ids, title, message, multi_badge_counter)
             else:
                 error = send_fire_base_push_multi(registration_ids, title, message, multi_badge_counter)
     return error
@@ -962,7 +962,7 @@ def func_send_push_trainer_trainer(class_id, title, message, member_id):
             check_async = True
         if len(registration_ids) > 0:
             if check_async:
-                error = task_send_fire_base_push_multi.delay(registration_ids, title, message, multi_badge_counter)
+                task_send_fire_base_push_multi.delay(registration_ids, title, message, multi_badge_counter)
             else:
                 error = send_fire_base_push_multi(registration_ids, title, message, multi_badge_counter)
     return error
@@ -998,7 +998,7 @@ def func_send_push_notice(to_member_type_cd, class_id, title, message):
         check_async = True
     if len(registration_ids) > 0:
         if check_async:
-            error = task_send_fire_base_push_multi_without_badge.delay(registration_ids, title, message)
+            task_send_fire_base_push_multi_without_badge.delay(registration_ids, title, message)
         else:
             error = send_fire_base_push_multi_without_badge(registration_ids, title, message)
 
