@@ -32,6 +32,7 @@ class Plan_view{
             member_schedule_state:[],
             member_schedule_permission_state_cd:[],
             member_schedule_reg_dt:[],
+            member_profile_url:[],
             date: null,
             date_text: null,
             start_dt:null,
@@ -168,6 +169,8 @@ class Plan_view{
         this.data.lecture_name = data.schedule_info[0].lecture_name;
         this.data.member_id = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.member_id}`;});
         this.data.member_id_original = this.data.member_id.slice();
+        this.data.member_profile_url = data.schedule_info[0].lecture_schedule_data.map((it)=>{return it.member_profile_url;});
+        this.data.member_profile_url_original = this.data.member_profile_url.slice();
         this.data.member_name = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.member_name}`;});
         this.data.member_schedule_id = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.schedule_id}`;});
         this.data.member_schedule_state = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.state_cd}`;});
@@ -176,6 +179,8 @@ class Plan_view{
         if(data.schedule_info[0].schedule_type == 1){
             this.data.member_id.push(data.schedule_info[0].member_id);
             this.data.member_id_original.push(this.data.member_id);
+            this.data.member_profile_url.push(data.schedule_info[0].member_profile_url);
+            this.data.member_profile_url_original.push(this.data.member_profile_url);
             this.data.member_name.push(data.schedule_info[0].member_name);
             this.data.member_schedule_id.push(data.schedule_info[0].schedule_id);
             this.data.member_schedule_state.push(data.schedule_info[0].state_cd);
@@ -558,7 +563,7 @@ class Plan_view{
             let member_id = this.data.member_id[i];
             let member_name = this.data.member_name[i];
             let member_schedule_id = this.data.member_schedule_id[i];
-            let icon_button_style = {"padding":"3px 1%", "width":"45%","height":"50px", "overflow":"hidden", "text-overflow":"ellipsis", "white-space":"nowrap", "font-size":"15px", "font-weight":"500", "text-align":"left"};
+            let icon_button_style = {"position":"relative", "padding":"3px 1%", "width":"45%","height":"50px", "overflow":"hidden", "text-overflow":"ellipsis", "white-space":"nowrap", "font-size":"15px", "font-weight":"500", "text-align":"left"};
             let state = this.data.member_schedule_state[i];
             let permission_state_cd = this.data.member_schedule_permission_state_cd[i];
 
@@ -573,8 +578,11 @@ class Plan_view{
                 // state_icon_url = CImg.confirm(["var(--img-sub1)"], {"vertical-align":"middle", "margin-bottom":"3px"});
                 state_icon_url = CImg.confirm_circle(["green"], {"vertical-align":"middle", "margin-bottom":"3px"});
             }else if(state == SCHEDULE_NOT_FINISH){
-                state_icon_url = DELETE;
+                // state_icon_url = DELETE;
+                state_icon_url = "";
             }
+
+            let profile_image = `<img src="${this.data.member_profile_url[i]}" style="width:24px;height:24px;vertical-align:middle;margin-bottom:4px;">`;
             let temp_html =
                 CComponent.icon_button(member_id, member_name, state_icon_url, icon_button_style, ()=>{
                     let auth_inspect;
