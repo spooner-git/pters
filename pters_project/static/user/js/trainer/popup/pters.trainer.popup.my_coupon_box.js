@@ -5,7 +5,8 @@ class My_coupon_box{
         
 
         this.data = {
-            promotion_code:null
+            promotion_code:null,
+            coupons:{}
         };
 
         this.tab = "coupon";
@@ -21,7 +22,7 @@ class My_coupon_box{
 
     set_initial_data (){
         My_coupon_box_func.read((data)=>{
-            
+            this.data.coupons = data.coupon_data;
             this.render_content();
         });
         func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
@@ -78,9 +79,14 @@ class My_coupon_box{
             {id:3, name:"생일 축하 30일", expiry:"2020-3-30", obtain:"2020-2-24", description:"유료고객: 기간연장, 신규고객: 스탠다드 이용권 지급"}
         ];
         let html_to_join = [];
-        for(let i=0; i<demo.length; i++){
+        // for(let i=0; i<demo.length; i++){
+        //     html_to_join.push(
+        //         this.dom_row_coupon(demo[i])
+        //     );
+        // }
+        for(let coupon in this.data.coupons){
             html_to_join.push(
-                this.dom_row_coupon(demo[i])
+                this.dom_row_coupon(this.data.coupons[coupon])
             );
         }
 
@@ -91,18 +97,18 @@ class My_coupon_box{
 
 
     dom_row_coupon(data){
-        let coupon_id = data.id;
-        let coupon_name = data.name;
-        let coupon_expiry = data.expiry;
-        let coupon_obtain = data.obtain;
-        let coupon_description = data.description;
+        let coupon_id = data.coupon_id;
+        let coupon_name = data.coupon_name;
+        let coupon_expiry = data.coupon_expiry_date;
+        let coupon_obtain = data.coupon_start_date;
+        let coupon_description = data.coupon_contents;
 
         let content = `<article class="coupon_wrapper">
                         <div style="display:flex;margin-bottom:5px;">
                             <div style="flex:1 1 0;font-size:15px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${coupon_name}</div>
                             <div style="flex-basis:80px;font-size:12px;color:var(--font-sub-normal);font-weight:500;text-align:right;">사용 ${CImg.arrow_right([""], {"vertical-align":"middle"})}</div>
                         </div>
-                        <div style="height:18px"><span style='font-size:12px;color:var(--font-sub-dark);letter-spacing:-0.6px;font-weight:normal;vertical-align:top'>${coupon_description}</div>
+                        <div style="height:auto;min-height:18px;"><span style='font-size:12px;color:var(--font-sub-dark);letter-spacing:-0.6px;font-weight:normal;vertical-align:top'>${coupon_description}</div>
                         <div style="height:18px"><span style='font-size:12px;color:var(--font-sub-dark);letter-spacing:-0.6px;font-weight:normal;vertical-align:top'>지급일 ${coupon_obtain} / 만료일 ${coupon_expiry}</span></div>
                     </article>
                     `;
@@ -163,19 +169,19 @@ class My_coupon_box{
         CComp.button(
             "promotion_code_confirm",
             "확인",
-            {"border":"var(--border-article-dark)", "border-radius":"4px", "padding":"12px 0", "height":"28px", "line-height":"28px"},
+            {"border":"var(--border-article-dark)", "border-radius":"4px", "padding":"12px 0", "height":"28px", "line-height":"28px", "font-size":"14px"},
             null,
             ()=>{
                 if(this.data.promotion_code != null){
                     My_coupon_box_func.promotion_code_check(this.data.promotion_code, (data)=>{
                         console.log(data);
-                        show_user_confirm(
-                            {title:`[${data.product_name}] 쿠폰`, comment:`이 쿠폰을 내 쿠폰함에 보관하겠습니까?`},
-                            ()=>{
-                                layer_popup.close_layer_popup();
+                        // show_user_confirm(
+                        //     {title:`[${data.product_name}] 쿠폰`, comment:`이 쿠폰을 내 쿠폰함에 보관하겠습니까?`},
+                        //     ()=>{
+                                // layer_popup.close_layer_popup();
                                 show_error_message({title:"내 쿠폰에서 확인해주세요"});
-                            }
-                        );
+                        //     }
+                        // );
                     });
                 }else{
                     show_error_message(
@@ -321,7 +327,7 @@ class My_coupon_box_func{
 
     static read(callback, error_callback){
         $.ajax({
-            url:"/trainer/get_trainer_setting_data/",
+            url:"/payment/get_member_coupon_list/",
             type:'GET',
             dataType : 'JSON',
     
@@ -361,12 +367,15 @@ class My_coupon_box_func{
         });
     }
 
-    static promotion_code_check(promotion_code, callback){
+    static promotion_code_check(coupon_cd, callback){
+        console.log("coupon_cd", coupon_cd)
         $.ajax({
-            url: "/payment/get_coupon_product_info/",
-            method: "GET",
+            // url: "/payment/get_coupon_product_info/",
+            url: "/payment/add_member_coupon/",
+            // method: "GET",
+            method: "POST",
             data: {
-                "coupon_cd": promotion_code
+                "coupon_cd": coupon_cd
             },
             dataType: "html",
     
