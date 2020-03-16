@@ -238,7 +238,6 @@ class GetMemberScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
         member_id = request.GET.get('member_id', '')
         page = request.GET.get('page', 1)
         sort = request.GET.get('sort_val', SORT_SCHEDULE_DT)
-
         error = None
         ordered_schedule_dict = collections.OrderedDict()
 
@@ -247,9 +246,10 @@ class GetMemberScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
         # context = {}
         if error is None:
             if str(sort) == str(SORT_SCHEDULE_DT):
-                ordered_schedule_dict = {
-                    'member_schedule': func_get_member_schedule_all_by_schedule_dt(class_id, member_id, page)
-                }
+                # ordered_schedule_dict = {
+                #     'member_schedule': func_get_member_schedule_all_by_schedule_dt(class_id, member_id, page)
+                # }
+                ordered_schedule_dict = func_get_member_schedule_all_by_schedule_dt(class_id, member_id, page)
                 # context['test'] = ordered_schedule_dict['member_schedule']
             elif str(sort) == str(SORT_SCHEDULE_MONTHLY):
                 ordered_schedule_dict = func_get_member_schedule_all_by_monthly(class_id, member_id, page)

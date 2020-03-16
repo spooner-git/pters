@@ -431,11 +431,11 @@ class Member_schedule_history{
     dom_list_by_time(received_data){
         let length = received_data.member_schedule.length;
         let html_to_join = [];
-        for(let i=length-1; i>=0; i--){
+        for(let i=0; i<length; i++){
         // for(let i=0; i<length; i++){
             let data = received_data.member_schedule[i];
-            // let numbering = data.schedule_idx + ' 회차';
-            let numbering = Number(i+1) + ' 회차';
+            let numbering = data.schedule_idx + ' 회차';
+            // let numbering = Number(i+1) + ' 회차';
             let schedule_id = data.schedule_id;
             let date =  DateRobot.to_text(data.start_dt.split(' ')[0], '', '', SHORT) +' '+ TimeRobot.to_text(data.start_dt.split(' ')[1], '', SHORT) + ' - ' +
                             TimeRobot.to_text(data.end_dt.split(' ')[1], '', SHORT);
@@ -995,9 +995,9 @@ class Member_schedule_history{
             this.settings.sign_use = settings.setting_schedule_sign_enable;
             let send_data = {"member_id": this.member_id, "sort_val": this.sort_val, "page": this.this_page};
             Member_func.read_schedule_list_by_ticket(send_data, (data)=>{
-                let demo = {max_page: 5, this_page:1};
-                this.this_page = demo.this_page;
-                this.max_page = demo.max_page;
+                // let demo = {max_page: 5, this_page:1};
+                this.this_page = data.this_page;
+                this.max_page = data.max_page;
 
                 this.received_data = data;
                 callback(data);
