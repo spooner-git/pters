@@ -23,20 +23,18 @@ class Mypage{
     }
 
     set_initial_data (){
-        My_coupon_box_func.read((data)=>{
-            this.data.coupons = Object.keys(data.coupon_data).length;
-            Mypage_func.read((data)=>{
-                this.data.db_id = data.trainer_info.member_id;
-                this.data.user_id = data.trainer_info.member_user_id;
-                this.data.name = data.trainer_info.member_name;
-                this.data.phone = data.trainer_info.member_phone;
-                this.data.email = data.trainer_info.member_email;
-                this.data.sex = data.trainer_info.member_sex;
-                this.data.birth = data.trainer_info.member_birthday_dt;
-                this.data.photo = data.trainer_info.member_profile_url;
-                this.render();
-                func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
-            });
+        Mypage_func.read((data)=>{
+            this.data.coupons = data.trainer_info.member_coupon_count;
+            this.data.db_id = data.trainer_info.member_id;
+            this.data.user_id = data.trainer_info.member_user_id;
+            this.data.name = data.trainer_info.member_name;
+            this.data.phone = data.trainer_info.member_phone;
+            this.data.email = data.trainer_info.member_email;
+            this.data.sex = data.trainer_info.member_sex;
+            this.data.birth = data.trainer_info.member_birthday_dt;
+            this.data.photo = data.trainer_info.member_profile_url;
+            this.render();
+            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
         });
     }
 
