@@ -1769,7 +1769,7 @@ def add_member_coupon_logic(request):
         coupon = CouponTb(member_id=request.user.id, name=coupon_info.name, contents=coupon_info.contents,
                           start_date=datetime.date.today(), expiry_date=coupon_info.expiry_date,
                           coupon_cd=coupon_info.coupon_cd, promotion_type_cd=coupon_info.promotion_type_cd,
-                          product_tb_id=coupon_info.product_tb_id,
+                          product_tb_id=coupon_info.product_id,
                           use=USE)
         coupon.save()
     else:
