@@ -21,7 +21,7 @@ class My_coupon_box{
 
     set_initial_data (){
         My_coupon_box_func.read((data)=>{
-            
+            console.log("Data", data)
             this.render_content();
         });
         func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
@@ -163,7 +163,7 @@ class My_coupon_box{
         CComp.button(
             "promotion_code_confirm",
             "확인",
-            {"border":"var(--border-article-dark)", "border-radius":"4px", "padding":"12px 0", "height":"28px", "line-height":"28px"},
+            {"border":"var(--border-article-dark)", "border-radius":"4px", "padding":"12px 0", "height":"28px", "line-height":"28px", "font-size":"14px"},
             null,
             ()=>{
                 if(this.data.promotion_code != null){
@@ -321,7 +321,7 @@ class My_coupon_box_func{
 
     static read(callback, error_callback){
         $.ajax({
-            url:"/trainer/get_trainer_setting_data/",
+            url:"/payment/get_member_coupon_list/",
             type:'GET',
             dataType : 'JSON',
     
@@ -361,12 +361,15 @@ class My_coupon_box_func{
         });
     }
 
-    static promotion_code_check(promotion_code, callback){
+    static promotion_code_check(coupon_cd, callback){
+        console.log("coupon_cd", coupon_cd)
         $.ajax({
-            url: "/payment/get_coupon_product_info/",
-            method: "GET",
+            // url: "/payment/get_coupon_product_info/",
+            url: "/payment/add_member_coupon/",
+            // method: "GET",
+            method: "POST",
             data: {
-                "coupon_cd": promotion_code
+                "coupon_cd": coupon_cd
             },
             dataType: "html",
     
