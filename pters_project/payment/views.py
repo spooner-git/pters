@@ -1757,7 +1757,7 @@ def add_member_coupon_logic(request):
 
     if error is None:
         try:
-            coupon_info = CouponTb.objects.get(coupon_cd=coupon_cd, use=USE)
+            coupon_info = ProductTb.objects.get(coupon_cd=coupon_cd, use=USE)
             if coupon_info.expiry_date < timezone.now():
                 error = '오류 : 유효기간이 지난 쿠폰입니다.'
             if coupon_info.coupon_amount <= 0:
