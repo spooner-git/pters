@@ -1767,7 +1767,7 @@ def add_member_coupon_logic(request):
 
     if error is None:
         coupon = CouponTb(member_id=request.user.id, name=coupon_info.name, contents=coupon_info.contents,
-                          start_date=coupon_info.start_date, expiry_date=coupon_info.expiry_date,
+                          start_date=datetime.date.today(), expiry_date=coupon_info.expiry_date,
                           coupon_cd=coupon_info.coupon_cd, promotion_type_cd=coupon_info.promotion_type_cd,
                           product_tb_id=coupon_info.product_tb_id,
                           use=USE)
