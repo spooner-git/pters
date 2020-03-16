@@ -10,6 +10,7 @@ class Mypage{
             email:null,
             sex:null,
             birth:null,
+            coupons:null,
             photo:'/static/common/icon/icon_account.png'
         };
 
@@ -22,19 +23,21 @@ class Mypage{
     }
 
     set_initial_data (){
-        Mypage_func.read((data)=>{
-            this.data.db_id = data.trainer_info.member_id;
-            this.data.user_id = data.trainer_info.member_user_id;
-            this.data.name = data.trainer_info.member_name;
-            this.data.phone = data.trainer_info.member_phone;
-            this.data.email = data.trainer_info.member_email;
-            this.data.sex = data.trainer_info.member_sex;
-            this.data.birth = data.trainer_info.member_birthday_dt;
-            this.data.photo = data.trainer_info.member_profile_url;
-            this.render();
-            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
+        My_coupon_box_func.read((data)=>{
+            this.data.coupons = Object.keys(data.coupon_data).length;
+            Mypage_func.read((data)=>{
+                this.data.db_id = data.trainer_info.member_id;
+                this.data.user_id = data.trainer_info.member_user_id;
+                this.data.name = data.trainer_info.member_name;
+                this.data.phone = data.trainer_info.member_phone;
+                this.data.email = data.trainer_info.member_email;
+                this.data.sex = data.trainer_info.member_sex;
+                this.data.birth = data.trainer_info.member_birthday_dt;
+                this.data.photo = data.trainer_info.member_profile_url;
+                this.render();
+                func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
+            });
         });
-        
     }
 
     clear(){
@@ -181,13 +184,22 @@ class Mypage{
     }
 
     dom_row_my_coupon_box(){
-        let my_coupon_number = 3;
+        let new_coupon_indicator = `<div style="
+                                        display: inline-block;
+                                        width: 5px;
+                                        height: 5px;
+                                        background-color: #fe4e65;
+                                        border-radius: 50%;
+                                        vertical-align: middle;
+                                        margin-right: 5px;
+                                        margin-bottom: 3px;
+                                    "></div>`;
 
         let id = "my_coupon";
         let title = "쿠폰함";
         let icon = DELETE;
         let icon_r_visible = SHOW;
-        let icon_r_text = my_coupon_number > 0 ? `${my_coupon_number} 개` : `0 개`;
+        let icon_r_text = this.data.coupons > 0 ? `${new_coupon_indicator} ${this.data.coupons} 개` : `0 개`;
         let style = null;
         let onclick = ()=>{
             sideGoPopup('my_coupon_box');

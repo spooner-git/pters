@@ -179,6 +179,12 @@ class My_coupon_box{
                         //     {title:`[${data.product_name}] 쿠폰`, comment:`이 쿠폰을 내 쿠폰함에 보관하겠습니까?`},
                         //     ()=>{
                                 // layer_popup.close_layer_popup();
+                                this.set_initial_data();
+                                try{
+                                    mypage_popup.init();
+                                }catch(e){
+
+                                }
                                 show_error_message({title:"내 쿠폰에서 확인해주세요"});
                         //     }
                         // );
