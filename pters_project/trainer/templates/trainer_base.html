@@ -179,7 +179,10 @@
                 </svg>
             </div>
             <div class="up_menu_tool">
-                <div style="flex:1 0 140px" id="up_menu_user_info" onclick="sideGoPopup('mypage')"><img src={% static_url "common/loading.svg" %} alt="" class="up_menu_img"><span>불러오는 중</span></div>
+                <div style="flex:1 0 140px;position:relative" id="up_menu_user_info" onclick="sideGoPopup('mypage')">
+                    <img src={% static_url "common/loading.svg" %} alt="" class="up_menu_img">
+                    <span>불러오는 중</span>
+                </div>
                 <div style="flex:1 0 0;position:relative" onclick="sideGoPage('alarm')">
                     <!-- <img src="/static/common/icon/tab_bar/icon_alarm_off.png" alt="" class="up_menu_img" onclick="sideGoPage('alarm')"> -->
                     <svg class="up_menu_img" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -193,7 +196,7 @@
                             <use id="Combined-Shape" fill="var(--img-main)" fill-rule="nonzero" xlink:href="#path-1"></use>
                         </g>
                     </svg>
-                    <div class="new_alarm_indicator" style="top:15px;right:5px;"></div>
+                    <div class="new_alarm_indicator alarm_new_dot" style="top:15px;right:5px;"></div>
                 </div>
                 <div style="flex:1 0 0" onclick="sideGoPopup('helper')">
                     <!-- <img src="/static/common/icon/icon_help_black.png" alt="" class="up_menu_img" onclick="sideGoPopup('helper')"> -->
@@ -263,7 +266,7 @@
                                     </g>
                                 </svg>
                                 <!-- <img src={% static_url "common/icon/tab_bar/icon_alarm_off.png" %} alt=""> -->
-                                <div class="new_alarm_indicator"></div>
+                                <div class="new_alarm_indicator alarm_new_dot"></div>
                             </div>
                         </div>
                         <div class="obj_table_cell_x5 nav_item" onclick="sideGoPage('menu', this)" id="menu">
@@ -274,6 +277,7 @@
                                     </g>
                                 </svg>
                                 <!-- <img src={% static_url "common/icon/tab_bar/icon_menu_off.png" %} alt=""> -->
+                                <div class="new_alarm_indicator menu_new_dot"></div>
                             </div>
                         </div>
                     </div>
@@ -1051,9 +1055,9 @@
     function are_there_new_alarm(){
         alarm.are_there_new_alarm((new_alarm_number)=>{
             if(new_alarm_number > 0){
-                $('.new_alarm_indicator').show();
+                $('.alarm_new_dot').show();
             }else{
-                $('.new_alarm_indicator').hide();
+                $('.alarm_new_dot').hide();
             }
         });
     }
@@ -1065,8 +1069,14 @@
             let user_id = data.trainer_info.member_id;
             let user_name = data.trainer_info.member_name;
             let user_photo = data.trainer_info.member_profile_url;
-            let target = document.getElementById('up_menu_user_info')
-            target.innerHTML = `<img src="${user_photo}" alt="" class="up_menu_img" style="border-radius:50%"><span>${user_name}</span>`;
+            let target = document.getElementById('up_menu_user_info');
+            let user_coupon_count = data.trainer_info.member_coupon_count;
+            target.innerHTML = `<img src="${user_photo}" alt="" class="up_menu_img" style="border-radius:50%"><span>${user_name}</span><div class="new_alarm_indicator menu_new_dot" style="top:15px;left:0px;"></div>`;
+            if(user_coupon_count > 0){
+                $(".menu_new_dot").show();
+            }else{
+                $(".menu_new_dot").hide();
+            }
         });
     }
 
