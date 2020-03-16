@@ -414,21 +414,21 @@ def delete_schedule_logic(request):
 
     if error is None:
         # 개인 레슨인 경우
-        if lecture_info is None and member_ticket_info is not None:
-            member_ticket_id = schedule_info.member_ticket_tb_id
-            member_name = schedule_info.member_ticket_tb.member.name
-
-            try:
-                lecture_one_to_one = LectureTb.objects.filter(class_tb_id=class_id,
-                                                              lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, state_cd='IP',
-                                                              use=USE).earliest('reg_dt')
-                lecture_name = lecture_one_to_one.name
-            except ObjectDoesNotExist:
-                lecture_name = '개인'
-
-            if str(setting_to_trainee_lesson_alarm) == str(TO_TRAINEE_LESSON_ALARM_ON):
-                func_send_push_trainer(member_ticket_id, class_type_name + ' - 일정 알림',
-                                       push_schedule_info + ' [' +lecture_name + '] 수업이 취소됐습니다.')
+        # if lecture_info is None and member_ticket_info is not None:
+        #     member_ticket_id = schedule_info.member_ticket_tb_id
+        #     member_name = schedule_info.member_ticket_tb.member.name
+        #
+        #     try:
+        #         lecture_one_to_one = LectureTb.objects.filter(class_tb_id=class_id,
+        #                                                       lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, state_cd='IP',
+        #                                                       use=USE).earliest('reg_dt')
+        #         lecture_name = lecture_one_to_one.name
+        #     except ObjectDoesNotExist:
+        #         lecture_name = '개인'
+        #
+        #     if str(setting_to_trainee_lesson_alarm) == str(TO_TRAINEE_LESSON_ALARM_ON):
+        #         func_send_push_trainer(member_ticket_id, class_type_name + ' - 일정 알림',
+        #                                push_schedule_info + ' [' +lecture_name + '] 수업이 취소됐습니다.')
 
         # 그룹 레슨 + 회원 일정인 경우
         if lecture_info is not None and member_ticket_info is not None:
@@ -471,19 +471,19 @@ def delete_schedule_logic(request):
                                   member_ticket_tb_id=member_ticket_id, log_info=lecture_name + ' 수업',
                                   log_how='예약 확정', log_detail=log_info, use=USE).save()
 
-        if str(setting_to_shared_trainer_lesson_alarm) == str(TO_SHARED_TRAINER_LESSON_ALARM_ON):
-            if member_name != '' and member_name is not None:
-                func_send_push_trainer_trainer(class_id, class_type_name + ' - 일정 알림', member_name + '님의 '
-                                               + push_schedule_info + ' [' + lecture_name + '] 수업이 취소됐습니다.',
-                                               request.user.id)
-            else:
-                func_send_push_trainer_trainer(class_id, class_type_name + ' - 일정 알림',
-                                               push_schedule_info + ' [' + lecture_name + '] 수업이 취소됐습니다.',
-                                               request.user.id)
+            if str(setting_to_shared_trainer_lesson_alarm) == str(TO_SHARED_TRAINER_LESSON_ALARM_ON):
+                if member_name != '' and member_name is not None:
+                    func_send_push_trainer_trainer(class_id, class_type_name + ' - 일정 알림', member_name + '님의 '
+                                                   + push_schedule_info + ' [' + lecture_name + '] 수업이 취소됐습니다.',
+                                                   request.user.id)
+                else:
+                    func_send_push_trainer_trainer(class_id, class_type_name + ' - 일정 알림',
+                                                   push_schedule_info + ' [' + lecture_name + '] 수업이 취소됐습니다.',
+                                                   request.user.id)
 
-        LogTb(log_type='LS02', auth_member_id=request.user.id, from_member_name=trainer_name,
-              to_member_name=member_name, class_tb_id=class_id, member_ticket_tb_id=member_ticket_id,
-              log_info=lecture_name + ' 수업', log_how='취소', log_detail=log_info, use=USE).save()
+            LogTb(log_type='LS02', auth_member_id=request.user.id, from_member_name=trainer_name,
+                  to_member_name=member_name, class_tb_id=class_id, member_ticket_tb_id=member_ticket_id,
+                  log_info=lecture_name + ' 수업', log_how='취소', log_detail=log_info, use=USE).save()
 
     if error is None:
         # 그룹 레슨의 경우
