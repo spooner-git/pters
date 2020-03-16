@@ -93,5 +93,8 @@ urlpatterns = [
 
     url(r'^ios_receipt_validation/$', views.ios_receipt_validation_logic, name='ios_receipt_validation'),
 
+    url(r'^add_member_coupon', views.add_member_coupon_logic, name='add_member_coupon'),
+    url(r'^get_member_coupon_list/$', views.GetMemberCouponListView.as_view(), name='get_member_coupon_list')
+
     ###################################################################################################################
 ]

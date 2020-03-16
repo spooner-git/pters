@@ -1,8 +1,9 @@
 import datetime
 import json
 import logging
-
+import collections
 import httplib2
+
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
@@ -11,6 +12,7 @@ from django.db import IntegrityError
 from django.db import InternalError
 from django.db import transaction
 from django.db.models import Q
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.views import View
@@ -25,7 +27,7 @@ from .functions import func_set_billing_schedule, func_get_imp_token, func_resen
     func_check_payment_price_info, func_get_end_date, func_cancel_period_billing_schedule, \
     func_set_billing_schedule_now, func_get_payment_info_from_imp, func_set_iamport_schedule
 from .models import PaymentInfoTb, BillingInfoTb, ProductTb, BillingCancelInfoTb, ProductPriceTb, \
-    ProductFunctionAuthTb, IosReceiptCheckTb
+    ProductFunctionAuthTb, IosReceiptCheckTb, CouponTb
 
 logger = logging.getLogger(__name__)
 
@@ -1743,3 +1745,58 @@ def ios_receipt_validation_logic(request):
             ios_receipt_validation_info.save()
 
     return render(request, 'ajax/payment_error_info.html')
+
+
+def add_member_coupon_logic(request):
+    coupon_cd = request.POST.get('coupon_cd', '')
+    coupon_info = None
+
+    error = None
+    if coupon_cd is None or coupon_cd == '':
+        error = '쿠폰 코드를 다시 확인해주세요.[1]'
+
+    if error is None:
+        try:
+            coupon_info = CouponTb.objects.get(coupon_cd=coupon_cd, use=USE)
+            if coupon_info.expiry_date < timezone.now():
+                error = '오류 : 유효기간이 지난 쿠폰입니다.'
+            if coupon_info.coupon_amount <= 0:
+                error = '오류 : 쿠폰이 모두 소진됐습니다.'
+        except ObjectDoesNotExist:
+            error = '쿠폰 코드를 다시 확인해주세요.[2]'
+
+    if error is None:
+        coupon = CouponTb(member_id=request.user.id, name=coupon_info.name, contents=coupon_info.contents,
+                          start_date=coupon_info.start_date, expiry_date=coupon_info.expiry_date,
+                          coupon_cd=coupon_info.coupon_cd, promotion_type_cd=coupon_info.promotion_type_cd,
+                          product_tb_id=coupon_info.product_tb_id,
+                          use=USE)
+        coupon.save()
+    else:
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
+        messages.error(request, error)
+
+    return render(request, 'ajax/payment_error_info.html')
+
+
+class GetMemberCouponListView(LoginRequiredMixin, View):
+    # template_name = 'test.html'
+    def get(self, request):
+        coupon_data_dict = collections.OrderedDict()
+        coupon_data = CouponTb.objects.select_related('product_tb').filter(member_id=request.user.id, use=USE)
+
+        for coupon_info in coupon_data:
+            coupon_data_dict[coupon_info.coupon_id] = {'coupon_id': coupon_info.coupon_id,
+                                                       'coupon_name': coupon_info.name,
+                                                       'coupon_contents': coupon_info.contents,
+                                                       'coupon_start_date': str(coupon_info.start_date),
+                                                       'coupon_expiry_date': str(coupon_info.expiry_date),
+                                                       'coupon_cd': coupon_info.coupon_cd,
+                                                       'coupon_promotion_type_cd': coupon_info.promotion_type_cd,
+                                                       'coupon_product_id': coupon_info.product_tb_id,
+                                                       'coupon_product_name': coupon_info.product_tb.name,
+                                                       'coupon_mod_dt': coupon_info.mod_dt,
+                                                       'coupon_reg_dt': coupon_info.reg_dt,
+                                                       'coupon_use': coupon_info.use}
+
+        return JsonResponse({'coupon_data': coupon_data_dict}, json_dumps_params={'ensure_ascii': True})

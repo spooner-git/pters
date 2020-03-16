@@ -166,3 +166,24 @@ class IosReceiptCheckTb(TimeStampedModel):
         db_table = 'IOS_RECEIPT_CHECK_TB'
         verbose_name = 'IOS 영수증'
         verbose_name_plural = 'IOS 영수증'
+
+
+class CouponTb(TimeStampedModel):
+    coupon_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    member = models.ForeignKey(MemberTb, verbose_name='회원', on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    name = models.CharField('쿠폰명', db_column='NAME', max_length=100, blank=True, default='')
+    contents = models.CharField('쿠폰 내용', db_column='CONTENTS', max_length=1000,  blank=True, default='')
+    start_date = models.DateTimeField('지급일', db_column='START_DATE', blank=True)
+    expiry_date = models.DateTimeField('만료일', db_column='EXPIRY_DATE', blank=True)
+    coupon_cd = models.CharField('쿠폰 코드', db_column='COUPON_CD', max_length=45, blank=True, default='')
+    promotion_type_cd = models.CharField('상품 타입', db_column='PROMOTION_TYPE_CD', max_length=45, blank=True, default='')
+    product_tb = models.ForeignKey(ProductTb, verbose_name='상품', on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'COUPON_TB'
+        verbose_name = '쿠폰'
+        verbose_name_plural = '쿠폰'
+
+    def __str__(self):
+        return self.name.__str__()
