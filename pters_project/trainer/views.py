@@ -51,7 +51,7 @@ from schedule.functions import func_refresh_member_ticket_count, func_get_traine
 from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb, ScheduleAlarmTb
 from stats.functions import get_sales_data
 from trainee.models import MemberTicketTb
-from payment.models import PaymentInfoTb, ProductFunctionAuthTb
+from payment.models import PaymentInfoTb, ProductFunctionAuthTb, CouponTb
 from .functions import func_get_trainer_setting_list, \
     func_get_member_ing_list, func_get_member_end_list, func_get_class_member_ing_list, func_get_class_member_end_list,\
     func_get_member_info, func_get_member_from_member_ticket_list, func_check_member_connection_info,\
@@ -4732,15 +4732,15 @@ def delete_background_img_info_logic(request):
 class GetTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
-        context = {}
+        # context = {}
         # context = super(GetTrainerInfoView, self).get_context_data(**kwargs)
         class_id = request.session.get('class_id', '')
         error = None
-        class_info = None
+        # class_info = None
 
-        center_name = '없음'
+        # center_name = '없음'
         user_member_info = None
-        off_repeat_schedule_data = None
+        # off_repeat_schedule_data = None
         member_data = collections.OrderedDict()
 
         if class_id is None or class_id == '':
@@ -4757,7 +4757,7 @@ class GetTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):
                 member_profile_url = '/static/common/icon/icon_account.png'
             else:
                 member_profile_url = user_member_info.profile_url
-
+            coupon_count = CouponTb.objects.filter(member_id=request.user.id, use=USE).count()
             member_data = {'member_id': request.user.id,
                            'member_user_id': user_member_info.user.username,
                            'member_name': user_member_info.name,
@@ -4766,24 +4766,9 @@ class GetTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):
                            'member_sex': str(user_member_info.sex),
                            'member_birthday_dt': str(user_member_info.birthday_dt),
                            'member_profile_url': member_profile_url,
-                           'member_phone_is_active': str(user_member_info.phone_is_active)
+                           'member_phone_is_active': str(user_member_info.phone_is_active),
+                           'member_coupon_count': coupon_count
                            }
-
-        if error is None:
-            try:
-                class_info = ClassTb.objects.get(class_id=class_id)
-            except ObjectDoesNotExist:
-                error = '오류가 발생했습니다.'
-
-        if error is None:
-            center_name = class_info.get_center_name()
-        if error is None:
-            off_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
-                                                                       en_dis_type=OFF_SCHEDULE_TYPE)
-
-        context['member_info'] = user_member_info
-        context['center_name'] = center_name
-        context['off_repeat_schedule_data'] = off_repeat_schedule_data
 
         return JsonResponse({'trainer_info': member_data}, json_dumps_params={'ensure_ascii': True})
 
