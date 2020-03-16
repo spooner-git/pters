@@ -119,7 +119,7 @@ class Menu {
     }
 
     dom_who_i_am(){
-        let new_indicator = this.data.coupons > 0 ? `<div class="new_alarm_indicator" style="position:relative;display:inline-block;vertical-align:top;margin-top:3px;"></div>` : "";
+        let new_indicator = this.data.coupons > 0 ? `<div class="new_alarm_indicator" style="position:relative;display:inline-block;vertical-align:top;margin-top:3px;margin-left:3px"></div>` : "";
         let member_id = null;
         let member_name = this.data.name == null ? "" : this.data.name;
         let onclick = `${this.instance}.go_to_profile()`;
