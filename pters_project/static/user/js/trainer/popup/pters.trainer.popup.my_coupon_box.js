@@ -169,13 +169,13 @@ class My_coupon_box{
                 if(this.data.promotion_code != null){
                     My_coupon_box_func.promotion_code_check(this.data.promotion_code, (data)=>{
                         console.log(data);
-                        show_user_confirm(
-                            {title:`[${data.product_name}] 쿠폰`, comment:`이 쿠폰을 내 쿠폰함에 보관하겠습니까?`},
-                            ()=>{
-                                layer_popup.close_layer_popup();
+                        // show_user_confirm(
+                        //     {title:`[${data.product_name}] 쿠폰`, comment:`이 쿠폰을 내 쿠폰함에 보관하겠습니까?`},
+                        //     ()=>{
+                                // layer_popup.close_layer_popup();
                                 show_error_message({title:"내 쿠폰에서 확인해주세요"});
-                            }
-                        );
+                        //     }
+                        // );
                     });
                 }else{
                     show_error_message(
