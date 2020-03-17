@@ -462,6 +462,13 @@ class GetAdminCouponListView(LoginRequiredMixin, AccessTestMixin, View):
         coupon_data = CouponTb.objects.select_related('product_tb').filter().order_by('order', '-reg_dt')
 
         for coupon_info in coupon_data:
+            product_tb = coupon_info.product_tb
+            product_id = ''
+            product_name = '기존 결제 상품'
+
+            if product_tb is not None and product_tb != '':
+                product_id = product_tb.product_id
+                product_name = product_tb.name
             coupon_data_dict[coupon_info.product_id] = {'coupon_id': coupon_info.coupon_id,
                                                         'coupon_cd': coupon_info.coupon_cd,
                                                         'coupon_name': coupon_info.name,
@@ -474,8 +481,8 @@ class GetAdminCouponListView(LoginRequiredMixin, AccessTestMixin, View):
                                                         'coupon_target': coupon_info.target,
                                                         'coupon_duplicate_enable': coupon_info.duplicate_enable,
                                                         'coupon_direct_reg_enable': coupon_info.direct_reg_enable,
-                                                        'coupon_product_id': coupon_info.product_tb_id,
-                                                        'coupon_product_name': coupon_info.product_tb.name,
+                                                        'coupon_product_id': product_id,
+                                                        'coupon_product_name': product_name,
                                                         'coupon_reg_dt': str(coupon_info.reg_dt),
                                                         'coupon_mod_dt': str(coupon_info.mod_dt),
                                                         'coupon_use': coupon_info.use
@@ -492,6 +499,13 @@ class GetAdminCouponInfoView(LoginRequiredMixin, AccessTestMixin, View):
         # start_time = timezone.now()
         coupon_id = request.GET.get('coupon_id', '')
         coupon_info = CouponTb.objects.get(coupon_id=coupon_id).order_by('order', '-reg_dt')
+        product_tb = coupon_info.product_tb
+        product_id = ''
+        product_name = '기존 결제 상품'
+
+        if product_tb is not None and product_tb != '':
+            product_id = product_tb.product_id
+            product_name = product_tb.name
 
         coupon = {'coupon_id': coupon_info.product_id,
                   'coupon_cd': coupon_info.coupon_cd,
@@ -505,8 +519,8 @@ class GetAdminCouponInfoView(LoginRequiredMixin, AccessTestMixin, View):
                   'coupon_target': coupon_info.target,
                   'coupon_duplicate_enable': coupon_info.duplicate_enable,
                   'coupon_direct_reg_enable': coupon_info.direct_reg_enable,
-                  'coupon_product_id': coupon_info.product_tb_id,
-                  'coupon_product_name': coupon_info.product_tb.name,
+                  'coupon_product_id': product_id,
+                  'coupon_product_name': product_name,
                   'coupon_reg_dt': str(coupon_info.reg_dt),
                   'coupon_mod_dt': str(coupon_info.mod_dt),
                   'coupon_use': coupon_info.use
@@ -556,8 +570,8 @@ class AddAdminCouponInfoView(LoginRequiredMixin, AccessTestMixin, View):
             error = '중복 등록 가능 여부를 선택해주세요.'
         if coupon_direct_reg_enable == '' or coupon_direct_reg_enable is None:
             error = '회원 직접 가능 여부를 선택해주세요.'
-        if coupon_product_id == '' or coupon_product_id is None:
-            error = '관련 상품을 선택해주세요.'
+        # if coupon_product_id == '' or coupon_product_id is None:
+        #     error = '관련 상품을 선택해주세요.'
         if coupon_product_effective_days == '' or coupon_product_effective_days is None:
             error = '상품 부여 기간일을 선택해주세요.'
         if coupon_name == '' or coupon_name is None:

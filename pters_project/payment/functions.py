@@ -6,9 +6,10 @@ import httplib2
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 
-from configs.const import USE, UN_USE
+from configs.const import USE, UN_USE, DISABLE, ALL_MEMBER, END_PAYMENT_MEMBER, ING_PAYMENT_MEMBER, NO_PAYMENT_MEMBER, \
+    NEW_MEMBER
 from configs import settings
-from .models import PaymentInfoTb, ProductPriceTb
+from .models import PaymentInfoTb, ProductPriceTb, CouponTb, CouponMemberTb
 
 logger = logging.getLogger(__name__)
 
@@ -229,6 +230,13 @@ def func_get_end_date(payment_type_cd, start_date, month, date):
     return end_date
 
 
+def func_get_end_date_by_day(start_date, day):
+
+    end_date = start_date + datetime.timedelta(days=day)
+
+    return end_date
+
+
 def func_cancel_period_billing_schedule(customer_uid):
     token_result = func_get_imp_token()
     access_token = token_result['access_token']
@@ -326,4 +334,66 @@ def func_set_iamport_schedule(access_token, name, price, customer_uid, merchant_
     if resp['status'] != '200':
         error = '오류가 발생했습니다.'
 
+    return error
+
+
+def func_check_coupon_use(coupon_cd, user_id, user_join_date):
+    error = None
+
+    today = datetime.date.today()
+    coupon_info = None
+    try:
+        coupon_info = CouponTb.objects.get(coupon_cd=coupon_cd, use=USE)
+        # 쿠폰 유효기간 체크
+        if coupon_info.end_date < timezone.now():
+            error = '오류 : 유효기간이 지난 쿠폰입니다.'
+        # 쿠폰 갯수 체크
+        if coupon_info.coupon_amount <= 0:
+            error = '오류 : 쿠폰이 모두 소진됐습니다.'
+        # 회원 직접 등록 가능 여부 체크
+        if coupon_info.direct_reg_enable == DISABLE:
+            error = '쿠폰 코드를 다시 확인해주세요.[2]'
+    except ObjectDoesNotExist:
+        error = '쿠폰 코드를 다시 확인해주세요.[3]'
+
+    if error is None:
+        month_ago = today - datetime.timedelta(days=31)
+        coupon_member_data = CouponMemberTb.objects.select_related(
+            'coupon_tb__product_tb').filter(member_id=user_id, coupon_cd=coupon_cd)
+
+        # 중복 등록 가능 여부 체크
+        if coupon_info.duplicate_enable == DISABLE and len(coupon_member_data) > 0:
+            error = '이미 등록된 쿠폰입니다.'
+
+        # target 체크
+        if coupon_info.target != ALL_MEMBER:
+            target = coupon_info.target
+            payment_data = PaymentInfoTb.objects.filter(member_id=user_id,
+                                                        status='paid',
+                                                        use=USE)
+            # 결제 했던 내역 count
+            payment_count = payment_data.count()
+            # 결제 진행중인 내역 count
+            payment_ing_count = payment_data.filter(start_date__lte=today, end_date__gte=today).count()
+
+            # 타겟이 신규 회원인 경우
+            if target == NEW_MEMBER:
+                # 한달보다 더 전에 가입한 경우 에러 표시
+                if user_join_date < month_ago:
+                    error = '등록 가능한 쿠폰이 아닙니다.[1]'
+            # 타겟이 결제를 한번도 한적 없는 회원인 경우
+            elif target == NO_PAYMENT_MEMBER:
+                # 결제 내역이 한번이라도 있으면 에러 표시
+                if payment_count > 0:
+                    error = '등록 가능한 쿠폰이 아닙니다.[2]'
+            # 타겟이 결제를 하고있는 회원인 경우
+            elif target == ING_PAYMENT_MEMBER:
+                # 진행중인 결제가 없는 경우 에러 표시
+                if payment_ing_count == 0:
+                    error = '등록 가능한 쿠폰이 아닙니다.[3]'
+            # 타겟이 결제 종료된 회원인 경우
+            elif target == END_PAYMENT_MEMBER:
+                # 결제 내역이 없거나 진행중인 결제내역이 있으면 에러 표시
+                if payment_count == 0 or payment_ing_count > 0:
+                    error = '등록 가능한 쿠폰이 아닙니다.[4]'
     return error
