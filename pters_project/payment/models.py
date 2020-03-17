@@ -197,6 +197,8 @@ class CouponTb(TimeStampedModel):
 class CouponMemberTb(TimeStampedModel):
     coupon_member_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     coupon_tb = models.ForeignKey(CouponTb, verbose_name='쿠폰', on_delete=models.CASCADE, null=True)
+    name = models.CharField('쿠폰명', db_column='NAME', max_length=100, blank=True, default='')
+    contents = models.CharField('쿠폰 내용', db_column='CONTENTS', max_length=1000,  blank=True, default='')
     member = models.ForeignKey(MemberTb, verbose_name='회원', on_delete=models.CASCADE, null=True)  # Field name made lowercase.
     start_date = models.DateTimeField('지급일', db_column='START_DATE', blank=True)
     expiry_date = models.DateTimeField('만료일', db_column='EXPIRY_DATE', blank=True)

@@ -1771,6 +1771,7 @@ def add_member_coupon_logic(request):
     if error is None:
         expiry_date = today + datetime.timedelta(days=coupon_info.effective_days)
         coupon_member = CouponMemberTb(member_id=request.user.id, coupon_tb_id=coupon_info.coupon_id,
+                                       name=coupon_info.name, contents=coupon_info.contents,
                                        start_date=today, expiry_date=expiry_date, use=USE)
         coupon_member.save()
 
@@ -1799,8 +1800,8 @@ class GetMemberCouponListView(LoginRequiredMixin, View):
 
             coupon_member_data_dict[coupon_member_info.coupon_id] = {
                 'coupon_id': coupon_member_info.coupon_id,
-                'coupon_name': coupon_member_info.coupon_tb.name,
-                'coupon_contents': coupon_member_info.coupon_tb.contents,
+                'coupon_name': coupon_member_info.name,
+                'coupon_contents': coupon_member_info.contents,
                 'coupon_start_date': str(coupon_member_info.start_date),
                 'coupon_expiry_date': str(coupon_member_info.expiry_date),
                 'coupon_target': coupon_member_info.coupon_info.target,
