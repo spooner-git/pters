@@ -155,10 +155,10 @@ def check_before_billing_logic(request):
                                              period_month=period_month,
                                              price=int(input_price),
                                              name=payment_name,
-                                             buyer_email=request.user.email,
+                                             buyer_email=str(request.user.email),
                                              status='ready',
                                              pay_method=pay_method,
-                                             buyer_name=request.user.first_name,
+                                             buyer_name=str(request.user.first_name),
                                              use=UN_USE)
 
                 if payment_type_cd == 'PERIOD':
@@ -722,11 +722,11 @@ def update_payment_product_info_logic(request):
                                                 period_month=1,
                                                 price=0,
                                                 name=product_price_info.product_tb.name + ' - 상품 변경',
-                                                buyer_email=request.user.email,
+                                                buyer_email=str(request.user.email),
                                                 status='paid',
                                                 pay_method='card',
                                                 card_name='상품 변경',
-                                                buyer_name=request.user.first_name,
+                                                buyer_name=str(request.user.first_name),
                                                 use=USE)
             change_payment_info.save()
 
@@ -758,7 +758,7 @@ def update_payment_product_info_logic(request):
                                                   int(product_price_info.sale_price),
                                                   payment_info.customer_uid, update_merchant_uid,
                                                   next_schedule_timestamp,
-                                                  request.user.first_name, request.user.email)
+                                                  str(request.user.first_name), str(request.user.email))
         #         if error is not None:
         #             raise InternalError
         #
@@ -848,7 +848,7 @@ def update_reserve_product_info_logic(request):
                                                           + product_price_info.name,
                                                           int(product_price_info.sale_price),
                                                           customer_uid, merchant_uid, next_schedule_timestamp,
-                                                          request.user.first_name, request.user.email)
+                                                          str(request.user.first_name), str(request.user.email))
                 if error is not None:
                     raise InternalError
 
@@ -912,7 +912,7 @@ def check_update_period_billing_logic(request):
                                              period_month=billing_info.period_month,
                                              price=context['price'],
                                              name=billing_info.name,
-                                             buyer_email=request.user.email,
+                                             buyer_email=str(request.user.email),
                                              status=status,
                                              pay_method='card',
                                              buyer_name=request.user.first_name,
@@ -1160,7 +1160,7 @@ def payment_for_iap_logic(request):
                                      imp_uid='',
                                      channel='iap',
                                      card_name='인앱 결제',
-                                     buyer_email=request.user.email,
+                                     buyer_email=str(request.user.email),
                                      status='paid',
                                      fail_reason='',
                                      currency='',
@@ -1175,7 +1175,7 @@ def payment_for_iap_logic(request):
     if error is None:
         logger.info(str(request.user.first_name) + '(' + str(request.user.id) + ')님 iap 결제 완료:'
                     + str(product_id) + ':'+' '+str(start_date))
-        email = EmailMessage('[PTERS 결제]' + request.user.first_name + '회원', 'android 인앱 결제 :' + str(timezone.now()),
+        email = EmailMessage('[PTERS 결제]' + str(request.user.first_name) + '회원', 'android 인앱 결제 :' + str(timezone.now()),
                              to=['support@pters.co.kr'])
         email.send()
     else:
@@ -1243,7 +1243,7 @@ def payment_for_ios_logic(request):
                                      # imp_uid=input_transaction_id,
                                      channel='iap',
                                      card_name=pay_info,
-                                     buyer_email=request.user.email,
+                                     buyer_email=str(request.user.email),
                                      status='paid',
                                      fail_reason='',
                                      currency='',
@@ -1356,7 +1356,7 @@ def payment_for_coupon_logic(request):
                                      # imp_uid=input_transaction_id,
                                      channel='coupon',
                                      card_name=pay_info,
-                                     buyer_email=request.user.email,
+                                     buyer_email=str(request.user.email),
                                      status='paid',
                                      fail_reason='',
                                      currency='',
@@ -1822,6 +1822,7 @@ def add_coupon_product_info_logic(request):
     error = None
     context = {'error': None}
     coupon_info = None
+    payment_name = None
     today = datetime.date.today()
     product_id = None
     start_date = today
@@ -1834,6 +1835,7 @@ def add_coupon_product_info_logic(request):
             coupon_member_info = CouponMemberTb.objects.get(coupon_member_id=coupon_member_id,
                                                             member_id=request.user.id,
                                                             use=USE)
+            payment_name = coupon_member_info.name
             coupon_info = coupon_member_info.coupon_tb
             if coupon_info.product_tb is not None and coupon_info.product_tb != '':
                 product_id = coupon_info.product_tb_id
@@ -1876,11 +1878,11 @@ def add_coupon_product_info_logic(request):
                     paid_date=today,
                     period_month=0,
                     price=0,
-                    name=coupon_info.name,
+                    name=payment_name,
                     imp_uid=str(coupon_member_id),
                     channel='coupon',
                     card_name='coupon',
-                    buyer_email=request.user.email,
+                    buyer_email=str(request.user.email),
                     status='paid',
                     fail_reason='',
                     currency='',
@@ -1974,11 +1976,11 @@ def add_coupon_product_info_logic(request):
                                                      paid_date=today,
                                                      period_month=0,
                                                      price=0,
-                                                     name=coupon_info.name,
+                                                     name=payment_name,
                                                      imp_uid=str(coupon_member_id),
                                                      channel='coupon',
                                                      card_name='coupon',
-                                                     buyer_email=request.user.email,
+                                                     buyer_email=str(request.user.email),
                                                      status='paid',
                                                      fail_reason='',
                                                      currency='',
@@ -2000,17 +2002,17 @@ def add_coupon_product_info_logic(request):
 
     if error is None:
         logger.info(str(request.user.first_name)
-                    + '(' + str(request.user.id) + ')님 coupon 결제 완료:' + str(product_id) + ':' + ' '
+                    + '(' + str(request.user.id) + ')님 coupon 등록 완료:' + str(payment_name) + ':' + ' '
                     + str(start_date))
 
-        email = EmailMessage('[PTERS 쿠폰 결제]' + str(request.user.first_name) + '회원',
-                             str(coupon_info.name)+':' + str(timezone.now()),
+        email = EmailMessage('[PTERS 쿠폰 등록]' + str(request.user.first_name) + '회원',
+                             str(payment_name)+':' + str(timezone.now()),
                              to=['support@pters.co.kr'])
         email.send()
     else:
         messages.error(request, error)
         logger.error(str(request.user.first_name) + '(' + str(request.user.id) + ')님 '
-                     + str(coupon_info.name)+' 쿠폰 등록 오류:' + str(error))
+                     + str(payment_name)+' 쿠폰 등록 오류:' + str(error))
 
     context['error'] = error
     return render(request, 'ajax/payment_error_info.html', context)
