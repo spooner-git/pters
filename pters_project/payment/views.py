@@ -1879,7 +1879,7 @@ def add_coupon_product_info_logic(request):
                     paid_date=today,
                     period_month=0,
                     price=0,
-                    name=payment_name,
+                    name=payment_info.product_tb.name+'-'+payment_name,
                     imp_uid=str(coupon_member_id),
                     channel='coupon',
                     card_name='coupon',
@@ -1958,42 +1958,44 @@ def add_coupon_product_info_logic(request):
                 start_date = payment_info.end_date + datetime.timedelta(days=1)
                 if product_id is None or product_id == '':
                     product_id = payment_info.product_tb_id
+                payment_name = payment_info.name + '-' + payment_name
             except ObjectDoesNotExist:
                 product_id = 8
+                payment_name = '스탠다드-'+payment_name
                 start_date = today
 
             if error is None:
                 try:
                     with transaction.atomic():
                         end_date = str(func_get_end_date_by_day(start_date, coupon_info.product_effective_days))
-                        payment_info = PaymentInfoTb(member_id=str(request.user.id),
-                                                     product_tb_id=product_id,
-                                                     payment_type_cd='SINGLE',
-                                                     merchant_uid='m_coupon_' + str(request.user.id) + '_'
-                                                                  + str(product_id)
-                                                                  + '_' + str(timezone.now().timestamp()),
-                                                     customer_uid='c_coupon_' + str(request.user.id) + '_'
-                                                                  + str(product_id)
-                                                                  + '_' + str(timezone.now().timestamp()),
-                                                     start_date=start_date, end_date=end_date,
-                                                     paid_date=today,
-                                                     period_month=0,
-                                                     price=0,
-                                                     name=payment_name,
-                                                     imp_uid=str(coupon_member_id),
-                                                     channel='coupon',
-                                                     card_name='coupon',
-                                                     buyer_email=str(request.user.email),
-                                                     status='paid',
-                                                     fail_reason='',
-                                                     currency='',
-                                                     pay_method='coupon',
-                                                     pg_provider='PTERS',
-                                                     receipt_url='',
-                                                     buyer_name=str(request.user.first_name),
-                                                     use=USE)
+                        new_payment_info = PaymentInfoTb(member_id=str(request.user.id),
+                                                         product_tb_id=product_id,
+                                                         payment_type_cd='SINGLE',
+                                                         merchant_uid='m_coupon_' + str(request.user.id) + '_'
+                                                                      + str(product_id)
+                                                                      + '_' + str(timezone.now().timestamp()),
+                                                         customer_uid='c_coupon_' + str(request.user.id) + '_'
+                                                                      + str(product_id)
+                                                                      + '_' + str(timezone.now().timestamp()),
+                                                         start_date=start_date, end_date=end_date,
+                                                         paid_date=today,
+                                                         period_month=0,
+                                                         price=0,
+                                                         name=payment_name,
+                                                         imp_uid=str(coupon_member_id),
+                                                         channel='coupon',
+                                                         card_name='coupon',
+                                                         buyer_email=str(request.user.email),
+                                                         status='paid',
+                                                         fail_reason='',
+                                                         currency='',
+                                                         pay_method='coupon',
+                                                         pg_provider='PTERS',
+                                                         receipt_url='',
+                                                         buyer_name=str(request.user.first_name),
+                                                         use=USE)
 
-                        payment_info.save()
+                        new_payment_info.save()
 
                         # 쿠폰 한도 차감 및 소진 처리
                         coupon_member_info.use = UN_USE
