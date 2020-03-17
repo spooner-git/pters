@@ -27,7 +27,7 @@ from login.models import MemberTb
 from .functions import func_set_billing_schedule, func_get_imp_token, func_resend_payment_info, \
     func_check_payment_price_info, func_get_end_date, func_cancel_period_billing_schedule, \
     func_set_billing_schedule_now, func_get_payment_info_from_imp, func_set_iamport_schedule, func_check_coupon_use, \
-    func_get_end_date_by_day
+    func_get_end_date_by_day, func_check_coupon_reg
 from .models import PaymentInfoTb, BillingInfoTb, ProductTb, BillingCancelInfoTb, ProductPriceTb, \
     ProductFunctionAuthTb, IosReceiptCheckTb, CouponTb, CouponMemberTb
 
@@ -1766,7 +1766,7 @@ def add_member_coupon_logic(request):
             error = '쿠폰 코드를 다시 확인해주세요.[3]'
 
     if error is None:
-        error = func_check_coupon_use(coupon_cd, request.user.id, request.user.date_joined)
+        error = func_check_coupon_reg(coupon_cd, request.user.id, request.user.date_joined)
 
     if error is None:
         expiry_date = today + datetime.timedelta(days=coupon_info.effective_days)
@@ -1798,16 +1798,17 @@ class GetMemberCouponListView(LoginRequiredMixin, View):
                 product_id = product_tb.product_id
                 product_name = product_tb.name
 
-            coupon_member_data_dict[coupon_member_info.coupon_id] = {
-                'coupon_id': coupon_member_info.coupon_id,
+            coupon_member_data_dict[coupon_member_info.coupon_member_id] = {
+                'coupon_member_id': coupon_member_info.coupon_member_id,
                 'coupon_name': coupon_member_info.name,
                 'coupon_contents': coupon_member_info.contents,
+                'coupon_cd': coupon_member_info.coupon_tb.coupon_cd,
                 'coupon_start_date': str(coupon_member_info.start_date),
                 'coupon_expiry_date': str(coupon_member_info.expiry_date),
-                'coupon_target': coupon_member_info.coupon_info.target,
+                'coupon_target': coupon_member_info.coupon_tb.target,
                 'coupon_product_id': product_id,
                 'coupon_product_name': product_name,
-                'coupon_product_effective_days': coupon_member_info.coupon_info.product_effective_days,
+                'coupon_product_effective_days': coupon_member_info.coupon_tb.product_effective_days,
                 'coupon_mod_dt': coupon_member_info.mod_dt,
                 'coupon_reg_dt': coupon_member_info.reg_dt,
                 'coupon_exhaustion': coupon_member_info.exhaustion
@@ -1826,7 +1827,7 @@ def add_coupon_product_info_logic(request):
     today = datetime.date.today()
     product_id = None
     start_date = today
-
+    coupon_member_info = None
     if coupon_member_id is None or coupon_member_id == '':
         error = '오류가 발생했습니다.[0]'
 
@@ -1894,8 +1895,10 @@ def add_coupon_product_info_logic(request):
 
                 coupon_payment_info.save()
 
-                # 쿠폰 한도 차감
-                coupon_info.coupon_amount -= 1
+                # 쿠폰 한도 차감 및 소진 처리
+                coupon_member_info.use = UN_USE
+                coupon_member_info.save()
+                coupon_info.amount -= 1
                 coupon_info.save()
 
                 # merchant_uid 업데이트
@@ -1992,8 +1995,10 @@ def add_coupon_product_info_logic(request):
 
                         payment_info.save()
 
-                        # 쿠폰 한도 차감
-                        coupon_info.coupon_amount -= 1
+                        # 쿠폰 한도 차감 및 소진 처리
+                        coupon_member_info.use = UN_USE
+                        coupon_member_info.save()
+                        coupon_info.amount -= 1
                         coupon_info.save()
                 except TypeError:
                     error = '쿠폰 등록중 발생했습니다.[0]'

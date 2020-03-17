@@ -46,6 +46,8 @@
                     {% csrf_token %}
                     <input type="hidden" name="next_page" id="id_next_page" value="{% url 'index' %}">
                     <input type="hidden" name="group_type" id="id_group_type" value="trainer" autocomplete="off">
+                    <input type="hidden" name="recommended_member_id" id="id_recommended_member_id" value="">
+                    <input type="hidden" name="recommended_member_username" id="id_recommended_member_username" value="">
                     <!-- 회원가입 제목 영역 -->
                     <div class="wrapper_registration_content_title" style="margin-bottom:40px;">
                         <div style="text-align: center;"><img src="/static/common/icon/icon_pters_logo.png" style="width:32px; height:32px;"></div>
@@ -104,14 +106,14 @@
                     <!-- 휴대폰 번호 입력 영역 -->
                     <div style="margin-top:8px;">
                         <input class="pters_login_input" type="text" name="phone" id="id_phone" placeholder="휴대폰 번호" minlength="10" maxlength="11" title="휴대폰 번호"
-                               autocomplete="off" style="width:225px;" pattern="[0-9]{10,11}" onkeyup="limit_char_auto_correction(event.target); check_sms_activation_button(event.target);"
+                               autocomplete="off" style="width:70%;" pattern="[0-9]{10,11}" onkeyup="limit_char_auto_correction(event.target); check_sms_activation_button(event.target);"
                                data-error-message="" data-valid="false">
                         <div class="activation_button" id="id_activation_button" onclick="activate_sms();" style="pointer-events:none;">인증</div>
                     </div>
 
                     <!-- 인증 번호 입력 영역 -->
                     <div style="margin-top:8px;">
-                        <div id="wrapper_id_activation" style="width: 225px; border: solid 1px #d6d2d2; display:inline-block">
+                        <div id="wrapper_id_activation" style="width: 70%; border: solid 1px #d6d2d2; display:inline-block">
                             <input class="pters_login_input" type="text" name="activation_code" id="id_activation_code" placeholder="인증 번호" minlength="3" maxlength="8" title="휴대폰 인증"
                                    style="width:70%; border:0" pattern="[0-9]{3,8}" onkeyup="limit_char_auto_correction(event.target);" data-error-message="" data-valid="false">
                             <div id="activation_timer" style="display:none; width:20%; text-align:right; padding-right:12px; color: #ff001f; font-size: 13px; font-weight: 500; letter-spacing: -0.5px;">
@@ -129,9 +131,9 @@
                     <div id="recommend_user_input_wrap">
                         <div style="width:100%; height: 1px;background:#f5f2f3; margin-top: 20px; margin-bottom: 20px;"></div>
                         <div style="margin-top:8px;">
-                            <div id="wrapper_recommend_id_confirm" style="width: 225px; border: solid 1px #d6d2d2; display:inline-block">
-                                <input class="pters_login_input" type="text" name="recommend_username" id="id_recommend_username" placeholder="추천인 아이디" minlength="4" maxlength="40" title="아이디"
-                                pattern="[a-zA-Z0-9-._@]{4,40}" onkeyup="limit_char_auto_correction(event.target);" data-error-message="아이디 : 필수 입력입니다." data-valid="true">
+                            <div id="wrapper_recommend_id_confirm" style="width: 70%; border: solid 1px #d6d2d2; display:inline-block">
+                                <input class="pters_login_input" type="text" name="recommend_username" id="id_recommend_username" placeholder="추천인 아이디" minlength="4" maxlength="40" title="추천인 아이디"
+                                pattern="[a-zA-Z0-9-._@]{4,40}" onkeyup="limit_char_auto_correction(event.target);$('#recommend_id_confirm').text('');" data-error-message="" data-valid="true">
                             </div>
                             <div class="activation_button" id="recommend_id_confirm_button" onclick="check_recommend_id();" style="pointer-events:;">확인</div>
                             <div class="input_description">

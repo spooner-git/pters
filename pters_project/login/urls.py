@@ -119,4 +119,7 @@ urlpatterns = [
 
     url(r'^password/change/done/$', views.password_change_done, name='auth_password_change_done'),
 
+    # 추천인 id 체크 기능
+    url(r'^check_recommended_member/$', views.CheckRecommendedMemberView.as_view(), name='check_recommended_member'),
+
 ]

@@ -97,7 +97,7 @@ class My_coupon_box{
 
 
     dom_row_coupon(data){
-        let coupon_id = data.coupon_id;
+        let coupon_member_id = data.coupon_member_id;
         let coupon_name = data.coupon_name;
         let coupon_expiry = data.coupon_expiry_date;
         let coupon_obtain = data.coupon_start_date;
@@ -118,12 +118,14 @@ class My_coupon_box{
             "div",
             content,
             null,
-            {id:`coupon_${coupon_id}`},
+            {id:`coupon_${coupon_member_id}`},
             {type:"click", exe:(e)=>{
                 e.stopPropagation();
                 show_user_confirm({title:`${coupon_name}<br> 쿠폰을 사용하시겠습니까?`}, ()=>{
                     layer_popup.close_layer_popup();
-                    alert(`${coupon_id} ${coupon_name} ${coupon_expiry}쿠폰 사용하기 실행`);
+
+                    this.send_data(coupon_member_id);
+                    // alert(`${coupon_member_id} ${coupon_name} ${coupon_expiry}쿠폰 사용하기 실행`);
                 });
                 
             }}
@@ -256,7 +258,7 @@ class My_coupon_box{
         func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
     }
 
-    send_data(){
+    send_data(coupon_member_id){
         // let auth_inspect = pass_inspector.setting_update();
         // if(auth_inspect.barrier == BLOCKED){
         //     let message = `${auth_inspect.limit_type}`;
@@ -270,7 +272,7 @@ class My_coupon_box{
             this.data_sending_now = true;
         }
         let data = {
-            
+            'coupon_member_id':coupon_member_id
         };
         My_coupon_box_func.activate(data, ()=>{
             this.data_sending_now = false;
@@ -289,7 +291,7 @@ class My_coupon_box_func{
     static activate(data, callback, error_callback){
         //my_coupon_box_time_selector_type, my_coupon_box_basic_select_time
         $.ajax({
-            url:"/trainer/update_my_coupon_box_setting/",
+            url:"/payment/add_coupon_product_info/",
             type:'POST',
             data: data,
             dataType : 'html',
