@@ -27,7 +27,7 @@ from .functions import func_set_billing_schedule, func_get_imp_token, func_resen
     func_check_payment_price_info, func_get_end_date, func_cancel_period_billing_schedule, \
     func_set_billing_schedule_now, func_get_payment_info_from_imp, func_set_iamport_schedule
 from .models import PaymentInfoTb, BillingInfoTb, ProductTb, BillingCancelInfoTb, ProductPriceTb, \
-    ProductFunctionAuthTb, IosReceiptCheckTb, CouponTb
+    ProductFunctionAuthTb, IosReceiptCheckTb, CouponTb, CouponMemberTb
 
 logger = logging.getLogger(__name__)
 
@@ -1757,8 +1757,8 @@ def add_member_coupon_logic(request):
 
     if error is None:
         try:
-            coupon_info = ProductTb.objects.get(coupon_cd=coupon_cd, use=USE)
-            if coupon_info.expiry_date < timezone.now():
+            coupon_info = CouponTb.objects.get(coupon_cd=coupon_cd, use=USE)
+            if coupon_info.end_date < timezone.now():
                 error = '오류 : 유효기간이 지난 쿠폰입니다.'
             if coupon_info.coupon_amount <= 0:
                 error = '오류 : 쿠폰이 모두 소진됐습니다.'
@@ -1766,12 +1766,11 @@ def add_member_coupon_logic(request):
             error = '쿠폰 코드를 다시 확인해주세요.[2]'
 
     if error is None:
-        coupon = CouponTb(member_id=request.user.id, name=coupon_info.name, contents=coupon_info.contents,
-                          start_date=datetime.date.today(), expiry_date=coupon_info.expiry_date,
-                          coupon_cd=coupon_info.coupon_cd, promotion_type_cd=coupon_info.promotion_type_cd,
-                          product_tb_id=coupon_info.product_id,
-                          use=USE)
-        coupon.save()
+        today = datetime.date.today()
+        expiry_date = today + datetime.timedelta(days=coupon_info.effective_days)
+        coupon_member = CouponMemberTb(member_id=request.user.id, coupon_tb_id=coupon_info.coupon_id,
+                                       start_date=today, expiry_date=expiry_date, use=USE)
+        coupon_member.save()
     else:
         logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
@@ -1782,21 +1781,24 @@ def add_member_coupon_logic(request):
 class GetMemberCouponListView(LoginRequiredMixin, View):
     # template_name = 'test.html'
     def get(self, request):
-        coupon_data_dict = collections.OrderedDict()
-        coupon_data = CouponTb.objects.select_related('product_tb').filter(member_id=request.user.id, use=USE)
+        coupon_member_data_dict = collections.OrderedDict()
+        coupon_member_data = CouponMemberTb.objects.select_related(
+            'coupon_tb__product_tb').filter(member_id=request.user.id, use=USE)
 
-        for coupon_info in coupon_data:
-            coupon_data_dict[coupon_info.coupon_id] = {'coupon_id': coupon_info.coupon_id,
-                                                       'coupon_name': coupon_info.name,
-                                                       'coupon_contents': coupon_info.contents,
-                                                       'coupon_start_date': str(coupon_info.start_date),
-                                                       'coupon_expiry_date': str(coupon_info.expiry_date),
-                                                       'coupon_cd': coupon_info.coupon_cd,
-                                                       'coupon_promotion_type_cd': coupon_info.promotion_type_cd,
-                                                       'coupon_product_id': coupon_info.product_tb_id,
-                                                       'coupon_product_name': coupon_info.product_tb.name,
-                                                       'coupon_mod_dt': coupon_info.mod_dt,
-                                                       'coupon_reg_dt': coupon_info.reg_dt,
-                                                       'coupon_use': coupon_info.use}
+        for coupon_member_info in coupon_member_data:
+            coupon_member_data_dict[coupon_member_info.coupon_id] = {
+                'coupon_id': coupon_member_info.coupon_id,
+                'coupon_name': coupon_member_info.coupon_tb.name,
+                'coupon_contents': coupon_member_info.coupon_tb.contents,
+                'coupon_start_date': str(coupon_member_info.start_date),
+                'coupon_expiry_date': str(coupon_member_info.expiry_date),
+                'coupon_target': coupon_member_info.target,
+                'coupon_product_id': coupon_member_info.coupon_tb.product_tb_id,
+                'coupon_product_name': coupon_member_info.coupon_tb.product_tb.name,
+                'coupon_product_effective_days': coupon_member_info.coupon_info.product_effective_days,
+                'coupon_mod_dt': coupon_member_info.mod_dt,
+                'coupon_reg_dt': coupon_member_info.reg_dt,
+                'coupon_use': coupon_member_info.use
+            }
 
-        return JsonResponse({'coupon_data': coupon_data_dict}, json_dumps_params={'ensure_ascii': True})
+        return JsonResponse({'coupon_member_data': coupon_member_data_dict}, json_dumps_params={'ensure_ascii': True})

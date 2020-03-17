@@ -51,7 +51,7 @@ from schedule.functions import func_refresh_member_ticket_count, func_get_traine
 from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb, ScheduleAlarmTb
 from stats.functions import get_sales_data
 from trainee.models import MemberTicketTb
-from payment.models import PaymentInfoTb, ProductFunctionAuthTb, CouponTb
+from payment.models import PaymentInfoTb, ProductFunctionAuthTb, CouponMemberTb
 from .functions import func_get_trainer_setting_list, \
     func_get_member_ing_list, func_get_member_end_list, func_get_class_member_ing_list, func_get_class_member_end_list,\
     func_get_member_info, func_get_member_from_member_ticket_list, func_check_member_connection_info,\
@@ -1672,7 +1672,7 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, View):
         ordered_alarm_dict['check_qa_comment'] = QATb.objects.filter(
             member_id=request.user.id, status_type_cd='QA_COMPLETE',
             use=USE).annotate(qa_comment=RawSQL(query, [])).filter(qa_comment__gt=0).count()
-        paginator = Paginator(alarm_data, 20)
+        paginator = Paginator(alarm_data, ALARM_PAGINATION_COUNTER)
         try:
             alarm_data = paginator.page(page)
         except EmptyPage:
@@ -4757,7 +4757,7 @@ class GetTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):
                 member_profile_url = '/static/common/icon/icon_account.png'
             else:
                 member_profile_url = user_member_info.profile_url
-            coupon_count = CouponTb.objects.filter(member_id=request.user.id, use=USE).count()
+            coupon_count = CouponMemberTb.objects.filter(member_id=request.user.id, use=USE).count()
             member_data = {'member_id': request.user.id,
                            'member_user_id': user_member_info.user.username,
                            'member_name': user_member_info.name,

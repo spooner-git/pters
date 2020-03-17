@@ -22,7 +22,7 @@ class My_coupon_box{
 
     set_initial_data (){
         My_coupon_box_func.read((data)=>{
-            this.data.coupons = data.coupon_data;
+            this.data.coupons = data.coupon_member_data;
             this.render_content();
         });
         func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
