@@ -564,6 +564,11 @@ class AddAdminCouponInfoView(LoginRequiredMixin, AccessTestMixin, View):
             error = '쿠폰명을 입력해주세요.'
 
         if error is None:
+            coupon_check = CouponTb.objects.filter(coupon_cd=coupon_cd).count()
+            if coupon_check > 0:
+                error = '쿠폰 코드가 중복됩니다.'
+
+        if error is None:
             coupon_info = CouponTb(coupon_cd=coupon_cd, name=coupon_name, contents=coupon_contents,
                                    amount=coupon_amount, effective_days=coupon_effective_days,
                                    product_effective_days=coupon_product_effective_days,

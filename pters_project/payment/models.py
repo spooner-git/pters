@@ -179,6 +179,7 @@ class CouponTb(TimeStampedModel):
     product_effective_days = models.IntegerField('관련 상품 기간', db_column='PRODUCT_EFFECTIVE_DAYS', default=0)
     start_date = models.DateTimeField('쿠폰 시작일', db_column='START_DATE', blank=True)
     end_date = models.DateTimeField('쿠폰 만료일', db_column='END_DATE', blank=True)
+    target = models.CharField('대상', db_column='TARGET', max_length=45, blank=True, default='')
     coupon_cd = models.CharField('쿠폰 코드', unique=True, db_column='COUPON_CD', max_length=45, blank=True, default='')
     duplicate_enable = models.IntegerField('중복 가능 여부', db_column='DUPLICATE_ENABLE', default=ENABLE)
     direct_reg_enable = models.IntegerField('회원 직접 등록 가능 여부', db_column='DIRECT_REG_ENABLE', default=ENABLE)
@@ -199,6 +200,7 @@ class CouponMemberTb(TimeStampedModel):
     member = models.ForeignKey(MemberTb, verbose_name='회원', on_delete=models.CASCADE, null=True)  # Field name made lowercase.
     start_date = models.DateTimeField('지급일', db_column='START_DATE', blank=True)
     expiry_date = models.DateTimeField('만료일', db_column='EXPIRY_DATE', blank=True)
+    exhaustion = models.IntegerField('소진 여부', db_column='EXHAUSTION', default=0)
 
     class Meta:
         managed = False
