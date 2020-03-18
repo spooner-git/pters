@@ -706,6 +706,13 @@ class AddMemberView(RegistrationView, View):
                                               phone_is_active=ACTIVATE, recommended_member_id=recommended_member_id,
                                               use=USE)
                             member.save()
+                            login_user = authenticate(username=form.cleaned_data['username'],
+                                                      password=form.cleaned_data['password1'])
+                            request.session['social_login_check'] = '0'
+                            request.session['social_login_type'] = ''
+                            request.session['social_login_id'] = ''
+                            request.session['social_accessToken'] = ''
+                            login(request, login_user)
 
                     except ValueError:
                         error = '이미 가입된 회원입니다.'
@@ -836,6 +843,13 @@ class AddTempMemberInfoView(RegistrationView, View):
                             func_delete_profile_image_logic(member_info.profile_url)
                         member_info.profile_url = ''
                         member_info.save()
+                        login_user = authenticate(username=form.cleaned_data['username'],
+                                                  password=form.cleaned_data['password1'])
+                        request.session['social_login_check'] = '0'
+                        request.session['social_login_type'] = ''
+                        request.session['social_login_id'] = ''
+                        request.session['social_accessToken'] = ''
+                        login(request, login_user)
 
                 except ValueError:
                     error = '오류가 발생했습니다.[1]'

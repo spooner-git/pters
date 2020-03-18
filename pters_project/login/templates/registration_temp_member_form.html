@@ -43,7 +43,7 @@
                 <form action="{% url "login:add_temp_member_info" %}" id="id_add_member_form" method="post">
                     {% csrf_token %}
                     <input type="hidden" name="member_id" value="{{ request.session.member_id }}">
-                    <input type="hidden" name="next_page" id="id_next_page" value="{% url 'index' %}">
+                    <input type="hidden" name="next_page" id="id_next_page" value="{% url 'trainee:index' %}">
                     <!-- 회원가입 제목 영역 -->
                     <div class="wrapper_registration_content_title" style="margin-bottom:40px; height:24px;">
                         <div class="registration_content_title" style="font-size: 20px; font-weight: bold; color: #1f1d1e; letter-spacing: -1px; text-align: center;">회원가입</div>
