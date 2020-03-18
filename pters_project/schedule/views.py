@@ -27,7 +27,7 @@ from login.models import LogTb, MemberTb
 from schedule.forms import AddScheduleTbForm
 from schedule.functions import func_send_push_trainee, func_send_push_trainer, func_get_holiday_schedule, \
     func_upload_daily_record_content_image_logic, func_delete_daily_record_content_image_logic, \
-    func_send_push_trainer_trainer, func_get_program_alarm_data
+    func_send_push_trainer_trainer, func_get_program_alarm_data, func_get_lecture_member_ticket_id_from_trainee
 from trainee.models import MemberTicketTb
 from trainer.models import LectureTb, ClassTb
 from .functions import func_get_member_ticket_id, func_add_schedule, func_add_schedule_update,\
@@ -1091,8 +1091,10 @@ def add_repeat_schedule_logic(request):
             if member_id == '':
                 error = '회원을 선택해 주세요.'
             else:
-                member_ticket_result = func_get_lecture_member_ticket_id(class_id, lecture_info.lecture_id,
-                                                                         member_id)
+                # 반복일정 등록시 종료일 고려
+                member_ticket_result = func_get_lecture_member_ticket_id_from_trainee(class_id, lecture_info.lecture_id,
+                                                                                      member_id,
+                                                                                      repeat_schedule_start_date_info.date())
                 if member_ticket_result['error'] is not None:
                     error = member_ticket_result['error']
                 else:
@@ -1150,8 +1152,12 @@ def add_repeat_schedule_logic(request):
                 member_ticket_id = None
                 if lecture_info is not None and lecture_info.lecture_type_cd == LECTURE_TYPE_ONE_TO_ONE:
                     # member_ticket_id = func_get_member_ticket_id(class_id, member_id)
-                    member_ticket_result = func_get_lecture_member_ticket_id(class_id, lecture_info.lecture_id,
-                                                                             member_id)
+
+                    # 반복일정 등록시 종료일 고려해서 등록하기
+                    member_ticket_result = func_get_lecture_member_ticket_id_from_trainee(
+                        class_id, lecture_info.lecture_id, member_id,
+                        datetime.datetime.strptime(repeat_schedule_info_date,  "%Y-%m-%d").date())
+
                     if member_ticket_result['error'] is None:
                         member_ticket_id = member_ticket_result['member_ticket_id']
                         schedule_check = 1
@@ -1334,8 +1340,10 @@ def add_repeat_schedule_confirm(request):
 
                     if member_info is not None:
                         repeat_member_ticket_id = None
-                        repeat_member_ticket_result = func_get_lecture_member_ticket_id(class_id, lecture_info.lecture_id,
-                                                                                 member_info.member_id)
+                        # 반복일정 일정 등록시 종료일 고려해서 등록
+                        repeat_member_ticket_result = func_get_lecture_member_ticket_id_from_trainee(
+                            class_id, lecture_info.lecture_id, member_info.member_id, repeat_schedule_info.start_date)
+
                         if repeat_member_ticket_result['error'] is not None:
                             error = repeat_member_ticket_result['error']
                         else:
@@ -1358,9 +1366,12 @@ def add_repeat_schedule_confirm(request):
                                 member_repeat_schedule_info = repeat_schedule_result['schedule_info']
                                 for schedule_info in schedule_data:
                                     member_ticket_id = None
-                                    member_ticket_result = func_get_lecture_member_ticket_id(class_id,
-                                                                                             lecture_info.lecture_id,
-                                                                                             member_info.member_id)
+                                    # 반복일정 일정 등록시 종료일 고려해서 등록
+                                    member_ticket_result = func_get_lecture_member_ticket_id_from_trainee(
+                                        class_id, lecture_info.lecture_id, member_info.member_id,
+                                        datetime.datetime.strptime(str(schedule_info.start_dt).split(' ')[0],
+                                                                   "%Y-%m-%d").date())
+
                                     if member_ticket_result['error'] is None:
                                         member_ticket_id = member_ticket_result['member_ticket_id']
 

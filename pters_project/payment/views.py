@@ -1993,7 +1993,7 @@ def add_coupon_product_info_logic(request):
                 start_date = payment_info.end_date + datetime.timedelta(days=1)
                 if product_id is None or product_id == '':
                     product_id = payment_info.product_tb_id
-                payment_name = payment_info.name + '-' + payment_name
+                payment_name = payment_info.product_tb.name + '-' + payment_name
             except ObjectDoesNotExist:
                 product_id = 8
                 payment_name = '스탠다드-'+payment_name

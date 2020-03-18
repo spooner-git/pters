@@ -134,9 +134,9 @@ def func_get_lecture_member_ticket_id(class_id, lecture_id, member_id):
 
 
 # 그룹 Lecture Id 조회
-def func_get_lecture_member_ticket_id_from_trainee(class_id, lecture_id, member_id):
+def func_get_lecture_member_ticket_id_from_trainee(class_id, lecture_id, member_id, target_date):
 
-    today = datetime.date.today()
+    # today = datetime.date.today()
     member_ticket_id = None
     error = None
     class_member_ticket_data = ClassMemberTicketTb.objects.select_related(
@@ -148,7 +148,7 @@ def func_get_lecture_member_ticket_id_from_trainee(class_id, lecture_id, member_
                                                                        'member_ticket_tb__reg_dt')
 
     for class_member_ticket_info in class_member_ticket_data:
-        if class_member_ticket_info.member_ticket_tb.end_date >= today:
+        if class_member_ticket_info.member_ticket_tb.end_date >= target_date:
             ticket_lecture_count = TicketLectureTb.objects.filter(
                 ticket_tb_id=class_member_ticket_info.member_ticket_tb.ticket_tb_id,
                 ticket_tb__state_cd=STATE_CD_IN_PROGRESS,

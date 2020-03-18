@@ -813,10 +813,13 @@ class AddTempMemberInfoView(RegistrationView, View):
 
         form = MyRegistrationForm(request.POST, request.FILES)
         member_id = request.POST.get('member_id', '')
+        username = request.POST.get('username', '')
         error = None
         member_info = None
         try:
             member_info = MemberTb.objects.get(member_id=member_id)
+            if member_info.user.username == username:
+                error = '이미 존재하는 ID 입니다.'
         except ObjectDoesNotExist:
             error = '가입되지 않은 회원입니다.'
 
@@ -850,7 +853,7 @@ class AddTempMemberInfoView(RegistrationView, View):
                         messages.error(request, str(field.label)+':'+err)
 
         if error is not None:
-            logger.error('member_id:'+str(member_id)+'[' + form.cleaned_data['username'] + ']' + error)
+            logger.error('member_id:'+str(member_id)+'[' + str(username) + ']' + error)
             messages.error(request, error)
 
         return render(request, self.template_name)
