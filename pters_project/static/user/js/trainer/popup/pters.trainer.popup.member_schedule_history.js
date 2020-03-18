@@ -429,7 +429,10 @@ class Member_schedule_history{
     }
 
     dom_list_by_time(received_data){
-        let length = received_data.member_schedule.length;
+        let length = 0;
+        if(received_data.member_schedule != undefined){
+            length = received_data.member_schedule.length;
+        }
         let html_to_join = [];
         for(let i=0; i<length; i++){
         // for(let i=0; i<length; i++){
