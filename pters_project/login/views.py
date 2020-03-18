@@ -405,6 +405,11 @@ class AddSocialMemberInfoView(RegistrationView, View):
                                                    name=first_name + ' 회원님 추천', contents=coupon_info.contents,
                                                    start_date=today, expiry_date=expiry_date, use=USE)
                     coupon_member.save()
+                    coupon_member = CouponMemberTb(member_id=user.id,
+                                                   coupon_tb_id=coupon_info.coupon_id,
+                                                   name='추천인 등록 이벤트', contents=coupon_info.contents,
+                                                   start_date=today, expiry_date=expiry_date, use=USE)
+                    coupon_member.save()
 
         if error is None:
             return redirect('/trainer/')
@@ -746,6 +751,11 @@ class AddMemberView(RegistrationView, View):
                             coupon_member = CouponMemberTb(member_id=recommended_member_info.member_id,
                                                            coupon_tb_id=coupon_info.coupon_id,
                                                            name=first_name+' 회원님 추천', contents=coupon_info.contents,
+                                                           start_date=today, expiry_date=expiry_date, use=USE)
+                            coupon_member.save()
+                            coupon_member = CouponMemberTb(member_id=user.id,
+                                                           coupon_tb_id=coupon_info.coupon_id,
+                                                           name='추천인 등록 이벤트', contents=coupon_info.contents,
                                                            start_date=today, expiry_date=expiry_date, use=USE)
                             coupon_member.save()
 
