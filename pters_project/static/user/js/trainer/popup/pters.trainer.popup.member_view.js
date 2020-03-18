@@ -819,10 +819,10 @@ class Member_view{
                     data.lecture_ing_color_cd,
                     data.week_info.split('/').map((item)=>{
                         return DAYNAME_MATCH[item];
-                    }).join('') + ' ' + data.start_time+' - '+data.end_time,
+                    }).join(''),
                     data.lecture_name,
                     data.start_date+' - '+data.end_date,
-                    ""
+                    data.start_time+' - '+data.end_time
                 )
             );
         }
@@ -854,13 +854,16 @@ class Member_view{
     }
 
     dom_row_repeat_item(repeat_id, color, repeat_name, repeat_day, repeat_period, repeat_time){
+        if(repeat_name == '일월화수목금토'){
+            repeat_name = '매일';
+        }
         let html = `<div id="repeat_item_${repeat_id}" style="display:flex;width:100%;height:60px;padding:8px 0px;box-sizing:border-box;cursor:pointer;">
                         <div style="flex-basis:16px;">
                             <div style="float:left;width:4px;height:100%;background-color:${color}"></div>
                         </div>
                         <div style="flex:1 1 0">
-                            <div style="font-size:16px;font-weight:500;letter-spacing:-0.7px;color:var(--font-base);">${repeat_name}</div>
-                            <div style="font-size:12px;font-weight:500;letter-spacing:-0.5px;color:var(--font-sub-normal);">${repeat_day} / ${repeat_time} / ${repeat_period}</div>
+                            <div style="font-size:16px;font-weight:500;letter-spacing:-0.7px;color:var(--font-base);">${repeat_name} ${repeat_time}</div>
+                            <div style="font-size:12px;font-weight:500;letter-spacing:-0.5px;color:var(--font-sub-normal);">${repeat_day} / ${repeat_period}</div>
                         </div>
                         <div style="flex-basis:30px;">
                             ${CImg.more("", {"vertical-align":"top"})}
