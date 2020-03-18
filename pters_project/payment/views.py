@@ -20,7 +20,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
 from configs.const import USE, UN_USE, DISABLE, ALL_MEMBER, NO_PAYMENT_MEMBER, ING_PAYMENT_MEMBER, END_PAYMENT_MEMBER, \
-    NEW_MEMBER, NEW_MEMBER
+    NEW_MEMBER, NEW_MEMBER, RECOMMENDED_REGISTER_COUPON_CD, RECOMMENDED_PAYMENT_COUPON_CD
 from configs import settings
 from login.models import MemberTb
 
@@ -356,6 +356,41 @@ def billing_check_logic(request):
 
                         if payment_info['status'] == 'paid':
                             # 정상 결제, 정기 결제인 경우 예약
+
+                            coupon_info = None
+                            recommend_error_check = None
+                            recommended_member_info = None
+                            today = datetime.date.today()
+                            member_payment_count = PaymentInfoTb.objects.get(member_id=pre_payment_info.member_id,
+                                                                             status='paid', use=USE)
+                            if member_payment_count <= 1:
+                                recommended_member_id = pre_payment_info.member.recommended_member_id
+
+                                try:
+                                    coupon_info = CouponTb.objects.get(coupon_cd=RECOMMENDED_PAYMENT_COUPON_CD,
+                                                                       use=USE)
+                                except ObjectDoesNotExist:
+                                    recommend_error_check = '쿠폰 없음'
+                                try:
+                                    recommended_member_info = MemberTb.objects.get(member_id=recommended_member_id,
+                                                                                   use=USE)
+                                except ObjectDoesNotExist:
+                                    recommend_error_check = '추천인 없음'
+
+                                if recommend_error_check is None:
+                                    recommend_error_check = func_check_coupon_use(RECOMMENDED_PAYMENT_COUPON_CD,
+                                                                                  recommended_member_info.member_id,
+                                                                                  recommended_member_info.user.date_joined)
+
+                                if recommend_error_check is None:
+                                    expiry_date = today + datetime.timedelta(days=coupon_info.effective_days)
+                                    coupon_member = CouponMemberTb(member_id=recommended_member_id,
+                                                                   coupon_tb_id=coupon_info.coupon_id,
+                                                                   name=pre_payment_info.member.name + '회원님 첫 결제',
+                                                                   contents=coupon_info.contents,
+                                                                   start_date=today, expiry_date=expiry_date, use=USE)
+                                    coupon_member.save()
+
                             error = func_set_billing_schedule(pre_payment_info.customer_uid,
                                                               pre_payment_info, int(pre_billing_info.payed_date))
 

@@ -321,8 +321,8 @@ class AddSocialMemberInfoView(RegistrationView, View):
         social_access_token = request.POST.get('social_accessToken', '')
         next_page = request.POST.get('next_page', '/login/registration_social/')
         recommended_member_id = request.POST.get('recommended_member_id', '')
-        recommend_check = None
         recommended_member_info = None
+        recommend_error_check = None
         error = None
         user = None
         if first_name == '' or first_name == 'None' or first_name is None:
@@ -344,7 +344,8 @@ class AddSocialMemberInfoView(RegistrationView, View):
             try:
                 recommended_member_info = MemberTb.objects.get(member_id=recommended_member_id)
             except ObjectDoesNotExist:
-                recommend_check = None
+                recommend_error_check = '추천인 없음'
+
         if error is None:
             try:
                 with transaction.atomic():
@@ -380,8 +381,9 @@ class AddSocialMemberInfoView(RegistrationView, View):
                 error = '등록 값에 문제가 있습니다.'
             except InternalError:
                 error = '이미 가입된 회원입니다.'
-        if error is None and recommended_member_info is not None:
+        if error is None and recommend_error_check is None:
             coupon_info = None
+            # recommend_check = None
             today = datetime.date.today()
             check_recommend_before = SnsInfoTb.objects.filter(member__recommended_member_id=recommended_member_id,
                                                               sns_id=sns_id).count()
@@ -389,20 +391,21 @@ class AddSocialMemberInfoView(RegistrationView, View):
                 try:
                     coupon_info = CouponTb.objects.get(coupon_cd=RECOMMENDED_REGISTER_COUPON_CD, use=USE)
                 except ObjectDoesNotExist:
-                    recommend_check = None
+                    recommend_error_check = '쿠폰 없음'
 
-                if recommend_check is None:
-                    recommend_check = func_check_coupon_use(RECOMMENDED_REGISTER_COUPON_CD,
-                                                            recommended_member_info.member_id,
-                                                            recommended_member_info.user.date_joined)
+                if recommend_error_check is None:
+                    recommend_error_check = func_check_coupon_use(RECOMMENDED_REGISTER_COUPON_CD,
+                                                                  recommended_member_info.member_id,
+                                                                  recommended_member_info.user.date_joined)
 
-                if recommend_check is None:
+                if recommend_error_check is None:
                     expiry_date = today + datetime.timedelta(days=coupon_info.effective_days)
                     coupon_member = CouponMemberTb(member_id=recommended_member_info.member_id,
                                                    coupon_tb_id=coupon_info.coupon_id,
-                                                   name=first_name + '회원님 추천', contents=coupon_info.contents,
+                                                   name=first_name + ' 회원님 추천', contents=coupon_info.contents,
                                                    start_date=today, expiry_date=expiry_date, use=USE)
                     coupon_member.save()
+
         if error is None:
             return redirect('/trainer/')
         if error is not None:
@@ -666,7 +669,7 @@ class AddMemberView(RegistrationView, View):
         recommended_member_id = request.POST.get('recommended_member_id', '')
         sms_activation_check = request.session.get('sms_activation_check', False)
         error = None
-        recommend_check = None
+        recommend_error_check = None
         recommended_member_info = None
 
         if sms_activation_check is False:
@@ -676,7 +679,7 @@ class AddMemberView(RegistrationView, View):
             try:
                 recommended_member_info = MemberTb.objects.get(member_id=recommended_member_id)
             except ObjectDoesNotExist:
-                recommend_check = None
+                recommend_error_check = '추천인 없음'
 
         if error is None:
             if form.is_valid():
@@ -715,7 +718,7 @@ class AddMemberView(RegistrationView, View):
                     except InternalError:
                         error = '이미 가입된 회원입니다.'
 
-                if error is None and recommended_member_info is not None:
+                if error is None and recommend_error_check is None:
                     coupon_info = None
                     today = datetime.date.today()
                     check_recommend_before = MemberTb.objects.filter(recommended_member_id=recommended_member_id,
@@ -724,18 +727,18 @@ class AddMemberView(RegistrationView, View):
                         try:
                             coupon_info = CouponTb.objects.get(coupon_cd=RECOMMENDED_REGISTER_COUPON_CD, use=USE)
                         except ObjectDoesNotExist:
-                            recommend_check = None
+                            recommend_error_check = '쿠폰 없음'
 
-                        if recommend_check is None:
-                            recommend_check = func_check_coupon_use(RECOMMENDED_REGISTER_COUPON_CD,
-                                                                         recommended_member_info.member_id,
-                                                                         recommended_member_info.user.date_joined)
+                        if recommend_error_check is None:
+                            recommend_error_check = func_check_coupon_use(RECOMMENDED_REGISTER_COUPON_CD,
+                                                                          recommended_member_info.member_id,
+                                                                          recommended_member_info.user.date_joined)
 
-                        if recommend_check is None:
+                        if recommend_error_check is None:
                             expiry_date = today + datetime.timedelta(days=coupon_info.effective_days)
                             coupon_member = CouponMemberTb(member_id=recommended_member_info.member_id,
                                                            coupon_tb_id=coupon_info.coupon_id,
-                                                           name=first_name+'회원님 추천', contents=coupon_info.contents,
+                                                           name=first_name+' 회원님 추천', contents=coupon_info.contents,
                                                            start_date=today, expiry_date=expiry_date, use=USE)
                             coupon_member.save()
 
