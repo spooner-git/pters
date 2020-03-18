@@ -15,8 +15,9 @@ from django.views.generic import TemplateView
 
 from admin_spooner.functions import func_upload_board_content_image_logic, func_delete_board_content_image_logic
 from board.models import QATb, NoticeTb, QACommentTb
-from configs.const import USE, UN_USE
+from configs.const import USE, UN_USE, COUPON_PRODUCT
 from configs.views import AccessTestMixin
+from payment.models import ProductTb, CouponTb
 
 logger = logging.getLogger(__name__)
 
@@ -430,3 +431,170 @@ def delete_admin_board_content_img_logic(request):
     # else:
     #     context['img_url'] = img_url
     return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+
+
+class GetAdminProductListView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        # start_time = timezone.now()
+        product_data_dict = collections.OrderedDict()
+        product_data = ProductTb.objects.select_related('product_tb').filter(upper_product_id='1').order_by('order', '-reg_dt')
+
+        for product_info in product_data:
+            product_data_dict[product_info.product_id] = {'product_id': product_info.product_id,
+                                                          'product_name': product_info.product_name,
+                                                          'product_contents': product_info.product_contents,
+                                                          'product_reg_dt': str(product_info.reg_dt),
+                                                          'product_mod_dt': str(product_info.mod_dt),
+                                                          'product_use': product_info.use
+                                                        }
+
+        # end_time = timezone.now()
+        # print(str(end_time-start_time))
+        return JsonResponse(product_data_dict, json_dumps_params={'ensure_ascii': True})
+
+
+class GetAdminCouponListView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        # start_time = timezone.now()
+        coupon_data_dict = collections.OrderedDict()
+        coupon_data = CouponTb.objects.select_related('product_tb').filter().order_by('order', '-reg_dt')
+
+        for coupon_info in coupon_data:
+            product_tb = coupon_info.product_tb
+            product_id = ''
+            product_name = '기존 결제 상품'
+
+            if product_tb is not None and product_tb != '':
+                product_id = product_tb.product_id
+                product_name = product_tb.name
+            coupon_data_dict[coupon_info.product_id] = {'coupon_id': coupon_info.coupon_id,
+                                                        'coupon_cd': coupon_info.coupon_cd,
+                                                        'coupon_name': coupon_info.name,
+                                                        'coupon_contents': coupon_info.contents,
+                                                        'coupon_amount': coupon_info.amount,
+                                                        'coupon_effective_days': coupon_info.effective_days,
+                                                        'coupon_product_effective_days': coupon_info.product_effective_days,
+                                                        'coupon_start_date': coupon_info.start_date,
+                                                        'coupon_end_date': coupon_info.end_date,
+                                                        'coupon_target': coupon_info.target,
+                                                        'coupon_duplicate_enable': coupon_info.duplicate_enable,
+                                                        'coupon_direct_reg_enable': coupon_info.direct_reg_enable,
+                                                        'coupon_product_id': product_id,
+                                                        'coupon_product_name': product_name,
+                                                        'coupon_reg_dt': str(coupon_info.reg_dt),
+                                                        'coupon_mod_dt': str(coupon_info.mod_dt),
+                                                        'coupon_use': coupon_info.use
+                                                        }
+
+        # end_time = timezone.now()
+        # print(str(end_time-start_time))
+        return JsonResponse(coupon_data_dict, json_dumps_params={'ensure_ascii': True})
+
+
+class GetAdminCouponInfoView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        # start_time = timezone.now()
+        coupon_id = request.GET.get('coupon_id', '')
+        coupon_info = CouponTb.objects.get(coupon_id=coupon_id).order_by('order', '-reg_dt')
+        product_tb = coupon_info.product_tb
+        product_id = ''
+        product_name = '기존 결제 상품'
+
+        if product_tb is not None and product_tb != '':
+            product_id = product_tb.product_id
+            product_name = product_tb.name
+
+        coupon = {'coupon_id': coupon_info.product_id,
+                  'coupon_cd': coupon_info.coupon_cd,
+                  'coupon_name': coupon_info.name,
+                  'coupon_contents': coupon_info.contents,
+                  'coupon_amount': coupon_info.amount,
+                  'coupon_effective_days': coupon_info.effective_days,
+                  'coupon_product_effective_days': coupon_info.product_effective_days,
+                  'coupon_start_date': coupon_info.start_date,
+                  'coupon_end_date': coupon_info.end_date,
+                  'coupon_target': coupon_info.target,
+                  'coupon_duplicate_enable': coupon_info.duplicate_enable,
+                  'coupon_direct_reg_enable': coupon_info.direct_reg_enable,
+                  'coupon_product_id': product_id,
+                  'coupon_product_name': product_name,
+                  'coupon_reg_dt': str(coupon_info.reg_dt),
+                  'coupon_mod_dt': str(coupon_info.mod_dt),
+                  'coupon_use': coupon_info.use
+                  }
+
+        # end_time = timezone.now()
+        # print(str(end_time-start_time))
+        return JsonResponse(coupon, json_dumps_params={'ensure_ascii': True})
+
+
+class AddAdminCouponInfoView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def post(self, request):
+
+        # 전체 회원:'ALL_MEMBER' / 신규회원(가입 1개월 이내):'NEW_MEMBER'
+        # 미결제 회원(결제를 한번도 안해본 회원): 'NO_PAYMENT_MEMBER' / 결제 종료중인 회원 'END_PAYMENT_MEMBER'
+        # 결제중인 회원: 'ING_PAYMENT_MEMBER'
+
+        coupon_cd = request.POST.get('coupon_cd', '')
+        coupon_name = request.POST.get('coupon_name', '')
+        coupon_contents = request.POST.get('coupon_contents', '')
+        coupon_amount = request.POST.get('coupon_amount', '')
+        coupon_effective_days = request.POST.get('coupon_effective_days', '')
+        coupon_product_effective_days = request.POST.get('coupon_product_effective_days', '')
+        coupon_start_date = request.POST.get('coupon_start_date', '')
+        coupon_end_date = request.POST.get('coupon_end_date', '')
+        coupon_target = request.POST.get('coupon_target', '')
+        coupon_duplicate_enable = request.POST.get('coupon_duplicate_enable', '')
+        coupon_direct_reg_enable = request.POST.get('coupon_direct_reg_enable', '')
+        coupon_product_id = request.POST.get('coupon_product_id', '')
+        coupon_use = request.POST.get('coupon_use', USE)
+
+        context = {}
+        error = None
+
+        if coupon_start_date == '' or coupon_start_date is None:
+            error = '쿠폰 시작일을 선택해주세요.'
+        if coupon_end_date == '' or coupon_end_date is None:
+            error = '쿠폰 종료일을 선택해주세요.'
+        if coupon_target == '' or coupon_target is None:
+            error = '쿠폰 대상을 선택해주세요.'
+        if coupon_amount == '' or coupon_amount is None:
+            error = '쿠폰 갯수를 선택해주세요.'
+        if coupon_effective_days == '' or coupon_effective_days is None:
+            error = '쿠폰 유효기간을 선택해주세요.'
+        if coupon_duplicate_enable == '' or coupon_duplicate_enable is None:
+            error = '중복 등록 가능 여부를 선택해주세요.'
+        if coupon_direct_reg_enable == '' or coupon_direct_reg_enable is None:
+            error = '회원 직접 가능 여부를 선택해주세요.'
+        # if coupon_product_id == '' or coupon_product_id is None:
+        #     error = '관련 상품을 선택해주세요.'
+        if coupon_product_effective_days == '' or coupon_product_effective_days is None:
+            error = '상품 부여 기간일을 선택해주세요.'
+        if coupon_name == '' or coupon_name is None:
+            error = '쿠폰명을 입력해주세요.'
+
+        if error is None:
+            coupon_check = CouponTb.objects.filter(coupon_cd=coupon_cd).count()
+            if coupon_check > 0:
+                error = '쿠폰 코드가 중복됩니다.'
+
+        if error is None:
+            coupon_info = CouponTb(coupon_cd=coupon_cd, name=coupon_name, contents=coupon_contents,
+                                   amount=coupon_amount, effective_days=coupon_effective_days,
+                                   product_effective_days=coupon_product_effective_days,
+                                   start_date=coupon_start_date, end_date=coupon_end_date,
+                                   duplicate_enable=coupon_duplicate_enable, direct_reg_enable=coupon_direct_reg_enable,
+                                   product_tb_id=coupon_product_id, use=coupon_use)
+            coupon_info.save()
+
+        if error is not None:
+            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+            # messages.error(request, error)
+            context['messageArray'] = error
+
+        return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+

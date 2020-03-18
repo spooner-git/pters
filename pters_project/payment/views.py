@@ -1,8 +1,9 @@
 import datetime
 import json
 import logging
-
+import collections
 import httplib2
+
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
@@ -11,21 +12,24 @@ from django.db import IntegrityError
 from django.db import InternalError
 from django.db import transaction
 from django.db.models import Q
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
-from configs.const import USE, UN_USE
+from configs.const import USE, UN_USE, DISABLE, ALL_MEMBER, NO_PAYMENT_MEMBER, ING_PAYMENT_MEMBER, END_PAYMENT_MEMBER, \
+    NEW_MEMBER, NEW_MEMBER, RECOMMENDED_REGISTER_COUPON_CD, RECOMMENDED_PAYMENT_COUPON_CD
 from configs import settings
 from login.models import MemberTb
 
 from .functions import func_set_billing_schedule, func_get_imp_token, func_resend_payment_info, \
     func_check_payment_price_info, func_get_end_date, func_cancel_period_billing_schedule, \
-    func_set_billing_schedule_now, func_get_payment_info_from_imp, func_set_iamport_schedule
+    func_set_billing_schedule_now, func_get_payment_info_from_imp, func_set_iamport_schedule, func_check_coupon_use, \
+    func_get_end_date_by_day, func_check_coupon_reg
 from .models import PaymentInfoTb, BillingInfoTb, ProductTb, BillingCancelInfoTb, ProductPriceTb, \
-    ProductFunctionAuthTb, IosReceiptCheckTb
+    ProductFunctionAuthTb, IosReceiptCheckTb, CouponTb, CouponMemberTb
 
 logger = logging.getLogger(__name__)
 
@@ -151,10 +155,10 @@ def check_before_billing_logic(request):
                                              period_month=period_month,
                                              price=int(input_price),
                                              name=payment_name,
-                                             buyer_email=request.user.email,
+                                             buyer_email=str(request.user.email),
                                              status='ready',
                                              pay_method=pay_method,
-                                             buyer_name=request.user.first_name,
+                                             buyer_name=str(request.user.first_name),
                                              use=UN_USE)
 
                 if payment_type_cd == 'PERIOD':
@@ -352,6 +356,41 @@ def billing_check_logic(request):
 
                         if payment_info['status'] == 'paid':
                             # 정상 결제, 정기 결제인 경우 예약
+
+                            coupon_info = None
+                            recommend_error_check = None
+                            recommended_member_info = None
+                            today = datetime.date.today()
+                            member_payment_count = PaymentInfoTb.objects.get(member_id=pre_payment_info.member_id,
+                                                                             status='paid', use=USE)
+                            if member_payment_count <= 1:
+                                recommended_member_id = pre_payment_info.member.recommended_member_id
+
+                                try:
+                                    coupon_info = CouponTb.objects.get(coupon_cd=RECOMMENDED_PAYMENT_COUPON_CD,
+                                                                       use=USE)
+                                except ObjectDoesNotExist:
+                                    recommend_error_check = '쿠폰 없음'
+                                try:
+                                    recommended_member_info = MemberTb.objects.get(member_id=recommended_member_id,
+                                                                                   use=USE)
+                                except ObjectDoesNotExist:
+                                    recommend_error_check = '추천인 없음'
+
+                                if recommend_error_check is None:
+                                    recommend_error_check = func_check_coupon_use(RECOMMENDED_PAYMENT_COUPON_CD,
+                                                                                  recommended_member_info.member_id,
+                                                                                  recommended_member_info.user.date_joined)
+
+                                if recommend_error_check is None:
+                                    expiry_date = today + datetime.timedelta(days=coupon_info.effective_days)
+                                    coupon_member = CouponMemberTb(member_id=recommended_member_id,
+                                                                   coupon_tb_id=coupon_info.coupon_id,
+                                                                   name=pre_payment_info.member.name + '회원님 첫 결제',
+                                                                   contents=coupon_info.contents,
+                                                                   start_date=today, expiry_date=expiry_date, use=USE)
+                                    coupon_member.save()
+
                             error = func_set_billing_schedule(pre_payment_info.customer_uid,
                                                               pre_payment_info, int(pre_billing_info.payed_date))
 
@@ -718,11 +757,11 @@ def update_payment_product_info_logic(request):
                                                 period_month=1,
                                                 price=0,
                                                 name=product_price_info.product_tb.name + ' - 상품 변경',
-                                                buyer_email=request.user.email,
+                                                buyer_email=str(request.user.email),
                                                 status='paid',
                                                 pay_method='card',
                                                 card_name='상품 변경',
-                                                buyer_name=request.user.first_name,
+                                                buyer_name=str(request.user.first_name),
                                                 use=USE)
             change_payment_info.save()
 
@@ -754,7 +793,7 @@ def update_payment_product_info_logic(request):
                                                   int(product_price_info.sale_price),
                                                   payment_info.customer_uid, update_merchant_uid,
                                                   next_schedule_timestamp,
-                                                  request.user.first_name, request.user.email)
+                                                  str(request.user.first_name), str(request.user.email))
         #         if error is not None:
         #             raise InternalError
         #
@@ -844,7 +883,7 @@ def update_reserve_product_info_logic(request):
                                                           + product_price_info.name,
                                                           int(product_price_info.sale_price),
                                                           customer_uid, merchant_uid, next_schedule_timestamp,
-                                                          request.user.first_name, request.user.email)
+                                                          str(request.user.first_name), str(request.user.email))
                 if error is not None:
                     raise InternalError
 
@@ -908,7 +947,7 @@ def check_update_period_billing_logic(request):
                                              period_month=billing_info.period_month,
                                              price=context['price'],
                                              name=billing_info.name,
-                                             buyer_email=request.user.email,
+                                             buyer_email=str(request.user.email),
                                              status=status,
                                              pay_method='card',
                                              buyer_name=request.user.first_name,
@@ -1156,7 +1195,7 @@ def payment_for_iap_logic(request):
                                      imp_uid='',
                                      channel='iap',
                                      card_name='인앱 결제',
-                                     buyer_email=request.user.email,
+                                     buyer_email=str(request.user.email),
                                      status='paid',
                                      fail_reason='',
                                      currency='',
@@ -1171,7 +1210,7 @@ def payment_for_iap_logic(request):
     if error is None:
         logger.info(str(request.user.first_name) + '(' + str(request.user.id) + ')님 iap 결제 완료:'
                     + str(product_id) + ':'+' '+str(start_date))
-        email = EmailMessage('[PTERS 결제]' + request.user.first_name + '회원', 'android 인앱 결제 :' + str(timezone.now()),
+        email = EmailMessage('[PTERS 결제]' + str(request.user.first_name) + '회원', 'android 인앱 결제 :' + str(timezone.now()),
                              to=['support@pters.co.kr'])
         email.send()
     else:
@@ -1239,7 +1278,7 @@ def payment_for_ios_logic(request):
                                      # imp_uid=input_transaction_id,
                                      channel='iap',
                                      card_name=pay_info,
-                                     buyer_email=request.user.email,
+                                     buyer_email=str(request.user.email),
                                      status='paid',
                                      fail_reason='',
                                      currency='',
@@ -1352,7 +1391,7 @@ def payment_for_coupon_logic(request):
                                      # imp_uid=input_transaction_id,
                                      channel='coupon',
                                      card_name=pay_info,
-                                     buyer_email=request.user.email,
+                                     buyer_email=str(request.user.email),
                                      status='paid',
                                      fail_reason='',
                                      currency='',
@@ -1743,3 +1782,278 @@ def ios_receipt_validation_logic(request):
             ios_receipt_validation_info.save()
 
     return render(request, 'ajax/payment_error_info.html')
+
+
+def add_member_coupon_logic(request):
+    coupon_cd = request.POST.get('coupon_cd', '')
+    coupon_info = None
+    error = None
+
+    today = datetime.date.today()
+
+    if coupon_cd is None or coupon_cd == '':
+        error = '쿠폰 코드를 다시 확인해주세요.[1]'
+
+    if error is None:
+        try:
+            coupon_info = CouponTb.objects.get(coupon_cd=coupon_cd, use=USE)
+        except ObjectDoesNotExist:
+            error = '쿠폰 코드를 다시 확인해주세요.[3]'
+
+    if error is None:
+        error = func_check_coupon_reg(coupon_cd, request.user.id, request.user.date_joined)
+
+    if error is None:
+        expiry_date = today + datetime.timedelta(days=coupon_info.effective_days)
+        coupon_member = CouponMemberTb(member_id=request.user.id, coupon_tb_id=coupon_info.coupon_id,
+                                       name=coupon_info.name, contents=coupon_info.contents,
+                                       start_date=today, expiry_date=expiry_date, use=USE)
+        coupon_member.save()
+
+    else:
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
+        messages.error(request, error)
+
+    return render(request, 'ajax/payment_error_info.html')
+
+
+class GetMemberCouponListView(LoginRequiredMixin, View):
+    # template_name = 'test.html'
+    def get(self, request):
+        coupon_member_data_dict = collections.OrderedDict()
+        coupon_member_data = CouponMemberTb.objects.select_related(
+            'coupon_tb__product_tb').filter(member_id=request.user.id, use=USE)
+
+        for coupon_member_info in coupon_member_data:
+            product_tb = coupon_member_info.coupon_tb.product_tb
+            product_id = ''
+            product_name = '기존 결제 상품'
+
+            if product_tb is not None and product_tb != '':
+                product_id = product_tb.product_id
+                product_name = product_tb.name
+
+            coupon_member_data_dict[coupon_member_info.coupon_member_id] = {
+                'coupon_member_id': coupon_member_info.coupon_member_id,
+                'coupon_name': coupon_member_info.name,
+                'coupon_contents': coupon_member_info.contents,
+                'coupon_cd': coupon_member_info.coupon_tb.coupon_cd,
+                'coupon_start_date': str(coupon_member_info.start_date),
+                'coupon_expiry_date': str(coupon_member_info.expiry_date),
+                'coupon_target': coupon_member_info.coupon_tb.target,
+                'coupon_product_id': product_id,
+                'coupon_product_name': product_name,
+                'coupon_product_effective_days': coupon_member_info.coupon_tb.product_effective_days,
+                'coupon_mod_dt': coupon_member_info.mod_dt,
+                'coupon_reg_dt': coupon_member_info.reg_dt,
+                'coupon_exhaustion': coupon_member_info.exhaustion
+            }
+
+        return JsonResponse({'coupon_member_data': coupon_member_data_dict}, json_dumps_params={'ensure_ascii': True})
+
+
+def add_coupon_product_info_logic(request):
+    coupon_member_id = request.POST.get('coupon_member_id', '')
+    error = None
+    context = {'error': None}
+    coupon_info = None
+    payment_name = None
+    today = datetime.date.today()
+    product_id = None
+    start_date = today
+    coupon_member_info = None
+    if coupon_member_id is None or coupon_member_id == '':
+        error = '오류가 발생했습니다.[0]'
+
+    if error is None:
+        try:
+            coupon_member_info = CouponMemberTb.objects.get(coupon_member_id=coupon_member_id,
+                                                            member_id=request.user.id,
+                                                            use=USE)
+            payment_name = coupon_member_info.name
+            coupon_info = coupon_member_info.coupon_tb
+            if coupon_info.product_tb is not None and coupon_info.product_tb != '':
+                product_id = coupon_info.product_tb_id
+        except ObjectDoesNotExist:
+            error = '쿠폰함을 확인해주세요.[0]'
+
+    if error is None:
+        error = func_check_coupon_use(coupon_info.coupon_cd, request.user.id, request.user.date_joined)
+
+    if error is None:
+        # 결제 예약 스케쥴 정보 가져오기
+        payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id,
+                                                    payment_type_cd='PERIOD',
+                                                    status='reserve',
+                                                    use=UN_USE).order_by('-end_date')
+        # 결제 예약 스케쥴이 있는 경우 (현재 결제중인것이 있음)
+        if len(payment_data) > 0:
+            payment_info = payment_data[0]
+            next_schedule_timestamp = ''
+
+            if error is None:
+                # 예약 데이터 업데이트
+                # if product_id is None or product_id == '':
+                product_id = payment_info.product_tb_id
+
+                # 다음 결제 예정일 업데이트
+                next_paid_date = str(func_get_end_date_by_day(payment_info.paid_date,
+                                                              coupon_info.product_effective_days))
+
+                # 쿠폰 등록 결제 정보 추가
+                # 시작일 : 다음 결제시 시작일 , 종료일 : 수정된 다음 결제 예정일
+                coupon_payment_info = PaymentInfoTb(
+                    member_id=str(request.user.id),
+                    product_tb_id=product_id,
+                    payment_type_cd='SINGLE',
+                    merchant_uid='m_coupon_' + str(request.user.id) + '_' + str(product_id)
+                                 + '_' + str(timezone.now().timestamp()),
+                    customer_uid=payment_info.customer_uid,
+                    start_date=str(payment_info.start_date), end_date=str(next_paid_date),
+                    paid_date=today,
+                    period_month=0,
+                    price=0,
+                    name=payment_info.product_tb.name+'-'+payment_name,
+                    imp_uid=str(coupon_member_id),
+                    channel='coupon',
+                    card_name='coupon',
+                    buyer_email=str(request.user.email),
+                    status='paid',
+                    fail_reason='',
+                    currency='',
+                    pay_method='coupon',
+                    pg_provider='PTERS',
+                    receipt_url='',
+                    buyer_name=str(request.user.first_name),
+                    use=USE)
+
+                coupon_payment_info.save()
+
+                # 쿠폰 한도 차감 및 소진 처리
+                coupon_member_info.use = UN_USE
+                coupon_member_info.save()
+                coupon_info.amount -= 1
+                coupon_info.save()
+
+                # merchant_uid 업데이트
+                merchant_uid = 'm_' + str(request.user.id) + '_' + str(product_id)\
+                               + '_' + str(timezone.now().timestamp())
+
+                payment_info.merchant_uid = merchant_uid
+                # 다음 결제일 업데이트
+                payment_info.paid_date = next_paid_date
+                # 다음 시작일 기간 만큼 업데이트
+                payment_info.start_date = str(func_get_end_date_by_day(payment_info.start_date,
+                                                                       coupon_info.product_effective_days))
+                # 다음 종료일 기간 만큼 업데이트
+                payment_info.end_date = str(func_get_end_date_by_day(payment_info.end_date,
+                                                                     coupon_info.product_effective_days))
+                payment_info.save()
+
+                # 정기결제 결제 정보 업데이트
+                try:
+                    billing_info = BillingInfoTb.objects.get(customer_uid=payment_info.customer_uid, use=USE)
+                    # 다음 결제 예정일 업데이트
+                    billing_info.next_payment_date = next_paid_date
+                    billing_info.payed_date = next_paid_date.split('-')[2]
+                    billing_info.save()
+                    # 정기 결제 다음 결제일을 자동 결제 예약 시간으로 설정
+                    next_billing_date_time = datetime.datetime.combine(
+                        datetime.datetime.strptime(next_paid_date, '%Y-%m-%d'),
+                        datetime.datetime.min.time())
+                    next_schedule_timestamp = next_billing_date_time.replace(hour=15, minute=0, second=0,
+                                                                             microsecond=0).timestamp()
+                except ObjectDoesNotExist:
+                    error = '정기 결제 정보를 불러오지 못했습니다.'
+
+            if error is None:
+                error = func_cancel_period_billing_schedule(payment_info.customer_uid)
+
+            if error is None:
+                token_result = func_get_imp_token()
+                access_token = token_result['access_token']
+                error = token_result['error']
+                if error is None:
+                    # iamport 정기 결제 예약 신청
+                    error = func_set_iamport_schedule(access_token, payment_info.name,
+                                                      int(payment_info.price),
+                                                      payment_info.customer_uid, payment_info.merchant_uid,
+                                                      next_schedule_timestamp,
+                                                      str(request.user.first_name), str(request.user.email))
+
+        else:
+            # 결제 예약 스케쥴이 없는 경우
+
+            # 현재 진행중인 상품이 있다면 다음날, 없다면 오늘 시작
+            try:
+                payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id, status='paid',
+                                                            end_date__gte=today,
+                                                            use=USE).latest('end_date')
+                start_date = payment_info.end_date + datetime.timedelta(days=1)
+                if product_id is None or product_id == '':
+                    product_id = payment_info.product_tb_id
+                payment_name = payment_info.product_tb.name + '-' + payment_name
+            except ObjectDoesNotExist:
+                product_id = 8
+                payment_name = '스탠다드-'+payment_name
+                start_date = today
+
+            if error is None:
+                try:
+                    with transaction.atomic():
+                        end_date = str(func_get_end_date_by_day(start_date, coupon_info.product_effective_days))
+                        new_payment_info = PaymentInfoTb(member_id=str(request.user.id),
+                                                         product_tb_id=product_id,
+                                                         payment_type_cd='SINGLE',
+                                                         merchant_uid='m_coupon_' + str(request.user.id) + '_'
+                                                                      + str(product_id)
+                                                                      + '_' + str(timezone.now().timestamp()),
+                                                         customer_uid='c_coupon_' + str(request.user.id) + '_'
+                                                                      + str(product_id)
+                                                                      + '_' + str(timezone.now().timestamp()),
+                                                         start_date=start_date, end_date=end_date,
+                                                         paid_date=today,
+                                                         period_month=0,
+                                                         price=0,
+                                                         name=payment_name,
+                                                         imp_uid=str(coupon_member_id),
+                                                         channel='coupon',
+                                                         card_name='coupon',
+                                                         buyer_email=str(request.user.email),
+                                                         status='paid',
+                                                         fail_reason='',
+                                                         currency='',
+                                                         pay_method='coupon',
+                                                         pg_provider='PTERS',
+                                                         receipt_url='',
+                                                         buyer_name=str(request.user.first_name),
+                                                         use=USE)
+
+                        new_payment_info.save()
+
+                        # 쿠폰 한도 차감 및 소진 처리
+                        coupon_member_info.use = UN_USE
+                        coupon_member_info.save()
+                        coupon_info.amount -= 1
+                        coupon_info.save()
+                except TypeError:
+                    error = '쿠폰 등록중 발생했습니다.[0]'
+                except ValueError:
+                    error = '쿠폰 등록중 발생했습니다.[1]'
+
+    if error is None:
+        logger.info(str(request.user.first_name)
+                    + '(' + str(request.user.id) + ')님 coupon 등록 완료:' + str(payment_name) + ':' + ' '
+                    + str(start_date))
+
+        email = EmailMessage('[PTERS 쿠폰 등록]' + str(request.user.first_name) + '회원',
+                             str(payment_name)+':' + str(timezone.now()),
+                             to=['support@pters.co.kr'])
+        email.send()
+    else:
+        messages.error(request, error)
+        logger.error(str(request.user.first_name) + '(' + str(request.user.id) + ')님 '
+                     + str(payment_name)+' 쿠폰 등록 오류:' + str(error))
+
+    context['error'] = error
+    return render(request, 'ajax/payment_error_info.html', context)

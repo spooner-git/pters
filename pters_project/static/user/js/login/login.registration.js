@@ -12,9 +12,11 @@ function check_group_select(group_type) {
     if (group_type == 'trainer') {
         $('#group_select_trainer_box').attr('class', 'group_select_box_on');
         $('#group_select_trainee_box').attr('class', 'group_select_box_off');
+        $("#recommend_user_input_wrap").show();
     } else {
         $('#group_select_trainer_box').attr('class', 'group_select_box_off');
         $('#group_select_trainee_box').attr('class', 'group_select_box_on');
+        $("#recommend_user_input_wrap").hide();
     }
 }
 
@@ -321,7 +323,21 @@ function registration_member_info(forms){
     if(error_info!=''){
         alert(error_info+'를 확인해주세요.');
     }else{
-        add_member_info();
+
+        let id_recommended_member_username = $('#id_recommended_member_username').val();
+        let id_recommend_username = $('#id_recommend_username').val();
+
+        if(id_recommend_username == ''){
+            $('#id_recommended_member_id').val('');
+            $('#id_recommended_member_username').val('');
+        }
+
+        if(id_recommended_member_username != id_recommend_username){
+            alert(id_recommend_username+'님을 추천인을 등록하려면 추천인 아이디 확인을 해주세요.');
+            $('#id_recommend_username').val('');
+        }else{
+            add_member_info();
+        }
     }
 }
 
@@ -352,6 +368,46 @@ function add_member_info(){
             }else{
                 alert('가입이 완료되었습니다.');
                 location.href = $('#id_next_page').val();
+            }
+        },
+        complete:function(){
+
+        },
+        error:function(){
+
+        }
+    });
+}
+
+function check_recommend_id(){
+    // alert("login.registration.js 파일 내 check_recommend_id 함수 확인 할 것");
+    // return;
+    let $recommend_id = $('#id_recommend_username');
+    $.ajax({
+        url:'/login/check_recommended_member/',
+        type:'POST',
+        data: {'username': $recommend_id.val()},
+        dataType : 'html',
+
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+
+        //통신성공시 처리
+        success:function(data){
+            let jsondata = JSON.parse(data);
+            if(jsondata.messageArray.length > 0){
+                $('#recommend_id_confirm').text(jsondata.messageArray).css({'display':'block', 'color':'#fe4e65'});
+                $('#id_recommended_member_id').val('');
+                $('#id_recommended_member_username').val('');
+            }else{
+                $('#recommend_id_confirm_button').text('재확인').css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2'});
+                $('#recommend_id_confirm').text('추천인 확인 완료').css({'display':'block', 'color':'green'});
+                $('#id_recommended_member_id').val(jsondata.user_db_id);
+                $('#id_recommended_member_username').val(jsondata.username);
+                // alert('확인되었습니다.');
             }
         },
         complete:function(){

@@ -30,6 +30,8 @@ class MemberTb(TimeStampedModel):
     address = models.CharField('지역', db_column='ADDRESS', max_length=255, blank=True, default='')
     job = models.CharField('직업', db_column='JOB', max_length=20, blank=True, default='')  # Field name made lowercase.
     contents = models.CharField('소개', db_column='CONTENTS', max_length=255, blank=True, default='')
+    recommended_member_id = models.CharField('추천 회원 ID', db_column='RECOMMENDED_MEMBER_ID',
+                                             max_length=20, blank=True, default='')
 
     class Meta:
         managed = False
