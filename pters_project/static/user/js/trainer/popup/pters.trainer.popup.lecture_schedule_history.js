@@ -39,13 +39,13 @@ class Lecture_schedule_history{
         let content;
         if(this.sort_val == SORT_SCHEDULE_DT){
             content = `<section style="margin-top:8px;" id="list_wrap">
-                            ${this.dom_arrange_select()}
+                           <!-- ${this.dom_arrange_select()} -->
                             ${this.dom_list_by_time(data)}
                         </section>`;
         }
         else if(this.sort_val == SORT_SCHEDULE_MONTHLY){
             content = `<section style="margin-top:8px;" id="list_wrap">
-                            ${this.dom_arrange_select()}
+                           <!-- ${this.dom_arrange_select()} -->
                             ${this.dom_list_by_monthly(data)}
                         </section>`;
         }
@@ -116,11 +116,11 @@ class Lecture_schedule_history{
     dom_list_by_time(received_data){
         let length = received_data.lecture_schedule_list.length;
         let html_to_join = [];
-        for(let i=length-1; i>=0; i--){
+        for(let i=0; i<length; i++){
         // for(let i=0; i<length; i++){
             let data = received_data.lecture_schedule_list[i];
-            // let numbering = data.schedule_idx + ' 회차';
-            let numbering = Number(i+1) + ' 회차';
+            let numbering = data.schedule_idx + ' 회차';
+            // let numbering = Number(i+1) + ' 회차';
             let schedule_id = data.schedule_id;
             let date =  DateRobot.to_text(data.start_dt.split(' ')[0], '', '', SHORT) +' '+ TimeRobot.to_text(data.start_dt.split(' ')[1], '', SHORT) + ' - ' +
                             TimeRobot.to_text(data.end_dt.split(' ')[1], '', SHORT);
@@ -130,6 +130,10 @@ class Lecture_schedule_history{
             let member_num = data.lecture_current_member_num;
             let max_num = data.lecture_max_member_num;
             let memo = data.note;
+            let member_name = data.member_name;
+            if(member_name != ''){
+                schedule_name = member_name;
+            }
             let daily_record_id = null;
             let onclick = ()=>{
                 return false;
@@ -637,7 +641,7 @@ class Lecture_schedule_history{
     switch_type(){
         let user_option = {
             by_time:{text:"시간순 정렬", callback:()=>{this.sort_val = SORT_SCHEDULE_DT;this.init();layer_popup.close_layer_popup();}},
-            by_monthly:{text:"월별 정렬", callback:()=>{this.sort_val = SORT_SCHEDULE_MONTHLY;this.init();layer_popup.close_layer_popup();}}
+            // by_monthly:{text:"월별 정렬", callback:()=>{this.sort_val = SORT_SCHEDULE_MONTHLY;this.init();layer_popup.close_layer_popup();}}
         };
         let options_padding_top_bottom = 16;
         // let button_height = 8 + 8 + 52;
@@ -653,9 +657,9 @@ class Lecture_schedule_history{
         Setting_calendar_func.read((settings)=>{
             let send_data = {"lecture_id": this.lecture_id, "sort_val": this.sort_val, "page": this.this_page};
             Lecture_func.read_schedule_list(send_data, (data)=>{
-                let demo = {max_page: 5, this_page:1};
-                this.this_page = demo.this_page;
-                this.max_page = demo.max_page;
+                // let demo = {max_page: 5, this_page:1};
+                this.this_page = data.this_page;
+                this.max_page = data.max_page;
 
                 callback(data);
             });

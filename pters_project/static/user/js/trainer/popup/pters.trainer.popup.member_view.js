@@ -789,17 +789,17 @@ class Member_view{
 
         html_to_join.unshift(
             `<div style="margin-top:10px;height:33px;">`+
-                CComp.button("add_new_ticket", `${CImg.plus([""], {"vertical-align":"middle", "margin-bottom":"3px", "margin-right":"2px", "width":"18px"})} 재등록`, {"font-size":"12px", "float":"left", "padding-left":"0"}, null, ()=>{
-                    let member_add_initial_data = {member_id: this.member_id};
-                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_ADD, 100, POPUP_FROM_BOTTOM, null, ()=>{
-                        member_add_popup = new Member_add('.popup_member_add', member_add_initial_data, 'member_add_popup');}
-                    );
-                }) +
-                CComp.button("view_ticket_history", `${CImg.list([""], {"vertical-align":"middle", "margin-bottom":"3px", "margin-right":"2px", "width":"18px"})} 수강권 이력`, {"font-size":"12px", "float":"right", "padding-right":"0"}, null, ()=>{
+                CComp.button("view_ticket_history", `${CImg.history([""], {"vertical-align":"middle", "margin-bottom":"3px", "margin-right":"2px", "width":"18px"})} 수강권 이력`, {"font-size":"12px", "float":"left", "padding-left":"0"}, null, ()=>{
                     let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_TICKET_HISTORY, 100, popup_style, null, ()=>{
                         member_ticket_history = new Member_ticket_history('.popup_member_ticket_history', {member_id:this.member_id, member_name:this.name}, null);
                     });
+                }) +
+                CComp.button("add_new_ticket", `${CImg.plus([""], {"vertical-align":"middle", "margin-bottom":"3px", "margin-right":"2px", "width":"18px"})} 재등록`, {"font-size":"12px", "float":"right", "padding-right":"0"}, null, ()=>{
+                    let member_add_initial_data = {member_id: this.member_id};
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_ADD, 100, POPUP_FROM_BOTTOM, null, ()=>{
+                        member_add_popup = new Member_add('.popup_member_add', member_add_initial_data, 'member_add_popup');}
+                    );
                 }) +
             `</div>`
         );
@@ -839,7 +839,7 @@ class Member_view{
                 //         plan_add_popup = new Plan_add('.popup_plan_add', data, "plan_add_popup");
                 //     });
                 // }) +
-                CComp.button("view_schedule_history", `${CImg.list([""], {"vertical-align":"middle", "margin-bottom":"3px", "margin-right":"2px", "width":"18px"})} 일정 이력`, {"font-size":"12px", "float":"right", "padding-right":"0"}, null, ()=>{
+                CComp.button("view_schedule_history", `${CImg.history([""], {"vertical-align":"middle", "margin-bottom":"3px", "margin-right":"2px", "width":"18px"})} 일정 이력`, {"font-size":"12px", "float":"left", "padding-left":"0"}, null, ()=>{
                     let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_SCHEDULE_HISTORY, 100, popup_style, null, ()=>{
                         member_schedule_history = new Member_schedule_history('.popup_member_schedule_history', this.member_id, null);

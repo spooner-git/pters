@@ -268,19 +268,21 @@ class GetLectureScheduleListView(LoginRequiredMixin, AccessTestMixin, View):
     def get(self, request):
         class_id = self.request.session.get('class_id', '')
         lecture_id = request.GET.get('lecture_id', None)
+        page = request.GET.get('page', 1)
+        sort = request.GET.get('sort_val', SORT_SCHEDULE_DT)
         error = None
-        lecture_schedule_list = []
+        ordered_schedule_dict = collections.OrderedDict()
 
         if lecture_id is None or lecture_id == '':
             error = '회원 정보를 불러오지 못했습니다.'
 
         if error is None:
-            lecture_schedule_list = func_get_lecture_schedule_all(class_id, lecture_id)
+            ordered_schedule_dict = func_get_lecture_schedule_all(class_id, lecture_id, page)
         else:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
             messages.error(request, error)
 
-        return JsonResponse({'lecture_schedule_list': lecture_schedule_list}, json_dumps_params={'ensure_ascii': True})
+        return JsonResponse(ordered_schedule_dict, json_dumps_params={'ensure_ascii': True})
 
 
 class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):

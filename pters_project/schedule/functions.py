@@ -19,7 +19,7 @@ from configs.const import REPEAT_TYPE_2WEAK, ON_SCHEDULE_TYPE, USE, UN_USE, SCHE
     AUTH_TYPE_VIEW, GROUP_SCHEDULE, OFF_SCHEDULE, FROM_TRAINEE_LESSON_ALARM_ON, TO_SHARED_TRAINER_LESSON_ALARM_OFF, \
     TO_SHARED_TRAINER_LESSON_ALARM_ON, PERMISSION_STATE_CD_WAIT, \
     PERMISSION_STATE_CD_APPROVE, TO_ALL_TRAINEE, TO_ING_TRAINEE, TO_END_TRAINEE, GROUP_TRAINEE, GROUP_TRAINER, \
-    MEMBER_SCHEDULE_PAGINATION_COUNTER
+    SCHEDULE_PAGINATION_COUNTER
 from configs.settings import DEBUG
 from login.models import PushInfoTb
 from trainee.models import MemberTicketTb
@@ -1451,12 +1451,12 @@ def func_get_member_schedule_all_by_schedule_dt(class_id, member_id, page):
         member_ticket_tb__use=USE).annotate(auth_cd=RawSQL(query_auth,
                                                            [])).filter(auth_cd=AUTH_TYPE_VIEW).order_by('-start_dt',
                                                                                                         '-reg_dt')
-    paginator = Paginator(member_schedule_data, MEMBER_SCHEDULE_PAGINATION_COUNTER)
+    paginator = Paginator(member_schedule_data, SCHEDULE_PAGINATION_COUNTER)
     try:
         member_schedule_data = paginator.page(page)
     except EmptyPage:
         member_schedule_data = []
-    schedule_idx = paginator.count - MEMBER_SCHEDULE_PAGINATION_COUNTER*(int(page)-1)
+    schedule_idx = paginator.count - SCHEDULE_PAGINATION_COUNTER*(int(page)-1)
 
     ordered_schedule_dict['max_page'] = paginator.num_pages
     ordered_schedule_dict['this_page'] = page
@@ -1742,7 +1742,8 @@ def func_get_member_schedule_all_by_monthly(class_id, member_id, page):
     return monthly_schedule_data_dict
 
 
-def func_get_lecture_schedule_all(class_id, lecture_id):
+def func_get_lecture_schedule_all(class_id, lecture_id, page):
+    ordered_schedule_dict = collections.OrderedDict()
     lecture_schedule_list = []
 
     # 수업의 회원수 체크를 위한 query
@@ -1757,8 +1758,16 @@ def func_get_lecture_schedule_all(class_id, lecture_id):
         'member_ticket_tb__member', 'reg_member',
         'lecture_tb').filter(class_tb=class_id, lecture_tb_id=lecture_id, lecture_schedule_id__isnull=True,
                              use=USE).annotate(lecture_current_member_num=RawSQL(query,
-                                                                                 [])).order_by('start_dt',
-                                                                                               'reg_dt')
+                                                                                 [])).order_by('-start_dt',
+                                                                                               '-reg_dt')
+    paginator = Paginator(schedule_data, SCHEDULE_PAGINATION_COUNTER)
+    try:
+        schedule_data = paginator.page(page)
+    except EmptyPage:
+        schedule_data = []
+    schedule_idx = paginator.count - SCHEDULE_PAGINATION_COUNTER*(int(page)-1)
+    ordered_schedule_dict['max_page'] = paginator.num_pages
+    ordered_schedule_dict['this_page'] = page
 
     for schedule_info in schedule_data:
         schedule_type = schedule_info.en_dis_type
@@ -1769,13 +1778,18 @@ def func_get_lecture_schedule_all(class_id, lecture_id):
             lecture_max_member_num = schedule_info.lecture_tb.member_num
             lecture_current_member_num = schedule_info.lecture_current_member_num
             lecture_ing_color_cd = schedule_info.lecture_tb.ing_color_cd
+            member_name = ''
             if schedule_info.lecture_tb.lecture_type_cd != LECTURE_TYPE_ONE_TO_ONE:
                 schedule_type = GROUP_SCHEDULE
+            else:
+                member_name = schedule_info.member_ticket_tb.member.name
         except AttributeError:
             lecture_id = ''
             lecture_name = ''
             lecture_max_member_num = ''
             lecture_current_member_num = ''
+            member_name = ''
+
         end_dt_time = str(schedule_info.end_dt).split(' ')[1]
         if end_dt_time == '00:00:00':
             end_dt_time = '24:00'
@@ -1787,7 +1801,8 @@ def func_get_lecture_schedule_all(class_id, lecture_id):
             mod_member_id = schedule_info.mod_member_id
             mod_member_name = schedule_info.mod_member.name
 
-        lecture_schedule_list.append({'schedule_id': str(schedule_info.schedule_id),
+        lecture_schedule_list.append({'schedule_idx': str(schedule_idx),
+                                      'schedule_id': str(schedule_info.schedule_id),
                                       'start_dt': str(schedule_info.start_dt),
                                       'end_dt': str(end_dt),
                                       'state_cd': schedule_info.state_cd,
@@ -1804,9 +1819,12 @@ def func_get_lecture_schedule_all(class_id, lecture_id):
                                       'lecture_id': str(lecture_id),
                                       'lecture_name': lecture_name,
                                       'lecture_max_member_num': lecture_max_member_num,
-                                      'lecture_current_member_num': lecture_current_member_num})
-
-    return lecture_schedule_list
+                                      'lecture_current_member_num': lecture_current_member_num,
+                                      'lecture_ing_color_cd': lecture_ing_color_cd,
+                                      'member_name': member_name})
+        schedule_idx -= 1
+    ordered_schedule_dict['lecture_schedule_list'] = lecture_schedule_list
+    return ordered_schedule_dict
 
 
 def func_get_trainer_attend_schedule(context, class_id, start_date, end_date, now):

@@ -663,7 +663,7 @@ class Lecture_view{
                     data.week_info.split('/').map((item)=>{
                         return DAYNAME_MATCH[item];
                     }).join(''),
-                    data.member_name != undefined ? data.member_name : "",
+                    data.member_name != undefined ? data.member_name+' /' : "",
                     data.start_date+' - '+data.end_date,
                     data.start_time+' - '+data.end_time
                 );
@@ -703,7 +703,7 @@ class Lecture_view{
                 //         plan_add_popup = new Plan_add('.popup_plan_add', data, "plan_add_popup");
                 //     });
                 // }) +
-                CComp.button("view_schedule_history", `${CImg.list([""], {"vertical-align":"middle", "margin-bottom":"3px", "margin-right":"2px", "width":"18px"})} 일정 이력`, {"font-size":"12px", "float":"right", "padding-right":"0"}, null, ()=>{
+                CComp.button("view_schedule_history", `${CImg.history([""], {"vertical-align":"middle", "margin-bottom":"3px", "margin-right":"2px", "width":"18px"})} 일정 이력`, {"font-size":"12px", "float":"left", "padding-left":"0"}, null, ()=>{
                     let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_LECTURE_SCHEDULE_HISTORY, 100, popup_style, null, ()=>{
                         lecture_schedule_history = new Lecture_schedule_history('.popup_lecture_schedule_history', this.lecture_id, null);
@@ -727,7 +727,7 @@ class Lecture_view{
                         </div>
                         <div style="flex:1 1 0">
                             <div style="font-size:16px;font-weight:500;letter-spacing:-0.7px;color:var(--font-base);">${repeat_name} ${repeat_time}</div>
-                            <div style="font-size:12px;font-weight:500;letter-spacing:-0.5px;color:var(--font-sub-normal);">${repeat_day} / ${repeat_period}</div>
+                            <div style="font-size:12px;font-weight:500;letter-spacing:-0.5px;color:var(--font-sub-normal);">${repeat_day} ${repeat_period}</div>
                         </div>
                         <div style="flex-basis:30px;">
                             ${CImg.more("", {"vertical-align":"top"})}
