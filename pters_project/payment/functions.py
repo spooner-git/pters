@@ -420,13 +420,6 @@ def func_check_coupon_use(coupon_cd, user_id, user_join_date):
 
     if error is None:
         new_member_check_date = today - datetime.timedelta(days=NEW_MEMBER_DAY)
-        coupon_member_data = CouponMemberTb.objects.select_related(
-            'coupon_tb__product_tb').filter(member_id=user_id, coupon_tb__coupon_cd=coupon_cd)
-
-        # 중복 등록 가능 여부 체크
-        if coupon_info.duplicate_enable == DISABLE and len(coupon_member_data) > 0:
-            error = '이미 등록된 쿠폰입니다.'
-
         # target 체크
         if coupon_info.target != ALL_MEMBER:
             target = coupon_info.target

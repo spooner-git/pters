@@ -1854,7 +1854,6 @@ class GetMemberCouponListView(LoginRequiredMixin, View):
 
 def add_coupon_product_info_logic(request):
     coupon_member_id = request.POST.get('coupon_member_id', '')
-
     error = None
     context = {'error': None}
     coupon_info = None

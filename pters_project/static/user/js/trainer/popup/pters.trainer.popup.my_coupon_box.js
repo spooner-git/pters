@@ -278,6 +278,9 @@ class My_coupon_box{
             this.data_sending_now = false;
             this.set_initial_data();
             show_error_message({title:'쿠폰을 사용하였습니다.'});
+            setTimeout(()=>{
+                location.href = '/trainer/trainer_main/';
+            }, 500);
         }, ()=>{this.data_sending_now = false;});
     }
 
