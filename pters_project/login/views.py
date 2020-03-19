@@ -259,6 +259,7 @@ class ServiceTestLoginView(TemplateView):
         #     schedule_info.save()
         return context
 
+
 class CheckRegistration(TemplateView):
     template_name = 'check_registration.html'
 
@@ -345,6 +346,8 @@ class AddSocialMemberInfoView(RegistrationView, View):
                 recommended_member_info = MemberTb.objects.get(member_id=recommended_member_id)
             except ObjectDoesNotExist:
                 recommend_error_check = '추천인 없음'
+        else:
+            recommend_error_check = '추천인 없음'
 
         if error is None:
             try:
@@ -685,6 +688,8 @@ class AddMemberView(RegistrationView, View):
                 recommended_member_info = MemberTb.objects.get(member_id=recommended_member_id)
             except ObjectDoesNotExist:
                 recommend_error_check = '추천인 없음'
+        else:
+            recommend_error_check = '추천인 없음'
 
         if error is None:
             if form.is_valid():

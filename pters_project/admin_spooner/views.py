@@ -503,7 +503,7 @@ class GetAdminCouponInfoView(LoginRequiredMixin, AccessTestMixin, View):
         product_id = ''
         product_name = '기존 결제 상품'
 
-        if product_tb is not None and product_tb != '':
+        if product_tb is not None and str(product_tb) != '':
             product_id = product_tb.product_id
             product_name = product_tb.name
 
