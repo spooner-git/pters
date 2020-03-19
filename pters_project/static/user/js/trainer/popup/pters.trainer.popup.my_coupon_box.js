@@ -102,13 +102,18 @@ class My_coupon_box{
         let coupon_expiry = data.coupon_expiry_date;
         let coupon_obtain = data.coupon_start_date;
         let coupon_description = data.coupon_contents;
-
+        let product_name = data.coupon_product_name;
+        let product_effective_days = data.coupon_product_effective_days;
         let content = `<article class="coupon_wrapper">
                         <div style="display:flex;margin-bottom:5px;">
                             <div style="flex:1 1 0;font-size:15px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${coupon_name}</div>
                             <div style="flex-basis:80px;font-size:12px;color:var(--font-sub-normal);font-weight:500;text-align:right;">사용 ${CImg.arrow_right([""], {"vertical-align":"middle"})}</div>
                         </div>
                         <div style="height:auto;min-height:18px;"><span style='font-size:12px;color:var(--font-sub-dark);letter-spacing:-0.6px;font-weight:normal;vertical-align:top'>${coupon_description}</div>
+                        <div style="height:auto;min-height:18px;padding:10px 0;">
+                            <span style='font-size:12px;color:var(--font-highlight);letter-spacing:-0.6px;font-weight:500;vertical-align:top'>
+                                ${product_name} - ${product_effective_days}일 이용권
+                        </div>
                         <div style="height:18px"><span style='font-size:12px;color:var(--font-sub-dark);letter-spacing:-0.6px;font-weight:normal;vertical-align:top'>지급일 ${coupon_obtain} / 만료일 ${coupon_expiry}</span></div>
                     </article>
                     `;
