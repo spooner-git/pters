@@ -269,6 +269,7 @@ class Home {
                 delay: 2000,
                 disableOnInteraction:false
             },
+            loop:true
             
             // pagination: {
             //     el: '.swiper-pagination',
