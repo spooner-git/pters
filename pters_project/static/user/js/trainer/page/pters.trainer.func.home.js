@@ -143,6 +143,7 @@ class Home {
 
                                 let html = notice_dom + current_date + program_dom + plan_dom + end_alert_dom + sales_summary_dom;
                                 document.querySelector('#home_content_wrap').innerHTML = html;
+                                this.swiper_init();
                             });
 
 
@@ -189,6 +190,7 @@ class Home {
                         
         let html = notice_dom + current_date_dom + program_dom + plan_dom + end_alert_dom + sales_summary_dom;
         document.querySelector('#home_content_wrap').innerHTML = html;
+        this.swiper_init();
     }
 
     dom_row_current_date(){
@@ -238,14 +240,45 @@ class Home {
                 });
             };
             let notice_row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
-            let dom = `<article class="program_wrapper">
-                            ${notice_row}
-                        </article>`;
+            let dom = `<div class="swiper-slide">
+                            <article class="program_wrapper">
+                                ${notice_row}
+                            </article>
+                        </div>`;
             html_to_join.push(dom);
         }
 
-        let html = html_to_join.join("");
+        // let html = html_to_join.join("");
+
+        let html = `<div class="swiper-container" id="service_notice_widget_swiper">
+                        <div class="swiper-wrapper">
+                            ${html_to_join.join("")}
+                        </div>
+                        
+                    </div>
+                    <div class="swiper-pagination"></div>`;
+
         return html;
+    }
+
+    swiper_init(){
+        this.swiper = new Swiper('#service_notice_widget_swiper', {
+            speed: 400,
+            spaceBetween: 0,
+            autoplay:{
+                delay: 2000,
+                disableOnInteraction:false
+            },
+            
+            // pagination: {
+            //     el: '.swiper-pagination',
+            //     type: 'bullets',
+            // },
+            // navigation: {
+            //     nextEl: '.swiper-button-next',
+            //     prevEl: '.swiper-button-prev',
+            // }
+        });
     }
 
 
