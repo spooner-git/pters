@@ -256,7 +256,7 @@ class Home {
                         </div>
                         
                     </div>
-                    <div class="swiper-pagination" style="bottom:0;right:10px"></div>`;
+                    <div class="swiper-pagination" style="bottom:0;right:10px;z-index:1"></div>`;
 
         return html;
     }
