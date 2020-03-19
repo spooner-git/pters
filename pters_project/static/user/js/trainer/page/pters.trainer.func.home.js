@@ -256,7 +256,7 @@ class Home {
                         </div>
                         
                     </div>
-                    <div class="swiper-pagination"></div>`;
+                    <div class="swiper-pagination" style="bottom:0;right:10px"></div>`;
 
         return html;
     }
@@ -270,12 +270,11 @@ class Home {
                 delay: 5000,
                 disableOnInteraction:false
             },
-            loop:true
             
-            // pagination: {
-            //     el: '.swiper-pagination',
-            //     type: 'bullets',
-            // },
+            pagination: {
+                el: '.swiper-pagination',
+                type: 'bullets',
+            }
             // navigation: {
             //     nextEl: '.swiper-button-next',
             //     prevEl: '.swiper-button-prev',
