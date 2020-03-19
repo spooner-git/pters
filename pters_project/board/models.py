@@ -70,6 +70,7 @@ class NoticeTb(TimeStampedModel):
     contents = models.CharField('내용', db_column='CONTENTS', max_length=3000, blank=True, default='')
     to_member_type_cd = models.CharField('공지 대상', db_column='TO_MEMBER_TYPE_CD', max_length=20,
                                          blank=True, default=TO_MEMBER_BOARD_TYPE_CD_ALL)
+    home_display = models.IntegerField('홈 화면 공개여부', db_column='HOME_DISPLAY', default=0)  # Field name made lowercase.
     hits = models.IntegerField('조회수', db_column='HITS', default=0)  # Field name made lowercase.
 
     class Meta:

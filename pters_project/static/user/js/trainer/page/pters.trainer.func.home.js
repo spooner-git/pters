@@ -130,7 +130,7 @@ class Home {
                                 sales_summary_dom = "";
                             }
 
-                            Setting_service_notice.read((data)=>{
+                            Setting_service_notice.read_for_home((data)=>{
                                 if(current_page_text != this.page_name){
                                     return false;
                                 }
@@ -263,10 +263,11 @@ class Home {
 
     swiper_init(){
         this.swiper = new Swiper('#service_notice_widget_swiper', {
-            speed: 400,
+            loop: true,
+            speed: 500,
             spaceBetween: 0,
             autoplay:{
-                delay: 2000,
+                delay: 5000,
                 disableOnInteraction:false
             },
             

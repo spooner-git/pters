@@ -21,6 +21,7 @@ urlpatterns = [
     url(r'^get_qa_list/$', views.GetQADataView.as_view(), name='get_qa_list'),
     url(r'^clear_qa_list/$', views.ClearQADataView.as_view(), name='clear_qa_list'),
     url(r'^get_notice_list/$', views.GetNoticeDataView.as_view(), name='get_notice_list'),
+    url(r'^get_home_notice_list/$', views.GetHomeNoticeDataView.as_view(), name='get_home_notice_list'),
 
     url(r'^get_qa_comment_list/$', views.GetQACommentDataView.as_view(), name='get_qa_comment_list'),
 

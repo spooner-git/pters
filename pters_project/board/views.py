@@ -122,6 +122,39 @@ class GetNoticeDataView(LoginRequiredMixin, View):
         return JsonResponse({'notice_data': notice_list}, json_dumps_params={'ensure_ascii': True})
 
 
+class GetHomeNoticeDataView(LoginRequiredMixin, View):
+
+    def get(self, request):
+        notice_type_cd = request.GET.getlist('notice_type[]')
+        member_type_cd = request.session.get('group_name')
+
+        query_notice_type_list = Q()
+        for notice_type_cd_info in notice_type_cd:
+            query_notice_type_list |= Q(notice_type_cd=notice_type_cd_info)
+        query_notice_group_cd = Q(to_member_type_cd='ALL') | Q(to_member_type_cd=member_type_cd)
+
+        query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `NOTICE_TB`.`NOTICE_TYPE_CD`"
+        notice_data = NoticeTb.objects.filter(query_notice_type_list, query_notice_group_cd,
+                                              home_display=USE
+                                              # use=USE
+                                              ).annotate(notice_type_cd_name=RawSQL(query_type_cd, []),
+                                                         ).order_by('-reg_dt')
+        notice_list = []
+        for notice_info in notice_data:
+            notice_list.append({'notice_id': notice_info.notice_id,
+                                'notice_type_cd': notice_info.notice_type_cd,
+                                'notice_type_cd_name': notice_info.notice_type_cd_name,
+                                'notice_title': notice_info.title,
+                                'notice_contents': notice_info.contents,
+                                'notice_to_member_type_cd': notice_info.to_member_type_cd,
+                                'notice_hits': notice_info.hits,
+                                'notice_mod_dt': str(notice_info.mod_dt),
+                                'notice_reg_dt': str(notice_info.reg_dt),
+                                'notice_use': notice_info.use})
+
+        return JsonResponse({'notice_data': notice_list}, json_dumps_params={'ensure_ascii': True})
+
+
 class GetQACommentDataView(LoginRequiredMixin, View):
 
     def get(self, request):
