@@ -102,13 +102,18 @@ class My_coupon_box{
         let coupon_expiry = data.coupon_expiry_date;
         let coupon_obtain = data.coupon_start_date;
         let coupon_description = data.coupon_contents;
-
+        let product_name = data.coupon_product_name;
+        let product_effective_days = data.coupon_product_effective_days;
         let content = `<article class="coupon_wrapper">
                         <div style="display:flex;margin-bottom:5px;">
                             <div style="flex:1 1 0;font-size:15px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${coupon_name}</div>
                             <div style="flex-basis:80px;font-size:12px;color:var(--font-sub-normal);font-weight:500;text-align:right;">사용 ${CImg.arrow_right([""], {"vertical-align":"middle"})}</div>
                         </div>
                         <div style="height:auto;min-height:18px;"><span style='font-size:12px;color:var(--font-sub-dark);letter-spacing:-0.6px;font-weight:normal;vertical-align:top'>${coupon_description}</div>
+                        <div style="height:auto;min-height:18px;padding:10px 0;">
+                            <span style='font-size:12px;color:var(--font-highlight);letter-spacing:-0.6px;font-weight:500;vertical-align:top'>
+                                ${product_name} - ${product_effective_days}일 이용권
+                        </div>
                         <div style="height:18px"><span style='font-size:12px;color:var(--font-sub-dark);letter-spacing:-0.6px;font-weight:normal;vertical-align:top'>지급일 ${coupon_obtain} / 만료일 ${coupon_expiry}</span></div>
                     </article>
                     `;
@@ -150,7 +155,7 @@ class My_coupon_box{
     element_promotion_code_input(){
         let id = 'promotion_code_input';
         let title = "";
-        let placeholder = '코드 입력';
+        let placeholder = '쿠폰 코드를 입력해주세요.';
         let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
@@ -170,7 +175,7 @@ class My_coupon_box{
         let html = 
         CComp.button(
             "promotion_code_confirm",
-            "확인",
+            "등록",
             {"border":"var(--border-article-dark)", "border-radius":"4px", "padding":"12px 0", "height":"28px", "line-height":"28px", "font-size":"14px"},
             null,
             ()=>{
@@ -193,7 +198,7 @@ class My_coupon_box{
                     });
                 }else{
                     show_error_message(
-                        {title:"정확한 프로모션 코드를 입력해주세요."}
+                        {title:"정확한 쿠폰 코드를 입력해주세요."}
                     );
                 }
                 
@@ -206,9 +211,9 @@ class My_coupon_box{
     dom_row_toolbox(){
 
         let title_text = "내 쿠폰";
-        let description1 = "<p style='font-size:14px;font-weight:500;'>적립된 쿠폰 내역입니다.</p>";
-        let title2_text = "프로모션 코드";
-        let description2 = "<p style='font-size:14px;font-weight:500;'>프로모션 코드를 입력해 쿠폰을 수령합니다.</p>";
+        let description1 = "<p style='font-size:14px;font-weight:500;'>보유 쿠폰 내역</p>";
+        let title2_text = "쿠폰 등록하기";
+        let description2 = "<p style='font-size:14px;font-weight:500;'>쿠폰을 등록해주세요.</p>";
         let title = 
         CComp.element(
             "span",

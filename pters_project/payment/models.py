@@ -1,6 +1,6 @@
 from django.db import models
 
-from configs.const import ENABLE
+from configs.const import ENABLE, DISABLE
 from configs.models import TimeStampedModel
 from login.models import MemberTb
 
@@ -29,7 +29,7 @@ class ProductTb(TimeStampedModel):
 class PaymentInfoTb(TimeStampedModel):
     payment_info_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     name = models.CharField('결제명', db_column='NAME', max_length=100,  blank=True, default='')
-    member = models.ForeignKey(MemberTb, verbose_name='회원', on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    member = models.ForeignKey(MemberTb, verbose_name='회원', on_delete=models.SET_NULL, null=True)  # Field name made lowercase.
     product_tb = models.ForeignKey(ProductTb, verbose_name='상품', on_delete=models.CASCADE, null=True)  # Field name made lowercase.
     merchant_uid = models.CharField('merchant_uid', db_column='MERCHANT_UID', max_length=150,  blank=True, default='')
     customer_uid = models.CharField('customer_uid', db_column='CUSTOMER_UID', max_length=150, blank=True, default='')
@@ -171,17 +171,17 @@ class IosReceiptCheckTb(TimeStampedModel):
 
 class CouponTb(TimeStampedModel):
     coupon_id = models.AutoField(db_column='ID', primary_key=True, null=False)
-    product_tb = models.ForeignKey(ProductTb, verbose_name='관련 상품', on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    product_tb = models.ForeignKey(ProductTb, verbose_name='관련 상품', on_delete=models.CASCADE, blank=True, null=True)  # Field name made lowercase.
     name = models.CharField('쿠폰명', db_column='NAME', max_length=100, blank=True, default='')
     contents = models.CharField('쿠폰 내용', db_column='CONTENTS', max_length=1000,  blank=True, default='')
-    amount = models.IntegerField('쿠폰 갯수', db_column='AMOUNT', default=0)
-    effective_days = models.IntegerField('쿠폰 사용 유효 기간', db_column='EFFECTIVE_DAYS', default=0)
-    product_effective_days = models.IntegerField('관련 상품 기간', db_column='PRODUCT_EFFECTIVE_DAYS', default=0)
-    start_date = models.DateTimeField('쿠폰 시작일', db_column='START_DATE', blank=True)
-    end_date = models.DateTimeField('쿠폰 만료일', db_column='END_DATE', blank=True)
-    target = models.CharField('대상', db_column='TARGET', max_length=45, blank=True, default='')
+    amount = models.IntegerField('쿠폰 갯수', db_column='AMOUNT', default=99999)
+    effective_days = models.IntegerField('쿠폰 사용 유효 기간', db_column='EFFECTIVE_DAYS', default=31)
+    product_effective_days = models.IntegerField('관련 상품 기간', db_column='PRODUCT_EFFECTIVE_DAYS', default=31)
+    start_date = models.DateField('쿠폰 시작일', db_column='START_DATE', blank=True)
+    end_date = models.DateField('쿠폰 만료일', db_column='END_DATE', blank=True)
+    target = models.CharField('대상', db_column='TARGET', max_length=45, blank=True, default='ALL_MEMBER')
     coupon_cd = models.CharField('쿠폰 코드', unique=True, db_column='COUPON_CD', max_length=45, blank=True, default='')
-    duplicate_enable = models.IntegerField('중복 가능 여부', db_column='DUPLICATE_ENABLE', default=ENABLE)
+    duplicate_enable = models.IntegerField('중복 가능 여부', db_column='DUPLICATE_ENABLE', default=DISABLE)
     direct_reg_enable = models.IntegerField('회원 직접 등록 가능 여부', db_column='DIRECT_REG_ENABLE', default=ENABLE)
 
     class Meta:

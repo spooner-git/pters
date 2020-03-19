@@ -31,7 +31,7 @@ class QACommentTbAdmin(admin.ModelAdmin):
 @admin.register(NoticeTb)
 class NoticeTbAdmin(admin.ModelAdmin):
     list_display = ('notice_id', 'member', 'notice_type_cd', 'title', 'contents', 'to_member_type_cd',
-                    'hits', 'mod_dt', 'reg_dt', 'use')
+                    'home_display', 'hits', 'mod_dt', 'reg_dt', 'use')
     search_fields = ['notice_type_cd', 'to_member_type_cd', 'title']
 
     def get_queryset(self, request):

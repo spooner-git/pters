@@ -1823,11 +1823,22 @@ class GetMemberCouponListView(LoginRequiredMixin, View):
         coupon_member_data_dict = collections.OrderedDict()
         coupon_member_data = CouponMemberTb.objects.select_related(
             'coupon_tb__product_tb').filter(member_id=request.user.id, use=USE)
-
+        today = datetime.date.today()
         for coupon_member_info in coupon_member_data:
             coupon_info = coupon_member_info.coupon_tb
-            product_id = ''
-            product_name = '기존 결제 상품'
+            # product_id = ''
+            # product_name = '기존 결제 상품'
+
+            # 현재 진행중인 상품이 있다면 다음날, 없다면 오늘 시작
+            try:
+                payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id, status='paid',
+                                                            start_date__lte=today, end_date__gte=today,
+                                                            use=USE).latest('end_date')
+                product_id = payment_info.product_tb_id
+                product_name = payment_info.product_tb.name
+            except ObjectDoesNotExist:
+                product_id = 8
+                product_name = '스탠다드'
 
             if coupon_info.product_tb is not None and coupon_info.product_tb != '':
                 product_id = coupon_info.product_tb_id
