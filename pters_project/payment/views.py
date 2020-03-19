@@ -1806,7 +1806,7 @@ def add_member_coupon_logic(request):
     if error is None:
         expiry_date = today + datetime.timedelta(days=coupon_info.effective_days)
         coupon_member = CouponMemberTb(member_id=request.user.id, coupon_tb_id=coupon_info.coupon_id,
-                                       name=coupon_info.name, contents=coupon_info.contents,
+                                       name=coupon_info.name, contents=coupon_info.contents, exhaustion=UN_USE,
                                        start_date=today, expiry_date=expiry_date, use=USE)
         coupon_member.save()
 
@@ -1930,6 +1930,7 @@ def add_coupon_product_info_logic(request):
                 coupon_payment_info.save()
 
                 # 쿠폰 한도 차감 및 소진 처리
+                coupon_member_info.exhaustion = USE
                 coupon_member_info.use = UN_USE
                 coupon_member_info.save()
                 coupon_info.amount -= 1
@@ -2032,6 +2033,7 @@ def add_coupon_product_info_logic(request):
                         new_payment_info.save()
 
                         # 쿠폰 한도 차감 및 소진 처리
+                        coupon_member_info.exhaustion = USE
                         coupon_member_info.use = UN_USE
                         coupon_member_info.save()
                         coupon_info.amount -= 1
