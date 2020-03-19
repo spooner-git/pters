@@ -52,6 +52,8 @@
 }
 #home_content_wrap .swiper-pagination-bullet{
 	margin-left:2px;
+	background: var(--bg-domtag);
+	opacity: 1;
 }
 #home_content_wrap .swiper-pagination-bullet-active{
 	background: #fe4e65;
