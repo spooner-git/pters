@@ -1825,13 +1825,13 @@ class GetMemberCouponListView(LoginRequiredMixin, View):
             'coupon_tb__product_tb').filter(member_id=request.user.id, use=USE)
 
         for coupon_member_info in coupon_member_data:
-            product_tb = coupon_member_info.coupon_tb.product_tb
+            coupon_info = coupon_member_info.coupon_tb
             product_id = ''
             product_name = '기존 결제 상품'
 
-            if product_tb is not None and product_tb != '':
-                product_id = product_tb.product_id
-                product_name = product_tb.name
+            if coupon_info.product_tb is not None and coupon_info.product_tb != '':
+                product_id = coupon_info.product_tb_id
+                product_name = coupon_info.product_tb.name
 
             coupon_member_data_dict[coupon_member_info.coupon_member_id] = {
                 'coupon_member_id': coupon_member_info.coupon_member_id,
