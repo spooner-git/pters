@@ -370,7 +370,8 @@ class SendAllSchedulePushAlarmDataView(View):
 
         # print(str(timezone.now()-start_time))
         # print(str(schedule_data))
-        logger.error('[push task 에러]'+error)
+        if error is not None:
+            logger.error('[push task 에러]'+str(error))
         return JsonResponse({'alarm_schedule': list(schedule_list)})
 
 

@@ -171,7 +171,7 @@ class IosReceiptCheckTb(TimeStampedModel):
 
 class CouponTb(TimeStampedModel):
     coupon_id = models.AutoField(db_column='ID', primary_key=True, null=False)
-    product_tb = models.ForeignKey(ProductTb, verbose_name='관련 상품', on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    product_tb = models.ForeignKey(ProductTb, verbose_name='관련 상품', on_delete=models.CASCADE, blank=True)  # Field name made lowercase.
     name = models.CharField('쿠폰명', db_column='NAME', max_length=100, blank=True, default='')
     contents = models.CharField('쿠폰 내용', db_column='CONTENTS', max_length=1000,  blank=True, default='')
     amount = models.IntegerField('쿠폰 갯수', db_column='AMOUNT', default=0)
