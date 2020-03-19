@@ -399,7 +399,7 @@ class AddSocialMemberInfoView(RegistrationView, View):
                 if recommend_error_check is None:
                     recommend_error_check = func_check_coupon_use(RECOMMENDED_REGISTER_COUPON_CD,
                                                                   recommended_member_info.member_id,
-                                                                  recommended_member_info.user.date_joined)
+                                                                  recommended_member_info.user.date_joined.date())
 
                 if recommend_error_check is None:
                     expiry_date = today + datetime.timedelta(days=coupon_info.effective_days)
@@ -749,7 +749,7 @@ class AddMemberView(RegistrationView, View):
                         if recommend_error_check is None:
                             recommend_error_check = func_check_coupon_use(RECOMMENDED_REGISTER_COUPON_CD,
                                                                           recommended_member_info.member_id,
-                                                                          recommended_member_info.user.date_joined)
+                                                                          recommended_member_info.user.date_joined.date())
 
                         if recommend_error_check is None:
                             expiry_date = today + datetime.timedelta(days=coupon_info.effective_days)

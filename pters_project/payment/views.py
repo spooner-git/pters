@@ -380,7 +380,7 @@ def billing_check_logic(request):
                                 if recommend_error_check is None:
                                     recommend_error_check = func_check_coupon_use(RECOMMENDED_PAYMENT_COUPON_CD,
                                                                                   recommended_member_info.member_id,
-                                                                                  recommended_member_info.user.date_joined)
+                                                                                  recommended_member_info.user.date_joined.date())
 
                                 if recommend_error_check is None:
                                     expiry_date = today + datetime.timedelta(days=coupon_info.effective_days)
@@ -1801,7 +1801,7 @@ def add_member_coupon_logic(request):
             error = '쿠폰 코드를 다시 확인해주세요.[3]'
 
     if error is None:
-        error = func_check_coupon_reg(coupon_cd, request.user.id, request.user.date_joined)
+        error = func_check_coupon_reg(coupon_cd, request.user.id, request.user.date_joined.date())
 
     if error is None:
         expiry_date = today + datetime.timedelta(days=coupon_info.effective_days)
@@ -1878,7 +1878,7 @@ def add_coupon_product_info_logic(request):
             error = '쿠폰함을 확인해주세요.[0]'
 
     if error is None:
-        error = func_check_coupon_use(coupon_info.coupon_cd, request.user.id, request.user.date_joined)
+        error = func_check_coupon_use(coupon_info.coupon_cd, request.user.id, request.user.date_joined.date())
 
     if error is None:
         # 결제 예약 스케쥴 정보 가져오기
