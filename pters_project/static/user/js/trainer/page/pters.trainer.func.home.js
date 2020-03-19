@@ -26,7 +26,7 @@ class Home {
         };
 
         this.received_data = {
-            program:null, schedule:null, member:null, statistics:null
+            program:null, schedule:null, member:null, statistics:null, notice:null
         };
 
         this.setting_data_cache = null;
@@ -100,6 +100,7 @@ class Home {
         let end_alert_dom;
         let sales_summary_dom;
         let my_pters_pass_dom;
+        let notice_dom;
 
         Setting_menu_access_func.read((data)=>{
             this.setting_data_cache = data;
@@ -122,9 +123,6 @@ class Home {
 
                         Statistics_func.read("sales", {"start_date":this.today, "end_date":this.today}, (data)=>{
                             this.received_data.statistics = data;
-                            if(current_page_text != this.page_name){
-                                return false;
-                            }
                             let locked = menu_lock_statistics;
                             let sales_summary = this.dom_row_sales_this_month(data, locked);
                             sales_summary_dom = '<div class="contents anim_fade_in_vibe_top">' + sales_summary + '</div>';
@@ -132,12 +130,23 @@ class Home {
                                 sales_summary_dom = "";
                             }
 
+                            Setting_service_notice.read((data)=>{
+                                if(current_page_text != this.page_name){
+                                    return false;
+                                }
+                                this.received_data.notice = data;
 
-                            my_pters_pass_dom = '<div class="contents anim_fade_in_vibe_top">' + this.dom_row_my_pters_pass() + '</div>';
-                            current_date = '<div class="contents anim_fade_in_vibe_top">' + this.dom_row_current_date() + '</div>';
+                                notice_dom = '<div class="contents anim_fade_in_vibe_top">' + this.dom_row_notice_from_pters() + '</div>';
 
-                            let html = current_date + program_dom + plan_dom + end_alert_dom + sales_summary_dom;
-                            document.querySelector('#home_content_wrap').innerHTML = html;
+                                my_pters_pass_dom = '<div class="contents anim_fade_in_vibe_top">' + this.dom_row_my_pters_pass() + '</div>';
+                                current_date = '<div class="contents anim_fade_in_vibe_top">' + this.dom_row_current_date() + '</div>';
+
+                                let html = notice_dom + current_date + program_dom + plan_dom + end_alert_dom + sales_summary_dom;
+                                document.querySelector('#home_content_wrap').innerHTML = html;
+                            });
+
+
+                            
                         });
                     }, OFF);
                 }, OFF);
@@ -153,6 +162,7 @@ class Home {
         let plan_dom;
         let end_alert_dom;
         let sales_summary_dom;
+        let notice_dom;
 
         let data = this.received_data;
 
@@ -173,8 +183,11 @@ class Home {
 
         let my_pters_pass_dom;
         my_pters_pass_dom = '<div class="contents">' + this.dom_row_my_pters_pass() + '</div>';
+
+        let notice = this.dom_row_notice_from_pters();
+        notice_dom = '<div class="contents">' + notice + '</div>';
                         
-        let html = current_date_dom + program_dom + plan_dom + end_alert_dom + sales_summary_dom;
+        let html = notice_dom + current_date_dom + program_dom + plan_dom + end_alert_dom + sales_summary_dom;
         document.querySelector('#home_content_wrap').innerHTML = html;
     }
 
@@ -193,6 +206,46 @@ class Home {
                         ${my_pters_pass}
                     </article>`;
         return dom;
+    }
+
+    dom_row_notice_from_pters(){
+        let html_to_join = [];
+        
+        let length = this.received_data.notice.notice_data.length;
+        for(let i=0; i<length; i++){
+            let data = this.received_data.notice.notice_data[i];
+            if(data.notice_type_cd != NOTICE){
+                continue;
+            }
+
+            let notice_title = data.notice_title;
+            let notice_content = data.notice_contents;
+            let notice_date = data.notice_reg_dt;
+
+            let id = `home_selected_notice_${data.notice_id}`;
+            let title = `${CImg.notice(["#fe4e65"], {"vertical-align":"top"})} ${notice_title}`;
+            let icon = DELETE;
+            let icon_r_visible = NONE;
+            let icon_r_text = ``;
+            let style = {"font-size":"15px", "font-weight":"bold", "height":"auto"};
+            let onclick = ()=>{
+                let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_BOTTOM;
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_READER, 100, popup_style, null, ()=>{
+                    let data = {
+                        title:notice_title, content:notice_content, date:notice_date
+                    };
+                    board_reader = new BoardReader("공지", '.popup_board_reader', "board_reader", data);
+                });
+            };
+            let notice_row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
+            let dom = `<article class="program_wrapper">
+                            ${notice_row}
+                        </article>`;
+            html_to_join.push(dom);
+        }
+
+        let html = html_to_join.join("");
+        return html;
     }
 
 

@@ -205,7 +205,52 @@ class Service_notice {
             }
         });
     }
+}
 
+class Setting_service_notice{
+    static read(callback, error_callback){
+        let url = '/board/get_notice_list/';
+
+        $.ajax({
+            url:url,
+            type:'GET',
+            data: {"notice_type": [NOTICE, NOTICE_UPDATE_HISTORY]},
+            dataType : 'JSON',
+    
+            beforeSend:function (){
+                // ajax_load_image(SHOW);
+            },
+    
+            //통신성공시 처리
+            success:function (data){
+                check_app_version(data.app_version);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message({title:data.messageArray[0]});
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(data); 
+                }
+                return data;
+                // }
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function (){
+                // ajax_load_image(HIDE);
+            },
+    
+            //통신 실패시 처리
+            error:function (){
+                if(error_callback != undefined){
+                    error_callback();
+                }
+                console.log('server error');
+            }
+        });
+    }
 }
 
 /* global $, 
