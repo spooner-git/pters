@@ -95,11 +95,14 @@ class HolidayTbAdmin(admin.ModelAdmin):
 
 
 @admin.register(ScheduleAlarmTb)
-class ScheduleAlarmTbAdmin(admin.ModelAdmin):
-    list_display = ('schedule_alarm_id', 'class_tb', 'member_id', 'schedule_tb', 'alarm_dt', 'alarm_minute',
-                    'mod_dt', 'reg_dt', 'use')
+
+class ScheduleAlarmTb(admin.ModelAdmin):
+    list_display = ('schedule_alarm_id', 'class_tb', 'member', 'schedule_tb', 'alarm_dt', 'alarm_minute',
+                    'reg_dt', 'mod_dt', 'use')
 
     def get_queryset(self, request):
         return super().get_queryset(request).select_related(
             'class_tb__member',
+            'member',
+            'schedule_tb'
         )

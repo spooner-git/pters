@@ -37,21 +37,19 @@ from django.views import View
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
-from django.views.generic import TemplateView, FormView
+from django.views.generic import TemplateView
 from registration import signals
 from registration.backends.hmac.views import RegistrationView, REGISTRATION_SALT
-from registration.forms import RegistrationForm
 
-from configs.const import USE, UN_USE, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, ACTIVATE, ON_SCHEDULE_TYPE, STATE_CD_FINISH, \
-    STATE_CD_ABSENCE, AUTH_TYPE_DELETE
+from configs.const import USE, UN_USE, AUTH_TYPE_VIEW, ACTIVATE, STATE_CD_FINISH, \
+    STATE_CD_ABSENCE, AUTH_TYPE_DELETE, RECOMMENDED_REGISTER_COUPON_CD
 from configs import settings
 from configs.functions import func_delete_profile_image_logic
-from payment.functions import func_cancel_period_billing_schedule
-from payment.models import PaymentInfoTb, BillingInfoTb, BillingCancelInfoTb
+from payment.functions import func_cancel_period_billing_schedule, func_check_coupon_use
+from payment.models import PaymentInfoTb, BillingInfoTb, BillingCancelInfoTb, CouponTb, CouponMemberTb
 from schedule.models import ScheduleTb, RepeatScheduleTb
 from trainee.models import MemberTicketTb
-from trainer.models import LectureMemberTb, ClassTb, SettingTb, LectureTb, MemberClassTb, ClassMemberTicketTb
-from trainer.models import LectureMemberTicketTb
+from trainer.models import LectureMemberTb, ClassTb, SettingTb, LectureTb, MemberClassTb
 from .forms import MyPasswordResetForm, MyPasswordChangeForm, MyRegistrationForm
 from .models import MemberTb, PushInfoTb, SnsInfoTb, MemberOutInfoTb, LogTb
 
@@ -261,6 +259,7 @@ class ServiceTestLoginView(TemplateView):
         #     schedule_info.save()
         return context
 
+
 class CheckRegistration(TemplateView):
     template_name = 'check_registration.html'
 
@@ -322,7 +321,9 @@ class AddSocialMemberInfoView(RegistrationView, View):
         group_type = request.POST.get('group_type', 'trainer')
         social_access_token = request.POST.get('social_accessToken', '')
         next_page = request.POST.get('next_page', '/login/registration_social/')
-
+        recommended_member_id = request.POST.get('recommended_member_id', '')
+        recommended_member_info = None
+        recommend_error_check = None
         error = None
         user = None
         if first_name == '' or first_name == 'None' or first_name is None:
@@ -340,6 +341,14 @@ class AddSocialMemberInfoView(RegistrationView, View):
         if user is not None:
             error = '이미 가입된 회원입니다.'
 
+        if recommended_member_id is not None and recommended_member_id != '':
+            try:
+                recommended_member_info = MemberTb.objects.get(member_id=recommended_member_id)
+            except ObjectDoesNotExist:
+                recommend_error_check = '추천인 없음'
+        else:
+            recommend_error_check = '추천인 없음'
+
         if error is None:
             try:
                 with transaction.atomic():
@@ -350,6 +359,7 @@ class AddSocialMemberInfoView(RegistrationView, View):
                     user.groups.add(group)
 
                     member = MemberTb(member_id=user.id, name=name, sex=sex,
+                                      recommended_member_id=recommended_member_id,
                                       user_id=user.id, use=USE)
                     member.save()
                     sns_info = SnsInfoTb(member_id=user.id, sns_id=sns_id, sns_type=sns_type,
@@ -363,7 +373,6 @@ class AddSocialMemberInfoView(RegistrationView, View):
                     if auto_login_check == '0':
                         self.request.session.set_expiry(0)
                     login(request, user)
-                    return redirect('/trainer/')
 
             except ValueError:
                 error = '이미 가입된 회원입니다.'
@@ -375,7 +384,38 @@ class AddSocialMemberInfoView(RegistrationView, View):
                 error = '등록 값에 문제가 있습니다.'
             except InternalError:
                 error = '이미 가입된 회원입니다.'
+        if error is None and recommend_error_check is None:
+            coupon_info = None
+            # recommend_check = None
+            today = datetime.date.today()
+            check_recommend_before = SnsInfoTb.objects.filter(member__recommended_member_id=recommended_member_id,
+                                                              sns_id=sns_id).count()
+            if check_recommend_before <= 1:
+                try:
+                    coupon_info = CouponTb.objects.get(coupon_cd=RECOMMENDED_REGISTER_COUPON_CD, use=USE)
+                except ObjectDoesNotExist:
+                    recommend_error_check = '쿠폰 없음'
 
+                if recommend_error_check is None:
+                    recommend_error_check = func_check_coupon_use(RECOMMENDED_REGISTER_COUPON_CD,
+                                                                  recommended_member_info.member_id,
+                                                                  recommended_member_info.user.date_joined.date())
+
+                if recommend_error_check is None:
+                    expiry_date = today + datetime.timedelta(days=coupon_info.effective_days)
+                    coupon_member = CouponMemberTb(member_id=recommended_member_info.member_id,
+                                                   coupon_tb_id=coupon_info.coupon_id,
+                                                   name=first_name + ' 회원님 추천', contents=coupon_info.contents,
+                                                   start_date=today, expiry_date=expiry_date, use=USE)
+                    coupon_member.save()
+                    coupon_member = CouponMemberTb(member_id=user.id,
+                                                   coupon_tb_id=coupon_info.coupon_id,
+                                                   name='추천인 등록 이벤트', contents=coupon_info.contents,
+                                                   start_date=today, expiry_date=expiry_date, use=USE)
+                    coupon_member.save()
+
+        if error is None:
+            return redirect('/trainer/')
         if error is not None:
             logger.error(name + '[' + username + ']' + error)
             messages.error(request, error)
@@ -634,11 +674,22 @@ class AddMemberView(RegistrationView, View):
         first_name = request.POST.get('first_name', name)
         phone = request.POST.get('phone', '')
         group_type = request.POST.get('group_type', 'trainee')
+        recommended_member_id = request.POST.get('recommended_member_id', '')
         sms_activation_check = request.session.get('sms_activation_check', False)
         error = None
+        recommend_error_check = None
+        recommended_member_info = None
 
         if sms_activation_check is False:
             error = '문자 인증을 완료해주세요.'
+
+        if recommended_member_id is not None and recommended_member_id != '':
+            try:
+                recommended_member_info = MemberTb.objects.get(member_id=recommended_member_id)
+            except ObjectDoesNotExist:
+                recommend_error_check = '추천인 없음'
+        else:
+            recommend_error_check = '추천인 없음'
 
         if error is None:
             if form.is_valid():
@@ -662,8 +713,16 @@ class AddMemberView(RegistrationView, View):
                             user.save()
 
                             member = MemberTb(member_id=user.id, name=name, phone=phone, user_id=user.id,
-                                              phone_is_active=ACTIVATE, use=USE)
+                                              phone_is_active=ACTIVATE, recommended_member_id=recommended_member_id,
+                                              use=USE)
                             member.save()
+                            login_user = authenticate(username=form.cleaned_data['username'],
+                                                      password=form.cleaned_data['password1'])
+                            request.session['social_login_check'] = '0'
+                            request.session['social_login_type'] = ''
+                            request.session['social_login_id'] = ''
+                            request.session['social_accessToken'] = ''
+                            login(request, login_user)
 
                     except ValueError:
                         error = '이미 가입된 회원입니다.'
@@ -675,6 +734,36 @@ class AddMemberView(RegistrationView, View):
                         error = '등록 값에 문제가 있습니다.'
                     except InternalError:
                         error = '이미 가입된 회원입니다.'
+
+                if error is None and recommend_error_check is None:
+                    coupon_info = None
+                    today = datetime.date.today()
+                    check_recommend_before = MemberTb.objects.filter(recommended_member_id=recommended_member_id,
+                                                                     phone=phone).count()
+                    if check_recommend_before <= 1:
+                        try:
+                            coupon_info = CouponTb.objects.get(coupon_cd=RECOMMENDED_REGISTER_COUPON_CD, use=USE)
+                        except ObjectDoesNotExist:
+                            recommend_error_check = '쿠폰 없음'
+
+                        if recommend_error_check is None:
+                            recommend_error_check = func_check_coupon_use(RECOMMENDED_REGISTER_COUPON_CD,
+                                                                          recommended_member_info.member_id,
+                                                                          recommended_member_info.user.date_joined.date())
+
+                        if recommend_error_check is None:
+                            expiry_date = today + datetime.timedelta(days=coupon_info.effective_days)
+                            coupon_member = CouponMemberTb(member_id=recommended_member_info.member_id,
+                                                           coupon_tb_id=coupon_info.coupon_id,
+                                                           name=first_name+' 회원님 추천', contents=coupon_info.contents,
+                                                           start_date=today, expiry_date=expiry_date, use=USE)
+                            coupon_member.save()
+                            coupon_member = CouponMemberTb(member_id=user.id,
+                                                           coupon_tb_id=coupon_info.coupon_id,
+                                                           name='추천인 등록 이벤트', contents=coupon_info.contents,
+                                                           start_date=today, expiry_date=expiry_date, use=USE)
+                            coupon_member.save()
+
             else:
                 for field in form:
                     for err in field.errors:
@@ -746,10 +835,13 @@ class AddTempMemberInfoView(RegistrationView, View):
 
         form = MyRegistrationForm(request.POST, request.FILES)
         member_id = request.POST.get('member_id', '')
+        username = request.POST.get('username', '')
         error = None
         member_info = None
         try:
             member_info = MemberTb.objects.get(member_id=member_id)
+            if member_info.user.username == username:
+                error = '이미 존재하는 ID 입니다.'
         except ObjectDoesNotExist:
             error = '가입되지 않은 회원입니다.'
 
@@ -766,6 +858,13 @@ class AddTempMemberInfoView(RegistrationView, View):
                             func_delete_profile_image_logic(member_info.profile_url)
                         member_info.profile_url = ''
                         member_info.save()
+                        login_user = authenticate(username=form.cleaned_data['username'],
+                                                  password=form.cleaned_data['password1'])
+                        request.session['social_login_check'] = '0'
+                        request.session['social_login_type'] = ''
+                        request.session['social_login_id'] = ''
+                        request.session['social_accessToken'] = ''
+                        login(request, login_user)
 
                 except ValueError:
                     error = '오류가 발생했습니다.[1]'
@@ -783,7 +882,7 @@ class AddTempMemberInfoView(RegistrationView, View):
                         messages.error(request, str(field.label)+':'+err)
 
         if error is not None:
-            logger.error('member_id:'+str(member_id)+'[' + form.cleaned_data['username'] + ']' + error)
+            logger.error('member_id:'+str(member_id)+'[' + str(username) + ']' + error)
             messages.error(request, error)
 
         return render(request, self.template_name)
@@ -2013,3 +2112,28 @@ class ActivationView(BaseActivationView):
             return user
         except User.DoesNotExist:
             return None
+
+
+class CheckRecommendedMemberView(View):
+    template_name = 'ajax/registration_error_ajax.html'
+
+    def post(self, request):
+        username = request.POST.get('username', '')
+        error = ''
+        user_info = None
+        context = {}
+        if username is None or username == '':
+            error = '아이디를 입력해주세요.'
+
+        if error == '':
+            try:
+                user_info = User.objects.get(username=username)
+                context = {'user_db_id': user_info.id, 'username': username}
+            except ObjectDoesNotExist:
+                error = '아이디를 다시 확인해주세요.'
+            # if not User.objects.filter(username=username).exists():
+            #     error = '아이디를 다시 확인해주세요.'
+
+        if error != '':
+            messages.error(request, error)
+        return render(request, self.template_name, context)

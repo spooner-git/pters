@@ -44,7 +44,8 @@ def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_dat
                 idx1 += 1
                 idx2 = 1
             schedule_info.idx = str(idx1)+'-'+str(idx2)
-            schedule_info.note = schedule_info.note.replace('\n', '<br/>')
+            if schedule_info.note is not None and schedule_info.note != '':
+                schedule_info.note = schedule_info.note.replace('\n', '<br/>')
             schedule_list.append(schedule_info)
             idx2 += 1
 
@@ -76,7 +77,8 @@ def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_dat
 
             for schedule_info in schedule_data:
                 schedule_info.idx = str(idx1) + '-' + str(idx2)
-                schedule_info.note = schedule_info.note.replace('\n', '<br/>')
+                if schedule_info.note is not None and schedule_info.note != '':
+                    schedule_info.note = schedule_info.note.replace('\n', '<br/>')
                 schedule_list.append(schedule_info)
                 idx2 += 1
 
@@ -135,7 +137,8 @@ def func_get_trainee_lecture_schedule(context, user_id, class_id, start_date, en
                                  ).annotate(lecture_current_member_num=RawSQL(query, []),
                                             lecture_wait_member_num=RawSQL(query_wait, [])).order_by('start_dt')
         for lecture_schedule_info in lecture_schedule_data:
-            lecture_schedule_info.note = lecture_schedule_info.note.replace('\n', '<br/>')
+            if lecture_schedule_info.note is not None and lecture_schedule_info.note != '':
+                lecture_schedule_info.note = lecture_schedule_info.note.replace('\n', '<br/>')
     context['lecture_schedule_data'] = lecture_schedule_data
 
     return context

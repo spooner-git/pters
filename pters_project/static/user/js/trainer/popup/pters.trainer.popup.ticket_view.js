@@ -53,6 +53,8 @@ class Ticket_view{
             period : OFF
         };
 
+        this.list_type = "basic_info";
+
         this.init();
         this.set_initial_data();
     }
@@ -215,8 +217,9 @@ class Ticket_view{
                                                         CComponent.dom_tag('주간 최대 예약 횟수') +  max_reserve_number_weekly + 
                                                 '</div>';
         let ticket_memo_assembly = '<div class="obj_input_box_full">'+CComponent.dom_tag('설명')+memo+ '</div>';
-        let ticket_member_list_assembly = '<div class="obj_input_box_full" style="padding-top:16px;">'+CComponent.dom_tag(`수강권 보유 회원 (${this.data.member_id.length} 명)`, 
-                                            {"font-size":"13px", "font-weight":"bold", "letter-spacing":"-0.6px", "padding":"0", "padding-bottom":"8px", "color":"var(--font-sub-normal)", "height":"20px"}) + 
+        let ticket_member_list_assembly = '<div class="obj_input_box_full" style="padding-top:16px;">'+
+                                            // CComponent.dom_tag(`수강권 보유 회원 (${this.data.member_id.length} 명)`, 
+                                            // {"font-size":"13px", "font-weight":"bold", "letter-spacing":"-0.6px", "padding":"0", "padding-bottom":"8px", "color":"var(--font-sub-normal)", "height":"20px"}) + 
                                             `${this.data.lecture_id.length == 0 && this.data.name != null ? `<span style='color:var(--font-highlight);font-size:12px;font-weight:bold;'>${CImg.warning(["#fe4e65"], {"vertical-align":"middle", "width":"20px", "height":"20px", "margin-bottom":"4px"})} 포함된 수업이 없어, 수강권 보유 회원들이 일정을 등록할 수 없습니다.</span>` : ""}` +
                                             member_list+ '</div>';
 
@@ -225,11 +228,32 @@ class Ticket_view{
             ticket_member_list_assembly = "";
         }
 
-        let html =  lecture_list_assembly +
-                    ticket_memo_assembly +
-                    ticket_basic_info_assembly +
-                    ticket_additional_setting_assembly +
-                    ticket_member_list_assembly;
+
+        let tab_basic_info = 
+            lecture_list_assembly +
+            ticket_memo_assembly +
+            ticket_basic_info_assembly;
+
+        let tab_members_info =
+            ticket_member_list_assembly;
+
+        let tab_reserve_info =
+            ticket_additional_setting_assembly;
+
+        let selected_tab;
+        if(this.list_type == "basic_info"){
+            selected_tab = tab_basic_info;
+        }else if(this.list_type == "members_info"){
+            selected_tab = tab_members_info;
+        }else if(this.list_type == "reserve_info"){
+            selected_tab = tab_reserve_info;
+        }
+
+
+        let html =  
+            this.dom_row_list_type_tab() +
+            selected_tab;
+
         return html;
     }
 
@@ -275,6 +299,38 @@ class Ticket_view{
         return html;
     }
 
+    dom_row_list_type_tab(){
+        let html = 
+        `<div class="list_type_tab_wrap" style="width:100%;padding-left:45px;text-align:left;box-sizing:border-box;height:auto">
+            ${CComp.element("div", "기본 정보", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_basic_info", class:`list_tab_content ${this.list_type == "basic_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("basic_info");}})}
+            ${CComp.element("div", `사용 정책`, {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_reserve_info", class:`list_tab_content ${this.list_type == "reserve_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("reserve_info");}})}
+            ${CComp.element("div", `보유 회원(${this.data.member_id.length})`, {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_members_info", class:`list_tab_content ${this.list_type == "members_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("members_info");}})}
+        </div>`;
+        return html;
+    }
+
+    switch_type(type){
+        if(type == this.list_type){
+            return false;
+        }
+        switch(type){
+            case "basic_info":
+                this.list_type = "basic_info";
+                this.render();
+            break;
+
+            case "members_info":
+                this.list_type = "members_info";
+                this.render();
+            break;
+
+            case "reserve_info":
+                this.list_type = "reserve_info";
+                this.render();
+            break;
+        }
+    }
+
     dom_row_lecture_select(){
         let id = 'lecture_select_view';
         let length_lecture = this.data.lecture_name.length;
@@ -284,7 +340,7 @@ class Ticket_view{
                 ing_lecture_length++;
             }
         }
-        let title = this.data.lecture_id.length == 0  && this.data.name != null ? '<span style="color:var(--font-highlight);">포함된 수업이 없습니다.</span>' : ing_lecture_length+'개';
+        let title = this.data.lecture_id.length == 0  && this.data.name != null ? `<span style="color:var(--font-highlight);">${CImg.warning(["#fe4e65"], {"vertical-align":"middle", "width":"20px", "height":"20px", "margin-bottom":"4px"})}포함된 수업이 없습니다.</span>` : ing_lecture_length+'개';
         let icon = CImg.lecture();
         let icon_r_visible = SHOW;
         let icon_r_text = CComponent.text_button ('ticket_lecture_list_view', "수업 목록", null, ()=>{
@@ -575,7 +631,8 @@ class Ticket_view{
             title = "제한 없음";
         }
         let placeholder = `제한 없음`;
-        let icon = NONE;
+        // let icon = NONE;
+        let icon = CImg.time();
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;

@@ -184,9 +184,12 @@ class Plan_repeat_list{
 
 
     dom_row_repeat_item(repeat_id, color, repeat_name, repeat_day, repeat_period, repeat_time){
+        if(repeat_day == '일월화수목금토'){
+            repeat_day = '매일';
+        }
         let html = `<div class="repeat_wrapper" id="repeat_item_${repeat_id}">
                         <div style="flex-basis:16px;">
-                            <div style="float:left;width:4px;height:32px;background-color:${color}"></div>
+                            <div style="float:left;width:4px;height:100%;background-color:${color}"></div>
                         </div>
                         <div style="flex:1 1 0">
                             <div style="font-size:16px;font-weight:500;letter-spacing:-0.7px;color:var(--font-base);">${repeat_name}</div>

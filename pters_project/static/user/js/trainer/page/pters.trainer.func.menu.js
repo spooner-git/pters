@@ -6,7 +6,8 @@ class Menu {
 
         this.data = {
             name:null,
-            photo:null
+            photo:null,
+            coupons:null
         };
     }
 
@@ -25,6 +26,7 @@ class Menu {
     set_initial_data(){
         Mypage_func.read((data)=>{
             this.data.name = data.trainer_info.member_name;
+            this.data.coupons = data.trainer_info.member_coupon_count;
             this.data.photo = data.trainer_info.member_profile_url;
             this.render_content();
         });
@@ -117,6 +119,7 @@ class Menu {
     }
 
     dom_who_i_am(){
+        let new_indicator = this.data.coupons > 0 ? `<div class="new_alarm_indicator" style="position:relative;display:inline-block;vertical-align:top;margin-top:3px;margin-left:3px"></div>` : "";
         let member_id = null;
         let member_name = this.data.name == null ? "" : this.data.name;
         let onclick = `${this.instance}.go_to_profile()`;
@@ -125,7 +128,7 @@ class Menu {
                             <img src=${this.data.photo == null ? '/static/common/icon/icon_account.png' : this.data.photo} style="width:100%;border-radius:50%;">
                         </div>                
                         <div class="my_data_c" style="display:table-cell;width:auto;padding-left:8px;vertical-align:middle;">
-                            <div class="my_name" style="font-size:17px;font-weight:500;">${member_name}</div>
+                            <div class="my_name" style="font-size:17px;font-weight:500;">${member_name} ${new_indicator}</div>
                             <div style="font-size:11px;color:var(--font-sub-normal)">프로필 확인</div>
                         </div>
                     </article>`;

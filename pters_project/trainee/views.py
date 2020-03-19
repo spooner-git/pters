@@ -436,7 +436,8 @@ def add_trainee_schedule_logic(request):
         if lecture_schedule_id == '' or lecture_schedule_id is None:
             # member_ticket_id = func_get_member_ticket_id(class_id, request.user.id)
             member_ticket_result = func_get_lecture_member_ticket_id_from_trainee(
-                class_id, lecture_id, request.user.id)
+                class_id, lecture_id, request.user.id,
+                datetime.datetime.strptime(training_date, "%Y-%m-%d").date())
 
             if member_ticket_result['error'] is not None:
                 error = member_ticket_result['error']
@@ -462,7 +463,8 @@ def add_trainee_schedule_logic(request):
                                                                       use=USE)
                     if len(lecture_schedule_data) == 0:
                         member_ticket_result = func_get_lecture_member_ticket_id_from_trainee(
-                            class_id, lecture_schedule_info.lecture_tb_id, request.user.id)
+                            class_id, lecture_schedule_info.lecture_tb_id, request.user.id,
+                            datetime.datetime.strptime(training_date, "%Y-%m-%d").date())
 
                         if member_ticket_result['error'] is not None:
                             error = member_ticket_result['error']
@@ -2095,7 +2097,8 @@ class PopupInquiryHistoryView(TemplateView):
             # if qa_info.read == 0 and qa_info.status_type_cd == 'QA_COMPLETE':
             #     qa_info.read = 1
             #     qa_info.save()
-            qa_info.contents = qa_info.contents.replace('\n', '<br/>')
+            if qa_info.contents is not None and qa_info.contents != '':
+                qa_info.contents = qa_info.contents.replace('\n', '<br/>')
         context['qa_data'] = qa_list
 
         return context

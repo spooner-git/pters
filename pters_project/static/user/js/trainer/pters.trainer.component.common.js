@@ -810,6 +810,53 @@ class CComponent{
         return html;
     }
 
+    //회원의 일정 이력에 사용되는 행
+    static lecture_schedule_history_row (numbering, schedule_id, date, schedule_name, attend_status, permission_status, memo, member_num, max_num, callback){
+        let permission_status_name = "";
+        if(permission_status == SCHEDULE_WAIT){
+            permission_status_name = '('+APPROVE_SCHEDULE_STATUS[permission_status]+')';
+        }
+        let html = `<li class="schedule_history_row" id="schedule_history_row_${schedule_id}">`;
+
+        let raw_1 = `<div class="obj_table_raw">
+                        <div class="cell_schedule_num">${numbering}</div>
+                        <div class="cell_schedule_info">${schedule_name}</div>
+                        <div class="cell_schedule_attend">${member_num} / ${max_num}</div>
+                    </div>`;
+        if(max_num==1){
+            raw_1 = `<div class="obj_table_raw">
+                        <div class="cell_schedule_num">${numbering}</div>
+                        <div class="cell_schedule_info">${schedule_name}</div>
+                        <!--<div class="cell_schedule_attend">${member_num} / ${max_num}</div>-->
+                    </div>`;
+        }
+        let raw_2 = `<div class="obj_table_raw table_date_info">
+                        <div class="cell_schedule_info">${date}</div>
+                    </div>`;
+        let raw_3 = `<div class="obj_table_raw table_memo_info">
+                        <div class="cell_schedule_num"></div>
+                        <div class="cell_schedule_info">${memo}</div>
+                    </div>`;
+        
+        let sub_assemble = `<div style="display:flex;">
+                            <div style="flex:1 1 0;">${raw_1} ${raw_2}</div>
+                            <div style="flex-basis:80px;text-align:right;">
+                                <span style="color:${LECTURE_SCHEDULE_STATUS_COLOR[attend_status]}">${LECTURE_SCHEDULE_STATUS[attend_status]}<br/>${permission_status_name}</span>
+                            </div>
+                        </div>`;
+        
+
+        html += sub_assemble;
+        if(memo != ''){
+            html += raw_3;
+        }
+        html += '</li>';
+        $(document).off('click', `#schedule_history_row_${schedule_id}`).on('click', `#schedule_history_row_${schedule_id}`, function(){
+            callback();
+        });
+        return html;
+    }
+
     static no_data_row(text, style){
         let html = `<li class="no_data_row" style="${CComponent.data_to_style_code(style)}">
                         <div class="obj_table_raw">
@@ -955,9 +1002,34 @@ class CImg{
     }
 
     static warning(svg_color, style, onclick){
+        if(svg_color == undefined){
+            svg_color = [];
+        }
         let svg =  `<svg style="${CComponent.data_to_style_code(style)}" ${CImg.data_to_onclick_event(onclick)} xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
                         <path fill="${CImg.data_to_svg_color(svg_color[0], "var(--img-main)")}" d="M4.47 21h15.06c1.54 0 2.5-1.67 1.73-3L13.73 4.99c-.77-1.33-2.69-1.33-3.46 0L2.74 18c-.77 1.33.19 3 1.73 3zM12 14c-.55 0-1-.45-1-1v-2c0-.55.45-1 1-1s1 .45 1 1v2c0 .55-.45 1-1 1zm1 4h-2v-2h2v2z"/>
                     </svg>`;
+        return svg;
+    }
+
+    static list(svg_color, style, onclick){
+        if(svg_color == undefined){
+            svg_color = [];
+        }
+        let svg = `<svg style="${CComponent.data_to_style_code(style)}" ${CImg.data_to_onclick_event(onclick)} xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                    <path d="M0 0h24v24H0V0z" fill="none"/>
+                    <path fill="${CImg.data_to_svg_color(svg_color[0], "var(--img-main)")}" d="M4 10.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm0-6c-.83 0-1.5.67-1.5 1.5S3.17 7.5 4 7.5 5.5 6.83 5.5 6 4.83 4.5 4 4.5zm0 12c-.83 0-1.5.68-1.5 1.5s.68 1.5 1.5 1.5 1.5-.68 1.5-1.5-.67-1.5-1.5-1.5zM8 19h12c.55 0 1-.45 1-1s-.45-1-1-1H8c-.55 0-1 .45-1 1s.45 1 1 1zm0-6h12c.55 0 1-.45 1-1s-.45-1-1-1H8c-.55 0-1 .45-1 1s.45 1 1 1zM7 6c0 .55.45 1 1 1h12c.55 0 1-.45 1-1s-.45-1-1-1H8c-.55 0-1 .45-1 1z"/>
+                </svg>`;
+        return svg;
+    }
+
+    static history(svg_color, style, onclick){
+        if(svg_color == undefined){
+            svg_color = [];
+        }
+        let svg = `<svg style="${CComponent.data_to_style_code(style)}" ${CImg.data_to_onclick_event(onclick)} xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                    <path d="M0 0h24v24H0z" fill="none"/>
+                    <path fill="${CImg.data_to_svg_color(svg_color[0], "var(--img-main)")}" d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/>
+                </svg>`;
         return svg;
     }
 
@@ -1728,6 +1800,45 @@ class CComp{
         return html;
     }
 
+    static scroll_container(type, title, style, attr, callback){
+        let style_code = style == null ? "" : `style="${CComp.data_to_style_code(style)}"`;
+        let attr_code = CComp.data_to_attr_code(attr);
+        
+        let html = `<${type} ${style_code} ${attr_code}>${title}</${type}>`;
+
+        //onclick을 사용하려면 attr에 무조건 id가 부여되어야함
+        if(callback != undefined && attr != undefined){
+            if(attr.id != undefined){
+                $(`#${attr.id}`).off("scroll").on("scroll", function(e){
+                    console.log("scroll!!")
+                    if(callback != undefined){
+                        let container_height = Number($(this).height());
+                        let scroll_position = Number($(this).scrollTop());
+                        let scroll_height = Number($(this).prop("scrollHeight"));
+                        if( container_height+scroll_position >= scroll_height-50){
+                            callback(e);
+                        }
+                    }
+                });
+            }
+        }
+
+        return html;
+    }
+
+    static scroll_container_event_install(id, callback){
+        $(`#${id}`).off("scroll").on("scroll", function(e){
+            if(callback != undefined){
+                let container_height = Number($(this).height());
+                let scroll_position = Number($(this).scrollTop());
+                let scroll_height = Number($(this).prop("scrollHeight"));
+                if( container_height+scroll_position >= scroll_height-50){
+                    callback(e);
+                }
+            }
+        });
+    }
+
     static element(type, title, style, attr, event){
         let style_code = style == null ? "" : `style="${CComp.data_to_style_code(style)}"`;
         let attr_code = CComp.data_to_attr_code(attr);
@@ -1745,6 +1856,14 @@ class CComp{
             }
         }
 
+        return html;
+    }
+
+    static img(src, style, attr){
+        let style_code = CComp.data_to_style_code(style);
+        let attr_code = CComp.data_to_attr_code(attr);
+        let html = `<img src=${src} style="${style_code};" ${attr_code}>`;
+        
         return html;
     }
 

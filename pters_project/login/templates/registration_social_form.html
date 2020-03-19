@@ -37,6 +37,21 @@
                 </div>
                 <div style="height: 1px;background:#f5f2f3; margin-top: 20px; margin-bottom: 20px;"></div>
 
+                <!-- 추천인 아이디 입력 영역 -->
+                <div id="recommend_user_input_wrap">
+                    <div style="margin-top:8px;">
+                        <div id="wrapper_recommend_id_confirm" style="width: 70%; border: solid 1px #d6d2d2; display:inline-block">
+                            <input class="pters_login_input" type="text" name="recommend_username" id="id_recommend_username" placeholder="추천인 아이디" minlength="4" maxlength="40" title="추천인 아이디"
+                            pattern="[a-zA-Z0-9-._@]{4,40}" onkeyup="limit_char_auto_correction(event.target);$('#recommend_id_confirm').text('');" data-error-message="" data-valid="true">
+                        </div>
+                        <div class="activation_button" id="recommend_id_confirm_button" onclick="check_recommend_id();" style="pointer-events:;">확인</div>
+                        <div class="input_description">
+                            <div class="input_description_text" id="recommend_id_confirm"></div>
+                        </div>
+                    </div>
+                    <div style="width:100%; height: 1px;background:#f5f2f3; margin-top: 20px; margin-bottom: 20px;"></div>
+                </div>
+
                 <!-- 약관 동의 영역 -->
                 <div class="contract">
                     <span class="all_contract">전체 약관에 동의</span>
@@ -81,6 +96,8 @@
         <input type="hidden" name="sex" id="id_sns_sex" value="{{ sex }}">
         <input type="hidden" name="social_accessToken" id="id_social_accessToken" value="{{ social_accessToken }}">
         <input type="hidden" name="group_type" id="id_group_type" value="trainer">
+        <input type="hidden" name="recommended_member_id" id="id_recommended_member_id" value="">
+        <input type="hidden" name="recommended_member_username" id="id_recommended_member_username" value="">
         <input type="hidden" name="next_page" value="{% url 'login:registration_social' %}">
     </form>
 
@@ -91,7 +108,22 @@
     <script type="text/javascript">
         function sns_add_member() {
             if($('#all_contract').attr('data-valid')=='true'){
-                document.getElementById('sns-form').submit();
+
+                let id_recommended_member_username = $('#id_recommended_member_username').val();
+                let id_recommend_username = $('#id_recommend_username').val();
+
+                if(id_recommend_username == ''){
+                    $('#id_recommended_member_id').val('');
+                    $('#id_recommended_member_username').val('');
+                }
+
+                if(id_recommended_member_username != id_recommend_username){
+                    alert(id_recommend_username+'님을 추천인을 등록하려면 추천인 아이디 확인을 해주세요.');
+                    $('#id_recommend_username').val('');
+                }else{
+                    document.getElementById('sns-form').submit();
+                }
+
             }
             else{
                 alert('약관에 동의해주세요.')

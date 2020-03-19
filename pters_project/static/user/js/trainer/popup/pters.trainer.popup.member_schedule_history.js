@@ -8,8 +8,13 @@ class Member_schedule_history{
         this.settings = {
             sign_use:OFF
         };
-        this.page = 1;
+        // this.page = 1;
         this.sort_val = SORT_SCHEDULE_DT;
+
+        this.page_loading_ing = false;
+        this.this_page = 1;
+        this.max_page;
+
         this.init();
 
         this.expand = null;
@@ -17,8 +22,8 @@ class Member_schedule_history{
     }
 
     init(){
-        this.request_list(()=>{
-            this.render();
+        this.request_list((data)=>{
+            this.render(data);
         });
     }
 
@@ -28,32 +33,34 @@ class Member_schedule_history{
         }, 300);
     }
 
-    render(){
+    render(data){
         let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();member_schedule_history.clear();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span id="">일정 이력</span></span>`;
         let top_right = `<span class="icon_right"></span>`;
         let content;
         if(this.sort_val == SORT_SCHEDULE_DT){
-            content = `<section style="margin-top:8px;">
+            content = `<section style="margin-top:8px;" id="list_wrap">
                             ${this.dom_arrange_select()}
-                            ${this.dom_list_by_time()}
+                            ${this.dom_list_by_time(data)}
                         </section>`;
         }
         else if(this.sort_val == SORT_SCHEDULE_MONTHLY){
-            content = `<section style="margin-top:8px;">
+            content = `<section style="margin-top:8px;" id="list_wrap">
                             ${this.dom_arrange_select()}
-                            ${this.dom_list_by_monthly()}
+                            ${this.dom_list_by_monthly(data)}
                         </section>`;
         }
         else if(this.sort_val == SORT_MEMBER_TICKET){
-            content =   `<section style="margin-top:8px;">
+            content =   `<section style="margin-top:8px;" id="list_wrap">
                             ${this.dom_arrange_select()}
-                            ${this.dom_list()}
+                            ${this.dom_list_by_ticket(data)}
                         </section>`;
         }
-        let html = PopupBase.base(top_left, top_center, top_right, content, "");
+        let wrapper_middle_content = this.dom_list_content_wrap(content);
+        let html = PopupBase.base(top_left, top_center, top_right, wrapper_middle_content.dom, "");
 
         document.querySelector(this.target.install).innerHTML = html;
+        wrapper_middle_content.install();
     }
 
     dom_arrange_select(){
@@ -79,15 +86,52 @@ class Member_schedule_history{
         return html;
     }
 
-    dom_list(){
+    dom_list_content_wrap(content){
+        let wrap_id = "list_by_time_wrap";
+        let html = 
+            CComp.scroll_container(
+                "div",
+                `${content}`,
+                {height:"100%", "overflow-y":"auto"},
+                {id:wrap_id}
+            );
+        let manual_event_install = ()=>{
+            CComp.scroll_container_event_install(wrap_id, ()=>{
+                if(this.page_loading_ing == true){
+                    return false;
+                }
+                if(this.this_page == this.max_page){
+                    return false;
+                }
+
+                this.page_loading_ing = true;
+                this.append_loading_image(ON);
+                this.this_page++;
+                let send_data = {"member_id": this.member_id, "sort_val": this.sort_val, "page": this.this_page};
+                Member_func.read_schedule_list_by_ticket(send_data, (data)=>{
+                    this.append_loading_image(OFF);
+                    this.append_list(data);
+                    this.page_loading_ing = false;
+                });
+            });
+        };
+        return {
+                    dom:html, 
+                    install:()=>{
+                        manual_event_install();
+                    }
+                };
+    }
+
+    dom_list_by_ticket(received_data){
         let html_to_join = [];
         let html;
 
-        let item_length = Object.keys(this.received_data).length;
+        let item_length = Object.keys(received_data).length;
 
         let member_ticket_list = [];
-        for(let ticket in this.received_data){
-            member_ticket_list.push(this.received_data[ticket]);
+        for(let ticket in received_data){
+            member_ticket_list.push(received_data[ticket]);
         }
         member_ticket_list.sort(function(a, b){
             let return_val = 0;
@@ -384,14 +428,17 @@ class Member_schedule_history{
         return html_to_join.join('');
     }
 
-    dom_list_by_time(){
-        let length = this.received_data.member_schedule.length;
+    dom_list_by_time(received_data){
+        let length = 0;
+        if(received_data.member_schedule != undefined){
+            length = received_data.member_schedule.length;
+        }
         let html_to_join = [];
-        for(let i=length-1; i>=0; i--){
+        for(let i=0; i<length; i++){
         // for(let i=0; i<length; i++){
-            let data = this.received_data.member_schedule[i];
-            // let numbering = data.schedule_idx + ' 회차';
-            let numbering = Number(i+1) + ' 회차';
+            let data = received_data.member_schedule[i];
+            let numbering = data.schedule_idx + ' 회차';
+            // let numbering = Number(i+1) + ' 회차';
             let schedule_id = data.schedule_id;
             let date =  DateRobot.to_text(data.start_dt.split(' ')[0], '', '', SHORT) +' '+ TimeRobot.to_text(data.start_dt.split(' ')[1], '', SHORT) + ' - ' +
                             TimeRobot.to_text(data.end_dt.split(' ')[1], '', SHORT);
@@ -604,16 +651,16 @@ class Member_schedule_history{
         return html_to_join.join("");
     }
 
-    dom_list_by_monthly(){
+    dom_list_by_monthly(received_data){
         let html_to_join = [];
         let html;
 
-        let item_length = Object.keys(this.received_data).length;
+        let item_length = Object.keys(received_data).length;
 
         let member_monthly_list = [];
-        for(let month_num in this.received_data){
+        for(let month_num in received_data){
 
-            member_monthly_list.push(this.received_data[month_num]);
+            member_monthly_list.push(received_data[month_num]);
         }
         member_monthly_list.sort(function(a, b){
             let return_val = 0;
@@ -881,6 +928,37 @@ class Member_schedule_history{
         return html_to_join.join('');
     }
 
+    append_list (data){
+        let content;
+        if(this.sort_val == SORT_SCHEDULE_DT){
+            content = this.dom_list_by_time(data);
+        }
+        else if(this.sort_val == SORT_SCHEDULE_MONTHLY){
+            content = this.dom_list_by_monthly(data);
+        }
+        else if(this.sort_val == SORT_MEMBER_TICKET){
+            content = this.dom_list_by_time(data);
+        }
+
+        $(`#list_wrap`).append(content);
+    }
+
+    append_loading_image(power){
+        switch(power){
+            case ON:
+                $("#list_wrap").append(
+                    `<div style="text-align:center;padding-bottom:60px" id="append_loading_image">
+                        <img src="/static/common/loading.svg">
+                        <div style="font-size:12px;color:var(--font-sub-normal);word-break:keep-all">사용자 데이터를 불러오고 있습니다.</div>
+                    </div>`);
+                break;
+            case OFF:
+                $("#append_loading_image").remove();
+                break;
+        }
+    }
+
+
     open_drawing_board(callback){
         //사인창 열기
         let root_content_height = $root_content.height();
@@ -918,13 +996,16 @@ class Member_schedule_history{
     request_list (callback){
         Setting_calendar_func.read((settings)=>{
             this.settings.sign_use = settings.setting_schedule_sign_enable;
-            let send_data = {"member_id": this.member_id, "sort_val": this.sort_val, "page": this.page};
+            let send_data = {"member_id": this.member_id, "sort_val": this.sort_val, "page": this.this_page};
             Member_func.read_schedule_list_by_ticket(send_data, (data)=>{
+                // let demo = {max_page: 5, this_page:1};
+                this.this_page = data.this_page;
+                this.max_page = data.max_page;
+
                 this.received_data = data;
-                callback();
+                callback(data);
             });
         });
-        
     }
 
     upper_right_menu(){

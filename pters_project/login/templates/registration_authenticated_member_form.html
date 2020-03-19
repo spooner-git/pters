@@ -44,6 +44,8 @@
                     {% csrf_token %}
                     <input type="hidden" name="next_page" id="id_next_page" value="{% url 'index' %}">
                     <input type="hidden" name="member_id" value="{{ member.member_id }}">
+                    <input type="hidden" name="recommended_member_id" id="id_recommended_member_id" value="">
+                    <input type="hidden" name="recommended_member_username" id="id_recommended_member_username" value="">
                     <!-- 회원가입 제목 영역 -->
                     <div class="wrapper_registration_content_title" style="margin-bottom:40px; height:24px;">
                         <div class="registration_content_title" style="font-size: 20px; font-weight: bold; color: #1f1d1e; letter-spacing: -1px; text-align: center;">인증을 완료해주세요.</div>
@@ -74,6 +76,21 @@
                         <div class="activation_button" id="id_activation_confirm_button" onclick="check_activation_code();" style="pointer-events:none;">확인</div>
                         <div class="input_description">
                             <div class="input_description_text" id="id_activation_confirm"></div>
+                        </div>
+                    </div>
+
+                    <!-- 추천인 아이디 입력 영역 -->
+                    <div id="recommend_user_input_wrap">
+                        <div style="width:100%; height: 1px;background:#f5f2f3; margin-top: 20px; margin-bottom: 20px;"></div>
+                        <div style="margin-top:8px;">
+                            <div id="wrapper_recommend_id_confirm" style="width: 225px; border: solid 1px #d6d2d2; display:inline-block">
+                                <input class="pters_login_input" type="text" name="recommend_username" id="id_recommend_username" placeholder="추천인 아이디" minlength="4" maxlength="40" title="추천인 아이디"
+                                pattern="[a-zA-Z0-9-._@]{4,40}" onkeyup="limit_char_auto_correction(event.target);$('#recommend_id_confirm').text('');" data-error-message="" data-valid="true">
+                            </div>
+                            <div class="activation_button" id="recommend_id_confirm_button" onclick="check_recommend_id();" style="pointer-events:;">확인</div>
+                            <div class="input_description">
+                                <div class="input_description_text" id="recommend_id_confirm"></div>
+                            </div>
                         </div>
                     </div>
 
@@ -159,7 +176,21 @@
             if(error_info!=''){
                 alert(error_info+'를 확인해주세요.');
             }else{
-                add_member_info();
+
+                let id_recommended_member_username = $('#id_recommended_member_username').val();
+                let id_recommend_username = $('#id_recommend_username').val();
+
+                if(id_recommend_username == ''){
+                    $('#id_recommended_member_id').val('');
+                    $('#id_recommended_member_username').val('');
+                }
+
+                if(id_recommended_member_username != id_recommend_username){
+                    alert(id_recommend_username+'님을 추천인을 등록하려면 추천인 아이디 확인을 해주세요.');
+                    $('#id_recommend_username').val('');
+                }else{
+                    add_member_info();
+                }
             }
         }
 

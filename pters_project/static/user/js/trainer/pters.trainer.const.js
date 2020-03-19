@@ -203,6 +203,7 @@ const POPUP_ADDRESS_LECTURE_SIMPLE_VIEW = 'popup_lecture_simple_view';
 const POPUP_ADDRESS_LECTURE_ADD = 'popup_lecture_add';
 const POPUP_ADDRESS_LECTURE_EDIT = 'popup_lecture_edit';
 const POPUP_ADDRESS_LECTURE_LIST = 'popup_lecture_list';
+const POPUP_LECTURE_SCHEDULE_HISTORY = 'popup_lecture_schedule_history';
 
 const POPUP_ADDRESS_TICKET_VIEW = 'popup_ticket_view';
 const POPUP_ADDRESS_TICKET_SIMPLE_VIEW = 'popup_ticket_simple_view';
@@ -292,6 +293,8 @@ const POPUP_ADDRESS_PTERS_PASS_PAY_INFO = 'popup_pters_pass_pay_info';
 const POPUP_ADDRESS_PTERS_PASS_SHOP = 'popup_pters_pass_shop';
 const POPUP_ADDRESS_PTERS_PASS_SHOP_AGREEMENT = 'popup_pters_pass_shop_agreement';
 const POPUP_ADDRESS_PTERS_PASS_PAY_CANCEL = 'popup_pters_pass_pay_cancel';
+
+const POPUP_ADDRESS_MY_COUPON_BOX = 'popup_my_coupon_box';
 // User Input 팝업
 
 // PassInspector
@@ -317,8 +320,10 @@ const COLOR_NAME_CODE = {"#fbf3bd":"바나나", "#dbe6f7":"하늘", "#ffd3d9": "
             };
 const SEX_CODE = {"M": "남성", "W": "여성"};
 const SCHEDULE_STATUS = {"NP" : "진행전", "PC": "결석", "PE": "출석"};
+const LECTURE_SCHEDULE_STATUS = {"NP" : "진행전", "PE": "완료"};
+const LECTURE_SCHEDULE_STATUS_COLOR = {"NP" : "var(--font-sub-light)", "PC": "orange", "PE": "var(--font-main)"};
 const APPROVE_SCHEDULE_STATUS = {"AP": "예약 확정", "WP":"대기 예약"};
-const SCHEDULE_STATUS_COLOR = {"NP" : "진행전", "PC": "orange", "PE": "green"};
+const SCHEDULE_STATUS_COLOR = {"NP" : "var(--font-main)", "PC": "orange", "PE": "green"};
 const TICKET_STATUS = {"IP": "진행중", "PE": "종료", "RF": "환불"};
 const TICKET_STATUS_COLOR = {"IP": "green", "PE": "var(--font-main)", "RF": "orange"};
 const PAY_TYPE_NAME = {"SINGLE": "1회 결제", "PERIOD": "정기 결제 / 1 개월", "":"없음", "FREE_EVENT":"무료 이벤트", "CHANGE":"상품 변경"};
