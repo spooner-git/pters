@@ -155,7 +155,7 @@ class My_coupon_box{
     element_promotion_code_input(){
         let id = 'promotion_code_input';
         let title = "";
-        let placeholder = '코드 입력';
+        let placeholder = '쿠폰 코드를 입력해주세요.';
         let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
@@ -175,7 +175,7 @@ class My_coupon_box{
         let html = 
         CComp.button(
             "promotion_code_confirm",
-            "확인",
+            "등록",
             {"border":"var(--border-article-dark)", "border-radius":"4px", "padding":"12px 0", "height":"28px", "line-height":"28px", "font-size":"14px"},
             null,
             ()=>{
@@ -198,7 +198,7 @@ class My_coupon_box{
                     });
                 }else{
                     show_error_message(
-                        {title:"정확한 프로모션 코드를 입력해주세요."}
+                        {title:"정확한 쿠폰 코드를 입력해주세요."}
                     );
                 }
                 
@@ -211,9 +211,9 @@ class My_coupon_box{
     dom_row_toolbox(){
 
         let title_text = "내 쿠폰";
-        let description1 = "<p style='font-size:14px;font-weight:500;'>적립된 쿠폰 내역입니다.</p>";
-        let title2_text = "프로모션 코드";
-        let description2 = "<p style='font-size:14px;font-weight:500;'>프로모션 코드를 입력해 쿠폰을 수령합니다.</p>";
+        let description1 = "<p style='font-size:14px;font-weight:500;'>보유 쿠폰 내역</p>";
+        let title2_text = "쿠폰 등록하기";
+        let description2 = "<p style='font-size:14px;font-weight:500;'>쿠폰을 등록해주세요.</p>";
         let title = 
         CComp.element(
             "span",

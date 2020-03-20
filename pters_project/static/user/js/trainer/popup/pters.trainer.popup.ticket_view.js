@@ -303,7 +303,7 @@ class Ticket_view{
         let html = 
         `<div class="list_type_tab_wrap" style="width:100%;padding-left:45px;text-align:left;box-sizing:border-box;height:auto">
             ${CComp.element("div", "기본 정보", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_basic_info", class:`list_tab_content ${this.list_type == "basic_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("basic_info");}})}
-            ${CComp.element("div", `사용 정책`, {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_reserve_info", class:`list_tab_content ${this.list_type == "reserve_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("reserve_info");}})}
+            ${CComp.element("div", `이용 규칙`, {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_reserve_info", class:`list_tab_content ${this.list_type == "reserve_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("reserve_info");}})}
             ${CComp.element("div", `보유 회원(${this.data.member_id.length})`, {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_members_info", class:`list_tab_content ${this.list_type == "members_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("members_info");}})}
         </div>`;
         return html;

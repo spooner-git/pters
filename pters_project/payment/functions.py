@@ -7,7 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 
 from configs.const import USE, UN_USE, DISABLE, ALL_MEMBER, END_PAYMENT_MEMBER, ING_PAYMENT_MEMBER, NO_PAYMENT_MEMBER, \
-    NEW_MEMBER, NEW_MEMBER_DAY
+    NEW_MEMBER, NEW_MEMBER_DAY, OLD_MEMBER
 from configs import settings
 from .models import PaymentInfoTb, ProductPriceTb, CouponTb, CouponMemberTb
 
@@ -380,22 +380,26 @@ def func_check_coupon_reg(coupon_cd, user_id, user_join_date):
             if target == NEW_MEMBER:
                 # 한달보다 더 전에 가입한 경우 에러 표시
                 if user_join_date < new_member_check_date:
-                    error = '등록 가능한 쿠폰이 아닙니다.[1]'
-            # 타겟이 결제를 한번도 한적 없는 회원인 경우
+                    error = '신규 고객님을 위한 쿠폰입니다.'
+            # 타겟이 기존 회원인 경우
+            elif target == OLD_MEMBER:
+                # 3달안에 가입한 경우 에러 표시
+                if user_join_date >= new_member_check_date:
+                    error = '기존 고객님을 위한 쿠폰입니다.'
             elif target == NO_PAYMENT_MEMBER:
                 # 결제 내역이 한번이라도 있으면 에러 표시
                 if payment_count > 0:
-                    error = '등록 가능한 쿠폰이 아닙니다.[2]'
+                    error = '결제 내역이 없는 고객님을 위한 쿠폰입니다.'
             # 타겟이 결제를 하고있는 회원인 경우
             elif target == ING_PAYMENT_MEMBER:
                 # 진행중인 결제가 없는 경우 에러 표시
                 if payment_ing_count == 0:
-                    error = '등록 가능한 쿠폰이 아닙니다.[3]'
+                    error = '결제중인 고객님을 위한 쿠폰입니다.'
             # 타겟이 결제 종료된 회원인 경우
             elif target == END_PAYMENT_MEMBER:
                 # 결제 내역이 없거나 진행중인 결제내역이 있으면 에러 표시
                 if payment_count == 0 or payment_ing_count > 0:
-                    error = '등록 가능한 쿠폰이 아닙니다.[4]'
+                    error = '결제를 했던 경험이 있는 고객님을 위한 쿠폰입니다.'
     return error
 
 
@@ -433,22 +437,26 @@ def func_check_coupon_use(coupon_cd, user_id, user_join_date):
 
             # 타겟이 신규 회원인 경우
             if target == NEW_MEMBER:
-                # 한달보다 더 전에 가입한 경우 에러 표시
+                # 3달보다 더 전에 가입한 경우 에러 표시
                 if user_join_date < new_member_check_date:
-                    error = '등록 가능한 쿠폰이 아닙니다.[1]'
-            # 타겟이 결제를 한번도 한적 없는 회원인 경우
+                    error = '신규 고객님을 위한 쿠폰입니다.'
+            # 타겟이 기존 회원인 경우
+            elif target == OLD_MEMBER:
+                # 3달안에 가입한 경우 에러 표시
+                if user_join_date >= new_member_check_date:
+                    error = '기존 고객님을 위한 쿠폰입니다.'
             elif target == NO_PAYMENT_MEMBER:
                 # 결제 내역이 한번이라도 있으면 에러 표시
                 if payment_count > 0:
-                    error = '등록 가능한 쿠폰이 아닙니다.[2]'
+                    error = '결제 내역이 없는 고객님을 위한 쿠폰입니다.'
             # 타겟이 결제를 하고있는 회원인 경우
             elif target == ING_PAYMENT_MEMBER:
                 # 진행중인 결제가 없는 경우 에러 표시
                 if payment_ing_count == 0:
-                    error = '등록 가능한 쿠폰이 아닙니다.[3]'
+                    error = '결제중인 고객님을 위한 쿠폰입니다.'
             # 타겟이 결제 종료된 회원인 경우
             elif target == END_PAYMENT_MEMBER:
                 # 결제 내역이 없거나 진행중인 결제내역이 있으면 에러 표시
                 if payment_count == 0 or payment_ing_count > 0:
-                    error = '등록 가능한 쿠폰이 아닙니다.[4]'
+                    error = '결제를 했던 경험이 있는 고객님을 위한 쿠폰입니다.'
     return error
