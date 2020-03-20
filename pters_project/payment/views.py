@@ -362,7 +362,7 @@ def billing_check_logic(request):
                             recommended_member_info = None
                             today = datetime.date.today()
                             member_payment_count = PaymentInfoTb.objects.filter(member_id=pre_payment_info.member_id,
-                                                                                status='paid', use=USE)
+                                                                                status='paid', use=USE).count()
                             if member_payment_count <= 1:
                                 recommended_member_id = pre_payment_info.member.recommended_member_id
 
