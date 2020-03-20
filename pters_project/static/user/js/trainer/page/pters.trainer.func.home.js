@@ -277,7 +277,8 @@ class Home {
             pagination: {
                 el: '.swiper-pagination',
                 type: 'bullets',
-            }
+            },
+            setWrapperSize:true
             // navigation: {
             //     nextEl: '.swiper-button-next',
             //     prevEl: '.swiper-button-prev',

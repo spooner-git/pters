@@ -539,15 +539,18 @@ html, body{
     height: 100%;
 }
     #section_side{
-        flex:0 0 200px;
+        /* flex:0 0 200px; */
+        display: inline-block;
+        width: 200px;
         background-color: var(--bg-light);
         transition: 0.2s;
         overflow: hidden;
     }
     #section_center{
         position: relative;
-        flex: 1 0 0;
-        width: 100%;
+        /* flex: 1 0 0; */
+        display: inline-block;
+        width: calc(100% - 200px);
     }
     #section_content{
         position: relative;
@@ -612,6 +615,9 @@ html, body{
 @media(max-width:650px){
     #section_side{
         display: none;
+    }
+    #section_center{
+        width: 100%;
     }
     #section_up_menu{
         display: none;
