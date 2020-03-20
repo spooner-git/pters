@@ -231,6 +231,9 @@ class Home {
             let icon_r_text = ``;
             let style = {"font-size":"15px", "font-weight":"bold", "height":"auto"};
             let onclick = ()=>{
+                // 공지사항 조회수 확인을 위한 작업
+                Setting_service_notice.update_notice_hits({'notice_id':data.notice_id});
+
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_BOTTOM;
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_READER, 100, popup_style, null, ()=>{
                     let data = {

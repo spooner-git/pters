@@ -3,6 +3,7 @@ import logging
 import collections
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import EmailMessage
 from django.db.models import Q
 from django.db.models.expressions import RawSQL
@@ -153,6 +154,29 @@ class GetHomeNoticeDataView(LoginRequiredMixin, View):
                                 'notice_use': notice_info.use})
 
         return JsonResponse({'notice_data': notice_list}, json_dumps_params={'ensure_ascii': True})
+
+
+def update_notice_hits_logic(request):
+    notice_id = request.GET.get('notice_id')
+    error = None
+    context = {}
+
+    if notice_id is None or notice_id == '':
+        error = '공지사항을 불러오는데 실패했습니다.[1]'
+
+    if error is None:
+        try:
+            notice_info = NoticeTb.objects.get(notice_id=notice_id)
+            notice_info.hits += 1
+            notice_info.save()
+        except ObjectDoesNotExist:
+            error = '공지사항을 불러오는데 실패했습니다.[2]'
+
+    if error is not None:
+        messages.error(request, error)
+        context['messageArray'] = error
+
+    return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
 
 
 class GetQACommentDataView(LoginRequiredMixin, View):
