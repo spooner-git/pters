@@ -54,6 +54,10 @@ urlpatterns = [
     # 반복일정 확인
     url(r'^add_repeat_schedule_confirm/$', views.add_repeat_schedule_confirm, name='add_repeat_schedule_confirm'),
 
+    # 수업 반복일정에 회원 반복일정 등록
+    url(r'^add_member_repeat_schedule_to_lecture_schedule/$', views.add_member_repeat_schedule_to_lecture_schedule_logic,
+        name='add_member_repeat_schedule_to_lecture_schedule'),
+
     # 반복일정 취소
     url(r'^delete_repeat_schedule/$', views.delete_repeat_schedule_logic, name='delete_repeat_schedule'),
     # 일정 수정 됐는지 확인

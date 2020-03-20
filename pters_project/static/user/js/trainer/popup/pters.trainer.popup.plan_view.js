@@ -18,7 +18,6 @@ class Plan_view{
             current_zone: TimeRobot.to_zone(d.getHours(), d.getMinutes()).zone
         };
 
-        this.if_user_changed_any_information = false;
         this.schedule_id = data_from_external.schedule_id;
         // this.schedule_permission_state_cd = data_from_external.permission_state_cd;
         this.selected_date = data_from_external.date;
@@ -33,8 +32,10 @@ class Plan_view{
             member_schedule_state:[],
             member_schedule_permission_state_cd:[],
             member_schedule_reg_dt:[],
+            member_profile_url:[],
             date: null,
             date_text: null,
+            start_dt:null,
             start_time: null,
             start_time_text: null,
             end_time: null,
@@ -47,7 +48,7 @@ class Plan_view{
                     repeat_end: null
                 }
             ],
-            memo: "",
+            note: "",
 
             //plan_add 팝업의 data보다 추가된 항목
             lecture_color: null,
@@ -101,6 +102,7 @@ class Plan_view{
     set date (data){
         this.data.date = data.data;
         this.data.date_text = data.text;
+        this.data.start_dt = DateRobot.to_yyyymmdd(data.data.year, data.data.month, data.data.date);
         this.render_content();
     }
 
@@ -129,13 +131,13 @@ class Plan_view{
         return this.data.end_time;
     }
 
-    set memo (text){
-        this.data.memo = text;
+    set note (text){
+        this.data.note = text;
         this.render_content();
     }
 
-    get memo (){
-        return this.data.memo;
+    get note (){
+        return this.data.note;
     }
 
     init (){
@@ -167,6 +169,8 @@ class Plan_view{
         this.data.lecture_name = data.schedule_info[0].lecture_name;
         this.data.member_id = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.member_id}`;});
         this.data.member_id_original = this.data.member_id.slice();
+        this.data.member_profile_url = data.schedule_info[0].lecture_schedule_data.map((it)=>{return it.member_profile_url;});
+        this.data.member_profile_url_original = this.data.member_profile_url.slice();
         this.data.member_name = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.member_name}`;});
         this.data.member_schedule_id = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.schedule_id}`;});
         this.data.member_schedule_state = data.schedule_info[0].lecture_schedule_data.map((it)=>{return `${it.state_cd}`;});
@@ -175,6 +179,8 @@ class Plan_view{
         if(data.schedule_info[0].schedule_type == 1){
             this.data.member_id.push(data.schedule_info[0].member_id);
             this.data.member_id_original.push(this.data.member_id);
+            this.data.member_profile_url.push(data.schedule_info[0].member_profile_url);
+            this.data.member_profile_url_original.push(this.data.member_profile_url);
             this.data.member_name.push(data.schedule_info[0].member_name);
             this.data.member_schedule_id.push(data.schedule_info[0].schedule_id);
             this.data.member_schedule_state.push(data.schedule_info[0].state_cd);
@@ -183,6 +189,7 @@ class Plan_view{
         }
         this.data.date = this.selected_date;
         this.data.date_text = DateRobot.to_text(this.data.date.year, this.data.date.month, this.data.date.date);
+        this.data.start_dt = data.schedule_info[0].start_dt.split(" ")[0];
         this.data.start_time = data.schedule_info[0].start_time;
         this.data.start_time_text = TimeRobot.to_text(data.schedule_info[0].start_time.split(':')[0], data.schedule_info[0].start_time.split(':')[1])+' 부터';
         this.data.end_time = data.schedule_info[0].end_time;
@@ -193,7 +200,7 @@ class Plan_view{
         this.data.lecture_current_num = data.schedule_info[0].lecture_current_member_num;
         this.data.lecture_state_cd = data.schedule_info[0].state_cd;
         this.data.lecture_permission_state_cd = data.schedule_info[0].permission_state_cd;
-        this.data.memo = data.schedule_info[0].note;
+        this.data.note = data.schedule_info[0].note;
         this.data.schedule_type = data.schedule_info[0].schedule_type;
 
         this.data.reg_member_id = data.schedule_info[0].reg_member_id;
@@ -284,7 +291,6 @@ class Plan_view{
         return {left: top_left, center:top_center, right:top_right};
     }
 
-
     dom_assembly_toolbox (){
         let html = this.dom_row_lecture_name();
         return html;
@@ -334,7 +340,7 @@ class Plan_view{
     dom_row_lecture_name (){
         let lecture_name;
         if(this.data.schedule_type == 0){
-            lecture_name =`OFF 일정 ${this.data.memo != "" ? '('+this.data.memo+')' : ''}`;
+            lecture_name =`OFF 일정 ${this.data.note != "" ? '('+this.data.note+')' : ''}`;
         }else if(this.data.schedule_type == 1){
             lecture_name = this.data.member_name;
             if(this.data.member_schedule_permission_state_cd[0] == SCHEDULE_WAIT){
@@ -557,7 +563,7 @@ class Plan_view{
             let member_id = this.data.member_id[i];
             let member_name = this.data.member_name[i];
             let member_schedule_id = this.data.member_schedule_id[i];
-            let icon_button_style = {"padding":"3px 1%", "width":"45%","height":"50px", "overflow":"hidden", "text-overflow":"ellipsis", "white-space":"nowrap", "font-size":"15px", "font-weight":"500", "text-align":"left"};
+            let icon_button_style = {"position":"relative", "padding":"3px 1%", "width":"45%","height":"50px", "overflow":"hidden", "text-overflow":"ellipsis", "white-space":"nowrap", "font-size":"15px", "font-weight":"500", "text-align":"left"};
             let state = this.data.member_schedule_state[i];
             let permission_state_cd = this.data.member_schedule_permission_state_cd[i];
 
@@ -572,8 +578,11 @@ class Plan_view{
                 // state_icon_url = CImg.confirm(["var(--img-sub1)"], {"vertical-align":"middle", "margin-bottom":"3px"});
                 state_icon_url = CImg.confirm_circle(["green"], {"vertical-align":"middle", "margin-bottom":"3px"});
             }else if(state == SCHEDULE_NOT_FINISH){
-                state_icon_url = DELETE;
+                // state_icon_url = DELETE;
+                state_icon_url = "";
             }
+
+            let profile_image = `<img src="${this.data.member_profile_url[i]}" style="width:24px;height:24px;vertical-align:middle;margin-bottom:4px;">`;
             let temp_html =
                 CComponent.icon_button(member_id, member_name, state_icon_url, icon_button_style, ()=>{
                     let auth_inspect;
@@ -908,6 +917,7 @@ class Plan_view{
 
         return html;
     }
+
     dom_row_date_select (){
         let id = 'select_date';
         let title = this.data.date_text == null ? '일자*' : this.data.date_text;
@@ -927,8 +937,7 @@ class Plan_view{
                 
                 date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'birth', title:'일자', data:{year:year, month:month, date:date}, start_day:this.date_start,
                                                                                                 callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
-                                                                                                    this.date = object; 
-                                                                                                    this.if_user_changed_any_information = true;
+                                                                                                    this.date = object;
                                                                                                     //셀렉터에서 선택된 값(object)을 this.data_to_send에 셋팅하고 rerender 한다.
                 }});
             });
@@ -972,7 +981,6 @@ class Plan_view{
                                                                                                         this.data.duplicate_plan_when_add = data;
                                                                                                         this.render_content();
                                                                                                     });
-                                                                                                    this.if_user_changed_any_information = true;
                                                                                                     //셀렉터에서 선택된 값(object)을 this.dataCenter에 셋팅하고 rerender 한다.
                                                                                                 }});
             });
@@ -1009,7 +1017,6 @@ class Plan_view{
                                                                                                 range:{start:range_start, end:range_end},
                                                                                                 callback_when_set: (object)=>{
                                                                                                     this.end_time = object;
-                                                                                                    this.if_user_changed_any_information = true;
                                                                                                     this.check_duplicate_plan_exist((data)=>{
                                                                                                         this.data.duplicate_plan_when_add = data;
                                                                                                         this.render_content();
@@ -1052,7 +1059,6 @@ class Plan_view{
                     this.data.end_time = object.data.end;
                     this.data.end_time_text = object.text.end + ' 까지 <span style="font-size:11px;">('+ object.text.diff +'분 진행)</span>';
 
-                    this.if_user_changed_any_information = true;
                     // this.render_content();
                     this.check_duplicate_plan_exist((data)=>{
                         this.data.duplicate_plan_when_add = data;
@@ -1086,7 +1092,6 @@ class Plan_view{
                     this.data.end_time = object.data.end;
                     this.data.end_time_text = object.text.end + ' 까지 <span style="font-size:11px;">('+ object.text.diff +'분 진행)</span>';
 
-                    this.if_user_changed_any_information = true;
                     // this.render_content();
                     this.check_duplicate_plan_exist((data)=>{
                         this.data.duplicate_plan_when_add = data;
@@ -1108,7 +1113,7 @@ class Plan_view{
 
     dom_row_memo_select (){
         let id = 'select_memo';
-        let title = this.data.memo == null ? '' : this.data.memo;
+        let title = this.data.note == null ? '' : this.data.note;
         let placeholder = '일정 메모';
         let icon = CImg.memo();
         let icon_r_visible = HIDE;
@@ -1119,15 +1124,8 @@ class Plan_view{
         let pattern_message = "+ - _ : . , 제외 특수문자는 입력 불가";
         let required = "";
         let html = CComponent.create_input_textarea_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, (input_data)=>{
-            let user_input_data = input_data;
-            this.memo = user_input_data;
-            this.if_user_changed_any_information = true;
-            // let data_to_send = {"schedule_id": this.schedule_id, "add_memo":this.memo};
-            // let url_update_memo = '/schedule/update_memo_schedule/';
-            // Plan_func.update(url_update_memo, data_to_send, ()=>{
-            //     this.init();
-            //     this.if_user_changed_any_information = true;
-            // });
+            let user_input_data =  input_data != null ? input_data : "";
+            this.note = user_input_data;
         }, pattern, pattern_message, required);
         return html;
     }
@@ -1310,7 +1308,9 @@ class Plan_view{
     }
 
     upper_left_menu(){
-        if(this.if_user_changed_any_information == true){
+        let check_whether_info_changed = this.check_whether_info_changed();
+
+        if(check_whether_info_changed == true){
             let inspect = pass_inspector.schedule_update();
             if(inspect.barrier == BLOCKED){
                 let message = `${inspect.limit_type}`;
@@ -1337,6 +1337,22 @@ class Plan_view{
         }
     }
 
+    check_whether_info_changed(){
+        let ori_data = this.received_data.schedule_info[0];
+        let new_data = this.data;
+        let need_to_check = ["start_dt", "start_time", "end_time", "note"];
+        let length = need_to_check.length;
+
+        var if_changed_item_exist = false;
+        for(let i=0; i<length; i++){
+            if(ori_data[need_to_check[i]] != new_data[need_to_check[i]]){
+                if_changed_item_exist = true;
+            }
+        }
+
+        return if_changed_item_exist;
+    }
+
     send_data (){
         let start_dt = DateRobot.to_yyyymmdd(this.data.date.year, this.data.date.month, this.data.date.date) + ' ' + this.data.start_time;
         let end_dt = DateRobot.to_yyyymmdd(this.data.date.year, this.data.date.month, this.data.date.date) + ' ' + this.data.end_time;
@@ -1354,7 +1370,7 @@ class Plan_view{
         }
 
         let data_to_send = {"schedule_ids[]":schedule_ids, "start_dt":start_dt, "end_dt":end_dt};
-        let data_to_send_for_memo_update = {"schedule_id": this.schedule_id, "add_memo":this.memo};
+        let data_to_send_for_memo_update = {"schedule_id": this.schedule_id, "add_memo":this.note};
         let url = '/schedule/update_schedule/';
         let url_update_memo = '/schedule/update_memo_schedule/';
         

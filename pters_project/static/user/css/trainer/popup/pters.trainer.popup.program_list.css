@@ -48,7 +48,7 @@
 		vertical-align: middle;
 	}
 	.program_data_u > div:first-child{
-		font-weight: bold;
+		font-weight: 500;
 		width: auto;
 	}
 	.program_data_u > div:last-child{

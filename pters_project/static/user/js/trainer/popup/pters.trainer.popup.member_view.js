@@ -53,12 +53,16 @@ class Member_view{
                         lecture_state:[],
                         lecture_color:[],
                     }
-                ]
-                
+                ],
+            
+            repeat:[
+
+            ]
         };
 
         //팝업의 날짜, 시간등의 입력란을 미리 외부에서 온 데이터로 채워서 보여준다.
-       
+        this.list_type = "basic_info";
+
         this.init();
         // this.set_initial_data();
     }
@@ -185,92 +189,99 @@ class Member_view{
             this.data.email = data.member_email;
             this.data.profile_img = data.member_profile_url;
 
+            Member_func.repeat_list(
+                {"member_id":this.member_id}, (data)=>{
+                    let repeat_list = data.member_repeat_schedule_data; //array
 
-            Member_func.read_ticket_list({"member_id":this.member_id}, (data)=>{
-                let ticket_list = data;
-                this.data.ticket = [];
-                let member_ticket_list = [];
-                for(let ticket in ticket_list){
-                    member_ticket_list.push(ticket_list[ticket]);
-                }
-                member_ticket_list.sort(function(a, b){
-                    let return_val = 0;
-                    if(a.member_ticket_start_date < b.member_ticket_start_date){
-                        return_val = -1;
-                    }
-                    else if(a.member_ticket_start_date > b.member_ticket_start_date){
-                        return_val = 1;
-                    }
-                    else{
-                        if(a.member_ticket_end_date < b.member_ticket_end_date) {
-                            return_val = -1;
+                    this.data.repeat = repeat_list;
+                    
+                    Member_func.read_ticket_list({"member_id":this.member_id}, (data)=>{
+                        let ticket_list = data;
+                        this.data.ticket = [];
+                        let member_ticket_list = [];
+                        for(let ticket in ticket_list){
+                            member_ticket_list.push(ticket_list[ticket]);
                         }
-                        else if(a.member_ticket_end_date > b.member_ticket_end_date){
-                            return_val = 1;
-                        }
-                        else{
-                            if(a.member_ticket_reg_dt < b.member_ticket_reg_dt) {
+                        member_ticket_list.sort(function(a, b){
+                            let return_val = 0;
+                            if(a.member_ticket_start_date < b.member_ticket_start_date){
                                 return_val = -1;
                             }
-                            else if(a.member_ticket_reg_dt > b.member_ticket_reg_dt) {
+                            else if(a.member_ticket_start_date > b.member_ticket_start_date){
                                 return_val = 1;
                             }
+                            else{
+                                if(a.member_ticket_end_date < b.member_ticket_end_date) {
+                                    return_val = -1;
+                                }
+                                else if(a.member_ticket_end_date > b.member_ticket_end_date){
+                                    return_val = 1;
+                                }
+                                else{
+                                    if(a.member_ticket_reg_dt < b.member_ticket_reg_dt) {
+                                        return_val = -1;
+                                    }
+                                    else if(a.member_ticket_reg_dt > b.member_ticket_reg_dt) {
+                                        return_val = 1;
+                                    }
+                                }
+                            }
+                            return return_val;
+                        });
+                        for(let i=0; i<member_ticket_list.length; i++){
+                            if(member_ticket_list[i].member_ticket_state_cd != 'IP'){
+                                continue;
+                            }
+                            let ticket_rem_count_of_this_member = member_ticket_list[i].member_ticket_rem_count;
+                            let ticket_reg_count_of_this_member = member_ticket_list[i].member_ticket_reg_count;
+                            let ticket_avail_count_of_this_member = member_ticket_list[i].member_ticket_avail_count;
+                            let ticket_reg_price_of_this_member = member_ticket_list[i].member_ticket_price;
+                            let ticket_reg_date_of_this_member = member_ticket_list[i].member_ticket_start_date;
+                            let ticket_end_date_of_this_member = member_ticket_list[i].member_ticket_end_date;
+                            let ticket_refund_date_of_this_member = member_ticket_list[i].member_ticket_refund_date;
+                            let ticket_refund_price_of_this_member = member_ticket_list[i].member_ticket_refund_price;
+                            // let ticket_remain_date = Math.round((new Date(ticket_end_date_of_this_member).getTime() - new Date().getTime()) / (1000*60*60*24));
+                            let ticket_remain_date = DateRobot.diff_date(ticket_end_date_of_this_member, `${this.dates.current_year}-${this.dates.current_month}-${this.dates.current_date}`);
+                            let ticket_pay_method = member_ticket_list[i].member_ticket_pay_method;
+                            let ticket_remain_alert_text = "";
+                            if(ticket_remain_date < 0){
+                                ticket_remain_alert_text = " 지남";
+                                ticket_remain_date = Math.abs(ticket_remain_date);
+                            }
+
+                            // Ticket_func.read({"ticket_id": ticket_list[ticket].member_ticket_ticket_id}, (data)=>{
+                                let ticket_of_member = {
+                                                    ticket_id:member_ticket_list[i].ticket_id,
+                                                    ticket_name:member_ticket_list[i].member_ticket_name,
+                                                    ticket_effective_days:member_ticket_list[i].ticket_effective_days,
+                                                    ticket_reg_count:ticket_reg_count_of_this_member,
+                                                    ticket_rem_count:ticket_rem_count_of_this_member,
+                                                    ticket_avail_count:ticket_avail_count_of_this_member,
+                                                    ticket_price:ticket_reg_price_of_this_member,
+                                                    ticket_state:member_ticket_list[i].ticket_state_cd,
+                                                    ticket_note:member_ticket_list[i].member_ticket_note,
+                                                    ticket_refund_date: ticket_refund_date_of_this_member,
+                                                    ticket_refund_price: ticket_refund_price_of_this_member,
+                                                    ticket_pay_method:ticket_pay_method,
+                                                    member_ticket_id:member_ticket_list[i].member_ticket_id,
+                                                    start_date:ticket_reg_date_of_this_member,
+                                                    start_date_text:DateRobot.to_text(ticket_reg_date_of_this_member, '', '', SHORT),
+                                                    end_date:ticket_end_date_of_this_member,
+                                                    end_date_text:ticket_end_date_of_this_member == "9999-12-31" ? "소진 시까지" :  DateRobot.to_text(ticket_end_date_of_this_member, '', '', SHORT)+' ('+ticket_remain_date+'일'+ ticket_remain_alert_text+')',
+                                                    lecture_id:member_ticket_list[i].ticket_lecture_id_list,
+                                                    lecture_name:member_ticket_list[i].ticket_lecture_list,
+                                                    lecture_state:member_ticket_list[i].ticket_lecture_state_cd_list,
+                                                    lecture_color:member_ticket_list[i].ticket_lecture_ing_color_cd_list,
+                                                };
+                                this.data.ticket.push(ticket_of_member);
+
+                                // this.init();
+                            // });
                         }
-                    }
-                    return return_val;
-                });
-                for(let i=0; i<member_ticket_list.length; i++){
-                    if(member_ticket_list[i].member_ticket_state_cd != 'IP'){
-                        continue;
-                    }
-                    let ticket_rem_count_of_this_member = member_ticket_list[i].member_ticket_rem_count;
-                    let ticket_reg_count_of_this_member = member_ticket_list[i].member_ticket_reg_count;
-                    let ticket_avail_count_of_this_member = member_ticket_list[i].member_ticket_avail_count;
-                    let ticket_reg_price_of_this_member = member_ticket_list[i].member_ticket_price;
-                    let ticket_reg_date_of_this_member = member_ticket_list[i].member_ticket_start_date;
-                    let ticket_end_date_of_this_member = member_ticket_list[i].member_ticket_end_date;
-                    let ticket_refund_date_of_this_member = member_ticket_list[i].member_ticket_refund_date;
-                    let ticket_refund_price_of_this_member = member_ticket_list[i].member_ticket_refund_price;
-                    // let ticket_remain_date = Math.round((new Date(ticket_end_date_of_this_member).getTime() - new Date().getTime()) / (1000*60*60*24));
-                    let ticket_remain_date = DateRobot.diff_date(ticket_end_date_of_this_member, `${this.dates.current_year}-${this.dates.current_month}-${this.dates.current_date}`);
-                    let ticket_pay_method = member_ticket_list[i].member_ticket_pay_method;
-                    let ticket_remain_alert_text = "";
-                    if(ticket_remain_date < 0){
-                        ticket_remain_alert_text = " 지남";
-                        ticket_remain_date = Math.abs(ticket_remain_date);
-                    }
-
-                    // Ticket_func.read({"ticket_id": ticket_list[ticket].member_ticket_ticket_id}, (data)=>{
-                        let ticket_of_member = {
-                                            ticket_id:member_ticket_list[i].ticket_id,
-                                            ticket_name:member_ticket_list[i].member_ticket_name,
-                                            ticket_effective_days:member_ticket_list[i].ticket_effective_days,
-                                            ticket_reg_count:ticket_reg_count_of_this_member,
-                                            ticket_rem_count:ticket_rem_count_of_this_member,
-                                            ticket_avail_count:ticket_avail_count_of_this_member,
-                                            ticket_price:ticket_reg_price_of_this_member,
-                                            ticket_state:member_ticket_list[i].ticket_state_cd,
-                                            ticket_note:member_ticket_list[i].member_ticket_note,
-                                            ticket_refund_date: ticket_refund_date_of_this_member,
-                                            ticket_refund_price: ticket_refund_price_of_this_member,
-                                            ticket_pay_method:ticket_pay_method,
-                                            member_ticket_id:member_ticket_list[i].member_ticket_id,
-                                            start_date:ticket_reg_date_of_this_member,
-                                            start_date_text:DateRobot.to_text(ticket_reg_date_of_this_member, '', '', SHORT),
-                                            end_date:ticket_end_date_of_this_member,
-                                            end_date_text:ticket_end_date_of_this_member == "9999-12-31" ? "소진 시까지" :  DateRobot.to_text(ticket_end_date_of_this_member, '', '', SHORT)+' ('+ticket_remain_date+'일'+ ticket_remain_alert_text+')',
-                                            lecture_id:member_ticket_list[i].ticket_lecture_id_list,
-                                            lecture_name:member_ticket_list[i].ticket_lecture_list,
-                                            lecture_state:member_ticket_list[i].ticket_lecture_state_cd_list,
-                                            lecture_color:member_ticket_list[i].ticket_lecture_ing_color_cd_list,
-                                        };
-                        this.data.ticket.push(ticket_of_member);
-
-                        // this.init();
-                    // });
+                        this.render();
+                    });
                 }
-                this.render();
-            });
+            );
         });
     }
 
@@ -324,18 +335,44 @@ class Member_view{
         let birth = this.dom_row_member_birth_input();
         let sex = this.dom_row_member_sex_input();
         let ticket = this.dom_row_ticket();
+        let repeat = this.dom_row_repeat();
         // let memo = this.dom_row_member_memo_input();
         let tag_id = this.data.active == 'True' || this.data.active == null ? '아이디' : '아이디 <span style="color:var(--font-highlight);margin-left:3px;">(임시아이디, 비밀번호 0000)</span>';
-        let html =
+
+
+        let tab_basic_info =
             '<div class="obj_input_box_full">'
                 + CComponent.dom_tag(tag_id) + user_id + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('휴대폰 번호') + phone + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('생년월일') + birth + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('성별') + sex +
-            '</div>' +
-            '<div class="obj_input_box_full" style="padding-right:18px">'
-                + CComponent.dom_tag('진행중인 수강권') + ticket +
             '</div>';
+        
+        let tab_ticket_info =
+            '<div class="obj_input_box_full" style="padding-right:18px">' +
+                // CComponent.dom_tag('진행중인 수강권', {"padding-left":"0"}) + 
+                ticket +
+            '</div>';
+        
+        let tab_repeat_info = 
+            '<div class="obj_input_box_full" style="padding-right:18px">' +
+                // CComponent.dom_tag('반복 일정', {"padding-left":"0"}) + 
+                repeat +
+            '</div>';
+
+        let selected_tab;
+        if(this.list_type == "basic_info"){
+            selected_tab = tab_basic_info;
+        }else if(this.list_type == "ticket_info"){
+            selected_tab = tab_ticket_info;
+        }else if(this.list_type == "repeat_info"){
+            selected_tab = tab_repeat_info;
+        }
+
+        let html =
+            this.dom_row_list_type_tab() +
+            selected_tab;            
+            
             // '<div class="obj_input_box_full">'
             //     + CComponent.dom_tag('특이사항')  + memo +
             // '</div>';
@@ -377,6 +414,38 @@ class Member_view{
         </div>
         `;
         return html;
+    }
+
+    dom_row_list_type_tab(){
+        let html = 
+        `<div class="list_type_tab_wrap" style="width:100%;padding-left:45px;text-align:left;box-sizing:border-box;height:auto">
+            ${CComp.element("div", "기본 정보", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_basic_info", class:`list_tab_content ${this.list_type == "basic_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("basic_info");}})}
+            ${CComp.element("div", "수강권", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_ticket_info", class:`list_tab_content ${this.list_type == "ticket_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("ticket_info");}})}
+            ${CComp.element("div", "일정", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_repeat_info", class:`list_tab_content ${this.list_type == "repeat_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("repeat_info");}})}
+        </div>`;
+        return html;
+    }
+
+    switch_type(type){
+        if(type == this.list_type){
+            return false;
+        }
+        switch(type){
+            case "basic_info":
+                this.list_type = "basic_info";
+                this.render();
+            break;
+
+            case "ticket_info":
+                this.list_type = "ticket_info";
+                this.render();
+            break;
+
+            case "repeat_info":
+                this.list_type = "repeat_info";
+                this.render();
+            break;
+        }
     }
 
     dom_row_profile_image(){
@@ -717,7 +786,134 @@ class Member_view{
                 )
             );
         }
+
+        html_to_join.unshift(
+            `<div style="margin-top:10px;height:33px;">`+
+                CComp.button("view_ticket_history", `${CImg.history([""], {"vertical-align":"middle", "margin-bottom":"3px", "margin-right":"2px", "width":"18px"})} 수강권 이력`, {"font-size":"12px", "float":"left", "padding-left":"0"}, null, ()=>{
+                    let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_TICKET_HISTORY, 100, popup_style, null, ()=>{
+                        member_ticket_history = new Member_ticket_history('.popup_member_ticket_history', {member_id:this.member_id, member_name:this.name}, null);
+                    });
+                }) +
+                CComp.button("add_new_ticket", `${CImg.plus([""], {"vertical-align":"middle", "margin-bottom":"3px", "margin-right":"2px", "width":"18px"})} 재등록`, {"font-size":"12px", "float":"right", "padding-right":"0"}, null, ()=>{
+                    let member_add_initial_data = {member_id: this.member_id};
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_ADD, 100, POPUP_FROM_BOTTOM, null, ()=>{
+                        member_add_popup = new Member_add('.popup_member_add', member_add_initial_data, 'member_add_popup');}
+                    );
+                }) +
+            `</div>`
+        );
         let html = html_to_join.join('');
+
+        return html;
+    }
+
+    dom_row_repeat(){
+        let html_to_join = [];
+        let length = this.data.repeat.length;
+        for(let i=0; i<length; i++){
+            let data = this.data.repeat[i];
+            html_to_join.push(
+                this.dom_row_repeat_item(
+                    data.repeat_schedule_id,
+                    data.lecture_ing_color_cd,
+                    data.week_info.split('/').map((item)=>{
+                        return DAYNAME_MATCH[item];
+                    }).join(''),
+                    data.lecture_name,
+                    data.start_date+' - '+data.end_date,
+                    data.start_time+' - '+data.end_time
+                )
+            );
+        }
+        html_to_join.unshift(
+            `<div style="margin-top:10px;margin-bottom:10px;height:33px;">`+
+                // CComp.button("add_new_schedule", `${CImg.plus([""], {"vertical-align":"middle", "margin-bottom":"3px", "margin-right":"2px", "width":"18px"})} 새 일정`, {"font-size":"12px", "float":"left", "padding-left":"0"}, null, ()=>{
+                //     let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_BOTTOM;
+                //     let data = {
+                //         user_selected_date: {year:this.current_year, month:this.current_month, date:this.current_date},
+                //         user_selected_time: {hour:this.current_hour, minute:this.current_minute, hour2:this.current_hour, minute2:this.current_minute},
+                //         user_selected_plan : {schedule_id:"", date:{year:null, month:null, date:null}}
+                //     };
+                //     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PLAN_ADD, 100, popup_style, null, ()=>{
+                //         plan_add_popup = new Plan_add('.popup_plan_add', data, "plan_add_popup");
+                //     });
+                // }) +
+                CComp.button("view_schedule_history", `${CImg.history([""], {"vertical-align":"middle", "margin-bottom":"3px", "margin-right":"2px", "width":"18px"})} 일정 이력`, {"font-size":"12px", "float":"left", "padding-left":"0"}, null, ()=>{
+                    let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_SCHEDULE_HISTORY, 100, popup_style, null, ()=>{
+                        member_schedule_history = new Member_schedule_history('.popup_member_schedule_history', this.member_id, null);
+                    });
+                }) +
+            `</div>
+            <div>${CComponent.dom_tag('반복 일정', {"padding-left":"0", "padding-top":"0"})}</div>
+            ${html_to_join.length == 0 ? `<div style="font-size:12px;color:var(--font-sub-dark);padding:5px;">설정된 반복 일정이 없습니다.</div>` : ""}
+            `
+        );
+        return html_to_join.join("");
+    }
+
+    dom_row_repeat_item(repeat_id, color, repeat_name, repeat_day, repeat_period, repeat_time){
+        if(repeat_name == '일월화수목금토'){
+            repeat_name = '매일';
+        }
+        let html = `<div id="repeat_item_${repeat_id}" style="display:flex;width:100%;height:60px;padding:8px 0px;box-sizing:border-box;cursor:pointer;">
+                        <div style="flex-basis:16px;">
+                            <div style="float:left;width:4px;height:100%;background-color:${color}"></div>
+                        </div>
+                        <div style="flex:1 1 0">
+                            <div style="font-size:16px;font-weight:500;letter-spacing:-0.7px;color:var(--font-base);">${repeat_name} ${repeat_time}</div>
+                            <div style="font-size:12px;font-weight:500;letter-spacing:-0.5px;color:var(--font-sub-normal);">${repeat_day} / ${repeat_period}</div>
+                        </div>
+                        <div style="flex-basis:30px;">
+                            ${CImg.more("", {"vertical-align":"top"})}
+                        </div>
+                    </div>`;
+        $(document).off('click', `#repeat_item_${repeat_id}`).on('click', `#repeat_item_${repeat_id}`, function(e){
+            let user_option = {
+                delete:{text:"반복일정 삭제", callback:()=>{
+                    layer_popup.close_layer_popup();
+                    let message = {
+                        title:`정말 ${repeat_name}의 반복 일정을 취소하시겠습니까?`,
+                        comment:`${CImg.warning(["#fe4e65"], {"vertical-align":"middle", "margin-bottom":"4px"})}
+                                <br>
+                                <div style="text-align:center;margin-top:5px;">
+                                    하위에 다른 반복일정이 존재할 경우 함께 취소됩니다. <br>
+                                    과거일정은 보존되지만, 등록한 미래일정은 취소됩니다.
+                                </div>`
+                    }
+                    show_user_confirm(message, ()=>{
+                        layer_popup.close_layer_popup();
+                        let inspect = pass_inspector.schedule_delete();
+                        if(inspect.barrier == BLOCKED){
+                            let message = `${inspect.limit_type}`;
+                            show_error_message({title:message});
+                            return false;
+                        }
+
+                        Loading.show(`${repeat_name}의 반복 일정을 삭제 중입니다.<br>일정이 많은 경우 최대 2~4분까지 소요될 수 있습니다.`);
+                        Plan_func.delete_plan_repeat({"repeat_schedule_id":repeat_id}, ()=>{
+                            Loading.hide();
+                            try{
+                                current_page.init();
+                            }catch(e){}
+                            try{
+                                this.init();
+                            }catch(e){}
+                            layer_popup.close_layer_popup();
+                        }, ()=>{Loading.hide();});
+                    });
+                }}
+            };
+            let options_padding_top_bottom = 16;
+            // let button_height = 8 + 8 + 52;
+            let button_height = 52;
+            let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
+            let root_content_height = $root_content.height();
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
+                option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+            });
+        });
 
         return html;
     }
@@ -875,29 +1071,29 @@ class Member_view{
 
     upper_right_menu(){
         let user_option = {
-            recontract:{text:"재등록", callback:()=>{
-                    layer_popup.close_layer_popup();
-                    let member_add_initial_data = {member_id: this.member_id};
-                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_ADD, 100, POPUP_FROM_BOTTOM, null, ()=>{
-                        member_add_popup = new Member_add('.popup_member_add', member_add_initial_data, 'member_add_popup');});
-                }
-            },
-            ticket_history:{text:"수강권 이력", callback:()=>{
-                    layer_popup.close_layer_popup();
-                    let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
-                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_TICKET_HISTORY, 100, popup_style, null, ()=>{
-                        member_ticket_history = new Member_ticket_history('.popup_member_ticket_history', {member_id:this.member_id, member_name:this.name}, null);
-                    });
-                }
-            },
-            lesson_history:{text:"일정 이력", callback:()=>{
-                    layer_popup.close_layer_popup();
-                    let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
-                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_SCHEDULE_HISTORY, 100, popup_style, null, ()=>{
-                        member_schedule_history = new Member_schedule_history('.popup_member_schedule_history', this.member_id, null);
-                    });
-                }
-            },
+            // recontract:{text:"재등록", callback:()=>{
+            //         layer_popup.close_layer_popup();
+            //         let member_add_initial_data = {member_id: this.member_id};
+            //         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_ADD, 100, POPUP_FROM_BOTTOM, null, ()=>{
+            //             member_add_popup = new Member_add('.popup_member_add', member_add_initial_data, 'member_add_popup');});
+            //     }
+            // },
+            // ticket_history:{text:"수강권 이력", callback:()=>{
+            //         layer_popup.close_layer_popup();
+            //         let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            //         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_TICKET_HISTORY, 100, popup_style, null, ()=>{
+            //             member_ticket_history = new Member_ticket_history('.popup_member_ticket_history', {member_id:this.member_id, member_name:this.name}, null);
+            //         });
+            //     }
+            // },
+            // lesson_history:{text:"일정 이력", callback:()=>{
+            //         layer_popup.close_layer_popup();
+            //         let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            //         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_SCHEDULE_HISTORY, 100, popup_style, null, ()=>{
+            //             member_schedule_history = new Member_schedule_history('.popup_member_schedule_history', this.member_id, null);
+            //         });
+            //     }
+            // },
             delete:{text:"회원 삭제", callback:()=>{
                     let message = {
                         title:`"${this.data.name}" <br>회원 정보를 삭제 하시겠습니까?`,

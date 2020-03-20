@@ -1,7 +1,8 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import RepeatScheduleTb, ScheduleTb, DeleteRepeatScheduleTb, DeleteScheduleTb, HolidayTb, DailyRecordTb
+from .models import RepeatScheduleTb, ScheduleTb, DeleteRepeatScheduleTb, DeleteScheduleTb, HolidayTb, DailyRecordTb, \
+    ScheduleAlarmTb
 
 
 @admin.register(RepeatScheduleTb)
@@ -92,3 +93,15 @@ class HolidayTbAdmin(admin.ModelAdmin):
     list_display = ('holiday_id', 'holiday_dt', 'holiday_name', 'use')
     search_fields = ['holiday_name']
 
+
+@admin.register(ScheduleAlarmTb)
+class ScheduleAlarmTb(admin.ModelAdmin):
+    list_display = ('schedule_alarm_id', 'class_tb', 'member', 'schedule_tb', 'alarm_dt', 'alarm_minute',
+                    'reg_dt', 'mod_dt', 'use')
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related(
+            'class_tb__member',
+            'member',
+            'schedule_tb'
+        )

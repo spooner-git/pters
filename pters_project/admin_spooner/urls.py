@@ -50,4 +50,8 @@ urlpatterns = [
     url(r'^delete_admin_board_content_img/$', views.delete_admin_board_content_img_logic,
         name='delete_admin_board_content_img'),
 
+    url(r'^get_admin_product_list/$', views.GetAdminProductListView.as_view(), name='get_admin_product_list'),
+    url(r'^get_admin_coupon_list/$', views.GetAdminCouponListView.as_view(), name='get_admin_coupon_list'),
+    url(r'^get_admin_coupon_info/$', views.GetAdminCouponInfoView.as_view(), name='get_admin_coupon_info'),
+    url(r'^add_admin_coupon_info/$', views.AddAdminCouponInfoView.as_view(), name='add_admin_coupon_info'),
 ]

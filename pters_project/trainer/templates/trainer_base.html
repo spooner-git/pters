@@ -32,7 +32,6 @@
     <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.object.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.base.css" %}>
     
-    
     <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.component.common.css" %}>
     <link rel="stylesheet" href={% static_url "common/css/swiper.min.css" %}>
     <link rel="stylesheet" href={% static_url "common/css/croppie.css" %}>
@@ -62,7 +61,6 @@
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.const.js" %}></script>
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.text.js" %}></script>
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.fundamental.js" %}></script>
-
     {% block local_css %}
     {% endblock %}
 </head>
@@ -142,13 +140,6 @@
             </div>
 
             <div class="side_menu_item" onclick="sideGoPage('program_notice_page_type')" id="side_program_notice_page_type">
-                <!--
-                <svg style="vertical-align:middle;margin-right:15px;" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <g id="데스크탑/아이콘/강사공지/5C5859" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                        <path class="nav_svg" id="Combined-Shape" fill="var(--img-main)" fill-rule="nonzero"  d="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z"></path>
-                    </g>
-                </svg>
-                -->
                 <svg style="vertical-align:middle;margin-right:15px;" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <g id="데스크탑/아이콘/강사공지/5C5859" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                         <path class="nav_svg" id="Combined-Shape" fill="var(--img-main)" d="M20,3 C20.5128358,3 20.9355072,3.38604019 20.9932723,3.88337887 L21,4 L21,19.087931 C21,19.2096756 20.9777689,19.330397 20.9344005,19.4441553 C20.7517158,19.9233494 20.2404339,20.1807767 19.7551431,20.0575883 L19.6437756,20.0223314 L12,17.108 L12,18 C12,19.1045695 11.1045695,20 10,20 L7,20 C5.8954305,20 5,19.1045695 5,18 L5,15.5833391 C3.9456382,15.5833391 3.08183488,14.7674613 3.00548574,13.7326015 L3,13.5833391 L3,9.58333912 C3,8.52897733 3.81587779,7.665174 4.85073766,7.58882486 L5,7.58333912 L8,7.58333912 L19.6382755,3.06771495 C19.7536231,3.02296037 19.8762744,3 20,3 Z M7,18 L10,18 L10,16.346 L8,15.5833391 L7,15.583 L7,18 Z M19,5.58333912 L8,9.58333912 L5,9.58333912 L5,13.5833391 L8,13.5833391 L19,17.5833391 L19,5.58333912 Z"></path>
@@ -188,7 +179,10 @@
                 </svg>
             </div>
             <div class="up_menu_tool">
-                <div style="flex:1 0 140px" id="up_menu_user_info" onclick="sideGoPopup('mypage')"><img src={% static_url "common/loading.svg" %} alt="" class="up_menu_img"><span>불러오는 중</span></div>
+                <div style="flex:1 0 140px;position:relative" id="up_menu_user_info" onclick="sideGoPopup('mypage')">
+                    <img src={% static_url "common/loading.svg" %} alt="" class="up_menu_img">
+                    <span>불러오는 중</span>
+                </div>
                 <div style="flex:1 0 0;position:relative" onclick="sideGoPage('alarm')">
                     <!-- <img src="/static/common/icon/tab_bar/icon_alarm_off.png" alt="" class="up_menu_img" onclick="sideGoPage('alarm')"> -->
                     <svg class="up_menu_img" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -202,7 +196,7 @@
                             <use id="Combined-Shape" fill="var(--img-main)" fill-rule="nonzero" xlink:href="#path-1"></use>
                         </g>
                     </svg>
-                    <div class="new_alarm_indicator" style="top:15px;right:5px;"></div>
+                    <div class="new_alarm_indicator alarm_new_dot" style="top:15px;left:5px;"></div>
                 </div>
                 <div style="flex:1 0 0" onclick="sideGoPopup('helper')">
                     <!-- <img src="/static/common/icon/icon_help_black.png" alt="" class="up_menu_img" onclick="sideGoPopup('helper')"> -->
@@ -272,7 +266,7 @@
                                     </g>
                                 </svg>
                                 <!-- <img src={% static_url "common/icon/tab_bar/icon_alarm_off.png" %} alt=""> -->
-                                <div class="new_alarm_indicator"></div>
+                                <div class="new_alarm_indicator alarm_new_dot"></div>
                             </div>
                         </div>
                         <div class="obj_table_cell_x5 nav_item" onclick="sideGoPage('menu', this)" id="menu">
@@ -283,6 +277,7 @@
                                     </g>
                                 </svg>
                                 <!-- <img src={% static_url "common/icon/tab_bar/icon_menu_off.png" %} alt=""> -->
+                                <div class="new_alarm_indicator menu_new_dot"></div>
                             </div>
                         </div>
                     </div>
@@ -325,7 +320,6 @@
 <!-- 페이지 스크립트 로드-->
 
 <!-- ajax 팝업 JS 로드 -->
-<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.temp_for_error.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.plan_view.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.plan_add.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.plan_repeat_list.js" %}></script>
@@ -337,6 +331,7 @@
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.lecture_list.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.lecture_add.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.lecture_view.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.lecture_schedule_history.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.ticket_list.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.ticket_add.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.ticket_view.js" %}></script>
@@ -384,6 +379,7 @@
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.password_modify.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.leave_pters.js" %}></script>
 
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.my_coupon_box.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.pters_pass_main.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.pters_pass_pay_info.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.pters_pass_shop.js" %}></script>
@@ -506,7 +502,6 @@
     // 페이지 인스턴스
 
     // 팝업 인스턴스
-    var temp_for_error;
     var plan_view_popup;
     var plan_add_popup;
     var plan_repeat_list_popup;
@@ -527,6 +522,7 @@
     var lecture_simple_view_popup;
     var lecture_edit_popup;
     var lecture_list_popup;
+    var lecture_schedule_history;
 
     var member_schedule_history;
     var member_ticket_history;
@@ -575,6 +571,7 @@
     var service_about_us_popup;
 
     var pters_pass_main_popup;
+    var my_coupon_box_popup;
     var pters_pass_pay_info_popup;
     var pters_pass_shop_popup;
     var pters_pass_shop_agreement_popup;
@@ -1001,6 +998,12 @@
                                                     pters_pass_main_popup = new Pters_pass_main('.popup_pters_pass_main')});
                     };
             break;
+            case 'my_coupon_box':
+                open = ()=>{
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MY_COUPON_BOX, 100, POPUP_FROM_RIGHT, null, ()=>{
+                                                    my_coupon_box_popup = new My_coupon_box('.popup_my_coupon_box')});
+                    };
+            break;
             case 'helper':
                 open = ()=>{
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SERVICE_HELPER, 100, POPUP_FROM_RIGHT, null, ()=>{
@@ -1041,20 +1044,6 @@
         }
     }
     
-    //수강권 가격 입력 오류 1개 이상 의심되면 수정 팝업 띄우기
-    // TempForError_func.ajax(
-    //     "/trainer/get_trainer_member_ticket_price_bug_list/",
-    //     "GET",
-    //     "",
-    //     (data)=>{
-    //         console.log("가격 입력 에러", data);
-    //         if(Object.keys(data).length > 0){
-    //             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_temp_for_error', 100, POPUP_FROM_RIGHT, null, ()=>{
-    //             temp_for_error = new TempForError('.popup_temp_for_error', 'temp_for_error');});
-    //         }
-    //     }
-    // ); 
-
 
     //튜토리얼을 본적이 없으면 튜토리얼을 띄우기
     let tutorial_view = localStorage.getItem("tutorial_view");
@@ -1066,9 +1055,9 @@
     function are_there_new_alarm(){
         alarm.are_there_new_alarm((new_alarm_number)=>{
             if(new_alarm_number > 0){
-                $('.new_alarm_indicator').show();
+                $('.alarm_new_dot').show();
             }else{
-                $('.new_alarm_indicator').hide();
+                $('.alarm_new_dot').hide();
             }
         });
     }
@@ -1080,8 +1069,14 @@
             let user_id = data.trainer_info.member_id;
             let user_name = data.trainer_info.member_name;
             let user_photo = data.trainer_info.member_profile_url;
-            let target = document.getElementById('up_menu_user_info')
-            target.innerHTML = `<img src="${user_photo}" alt="" class="up_menu_img" style="border-radius:50%"><span>${user_name}</span>`;
+            let target = document.getElementById('up_menu_user_info');
+            let user_coupon_count = data.trainer_info.member_coupon_count;
+            target.innerHTML = `<img src="${user_photo}" alt="" class="up_menu_img" style="border-radius:50%"><span>${user_name}</span><div class="new_alarm_indicator menu_new_dot" style="top:15px;left:0px;"></div>`;
+            if(user_coupon_count > 0){
+                $(".menu_new_dot").show();
+            }else{
+                $(".menu_new_dot").hide();
+            }
         });
     }
 
@@ -1089,7 +1084,6 @@
     $('#home').trigger('click');
 
     pc_top_toolbar_user_info_update();
-    are_there_new_alarm();
     theme_data_to_app();
     // 구글 reCAPTCHA 보이지 않게 하기
     /*

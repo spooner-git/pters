@@ -83,11 +83,6 @@ class Pters_pass_shop{
         let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
         let top_right = `<span class="icon_right"></span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>`+
-                        `<div style="width:100%; font-size:13px; text-align:right; height: 20px;line-height:20px; margin-bottom:5px;">
-                            <input type="text" id="pters_pass_coupon_code" name="coupon_code" value="" placeholder="쿠폰 코드 입력" style="font-size:14px; text-align:right; color:inherit; background-color:transparent;">
-                            <div style="display:inline-block; width:30px; color:var(--font-highlight); font-size:13px; font-weight:500; margin-right:10px;" onclick="pters_pass_shop_popup.coupon_check((data)=>pters_pass_shop_popup.dom_row_pters_coupon_html(data));">확인</div>
-                         </div>
-                        `+
                         `<section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
         if(user_username == 'guest'){
             content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>`+

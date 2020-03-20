@@ -3,7 +3,8 @@ import logging
 import collections
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.mail import EmailMessage
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.mail import EmailMessage, message
 from django.db.models import Q
 from django.db.models.expressions import RawSQL
 from django.http import JsonResponse
@@ -12,8 +13,13 @@ from django.utils import timezone
 from django.views import View
 from django.views.generic import TemplateView
 
+from configs.functions import func_send_email
+from configs.settings import DEBUG
 from configs.const import USE
 from .models import QATb, BoardTb, NoticeTb, QACommentTb
+
+if DEBUG is False:
+    from tasks.tasks import task_send_email
 
 logger = logging.getLogger(__name__)
 
@@ -37,12 +43,19 @@ def add_qa_info_logic(request):
                        status_type_cd='QA_WAIT', use=USE)
         qa_info.save()
 
-    # if error is None:
-        # email = EmailMessage('[PTERS 질문]'+request.user.first_name+'회원-'+title,
-        #                      '질문 유형:'+qa_type_cd+'\n\n'+contents + '\n\n' + request.user.email +
-        #                      '\n\n' + str(timezone.now()),
-        #                      to=['support@pters.co.kr'])
-        # email.send()
+    if error is None:
+
+        check_async = False
+        if DEBUG is False:
+            check_async = True
+        if check_async:
+            task_send_email.delay('[PTERS 질문]'+request.user.first_name+'회원-'+title,
+                                  '질문 유형:' + qa_type_cd + '\n\n' + contents + '\n\n' + request.user.email +
+                                  '\n\n' + str(timezone.now()))
+        else:
+            error = func_send_email('[PTERS 질문]'+request.user.first_name+'회원-'+title,
+                                    '질문 유형:' + qa_type_cd + '\n\n' + contents + '\n\n' + request.user.email +
+                                    '\n\n' + str(timezone.now()))
 
         # return redirect(next_page)
     if error is not None:
@@ -70,7 +83,8 @@ class GetQADataView(LoginRequiredMixin, TemplateView):
             # if qa_info.read == 0 and qa_info.status_type_cd == 'QA_COMPLETE':
             #     qa_info.read = 1
             #     qa_info.save()
-            qa_info.contents = qa_info.contents.replace('\n', '<br/>')
+            if qa_info.contents is not None and qa_info.contents != '':
+                qa_info.contents = qa_info.contents.replace('\n', '<br/>')
         context['qa_data'] = qa_list
 
         return context
@@ -119,6 +133,62 @@ class GetNoticeDataView(LoginRequiredMixin, View):
                                 'notice_use': notice_info.use})
 
         return JsonResponse({'notice_data': notice_list}, json_dumps_params={'ensure_ascii': True})
+
+
+class GetHomeNoticeDataView(LoginRequiredMixin, View):
+
+    def get(self, request):
+        notice_type_cd = request.GET.getlist('notice_type[]')
+        member_type_cd = request.session.get('group_name')
+
+        query_notice_type_list = Q()
+        for notice_type_cd_info in notice_type_cd:
+            query_notice_type_list |= Q(notice_type_cd=notice_type_cd_info)
+        query_notice_group_cd = Q(to_member_type_cd='ALL') | Q(to_member_type_cd=member_type_cd)
+
+        query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `NOTICE_TB`.`NOTICE_TYPE_CD`"
+        notice_data = NoticeTb.objects.filter(query_notice_type_list, query_notice_group_cd,
+                                              home_display=USE
+                                              # use=USE
+                                              ).annotate(notice_type_cd_name=RawSQL(query_type_cd, []),
+                                                         ).order_by('-reg_dt')
+        notice_list = []
+        for notice_info in notice_data:
+            notice_list.append({'notice_id': notice_info.notice_id,
+                                'notice_type_cd': notice_info.notice_type_cd,
+                                'notice_type_cd_name': notice_info.notice_type_cd_name,
+                                'notice_title': notice_info.title,
+                                'notice_contents': notice_info.contents,
+                                'notice_to_member_type_cd': notice_info.to_member_type_cd,
+                                'notice_hits': notice_info.hits,
+                                'notice_mod_dt': str(notice_info.mod_dt),
+                                'notice_reg_dt': str(notice_info.reg_dt),
+                                'notice_use': notice_info.use})
+
+        return JsonResponse({'notice_data': notice_list}, json_dumps_params={'ensure_ascii': True})
+
+
+def update_notice_hits_logic(request):
+    notice_id = request.GET.get('notice_id')
+    error = None
+    context = {}
+
+    if notice_id is None or notice_id == '':
+        error = '공지사항을 불러오는데 실패했습니다.[1]'
+
+    if error is None:
+        try:
+            notice_info = NoticeTb.objects.get(notice_id=notice_id)
+            notice_info.hits += 1
+            notice_info.save()
+        except ObjectDoesNotExist:
+            error = '공지사항을 불러오는데 실패했습니다.[2]'
+
+    if error is not None:
+        messages.error(request, error)
+        context['messageArray'] = error
+
+    return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
 
 
 class GetQACommentDataView(LoginRequiredMixin, View):

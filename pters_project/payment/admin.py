@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 from .models import PaymentInfoTb, BillingInfoTb, ProductTb, ProductPriceTb, ProductFunctionAuthTb, FunctionAuthTb, \
-    BillingCancelInfoTb, IosReceiptCheckTb
+    BillingCancelInfoTb, IosReceiptCheckTb, CouponMemberTb, CouponTb
 
 
 @admin.register(ProductTb)
@@ -92,4 +92,29 @@ class IosReceiptCheckTbAdmin(admin.ModelAdmin):
         return super().get_queryset(request).select_related(
             'member',
             'payment_tb',
+        )
+
+
+@admin.register(CouponTb)
+class CouponTb(admin.ModelAdmin):
+    list_display = ('coupon_id', 'product_tb', 'name', 'contents', 'amount',
+                    'effective_days', 'product_effective_days', 'start_date', 'end_date', 'target',
+                    'coupon_cd', 'duplicate_enable', 'direct_reg_enable',
+                    'reg_dt', 'mod_dt', 'use')
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related(
+            'product_tb'
+        )
+
+
+@admin.register(CouponMemberTb)
+class CouponMemberTb(admin.ModelAdmin):
+    list_display = ('coupon_member_id', 'coupon_tb', 'name', 'contents', 'member',
+                    'start_date', 'expiry_date', 'exhaustion', 'reg_dt', 'mod_dt', 'use')
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related(
+            'coupon_tb__product_tb',
+            'member',
         )

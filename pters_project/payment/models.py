@@ -1,5 +1,6 @@
 from django.db import models
 
+from configs.const import ENABLE, DISABLE
 from configs.models import TimeStampedModel
 from login.models import MemberTb
 
@@ -27,11 +28,11 @@ class ProductTb(TimeStampedModel):
 
 class PaymentInfoTb(TimeStampedModel):
     payment_info_id = models.AutoField(db_column='ID', primary_key=True, null=False)
-    name = models.CharField('결제명', db_column='NAME', max_length=45,  blank=True, default='')
-    member = models.ForeignKey(MemberTb, verbose_name='회원', on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    name = models.CharField('결제명', db_column='NAME', max_length=100,  blank=True, default='')
+    member = models.ForeignKey(MemberTb, verbose_name='회원', on_delete=models.SET_NULL, null=True)  # Field name made lowercase.
     product_tb = models.ForeignKey(ProductTb, verbose_name='상품', on_delete=models.CASCADE, null=True)  # Field name made lowercase.
-    merchant_uid = models.CharField('merchant_uid', db_column='MERCHANT_UID', max_length=100,  blank=True, default='')
-    customer_uid = models.CharField('customer_uid', db_column='CUSTOMER_UID', max_length=100, blank=True, default='')
+    merchant_uid = models.CharField('merchant_uid', db_column='MERCHANT_UID', max_length=150,  blank=True, default='')
+    customer_uid = models.CharField('customer_uid', db_column='CUSTOMER_UID', max_length=150, blank=True, default='')
     start_date = models.DateField('시작일', db_column='START_DATE', blank=True, null=True)  # Field name made lowercase.
     end_date = models.DateField('종료일', db_column='END_DATE', blank=True, null=True)  # Field name made lowercase.
     paid_date = models.DateField('결제일', db_column='PAID_DATE', blank=True, null=True)  # Field name made lowercase.
@@ -62,14 +63,14 @@ class PaymentInfoTb(TimeStampedModel):
 
 class BillingInfoTb(TimeStampedModel):
     billing_info_id = models.AutoField(db_column='ID', primary_key=True, null=False)
-    name = models.CharField('결제명', db_column='NAME', max_length=45,  blank=True, default='')
+    name = models.CharField('결제명', db_column='NAME', max_length=100,  blank=True, default='')
     member = models.ForeignKey(MemberTb, verbose_name='회원 ', on_delete=models.CASCADE, null=True)  # Field name made lowercase.
     pay_method = models.CharField('결제 방법', db_column='PAY_METHOD', max_length=45, blank=True, default='')
     product_tb = models.ForeignKey(ProductTb, verbose_name='상품', on_delete=models.CASCADE, null=True)  # Field name made lowercase.
     payment_type_cd = models.CharField('단기/정기 결제 종류', db_column='PAYMENT_TYPE_CD', max_length=45, blank=True, default='')
     period_month = models.IntegerField('반복 개월수', db_column='PERIOD_MONTH', default=1)
-    merchant_uid = models.CharField('merchant_uid', db_column='MERCHANT_UID', max_length=100,  blank=True, default='')
-    customer_uid = models.CharField('customer_uid', db_column='CUSTOMER_UID', max_length=100, blank=True, default='')
+    merchant_uid = models.CharField('merchant_uid', db_column='MERCHANT_UID', max_length=150,  blank=True, default='')
+    customer_uid = models.CharField('customer_uid', db_column='CUSTOMER_UID', max_length=150, blank=True, default='')
     price = models.IntegerField('결제 금액', db_column='PRICE', default=0)
     card_name = models.CharField('카드명', db_column='CARD_NAME', max_length=45, blank=True, default='')
     payment_reg_date = models.DateField('정기결제 등록일', db_column='PAYMENT_REG_DATE', blank=True, null=True)
@@ -104,7 +105,7 @@ class BillingCancelInfoTb(TimeStampedModel):
 class ProductPriceTb(TimeStampedModel):
     product_price_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     product_tb = models.ForeignKey(ProductTb, verbose_name='상품', on_delete=models.CASCADE, null=True)  # Field name made lowercase.
-    name = models.CharField(db_column='name', max_length=45, blank=True, default='')
+    name = models.CharField(db_column='name', max_length=100, blank=True, default='')
     price = models.IntegerField('기본 가격', db_column='PRICE', default=0)
     sale_price = models.IntegerField('할인 가격', db_column='SALE_PRICE', default=0)
     payment_type_cd = models.CharField('단기/정기 결제 종류', db_column='PAYMENT_TYPE_CD', max_length=45,  blank=True, default='')
@@ -166,3 +167,48 @@ class IosReceiptCheckTb(TimeStampedModel):
         db_table = 'IOS_RECEIPT_CHECK_TB'
         verbose_name = 'IOS 영수증'
         verbose_name_plural = 'IOS 영수증'
+
+
+class CouponTb(TimeStampedModel):
+    coupon_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    product_tb = models.ForeignKey(ProductTb, verbose_name='관련 상품', on_delete=models.CASCADE, blank=True, null=True)  # Field name made lowercase.
+    name = models.CharField('쿠폰명', db_column='NAME', max_length=100, blank=True, default='')
+    contents = models.CharField('쿠폰 내용', db_column='CONTENTS', max_length=1000,  blank=True, default='')
+    amount = models.IntegerField('쿠폰 갯수', db_column='AMOUNT', default=99999)
+    effective_days = models.IntegerField('쿠폰 사용 유효 기간', db_column='EFFECTIVE_DAYS', default=31)
+    product_effective_days = models.IntegerField('관련 상품 기간', db_column='PRODUCT_EFFECTIVE_DAYS', default=31)
+    start_date = models.DateField('쿠폰 시작일', db_column='START_DATE', blank=True)
+    end_date = models.DateField('쿠폰 만료일', db_column='END_DATE', blank=True)
+    target = models.CharField('대상', db_column='TARGET', max_length=45, blank=True, default='ALL_MEMBER')
+    coupon_cd = models.CharField('쿠폰 코드', unique=True, db_column='COUPON_CD', max_length=45, blank=True, default='')
+    duplicate_enable = models.IntegerField('중복 가능 여부', db_column='DUPLICATE_ENABLE', default=DISABLE)
+    direct_reg_enable = models.IntegerField('회원 직접 등록 가능 여부', db_column='DIRECT_REG_ENABLE', default=ENABLE)
+
+    class Meta:
+        managed = False
+        db_table = 'COUPON_TB'
+        verbose_name = '쿠폰'
+        verbose_name_plural = '쿠폰'
+
+    def __str__(self):
+        return self.name.__str__()
+
+
+class CouponMemberTb(TimeStampedModel):
+    coupon_member_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    coupon_tb = models.ForeignKey(CouponTb, verbose_name='쿠폰', on_delete=models.CASCADE, null=True)
+    name = models.CharField('쿠폰명', db_column='NAME', max_length=100, blank=True, default='')
+    contents = models.CharField('쿠폰 내용', db_column='CONTENTS', max_length=1000,  blank=True, default='')
+    member = models.ForeignKey(MemberTb, verbose_name='회원', on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    start_date = models.DateTimeField('지급일', db_column='START_DATE', blank=True)
+    expiry_date = models.DateTimeField('만료일', db_column='EXPIRY_DATE', blank=True)
+    exhaustion = models.IntegerField('소진 여부', db_column='EXHAUSTION', default=0)
+
+    class Meta:
+        managed = False
+        db_table = 'COUPON_MEMBER_TB'
+        verbose_name = '회원 쿠폰함'
+        verbose_name_plural = '회원 쿠폰함'
+
+    def __str__(self):
+        return self.name.__str__()

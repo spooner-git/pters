@@ -93,5 +93,10 @@ urlpatterns = [
 
     url(r'^ios_receipt_validation/$', views.ios_receipt_validation_logic, name='ios_receipt_validation'),
 
+
+    # 쿠폰 관련 기능
+    url(r'^add_member_coupon/$', views.add_member_coupon_logic, name='add_member_coupon'),
+    url(r'^get_member_coupon_list/$', views.GetMemberCouponListView.as_view(), name='get_member_coupon_list'),
+    url(r'^add_coupon_product_info/$', views.add_coupon_product_info_logic, name='add_coupon_product_info')
     ###################################################################################################################
 ]

@@ -26,11 +26,10 @@ class Home {
         };
 
         this.received_data = {
-            program:null, schedule:null, member:null, statistics:null
+            program:null, schedule:null, member:null, statistics:null, notice:null
         };
 
         this.setting_data_cache = null;
-        this.temp_for_error = HIDE;
     }
 
     init (){
@@ -101,6 +100,7 @@ class Home {
         let end_alert_dom;
         let sales_summary_dom;
         let my_pters_pass_dom;
+        let notice_dom;
 
         Setting_menu_access_func.read((data)=>{
             this.setting_data_cache = data;
@@ -123,9 +123,6 @@ class Home {
 
                         Statistics_func.read("sales", {"start_date":this.today, "end_date":this.today}, (data)=>{
                             this.received_data.statistics = data;
-                            if(current_page_text != this.page_name){
-                                return false;
-                            }
                             let locked = menu_lock_statistics;
                             let sales_summary = this.dom_row_sales_this_month(data, locked);
                             sales_summary_dom = '<div class="contents anim_fade_in_vibe_top">' + sales_summary + '</div>';
@@ -133,31 +130,24 @@ class Home {
                                 sales_summary_dom = "";
                             }
 
-
-                            my_pters_pass_dom = '<div class="contents anim_fade_in_vibe_top">' + this.dom_row_my_pters_pass() + '</div>';
-                            current_date = '<div class="contents anim_fade_in_vibe_top">' + this.dom_row_current_date() + '</div>';
-
-                            let temp_for_error = '<div class="contents">' + this.dom_row_temp_for_error() + '</div>';
-
-                            TempForError_func.ajax(
-                                "/trainer/get_trainer_member_ticket_price_bug_list/",
-                                "GET",
-                                "",
-                                (data)=>{
-                                    if(Object.keys(data).length > 0){
-                                        this.temp_for_error = SHOW;
-                                        
-                                    }else{
-                                        this.temp_for_error = HIDE;
-                                        temp_for_error = "";
-                                    }
-                                    let html = temp_for_error + current_date + program_dom + plan_dom + end_alert_dom + sales_summary_dom;
-                                    document.querySelector('#home_content_wrap').innerHTML = html;
+                            Setting_service_notice.read_for_home((data)=>{
+                                if(current_page_text != this.page_name){
+                                    return false;
                                 }
-                            );
+                                this.received_data.notice = data;
 
-                            // let html = current_date + program_dom + plan_dom + end_alert_dom + sales_summary_dom + temp_for_error;
-                            // document.querySelector('#home_content_wrap').innerHTML = html;
+                                notice_dom = '<div class="contents anim_fade_in_vibe_top">' + this.dom_row_notice_from_pters() + '</div>';
+
+                                my_pters_pass_dom = '<div class="contents anim_fade_in_vibe_top">' + this.dom_row_my_pters_pass() + '</div>';
+                                current_date = '<div class="contents anim_fade_in_vibe_top">' + this.dom_row_current_date() + '</div>';
+
+                                let html = notice_dom + current_date + program_dom + plan_dom + end_alert_dom + sales_summary_dom;
+                                document.querySelector('#home_content_wrap').innerHTML = html;
+                                this.swiper_init();
+                            });
+
+
+                            
                         });
                     }, OFF);
                 }, OFF);
@@ -173,6 +163,7 @@ class Home {
         let plan_dom;
         let end_alert_dom;
         let sales_summary_dom;
+        let notice_dom;
 
         let data = this.received_data;
 
@@ -194,14 +185,12 @@ class Home {
         let my_pters_pass_dom;
         my_pters_pass_dom = '<div class="contents">' + this.dom_row_my_pters_pass() + '</div>';
 
-        let temp_for_error = '<div class="contents">' + this.dom_row_temp_for_error() + '</div>';
-
-        if(this.temp_for_error == HIDE){
-            temp_for_error = "";
-        }
+        let notice = this.dom_row_notice_from_pters();
+        notice_dom = '<div class="contents">' + notice + '</div>';
                         
-        let html = temp_for_error + current_date_dom + program_dom + plan_dom + end_alert_dom + sales_summary_dom;
+        let html = notice_dom + current_date_dom + program_dom + plan_dom + end_alert_dom + sales_summary_dom;
         document.querySelector('#home_content_wrap').innerHTML = html;
+        this.swiper_init();
     }
 
     dom_row_current_date(){
@@ -221,23 +210,81 @@ class Home {
         return dom;
     }
 
-    dom_row_temp_for_error(){
-        let id = "temp_for_error_at_home";
-        let title = '<span style="color:#fe4e65;font-size:13px;">[PTERS 안내] 일부 이용자 가격 입력오류 수정</span>';
-        let icon = DELETE;
-        let icon_r_visible = NONE;
-        let icon_r_text = ``;
-        let style = {"font-size":"15px", "font-weight":"bold"};
-        let onclick = ()=>{
-            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_temp_for_error', 100, POPUP_FROM_RIGHT, null, ()=>{
-                temp_for_error = new TempForError('.popup_temp_for_error', 'temp_for_error');});
-        };
-        let my_pters_pass = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
-        let dom = `<article class="my_pters_pass_wrapper">
-                        ${my_pters_pass}
-                    </article>`;
-        return dom;
+    dom_row_notice_from_pters(){
+        let html_to_join = [];
+        
+        let length = this.received_data.notice.notice_data.length;
+        for(let i=0; i<length; i++){
+            let data = this.received_data.notice.notice_data[i];
+            if(data.notice_type_cd != NOTICE){
+                continue;
+            }
+
+            let notice_title = data.notice_title;
+            let notice_content = data.notice_contents;
+            let notice_date = data.notice_reg_dt;
+
+            let id = `home_selected_notice_${data.notice_id}`;
+            let title = `${CImg.notice(["#fe4e65"], {"vertical-align":"top"})} ${notice_title}`;
+            let icon = DELETE;
+            let icon_r_visible = NONE;
+            let icon_r_text = ``;
+            let style = {"font-size":"15px", "font-weight":"bold", "height":"auto"};
+            let onclick = ()=>{
+                // 공지사항 조회수 확인을 위한 작업
+                Setting_service_notice.update_notice_hits({'notice_id':data.notice_id});
+
+                let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_BOTTOM;
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_READER, 100, popup_style, null, ()=>{
+                    let data = {
+                        title:notice_title, content:notice_content, date:notice_date
+                    };
+                    board_reader = new BoardReader("공지", '.popup_board_reader', "board_reader", data);
+                });
+            };
+            let notice_row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
+            let dom = `<div class="swiper-slide">
+                            <article class="program_wrapper">
+                                ${notice_row}
+                            </article>
+                        </div>`;
+            html_to_join.push(dom);
+        }
+
+        // let html = html_to_join.join("");
+
+        let html = `<div class="swiper-container" id="service_notice_widget_swiper">
+                        <div class="swiper-wrapper">
+                            ${html_to_join.join("")}
+                        </div>
+                        
+                    </div>
+                    <div class="swiper-pagination" style="bottom:0;right:10px;z-index:1"></div>`;
+
+        return html;
     }
+
+    swiper_init(){
+        this.swiper = new Swiper('#service_notice_widget_swiper', {
+            loop: true,
+            speed: 500,
+            spaceBetween: 0,
+            autoplay:{
+                delay: 5000,
+                disableOnInteraction:false
+            },
+            
+            pagination: {
+                el: '.swiper-pagination',
+                type: 'bullets',
+            }
+            // navigation: {
+            //     nextEl: '.swiper-button-next',
+            //     prevEl: '.swiper-button-prev',
+            // }
+        });
+    }
+
 
     dom_row_program(data){
         let html_to_join = [];
@@ -249,11 +296,14 @@ class Home {
                 continue;
             }
             let id = "home_selected_program";
-            let title = programs[i].program_subject_type_name;
+            let title = 
+                programs[i].shared_program_flag == ON 
+                ? programs[i].program_subject_type_name + ' <div style="font-size:12px;font-weight:500">(공유자: ' + programs[i].program_program_owner_name+')</div>'
+                : programs[i].program_subject_type_name;
             let icon = DELETE;
             let icon_r_visible = HIDE;
             let icon_r_text = `${TEXT.word.program[language]} ${TEXT.word.change[language]} ${CImg.arrow_right(["var(--img-sub1)"], {"vertical-align":"middle"})}`;
-            let style = {"font-size":"15px", "font-weight":"bold"};
+            let style = {"font-size":"15px", "font-weight":"bold", "height":"auto"};
             let onclick = ()=>{
                 let inspect = pass_inspector.program_read();
                 if(inspect.barrier == BLOCKED){

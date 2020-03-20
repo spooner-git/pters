@@ -10,6 +10,7 @@ class Mypage{
             email:null,
             sex:null,
             birth:null,
+            coupons:null,
             photo:'/static/common/icon/icon_account.png'
         };
 
@@ -23,6 +24,7 @@ class Mypage{
 
     set_initial_data (){
         Mypage_func.read((data)=>{
+            this.data.coupons = data.trainer_info.member_coupon_count;
             this.data.db_id = data.trainer_info.member_id;
             this.data.user_id = data.trainer_info.member_user_id;
             this.data.name = data.trainer_info.member_name;
@@ -34,7 +36,6 @@ class Mypage{
             this.render();
             func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
         });
-        
     }
 
     clear(){
@@ -75,6 +76,7 @@ class Mypage{
         let my_phone = this.dom_row_my_phone();
         let my_email = this.dom_row_my_email();
         let my_pass = this.dom_row_my_pass();
+        let my_coupon_box = this.dom_row_my_coupon_box();
         let profile_change = this.dom_row_profile_change();
         let password_change = this.dom_row_password_change();
         let leave_pters = this.dom_row_leave_pters();
@@ -82,7 +84,7 @@ class Mypage{
 
 
         let html =  '<section id="basic_info_wrap">'+ my_id + my_name + my_phone + my_email + '</section>' + 
-                    '<section id="pass_info_wrap">'+ my_pass + '</section>' + 
+                    '<section id="pass_info_wrap">'+ my_pass + my_coupon_box + '</section>' + 
                     '<section id="edit_info_wrap">'+ profile_change + password_change + leave_pters + logout + '</section>';
 
 
@@ -173,6 +175,32 @@ class Mypage{
         let style = null;
         let onclick = ()=>{
             sideGoPopup('pters_pass_main');
+        };
+
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
+        return html;
+    }
+
+    dom_row_my_coupon_box(){
+        let new_coupon_indicator = `<div style="
+                                        display: inline-block;
+                                        width: 5px;
+                                        height: 5px;
+                                        background-color: #fe4e65;
+                                        border-radius: 50%;
+                                        vertical-align: middle;
+                                        margin-right: 5px;
+                                        margin-bottom: 3px;
+                                    "></div>`;
+
+        let id = "my_coupon";
+        let title = "쿠폰함";
+        let icon = DELETE;
+        let icon_r_visible = SHOW;
+        let icon_r_text = this.data.coupons > 0 ? `${new_coupon_indicator} ${this.data.coupons} 개` : `0 개`;
+        let style = null;
+        let onclick = ()=>{
+            sideGoPopup('my_coupon_box');
         };
 
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);

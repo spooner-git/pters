@@ -42,12 +42,21 @@
 
 
 #home_content_wrap .contents{
+	position: relative;
 	border-radius: 4px;
 	box-shadow: var(--box-shadow-article);
 	border: var(--border-article);
 	background-color: var(--bg-article);
 	margin-bottom: 12px;
 	padding: 4px 0;
+}
+#home_content_wrap .swiper-pagination-bullet{
+	margin-left:2px;
+	background: var(--bg-domtag);
+	opacity: 1;
+}
+#home_content_wrap .swiper-pagination-bullet-active{
+	background: #fe4e65;
 }
 
 @media(min-width:800px){

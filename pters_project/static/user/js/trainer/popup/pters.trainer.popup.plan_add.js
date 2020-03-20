@@ -161,6 +161,7 @@ class Plan_add{
     }
 
     set_initial_data(data){
+        console.log(data);
         this.user_data = data;
         let user_data_date = this.user_data.user_selected_date;
         this.data.date = user_data_date.year == null ? null : {year: user_data_date.year, month:user_data_date.month, date:user_data_date.date};
@@ -295,8 +296,8 @@ class Plan_add{
         </div>
         <div class="plan_add_bottom_tools_wrap">
             <div class="list_type_tab_wrap">
-                <div onclick="${this.instance}.switch_type('lesson');" class="list_tab_content ${this.list_type == "lesson" ? "tab_selected" : ""}">수업</div>
-                <div onclick="${this.instance}.switch_type('off');" class="list_tab_content ${this.list_type == "off" ? "tab_selected" : ""}">OFF(일반일정)</div>
+                <div onclick="${this.instance}.switch_type('lesson');" class="list_tab_content ${this.list_type == "lesson" ? "tab_selected anim_pulse_strong" : ""}">수업</div>
+                <div onclick="${this.instance}.switch_type('off');" class="list_tab_content ${this.list_type == "off" ? "tab_selected anim_pulse_strong" : ""}">OFF(일반일정)</div>
             </div>
         </div>
         `;
