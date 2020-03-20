@@ -1177,6 +1177,8 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
         # if member_ticket_id is None or member_ticket_id == '':
         #     error = '수강정보를 불러오지 못했습니다.'
+        if class_id is None or class_id == '':
+            error = '연결된 프로그램이 없습니다.'
 
         if error is None:
             today = datetime.date.today()

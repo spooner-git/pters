@@ -1160,27 +1160,26 @@ def clear_badge_counter_logic(request):
     push_token = request.session.get('push_token', '')
     error = None
     token_data = None
+    token_check = ''
     if push_token is None or push_token == '':
-        error = 'Push 정보를 가져올 수 없습니다'
+        error = 'Push 정보를 가져올 수 없습니다[0]'
 
     # logger.info('[' + str(request.user.id) + ']' + push_token)
     if error is None:
         try:
             token_data = PushInfoTb.objects.get(token=push_token, use=USE)
         except ObjectDoesNotExist:
-            error = 'Push 정보를 가져올 수 없습니다'
+            error = 'Push 정보를 가져올 수 없습니다[1]'
 
     if error is None:
         token_data.badge_counter = 0
         token_data.save()
-
-    if error is None:
-        return render(request, 'ajax/token_check_ajax.html', {'token_check': token_data.token})
+        token_check = token_data.token
     else:
         logger.error(error)
-        # messages.error(request, error)
+        # messages.error(request, error):q
 
-        return render(request, 'ajax/token_check_ajax.html', {'token_check': ''})
+    return render(request, 'ajax/token_check_ajax.html', {'token_check': token_check})
 
 
 def add_member_no_email_func(user_id, first_name, phone, sex, birthday_dt):
