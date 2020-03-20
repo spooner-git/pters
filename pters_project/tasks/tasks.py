@@ -1,6 +1,7 @@
 import json
 import httplib2
 from celery import shared_task
+from django.core.mail import EmailMessage
 
 from configs import settings
 
@@ -114,3 +115,10 @@ def task_send_aws_lambda_for_push_alarm(data):
     if resp['status'] != '200':
         error = '오류가 발생했습니다.'
     return error
+
+
+@shared_task
+def task_send_email(title, contents):
+    email = EmailMessage(title, contents, to=['support@pters.co.kr'])
+    email.send()
+    # return error

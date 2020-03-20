@@ -4,6 +4,7 @@ import boto3
 import logging
 from botocore.exceptions import ClientError
 from django.core.files.base import ContentFile
+from django.core.mail import EmailMessage
 
 from configs import settings
 
@@ -82,3 +83,9 @@ def func_delete_profile_image_logic(file_name):
         else:
             error_code = None
     return error_code
+
+
+def func_send_email(title, contents):
+    email = EmailMessage(title, contents, to=['support@pters.co.kr'])
+    email.send()
+    # return error

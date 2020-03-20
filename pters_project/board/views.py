@@ -3,7 +3,8 @@ import logging
 import collections
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.mail import EmailMessage
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.mail import EmailMessage, message
 from django.db.models import Q
 from django.db.models.expressions import RawSQL
 from django.http import JsonResponse
@@ -12,8 +13,13 @@ from django.utils import timezone
 from django.views import View
 from django.views.generic import TemplateView
 
+from configs.functions import func_send_email
+from configs.settings import DEBUG
 from configs.const import USE
 from .models import QATb, BoardTb, NoticeTb, QACommentTb
+
+if DEBUG is False:
+    from tasks.tasks import task_send_email
 
 logger = logging.getLogger(__name__)
 
@@ -37,12 +43,19 @@ def add_qa_info_logic(request):
                        status_type_cd='QA_WAIT', use=USE)
         qa_info.save()
 
-    # if error is None:
-        # email = EmailMessage('[PTERS 질문]'+request.user.first_name+'회원-'+title,
-        #                      '질문 유형:'+qa_type_cd+'\n\n'+contents + '\n\n' + request.user.email +
-        #                      '\n\n' + str(timezone.now()),
-        #                      to=['support@pters.co.kr'])
-        # email.send()
+    if error is None:
+
+        check_async = False
+        if DEBUG is False:
+            check_async = True
+        if check_async:
+            task_send_email.delay('[PTERS 질문]'+request.user.first_name+'회원-'+title,
+                                  '질문 유형:' + qa_type_cd + '\n\n' + contents + '\n\n' + request.user.email +
+                                  '\n\n' + str(timezone.now()))
+        else:
+            error = func_send_email('[PTERS 질문]'+request.user.first_name+'회원-'+title,
+                                    '질문 유형:' + qa_type_cd + '\n\n' + contents + '\n\n' + request.user.email +
+                                    '\n\n' + str(timezone.now()))
 
         # return redirect(next_page)
     if error is not None:
@@ -153,6 +166,29 @@ class GetHomeNoticeDataView(LoginRequiredMixin, View):
                                 'notice_use': notice_info.use})
 
         return JsonResponse({'notice_data': notice_list}, json_dumps_params={'ensure_ascii': True})
+
+
+def update_notice_hits_logic(request):
+    notice_id = request.GET.get('notice_id')
+    error = None
+    context = {}
+
+    if notice_id is None or notice_id == '':
+        error = '공지사항을 불러오는데 실패했습니다.[1]'
+
+    if error is None:
+        try:
+            notice_info = NoticeTb.objects.get(notice_id=notice_id)
+            notice_info.hits += 1
+            notice_info.save()
+        except ObjectDoesNotExist:
+            error = '공지사항을 불러오는데 실패했습니다.[2]'
+
+    if error is not None:
+        messages.error(request, error)
+        context['messageArray'] = error
+
+    return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
 
 
 class GetQACommentDataView(LoginRequiredMixin, View):

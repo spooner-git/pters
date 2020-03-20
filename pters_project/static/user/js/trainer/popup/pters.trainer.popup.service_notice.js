@@ -141,16 +141,19 @@ class Service_notice {
         let title = null;
         let content = null;
         let date = null;
+        let notice_id = null;
         for(let i=0; i<length; i++){
             let current_loop = this.data[i];
-            let notice_id = current_loop.notice_id;
+            notice_id = current_loop.notice_id;
             if(notice_id == id){
                 title = current_loop.notice_title;
                 content = current_loop.notice_contents;
                 date = current_loop.notice_mod_dt;
+                break;
             }
         }
 
+        Setting_service_notice.update_notice_hits({'notice_id':notice_id});
         let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_BOTTOM;
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_READER, 100, popup_style, null, ()=>{
             let data = {
@@ -290,6 +293,33 @@ class Setting_service_notice{
                 if(error_callback != undefined){
                     error_callback();
                 }
+                console.log('server error');
+            }
+        });
+    }
+    // 조회수 확인을 위해
+    static update_notice_hits(data){
+        let url = '/board/update_notice_hits/';
+
+        $.ajax({
+            url:url,
+            type:'GET',
+            data: data,
+            dataType : 'JSON',
+
+            beforeSend:function (){
+            },
+
+            //통신성공시 처리
+            success:function (){
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function (){
+            },
+
+            //통신 실패시 처리
+            error:function (){
                 console.log('server error');
             }
         });

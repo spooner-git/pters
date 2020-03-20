@@ -124,16 +124,19 @@ class Service_inquiry_faq {
         let title = null;
         let content = null;
         let date = null;
+        let notice_id = null;
         for(let i=0; i<length; i++){
             let current_loop = this.data[i];
-            let notice_id = current_loop.notice_id;
+            notice_id = current_loop.notice_id;
             if(notice_id == id){
                 title = current_loop.notice_title;
                 content = current_loop.notice_contents;
                 date = current_loop.notice_reg_dt;
+                break;
             }
         }
 
+        Setting_service_notice.update_notice_hits({'notice_id':notice_id});
         let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_BOTTOM;
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_READER, 100, popup_style, null, ()=>{
             let data = {
