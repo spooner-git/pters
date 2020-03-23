@@ -47,7 +47,7 @@ from schedule.functions import func_refresh_member_ticket_count, func_get_traine
     func_get_lecture_member_ticket_id, func_get_trainer_schedule_all, func_get_trainer_schedule_info, \
     func_get_lecture_schedule_all, func_get_member_schedule_all_by_member_ticket, \
     func_get_member_schedule_all_by_schedule_dt, func_get_member_schedule_all_by_monthly, \
-    func_get_permission_wait_schedule_all, func_add_schedule, func_send_push_notice
+    func_get_permission_wait_schedule_all, func_add_schedule, func_send_push_notice, func_get_member_ticket_id_old
 from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb, ScheduleAlarmTb
 from stats.functions import get_sales_data
 from trainee.models import MemberTicketTb
@@ -1299,6 +1299,7 @@ class AttendModeDetailView(LoginRequiredMixin, AccessTestMixin, View):
         class_id = request.session.get('class_id', '')
         phone_number = request.POST.get('phone_number', '')
         schedule_id = request.POST.get('schedule_id', '')
+        member_ticket_id = request.POST.get('member_ticket_id', '')
         error = None
         if schedule_id is None or schedule_id == '':
             error = '일정 정보를 불러오지 못했습니다.'
@@ -1333,14 +1334,19 @@ class AttendModeDetailView(LoginRequiredMixin, AccessTestMixin, View):
                         member_ticket_id = None
                         member_ticket_result = func_get_lecture_member_ticket_id(class_id, schedule_info.lecture_tb_id,
                                                                                  member_id)
+
                         if member_ticket_result['error'] is not None:
                             error = member_ticket_result['error']
                         else:
                             member_ticket_id = member_ticket_result['member_ticket_id']
 
+                        # if error is None:
+                        #     if member_ticket_id is None or member_ticket_id == '':
+                        #         member_ticket_id = func_get_member_ticket_id_old(class_id, member_id)
+
                         if error is None:
                             if member_ticket_id is None or member_ticket_id == '':
-                                error = '예약 가능 횟수가 없습니다.'
+                                error = '선택하신 수업의 예약 가능 횟수가 없습니다.'
                             else:
                                 try:
                                     context['member_ticket_info'] =\
@@ -4766,6 +4772,7 @@ class GetTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):
         # context = {}
         # context = super(GetTrainerInfoView, self).get_context_data(**kwargs)
         class_id = request.session.get('class_id', '')
+        class_type_name = request.session.get('class_type_name', '')
         error = None
         # class_info = None
 
@@ -4798,7 +4805,9 @@ class GetTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):
                            'member_birthday_dt': str(user_member_info.birthday_dt),
                            'member_profile_url': member_profile_url,
                            'member_phone_is_active': str(user_member_info.phone_is_active),
-                           'member_coupon_count': coupon_count
+                           'member_coupon_count': coupon_count,
+                           'member_current_program_id': class_id,
+                           'member_current_program_name': class_type_name
                            }
 
         return JsonResponse({'trainer_info': member_data}, json_dumps_params={'ensure_ascii': True})
@@ -5849,6 +5858,7 @@ def attend_mode_check_logic(request):
     phone_number = request.POST.get('phone_number', '')
     schedule_id = request.POST.get('schedule_id', '')
     error = None
+    member_ticket_id = None
 
     try:
         schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id)
@@ -5868,7 +5878,7 @@ def attend_mode_check_logic(request):
             member_id_list.append(member_info.member_ticket_tb.member_id)
 
     if len(member_id_list) > 1:
-        error = '중복되는 휴대폰 번호 2개 이상 존재합니다. 강사에게 문의해주세요.'
+        error = '중복되는 휴대폰 번호 2개 이상 존재합니다. 강사님에게 문의해주세요.'
 
     if error is None:
         if len(member_data) > 0:
@@ -5882,7 +5892,6 @@ def attend_mode_check_logic(request):
                         error = '이미 출석 처리된 수업입니다.'
 
                 except ObjectDoesNotExist:
-                    member_ticket_id = None
                     member_ticket_result = func_get_lecture_member_ticket_id(class_id, schedule_info.lecture_tb_id,
                                                                              member_id)
 
@@ -5891,9 +5900,13 @@ def attend_mode_check_logic(request):
                     else:
                         member_ticket_id = member_ticket_result['member_ticket_id']
 
+                    # if error is None:
+                    #     if member_ticket_id is None or member_ticket_id == '':
+                    #         member_ticket_id = func_get_member_ticket_id_old(class_id, member_id)
+
                     if error is None:
                         if member_ticket_id is None or member_ticket_id == '':
-                            error = '예약 가능 횟수가 없습니다. 수강권을 확인해주세요.'
+                            error = '선택하신 수업의 예약 가능 횟수가 없습니다.'
                         else:
                             try:
                                 MemberTicketTb.objects.get(member_ticket_id=member_ticket_id)
@@ -5904,7 +5917,7 @@ def attend_mode_check_logic(request):
                     error = '이미 출석 처리된 수업입니다.'
                 if error is None:
                     if schedule_info.member_ticket_tb.member_id != member_id:
-                        error = '휴대폰 번호와 수업이 일치하지 않습니다.'
+                        error = '휴대폰 번호가 일치하지 않습니다.'
         else:
             error = '휴대폰 번호를 확인해주세요.'
 
@@ -5912,7 +5925,7 @@ def attend_mode_check_logic(request):
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
 
-    return render(request, 'ajax/trainer_error_ajax.html')
+    return render(request, 'ajax/trainer_error_ajax.html', {'member_ticket_id': member_ticket_id})
 
 
 # 출석 체크 완료 기능
@@ -5948,14 +5961,19 @@ def attend_mode_finish_logic(request):
                         member_ticket_id = None
                         member_ticket_result = func_get_lecture_member_ticket_id(class_id, schedule_info.lecture_tb_id,
                                                                                  member_id)
+
                         if member_ticket_result['error'] is not None:
                             error = member_ticket_result['error']
                         else:
                             member_ticket_id = member_ticket_result['member_ticket_id']
 
+                        # if error is None:
+                        #     if member_ticket_id is None or member_ticket_id == '':
+                        #         member_ticket_id = func_get_member_ticket_id_old(class_id, member_id)
+
                         if error is None:
                             if member_ticket_id is None or member_ticket_id == '':
-                                error = '예약 가능 횟수가 없습니다.'
+                                error = '선택하신 수업의 예약 가능 횟수가 없습니다.'
                         if error is None:
                             schedule_result = func_add_schedule(class_id, member_ticket_id, None,
                                                                 schedule_info.lecture_tb, schedule_id,

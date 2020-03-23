@@ -285,8 +285,8 @@
 
             <div id="wrapper_lesson_now_info">
             {% now "Y.m.d (l)" as today %}
-{#                <p class="title_tag" style="margin-bottom: 10px;">{{ today |cut:"요일" }} - 현재 진행중인 수업</p>#}
-                <p class="title_tag" style="margin-bottom: 10px;">현재 진행중인 수업 </p>
+                <p class="title_tag" style="margin-bottom: 10px;">{{ today |cut:"요일" }} - 현재 진행중인 수업</p>
+{#                <p class="title_tag" style="margin-bottom: 10px;">현재 진행중인 수업 </p>#}
                 {% for attend_schedule_info in attend_schedule_data %}
                     {% if attend_schedule_info.lecture_tb %}
                         {% if not attend_schedule_info.member_ticket_tb %}
@@ -303,17 +303,17 @@
                                     <span>예약 : {{ attend_schedule_info.lecture_current_member_num }}</span></p>
                             </div>
                         </div>
-                        {% endif %}
-                    {% else %}
+                        {% else %}
                         <div class="wrapper_lesson_now_info_article" data-id="{{ attend_schedule_info.schedule_id }}" onclick="lesson_select(this)">
                             <div class="wrapper_lesson_now_color">
                                 <div class="color_tag" style="background-color:{{ attend_schedule_info.ing_color_cd }};"></div>
                             </div>
                             <div class="wrapper_lesson_now_text">
                                 <p class="lesson_date_row">{{ attend_schedule_info.start_dt | date:"Y.m.d (l)" |cut:"요일" }} {{ attend_schedule_info.start_dt | time:'H:i' }} ~ {{ attend_schedule_info.end_dt | time:'H:i' }}</p>
-                                <p class="lesson_name_row">개인 수업 - {{ attend_schedule_info.member_ticket_tb.member.name }} 회원</p>
+                                <p class="lesson_name_row">{{ attend_schedule_info.lecture_tb.name }} - {{ attend_schedule_info.member_ticket_tb.member.name }}</p>
                             </div>
                         </div>
+                        {% endif %}
                     {% endif %}
                 {% endfor %}
 
@@ -355,6 +355,7 @@
                 <p style="font-size:12px;font-weight:500;letter-spacing: -0.5px;color:#858282;">등록된 휴대폰 번호를 입력해주세요.</p>
                 <input type="tel" placeholder="- 를 제외한 숫자만 입력" name="phone_number" id="input_form_phone" autocomplete="off" onkeyup="limit_char_only_number(this);">
                 <input type="hidden" name="schedule_id" id="input_form_lesson_id">
+                <input type="hidden" name="member_ticket_id" id="id_member_ticket_id">
             </form>
         </section>
 
@@ -379,6 +380,7 @@
         let lecture_schedule_id = [{% for lecture_schedule_info in lecture_schedule_data %}'{{ lecture_schedule_info.schedule_id }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
         let scheduleIdArray = [{% for pt_schedule_info in pt_schedule_data %}'{{ pt_schedule_info.schedule_id }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
         let attend_mode_out_lock = '{{ request.session.setting_trainer_attend_mode_out_lock }}';
+
         window.onload=function(){
             let window_height = window.innerHeight;
             let content_height = $('#content_wrapper').height();
@@ -448,6 +450,7 @@
                     if(jsondata.messageArray.length>0){
                         alert(jsondata.messageArray);
                     }else{
+                        $('#id_member_ticket_id').val(jsondata.member_ticket_id);
                         form_info.submit();
                     }
 

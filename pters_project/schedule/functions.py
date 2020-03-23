@@ -133,6 +133,27 @@ def func_get_lecture_member_ticket_id(class_id, lecture_id, member_id):
     return {'error': error, 'member_ticket_id': member_ticket_id}
 
 
+# 1:1 member_ticket id 조회 - 자유형 문제
+def func_get_member_ticket_id_old(class_id, member_id):
+    today = datetime.date.today()
+    member_ticket_id = None
+    # 강좌에 해당하는 수강/회원 정보 가져오기
+    class_member_ticket_data = ClassMemberTicketTb.objects.select_related(
+        'member_ticket_tb').filter(class_tb_id=class_id, class_tb__use=USE,  auth_cd=AUTH_TYPE_VIEW,
+                                   member_ticket_tb__member_id=member_id,
+                                   member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+                                   member_ticket_tb__member_ticket_avail_count__gt=0,
+                                   # member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
+                                   # member_ticket_tb__end_date__gte=today,
+                                   member_ticket_tb__use=USE).order_by('member_ticket_tb__start_date',
+                                                                       'member_ticket_tb__reg_dt')
+    for class_member_ticket_info in class_member_ticket_data:
+        member_ticket_id = class_member_ticket_info.member_ticket_tb_id
+        break
+
+    return member_ticket_id
+
+
 # 그룹 Lecture Id 조회
 def func_get_lecture_member_ticket_id_from_trainee(class_id, lecture_id, member_id, target_date):
 
@@ -1901,7 +1922,7 @@ def func_get_trainer_attend_schedule(context, class_id, start_date, end_date, no
                                                          use=USE).order_by('start_dt', 'reg_dt').annotate(
         lecture_current_member_num=RawSQL(query, []),
         lecture_current_finish_member_num=RawSQL(finish_member_query, []))
-
+    # print(str(len(context['attend_schedule_data'])))
     return context
 
 
