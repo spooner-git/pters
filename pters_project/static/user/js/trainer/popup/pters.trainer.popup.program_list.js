@@ -338,7 +338,7 @@ class Program_list{
             let owner_name = data.program_program_owner_name;
             let owner_id = data.program_program_owner_id;
             let category_code = data.program_upper_subject_cd != "" ? data.program_upper_subject_cd : "ETC";
-            let category_sub_name = PROGRAM_CATEGORY[category_code].sub_category[data.program_subject_cd].name;
+            let category_sub_name = data.program_subject_cd_name;
             let category_sub_code = data.program_subject_cd;
 
             let html = `<article class="program_wrapper " data-program_id="${id}" onclick="event.stopPropagation();program_list_popup.event_program_click(${id}, '${name}', '${category_code}', '${category_sub_code}', '${selected}', '${shared}');">

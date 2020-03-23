@@ -111,6 +111,14 @@ class ClassTb(TimeStampedModel):
 
         return subject_type_name
 
+    def get_subject_type_name(self):
+        try:
+            subject_type_name = CommonCdTb.objects.get(common_cd=self.subject_cd).common_cd_nm
+        except ObjectDoesNotExist:
+            subject_type_name = ''
+
+        return subject_type_name
+
     def get_state_cd_name(self):
         try:
             state_cd_name = CommonCdTb.objects.get(common_cd=self.state_cd).common_cd_nm

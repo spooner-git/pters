@@ -154,6 +154,8 @@ urlpatterns = [
     # 강좌 기능 ##########################################################################################################
     # 강좌 정보 조회
     url(r'^get_program_list/$', views.GetProgramListViewAjax.as_view(), name='get_program_list'),
+    # 강좌 정보 조회
+    url(r'^get_program_category/$', views.GetProgramCategoryViewAjax.as_view(), name='get_program_category'),
     # 강좌 추가
     url(r'^add_program_info/$', views.add_program_info_logic, name='add_program_info'),
     # 강좌 삭제

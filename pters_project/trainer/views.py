@@ -4037,6 +4037,7 @@ class GetProgramListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                 'program_total_member_num': total_member_num,
                                 'program_state_cd': program_info.class_tb.state_cd,
                                 'program_subject_cd': program_info.class_tb.subject_cd,
+                                'program_subject_cd_name': program_info.class_tb.get_subject_type_name(),
                                 'program_subject_type_name': program_subject_type_name,
                                 'program_upper_subject_cd': program_info.class_tb.get_upper_class_type_cd(),
                                 'program_upper_subject_type_name': program_info.class_tb.get_upper_class_type_cd_name(),
@@ -4053,6 +4054,34 @@ class GetProgramListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
             messages.error(self.request, error)
 
         return JsonResponse({'program_data': program_list}, json_dumps_params={'ensure_ascii': True})
+
+
+class GetProgramCategoryViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        program_category_dict = collections.OrderedDict()
+        error = None
+        program_upper_category_data = CommonCdTb.objects.filter(upper_common_cd='02', use=USE).order_by('order')
+        program_sub_category_data = CommonCdTb.objects.filter(upper_common_cd='03', use=USE).order_by('order')
+
+        if error is None:
+            for program_upper_category_info in program_upper_category_data:
+                try:
+                    program_category_dict[program_upper_category_info.common_cd]
+                except KeyError:
+                    program_category_dict[program_upper_category_info.common_cd] = {'name': program_upper_category_info.common_cd_nm,
+                                                                                    'sub_category': {}}
+            for program_sub_category_info in program_sub_category_data:
+
+                try:
+                    program_category_dict[program_sub_category_info.group_cd]['sub_category'][program_sub_category_info.common_cd]
+                except KeyError:
+                    program_category_dict[program_sub_category_info.group_cd]['sub_category'][program_sub_category_info.common_cd] = {'name': program_sub_category_info.common_cd_nm}
+
+        if error is not None:
+            messages.error(self.request, error)
+
+        return JsonResponse({'program_category_data': program_category_dict}, json_dumps_params={'ensure_ascii': True})
 
 
 def add_program_info_logic(request):

@@ -5203,18 +5203,22 @@ class CategorySelector{
         this.upper_category = upper_category;
         this.callback = callback;
         this.received_data;
+        this.category_data = {};
         this.multiple_select = multiple_select;
         this.data = {
             name:[],
             code:[]
         };
-        this.init();
+        // this.init();
         this.set_initial_data();
     }
 
 
     init(){
-        this.render();
+        this.request_list((data)=>{
+            this.category_data = data.program_category_data;
+            this.render();
+        });
     }
 
     set_initial_data(){
@@ -5241,7 +5245,7 @@ class CategorySelector{
     }
 
     dom_list (){
-        let category_to_be_drawn = this.upper_category == null ? PROGRAM_CATEGORY : PROGRAM_CATEGORY[this.upper_category].sub_category;
+        let category_to_be_drawn = this.upper_category == null ? this.category_data : this.category_data[this.upper_category].sub_category;
         let html_to_join = [];
         for(let item in category_to_be_drawn){
             let checked = this.data.code.indexOf(item) != -1 ? 1 : 0; //타겟이 이미 가진 데이터를 get
@@ -5274,8 +5278,43 @@ class CategorySelector{
     }
 
     request_list (callback){
-        // this.received_data = color_data;
-        // callback();
+
+        $.ajax({
+            url:'/trainer/get_program_category/',
+            type:'GET',
+            data: {},
+            dataType : 'JSON',
+
+            beforeSend:function (){
+                // ajax_load_image(SHOW);
+            },
+
+            //통신성공시 처리
+            success:function (data){
+                check_app_version(data.app_version);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message({title:data.messageArray[0]});
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(data);
+                }
+
+                return data;
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function (){
+                // ajax_load_image(HIDE);
+            },
+
+            //통신 실패시 처리
+            error:function (){
+                console.log('server error');
+            }
+        });
     }
 
     upper_right_menu(){
