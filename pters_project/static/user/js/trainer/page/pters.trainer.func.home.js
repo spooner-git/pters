@@ -43,8 +43,10 @@ class Home {
         document.querySelector(this.targetHTML).innerHTML = component.initial_page;
 
         this.render_loading_image();
-        this.render_upper_box();
-        this.render_content();
+        this.render_upper_box(()=>{
+            this.render_content();
+        });
+
     }
 
     reset(){
@@ -55,8 +57,9 @@ class Home {
         this.set_current_date();
 
         this.render_loading_image();
-        this.render_upper_box();
-        this.render_content();
+        this.render_upper_box(()=>{
+            this.render_content();
+        });
     }
 
     set_current_date(){
@@ -69,7 +72,7 @@ class Home {
     }
 
     //상단을 렌더링
-    render_upper_box (){
+    render_upper_box (callback){
         Mypage_func.read((data)=>{
             if(current_page_text != this.page_name){
                 return false;
@@ -77,8 +80,10 @@ class Home {
             this.data.user_id = data.trainer_info.member_id;
             this.data.user_name = data.trainer_info.member_name;
             this.data.user_photo = data.trainer_info.member_profile_url;
+            this.data.program = data.trainer_info.program;
             let component = this.static_component();
             document.getElementById('home_display_panel').innerHTML = component.home_upper_box;
+            callback();
         });
     }
 
@@ -106,9 +111,9 @@ class Home {
             this.setting_data_cache = data;
             let menu_lock_statistics = data.setting_trainer_statistics_lock;
         
-            Program_func.read((data)=>{
-                this.received_data.program = data;
-                let program = this.dom_row_program(data);
+            // Program_func.read((data)=>{
+            //     this.received_data.program = data;
+                let program = this.dom_row_program(this.data.program);
                 program_dom = '<div class="contents anim_fade_in_vibe_top">' + program + '</div>';
 
                 calendar.request_schedule_data (this.today, 1, (data)=>{
@@ -151,7 +156,7 @@ class Home {
                         });
                     }, OFF);
                 }, OFF);
-            });
+            // });
         });
     }
 
@@ -170,7 +175,7 @@ class Home {
         let current_date = this.dom_row_current_date();
         current_date_dom = '<div class="contents">' + current_date + '</div>';
 
-        let program = this.dom_row_program(data.program);
+        let program = this.dom_row_program(this.data.program);
         program_dom = '<div class="contents">' + program + '</div>';
 
         let today_plan = this.dom_row_today_plan(data.schedule);
@@ -290,38 +295,38 @@ class Home {
     dom_row_program(data){
         let html_to_join = [];
 
-        let programs = data.program_data;
-        let length = programs.length;
-        for(let i=0; i<length; i++){
-            if(programs[i].program_selected == PROGRAM_NOT_SELECTED){
-                continue;
+        let program = data;
+        // let length = programs.length;
+        // for(let i=0; i<length; i++){
+        //     if(programs[i].program_selected == PROGRAM_NOT_SELECTED){
+        //         continue;
+        //     }
+        let id = "home_selected_program";
+        let title =
+            program.shared_program_flag == ON
+            ? program.program_subject_type_name + ' <div style="font-size:12px;font-weight:500">(공유자: ' + program.program_program_owner_name+')</div>'
+            : program.program_subject_type_name;
+        let icon = DELETE;
+        let icon_r_visible = HIDE;
+        let icon_r_text = `${TEXT.word.program[language]} ${TEXT.word.change[language]} ${CImg.arrow_right(["var(--img-sub1)"], {"vertical-align":"middle"})}`;
+        let style = {"font-size":"15px", "font-weight":"bold", "height":"auto"};
+        let onclick = ()=>{
+            let inspect = pass_inspector.program_read();
+            if(inspect.barrier == BLOCKED){
+                let message = `${inspect.limit_type}`;
+                show_error_message({title:message});
+                return false;
             }
-            let id = "home_selected_program";
-            let title = 
-                programs[i].shared_program_flag == ON 
-                ? programs[i].program_subject_type_name + ' <div style="font-size:12px;font-weight:500">(공유자: ' + programs[i].program_program_owner_name+')</div>'
-                : programs[i].program_subject_type_name;
-            let icon = DELETE;
-            let icon_r_visible = HIDE;
-            let icon_r_text = `${TEXT.word.program[language]} ${TEXT.word.change[language]} ${CImg.arrow_right(["var(--img-sub1)"], {"vertical-align":"middle"})}`;
-            let style = {"font-size":"15px", "font-weight":"bold", "height":"auto"};
-            let onclick = ()=>{
-                let inspect = pass_inspector.program_read();
-                if(inspect.barrier == BLOCKED){
-                    let message = `${inspect.limit_type}`;
-                    show_error_message({title:message});
-                    return false;
-                }
-                let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PROGRAM_LIST, 100, popup_style, null, ()=>{
-                    program_list_popup = new Program_list('.popup_program_list');});
-            };
-            let selected_program = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
-            let dom = `<article class="program_wrapper">
-                            ${selected_program}
-                        </article>`;
-            html_to_join.push(dom);
-        }
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PROGRAM_LIST, 100, popup_style, null, ()=>{
+                program_list_popup = new Program_list('.popup_program_list');});
+        };
+        let selected_program = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, onclick);
+        let dom = `<article class="program_wrapper">
+                        ${selected_program}
+                    </article>`;
+        html_to_join.push(dom);
+        // }
 
 
         let html = html_to_join.join("");

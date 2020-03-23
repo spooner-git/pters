@@ -4772,17 +4772,28 @@ class GetTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):
         # context = {}
         # context = super(GetTrainerInfoView, self).get_context_data(**kwargs)
         class_id = request.session.get('class_id', '')
-        class_type_name = request.session.get('class_type_name', '')
         error = None
         # class_info = None
 
         # center_name = '없음'
         user_member_info = None
+        class_info = None
         # off_repeat_schedule_data = None
         member_data = collections.OrderedDict()
+        shared_program_flag = MY_PROGRAM
 
         if class_id is None or class_id == '':
             error = '오류가 발생했습니다.'
+
+        if error is None:
+            try:
+                class_info = ClassTb.objects.get(class_id=class_id)
+
+                if str(class_info.member.member_id) != str(request.user.id):
+                    shared_program_flag = SHARED_PROGRAM
+
+            except ObjectDoesNotExist:
+                error = '프로그램 정보를 불러오지 못했습니다.'
 
         if error is None:
             try:
@@ -4806,8 +4817,12 @@ class GetTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):
                            'member_profile_url': member_profile_url,
                            'member_phone_is_active': str(user_member_info.phone_is_active),
                            'member_coupon_count': coupon_count,
-                           'member_current_program_id': class_id,
-                           'member_current_program_name': class_type_name
+                           'program': {'program_id': class_id,
+                                       'program_subject_type_name': class_info.get_class_type_cd_name(),
+                                       'program_program_owner_id': class_info.member_id,
+                                       'program_program_owner_name': class_info.member.name,
+                                       'shared_program_flag': shared_program_flag
+                                      }
                            }
 
         return JsonResponse({'trainer_info': member_data}, json_dumps_params={'ensure_ascii': True})
