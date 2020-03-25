@@ -403,13 +403,21 @@ class Calendar {
         this.current_month = month;
         this.current_date = date;
         let first_day_of_the_date = new Date(year, month-1, 1).getDay();
+        let target_row_for_date_zoomed = new Date(year, month-1, date).getDay() + 1;
         if(this.date_start == 1){
             if(first_day_of_the_date == 0){
                 first_day_of_the_date = 6;
             }else{
                 first_day_of_the_date--;
             }
+            if(target_row_for_date_zoomed == 0){
+                target_row_for_date_zoomed = 6;
+            }else{
+                target_row_for_date_zoomed--;
+            }
         }
+        this.week_zoomed.target_row = target_row_for_date_zoomed;
+
         this.current_week = Math.ceil( (date + first_day_of_the_date )/7 ) - 1;
 
         this.render_upper_box("week");
