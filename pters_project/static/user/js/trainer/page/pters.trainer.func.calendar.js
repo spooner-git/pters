@@ -889,7 +889,10 @@ class Calendar {
                 let saturday = "";
                 let border_style = "";
                 let today_marking = "";
-                let today_text_style = "";
+                let today_text_style = "position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);z-index:1";
+                if(month_or_week == "month"){
+                    today_text_style = "";
+                }
                 border_style = month_or_week == "week" ? "no_border" : "";
 
                 
