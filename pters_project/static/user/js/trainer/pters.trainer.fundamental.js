@@ -89,7 +89,7 @@ function pc_keyboard_event(){
     $(document).on('keypress', 'input', function(e){
         if (e.charCode == 13) {
             e.preventDefault();
-            $('input').blur();
+            $('input:focus').blur();
         }
     });
 }
