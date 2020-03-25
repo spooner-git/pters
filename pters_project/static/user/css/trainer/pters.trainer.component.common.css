@@ -180,9 +180,11 @@ input:disabled{
 	font-size: 16px;
 	font-weight: 500;
 	letter-spacing: -0.5px;
-
-	/* border-bottom: 1px solid #cccccc; */
-	padding: 5px 20px;
+	padding: 10px 5px 10px 15px;
+	box-shadow: var(--box-shadow-article);
+	border: var(--border-article);
+	margin: 10px 10px;
+	border-radius: 5px;
 }
 .select_ticket_row > div{
 	height: 50px;
