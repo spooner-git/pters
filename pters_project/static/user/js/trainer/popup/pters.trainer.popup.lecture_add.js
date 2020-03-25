@@ -153,10 +153,10 @@ class Lecture_add{
             lecture_lecture_start_time = '<div class="obj_input_box_full">' + CComponent.dom_tag('회원 예약 시작 시각') + lecture_start_time + '</div>';
         }
 
-        let html =  '<div class="obj_input_box_full">'+CComponent.dom_tag('수업명') + name+'</div>' +
-                    '<div class="obj_input_box_full">'+CComponent.dom_tag('정원') + capacity + '</div>' +
+        let html =  '<div class="obj_input_box_full">'+CComponent.dom_tag('수업명', null, true) + name+'</div>' +
+                    '<div class="obj_input_box_full">'+CComponent.dom_tag('정원', null, true) + capacity + '</div>' +
                     lecture_lecture_start_time+
-                    '<div class="obj_input_box_full">'+CComponent.dom_tag('기본 수업 시간') + time + '</div>' +
+                    '<div class="obj_input_box_full">'+CComponent.dom_tag('기본 수업 시간', null, true) + time + '</div>' +
                     '<div class="obj_input_box_full">'+CComponent.dom_tag('색상 태그')+ color+ '</div>' +
                     '<div class="obj_input_box_full">'+CComponent.dom_tag('생성시 수강권에 추가')+ ticket+ '</div>' +
                     '<div class="obj_input_box_full">'+CComponent.dom_tag('생성시 같은 이름의 수강권을 함께 생성')+ ticket_make+ '</div>';
@@ -180,7 +180,7 @@ class Lecture_add{
     dom_row_lecture_name_input(){
         let id = 'input_lecture_name';
         let title = this.data.name == null ? '' : this.data.name;
-        let placeholder = '수업명*';
+        let placeholder = '수업명';
         let icon = CImg.lecture();
         let icon_r_visible = HIDE;
         let icon_r_text = "";
@@ -198,7 +198,7 @@ class Lecture_add{
     dom_row_lecture_minute_input(){
         let id = "lecture_minute_input";
         let title = this.data.lecture_minute == null ? "" : this.data.lecture_minute+'분';
-        let placeholder = "5분단위 입력가능*";
+        let placeholder = "5분단위 입력";
         let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
@@ -229,7 +229,7 @@ class Lecture_add{
         let unit = '명';
         let id = 'input_lecture_capacity';
         let title = this.data.capacity == null ? '' : this.data.capacity+unit;
-        let placeholder =  '정원*';
+        let placeholder =  '정원';
         let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";

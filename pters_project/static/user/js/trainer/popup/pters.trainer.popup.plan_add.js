@@ -263,19 +263,19 @@ class Plan_add{
 
         let html;
         if(this.time_selector == CLASSIC){
-            html =  `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('수업') + lecture_select_row + '</div>' +
-                    `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('회원') + member_select_row+'</div>' +
+            html =  `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('수업', null, true) + lecture_select_row + '</div>' +
+                    `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('회원', null, this.data.lecture_type_cd[0] === LECTURE_TYPE_ONE_TO_ONE ? true : false) + member_select_row+'</div>' +
                     '<div class="obj_input_box_full">' +  
-                                                    CComponent.dom_tag('일자') + date_select_row + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>' +
-                                                    CComponent.dom_tag('진행 시간') + classic_time_selector +'<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>' +
+                                                    CComponent.dom_tag('일자', null, true) + date_select_row + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>' +
+                                                    CComponent.dom_tag('진행 시간', null, true) + classic_time_selector +'<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>' +
                                                     CComponent.dom_tag('반복') + repeat_select_row + '</div>' +
                     '<div class="obj_input_box_full">'+  CComponent.dom_tag(`메모 <span style="color:var(--font-highlight);display:${display}">(회원님께 공유되는 메모입니다.)</span>`) + memo_select_row + '</div>';
         }else if(this.time_selector == BASIC){
-            html =  `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('수업') + lecture_select_row + '</div>' +
-                    `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('회원') + member_select_row+'</div>' +
+            html =  `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('수업', null, true) + lecture_select_row + '</div>' +
+                    `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('회원', null, this.data.lecture_type_cd[0] === LECTURE_TYPE_ONE_TO_ONE ? true : false) + member_select_row+'</div>' +
                     '<div class="obj_input_box_full">' +  
-                                                    CComponent.dom_tag('일자') + date_select_row + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>' +
-                                                    CComponent.dom_tag('진행 시간') + start_time_select_row + end_time_select_row  +'<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>' +
+                                                    CComponent.dom_tag('일자', null, true) + date_select_row + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>' +
+                                                    CComponent.dom_tag('진행 시간', null, true) + start_time_select_row + end_time_select_row  +'<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>' +
                                                     CComponent.dom_tag('반복') + repeat_select_row + '</div>' +
                     '<div class="obj_input_box_full">'+  CComponent.dom_tag(`메모 <span style="color:var(--font-highlight);display:${display}">(회원님께 공유되는 메모입니다.)</span>`) + memo_select_row + '</div>';
         }
@@ -306,7 +306,7 @@ class Plan_add{
 
     dom_row_lecture_select(){
         let id = 'select_lecture';
-        let title = this.data.lecture_name.length == 0 ? '수업*' : this.data.lecture_name.join(', ');
+        let title = this.data.lecture_name.length == 0 ? '수업' : this.data.lecture_name.join(', ');
         let icon = CImg.lecture();
         let icon_r_visible = SHOW;
         let icon_r_text = "";
@@ -356,7 +356,7 @@ class Plan_add{
 
     dom_row_member_select(){
         let id = 'select_member';
-        let title = this.data.member_name.length == 0 ? '회원*' : this.data.member_name.join(', ');
+        let title = this.data.member_name.length == 0 ? '회원' : this.data.member_name.join(', ');
         let icon = CImg.members();
         let icon_r_visible = SHOW;
         let icon_r_text = "";
@@ -382,7 +382,7 @@ class Plan_add{
     dom_row_date_select(){
         //등록하는 행을 만든다.
         let id = 'select_date';
-        let title = this.data.date_text == null ? '일자*' : this.data.date_text;
+        let title = this.data.date_text == null ? '일자' : this.data.date_text;
         let icon = CImg.date();
         let icon_r_visible = NONE;
         let icon_r_text = "";
@@ -416,7 +416,7 @@ class Plan_add{
 
     dom_row_start_time_select(){
         let id = 'select_start';
-        let title = this.data.start_time_text == null ? '시작 시각*' : this.data.start_time_text;
+        let title = this.data.start_time_text == null ? '시작 시각' : this.data.start_time_text;
         let icon = CImg.blank();
         let icon_r_visible = NONE;
         let icon_r_text = "";
@@ -454,7 +454,7 @@ class Plan_add{
 
     dom_row_end_time_select(){
         let id = 'select_end';
-        let title = this.data.end_time_text == null ? '종료 시각*' : this.data.end_time_text;
+        let title = this.data.end_time_text == null ? '종료 시각' : this.data.end_time_text;
         let icon = CImg.blank();
         let icon_r_visible = NONE;
         let icon_r_text = "";
@@ -520,7 +520,7 @@ class Plan_add{
         let root_content_height = $root_content.height();
 
         let id = 'classic_time_selector';
-        let title = this.data.start_time_text == null ? '시작 시각*' : this.data.start_time_text;
+        let title = this.data.start_time_text == null ? '시작 시각' : this.data.start_time_text;
         let icon = CImg.blank();
         let icon_r_visible = NONE;
         let icon_r_text = "";
@@ -555,7 +555,7 @@ class Plan_add{
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, callback);
 
         let id2 = 'classic_time_selector2';
-        let title2 = this.data.end_time_text == null ? '종료 시각*' : this.data.end_time_text;
+        let title2 = this.data.end_time_text == null ? '종료 시각' : this.data.end_time_text;
         let icon2 = CImg.blank();
         let icon_r_visible2 = NONE;
         let icon_r_text2 = "";

@@ -245,19 +245,13 @@ class Member_add{
 
         let html =
             '<div class="obj_input_box_full">'
-                + CComponent.dom_tag('회원명') + name + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag('회원명', null, true) + name + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('휴대폰 번호') + phone + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('생년월일') + birth + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('성별') + sex +
             '</div>' +
             '<div class="obj_input_box_full">'
-                + CComponent.dom_tag('수강권') + ticket + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
-                // + CComponent.dom_tag('횟수') + reg_count + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
-                // + CComponent.dom_tag('시작일') + start_date + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
-                // + CComponent.dom_tag('종료일') + end_date + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
-                // + CComponent.dom_tag('가격') + reg_price + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
-                // + CComponent.dom_tag('지불 방법') + pay_method + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
-                // + CComponent.dom_tag('특이사항') + memo +
+                + CComponent.dom_tag('수강권', null, true) + ticket + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
                 + ticket_sub_assembly +
             '</div>';
         
@@ -267,13 +261,7 @@ class Member_add{
                 + CComponent.dom_tag('회원명') + name +
             '</div>' +
             '<div class="obj_input_box_full">'
-                + CComponent.dom_tag('수강권') + ticket + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
-                // + CComponent.dom_tag('횟수') + reg_count + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
-                // + CComponent.dom_tag('시작일') + start_date + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
-                // + CComponent.dom_tag('종료일') + end_date + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
-                // + CComponent.dom_tag('가격') + reg_price + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
-                // + CComponent.dom_tag('지불 방법') + pay_method + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
-                // + CComponent.dom_tag('특이사항') + memo +
+                + CComponent.dom_tag('수강권', null, true) + ticket + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
                 + ticket_sub_assembly +
             '</div>';
         }
@@ -318,7 +306,7 @@ class Member_add{
     dom_row_member_name_input(){
         let id = 'input_member_name';
         let title = this.data.name == null ? '' : this.data.name;
-        let placeholder = '회원명*';
+        let placeholder = '회원명';
         let icon = CImg.members();
         let icon_r_visible = HIDE;
         let icon_r_text = "";
@@ -449,7 +437,7 @@ class Member_add{
 
     dom_row_ticket_select(){
         let id = 'input_ticket_select';
-        let title = this.data.ticket_id.length == 0 ? '수강권*' : this.data.ticket_name.join(', ');
+        let title = this.data.ticket_id.length == 0 ? '수강권' : this.data.ticket_name.join(', ');
         let icon = CImg.ticket();
         let icon_r_visible = SHOW;
         let icon_r_text = "";
@@ -469,7 +457,7 @@ class Member_add{
     dom_row_start_date_select(){
         //등록하는 행을 만든다.
         let id = 'start_date_select';
-        let title = this.data.start_date == null ? '시작일*' : this.data.start_date_text;
+        let title = this.data.start_date == null ? '시작일' : this.data.start_date_text;
         let icon = NONE;
         let icon_r_visible = NONE;
         let icon_r_text = "";
@@ -518,7 +506,7 @@ class Member_add{
         }
         //등록하는 행을 만든다.
         let id = 'end_date_select';
-        let title = this.data.end_date == null ? '종료일*' : this.data.end_date_text + diff_date;
+        let title = this.data.end_date == null ? '종료일' : this.data.end_date_text + diff_date;
         let icon = NONE;
         let icon_r_visible = NONE;
         let icon_r_text = "";
@@ -676,7 +664,7 @@ class Member_add{
         let unit = '회';
         let id = 'input_reg_count';
         let title = this.data.ticket_reg_count.length == 0 || this.data.ticket_reg_count[0] == null ? '' : this.data.ticket_reg_count[0];
-        let placeholder = '횟수*';
+        let placeholder = '횟수';
         let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";

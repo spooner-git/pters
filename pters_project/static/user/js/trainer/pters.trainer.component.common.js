@@ -17,8 +17,12 @@ class CComponent{
         return html;
     }
 
-    static dom_tag(tag_name, style){
-        let html = `<div class="dom_tag" style="${CComponent.data_to_style_code(style)}">${tag_name}</div>`;
+    static dom_tag(tag_name, style, required){
+        let required_marking = ``;
+        if(required == true){
+            required_marking = `<span style="font-size:15px;font-weight:bold;color:var(--font-highlight);vertical-align:middle"> *</span>`;
+        }
+        let html = `<div class="dom_tag" style="${CComponent.data_to_style_code(style)}">${tag_name} ${required_marking}</div>`;
         return html;
     }
 
