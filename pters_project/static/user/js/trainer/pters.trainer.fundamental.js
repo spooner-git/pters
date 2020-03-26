@@ -240,7 +240,7 @@ class DateRobot{
         let yyyymmdd2 = Number(`${year2}${month2}${date2}`);
 
         if(yyyymmdd1 > yyyymmdd2){
-            return true
+            return true;
         }
         return false;
     }

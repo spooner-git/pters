@@ -477,13 +477,27 @@ class Member_add{
                                                                                                 // min:{year:year, month:month, date:date},
                                                                                                 callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
                                                                                                     if(this.data.end_date != null){
-                                                                                                        let compare = DateRobot.compare(
-                                                                                                            object.data.year+'-'+object.data.month+'-'+object.data.date, 
-                                                                                                            this.data.end_date.year+'-'+this.data.end_date.month+'-'+this.data.end_date.date
-                                                                                                        );
-                                                                                                        if(compare == true){
-                                                                                                            this.data.end_date = object.data;
-                                                                                                            this.data.end_date_text = object.text;
+                                                                                                        //종료일자가 있을때, 선택한 시작일자가 이 종료일자보다 미래이면 종료일을 시작일과 같도록 한다
+                                                                                                        // let compare = DateRobot.compare(
+                                                                                                        //     object.data.year+'-'+object.data.month+'-'+object.data.date, 
+                                                                                                        //     this.data.end_date.year+'-'+this.data.end_date.month+'-'+this.data.end_date.date
+                                                                                                        // );
+                                                                                                        // if(compare == true){
+                                                                                                        //     this.data.end_date = object.data;
+                                                                                                        //     this.data.end_date_text = object.text;
+                                                                                                        // }
+                                                                                                        if(this.data.ticket_effective_days >= 99999){ //수강권 유효날짜가 99999 (소진시까지)
+                                                                                                            // this.data.end_date = {year:9999, month:12, date:31};
+                                                                                                            // this.data.end_date_text = "소진 시까지";
+                                                                                                        }else{
+                                                                                                            let end_date = DateRobot.to_yyyymmdd(object.data.year, object.data.month, object.data.date);
+                                                                                                            let new_date = DateRobot.add_date(end_date, this.data.ticket_effective_days);
+                                                                                                            let new_date_year = new_date.split('-')[0];
+                                                                                                            let new_date_month = new_date.split('-')[1];
+                                                                                                            let new_date_date = new_date.split('-')[2];
+                                                                                                    
+                                                                                                            this.data.end_date = {year:Number(new_date_year), month:Number(new_date_month), date:Number(new_date_date)};
+                                                                                                            this.data.end_date_text = DateRobot.to_text(new_date_year, new_date_month, new_date_date, SHORT);
                                                                                                         }
                                                                                                     }
                                                                                                     
@@ -894,7 +908,6 @@ class Member_add{
             }, ()=>{this.data_sending_now = false;});
         }
 
-        
         layer_popup.close_layer_popup();
     }
 
