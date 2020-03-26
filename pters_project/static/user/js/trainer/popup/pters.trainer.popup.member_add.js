@@ -909,6 +909,10 @@ class Member_add{
             return false;
         }
         else{
+            if(this.data.ticket_id.length == 0){
+                show_error_message({title:'등록할 수강권을 선택 해주세요.'});
+                return false;
+            }
             if(this.data.start_date == null){
                 show_error_message({title:'시작일을 입력 해주세요.'});
                 return false;
@@ -917,10 +921,7 @@ class Member_add{
                 show_error_message({title:'종료일을 입력 해주세요.'});
                 return false;
             }
-            if(this.data.ticket_id.length == 0){
-                show_error_message({title:'등록할 수강권을 선택 해주세요.'});
-                return false;
-            }
+            
             return true;
         }
     }
