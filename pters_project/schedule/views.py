@@ -123,7 +123,7 @@ def check_schedule_logic(request):
                                         use=USE).count()
 
                                     if day_schedule_count >= member_ticket_info.ticket_tb.day_schedule_enable:
-                                        error_temp = member_info['member_name'] +'님의 '+ member_ticket_info.ticket_tb.name + ' 수강권의 하루 최대 이용 횟수를 초과했습니다.'
+                                        error_temp = member_info['member_name'] +'님의 '+ member_ticket_info.ticket_tb.name + ' 회원권의 하루 최대 이용 횟수를 초과했습니다.'
 
                             if error_temp is None:
                                 select_date = schedule_start_datetime.date()
@@ -144,7 +144,7 @@ def check_schedule_logic(request):
                                         start_dt__gte=first_day, start_dt__lt=last_day,
                                         use=USE).count()
                                     if week_schedule_count >= member_ticket_info.ticket_tb.week_schedule_enable:
-                                        error_temp = member_info['member_name'] +'님의 '+ member_ticket_info.ticket_tb.name + ' 수강권의 주간 최대 이용 횟수를 초과했습니다.'
+                                        error_temp = member_info['member_name'] +'님의 '+ member_ticket_info.ticket_tb.name + ' 회원권의 주간 최대 이용 횟수를 초과했습니다.'
 
                             if error_temp is not None:
                                 raise InternalError

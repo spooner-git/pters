@@ -117,7 +117,7 @@ class Setting_shared{
                                 </div>
                             </div>`;
         let auth_ticket = `<div class="shared_member_auth" style="${ticket_auth.length == 0 ? "display:none" : ""}">
-                                <div class="auth_title">수강권</div>
+                                <div class="auth_title">회원권</div>
                                 <div class="auth_setting">
                                     ${ticket_auth.join("/")}
                                 </div>

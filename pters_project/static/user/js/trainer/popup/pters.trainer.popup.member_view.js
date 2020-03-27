@@ -350,7 +350,7 @@ class Member_view{
         
         let tab_ticket_info =
             '<div class="obj_input_box_full" style="padding-right:18px">' +
-                // CComponent.dom_tag('진행중인 수강권', {"padding-left":"0"}) + 
+                // CComponent.dom_tag('진행중인 회원권', {"padding-left":"0"}) +
                 ticket +
             '</div>';
         
@@ -420,7 +420,7 @@ class Member_view{
         let html = 
         `<div class="list_type_tab_wrap" style="width:100%;padding-left:45px;text-align:left;box-sizing:border-box;height:auto">
             ${CComp.element("div", "기본 정보", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_basic_info", class:`list_tab_content ${this.list_type == "basic_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("basic_info");}})}
-            ${CComp.element("div", "수강권", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_ticket_info", class:`list_tab_content ${this.list_type == "ticket_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("ticket_info");}})}
+            ${CComp.element("div", "회원권", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_ticket_info", class:`list_tab_content ${this.list_type == "ticket_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("ticket_info");}})}
             ${CComp.element("div", "일정", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_repeat_info", class:`list_tab_content ${this.list_type == "repeat_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("repeat_info");}})}
         </div>`;
         return html;
@@ -789,7 +789,7 @@ class Member_view{
 
         html_to_join.unshift(
             `<div style="margin-top:10px;height:33px;">`+
-                CComp.button("view_ticket_history", `${CImg.history([""], {"vertical-align":"middle", "margin-bottom":"3px", "margin-right":"2px", "width":"18px"})} 수강권 이력`, {"font-size":"12px", "float":"left", "padding-left":"0"}, null, ()=>{
+                CComp.button("view_ticket_history", `${CImg.history([""], {"vertical-align":"middle", "margin-bottom":"3px", "margin-right":"2px", "width":"18px"})} 회원권 이력`, {"font-size":"12px", "float":"left", "padding-left":"0"}, null, ()=>{
                     let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_TICKET_HISTORY, 100, popup_style, null, ()=>{
                         member_ticket_history = new Member_ticket_history('.popup_member_ticket_history', {member_id:this.member_id, member_name:this.name}, null);
@@ -1078,7 +1078,7 @@ class Member_view{
             //             member_add_popup = new Member_add('.popup_member_add', member_add_initial_data, 'member_add_popup');});
             //     }
             // },
-            // ticket_history:{text:"수강권 이력", callback:()=>{
+            // ticket_history:{text:"회원권 이력", callback:()=>{
             //         layer_popup.close_layer_popup();
             //         let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             //         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_TICKET_HISTORY, 100, popup_style, null, ()=>{
@@ -1564,7 +1564,7 @@ class Member_simple_view{
                                     </div>`;
 
             let html_name = `<div style="display:flex;">
-                            <div style="flex-basis:68px;font-size:11px;font-weight:500;letter-spacing:-0.5px;color:var(--font-inactive);line-height:24px;padding-top:8px;padding-bottom:0;">${i==0 ? "수강권" : ""}</div>
+                            <div style="flex-basis:68px;font-size:11px;font-weight:500;letter-spacing:-0.5px;color:var(--font-inactive);line-height:24px;padding-top:8px;padding-bottom:0;">${i==0 ? "회원권" : ""}</div>
                             ${html_ticket_name}
                         </div>`;
 

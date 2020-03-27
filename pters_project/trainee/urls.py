@@ -107,7 +107,7 @@ urlpatterns = [
     url(r'^popup_calendar_plan_reserve_complete/$', views.PopupCalendarPlanReserveCompleteView.as_view(),
         name='popup_calendar_plan_reserve_complete'),
 
-    # 회원 수강권 정보 팝업 페이지
+    # 회원권 정보 팝업 페이지
     url(r'^popup_member_ticket_info/$', views.PopupMemberTicketInfoView.as_view(),
         name='popup_member_ticket_info'),
 

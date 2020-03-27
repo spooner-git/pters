@@ -223,7 +223,7 @@ class CComponent{
         return html;
     }
 
-    //수강권 선택 팝업에 사용되는 행
+    //회원권 선택 팝업에 사용되는 행
     static select_ticket_row (multiple_select, checked, location, ticket_id, ticket_name, ticket_price, ticket_reg_count, ticket_effective_days, onclick){
         let html = `
                     <li class="select_ticket_row str_${location}" id="select_ticket_row_${ticket_id}">
@@ -541,7 +541,7 @@ class CComponent{
         return html;
     }
 
-    //회원의 수강권 이력에 사용되는 행
+    //회원의 회원권 이력에 사용되는 행
     static ticket_history_row (numbering, ticket_id, date, ticket_name, reg_count, remain_count, avail_count, status, note, onclick){
         let html = `<li class="ticket_history_row" id="ticket_history_row_${ticket_id}">
                         <div class="obj_table_raw table_basic_info">

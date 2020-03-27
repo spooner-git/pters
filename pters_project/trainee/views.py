@@ -530,7 +530,7 @@ def add_trainee_schedule_logic(request):
                                                            use=USE).count()
 
             if day_schedule_count >= member_ticket_info.ticket_tb.day_schedule_enable:
-                error = member_ticket_info.ticket_tb.name + ' 수강권의 하루 최대 이용 횟수를 초과했습니다.'
+                error = member_ticket_info.ticket_tb.name + ' 회원권의 하루 최대 이용 횟수를 초과했습니다.'
     if error is None:
         select_date = start_date.date()
         if member_ticket_info.ticket_tb.week_schedule_enable < 9999:
@@ -549,7 +549,7 @@ def add_trainee_schedule_logic(request):
                                                             start_dt__gte=first_day, start_dt__lt=last_day,
                                                             use=USE).count()
             if week_schedule_count >= member_ticket_info.ticket_tb.week_schedule_enable:
-                error = member_ticket_info.ticket_tb.name + ' 수강권의 주간 최대 이용 횟수를 초과했습니다.'
+                error = member_ticket_info.ticket_tb.name + ' 회원권의 주간 최대 이용 횟수를 초과했습니다.'
 
         if error is None:
             if member_ticket_info.member_auth_cd == AUTH_TYPE_WAIT:
@@ -559,7 +559,7 @@ def add_trainee_schedule_logic(request):
 
         if error is None:
             if start_date.date() > member_ticket_info.end_date:
-                error = '수강권 종료일 이후의 일정은 등록이 불가능합니다.'
+                error = '회원권 종료일 이후의 일정은 등록이 불가능합니다.'
 
     if error is None:
         schedule_result = pt_add_logic_func(training_date, start_date, end_date, request.user.id, member_ticket_id,
@@ -654,7 +654,7 @@ def delete_trainee_schedule_logic(request):
         try:
             class_info = ClassTb.objects.get(class_id=class_id)
         except ObjectDoesNotExist:
-            error = '수강권 정보를 불러오지 못했습니다.[0]'
+            error = '회원권 정보를 불러오지 못했습니다.[0]'
 
     if error is None:
         if str(member_ticket_info.member_id) != str(request.user.id):
@@ -935,7 +935,7 @@ def program_select_logic(request):
 
     if error is None:
         if member_ticket_connection_check == PROGRAM_LECTURE_CONNECT_DELETE:
-            # 선택한 지점의 연결 대기중인 수강권 전부 삭제
+            # 선택한 지점의 연결 대기중인 회원권 전부 삭제
             member_ticket_data = ClassMemberTicketTb.objects.select_related(
                 'class_tb', 'member_ticket_tb__member'
             ).filter(class_tb_id=class_id, member_ticket_tb__member_id=request.user.id,
@@ -947,7 +947,7 @@ def program_select_logic(request):
             try:
                 class_info = ClassTb.objects.get(class_id=class_id)
             except ObjectDoesNotExist:
-                error = '수강권 정보를 불러오지 못했습니다.[1]'
+                error = '회원권 정보를 불러오지 못했습니다.[1]'
 
             # log_data = LogTb(log_type='LP02', auth_member_id=request.user.id,
             #                  from_member_name=request.user.first_name,
@@ -967,7 +967,7 @@ def program_select_logic(request):
             log_data.save()
 
         elif member_ticket_connection_check == PROGRAM_LECTURE_CONNECT_ACCEPT:
-            # 선택한 지점의 연결 대기중인 수강권 전부 연결
+            # 선택한 지점의 연결 대기중인 회원권 전부 연결
             member_ticket_data = ClassMemberTicketTb.objects.select_related(
                 'class_tb', 'member_ticket_tb__member'
             ).filter(class_tb_id=class_id, member_ticket_tb__member_id=request.user.id,
@@ -981,7 +981,7 @@ def program_select_logic(request):
             try:
                 class_info = ClassTb.objects.get(class_id=class_id)
             except ObjectDoesNotExist:
-                error = '수강권 정보를 불러오지 못했습니다.[2]'
+                error = '회원권 정보를 불러오지 못했습니다.[2]'
 
             # log_data = LogTb(log_type='LP01', auth_member_id=request.user.id,
             #                  from_member_name=request.user.first_name,
@@ -1008,7 +1008,7 @@ def program_select_logic(request):
             try:
                 class_info = ClassTb.objects.get(class_id=class_id)
             except ObjectDoesNotExist:
-                error = '수강권 정보를 불러오지 못했습니다.[3]'
+                error = '회원권 정보를 불러오지 못했습니다.[3]'
 
             if error is None:
                 request.session['trainer_id'] = class_info.member_id
@@ -1040,7 +1040,7 @@ class GetTraineeInfoView(LoginRequiredMixin, AccessTestMixin, View):
             try:
                 class_info = ClassTb.objects.get(class_id=class_id)
             except ObjectDoesNotExist:
-                error = '수강권 정보를 불러오지 못했습니다.[0]'
+                error = '회원권 정보를 불러오지 못했습니다.[0]'
 
         if error is None:
             # if class_id != '' and class_id is not None:
@@ -1054,7 +1054,7 @@ class GetTraineeInfoView(LoginRequiredMixin, AccessTestMixin, View):
                 try:
                     class_info.mem_info = MemberTb.objects.get(member_id=class_info.member_id)
                 except ObjectDoesNotExist:
-                    error = '수강권 정보를 불러오지 못했습니다.[1]'
+                    error = '회원권 정보를 불러오지 못했습니다.[1]'
         context['class_info'] = class_info
 
         if error is None:
@@ -1320,7 +1320,7 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
     # start_date = None
     # end_date = None
     if member_ticket_id is None or member_ticket_id == '':
-        error = '수강권 정보를 불러오지 못했습니다.[0]'
+        error = '회원권 정보를 불러오지 못했습니다.[0]'
     elif schedule_date == '':
         error = '날짜를 선택해 주세요.'
 
@@ -1355,9 +1355,9 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
         try:
             member_ticket_info = MemberTicketTb.objects.get(member_ticket_id=member_ticket_id, use=USE)
         except ObjectDoesNotExist:
-            error = '수강권 정보를 불러오지 못했습니다.[1]'
+            error = '회원권 정보를 불러오지 못했습니다.[1]'
         except ValueError:
-            error = '수강권 정보를 불러오지 못했습니다.[2]'
+            error = '회원권 정보를 불러오지 못했습니다.[2]'
 
     if error is None:
         if str(member_ticket_info.member_id) != str(user_id):
@@ -1365,7 +1365,7 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
 
     if error is None:
         if member_ticket_info.state_cd != STATE_CD_IN_PROGRESS:
-            error = '수강권 정보를 불러오지 못했습니다.[3]'
+            error = '회원권 정보를 불러오지 못했습니다.[3]'
 
     if error is None:
         if start_date >= fifteen_days_after:
@@ -1603,10 +1603,10 @@ class PopupCalendarPlanReserveView(LoginRequiredMixin, AccessTestMixin, Template
         class_id = self.request.session.get('class_id')
         select_date = self.request.GET.get('select_date')
         # 개인 수업 예약 가능 횟수 호출
-        # 회원과 연결되어있는 수강권중에서 개인 수업이 포함되어 있는 경우 count
+        # 회원과 연결되어있는 회원권중에서 개인 수업이 포함되어 있는 경우 count
 
         # 선택한날에 오픈되어 있는 그룹수업의 예약 가능 횟수 호출
-        # 회원과 연결되어있는 수강권중에서 해당 그룹 수업이 포함되어 있는 경우 count
+        # 회원과 연결되어있는 회원권중에서 해당 그룹 수업이 포함되어 있는 경우 count
         context = func_get_class_member_ticket_count(context, class_id, self.request.user.id)
 
         context['error'] = None
@@ -1751,7 +1751,7 @@ class PopupMemberTicketInfoView(LoginRequiredMixin, AccessTestMixin, TemplateVie
             member_ticket_info = MemberTicketTb.objects.get(member_ticket_id=member_ticket_id)
 
         except ObjectDoesNotExist:
-            error = '수강권 정보를 불러오지 못했습니다.'
+            error = '회원권 정보를 불러오지 못했습니다.'
 
         if error is None:
 
@@ -1773,7 +1773,7 @@ class PopupMemberTicketInfoView(LoginRequiredMixin, AccessTestMixin, TemplateVie
             try:
                 ticket_info = TicketTb.objects.get(ticket_id=member_ticket_info.ticket_tb_id)
             except ObjectDoesNotExist:
-                error = '수강권 정보를 불러오지 못했습니다.'
+                error = '회원권 정보를 불러오지 못했습니다.'
 
         if error is None:
             ticket_info.ticket_lecture_data = TicketLectureTb.objects.select_related(
@@ -1816,7 +1816,7 @@ class PopupLectureTicketInfoView(LoginRequiredMixin, AccessTestMixin, TemplateVi
         try:
             member_ticket_info = MemberTicketTb.objects.get(member_ticket_id=member_ticket_id)
         except ObjectDoesNotExist:
-            error = '수강권 정보를 불러오지 못했습니다.'
+            error = '회원권 정보를 불러오지 못했습니다.'
 
         try:
             lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
@@ -1885,7 +1885,7 @@ class PopupTicketInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             try:
                 ticket_info = TicketTb.objects.get(ticket_id=ticket_id)
             except ObjectDoesNotExist:
-                error = '수강권 정보를 불러오지 못했습니다.'
+                error = '회원권 정보를 불러오지 못했습니다.'
 
         if error is None:
             ticket_info.ticket_lecture_data = TicketLectureTb.objects.select_related(
@@ -1914,7 +1914,7 @@ class PopupMyInfoChangeView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             try:
                 class_info = ClassTb.objects.get(class_id=class_id)
             except ObjectDoesNotExist:
-                error = '수강권 정보를 불러오지 못했습니다.[0]'
+                error = '회원권 정보를 불러오지 못했습니다.[0]'
 
         if error is None:
             try:
@@ -1927,7 +1927,7 @@ class PopupMyInfoChangeView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                 try:
                     class_info.mem_info = MemberTb.objects.get(member_id=class_info.member_id)
                 except ObjectDoesNotExist:
-                    error = '수강권 정보를 불러오지 못했습니다.[1]'
+                    error = '회원권 정보를 불러오지 못했습니다.[1]'
             context['class_info'] = class_info
 
         if error is None:

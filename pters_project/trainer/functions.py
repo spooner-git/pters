@@ -567,7 +567,7 @@ def func_get_member_ticket_list(class_id, member_id):
     return member_ticket_list
 
 
-# 회원의 수강권 추가하기
+# 회원의 회원권 추가하기
 def func_add_member_ticket_info(user_id, class_id, ticket_id, counts, price, pay_method,
                                 start_date, end_date, contents, member_id):
     error = None
@@ -620,7 +620,7 @@ def func_add_member_ticket_info(user_id, class_id, ticket_id, counts, price, pay
     return error
 
 
-# 회원의 수강권 삭제하기
+# 회원의 회원권 삭제하기
 def func_delete_member_ticket_info(user_id, class_id, member_ticket_id):
     error = None
     class_member_ticket_info = None
@@ -1005,7 +1005,7 @@ def func_get_lecture_info(class_id, lecture_id, user_id):
             lecture_tb = None
     else:
         if lecture_tb.state_cd == STATE_CD_IN_PROGRESS:
-            # 수업에 속한 수강권을 가지고 있는 회원들을 가지고 오기 위한 작업
+            # 수업에 속한 회원권을 가지고 있는 회원들을 가지고 오기 위한 작업
             all_member_ticket_list = ClassMemberTicketTb.objects.select_related(
                 'member_ticket_tb__ticket_tb',
                 'member_ticket_tb__member').filter(

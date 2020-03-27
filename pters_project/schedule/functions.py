@@ -1441,7 +1441,7 @@ def func_get_member_schedule_all_by_member_ticket(class_id, member_id, page):
         lecture_info = member_schedule_info.lecture_tb
         schedule_type = member_schedule_info.en_dis_type
 
-        # 수강권에 따른 일정 정보 전달을 위해 초기화
+        # 회원권에 따른 일정 정보 전달을 위해 초기화
         if temp_member_ticket_id != member_ticket_id:
             temp_member_ticket_id = member_ticket_id
             schedule_list = []
@@ -1469,7 +1469,7 @@ def func_get_member_schedule_all_by_member_ticket(class_id, member_id, page):
         if member_schedule_info.mod_member is not None and member_schedule_info.mod_member != '':
             mod_member_id = member_schedule_info.mod_member_id
             mod_member_name = member_schedule_info.mod_member.name
-        # 일정 정보를 추가하고 수강권에 할당
+        # 일정 정보를 추가하고 회원권에 할당
         schedule_info = {'schedule_id': str(member_schedule_info.schedule_id),
                          'lecture_id': str(lecture_id),
                          'lecture_name': lecture_name,
@@ -1545,7 +1545,7 @@ def func_get_member_schedule_all_by_schedule_dt(class_id, member_id, page):
         lecture_info = member_schedule_info.lecture_tb
         schedule_type = member_schedule_info.en_dis_type
 
-        # 수강권에 따른 일정 정보 전달을 위해 초기화
+        # 회원권에 따른 일정 정보 전달을 위해 초기화
         if temp_member_ticket_id != member_ticket_id:
             temp_member_ticket_id = member_ticket_id
 
@@ -1571,7 +1571,7 @@ def func_get_member_schedule_all_by_schedule_dt(class_id, member_id, page):
             mod_member_id = member_schedule_info.mod_member_id
             mod_member_name = member_schedule_info.mod_member.name
         end_dt = str(member_schedule_info.start_dt).split(' ')[0] + ' ' + end_dt_time
-        # 일정 정보를 추가하고 수강권에 할당
+        # 일정 정보를 추가하고 회원권에 할당
         schedule_info = {
                          'schedule_idx': str(schedule_idx),
                          'schedule_id': str(member_schedule_info.schedule_id),
@@ -1684,7 +1684,7 @@ def func_get_permission_wait_schedule_all(class_id, page):
         if member_schedule_info.mod_member is not None and member_schedule_info.mod_member != '':
             mod_member_id = member_schedule_info.mod_member_id
             mod_member_name = member_schedule_info.mod_member.name
-        # 일정 정보를 추가하고 수강권에 할당
+        # 일정 정보를 추가하고 회원권에 할당
         schedule_info = {
                          # 'schedule_idx': str(schedule_idx),
                          'schedule_id': str(member_schedule_info.schedule_id),
@@ -1744,7 +1744,7 @@ def func_get_member_schedule_all_by_monthly(class_id, member_id, page):
         lecture_info = member_schedule_info.lecture_tb
         schedule_type = member_schedule_info.en_dis_type
 
-        # 수강권에 따른 일정 정보 전달을 위해 초기화
+        # 회원권에 따른 일정 정보 전달을 위해 초기화
         if temp_member_ticket_id != member_ticket_id:
             temp_member_ticket_id = member_ticket_id
 
@@ -1773,7 +1773,7 @@ def func_get_member_schedule_all_by_monthly(class_id, member_id, page):
         if member_schedule_info.mod_member is not None and member_schedule_info.mod_member != '':
             mod_member_id = member_schedule_info.mod_member_id
             mod_member_name = member_schedule_info.mod_member.name
-        # 일정 정보를 추가하고 수강권에 할당
+        # 일정 정보를 추가하고 회원권에 할당
         schedule_info = {
                          # 'schedule_idx': str(schedule_idx),
                          'schedule_id': str(member_schedule_info.schedule_id),

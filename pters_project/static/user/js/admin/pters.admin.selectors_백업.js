@@ -2075,7 +2075,7 @@ class TicketSelector{
 
     dom_add_new_ticket(){
         let id = "add_new_ticket";
-        let title = "새로운 수강권 생성";
+        let title = "새로운 회원권 생성";
         let icon = '/static/common/icon/icon_plus_pink.png';
         let icon_r_visible = SHOW;
         let icon_r_text = "";

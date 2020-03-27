@@ -1778,7 +1778,7 @@ def export_excel_member_list_logic(request):
     start_raw = 3
 
     ws1['A2'] = '회원명'
-    ws1['B2'] = '수강권'
+    ws1['B2'] = '회원권'
     ws1['C2'] = '회원 ID'
     ws1['D2'] = '등록 횟수'
     ws1['E2'] = '남은 횟수'
@@ -1931,7 +1931,7 @@ def export_excel_member_info_logic(request):
                 ws1.title = member_ticket_info.start_date + ' 수강정보'
                 ws1['A1'] = '수강 정보'
                 ws1['A1'].font = Font(bold=True, size=15)
-                ws1['A2'] = '수강권'
+                ws1['A2'] = '회원권'
                 ws1['B2'] = '시작일자'
                 ws1['C2'] = '종료일자'
                 ws1['D2'] = '등록횟수'
@@ -2090,7 +2090,7 @@ def export_excel_member_info_logic(request):
 
 
 # ############### ############### ############### ############### ############### ############### ##############
-# 회원 수강권 기능 ############### ############### ############### ############### ############### ############### ########
+# 회원권 기능 ############### ############### ############### ############### ############### ############### ########
 
 class GetMemberTicketInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
@@ -2198,7 +2198,7 @@ def add_member_ticket_info_logic(request):
         error = '시작 일자를 입력해 주세요.'
 
     if ticket_id == '':
-        error = '수강권을 선택해 주세요.'
+        error = '회원권을 선택해 주세요.'
 
     if error is None:
         try:
@@ -2211,7 +2211,7 @@ def add_member_ticket_info_logic(request):
             ticket_info = TicketTb.objects.get(ticket_id=ticket_id)
             ticket_name = ticket_info.name
         except ObjectDoesNotExist:
-            error = '수강권 정보를 확인해주세요.'
+            error = '회원권 정보를 확인해주세요.'
     if error is None:
         error = func_add_member_ticket_info(request.user.id, class_id, ticket_id, counts, price, pay_method,
                                             start_date, end_date, contents, member_id)
@@ -2223,12 +2223,12 @@ def add_member_ticket_info_logic(request):
                          from_member_name=request.user.first_name,
                          class_tb_id=class_id,
                          log_info=member_name + ' 회원님에게 '
-                                  + ticket_name + ' 수강권',  log_how='추가', use=USE)
+                                  + ticket_name + ' 회원권',  log_how='추가', use=USE)
         log_data.save()
     return render(request, 'ajax/trainer_error_ajax.html')
 
 
-# 수강권 수정
+# 회원권 수정
 def update_member_ticket_info_logic(request):
     member_ticket_id = request.POST.get('member_ticket_id', '')
     note = request.POST.get('note', '')
@@ -2339,12 +2339,12 @@ def update_member_ticket_info_logic(request):
                          from_member_name=request.user.first_name,
                          class_tb_id=class_id,
                          log_info=member_ticket_info.member.name + ' 회원님의 '
-                                  + member_ticket_info.ticket_tb.name + ' 수강권 정보', log_how='변경', use=USE)
+                                  + member_ticket_info.ticket_tb.name + ' 회원권 정보', log_how='변경', use=USE)
         log_data.save()
     return render(request, 'ajax/trainer_error_ajax.html')
 
 
-# 회원 수강권 삭제
+# 회원권 삭제
 def delete_member_ticket_info_logic(request):
     member_ticket_id = request.POST.get('member_ticket_id', '')
     class_id = request.session.get('class_id', '')
@@ -2374,7 +2374,7 @@ def delete_member_ticket_info_logic(request):
                          from_member_name=request.user.first_name,
                          class_tb_id=class_id,
                          log_info=member_ticket_info.member.name + ' 회원님의 '
-                                  + member_ticket_info.ticket_tb.name + ' 수강권', log_how='삭제', use=USE)
+                                  + member_ticket_info.ticket_tb.name + ' 회원권', log_how='삭제', use=USE)
         log_data.save()
 
     return render(request, 'ajax/trainer_error_ajax.html')
@@ -2428,7 +2428,7 @@ def update_member_ticket_status_info_logic(request):
             refund_date = None
             if member_ticket_info.ticket_tb.use == UN_USE \
                     or member_ticket_info.ticket_tb.state_cd != STATE_CD_IN_PROGRESS:
-                error = '해당 수강권은 진행중 상태가 아닙니다.'
+                error = '해당 회원권은 진행중 상태가 아닙니다.'
 
         if state_cd == STATE_CD_FINISH:
             refund_price = 0
@@ -2486,7 +2486,7 @@ def update_member_ticket_status_info_logic(request):
                          from_member_name=request.user.first_name,
                          class_tb_id=class_id,
                          log_info=member_ticket_info.member.name + ' 회원님의 '
-                                  + member_ticket_info.ticket_tb.name + ' 수강권 상태', log_how='변경', use=USE)
+                                  + member_ticket_info.ticket_tb.name + ' 회원권 상태', log_how='변경', use=USE)
         log_data.save()
 
     return render(request, 'ajax/trainer_error_ajax.html')
@@ -2921,7 +2921,7 @@ def update_fix_lecture_member_logic(request):
                     try:
                         member_lecture_list[lecture_id]
                     except KeyError:
-                        error = '해당 회원님은 수업에 참여할 수 있는 수강권이 없습니다.'
+                        error = '해당 회원님은 수업에 참여할 수 있는 회원권이 없습니다.'
 
                 if error is None:
                     try:
@@ -3013,7 +3013,7 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                               use=USE).order_by('lecture_tb_id', 'ticket_tb_id')
 
         lecture_data_dict = {}
-        # 수업과 연관되어있는 수강권 정보 셋팅
+        # 수업과 연관되어있는 회원권 정보 셋팅
         for lecture_ticket_info in lecture_ticket_data:
             lecture_tb = lecture_ticket_info.lecture_tb
             ticket_tb = lecture_ticket_info.ticket_tb
@@ -3041,7 +3041,7 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                 lecture_data_dict[lecture_id]['lecture_ticket_state_cd_list'].append(ticket_tb.state_cd)
                 lecture_data_dict[lecture_id]['lecture_ticket_id_list'].append(ticket_tb.ticket_id)
 
-        # 수업에 수강권이 연결되어있지 않은 경우 처리
+        # 수업에 회원권이 연결되어있지 않은 경우 처리
         if len(lecture_data) != len(lecture_data_dict):
             for lecture_info in lecture_data:
                 lecture_id = str(lecture_info.lecture_id)
@@ -3139,7 +3139,7 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                               use=USE).order_by('lecture_tb_id', 'ticket_tb_id')
 
         lecture_data_dict = {}
-        # 수업과 연관되어있는 수강권 정보 셋팅
+        # 수업과 연관되어있는 회원권 정보 셋팅
         for lecture_ticket_info in lecture_ticket_data:
             lecture_tb = lecture_ticket_info.lecture_tb
             ticket_tb = lecture_ticket_info.ticket_tb
@@ -3167,7 +3167,7 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                 lecture_data_dict[lecture_id]['lecture_ticket_state_cd_list'].append(ticket_tb.state_cd)
                 lecture_data_dict[lecture_id]['lecture_ticket_id_list'].append(ticket_tb.ticket_id)
 
-        # 수업에 수강권이 연결되어있지 않은 경우 처리
+        # 수업에 회원권이 연결되어있지 않은 경우 처리
         if len(lecture_data) != len(lecture_data_dict):
             for lecture_info in lecture_data:
                 lecture_id = str(lecture_info.lecture_id)
@@ -3236,7 +3236,7 @@ class GetLectureIngMemberListViewAjax(LoginRequiredMixin, AccessTestMixin, View)
                                               use=USE).order_by('lecture_tb_id', 'ticket_tb_id')
 
         if len(lecture_ticket_data) > 0:
-            # 수업에 속한 수강권을 가지고 있는 회원들을 가지고 오기 위한 작업
+            # 수업에 속한 회원권을 가지고 있는 회원들을 가지고 오기 위한 작업
             query_ticket_list = Q()
             for lecture_ticket_info in lecture_ticket_data:
                 query_ticket_list |= Q(member_ticket_tb__ticket_tb_id=lecture_ticket_info.ticket_tb_id)
@@ -3338,13 +3338,13 @@ def add_ticket_info_logic(request):
         log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
                          from_member_name=request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=ticket_name+' 수강권', log_how='추가', use=USE)
+                         log_info=ticket_name+' 회원권', log_how='추가', use=USE)
         log_data.save()
 
     return render(request, 'ajax/trainer_error_ajax.html')
 
 
-# 수강권 삭제
+# 회원권 삭제
 def delete_ticket_info_logic(request):
     class_id = request.session.get('class_id', '')
     ticket_id = request.POST.get('ticket_id', '')
@@ -3416,13 +3416,13 @@ def delete_ticket_info_logic(request):
         log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
                          from_member_name=request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=ticket_info.name+' 수강권', log_how='삭제', use=USE)
+                         log_info=ticket_info.name+' 회원권', log_how='삭제', use=USE)
         log_data.save()
 
     return render(request, 'ajax/trainer_error_ajax.html')
 
 
-# 수강권 수정
+# 회원권 수정
 def update_ticket_info_logic(request):
     class_id = request.session.get('class_id', '')
     ticket_id = request.POST.get('ticket_id', '')
@@ -3468,13 +3468,13 @@ def update_ticket_info_logic(request):
         log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
                          from_member_name=request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=ticket_info.name+' 수강권', log_how='변경', use=USE)
+                         log_info=ticket_info.name+' 회원권', log_how='변경', use=USE)
         log_data.save()
 
     return render(request, 'ajax/trainer_error_ajax.html')
 
 
-# 수강권에 그룹 추가
+# 회원권에 그룹 추가
 def add_ticket_lecture_info_logic(request):
     class_id = request.session.get('class_id', '')
     ticket_id = request.POST.get('ticket_id', '')
@@ -3510,7 +3510,7 @@ def add_ticket_lecture_info_logic(request):
         log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
                          from_member_name=request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=ticket_lecture_info.ticket_tb.name + ' 수강권에 '
+                         log_info=ticket_lecture_info.ticket_tb.name + ' 회원권에 '
                                   + ticket_lecture_info.lecture_tb.name + '수업', log_how='추가', use=USE)
         log_data.save()
 
@@ -3603,7 +3603,7 @@ def delete_ticket_lecture_info_logic(request):
         log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
                          from_member_name=request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=ticket_name + ' 수강권에 '
+                         log_info=ticket_name + ' 회원권에 '
                                   + lecture_name + '수업', log_how='삭제', use=USE)
         log_data.save()
 
@@ -3621,13 +3621,13 @@ def update_ticket_status_info_logic(request):
     now = timezone.now()
 
     if ticket_id is None or ticket_id == '':
-        error = '수강권 정보를 불러오지 못했습니다.'
+        error = '회원권 정보를 불러오지 못했습니다.'
 
     if error is None:
         try:
             ticket_info = TicketTb.objects.get(ticket_id=ticket_id)
         except ObjectDoesNotExist:
-            error = '수강권 정보를 불러오지 못했습니다.'
+            error = '회원권 정보를 불러오지 못했습니다.'
 
     if error is None:
 
@@ -3678,7 +3678,7 @@ def update_ticket_status_info_logic(request):
         log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
                          from_member_name=request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=ticket_info.name + ' 수강권', log_how='변경', use=USE)
+                         log_info=ticket_info.name + ' 회원권', log_how='변경', use=USE)
         log_data.save()
 
     return render(request, 'ajax/trainer_error_ajax.html')
@@ -4149,7 +4149,7 @@ def add_program_info_logic(request):
                                                     lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, member_num=1, use=USE)
                 one_to_one_lecture_info.save()
 
-                ticket_info = TicketTb(class_tb_id=class_info.class_id, name='개인 수업 수강권',
+                ticket_info = TicketTb(class_tb_id=class_info.class_id, name='개인 수업 회원권',
                                        state_cd=STATE_CD_IN_PROGRESS, use=USE)
                 ticket_info.save()
 
@@ -4165,7 +4165,7 @@ def add_program_info_logic(request):
                                                lecture_type_cd=LECTURE_TYPE_NORMAL, member_num=2, use=USE)
                 group_lecture_info.save()
 
-                ticket_group_info = TicketTb(class_tb_id=class_info.class_id, name='2:1 그룹 수업 수강권',
+                ticket_group_info = TicketTb(class_tb_id=class_info.class_id, name='2:1 그룹 수업 회원권',
                                              state_cd=STATE_CD_IN_PROGRESS, use=USE)
                 ticket_group_info.save()
 
@@ -4174,7 +4174,7 @@ def add_program_info_logic(request):
                                                       lecture_tb_id=group_lecture_info.lecture_id, use=USE)
                 ticket_lecture_info.save()
 
-                ticket_total_info = TicketTb(class_tb_id=class_info.class_id, name='통합 수강권',
+                ticket_total_info = TicketTb(class_tb_id=class_info.class_id, name='통합 회원권',
                                              state_cd=STATE_CD_IN_PROGRESS, use=USE)
                 ticket_total_info.save()
 
@@ -4489,7 +4489,7 @@ def update_trainer_program_connection_info_logic(request):
 
     if error is None:
         if member_ticket_connection_check == PROGRAM_LECTURE_CONNECT_DELETE:
-            # 선택한 지점의 연결 대기중인 수강권 전부 삭제
+            # 선택한 지점의 연결 대기중인 회원권 전부 삭제
             member_program_data = MemberClassTb.objects.select_related(
                 'class_tb', 'member'
             ).filter(class_tb_id=class_id, member_id=request.user.id, use=USE)
@@ -4516,7 +4516,7 @@ def update_trainer_program_connection_info_logic(request):
             log_data.save()
 
         elif member_ticket_connection_check == PROGRAM_LECTURE_CONNECT_ACCEPT:
-            # 선택한 지점의 연결 대기중인 수강권 전부 연결
+            # 선택한 지점의 연결 대기중인 회원권 전부 연결
             member_program_data = MemberClassTb.objects.select_related(
                 'class_tb', 'member'
             ).filter(class_tb_id=class_id, member_id=request.user.id, auth_cd=AUTH_TYPE_WAIT, use=USE)
@@ -4550,7 +4550,7 @@ def delete_trainer_program_connection_logic(request):
     if class_id == '':
         error = '지점 정보를 불러오지 못했습니다.[0]'
     if error is None:
-        # 선택한 지점의 연결 대기중인 수강권 전부 삭제
+        # 선택한 지점의 연결 대기중인 회원권 전부 삭제
         member_program_data = MemberClassTb.objects.select_related(
             'class_tb', 'member'
         ).filter(class_tb_id=class_id, member_id=request.user.id, use=USE)
