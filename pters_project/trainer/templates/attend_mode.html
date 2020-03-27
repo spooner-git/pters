@@ -80,7 +80,7 @@
         #wrapper_lesson_now{
             background-color: #ffffff;
             border-radius: 5px;
-            height: 70%;
+            /* height: 70%; */
         }
         #wrapper_arrow_button{
             position: relative;
@@ -167,7 +167,11 @@
         }
 
         #wrapper_phone_input{
-            /* text-align: center; */
+            text-align: center;
+            display:none;
+            position:fixed;
+            top: 0;
+            background:white;
         }
         #form_data_phone{
             padding: 0 20px;
@@ -186,7 +190,7 @@
 
         #wrapper_submit_button{
             text-align: center;
-            position: fixed;
+{#            position: fixed;#}
             bottom:  20px;
             padding: 20px;
         }
@@ -237,13 +241,24 @@
             min-width: 100px;
             margin: 5px;
         }
-        .popup_shade{
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #282828;
+        #shade_for_popup_basic{
+            position: absolute;
+            top:0;
+            left:0;
+            height:100%;
+            width:100%;
+            background-color: var(--bg-for-only-shade);
+            opacity:0.5;
+            display: none;
+            /* transition: 0.1s; */
+        }
+        .num_pad_style{
+            display:table-cell;
+            cursor:pointer;
+        }
+        .num_pad_style:active{
+            color:white;
+            background: #fe4e65;
             opacity: 0.5;
         }
         /* 팝업 */
@@ -261,9 +276,11 @@
         .ftc_pink{color: #fe4e65}
     </style>
 </head>
+{% now "Y.m.d (l) H:i" as current_time %}
 
 <body>
     <div id="content_wrapper">
+        <div id="shade_for_popup_basic" onclick="layer_popup.close_layer_popup();"></div>
         <section id="wrapper_lesson_now">
             <div id="wrapper_arrow_button">
                 <div class="left_button_set">
@@ -280,12 +297,12 @@
             </div>
 
             <div id="wrapper_page_title">
-                <span>실시간 출석 체크 </span>
+                <span>실시간 출석 체크</span><br/>
+                <span id="current_time"></span>
             </div>
 
             <div id="wrapper_lesson_now_info">
-            {% now "Y.m.d (l)" as today %}
-                <p class="title_tag" style="margin-bottom: 10px;">{{ today |cut:"요일" }} - 현재 진행중인 수업</p>
+                <p class="title_tag" style="margin-bottom: 10px;">현재 출석체크 가능 수업</p>
 {#                <p class="title_tag" style="margin-bottom: 10px;">현재 진행중인 수업 </p>#}
                 {% for attend_schedule_info in attend_schedule_data %}
                     {% if attend_schedule_info.lecture_tb %}
@@ -296,23 +313,27 @@
                             </div>
                             <div class="wrapper_lesson_now_text">
                                 <p class="lesson_date_row">{{ attend_schedule_info.start_dt | date:"Y.m.d (l)" |cut:"요일" }} {{ attend_schedule_info.start_dt | time:'H:i' }} ~ {{ attend_schedule_info.end_dt | time:'H:i' }}</p>
-                                <p class="lesson_name_row">{{ attend_schedule_info.lecture_tb.name }}</p>
-                                <p class="lesson_member_row">
-                                    <span style="margin-right:10px;">정원 : {{ attend_schedule_info.lecture_tb.member_num }}</span>
-                                    <span style="margin-right:10px;">출석 : {{ attend_schedule_info.lecture_current_finish_member_num }}</span>
-                                    <span>예약 : {{ attend_schedule_info.lecture_current_member_num }}</span></p>
+                                <p class="lesson_name_row">[그룹] {{ attend_schedule_info.lecture_tb.name }}</p>
+                                {% if request.session.setting_attend_mode_max_num_view_available == 1 %}
+                                    <p class="lesson_member_row">
+                                        <span style="margin-right:10px;">정원 : {{ attend_schedule_info.lecture_tb.member_num }}</span>
+                                        <span style="margin-right:10px;">출석 : {{ attend_schedule_info.lecture_current_finish_member_num }}</span>
+                                        <span>예약 : {{ attend_schedule_info.lecture_current_member_num }}</span></p>
+                                {% endif %}
                             </div>
                         </div>
                         {% else %}
-                        <div class="wrapper_lesson_now_info_article" data-id="{{ attend_schedule_info.schedule_id }}" onclick="lesson_select(this)">
-                            <div class="wrapper_lesson_now_color">
-                                <div class="color_tag" style="background-color:{{ attend_schedule_info.ing_color_cd }};"></div>
-                            </div>
-                            <div class="wrapper_lesson_now_text">
-                                <p class="lesson_date_row">{{ attend_schedule_info.start_dt | date:"Y.m.d (l)" |cut:"요일" }} {{ attend_schedule_info.start_dt | time:'H:i' }} ~ {{ attend_schedule_info.end_dt | time:'H:i' }}</p>
-                                <p class="lesson_name_row">{{ attend_schedule_info.lecture_tb.name }} - {{ attend_schedule_info.member_ticket_tb.member.name }}</p>
-                            </div>
-                        </div>
+                            {% if attend_schedule_info.lecture_tb.lecture_type_cd == 'ONE_TO_ONE' %}
+                                <div class="wrapper_lesson_now_info_article" data-id="{{ attend_schedule_info.schedule_id }}" onclick="lesson_select(this)">
+                                    <div class="wrapper_lesson_now_color">
+                                        <div class="color_tag" style="background-color:{{ attend_schedule_info.ing_color_cd }};"></div>
+                                    </div>
+                                    <div class="wrapper_lesson_now_text">
+                                        <p class="lesson_date_row">{{ attend_schedule_info.start_dt | date:"Y.m.d (l)" |cut:"요일" }} {{ attend_schedule_info.start_dt | time:'H:i' }} ~ {{ attend_schedule_info.end_dt | time:'H:i' }}</p>
+                                        <p class="lesson_name_row">[개인] {{ attend_schedule_info.lecture_tb.name }} - {{ attend_schedule_info.member_ticket_tb.member.name }}</p>
+                                    </div>
+                                </div>
+                            {% endif %}
                         {% endif %}
                     {% endif %}
                 {% endfor %}
@@ -350,19 +371,54 @@
         </section>
 
         <section id="wrapper_phone_input">
+            <div class="left_button_set" style="text-align: left; padding:10px;">
+                <button id="button_back" onclick="close_phone_number_popup(event)">
+                    <img src="/static/common/icon/icon_x_black.png" style="width:25px; height:25px;">
+                </button>
+            </div>
+{#            <p style="font-size:20px;font-weight:500;letter-spacing: -0.5px;color:#858282;">등록된 휴대폰 번호를 입력해주세요.</p>#}
+{#            <br/>#}
+            <br/>
             <form action="{% url 'trainer:attend_mode_detail' %}" id="form_data_phone" method="post">
                 <div style="display:none;">{% csrf_token %}</div>
-                <p style="font-size:12px;font-weight:500;letter-spacing: -0.5px;color:#858282;">등록된 휴대폰 번호를 입력해주세요.</p>
-                <input type="tel" placeholder="- 를 제외한 숫자만 입력" name="phone_number" id="input_form_phone" autocomplete="off" onkeyup="limit_char_only_number(this);">
+                <input type="tel" name="show_phone_number" id="id_show_phone_number" placeholder="휴대폰 번호를 입력해주세요."
+                       style="width:100%; text-align:center; background:white; border:0; font-size:25px; padding-bottom:50px;" autocomplete="off" disabled>
+                <br/>
+                <div>
+                    <div style="display:table; width:100%; font-size:30px;font-weight:500; line-height:80px;">
+                        <div onclick="number_pad_input('1');" class="num_pad_style">1</div>
+                        <div onclick="number_pad_input('2');" class="num_pad_style">2</div>
+                        <div onclick="number_pad_input('3');" class="num_pad_style">3</div>
+                    </div>
+                    <div style="display:table; width:100%; font-size:30px;font-weight:500; line-height:80px;">
+                        <div onclick="number_pad_input('4');" class="num_pad_style">4</div>
+                        <div onclick="number_pad_input('5');" class="num_pad_style">5</div>
+                        <div onclick="number_pad_input('6');" class="num_pad_style">6</div>
+                    </div>
+                    <div style="display:table; width:100%; font-size:30px;font-weight:500; line-height:80px;">
+                        <div onclick="number_pad_input('7');" class="num_pad_style">7</div>
+                        <div onclick="number_pad_input('8');" class="num_pad_style">8</div>
+                        <div onclick="number_pad_input('9');" class="num_pad_style">9</div>
+                    </div>
+                    <div style="display:table; width:100%; font-size:30px;font-weight:500; line-height:80px;">
+                        <div onclick="number_pad_input('clear');" class="num_pad_style" style="width:33.3%; font-size:18px;">지우기</div>
+                        <div onclick="number_pad_input('0');" class="num_pad_style" style="width:33.3%;">0</div>
+                        <div onclick="number_pad_input('all_clear');"  class="num_pad_style" style="width:33.3%; font-size:18px;">전체 지우기</div>
+                    </div>
+                </div>
+                <input type="hidden" name="phone_number" id="input_form_phone">
                 <input type="hidden" name="schedule_id" id="input_form_lesson_id">
                 <input type="hidden" name="member_ticket_id" id="id_member_ticket_id">
             </form>
+
+            <div id="wrapper_submit_button">
+                    <button onclick="form_complete(event)">확인</button>
+            </div>
         </section>
 
         <section id="wrapper_submit_button">
                 <button onclick="form_confirm(event)">확인</button>
         </section>
-
         <!-- <section id="wrapper_submit_button">
                 <button id="button_setting" onclick="back_to_normal_mode(event, 'admin_check')"></button>
                 <button id="button_back" onclick="back_to_normal_mode(event, 'exit')"></button>
@@ -377,10 +433,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script>
 
-        let lecture_schedule_id = [{% for lecture_schedule_info in lecture_schedule_data %}'{{ lecture_schedule_info.schedule_id }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-        let scheduleIdArray = [{% for pt_schedule_info in pt_schedule_data %}'{{ pt_schedule_info.schedule_id }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        let attend_schedule_id = [{% for attend_schedule_info in attend_schedule_data %}'{{ attend_schedule_info.schedule_id }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
         let attend_mode_out_lock = '{{ request.session.setting_trainer_attend_mode_out_lock }}';
-
         window.onload=function(){
             let window_height = window.innerHeight;
             let content_height = $('#content_wrapper').height();
@@ -393,78 +447,160 @@
             }
             func_set_webkit_overflow_scrolling('#content_wrapper');
 
-            $('#wrapper_lesson_now_info').css('height', $('#wrapper_lesson_now').height() - 160 + 'px');
+{#            $('#wrapper_lesson_now_info').css('height', $('#wrapper_lesson_now').height() - 160 + 'px');#}
         };
          setInterval(function(){
-             $.ajax({
-                 url: '/trainer/get_attend_mode_schedule/',
-                 type : 'GET',
-                 dataType : 'html',
+             let week_info = ['일', '월', '화', '수', '목', '금', '토'];
+             let today = new Date();
+             let year = today.getFullYear();
+             let month = today.getMonth()+1;
+             let day = today.getDate();
+             let hour = today.getHours();
+             let minute = today.getMinutes();
+             let second = today.getSeconds();
+             let week = week_info[today.getDay()];
+             if(second==0){
+                 $.ajax({
+                     url: '/trainer/get_attend_mode_schedule/',
+                     type : 'GET',
+                     dataType : 'html',
 
-                 beforeSend:function(){
-                 },
+                     beforeSend:function(){
+                     },
 
-                 success:function(data){
-                     var jsondata = JSON.parse(data);
-                     check_app_version(jsondata.app_version);
-                     if(jsondata.messageArray.length>0){
-                         alert(jsondata.messageArray);
-                     }else{
-                         if(JSON.stringify(lecture_schedule_id) != JSON.stringify(jsondata.lecture_schedule_id)){
-                             location.reload();
+                     success:function(data){
+                         var jsondata = JSON.parse(data);
+                         check_app_version(jsondata.app_version);
+                         if(jsondata.messageArray.length>0){
+                             alert(jsondata.messageArray);
+                         }else{
+                             if(JSON.stringify(attend_schedule_id) != JSON.stringify(jsondata.attend_schedule_data)){
+                                 location.reload();
+                             }
                          }
-                         if(JSON.stringify(scheduleIdArray) != JSON.stringify(jsondata.scheduleIdArray)){
-                             location.reload();
-                         }
+                     },
+                     complete:function(){
+                     },
+
+                     error:function(){
+                         console.log('server error');
                      }
-                 },
-                 complete:function(){
-                 },
+                 });
+             }
+             if(month < 10){
+                 month = '0'+month;
+             }
+             if(day < 10){
+                 day = '0'+day;
+             }
+             if(hour < 10){
+                 hour = '0'+hour;
+             }
+             if(minute < 10){
+                 minute = '0'+minute;
+             }
+             if(second < 10){
+                 second = '0'+second;
+             }
+             $('#current_time').text(year+'.'+month+'.'+day+'('+week+') '+hour+':'+minute+':'+second);
 
-                 error:function(){
-                     console.log('server error');
-                 }
-             });
-         }, 60000);// 자동 ajax 새로고침(일정가져오기)
+         },1000);// 자동 ajax 새로고침(일정가져오기)
+
+        function number_pad_input(number){
+            if(number=='all_clear'){
+                $('#input_form_phone').val('');
+                $('#id_show_phone_number').val('');
+            }else{
+
+                let input_form_phone = $('#input_form_phone').val();
+                let input_phone_number = '';
+                if(number=='clear') {
+                    var sliceStr = input_form_phone.slice(0, -1); //문자
+                    $('#input_form_phone').val(sliceStr);
+                    input_form_phone = sliceStr;
+                }
+                else{
+                    if(input_form_phone.length < 11){
+                        input_form_phone += number;
+                        $('#input_form_phone').val(input_form_phone);
+                    }
+                }
+
+                if(input_form_phone.length < 4) {
+                    input_phone_number = input_form_phone;
+                } else if(input_form_phone.length < 7) {
+                    input_phone_number += input_form_phone.substr(0, 3);
+                    input_phone_number += "-";
+                    input_phone_number += input_form_phone.substr(3);
+                } else if(input_form_phone.length < 11) {
+                    input_phone_number += input_form_phone.substr(0, 3);
+                    input_phone_number += "-";
+                    input_phone_number += input_form_phone.substr(3, 3);
+                    input_phone_number += "-";
+                    input_phone_number += input_form_phone.substr(6);
+                } else if(input_form_phone.length == 11){
+                    input_phone_number += input_form_phone.substr(0, 3);
+                    input_phone_number += "-";
+                    input_phone_number += input_form_phone.substr(3, 4);
+                    input_phone_number += "-";
+                    input_phone_number += input_form_phone.substr(7);
+                }
+                if(input_form_phone.length <= 11){
+                    $('#id_show_phone_number').val(input_phone_number);
+                }
+            }
+        }
 
 
         function form_confirm(e){
             e.preventDefault();
             if($('#input_form_lesson_id').val().length == 0){
                 alert('수업을 선택해주세요!');
+                $('#input_form_phone').val("");
                 return false;
             }
+            $('#shade_for_popup_basic').css('display', 'block');
+            $('#wrapper_phone_input').css('display', 'block');
+        }
+
+        function form_complete(e) {
+            e.preventDefault();
             let form_info = $('#form_data_phone');
             $.ajax({
                 url: '/trainer/attend_mode_check/',
-                type : 'POST',
-                data : form_info.serialize(),
-                dataType : 'html',
+                type: 'POST',
+                data: form_info.serialize(),
+                dataType: 'html',
 
-                beforeSend:function(){
+                beforeSend: function () {
                 },
 
-                success:function(data){
+                success: function (data) {
                     var jsondata = JSON.parse(data);
                     check_app_version(jsondata.app_version);
-                    if(jsondata.messageArray.length>0){
+                    if (jsondata.messageArray.length > 0) {
                         alert(jsondata.messageArray);
-                    }else{
+                        //$('#input_form_phone').val("");
+                    } else {
                         $('#id_member_ticket_id').val(jsondata.member_ticket_id);
                         form_info.submit();
                     }
 
                 },
 
-                complete:function(){
+                complete: function () {
                 },
 
-                error:function(){
+                error: function () {
                     console.log('server error');
                 }
             });
         }
-
+        function close_phone_number_popup(){
+            $('#shade_for_popup_basic').css('display', 'none');
+            $('#wrapper_phone_input').css('display', 'none');
+            number_pad_input('all_clear');
+        }
 
         function back_to_normal_mode(e, popup_name){
             e.preventDefault();
@@ -595,11 +731,11 @@
                                         document.getElementById('select_prev_time_display').value = '{{ setting_attend_class_prev_display_time }}';
                                         document.getElementById('select_after_time_display').value = '{{ setting_attend_class_after_display_time }}';
                                     }
-                                }
+                                };
                         
             let clear = function(){ $('#content_wrapper').css('overflow-y', 'auto');
                                     $('#popup_storage').html('');
-                                }
+                                };
 
 
             return ({
@@ -729,7 +865,7 @@
             var temp = $(e).val();
             if(limit.test(temp)){
                 $(e).val(temp.replace(limit, ""));
-                alert("숫자만 입력하실 수 있습니다.");
+{#                alert("숫자만 입력하실 수 있습니다.");#}
             }
             else{
                 $('#admin_password').val(temp);

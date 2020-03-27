@@ -1279,6 +1279,7 @@ class AttendModeView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
         start_date = current_time + datetime.timedelta(minutes=int(setting_attend_class_prev_display_time))
         end_date = current_time - datetime.timedelta(minutes=int(setting_attend_class_after_display_time))
+        func_setting_data_update(self.request, 'trainer')
         context = func_get_trainer_attend_schedule(context, class_id, start_date, end_date, current_time)
 
         context['setting_admin_password'] = setting_admin_password
@@ -5937,7 +5938,7 @@ def attend_mode_check_logic(request):
 
                     if error is None:
                         if member_ticket_id is None or member_ticket_id == '':
-                            error = '선택하신 수업의 예약 가능 횟수가 없습니다.'
+                            error = '선택하신 수업의 예약 가능 횟수를 확인해주세요.'
                         else:
                             try:
                                 MemberTicketTb.objects.get(member_ticket_id=member_ticket_id)
@@ -6046,6 +6047,7 @@ def update_attend_mode_setting_logic(request):
     setting_admin_password = request.POST.get('setting_admin_password', '0000')
     setting_attend_class_prev_display_time = request.POST.get('setting_attend_class_prev_display_time', '5')
     setting_attend_class_after_display_time = request.POST.get('setting_attend_class_after_display_time', '5')
+    setting_attend_mode_max_num_view_available = request.POST.get('setting_attend_mode_max_num_view_available', USE)
 
     class_id = request.session.get('class_id', '')
     # next_page = request.POST.get('next_page', '/trainer/attend_mode/')
@@ -6056,16 +6058,19 @@ def update_attend_mode_setting_logic(request):
         setting_attend_class_prev_display_time = '5'
     if setting_attend_class_after_display_time is None or setting_attend_class_after_display_time == '':
         setting_attend_class_after_display_time = '5'
-
+    if setting_attend_mode_max_num_view_available is None or setting_attend_mode_max_num_view_available == '':
+        setting_attend_mode_max_num_view_available = USE
     setting_type_cd_data = ['LT_ADMIN_PASSWORD', 'LT_ATTEND_CLASS_PREV_DISPLAY_TIME',
-                            'LT_ATTEND_CLASS_AFTER_DISPLAY_TIME']
-    setting_info_data = [setting_admin_password, setting_attend_class_prev_display_time, setting_attend_class_after_display_time]
+                            'LT_ATTEND_CLASS_AFTER_DISPLAY_TIME', 'LT_ATTEND_CLASS_MAX_NUM_VIEW']
+    setting_info_data = [setting_admin_password, setting_attend_class_prev_display_time,
+                         setting_attend_class_after_display_time, setting_attend_mode_max_num_view_available]
     error = update_program_setting_data(class_id, setting_type_cd_data, setting_info_data)
 
     if error is None:
         request.session['setting_admin_password'] = setting_admin_password
         request.session['setting_attend_class_prev_display_time'] = setting_attend_class_prev_display_time
         request.session['setting_attend_class_after_display_time'] = setting_attend_class_after_display_time
+        request.session['setting_attend_mode_max_num_view_available'] = setting_attend_mode_max_num_view_available
     else:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
@@ -6096,7 +6101,7 @@ def check_admin_password_logic(request):
 
 
 class GetAttendModeScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'ajax/schedule_ajax.html'
+    template_name = 'ajax/attend_schedule_ajax.html'
 
     def get_context_data(self, **kwargs):
         context = super(GetAttendModeScheduleView, self).get_context_data(**kwargs)

@@ -305,6 +305,8 @@ def func_setting_data_update(request, group):
 
         request.session['setting_schedule_alarm_minute'] = context['setting_schedule_alarm_minute']
 
+        request.session['setting_attend_mode_max_num_view_available'] = context['setting_attend_mode_max_num_view_available']
+
         if group == 'trainee':
             try:
                 setting_data = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_LAN_01')

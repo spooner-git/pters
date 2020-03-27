@@ -1908,7 +1908,7 @@ def func_get_trainer_attend_schedule(context, class_id, start_date, end_date, no
     # func_get_trainer_attend_lecture_schedule(context, class_id, start_date, end_date, now, '')
 
     query = "select count(B.ID) from SCHEDULE_TB as B where B.GROUP_SCHEDULE_ID = `SCHEDULE_TB`.`ID` " \
-            "AND B.STATE_CD = \'AP\' AND B.USE=1"
+            "AND B.STATE_CD = \'NP\' AND PERMISSION_STATE_CD=\'AP\' AND B.USE=1"
     finish_member_query = "select count(B.ID) from SCHEDULE_TB as B where B.GROUP_SCHEDULE_ID = `SCHEDULE_TB`.`ID` " \
                           "AND B.STATE_CD = \'PE\' AND B.USE=1"
 

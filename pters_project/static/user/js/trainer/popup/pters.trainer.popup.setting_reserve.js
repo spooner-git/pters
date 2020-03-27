@@ -10,7 +10,7 @@ class Setting_reserve{
                 available_reserve_date:{value:[], text:[]},
                 available_reserve_time:{value:[], text:[]},
                 available_cancel_time:{value:[], text:[]},
-                capacity_visible:OFF,
+                capacity_visible:ON,
                 setting_member_private_class_auto_permission:ON,
                 setting_member_public_class_auto_permission:ON,
                 setting_member_public_class_wait_member_num:0,
