@@ -4346,6 +4346,12 @@ def update_share_program_info_logic(request):
                                               mod_member_id=request.user.id, use=USE)
             class_member_info.save()
 
+        if auth_cd == AUTH_TYPE_DELETE:
+            schedule_alarm_data = ScheduleAlarmTb.objects.filter(class_tb_id=class_id, member_id=trainer_id)
+            schedule_alarm_data.delete()
+            member_program_setting_data = SettingTb.objects.filter(class_tb_id=class_id, member_id=trainer_id)
+            member_program_setting_data.delete()
+
         function_list = ProductFunctionAuthTb.objects.select_related(
             'function_auth_tb', 'product_tb').filter(product_tb_id=6,
                                                      use=USE).order_by('product_tb_id',
@@ -4488,6 +4494,11 @@ def update_trainer_program_connection_info_logic(request):
             ).filter(class_tb_id=class_id, member_id=request.user.id, use=USE)
             member_program_data.update(auth_cd=AUTH_TYPE_DELETE)
 
+            schedule_alarm_data = ScheduleAlarmTb.objects.filter(class_tb_id=class_id, member_id=request.user.id)
+            schedule_alarm_data.delete()
+            member_program_setting_data = SettingTb.objects.filter(class_tb_id=class_id, member_id=request.user.id)
+            member_program_setting_data.delete()
+
             class_info = None
             try:
                 class_info = ClassTb.objects.get(class_id=class_id)
@@ -4543,6 +4554,11 @@ def delete_trainer_program_connection_logic(request):
             'class_tb', 'member'
         ).filter(class_tb_id=class_id, member_id=request.user.id, use=USE)
         member_program_data.update(auth_cd=AUTH_TYPE_DELETE)
+
+        schedule_alarm_data = ScheduleAlarmTb.objects.filter(class_tb_id=class_id, member_id=request.user.id)
+        schedule_alarm_data.delete()
+        member_program_setting_data = SettingTb.objects.filter(class_tb_id=class_id, member_id=request.user.id)
+        member_program_setting_data.delete()
 
         class_info = None
         try:
