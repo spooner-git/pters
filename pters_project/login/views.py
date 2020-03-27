@@ -326,6 +326,8 @@ class AddSocialMemberInfoView(RegistrationView, View):
         recommend_error_check = None
         error = None
         user = None
+        today = datetime.date.today()
+
         if first_name == '' or first_name == 'None' or first_name is None:
             first_name = name
 
@@ -374,6 +376,19 @@ class AddSocialMemberInfoView(RegistrationView, View):
                         self.request.session.set_expiry(0)
                     login(request, user)
 
+                    if group_type == 'trainer':
+                        try:
+                            coupon_info = CouponTb.objects.get(coupon_cd='PTERS1010', use=USE)
+                            expiry_date = today + datetime.timedelta(days=coupon_info.effective_days)
+                            coupon_member = CouponMemberTb(member_id=request.user.id, name=coupon_info.name,
+                                                           coupon_tb_id=coupon_info.coupon_id,
+                                                           contents=coupon_info.contents, exhaustion=UN_USE,
+                                                           start_date=today, expiry_date=expiry_date, use=USE)
+                            coupon_member.save()
+
+                        except ObjectDoesNotExist:
+                            coupon_info = None
+
             except ValueError:
                 error = '이미 가입된 회원입니다.'
             except IntegrityError:
@@ -387,7 +402,6 @@ class AddSocialMemberInfoView(RegistrationView, View):
         if error is None and recommend_error_check is None:
             coupon_info = None
             # recommend_check = None
-            today = datetime.date.today()
             check_recommend_before = SnsInfoTb.objects.filter(member__recommended_member_id=recommended_member_id,
                                                               sns_id=sns_id).count()
             if check_recommend_before <= 1:
@@ -679,6 +693,7 @@ class AddMemberView(RegistrationView, View):
         error = None
         recommend_error_check = None
         recommended_member_info = None
+        today = datetime.date.today()
 
         if sms_activation_check is False:
             error = '문자 인증을 완료해주세요.'
@@ -724,6 +739,19 @@ class AddMemberView(RegistrationView, View):
                             request.session['social_accessToken'] = ''
                             login(request, login_user)
 
+                            if group_type == 'trainer':
+                                try:
+                                    coupon_info = CouponTb.objects.get(coupon_cd='PTERS1010', use=USE)
+                                    expiry_date = today + datetime.timedelta(days=coupon_info.effective_days)
+                                    coupon_member = CouponMemberTb(member_id=request.user.id, name=coupon_info.name,
+                                                                   coupon_tb_id=coupon_info.coupon_id,
+                                                                   contents=coupon_info.contents, exhaustion=UN_USE,
+                                                                   start_date=today, expiry_date=expiry_date, use=USE)
+                                    coupon_member.save()
+
+                                except ObjectDoesNotExist:
+                                    coupon_info = None
+
                     except ValueError:
                         error = '이미 가입된 회원입니다.'
                     except IntegrityError:
@@ -737,7 +765,6 @@ class AddMemberView(RegistrationView, View):
 
                 if error is None and recommend_error_check is None:
                     coupon_info = None
-                    today = datetime.date.today()
                     check_recommend_before = MemberTb.objects.filter(recommended_member_id=recommended_member_id,
                                                                      phone=phone).count()
                     if check_recommend_before <= 1:
