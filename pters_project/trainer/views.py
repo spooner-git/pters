@@ -58,7 +58,7 @@ from .functions import func_get_trainer_setting_list, \
     func_get_member_lecture_list, func_get_member_ticket_list, func_get_lecture_info, func_add_member_ticket_info,\
     func_get_ticket_info, func_delete_member_ticket_info, func_update_lecture_member_fix_status_cd,\
     update_user_setting_data, update_program_setting_data, func_get_member_ticket_info, func_get_trainer_info,\
-    update_alarm_setting_data
+    update_alarm_setting_data, func_hold_member_ticket_info
 from .models import ClassMemberTicketTb, LectureTb, ClassTb, MemberClassTb, BackgroundImgTb, \
     SettingTb, TicketTb, TicketLectureTb, CenterTrainerTb, LectureMemberTb, ProgramAuthTb, ProgramBoardTb, \
     ProgramNoticeTb, BugMemberTicketPriceTb
@@ -1353,7 +1353,7 @@ class AttendModeDetailView(LoginRequiredMixin, AccessTestMixin, View):
                                     context['member_ticket_info'] =\
                                         MemberTicketTb.objects.get(member_ticket_id=member_ticket_id)
                                 except ObjectDoesNotExist:
-                                    error = '수강정보를 불러오지 못했습니다.'
+                                    error = '회원권 정보를 불러오지 못했습니다.'
                 else:
                     if schedule_info.member_ticket_tb.member_id == member_id:
                         context['member_ticket_info'] = schedule_info.member_ticket_tb
@@ -1928,8 +1928,8 @@ def export_excel_member_info_logic(request):
                 member_ticket_info.reg_dt = str(member_ticket_info.reg_dt)
 
                 start_raw = 7
-                ws1.title = member_ticket_info.start_date + ' 수강정보'
-                ws1['A1'] = '수강 정보'
+                ws1.title = member_ticket_info.start_date + ' 회원권 정보'
+                ws1['A1'] = '회원권 정보'
                 ws1['A1'].font = Font(bold=True, size=15)
                 ws1['A2'] = '회원권'
                 ws1['B2'] = '시작일자'
@@ -1954,18 +1954,18 @@ def export_excel_member_info_logic(request):
                 try:
                     member_ticket_info.state_cd_name = CommonCdTb.objects.get(common_cd=member_ticket_info.state_cd)
                 except ObjectDoesNotExist:
-                    error = '수강정보를 불러오지 못했습니다.'
+                    error = '회원권 정보를 불러오지 못했습니다.'
                 try:
                     member_ticket_test = MemberTicketTb.objects.get(
                         member_ticket_id=member_ticket_info.member_ticket_id)
                     member_ticket_info.auth_cd = member_ticket_test.member_auth_cd
                 except ObjectDoesNotExist:
-                    error = '수강정보를 불러오지 못했습니다.'
+                    error = '회원권 정보를 불러오지 못했습니다.'
 
                 try:
                     member_ticket_info.auth_cd_name = CommonCdTb.objects.get(common_cd=member_ticket_info.auth_cd)
                 except ObjectDoesNotExist:
-                    error = '수강정보를 불러오지 못했습니다.'
+                    error = '회원권 정보를 불러오지 못했습니다.'
 
                 if member_ticket_info.auth_cd == AUTH_TYPE_WAIT:
                     np_member_ticket_counts += 1
@@ -2068,7 +2068,7 @@ def export_excel_member_info_logic(request):
                 ws1 = wb.create_sheet()
 
     user_agent = request.META['HTTP_USER_AGENT']
-    filename = str(member_info.name + '_회원님_수강정보.xlsx').encode('utf-8')
+    filename = str(member_info.name + '_회원님_회원정보.xlsx').encode('utf-8')
     # test_str = urllib.parse.unquote('한글')
     response = HttpResponse(save_virtual_workbook(wb),
                             content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
@@ -2104,7 +2104,7 @@ class GetMemberTicketInfoView(LoginRequiredMixin, AccessTestMixin, View):
             error = '오류가 발생했습니다.'
 
         if member_ticket_id is None or member_ticket_id == '':
-            error = '회원 수강 정보를 불러오지 못했습니다.'
+            error = '회원 정보를 불러오지 못했습니다.'
 
         if error is None:
             member_ticket_list = func_get_member_ticket_info(class_id, member_ticket_id)
@@ -2246,13 +2246,13 @@ def update_member_ticket_info_logic(request):
     member_ticket_info = None
 
     if member_ticket_id is None or member_ticket_id == '':
-        error = '수강정보를 불러오지 못했습니다.'
+        error = '회원권 정보를 불러오지 못했습니다.'
 
     if error is None:
         try:
             member_ticket_info = MemberTicketTb.objects.get(member_ticket_id=member_ticket_id)
         except ObjectDoesNotExist:
-            error = '수강정보를 불러오지 못했습니다.'
+            error = '회원권 정보를 불러오지 못했습니다.'
 
     if error is None:
         if note is None or note == '':
@@ -2278,7 +2278,7 @@ def update_member_ticket_info_logic(request):
         try:
             price = int(price)
         except ValueError:
-            error = '수강 금액은 숫자만 입력 가능합니다.'
+            error = '회원권 금액은 숫자만 입력 가능합니다.'
 
         try:
             member_ticket_reg_count = int(member_ticket_reg_count)
@@ -2351,13 +2351,13 @@ def delete_member_ticket_info_logic(request):
     error = None
     member_ticket_info = None
     if member_ticket_id is None or member_ticket_id == '':
-        error = '수강정보를 불러오지 못했습니다.'
+        error = '회원권 정보를 불러오지 못했습니다.'
 
     if error is None:
         try:
             member_ticket_info = MemberTicketTb.objects.get(member_ticket_id=member_ticket_id)
         except ObjectDoesNotExist:
-            error = '수강정보를 불러오지 못했습니다.'
+            error = '회원권 정보를 불러오지 못했습니다.'
 
     if error is None:
         error = func_delete_member_ticket_info(request.user.id, class_id, member_ticket_id)
@@ -2380,6 +2380,44 @@ def delete_member_ticket_info_logic(request):
     return render(request, 'ajax/trainer_error_ajax.html')
 
 
+# 회원권 홀딩
+def hold_member_ticket_info_logic(request):
+    member_ticket_id = request.POST.get('member_ticket_id', '')
+    start_date = request.POST.get('start_date', '')
+    end_date = request.POST.get('end_date', '')
+    class_id = request.session.get('class_id', '')
+    error = None
+    member_ticket_info = None
+    if member_ticket_id is None or member_ticket_id == '':
+        error = '회원권 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            member_ticket_info = MemberTicketTb.objects.get(member_ticket_id=member_ticket_id)
+        except ObjectDoesNotExist:
+            error = '회원권 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        error = func_hold_member_ticket_info(request.user.id, class_id, member_ticket_id, start_date, end_date)
+
+    if error is None:
+        # 회원의 고정 수업 정리
+        func_update_lecture_member_fix_status_cd(class_id, member_ticket_info.member_id)
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=member_ticket_info.member.name + ' 회원님의 '
+                                  + member_ticket_info.ticket_tb.name + ' 회원권', log_how='홀딩', use=USE)
+        log_data.save()
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
 def update_member_ticket_status_info_logic(request):
     class_id = request.session.get('class_id', '')
     member_ticket_id = request.POST.get('member_ticket_id', '')
@@ -2390,7 +2428,7 @@ def update_member_ticket_status_info_logic(request):
     error = None
 
     if member_ticket_id is None or member_ticket_id == '':
-        error = '수강정보를 불러오지 못했습니다.'
+        error = '회원권 정보를 불러오지 못했습니다.'
     if refund_price == '':
         refund_price = 0
     if refund_date == '':
@@ -2400,7 +2438,7 @@ def update_member_ticket_status_info_logic(request):
         try:
             member_ticket_info = MemberTicketTb.objects.get(member_ticket_id=member_ticket_id)
         except ObjectDoesNotExist:
-            error = '수강정보를 불러오지 못했습니다.'
+            error = '회원권 정보를 불러오지 못했습니다.'
     if error is None:
         if state_cd == 'RF':
             if refund_price is None or refund_price == 0:
@@ -2511,7 +2549,7 @@ def update_member_connection_info_logic(request):
 
     if error is None:
         if member_auth_cd != AUTH_TYPE_VIEW and member_auth_cd != AUTH_TYPE_WAIT and member_auth_cd != AUTH_TYPE_DELETE:
-            error = '수강정보를 불러오지 못했습니다.'
+            error = '회원권 정보를 불러오지 못했습니다.'
 
     if error is None:
 
@@ -3283,22 +3321,22 @@ def add_ticket_info_logic(request):
     try:
         ticket_price = int(ticket_price)
     except ValueError:
-        error = '수강 금액은 숫자만 입력 가능합니다.'
+        error = '회원권 금액은 숫자만 입력 가능합니다.'
 
     try:
         ticket_month_schedule_enable = int(ticket_month_schedule_enable)
     except ValueError:
-        error = '월간 수강 제한 횟수는 숫자만 입력 가능합니다.'
+        error = '월간 일정 등록 제한 횟수는 숫자만 입력 가능합니다.'
 
     try:
         ticket_week_schedule_enable = int(ticket_week_schedule_enable)
     except ValueError:
-        error = '주간 수강 제한 횟수는 숫자만 입력 가능합니다.'
+        error = '주간 일정 등록 제한 횟수는 숫자만 입력 가능합니다.'
 
     try:
         ticket_day_schedule_enable = int(ticket_day_schedule_enable)
     except ValueError:
-        error = '일일 수강 제한 횟수는 숫자만 입력 가능합니다.'
+        error = '일일 일정 등록 제한 횟수는 숫자만 입력 가능합니다.'
 
     try:
         ticket_reg_count = int(ticket_reg_count)
@@ -5943,7 +5981,7 @@ def attend_mode_check_logic(request):
                             try:
                                 MemberTicketTb.objects.get(member_ticket_id=member_ticket_id)
                             except ObjectDoesNotExist:
-                                error = '수강정보를 불러오지 못했습니다.'
+                                error = '회원권 정보를 불러오지 못했습니다.'
             else:
                 if schedule_info.state_cd == STATE_CD_FINISH:
                     error = '이미 출석 처리된 수업입니다.'

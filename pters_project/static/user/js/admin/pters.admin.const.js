@@ -129,7 +129,7 @@ const NOTICE_USAGE = 'SYS_USAGE';
 const NOTICE_UPDATE_HISTORY = 'UPDATE_HISTORY';
 const NOTICE_TYPE = {NOTICE:"공지", FAQ:"FAQ", SYS_USAGE:"사용법", UPDATE_HISTORY:"업데이트 내역"};
 const NOTICE_USE = {1:{text:"공개", color:"green"}, 0:{text:"비공개", color:"#676767"} };
-const NOTICE_TARGET = {ALL:"전체", trainer:"강사", trainee:"수강회원"};
+const NOTICE_TARGET = {ALL:"전체", trainer:"강사", trainee:"회원"};
 
 
 /* 팝업 주소 */

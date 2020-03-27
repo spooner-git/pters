@@ -12,7 +12,7 @@ from configs import DEBUG
 from configs.const import USE, UN_USE, AUTO_FINISH_OFF, FROM_TRAINEE_LESSON_ALARM_ON, \
     TO_TRAINEE_LESSON_ALARM_OFF, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, STATE_CD_IN_PROGRESS, STATE_CD_FINISH,\
     AUTH_TYPE_DELETE, STATE_CD_NOT_PROGRESS, SHOW, CALENDAR_TIME_SELECTOR_BASIC, ING_MEMBER_TRUE, ING_MEMBER_FALSE, \
-    TO_SHARED_TRAINER_LESSON_ALARM_OFF
+    TO_SHARED_TRAINER_LESSON_ALARM_OFF, STATE_CD_HOLDING
 
 from login.models import MemberTb
 from schedule.models import ScheduleTb, RepeatScheduleTb
@@ -629,7 +629,7 @@ def func_delete_member_ticket_info(user_id, class_id, member_ticket_id):
             'member_ticket_tb__member').get(class_tb_id=class_id, member_ticket_tb_id=member_ticket_id,
                                             auth_cd=AUTH_TYPE_VIEW, use=USE)
     except ObjectDoesNotExist:
-        error = '수강정보를 불러오지 못했습니다.'
+        error = '회원권 정보를 불러오지 못했습니다.'
 
     if error is None:
         schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, member_ticket_tb_id=member_ticket_id,
@@ -662,6 +662,41 @@ def func_delete_member_ticket_info(user_id, class_id, member_ticket_id):
                     member_ticket_info.member_ticket_avail_count = 0
                     member_ticket_info.state_cd = STATE_CD_FINISH
                     member_ticket_info.save()
+
+        except ValueError:
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError:
+            error = '등록 값에 문제가 있습니다.'
+        except TypeError:
+            error = '등록 값의 형태가 문제 있습니다.'
+        except ValidationError:
+            error = '등록 값의 형태가 문제 있습니다'
+        except InternalError:
+            error = '등록 값에 문제가 있습니다.'
+
+    return error
+
+
+# 회원의 회원권 홀딩하기
+def func_hold_member_ticket_info(user_id, class_id, member_ticket_id, start_date, end_date):
+    error = None
+    class_member_ticket_info = None
+    try:
+        class_member_ticket_info = ClassMemberTicketTb.objects.select_related(
+            'member_ticket_tb__member').get(class_tb_id=class_id, member_ticket_tb_id=member_ticket_id,
+                                            auth_cd=AUTH_TYPE_VIEW, use=USE)
+    except ObjectDoesNotExist:
+        error = '회원권 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                # 강사에게 더이상 안보이도록
+                class_member_ticket_info.mod_member_id = user_id
+                class_member_ticket_info.save()
+                member_ticket_info = class_member_ticket_info.member_ticket_tb
+                member_ticket_info.state_cd = STATE_CD_HOLDING
+                member_ticket_info.save()
 
         except ValueError:
             error = '등록 값에 문제가 있습니다.'

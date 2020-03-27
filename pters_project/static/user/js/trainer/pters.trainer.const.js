@@ -128,7 +128,7 @@ const TICKET_PAY_METHOD = {
 // 일지 공개 타입
 const DAILY_RECORD_OPEN_TYPE = {
     0:"나만 보기", 
-    1:"수강 회원님과 공유"
+    1:"회원님과 공유"
 };
 
 /* 정렬 관련된 값 */
@@ -324,7 +324,7 @@ const LECTURE_SCHEDULE_STATUS = {"NP" : "진행전", "PE": "완료"};
 const LECTURE_SCHEDULE_STATUS_COLOR = {"NP" : "var(--font-sub-light)", "PC": "orange", "PE": "var(--font-main)"};
 const APPROVE_SCHEDULE_STATUS = {"AP": "예약 확정", "WP":"대기 예약"};
 const SCHEDULE_STATUS_COLOR = {"NP" : "var(--font-main)", "PC": "orange", "PE": "green"};
-const TICKET_STATUS = {"IP": "진행중", "PE": "종료", "RF": "환불"};
+const TICKET_STATUS = {"IP": "진행중", "PE": "종료", "RF": "환불", "HD":"홀딩"};
 const TICKET_STATUS_COLOR = {"IP": "green", "PE": "var(--font-main)", "RF": "orange"};
 const PAY_TYPE_NAME = {"SINGLE": "1회 결제", "PERIOD": "정기 결제 / 1 개월", "":"없음", "FREE_EVENT":"무료 이벤트", "CHANGE":"상품 변경"};
 const PAY_STATUS = {"paid":"결제 완료", "failed":"결제 실패", "cancelled":"결제 취소", "reserve":"결제 예정"};

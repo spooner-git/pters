@@ -223,6 +223,33 @@ class Member_ticket_modify{
                         layer_popup.close_layer_popup();
                     });
                     layer_popup.close_layer_popup();}
+                },
+                holding: {
+                    text: "홀딩", callback: () => {
+
+                        let message = {
+                            title: '회원권 홀딩 안내',
+                            comment: `회원권을 재개 하실때까지 
+                                <span style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">자동으로 종료일자가 연장</span>됩니다.`
+                        };
+                        show_user_confirm(message, () => {
+                            Member_func.ticket_hold({"member_ticket_id": this.data.member_ticket_id}, () => {
+                                this.data.status = "HD";
+                                this.render_content();
+                                try {
+                                    current_page.init();
+                                } catch (e) {
+                                }
+                                try {
+                                    member_view_popup.init();
+                                    member_ticket_history.init();
+                                } catch (e) {
+                                }
+                                layer_popup.close_layer_popup();
+                            });
+                            layer_popup.close_layer_popup();
+                        });
+                    }
                 }
             };
 
@@ -230,6 +257,7 @@ class Member_ticket_modify{
                 delete user_option.resume;
                 delete user_option.delete;
             }else{
+                delete user_option.holding;
                 delete user_option.refund;
                 delete user_option.finish;
             }

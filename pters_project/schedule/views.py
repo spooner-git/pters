@@ -111,7 +111,7 @@ def check_schedule_logic(request):
                                 member_ticket_info = MemberTicketTb.objects.get(member_ticket_id=
                                                                                 member_info['member_ticket_id'])
                             except ObjectDoesNotExist:
-                                error_temp = '수강정보를 불러오지 못했습니다.'
+                                error_temp = '회원권 정보를 불러오지 못했습니다.'
                             if error_temp is None:
                                 select_date = schedule_start_datetime.date()
                                 if member_ticket_info.ticket_tb.day_schedule_enable < 9999:
@@ -2001,7 +2001,7 @@ def delete_repeat_schedule_logic2(request):
             try:
                 member_ticket_info = MemberTicketTb.objects.get(member_ticket_id=member_ticket_id, use=USE)
             except ObjectDoesNotExist:
-                error = '수강정보를 불러오지 못했습니다.'
+                error = '회원권 정보를 불러오지 못했습니다.'
             if error is None:
                 member_info = member_ticket_info.member
             if error is None:
@@ -2737,7 +2737,7 @@ def delete_lecture_repeat_schedule_logic(request):
             try:
                 member_ticket_info = MemberTicketTb.objects.get(member_ticket_id=member_ticket_id, use=USE)
             except ObjectDoesNotExist:
-                error_temp = '수강정보를 불러오지 못했습니다.'
+                error_temp = '회원권 정보를 불러오지 못했습니다.'
             if error_temp is None:
                 member_name = member_ticket_info.member.name
 

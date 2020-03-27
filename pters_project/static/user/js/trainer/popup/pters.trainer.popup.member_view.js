@@ -336,6 +336,7 @@ class Member_view{
         let sex = this.dom_row_member_sex_input();
         let ticket = this.dom_row_ticket();
         let repeat = this.dom_row_repeat();
+        let member_closed = this.dom_row_member_closed();
         // let memo = this.dom_row_member_memo_input();
         let tag_id = this.data.active == 'True' || this.data.active == null ? '아이디' : '아이디 <span style="color:var(--font-highlight);margin-left:3px;">(임시아이디, 비밀번호 0000)</span>';
 
@@ -360,6 +361,12 @@ class Member_view{
                 repeat +
             '</div>';
 
+        let tab_member_closed_info =
+            '<div class="obj_input_box_full" style="padding-right:18px">' +
+                // CComponent.dom_tag('반복 일정', {"padding-left":"0"}) +
+                member_closed +
+            '</div>';
+
         let selected_tab;
         if(this.list_type == "basic_info"){
             selected_tab = tab_basic_info;
@@ -367,6 +374,8 @@ class Member_view{
             selected_tab = tab_ticket_info;
         }else if(this.list_type == "repeat_info"){
             selected_tab = tab_repeat_info;
+        }else if(this.list_type == "member_closed_info"){
+            selected_tab = tab_member_closed_info;
         }
 
         let html =
@@ -422,6 +431,7 @@ class Member_view{
             ${CComp.element("div", "기본 정보", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_basic_info", class:`list_tab_content ${this.list_type == "basic_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("basic_info");}})}
             ${CComp.element("div", "회원권", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_ticket_info", class:`list_tab_content ${this.list_type == "ticket_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("ticket_info");}})}
             ${CComp.element("div", "일정", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_repeat_info", class:`list_tab_content ${this.list_type == "repeat_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("repeat_info");}})}
+            ${CComp.element("div", "불가일", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_member_closed_info", class:`list_tab_content ${this.list_type == "member_closed_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("member_closed_info");}})}
         </div>`;
         return html;
     }
@@ -445,6 +455,12 @@ class Member_view{
                 this.list_type = "repeat_info";
                 this.render();
             break;
+
+            case "member_closed_info":
+                this.list_type = "member_closed_info";
+                this.render();
+            break;
+
         }
     }
 
@@ -611,7 +627,7 @@ class Member_view{
             //행을 클릭했을때 실행할 내용
 
             if(disabled == true){
-                show_error_message({title:"수강 회원님께서 PTERS에 직접 접속하신 이후로는 <br> 타인이 정보를 수정할 수 없습니다."});
+                show_error_message({title:"이용 회원님께서 PTERS에 직접 접속하신 이후로는 <br> 타인이 정보를 수정할 수 없습니다."});
                 return false;
             }
             let root_content_height = $root_content.height();
@@ -650,7 +666,7 @@ class Member_view{
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
 
             if(disabled == true){
-                show_error_message({title:"수강 회원님께서 PTERS에 직접 접속하신 이후로는 <br> 타인이 정보를 수정할 수 없습니다."});
+                show_error_message({title:"이용 회원님께서 PTERS에 직접 접속하신 이후로는 <br> 타인이 정보를 수정할 수 없습니다."});
                 return false;
             }
 
@@ -848,6 +864,46 @@ class Member_view{
             `</div>
             <div>${CComponent.dom_tag('반복 일정', {"padding-left":"0", "padding-top":"0"})}</div>
             ${html_to_join.length == 0 ? `<div style="font-size:12px;color:var(--font-sub-dark);padding:5px;">설정된 반복 일정이 없습니다.</div>` : ""}
+            `
+        );
+        return html_to_join.join("");
+    }
+
+    dom_row_member_closed(){
+        let html_to_join = [];
+        let length = this.data.repeat.length;
+        for(let i=0; i<length; i++){
+            let data = this.data.repeat[i];
+            html_to_join.push(
+                this.dom_row_repeat_item(
+                    data.repeat_schedule_id,
+                    data.lecture_ing_color_cd,
+                    data.week_info.split('/').map((item)=>{
+                        return DAYNAME_MATCH[item];
+                    }).join(''),
+                    data.lecture_name,
+                    data.start_date+' - '+data.end_date,
+                    data.start_time+' - '+data.end_time
+                )
+            );
+        }
+        html_to_join.unshift(
+            `<div style="margin-top:10px;margin-bottom:10px;height:33px;">`+
+                CComp.button("view_schedule_history", `${CImg.history([""], {"vertical-align":"middle", "margin-bottom":"3px", "margin-right":"2px", "width":"18px"})} 과거 이력`, {"font-size":"12px", "float":"left", "padding-left":"0"}, null, ()=>{
+                    let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_SCHEDULE_HISTORY, 100, popup_style, null, ()=>{
+                        member_schedule_history = new Member_schedule_history('.popup_member_schedule_history', this.member_id, null);
+                    });
+                }) +
+                CComp.button("add_new_ticket", `${CImg.plus([""], {"vertical-align":"middle", "margin-bottom":"3px", "margin-right":"2px", "width":"18px"})}`, {"font-size":"12px", "float":"right", "padding-right":"0"}, null, ()=>{
+                    let member_add_initial_data = {member_id: this.member_id};
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_ADD, 100, POPUP_FROM_BOTTOM, null, ()=>{
+                        member_add_popup = new Member_add('.popup_member_add', member_add_initial_data, 'member_add_popup');}
+                    );
+                }) +
+            `</div>
+            <div>${CComponent.dom_tag('불가일', {"padding-left":"0", "padding-top":"0"})}</div>
+            ${html_to_join.length == 0 ? `<div style="font-size:12px;color:var(--font-sub-dark);padding:5px;">설정된 불가일이 없습니다.</div>` : ""}
             `
         );
         return html_to_join.join("");

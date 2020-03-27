@@ -85,6 +85,8 @@ urlpatterns = [
     url(r'^update_member_ticket_info/$', views.update_member_ticket_info_logic, name='update_member_ticket_info'),
     # 회원 수강정보 삭제 - refactoring - 확인 필요
     url(r'^delete_member_ticket_info/$', views.delete_member_ticket_info_logic, name='delete_member_ticket_info'),
+    # 회원 수강정보 삭제 - refactoring - 확인 필요
+    url(r'^hold_member_ticket_info/$', views.hold_member_ticket_info_logic, name='hold_member_ticket_info'),
     # 회원 수강정보 상태 변경 - refactoring - 확인 필요
     url(r'^update_member_ticket_status_info/$', views.update_member_ticket_status_info_logic,
         name='update_member_ticket_status_info'),

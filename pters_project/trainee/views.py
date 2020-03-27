@@ -304,7 +304,7 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
             try:
                 class_info = ClassTb.objects.get(class_id=class_id)
             except ObjectDoesNotExist:
-                error = '수강 정보를 불러오지 못했습니다.'
+                error = '회원권 정보를 불러오지 못했습니다.'
 
         if error is None:
             try:
@@ -317,7 +317,7 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
                 try:
                     class_info.mem_info = MemberTb.objects.get(member_id=class_info.member_id)
                 except ObjectDoesNotExist:
-                    error = '수강정보를 불러오지 못했습니다.'
+                    error = '회원권 정보를 불러오지 못했습니다.'
             context['class_info'] = class_info
 
         if error is None:
@@ -403,7 +403,7 @@ def add_trainee_schedule_logic(request):
     # lt_res_member_time_duration = 60
 
     if class_id is None or class_id == '':
-        error = '수강 정보를 불러오지 못했습니다.'
+        error = '회원권 정보를 불러오지 못했습니다.'
     if training_date == '':
         error = '날짜를 선택해 주세요.'
     # elif time_duration == '':
@@ -415,7 +415,7 @@ def add_trainee_schedule_logic(request):
         try:
             class_info = ClassTb.objects.get(class_id=class_id)
         except ObjectDoesNotExist:
-            error = '수강 정보를 불러오지 못했습니다.'
+            error = '회원권 정보를 불러오지 못했습니다.'
 
     if error is None:
         error = func_check_select_date_reserve_setting(class_id, class_info.member_id, training_date)
@@ -518,7 +518,7 @@ def add_trainee_schedule_logic(request):
         try:
             member_ticket_info = MemberTicketTb.objects.get(member_ticket_id=member_ticket_id)
         except ObjectDoesNotExist:
-            error = '수강정보를 불러오지 못했습니다.'
+            error = '회원권 정보를 불러오지 못했습니다.'
 
     if error is None:
         select_date = start_date.date()
@@ -810,7 +810,7 @@ class GetTraineeScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                     class_hour = class_info.class_hour
                     self.request.session['trainer_id'] = trainer_id
                 except ObjectDoesNotExist:
-                    error = '수강정보를 불러오지 못했습니다.'
+                    error = '회원권 정보를 불러오지 못했습니다.'
 
             context['error'] = error
             # context = func_get_holiday_schedule(context, start_date, end_date)
@@ -931,7 +931,7 @@ def program_select_logic(request):
     # else:
     member_ticket_connection_check = int(member_ticket_connection_check)
     if class_id == '':
-        error = '수강보권 정보를 불러오지 못했습니다.[0]'
+        error = '회원권 정보를 불러오지 못했습니다.[0]'
 
     if error is None:
         if member_ticket_connection_check == PROGRAM_LECTURE_CONNECT_DELETE:
@@ -1491,7 +1491,7 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, class_id):
     member_ticket_absence_count = 0
 
     if class_id is None or class_id == '':
-        error = '수강정보를 불러오지 못했습니다.'
+        error = '회원권 정보를 불러오지 못했습니다.'
 
     if error is None:
         # 강사에 해당하는 강좌 정보 불러오기
