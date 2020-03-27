@@ -15,7 +15,7 @@
                 {{ today |cut:"요일" }}
                     <div class="wrapper_program_select obj_table_cell_x2">
                         <select class="obj_font_size_13_weight_500 obj_font_color_light_grey" title="program_select">
-                            <option selected="" disabled="">프로그램 변경</option>
+                            <option selected="" disabled="">지점 변경</option>
                             {% for class_info in class_data %}
                             <option data-class_id="{{ class_info.class_tb_id }}">{{ class_info.class_type_name }} - {{ class_info.class_tb.member.name }} 강사</option>
                             {% endfor %}
@@ -219,11 +219,11 @@
         <div class="wrapper_title ">
             <div class="obj_table_raw">
                 <div class="wrapper_program_title obj_table_cell_x2 obj_font_size_18_weight_bold">
-                    프로그램 선택하세요.
+                    지점 선택하세요.
                 </div>
                 <div class="wrapper_program_select obj_table_cell_x2">
                     <select class="obj_font_size_13_weight_500 obj_font_color_light_grey" title="program_select">
-                        <option selected="" disabled="">프로그램 선택</option>
+                        <option selected="" disabled="">지점 선택</option>
                         {% for class_info in class_data %}
                         <option data-class_id="{{ class_info.class_tb_id }}">{{ class_info.class_type_name }} - {{ class_info.class_tb.member.name }} 강사</option>
                         {% endfor %}
@@ -236,13 +236,13 @@
         <div class="wrapper_title ">
             <div class="obj_table_raw">
                 <div class="wrapper_program_title obj_font_size_18_weight_bold">
-                    연결된 프로그램 없음
+                    연결된 지점 없음
                 </div>
             </div>
             <div class="obj_table_raw">
                 <div class="obj_font_size_12_weight_normal obj_font_color_dark_grey">
                     1. 알림 페이지에서 요청 사항을 확인해주세요. <br/>
-                    2. 요청 사항이 없다면 강사님에게 프로그램 연결을 요청해주세요.
+                    2. 요청 사항이 없다면 강사님에게 지점 연결을 요청해주세요.
                 </div>
             </div>
         </div>

@@ -329,7 +329,7 @@ class SendAllSchedulePushAlarmDataView(View):
             push_alarm_list[alarm_schedule_info.class_tb_id]['registration_ids'] += registration_ids
 
         # 우선 현재 시간 지난 대기 일정 조회후 다 지우고 메시지 날리기
-        # 프로그램에 설정된 대기 취소 시간 목록 불러오기
+        # 지점에 설정된 대기 취소 시간 목록 불러오기
         not_finish_wait_schedule_time = now + datetime.timedelta(minutes=1440)
 
         query_common_cd = "SELECT COMMON_CD_NM FROM COMMON_CD_TB WHERE COMMON_CD=`CLASS_TB`.`SUBJECT_CD`"

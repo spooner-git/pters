@@ -340,7 +340,7 @@ const LECTURE_TYPE_NORMAL = 'NORMAL';
 
 
 
-//프로그램 리스트
+//지점 리스트
 const PROGRAM_CATEGORY = {
     TR:{name:"스포츠",
         sub_category:{

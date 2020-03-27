@@ -167,21 +167,21 @@ urlpatterns = [
 
     # 강사 검색 기능
     url(r'^search_trainer_info/$', views.SearchTrainerInfoView.as_view(), name='search_trainer_info'),
-    # 프로그램 공유 기능
+    # 지점 공유 기능
     url(r'^update_share_program_info/$', views.update_share_program_info_logic, name='update_share_program_info'),
-    # 프로그램 공유 내역 조회
+    # 지점 공유 내역 조회
     url(r'^get_share_program_data/$', views.GetShareProgramDataViewAjax.as_view(), name='get_share_program_data'),
 
-    # 나에게 프로그램 공유 권한 내역 조회
+    # 나에게 지점 공유 권한 내역 조회
     url(r'^get_shared_program_data/$', views.GetSharedProgramDataViewAjax.as_view(), name='get_share_program_data'),
 
-    # 프로그램 공유 연결 안된 정보 조회
+    # 지점 공유 연결 안된 정보 조회
     url(r'^get_trainer_program_connection_list/$', views.GetTrainerProgramConnectionListView.as_view(),
         name='get_trainer_program_connection_list'),
-    # 프로그램 공유 수락/거절 기능
+    # 지점 공유 수락/거절 기능
     url(r'^update_trainer_program_connection_info/$', views.update_trainer_program_connection_info_logic,
         name='update_trainer_program_connection_info'),
-    # 프로그램 공유 해제 기능
+    # 지점 공유 해제 기능
     url(r'^delete_trainer_program_connection/$', views.delete_trainer_program_connection_logic,
         name='delete_trainer_program_connection'),
 
@@ -371,7 +371,7 @@ urlpatterns = [
     # 색상태그 선택 팝업 페이지
     url(r'^popup_color_select/$', views.PopupColorSelect.as_view(), name='popup_color_select'),
 
-    # 프로그램 추가 페이지
+    # 지점 추가 페이지
     url(r'^add_program/$', views.add_program_logic, name='add_program'),
     # url(r'^refresh_all_data/$', views.refresh_all_data_logic, name='refresh_all_data')
 

@@ -1468,14 +1468,14 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
         context['new_member_num'] = 0
 
         if class_id is None or class_id == '':
-            error = '프로그램 정보를 불러오지 못했습니다.'
+            error = '지점 정보를 불러오지 못했습니다.'
 
         if error is None:
             try:
                 class_info = ClassTb.objects.get(class_id=class_id)
                 context['center_name'] = class_info.get_center_name()
             except ObjectDoesNotExist:
-                error = '프로그램 정보를 불러오지 못했습니다.'
+                error = '지점 정보를 불러오지 못했습니다.'
 
         if error is None:
             # all_member = MemberTb.objects.filter().order_by('name')
@@ -4106,7 +4106,7 @@ def add_program_info_logic(request):
     class_info = None
 
     if subject_cd is None or subject_cd == '':
-        error = '프로그램 종류를 설정해주세요.'
+        error = '지점 종류를 설정해주세요.'
 
     if class_hour is None or class_hour == '':
         class_hour = 60
@@ -4222,13 +4222,13 @@ def delete_program_info_logic(request):
     error = None
     class_info = None
     if class_id is None or class_id == '':
-        error = '프로그램 정보를 불러오지 못했습니다.'
+        error = '지점 정보를 불러오지 못했습니다.'
 
     if error is None:
         try:
             class_info = MemberClassTb.objects.get(member_id=request.user.id, class_tb_id=class_id)
         except ObjectDoesNotExist:
-            error = '프로그램 정보를 불러오지 못했습니다.'
+            error = '지점 정보를 불러오지 못했습니다.'
 
     if error is None:
         class_info.auth_cd = AUTH_TYPE_DELETE
@@ -4246,7 +4246,7 @@ def delete_program_info_logic(request):
         log_data = LogTb(log_type='LC02', auth_member_id=request.user.id,
                          from_member_name=request.user.first_name,
                          class_tb_id=class_id,
-                         log_info='프로그램', log_how='삭제', use=USE)
+                         log_info='지점', log_how='삭제', use=USE)
 
         log_data.save()
 
@@ -4333,7 +4333,7 @@ def update_share_program_info_logic(request):
             error = '강사 정보를 불러오지 못했습니다.'
     if error is None:
         if auth_cd != AUTH_TYPE_VIEW and auth_cd != AUTH_TYPE_WAIT and auth_cd != AUTH_TYPE_DELETE:
-            error = '프로그램 정보를 불러오지 못했습니다.'
+            error = '지점 정보를 불러오지 못했습니다.'
 
     if error is None:
         try:
@@ -4400,7 +4400,7 @@ def update_share_program_info_logic(request):
                          from_member_name=request.user.first_name,
                          class_tb_id=class_id,
                          log_info=member_info.name + '님 에게 \''
-                                  + request.session.get('class_type_name', '') + '\' 프로그램',
+                                  + request.session.get('class_type_name', '') + '\' 지점',
                          log_how=log_how, log_detail='', use=USE)
         log_data.save()
 
@@ -4485,11 +4485,11 @@ def update_trainer_program_connection_info_logic(request):
     error = None
     member_ticket_connection_check = int(program_connection_check)
     if class_id == '':
-        error = '프로그램 정보를 불러오지 못했습니다.[0]'
+        error = '지점 정보를 불러오지 못했습니다.[0]'
 
     if error is None:
         if member_ticket_connection_check == PROGRAM_LECTURE_CONNECT_DELETE:
-            # 선택한 프로그램의 연결 대기중인 수강권 전부 삭제
+            # 선택한 지점의 연결 대기중인 수강권 전부 삭제
             member_program_data = MemberClassTb.objects.select_related(
                 'class_tb', 'member'
             ).filter(class_tb_id=class_id, member_id=request.user.id, use=USE)
@@ -4504,19 +4504,19 @@ def update_trainer_program_connection_info_logic(request):
             try:
                 class_info = ClassTb.objects.get(class_id=class_id)
             except ObjectDoesNotExist:
-                error = '프로그램 정보를 불러오지 못했습니다.[1]'
+                error = '지점 정보를 불러오지 못했습니다.[1]'
 
             log_data = LogTb(log_type='LP02', auth_member_id=request.user.id,
                              from_member_name=request.user.first_name,
                              class_tb_id=class_info.class_id,
                              log_info=class_info.member.name + ' 님의 \''
-                                      + class_info.get_class_type_cd_name()+'\' 프로그램',
+                                      + class_info.get_class_type_cd_name()+'\' 지점',
                              log_how='공유 거절',
                              log_detail='', use=USE)
             log_data.save()
 
         elif member_ticket_connection_check == PROGRAM_LECTURE_CONNECT_ACCEPT:
-            # 선택한 프로그램의 연결 대기중인 수강권 전부 연결
+            # 선택한 지점의 연결 대기중인 수강권 전부 연결
             member_program_data = MemberClassTb.objects.select_related(
                 'class_tb', 'member'
             ).filter(class_tb_id=class_id, member_id=request.user.id, auth_cd=AUTH_TYPE_WAIT, use=USE)
@@ -4526,13 +4526,13 @@ def update_trainer_program_connection_info_logic(request):
             try:
                 class_info = ClassTb.objects.get(class_id=class_id)
             except ObjectDoesNotExist:
-                error = '프로그램 정보를 불러오지 못했습니다.[2]'
+                error = '지점 정보를 불러오지 못했습니다.[2]'
 
             log_data = LogTb(log_type='LP01', auth_member_id=request.user.id,
                              from_member_name=request.user.first_name,
                              class_tb_id=class_info.class_id,
                              log_info=class_info.member.name + ' 님의 \''
-                                      + class_info.get_class_type_cd_name()+'\' 프로그램',
+                                      + class_info.get_class_type_cd_name()+'\' 지점',
                              log_how='공유 신청 수락',
                              log_detail='', use=USE)
             log_data.save()
@@ -4548,9 +4548,9 @@ def delete_trainer_program_connection_logic(request):
     class_id = request.POST.get('class_id', '')
     error = None
     if class_id == '':
-        error = '프로그램 정보를 불러오지 못했습니다.[0]'
+        error = '지점 정보를 불러오지 못했습니다.[0]'
     if error is None:
-        # 선택한 프로그램의 연결 대기중인 수강권 전부 삭제
+        # 선택한 지점의 연결 대기중인 수강권 전부 삭제
         member_program_data = MemberClassTb.objects.select_related(
             'class_tb', 'member'
         ).filter(class_tb_id=class_id, member_id=request.user.id, use=USE)
@@ -4565,14 +4565,14 @@ def delete_trainer_program_connection_logic(request):
         try:
             class_info = ClassTb.objects.get(class_id=class_id)
         except ObjectDoesNotExist:
-            error = '프로그램 정보를 불러오지 못했습니다.[1]'
+            error = '지점 정보를 불러오지 못했습니다.[1]'
 
         if error is None:
             log_data = LogTb(log_type='LP02', auth_member_id=request.user.id,
                              from_member_name=request.user.first_name,
                              class_tb_id=class_info.class_id,
                              log_info=class_info.member.name + ' 님의 \''
-                                      + class_info.get_class_type_cd_name()+'\' 프로그램',
+                                      + class_info.get_class_type_cd_name()+'\' 지점',
                              log_how='공유 해제',
                              log_detail='', use=USE)
             log_data.save()
@@ -4598,7 +4598,7 @@ class GetTrainerProgramConnectionListView(LoginRequiredMixin, AccessTestMixin, T
         member_program_data = MemberClassTb.objects.select_related('class_tb',
                                                                    'member').filter(member_id=request.user.id,
                                                                                     auth_cd=AUTH_TYPE_WAIT)
-        # 프로그램에 따른 권한 추가
+        # 지점에 따른 권한 추가
         for member_program_info in member_program_data:
             program_auth_data = ProgramAuthTb.objects.select_related(
                 'member', 'function_auth_tb').filter(class_tb_id=member_program_info.class_tb_id, use=USE)
@@ -4635,7 +4635,7 @@ def select_program_processing_logic(request):
     class_info = None
 
     if class_id == '':
-        error = '프로그램을 선택해 주세요.'
+        error = '지점을 선택해 주세요.'
 
     if error is None:
         try:
@@ -4810,7 +4810,7 @@ class GetTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):
                     shared_program_flag = SHARED_PROGRAM
 
             except ObjectDoesNotExist:
-                error = '프로그램 정보를 불러오지 못했습니다.'
+                error = '지점 정보를 불러오지 못했습니다.'
 
         if error is None:
             try:

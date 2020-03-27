@@ -84,7 +84,7 @@ class LogTb(TimeStampedModel):
     auth_member = models.ForeignKey(MemberTb, verbose_name='회원', db_column='AUTH_MEMBER_ID', null=True, default='')
     from_member_name = models.CharField('from 회원명', db_column='FROM_MEMBER_NAME', max_length=20, blank=True, default='')
     to_member_name = models.CharField('to 회원명', db_column='TO_MEMBER_NAME', max_length=20, blank=True, default='')
-    class_tb = models.ForeignKey('trainer.ClassTb', verbose_name='프로그램', db_column='class_tb_id', null=True, default='')
+    class_tb = models.ForeignKey('trainer.ClassTb', verbose_name='지점', db_column='class_tb_id', null=True, default='')
     member_ticket_tb = models.ForeignKey('trainee.MemberTicketTb', verbose_name='회원 수강권', db_column='lecture_tb_id', null=True, default='')
     log_info = models.CharField('LOG 제목', db_column='LOG_INFO', max_length=255, blank=True, default='')
     log_how = models.CharField('LOG 정보', db_column='LOG_HOW', max_length=255, blank=True, default='')

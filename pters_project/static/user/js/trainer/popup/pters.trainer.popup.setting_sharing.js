@@ -185,7 +185,7 @@ class Setting_sharing{
 
     dom_row_toolbox(){
         let title = "공유 하기";
-        let description = `<p style="font-size:12px;font-weight:500;margin-top:5px;color:var(--font-sub-normal)">현재 프로그램에 다른 PTERS 강사를 초대합니다.</p>`;
+        let description = `<p style="font-size:12px;font-weight:500;margin-top:5px;color:var(--font-sub-normal)">현재 지점에 다른 PTERS 강사를 초대합니다.</p>`;
         let html = `
         <div class="setting_sharing_upper_box" style="">
             <div style="display:inline-block;">

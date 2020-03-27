@@ -208,12 +208,12 @@ class Program_add{
             // };
             // let go_to_shop_button = `<div>${CComponent.button (id, title, style, onclick)}</div>`;
             
-            // show_error_message({title:`[${inspect.limit_type}] 이용자께서는 프로그램을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다.${go_to_shop_button}`});
+            // show_error_message({title:`[${inspect.limit_type}] 이용자께서는 지점을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다.${go_to_shop_button}`});
 
             this.data_sending_now = false;
             let message = {
-                title:"프로그램 등록을 완료하지 못했습니다.",
-                comment:`[${inspect.limit_type}] 이용자께서는 프로그램을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다.
+                title:"지점 등록을 완료하지 못했습니다.",
+                comment:`[${inspect.limit_type}] 이용자께서는 지점을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다.
                         <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까?</p>`
             };
             show_user_confirm (message, ()=>{

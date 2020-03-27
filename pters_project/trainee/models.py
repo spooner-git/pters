@@ -39,7 +39,7 @@ class MemberTicketTb(TimeStampedModel):
 
     def __str__(self):
 
-        return self.ticket_tb.__str__().split('(프로그램)-')[1]+'-'+self.member.__str__()+'(회원수강권)'
+        return self.ticket_tb.__str__().split('(지점)-')[1]+'-'+self.member.__str__()+'(회원수강권)'
 
     def get_state_cd_name(self):
         try:
@@ -52,15 +52,15 @@ class MemberTicketTb(TimeStampedModel):
 
 class ProgramNoticeHistoryTb(TimeStampedModel):
     program_notice_history_id = models.AutoField(db_column='ID', primary_key=True, null=False)
-    program_notice_tb = models.ForeignKey("trainer.ProgramNoticeTb", verbose_name='프로그램 공지', on_delete=models.CASCADE, null=True)
+    program_notice_tb = models.ForeignKey("trainer.ProgramNoticeTb", verbose_name='지점 공지', on_delete=models.CASCADE, null=True)
     member = models.ForeignKey(MemberTb, verbose_name='회원', on_delete=models.CASCADE, null=True)
-    class_tb = models.ForeignKey("trainer.ClassTb", verbose_name='프로그램', on_delete=models.CASCADE, null=True)
+    class_tb = models.ForeignKey("trainer.ClassTb", verbose_name='지점', on_delete=models.CASCADE, null=True)
 
     class Meta:
         managed = False
         db_table = 'PROGRAM_NOTICE_MEMBER_READ_HISTORY_TB'
-        verbose_name = '회원 프로그램 공지 조회 history'
-        verbose_name_plural = '회원 프로그램 공지 조회 history'
+        verbose_name = '회원 지점 공지 조회 history'
+        verbose_name_plural = '회원 지점 공지 조회 history'
 
 
 # 회원 수강권 연결 정보 (이제 사용 안함)

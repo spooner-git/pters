@@ -553,9 +553,9 @@ def add_trainee_schedule_logic(request):
 
         if error is None:
             if member_ticket_info.member_auth_cd == AUTH_TYPE_WAIT:
-                error = '알림 -> 프로그램 연결 허용 선택후 이용 가능합니다.'
+                error = '알림 -> 지점 연결 허용 선택후 이용 가능합니다.'
             elif member_ticket_info.member_auth_cd == AUTH_TYPE_DELETE:
-                error = '강사님에게 프로그램 연결을 요청하세요.'
+                error = '강사님에게 지점 연결을 요청하세요.'
 
         if error is None:
             if start_date.date() > member_ticket_info.end_date:
@@ -935,7 +935,7 @@ def program_select_logic(request):
 
     if error is None:
         if member_ticket_connection_check == PROGRAM_LECTURE_CONNECT_DELETE:
-            # 선택한 프로그램의 연결 대기중인 수강권 전부 삭제
+            # 선택한 지점의 연결 대기중인 수강권 전부 삭제
             member_ticket_data = ClassMemberTicketTb.objects.select_related(
                 'class_tb', 'member_ticket_tb__member'
             ).filter(class_tb_id=class_id, member_ticket_tb__member_id=request.user.id,
@@ -953,7 +953,7 @@ def program_select_logic(request):
             #                  from_member_name=request.user.first_name,
             #                  class_tb_id=class_id_session,
             #                  log_info=class_info.member.name + ' 강사님의 \''
-            #                           + class_info.get_class_type_cd_name()+'\' 프로그램',
+            #                           + class_info.get_class_type_cd_name()+'\' 지점',
             #                  log_how='연결 취소',
             #                  log_detail='', use=USE)
             # log_data.save()
@@ -961,13 +961,13 @@ def program_select_logic(request):
                              from_member_name=request.user.first_name,
                              class_tb_id=class_info.class_id,
                              log_info=class_info.member.name + ' 강사님의 \''
-                                      + class_info.get_class_type_cd_name()+'\' 프로그램',
+                                      + class_info.get_class_type_cd_name()+'\' 지점',
                              log_how='연결 취소',
                              log_detail='', use=USE)
             log_data.save()
 
         elif member_ticket_connection_check == PROGRAM_LECTURE_CONNECT_ACCEPT:
-            # 선택한 프로그램의 연결 대기중인 수강권 전부 연결
+            # 선택한 지점의 연결 대기중인 수강권 전부 연결
             member_ticket_data = ClassMemberTicketTb.objects.select_related(
                 'class_tb', 'member_ticket_tb__member'
             ).filter(class_tb_id=class_id, member_ticket_tb__member_id=request.user.id,
@@ -987,7 +987,7 @@ def program_select_logic(request):
             #                  from_member_name=request.user.first_name,
             #                  class_tb_id=class_id_session,
             #                  log_info=class_info.member.name + ' 강사님의 \''
-            #                           + class_info.get_class_type_cd_name()+'\' 프로그램',
+            #                           + class_info.get_class_type_cd_name()+'\' 지점',
             #                  log_how='연결 완료',
             #                  log_detail='', use=USE)
             # log_data.save()
@@ -995,14 +995,14 @@ def program_select_logic(request):
                              from_member_name=request.user.first_name,
                              class_tb_id=class_info.class_id,
                              log_info=class_info.member.name + ' 강사님의 \''
-                                      + class_info.get_class_type_cd_name()+'\' 프로그램',
+                                      + class_info.get_class_type_cd_name()+'\' 지점',
                              log_how='연결 완료',
                              log_detail='', use=USE)
             log_data.save()
             next_page = '/trainee/trainee_main/'
 
         if member_ticket_connection_check != PROGRAM_LECTURE_CONNECT_DELETE:
-            # 선택한 프로그램 연결
+            # 선택한 지점 연결
             class_info = None
             request.session['class_id'] = class_id
             try:
@@ -1189,7 +1189,7 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         # if member_ticket_id is None or member_ticket_id == '':
         #     error = '수강정보를 불러오지 못했습니다.'
         if class_id is None or class_id == '':
-            error = '연결된 프로그램이 없습니다.'
+            error = '연결된 지점이 없습니다.'
 
         if error is None:
             today = datetime.date.today()
