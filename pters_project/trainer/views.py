@@ -820,6 +820,512 @@ class GetMemberRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, View):
                             json_dumps_params={'ensure_ascii': True})
 
 
+def add_trainer_closed_date_logic(request):
+    class_id = request.session.get('class_id', '')
+    name = request.POST.get('name', '')
+    member_num = request.POST.get('member_num', '')
+    # member_num_view_flag = request.POST.get('member_num_view_flag', LECTURE_MEMBER_NUM_VIEW_ENABLE)
+    note = request.POST.get('note', '')
+    ing_color_cd = request.POST.get('ing_color_cd', '#ffd3d9')
+    end_color_cd = request.POST.get('end_color_cd', '#d2d1cf')
+    ing_font_color_cd = request.POST.get('ing_font_color_cd', '#282828')
+    end_font_color_cd = request.POST.get('end_font_color_cd', '#282828')
+    lecture_minute = request.POST.get('lecture_minute', 60)
+    start_time = request.POST.get('start_time', 'A-0')
+    error = None
+    lecture_id = None
+    lecture_type_cd = LECTURE_TYPE_NORMAL
+    if member_num == 1 or member_num == '1':
+        lecture_type_cd = LECTURE_TYPE_ONE_TO_ONE
+    try:
+        with transaction.atomic():
+            lecture_info = LectureTb(class_tb_id=class_id, member_num=member_num, lecture_type_cd=lecture_type_cd,
+                                     # member_num_view_flag=member_num_view_flag,
+                                     name=name, note=note, ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
+                                     ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
+                                     lecture_minute=lecture_minute, state_cd=STATE_CD_IN_PROGRESS,
+                                     start_time=start_time, use=USE)
+
+            lecture_info.save()
+            lecture_id = lecture_info.lecture_id
+    except ValueError:
+        error = '오류가 발생했습니다. [1]'
+    except IntegrityError:
+        error = '오류가 발생했습니다. [2]'
+    except TypeError:
+        error = '오류가 발생했습니다. [3]'
+    except ValidationError:
+        error = '오류가 발생했습니다. [4]'
+    except InternalError:
+        error = '오류가 발생했습니다. [5]'
+
+    if error is not None:
+        messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=name+' 수업', log_how='추가', use=USE)
+        log_data.save()
+    return JsonResponse({'lecture_id': str(lecture_id)}, json_dumps_params={'ensure_ascii': True})
+
+
+def update_trainer_closed_date_logic(request):
+    class_id = request.session.get('class_id', '')
+    name = request.POST.get('name', '')
+    member_num = request.POST.get('member_num', '')
+    # member_num_view_flag = request.POST.get('member_num_view_flag', LECTURE_MEMBER_NUM_VIEW_ENABLE)
+    note = request.POST.get('note', '')
+    ing_color_cd = request.POST.get('ing_color_cd', '#ffd3d9')
+    end_color_cd = request.POST.get('end_color_cd', '#d2d1cf')
+    ing_font_color_cd = request.POST.get('ing_font_color_cd', '#282828')
+    end_font_color_cd = request.POST.get('end_font_color_cd', '#282828')
+    lecture_minute = request.POST.get('lecture_minute', 60)
+    start_time = request.POST.get('start_time', 'A-0')
+    error = None
+    lecture_id = None
+    lecture_type_cd = LECTURE_TYPE_NORMAL
+    if member_num == 1 or member_num == '1':
+        lecture_type_cd = LECTURE_TYPE_ONE_TO_ONE
+    try:
+        with transaction.atomic():
+            lecture_info = LectureTb(class_tb_id=class_id, member_num=member_num, lecture_type_cd=lecture_type_cd,
+                                     # member_num_view_flag=member_num_view_flag,
+                                     name=name, note=note, ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
+                                     ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
+                                     lecture_minute=lecture_minute, state_cd=STATE_CD_IN_PROGRESS,
+                                     start_time=start_time, use=USE)
+
+            lecture_info.save()
+            lecture_id = lecture_info.lecture_id
+    except ValueError:
+        error = '오류가 발생했습니다. [1]'
+    except IntegrityError:
+        error = '오류가 발생했습니다. [2]'
+    except TypeError:
+        error = '오류가 발생했습니다. [3]'
+    except ValidationError:
+        error = '오류가 발생했습니다. [4]'
+    except InternalError:
+        error = '오류가 발생했습니다. [5]'
+
+    if error is not None:
+        messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=name+' 수업', log_how='추가', use=USE)
+        log_data.save()
+    return JsonResponse({'lecture_id': str(lecture_id)}, json_dumps_params={'ensure_ascii': True})
+
+
+def delete_trainer_closed_date_logic(request):
+    class_id = request.session.get('class_id', '')
+    name = request.POST.get('name', '')
+    member_num = request.POST.get('member_num', '')
+    # member_num_view_flag = request.POST.get('member_num_view_flag', LECTURE_MEMBER_NUM_VIEW_ENABLE)
+    note = request.POST.get('note', '')
+    ing_color_cd = request.POST.get('ing_color_cd', '#ffd3d9')
+    end_color_cd = request.POST.get('end_color_cd', '#d2d1cf')
+    ing_font_color_cd = request.POST.get('ing_font_color_cd', '#282828')
+    end_font_color_cd = request.POST.get('end_font_color_cd', '#282828')
+    lecture_minute = request.POST.get('lecture_minute', 60)
+    start_time = request.POST.get('start_time', 'A-0')
+    error = None
+    lecture_id = None
+    lecture_type_cd = LECTURE_TYPE_NORMAL
+    if member_num == 1 or member_num == '1':
+        lecture_type_cd = LECTURE_TYPE_ONE_TO_ONE
+    try:
+        with transaction.atomic():
+            lecture_info = LectureTb(class_tb_id=class_id, member_num=member_num, lecture_type_cd=lecture_type_cd,
+                                     # member_num_view_flag=member_num_view_flag,
+                                     name=name, note=note, ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
+                                     ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
+                                     lecture_minute=lecture_minute, state_cd=STATE_CD_IN_PROGRESS,
+                                     start_time=start_time, use=USE)
+
+            lecture_info.save()
+            lecture_id = lecture_info.lecture_id
+    except ValueError:
+        error = '오류가 발생했습니다. [1]'
+    except IntegrityError:
+        error = '오류가 발생했습니다. [2]'
+    except TypeError:
+        error = '오류가 발생했습니다. [3]'
+    except ValidationError:
+        error = '오류가 발생했습니다. [4]'
+    except InternalError:
+        error = '오류가 발생했습니다. [5]'
+
+    if error is not None:
+        messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=name+' 수업', log_how='추가', use=USE)
+        log_data.save()
+    return JsonResponse({'lecture_id': str(lecture_id)}, json_dumps_params={'ensure_ascii': True})
+
+
+class GetTrainerClosedDateView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        class_id = self.request.session.get('class_id', '')
+        member_id = request.GET.get('member_id', '')
+        error = None
+        member_result = {}
+        if member_id == '':
+            error = '회원 ID를 입력해주세요.'
+
+        if error is None:
+            member_result = func_get_member_info(class_id, request.user.id, member_id)
+            error = member_result['error']
+
+        if error is not None:
+            logger.error(request.user.first_name + ' ' + '[' + str(request.user.id) + ']' + error)
+            messages.error(request, error)
+
+        return JsonResponse(member_result['member_info'], json_dumps_params={'ensure_ascii': True})
+
+def add_trainer_closed_date_logic(request):
+    class_id = request.session.get('class_id', '')
+    name = request.POST.get('name', '')
+    member_num = request.POST.get('member_num', '')
+    # member_num_view_flag = request.POST.get('member_num_view_flag', LECTURE_MEMBER_NUM_VIEW_ENABLE)
+    note = request.POST.get('note', '')
+    ing_color_cd = request.POST.get('ing_color_cd', '#ffd3d9')
+    end_color_cd = request.POST.get('end_color_cd', '#d2d1cf')
+    ing_font_color_cd = request.POST.get('ing_font_color_cd', '#282828')
+    end_font_color_cd = request.POST.get('end_font_color_cd', '#282828')
+    lecture_minute = request.POST.get('lecture_minute', 60)
+    start_time = request.POST.get('start_time', 'A-0')
+    error = None
+    lecture_id = None
+    lecture_type_cd = LECTURE_TYPE_NORMAL
+    if member_num == 1 or member_num == '1':
+        lecture_type_cd = LECTURE_TYPE_ONE_TO_ONE
+    try:
+        with transaction.atomic():
+            lecture_info = LectureTb(class_tb_id=class_id, member_num=member_num, lecture_type_cd=lecture_type_cd,
+                                     # member_num_view_flag=member_num_view_flag,
+                                     name=name, note=note, ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
+                                     ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
+                                     lecture_minute=lecture_minute, state_cd=STATE_CD_IN_PROGRESS,
+                                     start_time=start_time, use=USE)
+
+            lecture_info.save()
+            lecture_id = lecture_info.lecture_id
+    except ValueError:
+        error = '오류가 발생했습니다. [1]'
+    except IntegrityError:
+        error = '오류가 발생했습니다. [2]'
+    except TypeError:
+        error = '오류가 발생했습니다. [3]'
+    except ValidationError:
+        error = '오류가 발생했습니다. [4]'
+    except InternalError:
+        error = '오류가 발생했습니다. [5]'
+
+    if error is not None:
+        messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=name + ' 수업', log_how='추가', use=USE)
+        log_data.save()
+    return JsonResponse({'lecture_id': str(lecture_id)}, json_dumps_params={'ensure_ascii': True})
+
+def update_trainer_closed_date_logic(request):
+    class_id = request.session.get('class_id', '')
+    name = request.POST.get('name', '')
+    member_num = request.POST.get('member_num', '')
+    # member_num_view_flag = request.POST.get('member_num_view_flag', LECTURE_MEMBER_NUM_VIEW_ENABLE)
+    note = request.POST.get('note', '')
+    ing_color_cd = request.POST.get('ing_color_cd', '#ffd3d9')
+    end_color_cd = request.POST.get('end_color_cd', '#d2d1cf')
+    ing_font_color_cd = request.POST.get('ing_font_color_cd', '#282828')
+    end_font_color_cd = request.POST.get('end_font_color_cd', '#282828')
+    lecture_minute = request.POST.get('lecture_minute', 60)
+    start_time = request.POST.get('start_time', 'A-0')
+    error = None
+    lecture_id = None
+    lecture_type_cd = LECTURE_TYPE_NORMAL
+    if member_num == 1 or member_num == '1':
+        lecture_type_cd = LECTURE_TYPE_ONE_TO_ONE
+    try:
+        with transaction.atomic():
+            lecture_info = LectureTb(class_tb_id=class_id, member_num=member_num, lecture_type_cd=lecture_type_cd,
+                                     # member_num_view_flag=member_num_view_flag,
+                                     name=name, note=note, ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
+                                     ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
+                                     lecture_minute=lecture_minute, state_cd=STATE_CD_IN_PROGRESS,
+                                     start_time=start_time, use=USE)
+
+            lecture_info.save()
+            lecture_id = lecture_info.lecture_id
+    except ValueError:
+        error = '오류가 발생했습니다. [1]'
+    except IntegrityError:
+        error = '오류가 발생했습니다. [2]'
+    except TypeError:
+        error = '오류가 발생했습니다. [3]'
+    except ValidationError:
+        error = '오류가 발생했습니다. [4]'
+    except InternalError:
+        error = '오류가 발생했습니다. [5]'
+
+    if error is not None:
+        messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=name + ' 수업', log_how='추가', use=USE)
+        log_data.save()
+    return JsonResponse({'lecture_id': str(lecture_id)}, json_dumps_params={'ensure_ascii': True})
+
+def delete_trainer_closed_date_logic(request):
+    class_id = request.session.get('class_id', '')
+    name = request.POST.get('name', '')
+    member_num = request.POST.get('member_num', '')
+    # member_num_view_flag = request.POST.get('member_num_view_flag', LECTURE_MEMBER_NUM_VIEW_ENABLE)
+    note = request.POST.get('note', '')
+    ing_color_cd = request.POST.get('ing_color_cd', '#ffd3d9')
+    end_color_cd = request.POST.get('end_color_cd', '#d2d1cf')
+    ing_font_color_cd = request.POST.get('ing_font_color_cd', '#282828')
+    end_font_color_cd = request.POST.get('end_font_color_cd', '#282828')
+    lecture_minute = request.POST.get('lecture_minute', 60)
+    start_time = request.POST.get('start_time', 'A-0')
+    error = None
+    lecture_id = None
+    lecture_type_cd = LECTURE_TYPE_NORMAL
+    if member_num == 1 or member_num == '1':
+        lecture_type_cd = LECTURE_TYPE_ONE_TO_ONE
+    try:
+        with transaction.atomic():
+            lecture_info = LectureTb(class_tb_id=class_id, member_num=member_num, lecture_type_cd=lecture_type_cd,
+                                     # member_num_view_flag=member_num_view_flag,
+                                     name=name, note=note, ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
+                                     ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
+                                     lecture_minute=lecture_minute, state_cd=STATE_CD_IN_PROGRESS,
+                                     start_time=start_time, use=USE)
+
+            lecture_info.save()
+            lecture_id = lecture_info.lecture_id
+    except ValueError:
+        error = '오류가 발생했습니다. [1]'
+    except IntegrityError:
+        error = '오류가 발생했습니다. [2]'
+    except TypeError:
+        error = '오류가 발생했습니다. [3]'
+    except ValidationError:
+        error = '오류가 발생했습니다. [4]'
+    except InternalError:
+        error = '오류가 발생했습니다. [5]'
+
+    if error is not None:
+        messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=name + ' 수업', log_how='추가', use=USE)
+        log_data.save()
+    return JsonResponse({'lecture_id': str(lecture_id)}, json_dumps_params={'ensure_ascii': True})
+
+class GetTrainerClosedDateView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        class_id = self.request.session.get('class_id', '')
+        member_id = request.GET.get('member_id', '')
+        error = None
+        member_result = {}
+        if member_id == '':
+            error = '회원 ID를 입력해주세요.'
+
+        if error is None:
+            member_result = func_get_member_info(class_id, request.user.id, member_id)
+            error = member_result['error']
+
+        if error is not None:
+            logger.error(request.user.first_name + ' ' + '[' + str(request.user.id) + ']' + error)
+            messages.error(request, error)
+
+        return JsonResponse(member_result['member_info'], json_dumps_params={'ensure_ascii': True})
+
+def add_member_closed_date_logic(request):
+    class_id = request.session.get('class_id', '')
+    name = request.POST.get('name', '')
+    member_num = request.POST.get('member_num', '')
+    # member_num_view_flag = request.POST.get('member_num_view_flag', LECTURE_MEMBER_NUM_VIEW_ENABLE)
+    note = request.POST.get('note', '')
+    ing_color_cd = request.POST.get('ing_color_cd', '#ffd3d9')
+    end_color_cd = request.POST.get('end_color_cd', '#d2d1cf')
+    ing_font_color_cd = request.POST.get('ing_font_color_cd', '#282828')
+    end_font_color_cd = request.POST.get('end_font_color_cd', '#282828')
+    lecture_minute = request.POST.get('lecture_minute', 60)
+    start_time = request.POST.get('start_time', 'A-0')
+    error = None
+    lecture_id = None
+    lecture_type_cd = LECTURE_TYPE_NORMAL
+    if member_num == 1 or member_num == '1':
+        lecture_type_cd = LECTURE_TYPE_ONE_TO_ONE
+    try:
+        with transaction.atomic():
+            lecture_info = LectureTb(class_tb_id=class_id, member_num=member_num, lecture_type_cd=lecture_type_cd,
+                                     # member_num_view_flag=member_num_view_flag,
+                                     name=name, note=note, ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
+                                     ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
+                                     lecture_minute=lecture_minute, state_cd=STATE_CD_IN_PROGRESS,
+                                     start_time=start_time, use=USE)
+
+            lecture_info.save()
+            lecture_id = lecture_info.lecture_id
+    except ValueError:
+        error = '오류가 발생했습니다. [1]'
+    except IntegrityError:
+        error = '오류가 발생했습니다. [2]'
+    except TypeError:
+        error = '오류가 발생했습니다. [3]'
+    except ValidationError:
+        error = '오류가 발생했습니다. [4]'
+    except InternalError:
+        error = '오류가 발생했습니다. [5]'
+
+    if error is not None:
+        messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=name + ' 수업', log_how='추가', use=USE)
+        log_data.save()
+    return JsonResponse({'lecture_id': str(lecture_id)}, json_dumps_params={'ensure_ascii': True})
+
+def update_member_closed_date_logic(request):
+    class_id = request.session.get('class_id', '')
+    name = request.POST.get('name', '')
+    member_num = request.POST.get('member_num', '')
+    # member_num_view_flag = request.POST.get('member_num_view_flag', LECTURE_MEMBER_NUM_VIEW_ENABLE)
+    note = request.POST.get('note', '')
+    ing_color_cd = request.POST.get('ing_color_cd', '#ffd3d9')
+    end_color_cd = request.POST.get('end_color_cd', '#d2d1cf')
+    ing_font_color_cd = request.POST.get('ing_font_color_cd', '#282828')
+    end_font_color_cd = request.POST.get('end_font_color_cd', '#282828')
+    lecture_minute = request.POST.get('lecture_minute', 60)
+    start_time = request.POST.get('start_time', 'A-0')
+    error = None
+    lecture_id = None
+    lecture_type_cd = LECTURE_TYPE_NORMAL
+    if member_num == 1 or member_num == '1':
+        lecture_type_cd = LECTURE_TYPE_ONE_TO_ONE
+    try:
+        with transaction.atomic():
+            lecture_info = LectureTb(class_tb_id=class_id, member_num=member_num, lecture_type_cd=lecture_type_cd,
+                                     # member_num_view_flag=member_num_view_flag,
+                                     name=name, note=note, ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
+                                     ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
+                                     lecture_minute=lecture_minute, state_cd=STATE_CD_IN_PROGRESS,
+                                     start_time=start_time, use=USE)
+
+            lecture_info.save()
+            lecture_id = lecture_info.lecture_id
+    except ValueError:
+        error = '오류가 발생했습니다. [1]'
+    except IntegrityError:
+        error = '오류가 발생했습니다. [2]'
+    except TypeError:
+        error = '오류가 발생했습니다. [3]'
+    except ValidationError:
+        error = '오류가 발생했습니다. [4]'
+    except InternalError:
+        error = '오류가 발생했습니다. [5]'
+
+    if error is not None:
+        messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=name + ' 수업', log_how='추가', use=USE)
+        log_data.save()
+    return JsonResponse({'lecture_id': str(lecture_id)}, json_dumps_params={'ensure_ascii': True})
+
+def delete_member_closed_date_logic(request):
+    class_id = request.session.get('class_id', '')
+    name = request.POST.get('name', '')
+    member_num = request.POST.get('member_num', '')
+    # member_num_view_flag = request.POST.get('member_num_view_flag', LECTURE_MEMBER_NUM_VIEW_ENABLE)
+    note = request.POST.get('note', '')
+    ing_color_cd = request.POST.get('ing_color_cd', '#ffd3d9')
+    end_color_cd = request.POST.get('end_color_cd', '#d2d1cf')
+    ing_font_color_cd = request.POST.get('ing_font_color_cd', '#282828')
+    end_font_color_cd = request.POST.get('end_font_color_cd', '#282828')
+    lecture_minute = request.POST.get('lecture_minute', 60)
+    start_time = request.POST.get('start_time', 'A-0')
+    error = None
+    lecture_id = None
+    lecture_type_cd = LECTURE_TYPE_NORMAL
+    if member_num == 1 or member_num == '1':
+        lecture_type_cd = LECTURE_TYPE_ONE_TO_ONE
+    try:
+        with transaction.atomic():
+            lecture_info = LectureTb(class_tb_id=class_id, member_num=member_num, lecture_type_cd=lecture_type_cd,
+                                     # member_num_view_flag=member_num_view_flag,
+                                     name=name, note=note, ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
+                                     ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
+                                     lecture_minute=lecture_minute, state_cd=STATE_CD_IN_PROGRESS,
+                                     start_time=start_time, use=USE)
+
+            lecture_info.save()
+            lecture_id = lecture_info.lecture_id
+    except ValueError:
+        error = '오류가 발생했습니다. [1]'
+    except IntegrityError:
+        error = '오류가 발생했습니다. [2]'
+    except TypeError:
+        error = '오류가 발생했습니다. [3]'
+    except ValidationError:
+        error = '오류가 발생했습니다. [4]'
+    except InternalError:
+        error = '오류가 발생했습니다. [5]'
+
+    if error is not None:
+        messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=name + ' 수업', log_how='추가', use=USE)
+        log_data.save()
+    return JsonResponse({'lecture_id': str(lecture_id)}, json_dumps_params={'ensure_ascii': True})
+
+
+class GetMemberClosedDateView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        class_id = self.request.session.get('class_id', '')
+        member_id = request.GET.get('member_id', '')
+        error = None
+        member_result = {}
+        if member_id == '':
+            error = '회원 ID를 입력해주세요.'
+
+        if error is None:
+            member_result = func_get_member_info(class_id, request.user.id, member_id)
+            error = member_result['error']
+
+        if error is not None:
+            logger.error(request.user.first_name + ' ' + '[' + str(request.user.id) + ']' + error)
+            messages.error(request, error)
+
+        return JsonResponse(member_result['member_info'], json_dumps_params={'ensure_ascii': True})
+
+
 # ############### ############### ############### ############### ############### ############### ##############
 # 회원 기능 ############### ############### ############### ############### ############### ############### ##############
 class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, View):

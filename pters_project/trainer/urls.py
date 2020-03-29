@@ -51,6 +51,24 @@ urlpatterns = [
         name='get_member_repeat_schedule'),
 
 
+    url(r'^add_trainer_closed_date/$', views.add_trainer_closed_date_logic,
+        name='add_trainer_closed_date'),
+    url(r'^update_trainer_closed_date/$', views.update_trainer_closed_date_logic,
+        name='update_trainer_closed_date'),
+    url(r'^delete_trainer_closed_date/$', views.delete_trainer_closed_date_logic,
+        name='delete_trainer_closed_date'),
+    url(r'^get_trainer_closed_date/$', views.GetTrainerClosedDateView.as_view(),
+        name='get_trainer_closed_date'),
+
+    url(r'^add_member_closed_date/$', views.add_member_closed_date_logic,
+        name='add_member_closed_date'),
+    url(r'^update_member_closed_date/$', views.update_member_closed_date_logic,
+        name='update_member_closed_date'),
+    url(r'^delete_member_closed_date/$', views.delete_member_closed_date_logic,
+        name='delete_member_closed_date'),
+    url(r'^get_member_closed_date/$', views.GetMemberClosedDateView.as_view(),
+        name='get_member_closed_date'),
+
     # 회원 기능 ##########################################
     # 회원 정보 조회 - refactoring
     url(r'^get_member_info/$', views.GetMemberInfoView.as_view(), name='get_member_info'),
