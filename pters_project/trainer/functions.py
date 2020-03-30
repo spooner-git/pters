@@ -704,8 +704,10 @@ def func_hold_member_ticket_info(user_id, class_id, member_ticket_id, start_date
             if str(extension_flag) == str(USE):
                 date_delta = (end_date_info - start_date_info).days + 1
 
-            if (start_date_info - end_date_info) > datetime.timedelta(days=365):
-                error = '1년까지만 불가 일정을 등록할수 있습니다.'
+            if start_date_info < class_member_ticket_info.start_date\
+                    or start_date_info > class_member_ticket_info.end_date:
+                error = '홀딩 시작일은 수강권 시작일과 종료일 사이 날짜여야 합니다.'
+
         except ValueError:
             error = '날짜 오류가 발생했습니다.[0]'
         except IntegrityError:

@@ -40,7 +40,7 @@ from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO
     SORT_LECTURE_NAME, SORT_LECTURE_MEMBER_COUNT, SORT_LECTURE_CAPACITY_COUNT, SORT_LECTURE_CREATE_DATE, \
     CALENDAR_TIME_SELECTOR_BASIC, SORT_END_DATE, SORT_MEMBER_TICKET, SORT_SCHEDULE_DT, STATE_CD_REFUND, \
     SORT_SCHEDULE_MONTHLY, SHARED_PROGRAM, MY_PROGRAM, PROGRAM_SELECT, PROGRAM_LECTURE_CONNECT_DELETE, \
-    PROGRAM_LECTURE_CONNECT_ACCEPT, BOARD_TYPE_CD_NOTICE, ON_SCHEDULE, ALARM_PAGINATION_COUNTER
+    PROGRAM_LECTURE_CONNECT_ACCEPT, BOARD_TYPE_CD_NOTICE, ON_SCHEDULE, ALARM_PAGINATION_COUNTER, STATE_CD_HOLDING
 from board.models import BoardTb, QATb, NoticeTb
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 from schedule.functions import func_refresh_member_ticket_count, func_get_trainer_attend_schedule, \
@@ -50,7 +50,7 @@ from schedule.functions import func_refresh_member_ticket_count, func_get_traine
     func_get_permission_wait_schedule_all, func_add_schedule, func_send_push_notice, func_get_member_ticket_id_old
 from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb, ScheduleAlarmTb
 from stats.functions import get_sales_data
-from trainee.models import MemberTicketTb
+from trainee.models import MemberTicketTb, MemberTicketHoldHistoryTb
 from payment.models import PaymentInfoTb, ProductFunctionAuthTb, CouponMemberTb
 from .functions import func_get_trainer_setting_list, \
     func_get_member_ing_list, func_get_member_end_list, func_get_class_member_ing_list, func_get_class_member_end_list,\
@@ -6810,4 +6810,28 @@ def delete_trainer_member_ticket_price_bug_check_logic(request):
     if error is not None:
         messages.error(request, error)
         context['messageArray'] = error
+    return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+
+
+def holding_test_logic(request):
+    context = {}
+    today = datetime.date.today()
+    yesterday = today - datetime.timedelta(days=1)
+
+    holding_data = MemberTicketHoldHistoryTb.objects.filter(start_date__lte=today,
+                                                            end_date__gte=yesterday, use=USE).order_by('start_date')
+
+    for holding_info in holding_data:
+        member_ticket_tb = holding_info.member_ticket_tb
+        if holding_info.start_date <= today <= holding_info.end_date:
+            # holding 기간에 속한 경우 홀딩 처리
+            member_ticket_tb.state_cd = STATE_CD_HOLDING
+
+        elif today > holding_info.end_date:
+            # holding 기간이 지난 경우 재개 처리
+            if member_ticket_tb.state_cd == STATE_CD_HOLDING:
+                member_ticket_tb.state_cd = STATE_CD_IN_PROGRESS
+
+        member_ticket_tb.save()
+
     return JsonResponse(context, json_dumps_params={'ensure_ascii': True})

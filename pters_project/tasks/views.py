@@ -17,11 +17,12 @@ from configs import settings
 from configs.settings import DEBUG
 from configs.const import USE, OFF_SCHEDULE_TYPE, UN_USE, AUTO_CANCEL_ON, AUTO_ABSENCE_ON, AUTO_FINISH_ON, \
     ON_SCHEDULE_TYPE, AUTO_FINISH_OFF, STATE_CD_NOT_PROGRESS, STATE_CD_FINISH, STATE_CD_ABSENCE, STATE_CD_IN_PROGRESS, \
-    PERMISSION_STATE_CD_WAIT, PERMISSION_STATE_CD_APPROVE
+    PERMISSION_STATE_CD_WAIT, PERMISSION_STATE_CD_APPROVE, STATE_CD_HOLDING
 from login.models import PushInfoTb
 from payment.models import BillingInfoTb, PaymentInfoTb
 from schedule.functions import func_send_push_trainer, func_send_push_trainee, func_refresh_member_ticket_count
 from schedule.models import RepeatScheduleTb, ScheduleTb, DeleteScheduleTb, ScheduleAlarmTb
+from trainee.models import MemberTicketHoldHistoryTb
 from trainer.functions import func_update_lecture_member_fix_status_cd
 from trainer.models import ClassMemberTicketTb, SettingTb
 
@@ -33,7 +34,25 @@ logger = logging.getLogger(__name__)
 
 def func_update_finish_member_ticket_data():
     now = timezone.now()
+    today = datetime.date.today()
+    yesterday = today - datetime.timedelta(days=1)
 
+    # 홀딩 반영
+    holding_data = MemberTicketHoldHistoryTb.objects.filter(start_date__lte=today,
+                                                            end_date__gte=yesterday, use=USE).order_by('start_date')
+
+    for holding_info in holding_data:
+        member_ticket_tb = holding_info.member_ticket_tb
+        if holding_info.start_date <= today <= holding_info.end_date:
+            # holding 기간에 속한 경우 홀딩 처리
+            member_ticket_tb.state_cd = STATE_CD_HOLDING
+
+        elif today > holding_info.end_date:
+            # holding 기간이 지난 경우 재개 처리
+            if member_ticket_tb.state_cd == STATE_CD_HOLDING:
+                member_ticket_tb.state_cd = STATE_CD_IN_PROGRESS
+
+        member_ticket_tb.save()
     # token_data = PushInfoTb.objects.filter(member_id=member_id, last_login__lte=now-90일, use=USE)
     # token_data.delete()
 
@@ -230,17 +249,6 @@ def update_finish_schedule_data_logic(request):
                     # member_ticket_tb_id = delete_schedule_info.member_ticket_tb_id
                     if member_ticket_tb_id is not None:
                         func_refresh_member_ticket_count(not_finish_schedule_info.class_tb_id, member_ticket_tb_id)
-        # else:
-        # try:
-        now += datetime.timedelta(minutes=int(setting_member_wait_schedule_auto_cancel_time))
-
-        # except TypeError:
-        #     now -= datetime.timedelta(minutes=int(setting_member_wait_schedule_auto_cancel_time))
-        not_finish_wait_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                                  permission_state_cd=PERMISSION_STATE_CD_WAIT,
-                                                                  en_dis_type=ON_SCHEDULE_TYPE, start_dt__lte=now,
-                                                                  use=USE)
-        not_finish_wait_schedule_data.delete()
 
     end_time = timezone.now()
     logger.info('finish_schedule_data_time'+str(end_time-now))
