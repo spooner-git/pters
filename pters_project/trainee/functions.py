@@ -190,8 +190,9 @@ def func_get_class_member_ticket_count(context, class_id, user_id):
 
         class_member_ticket_list = ClassMemberTicketTb.objects.select_related(
             'member_ticket_tb__ticket_tb', 'member_ticket_tb__member'
-        ).filter(class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__member_id=user_id,
-                 member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS, member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
+        ).filter(Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS) | Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
+                 class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__member_id=user_id,
+                 member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
                  member_ticket_tb__use=USE, use=USE).order_by('member_ticket_tb__start_date')
 
     if error is None:
