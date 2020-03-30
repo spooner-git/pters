@@ -704,8 +704,8 @@ def func_hold_member_ticket_info(user_id, class_id, member_ticket_id, start_date
             if str(extension_flag) == str(USE):
                 date_delta = (end_date_info - start_date_info).days + 1
 
-            if start_date_info < class_member_ticket_info.start_date\
-                    or start_date_info > class_member_ticket_info.end_date:
+            if start_date_info.date() < class_member_ticket_info.member_ticket_tb.start_date\
+                    or start_date_info.date() > class_member_ticket_info.member_ticket_tb.end_date:
                 error = '홀딩 시작일은 수강권 시작일과 종료일 사이 날짜여야 합니다.'
 
         except ValueError:
@@ -714,6 +714,25 @@ def func_hold_member_ticket_info(user_id, class_id, member_ticket_id, start_date
             error = '날짜 오류가 발생했습니다.[1]'
         except TypeError:
             error = '날짜 오류가 발생했습니다.[2]'
+
+    if error is None:
+        # 시작일이 사이에 있는 경우
+        duplicate_check_hold_start = MemberTicketHoldHistoryTb.objects.filter(member_ticket_tb_id=member_ticket_id,
+                                                                              start_date__lte=start_date_info,
+                                                                              end_date__gte=start_date_info,
+                                                                              use=USE).count()
+        # 종료일이 사이에 있는 경우
+        duplicate_check_hold_end = MemberTicketHoldHistoryTb.objects.filter(member_ticket_tb_id=member_ticket_id,
+                                                                            start_date__lte=end_date_info,
+                                                                            end_date__gte=end_date_info,
+                                                                            use=USE).count()
+        # 포함하는 경우
+        duplicate_check_hold_start_end = MemberTicketHoldHistoryTb.objects.filter(member_ticket_tb_id=member_ticket_id,
+                                                                                  start_date__gt=start_date_info,
+                                                                                  end_date__lt=end_date_info,
+                                                                                  use=USE).count()
+        if duplicate_check_hold_start > 0 or duplicate_check_hold_end > 0 or duplicate_check_hold_start_end > 0:
+            error = '기존 홀딩 기간과 겹칠수 없습니다.'
 
     if error is None:
         try:
