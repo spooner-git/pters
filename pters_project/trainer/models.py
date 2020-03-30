@@ -328,6 +328,37 @@ class SettingTb(TimeStampedModel):
         verbose_name_plural = '설정'
 
 
+class ScheduleClosedTb(TimeStampedModel):
+    schedule_closed_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    class_tb = models.ForeignKey(ClassTb, verbose_name='지점', on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    member = models.ForeignKey(MemberTb, verbose_name='회원', on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    start_date = models.DateField('시작일', db_column='START_DATE', blank=True, null=True)  # Field name made lowercase.
+    end_date = models.DateField('종료일', db_column='END_DATE', blank=True, null=True)  # Field name made lowercase.
+    week_info = models.CharField('반복 요일', db_column='WEEK_INFO', max_length=100, blank=True, default='')
+    title = models.CharField('제목', db_column='TITLE', max_length=200, blank=True, default='')
+    contents = models.CharField('내용', db_column='CONTENTS', max_length=3000, blank=True, default='')
+    is_member_view = models.IntegerField('사유 공개 여부', db_column='IS_MEMBER_VIEW', default=0)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'SCHEDULE_CLOSED_TB'
+        verbose_name = '불가 일정 요약'
+        verbose_name_plural = '불가 일정 요약'
+
+
+class ScheduleClosedDayTb(TimeStampedModel):
+    schedule_closed_day_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    schedule_closed_tb = models.ForeignKey(ScheduleClosedTb, verbose_name='불가 일정 요약 ID', on_delete=models.CASCADE,
+                                           null=True)
+    closed_date = models.DateField('휴무일', db_column='CLOSED_DATE', blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'SCHEDULE_CLOSED_DAY_TB'
+        verbose_name = '불가 일정 상세'
+        verbose_name_plural = '불가 일정 상세'
+
+
 # ################################################## 아직 사용 안함 ###################################################
 class ProgramGroupTb(TimeStampedModel):
     program_group_id = models.AutoField(db_column='ID', primary_key=True, null=False)
@@ -450,3 +481,4 @@ class BackgroundImgTb(TimeStampedModel):
     class Meta:
         managed = False
         db_table = 'BACKGROUND_IMG_TB'
+

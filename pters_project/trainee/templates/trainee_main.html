@@ -171,7 +171,7 @@
                                                                 POPUP_FROM_BOTTOM, {'member_ticket_id':'{{ing_member_ticket_info.member_ticket_tb_id}}' } )">
                     <div class="wrapper_sub_title obj_font_size_11_weight_bold obj_font_color_dark_grey">내 회원권</div>
                     <div class="wrapper_sub_title obj_font_size_15_weight_bold obj_font_color_black">
-                        {{ ing_member_ticket_info.member_ticket_tb.ticket_tb.name }}
+                        {{ ing_member_ticket_info.member_ticket_tb.ticket_tb.name }} {% if ing_member_ticket_info.member_ticket_tb.state_cd == 'HD' %}(홀딩: 예약 불가){% endif %}
                         <div style="text-align: left;border:1px solid #ededed;background-color:#ffffff;border-radius:3px;margin-top:5px;padding:5px 10px;" class="obj_font_size_13_weight_normal obj_font_color_black">
                             횟수 :
                             {% if ing_member_ticket_info.member_ticket_tb.member_ticket_reg_count >= 99999 %}

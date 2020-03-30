@@ -7,6 +7,7 @@ from django.db import InternalError
 from django.db import transaction
 from django.db.models import Q
 from django.db.models.expressions import RawSQL
+from django.utils import timezone
 
 from configs import DEBUG
 from configs.const import USE, UN_USE, AUTO_FINISH_OFF, FROM_TRAINEE_LESSON_ALARM_ON, \
@@ -16,7 +17,7 @@ from configs.const import USE, UN_USE, AUTO_FINISH_OFF, FROM_TRAINEE_LESSON_ALAR
 
 from login.models import MemberTb
 from schedule.models import ScheduleTb, RepeatScheduleTb
-from trainee.models import MemberTicketTb
+from trainee.models import MemberTicketTb, MemberTicketHoldHistoryTb
 from .models import ClassMemberTicketTb, LectureTb, SettingTb, TicketLectureTb, TicketTb, LectureMemberTb, MemberClassTb
 
 
@@ -78,7 +79,8 @@ def func_get_member_ing_list(class_id, user_id, keyword):
         'member_ticket_tb__member__user'
     ).filter(Q(member_ticket_tb__member__name__contains=keyword) |
              Q(member_ticket_tb__member__user__username__contains=keyword),
-             class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+             Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS) | Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
+             class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW,
              member_ticket_tb__use=USE, use=USE).order_by('member_ticket_tb__member_id', 'member_ticket_tb__end_date')
 
     return func_get_member_from_member_ticket_list(all_member_ticket_list, None, user_id)
@@ -98,7 +100,7 @@ def func_get_member_end_list(class_id, user_id, keyword):
     all_member_ticket_list = ClassMemberTicketTb.objects.select_related(
         'member_ticket_tb__ticket_tb',
         'member_ticket_tb__member__user').filter(
-        ~Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS),
+        ~Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS), ~Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
         Q(member_ticket_tb__member__name__contains=keyword) |
         Q(member_ticket_tb__member__user__username__contains=keyword),
         class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__use=USE,
@@ -115,8 +117,9 @@ def func_get_member_ing_check(class_id, member_id):
     all_member_ticket_list = ClassMemberTicketTb.objects.select_related(
         'member_ticket_tb__ticket_tb',
         'member_ticket_tb__member__user'
-    ).filter(class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__member_id=member_id,
-             member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+    ).filter(Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS) | Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
+             class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__member_id=member_id,
+
              member_ticket_tb__use=USE, use=USE).order_by('member_ticket_tb__member_id', 'member_ticket_tb__end_date')
 
     return len(all_member_ticket_list)
@@ -678,9 +681,14 @@ def func_delete_member_ticket_info(user_id, class_id, member_ticket_id):
 
 
 # 회원의 회원권 홀딩하기
-def func_hold_member_ticket_info(user_id, class_id, member_ticket_id, start_date, end_date):
+def func_hold_member_ticket_info(user_id, class_id, member_ticket_id, start_date, end_date, note, extension_flag):
     error = None
     class_member_ticket_info = None
+    date_delta = 0
+    start_date_info = None
+    end_date_info = None
+    now = timezone.now()
+
     try:
         class_member_ticket_info = ClassMemberTicketTb.objects.select_related(
             'member_ticket_tb__member').get(class_tb_id=class_id, member_ticket_tb_id=member_ticket_id,
@@ -690,12 +698,42 @@ def func_hold_member_ticket_info(user_id, class_id, member_ticket_id, start_date
 
     if error is None:
         try:
+            start_date_info = datetime.datetime.strptime(start_date, '%Y-%m-%d')
+            end_date_info = datetime.datetime.strptime(end_date, '%Y-%m-%d')
+
+            if str(extension_flag) == str(USE):
+                date_delta = (end_date_info - start_date_info).days + 1
+
+            if (start_date_info - end_date_info) > datetime.timedelta(days=365):
+                error = '1년까지만 불가 일정을 등록할수 있습니다.'
+        except ValueError:
+            error = '날짜 오류가 발생했습니다.[0]'
+        except IntegrityError:
+            error = '날짜 오류가 발생했습니다.[1]'
+        except TypeError:
+            error = '날짜 오류가 발생했습니다.[2]'
+
+    if error is None:
+        try:
             with transaction.atomic():
-                # 강사에게 더이상 안보이도록
+
+                member_ticket_history_info = MemberTicketHoldHistoryTb(member_ticket_tb_id=member_ticket_id,
+                                                                       start_date=start_date,
+                                                                       end_date=end_date,
+                                                                       note=note, extension_flag=extension_flag,
+                                                                       use=USE)
+                member_ticket_history_info.save()
+
                 class_member_ticket_info.mod_member_id = user_id
                 class_member_ticket_info.save()
+
                 member_ticket_info = class_member_ticket_info.member_ticket_tb
-                member_ticket_info.state_cd = STATE_CD_HOLDING
+
+                unlimited_end_date = datetime.datetime.strptime('9999-12-31', '%Y-%m-%d').date()
+                if member_ticket_info.end_date < unlimited_end_date:
+                    member_ticket_info.end_date += datetime.timedelta(days=date_delta)
+                if start_date_info <= now <= end_date_info:
+                    member_ticket_info.state_cd = STATE_CD_HOLDING
                 member_ticket_info.save()
 
         except ValueError:

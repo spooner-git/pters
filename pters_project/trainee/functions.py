@@ -8,7 +8,7 @@ from django.utils import timezone
 
 from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, USE, MEMBER_RESERVE_PROHIBITION_ON, LECTURE_TYPE_ONE_TO_ONE, \
     STATE_CD_IN_PROGRESS, STATE_CD_ABSENCE, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, AUTH_TYPE_DELETE, \
-    MEMBER_RESERVE_PROHIBITION_OFF, FROM_TRAINER_LESSON_ALARM_ON
+    MEMBER_RESERVE_PROHIBITION_OFF, FROM_TRAINER_LESSON_ALARM_ON, STATE_CD_HOLDING
 from login.models import CommonCdTb
 from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb
 from trainer.models import ClassTb, ClassMemberTicketTb, SettingTb, TicketLectureTb
@@ -525,8 +525,8 @@ def func_get_trainee_ing_member_ticket_list(context, class_id, user_id):
     member_ticket_list = ClassMemberTicketTb.objects.select_related(
         'member_ticket_tb__member',
         'member_ticket_tb__ticket_tb'
-    ).filter(class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__member_id=user_id,
-             member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+    ).filter(Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS) | Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
+             class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__member_id=user_id,
              member_ticket_tb__ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
              member_ticket_tb__use=USE, member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW, use=USE
              ).order_by('-member_ticket_tb__end_date', 'member_ticket_tb__reg_dt')

@@ -22,10 +22,13 @@ class Member_ticket_holding{
         this.data = {
             member_ticket_id: null,
             member_ticket_name: null,
-            member_ticket_price: null,
             member_ticket_start_date: null,
-            holding_price: null,
-            holding_date: null
+            member_ticket_end_date: null,
+            holding_price: 0,
+            holding_start_date: null,
+            holding_end_date: null,
+            holding_extension_flag: ON,
+            note: ""
         };
 
         this.date_start = 0;
@@ -48,10 +51,11 @@ class Member_ticket_holding{
 
     set_initial_data (){
         this.data.member_ticket_id = this.external_data.member_ticket_id;
-        this.data.holding_date = DateRobot.to_yyyymmdd(this.dates.current_year, this.dates.current_month, this.dates.current_date);
+        this.data.holding_start_date = DateRobot.to_yyyymmdd(this.dates.current_year, this.dates.current_month, this.dates.current_date);
+        this.data.holding_end_date = DateRobot.to_yyyymmdd(this.dates.current_year, this.dates.current_month, this.dates.current_date);
         this.data.member_ticket_name = this.external_data.member_ticket_name;
-        this.data.member_ticket_price = this.external_data.member_ticket_price;
         this.data.member_ticket_start_date = this.external_data.member_ticket_start_date;
+        this.data.member_ticket_end_date = this.external_data.member_ticket_end_date;
         this.render();
     }
 
@@ -90,15 +94,21 @@ class Member_ticket_holding{
     
     dom_assembly_content(){
 
-        let holding_date = this.dom_row_holding_date_input();
+        let holding_start_date = this.dom_row_holding_start_date_input();
+        let holding_end_date = this.dom_row_holding_end_date_input();
         let holding_price  = this.dom_row_holding_price_input();
         let holding_ticket    = this.dom_row_holding_ticket_input();
+        let holding_note = this.dom_row_holding_note_input();
+        let holding_extension_flag = this.dom_row_holding_extension_select();
 
         let html =
-            '<div class="obj_input_box_full">'
-                + CComponent.dom_tag('환불 날짜') + holding_date +
-                    `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>`
-                + CComponent.dom_tag('환불 금액') + holding_price +
+            '<div class="obj_input_box_full">'+
+                CComponent.dom_tag('홀딩 시작일') + holding_start_date +
+                CComponent.dom_tag('홀딩 종료일') + holding_end_date +
+                CComponent.dom_tag('특이사항') + holding_note +
+                CComponent.dom_tag('자동 기간 연장') + holding_extension_flag +
+                    // `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>`+
+                // + CComponent.dom_tag('홀딩 금액') + holding_price +
             '</div>'
                 + holding_ticket;
 
@@ -106,11 +116,11 @@ class Member_ticket_holding{
     }
 
     dom_row_toolbox(){
-        let title = "회원권 환불";
+        let title = "회원권 홀딩";
         let html = `<div class="">
                         <div style="display:inline-block;padding-left:60px;">
                             <span style="font-size:20px;font-weight:bold; letter-spacing: -0.9px; color: var(--font-main);">${title}</span>
-                            <p style="font-size:11px;color:var(--font-sub-dark);margin:12px 0;">환불금액은 매출통계에 반영 됩니다.</p>
+                            <p style="font-size:11px;color:var(--font-sub-dark);margin:12px 0;">홀딩 시작일부터 종료일까지는 회원님의 예약이 불가능합니다.</p>
                             <span style="display:none;">${title}</span>
                         </div>
                     </div>
@@ -118,9 +128,9 @@ class Member_ticket_holding{
         return html;
     }
 
-    dom_row_holding_date_input(){
+    dom_row_holding_start_date_input(){
         let id = 'member_ticket_start_holding';
-        let title = this.data.holding_date == null ||this.data.holding_date == 'None' ? '환불 날짜' : this.data.holding_date.replace(/-/gi, '.');
+        let title = this.data.holding_start_date == null ||this.data.holding_start_date == 'None' ? '홀딩 시작일' : this.data.holding_start_date.replace(/-/gi, '.');
         let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
@@ -129,20 +139,88 @@ class Member_ticket_holding{
             let root_content_height = $root_content.height();
             layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*320/root_content_height, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
                 //data_to_send의 선택날짜가 빈값이라면 오늘로 셋팅한다.
-                let year = this.data.holding_date == null ? this.dates.current_year : Number(this.data.holding_date.split('-')[0]);
-                let month = this.data.holding_date == null ? this.dates.current_month : Number(this.data.holding_date.split('-')[1]);
-                let date = this.data.holding_date == null ? this.dates.current_date : Number(this.data.holding_date.split('-')[2]);
+                let year = this.data.holding_start_date == null ? this.dates.current_year : Number(this.data.holding_start_date.split('-')[0]);
+                let month = this.data.holding_start_date == null ? this.dates.current_month : Number(this.data.holding_start_date.split('-')[1]);
+                let date = this.data.holding_start_date == null ? this.dates.current_date : Number(this.data.holding_start_date.split('-')[2]);
 
                 let year_min = Number(this.data.member_ticket_start_date.split('-')[0]);
                 let month_min = Number(this.data.member_ticket_start_date.split('-')[1]);
                 let date_min = Number(this.data.member_ticket_start_date.split('-')[2]);
                 
-                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'holding_date', title:'환불 일자', data:{year:year, month:month, date:date}, min:{year:year_min, month:month_min, date:date_min},callback_when_set: (object)=>{
-                    this.data.holding_date = DateRobot.to_yyyymmdd(object.data.year, object.data.month, object.data.date);
+                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'holding_start_date', title:'홀딩 시작일', data:{year:year, month:month, date:date}, min:{year:year_min, month:month_min, date:date_min},callback_when_set: (object)=>{
+                    this.data.holding_start_date = DateRobot.to_yyyymmdd(object.data.year, object.data.month, object.data.date);
+                    if(this.data.holding_start_date > this.data.holding_end_date){
+                        this.data.holding_end_date = DateRobot.to_yyyymmdd(object.data.year, object.data.month, object.data.date);
+                    }
                     this.render_content();
                 }});
             });
         });
+        return html;
+    }
+
+    dom_row_holding_end_date_input(){
+        let id = 'member_ticket_end_holding';
+        let title = this.data.holding_end_date == null ||this.data.holding_end_date == 'None' ? '홀딩 종료일' : this.data.holding_end_date.replace(/-/gi, '.');
+        let icon = NONE;
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
+        let style = null;
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            let root_content_height = $root_content.height();
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_date_selector', 100*320/root_content_height, POPUP_FROM_BOTTOM, {'select_date':null}, ()=>{
+                //data_to_send의 선택날짜가 빈값이라면 오늘로 셋팅한다.
+                let year = this.data.holding_end_date == null ? this.dates.current_year : Number(this.data.holding_end_date.split('-')[0]);
+                let month = this.data.holding_end_date == null ? this.dates.current_month : Number(this.data.holding_end_date.split('-')[1]);
+                let date = this.data.holding_end_date == null ? this.dates.current_date : Number(this.data.holding_end_date.split('-')[2]);
+                let year_min = Number(this.data.holding_start_date.split('-')[0]);
+                let month_min = Number(this.data.holding_start_date.split('-')[1]);
+                let date_min = Number(this.data.holding_start_date.split('-')[2]);
+
+                if(year == 9999){
+                    year = year_min;
+                    month = month_min;
+                    date = date_min;
+                }
+
+                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'holding_end_date', title:'홀딩 종료일', data:{year:year, month:month, date:date}, min:{year:year_min, month:month_min, date:date_min},callback_when_set: (object)=>{
+                    this.data.holding_end_date = DateRobot.to_yyyymmdd(object.data.year, object.data.month, object.data.date);
+                    this.render_content();
+                }});
+            });
+        });
+        return html;
+    }
+
+    dom_row_holding_note_input(){
+        let id = 'member_ticket_note_holding';
+        let title = this.data.note == null || this.data.note == 'None' ? '' :this.data.note;
+        let placeholder = '특이사항';
+        let icon = NONE;
+        let icon_r_visible = HIDE;
+        let icon_r_text;
+        let style = null;
+        let disabled = false;
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+.,:()\\[\\]\\s\\n 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,3000}";
+        let pattern_message = "+ - _ : ()[] . , 제외 특수문자는 입력 불가";
+        let required = "";
+        let html = CComponent.create_input_textarea_row(id, title, placeholder, icon, icon_r_visible, icon_r_text, style, (input_data)=>{
+            let user_input_data = input_data;
+            this.data.note = user_input_data;
+            this.render_content();
+        }, pattern, pattern_message, required);
+        return html;
+    }
+
+    dom_row_holding_extension_select(){
+        let id = "member_ticket_extension_select";
+        let power = this.data.holding_extension_flag;
+        let style = {"margin-top":"10px", "margin-left":"40px"};
+        let onclick = (on_off)=>{
+            this.data.holding_extension_flag = on_off;
+            this.render_content();
+        };
+        let html = CComponent.toggle_button (id, power, style, onclick);
         return html;
     }
 
@@ -174,8 +252,8 @@ class Member_ticket_holding{
                         <div style="display:table-cell;color:var(--font-highlight);width:auto;">${this.data.member_ticket_name}</div>
                     </div>
                     <div style="display:table;width:100%;font-size:11px;font-weight:500;padding-left:60px;box-sizing:border-box;">
-                        <div style="display:table-cell;color:var(--font-sub-normal);width:56px;">등록금</div>
-                        <div style="display:table-cell;color:var(--font-highlight);width:auto;">${UnitRobot.numberWithCommas(this.data.member_ticket_price)}원</div>
+                        <div style="display:table-cell;color:var(--font-sub-normal);width:56px;">기간</div>
+                        <div style="display:table-cell;color:var(--font-highlight);width:auto;">${this.data.member_ticket_start_date} ~ ${this.data.member_ticket_end_date}</div>
                     </div>`;
         return html;
     }
@@ -184,10 +262,10 @@ class Member_ticket_holding{
         if(this.check_before_send() == false){
             return false;
         }
-        let data = {"member_ticket_id":this.data.member_ticket_id, "state_cd":"RF", "note":"", "start_date":"", "end_date":"",
-                    "price":"", "holding_price":this.data.holding_price, "holding_date":this.data.holding_date, "member_ticket_reg_count":""};
+        let data = {"member_ticket_id":this.data.member_ticket_id, "note":this.data.note,
+            "price":this.data.holding_price, "start_date":this.data.holding_start_date, "end_date":this.data.holding_end_date, "extension_flag":this.data.holding_extension_flag};
 
-        Member_func.ticket_status(data, ()=>{
+        Member_func.ticket_hold(data, ()=>{
             this.set_initial_data();
             try{
                 current_page.init();
@@ -208,15 +286,11 @@ class Member_ticket_holding{
     check_before_send(){
         if(this.data.member_ticket_id == null){
             return false;
-        }else if(this.data.holding_price == null){
-            show_error_message({title:"환불 금액을 입력해주세요"});
+        }else if(this.data.holding_start_date == null){
+            show_error_message({title:"홀딩 시작일을 선택해주세요."});
             return false;
-        }else if(this.data.holding_price > this.data.member_ticket_price){
-            show_error_message({title:"환불금액은 등록금액보다 클 수 없습니다."});
-            this.data.holding_price = null;
-            this.render_content();
-            return false;
-        }else if(this.data.holding_date == null){
+        }else if(this.data.holding_end_date == null){
+            show_error_message({title:"홀딩 종료일을 선택해주세요."});
             return false;
         }
 

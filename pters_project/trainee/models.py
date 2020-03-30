@@ -50,6 +50,22 @@ class MemberTicketTb(TimeStampedModel):
         return state_cd_name
 
 
+class MemberTicketHoldHistoryTb(TimeStampedModel):
+    member_ticket_hold_history_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    member_ticket_tb = models.ForeignKey(MemberTicketTb, verbose_name='회원권', on_delete=models.CASCADE,
+                                         db_column='lecture_tb_id', null=True)
+    start_date = models.DateField('시작일', db_column='START_DATE', blank=True, null=True)  # Field name made lowercase.
+    end_date = models.DateField('종료일', db_column='END_DATE', blank=True, null=True)  # Field name made lowercase.
+    note = models.CharField('메모', db_column='NOTE', max_length=200, blank=True, default='')
+    extension_flag = models.IntegerField('연장 유무', db_column='EXTENSION_FLAG', default=1)
+
+    class Meta:
+        managed = False
+        db_table = 'MEMBER_TICKET_HOLD_HISTORY_TB'
+        verbose_name = '회원권 홀딩 history'
+        verbose_name_plural = '회원권 홀딩 history'
+
+
 class ProgramNoticeHistoryTb(TimeStampedModel):
     program_notice_history_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     program_notice_tb = models.ForeignKey("trainer.ProgramNoticeTb", verbose_name='지점 공지', on_delete=models.CASCADE, null=True)

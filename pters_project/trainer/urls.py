@@ -51,21 +51,14 @@ urlpatterns = [
         name='get_member_repeat_schedule'),
 
 
-    url(r'^add_trainer_closed_date/$', views.add_trainer_closed_date_logic,
-        name='add_trainer_closed_date'),
-    url(r'^update_trainer_closed_date/$', views.update_trainer_closed_date_logic,
-        name='update_trainer_closed_date'),
-    url(r'^delete_trainer_closed_date/$', views.delete_trainer_closed_date_logic,
-        name='delete_trainer_closed_date'),
+    url(r'^add_closed_date/$', views.add_closed_date_logic,
+        name='add_closed_date'),
+    url(r'^update_closed_date/$', views.update_closed_date_logic,
+        name='update_closed_date'),
+    url(r'^delete_closed_date/$', views.delete_closed_date_logic,
+        name='delete_closed_date'),
     url(r'^get_trainer_closed_date/$', views.GetTrainerClosedDateView.as_view(),
         name='get_trainer_closed_date'),
-
-    url(r'^add_member_closed_date/$', views.add_member_closed_date_logic,
-        name='add_member_closed_date'),
-    url(r'^update_member_closed_date/$', views.update_member_closed_date_logic,
-        name='update_member_closed_date'),
-    url(r'^delete_member_closed_date/$', views.delete_member_closed_date_logic,
-        name='delete_member_closed_date'),
     url(r'^get_member_closed_date/$', views.GetMemberClosedDateView.as_view(),
         name='get_member_closed_date'),
 
@@ -103,7 +96,7 @@ urlpatterns = [
     url(r'^update_member_ticket_info/$', views.update_member_ticket_info_logic, name='update_member_ticket_info'),
     # 회원 수강정보 삭제 - refactoring - 확인 필요
     url(r'^delete_member_ticket_info/$', views.delete_member_ticket_info_logic, name='delete_member_ticket_info'),
-    # 회원 수강정보 삭제 - refactoring - 확인 필요
+    # 회원 수강정보 홀딩 - refactoring - 확인 필요
     url(r'^hold_member_ticket_info/$', views.hold_member_ticket_info_logic, name='hold_member_ticket_info'),
     # 회원 수강정보 상태 변경 - refactoring - 확인 필요
     url(r'^update_member_ticket_status_info/$', views.update_member_ticket_status_info_logic,

@@ -185,7 +185,7 @@ const COLOR_NAME_CODE = {"#fbf3bd":"바나나", "#dbe6f7":"하늘", "#ffd3d9": "
               "#ead8f2":"블루베리", "#d9c3ab":"고구마", "#ffacb7":"복숭아"};
 const SEX_CODE = {"M": "남성", "W": "여성"};
 const SCHEDULE_STATUS = {"NP" : "진행전", "PC": "결석", "PE": "출석"};
-const TICKET_STATUS = {"IP": "진행중", "PE": "종료", "RF": "환불"};
+const TICKET_STATUS = {"IP": "진행중", "PE": "종료", "RF": "환불", "HD":"홀딩"};
 const PAY_TYPE_NAME = {"SINGLE": "1회 결제", "PERIOD": "정기 결제 / 1 개월", "":"없음"};
 const PAY_STATUS = {"paid":"결제 완료", "failed":"결제 실패", "cancelled":"결제 취소"};
 const PAY_METHOD = {"card":"카드 결제", "iap": "인앱 결제", "":"-"};

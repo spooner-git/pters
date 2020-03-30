@@ -37,6 +37,7 @@ class Member_view{
                     {
                         ticket_id:[],
                         member_ticket_id:null,
+                        member_ticket_state_cd:null,
                         ticket_name:null,
                         ticket_effective_days:null,
                         ticket_reg_count:null,
@@ -229,7 +230,7 @@ class Member_view{
                             return return_val;
                         });
                         for(let i=0; i<member_ticket_list.length; i++){
-                            if(member_ticket_list[i].member_ticket_state_cd != 'IP'){
+                            if(member_ticket_list[i].member_ticket_state_cd != 'IP' && member_ticket_list[i].member_ticket_state_cd != 'HD'){
                                 continue;
                             }
                             let ticket_rem_count_of_this_member = member_ticket_list[i].member_ticket_rem_count;
@@ -264,6 +265,7 @@ class Member_view{
                                                     ticket_refund_price: ticket_refund_price_of_this_member,
                                                     ticket_pay_method:ticket_pay_method,
                                                     member_ticket_id:member_ticket_list[i].member_ticket_id,
+                                                    member_ticket_state_cd:member_ticket_list[i].member_ticket_state_cd,
                                                     start_date:ticket_reg_date_of_this_member,
                                                     start_date_text:DateRobot.to_text(ticket_reg_date_of_this_member, '', '', SHORT),
                                                     end_date:ticket_end_date_of_this_member,
@@ -717,6 +719,7 @@ class Member_view{
             let ticket_name = this.data.ticket[i].ticket_name;
             let ticket_id =  this.data.ticket[i].ticket_id;
             let member_ticket_id =  this.data.ticket[i].member_ticket_id;
+            let member_ticket_status = this.data.ticket[i].member_ticket_state_cd;
             let ticket_start_date =  this.data.ticket[i].start_date;
             let ticket_end_date =  this.data.ticket[i].end_date;
             let ticket_reg_count =  this.data.ticket[i].ticket_reg_count;
@@ -743,7 +746,7 @@ class Member_view{
                     let data = {"member_id":this.member_id, "member_name":this.name, "member_ticket_id":member_ticket_id, "member_ticket_name":ticket_name, 
                                 "start_date": DateRobot.to_split(ticket_start_date), "start_date_text": DateRobot.to_text(ticket_start_date, "", "", SHORT),
                                 "end_date": DateRobot.to_split(ticket_end_date), "end_date_text": ticket_end_date == "9999-12-31" ? "소진 시까지" : DateRobot.to_text(ticket_end_date, "", "", SHORT),
-                                "reg_count":ticket_reg_count, "price":ticket_price, "status":ticket_status,
+                                "reg_count":ticket_reg_count, "price":ticket_price, "status":member_ticket_status,
                                 "refund_date": ticket_refund_date == null ? null : DateRobot.to_split(ticket_refund_date), 
                                 "refund_date_text": ticket_refund_date == null ? null : DateRobot.to_text(ticket_refund_date, "", "", SHORT),
                                 "refund_price":ticket_refund_price, "note":ticket_note, "pay_method":ticket_pay_method};
@@ -1245,6 +1248,7 @@ class Member_simple_view{
                         ticket_price:null,
                         ticket_state:null,
                         member_ticket_id:null,
+                        member_ticket_state_cd:null,
                         start_date:null,
                         start_date_text:null,
                         end_date:null,
@@ -1312,7 +1316,7 @@ class Member_simple_view{
                     return return_val;
                 });
                 for(let i=member_ticket_list.length-1; i>=0; i--){
-                    if(member_ticket_list[i].member_ticket_state_cd != 'IP'){
+                    if(member_ticket_list[i].member_ticket_state_cd != 'IP' && member_ticket_list[i].member_ticket_state_cd != 'HD'){
                         continue;
                     }
                     let ticket_rem_count_of_this_member = member_ticket_list[i].member_ticket_rem_count;
@@ -1338,7 +1342,7 @@ class Member_simple_view{
                                             ticket_rem_count:ticket_rem_count_of_this_member,
                                             ticket_avail_count:ticket_avail_count_of_this_member,
                                             ticket_price:ticket_reg_price_of_this_member,
-                                            ticket_state:member_ticket_list[i].ticket_state_cd,
+                                            ticket_state:member_ticket_list[i].member_ticket_state_cd,
                                             start_date:ticket_reg_date_of_this_member,
                                             start_date_text:DateRobot.to_text(ticket_reg_date_of_this_member, '', '', SHORT),
                                             end_date:ticket_end_date_of_this_member,
