@@ -47,7 +47,8 @@ from schedule.functions import func_refresh_member_ticket_count, func_get_traine
     func_get_lecture_member_ticket_id, func_get_trainer_schedule_all, func_get_trainer_schedule_info, \
     func_get_lecture_schedule_all, func_get_member_schedule_all_by_member_ticket, \
     func_get_member_schedule_all_by_schedule_dt, func_get_member_schedule_all_by_monthly, \
-    func_get_permission_wait_schedule_all, func_add_schedule, func_send_push_notice, func_get_member_ticket_id_old
+    func_get_permission_wait_schedule_all, func_add_schedule, func_send_push_notice, func_get_member_ticket_id_old, \
+    func_get_repeat_schedule_date_list
 from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb, ScheduleAlarmTb
 from stats.functions import get_sales_data
 from trainee.models import MemberTicketTb, MemberTicketHoldHistoryTb
@@ -61,7 +62,7 @@ from .functions import func_get_trainer_setting_list, \
     update_alarm_setting_data, func_hold_member_ticket_info
 from .models import ClassMemberTicketTb, LectureTb, ClassTb, MemberClassTb, BackgroundImgTb, \
     SettingTb, TicketTb, TicketLectureTb, CenterTrainerTb, LectureMemberTb, ProgramAuthTb, ProgramBoardTb, \
-    ProgramNoticeTb, BugMemberTicketPriceTb, ScheduleClosedTb
+    ProgramNoticeTb, BugMemberTicketPriceTb, ScheduleClosedTb, ScheduleClosedDayTb
 
 logger = logging.getLogger(__name__)
 
@@ -825,7 +826,7 @@ def add_closed_date_logic(request):
     member_id = request.POST.get('member_id', '')
     start_date = request.POST.get('start_date', '')
     end_date = request.POST.get('end_date', '')
-    week_info = request.POST.get('week_info', '')
+    repeat_week_type = request.POST.get('week_info', '')
     title = request.POST.get('title', '')
     contents = request.POST.get('contents', '')
     is_member_view = request.POST.get('is_member_view', '1')
@@ -834,10 +835,11 @@ def add_closed_date_logic(request):
     schedule_closed_id = ''
     start_date_info = None
     end_date_info = None
+    repeat_schedule_date_list = []
 
     if member_id is None:
         member_id = ''
-    if week_info == '':
+    if repeat_week_type == '':
         error = '요일을 선택해주세요.'
     if start_date == '':
         error = '시작 날짜를 선택해 주세요.'
@@ -864,25 +866,52 @@ def add_closed_date_logic(request):
             except ObjectDoesNotExist:
                 error = '회원 정보를 불러오지 못했습니다.'
 
-    try:
-        with transaction.atomic():
-            schedule_closed_info = ScheduleClosedTb(class_tb_id=class_id, member_id=member_id,
-                                                    start_date=start_date_info, end_date=end_date_info,
-                                                    title=title, contents=contents,
-                                                    is_member_view=is_member_view, use=USE)
+    # 등록할 날짜 list 가져오기
+    if error is None:
+        week_order = ['SUN', 'MON', 'TUE', 'WED', 'THS', 'FRI', 'SAT']
+        week_order = {key: i for i, key in enumerate(week_order)}
+        week_data = repeat_week_type.split('/')
+        week_data = sorted(week_data, key=lambda week_info: week_order.get(week_info))
+        repeat_week_type = "/".join(week_data)
+        repeat_schedule_date_list = func_get_repeat_schedule_date_list(repeat_week_type,
+                                                                       start_date_info,
+                                                                       end_date_info)
+        if len(repeat_schedule_date_list) == 0:
+            error = '등록할 수 있는 일정이 없습니다.'
 
-            schedule_closed_info.save()
-            schedule_closed_id = schedule_closed_info.schedule_closed_id
-    except ValueError:
-        error = '오류가 발생했습니다. [1]'
-    except IntegrityError:
-        error = '오류가 발생했습니다. [2]'
-    except TypeError:
-        error = '오류가 발생했습니다. [3]'
-    except ValidationError:
-        error = '오류가 발생했습니다. [4]'
-    except InternalError:
-        error = '오류가 발생했습니다. [5]'
+    if error is None:
+        try:
+            with transaction.atomic():
+                schedule_closed_info = ScheduleClosedTb(class_tb_id=class_id, member_id=member_id,
+                                                        start_date=start_date_info, end_date=end_date_info,
+                                                        title=title, contents=contents,
+                                                        week_info=repeat_week_type,
+                                                        is_member_view=is_member_view, use=USE)
+
+                schedule_closed_info.save()
+
+                schedule_closed_id = schedule_closed_info.schedule_closed_id
+
+                # 반복일정 데이터 등록
+                for repeat_schedule_date_info in repeat_schedule_date_list:
+                    repeat_schedule_info_date = str(repeat_schedule_date_info).split(' ')[0]
+
+                    closed_date = datetime.datetime.strptime(repeat_schedule_info_date, '%Y-%m-%d')
+
+                    schedule_closed_day = ScheduleClosedDayTb(schedule_closed_tb_id=schedule_closed_id,
+                                                              closed_date=closed_date, use=USE)
+                    schedule_closed_day.save()
+
+        except ValueError:
+            error = '오류가 발생했습니다. [1]'
+        except IntegrityError:
+            error = '오류가 발생했습니다. [2]'
+        except TypeError:
+            error = '오류가 발생했습니다. [3]'
+        except ValidationError:
+            error = '오류가 발생했습니다. [4]'
+        except InternalError:
+            error = '오류가 발생했습니다. [5]'
 
     if error is not None:
         messages.error(request, error)
@@ -999,6 +1028,7 @@ def delete_closed_date_logic(request):
     if error is None:
         try:
             schedule_close_info = ScheduleClosedTb.objects.get(schedule_closed_id=schedule_closed_id)
+            schedule_close_info.delete()
         except ObjectDoesNotExist:
             error = '오류가 발생했습니다. [0]'
 
@@ -1018,15 +1048,8 @@ class GetTrainerClosedDateView(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
         class_id = self.request.session.get('class_id', '')
-        member_id = request.GET.get('member_id', '')
         error = None
         member_result = {}
-        if member_id == '':
-            error = '회원 ID를 입력해주세요.'
-
-        if error is None:
-            member_result = func_get_member_info(class_id, request.user.id, member_id)
-            error = member_result['error']
 
         if error is not None:
             logger.error(request.user.first_name + ' ' + '[' + str(request.user.id) + ']' + error)
@@ -1044,10 +1067,6 @@ class GetMemberClosedDateView(LoginRequiredMixin, AccessTestMixin, View):
         member_result = {}
         if member_id == '':
             error = '회원 ID를 입력해주세요.'
-
-        if error is None:
-            member_result = func_get_member_info(class_id, request.user.id, member_id)
-            error = member_result['error']
 
         if error is not None:
             logger.error(request.user.first_name + ' ' + '[' + str(request.user.id) + ']' + error)
