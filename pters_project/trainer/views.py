@@ -3355,10 +3355,11 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
         class_member_ticket_list = ClassMemberTicketTb.objects.select_related(
             'member_ticket_tb__ticket_tb',
-            'member_ticket_tb__member').filter(class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW,
+            'member_ticket_tb__member').filter(Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS)
+                                               | Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
+                                               class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW,
                                                member_ticket_tb__ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
                                                member_ticket_tb__ticket_tb__use=USE,
-                                               member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
                                                member_ticket_tb__use=USE,
                                                use=USE).order_by('member_ticket_tb__ticket_tb',
                                                                  'member_ticket_tb__member')
@@ -3520,10 +3521,12 @@ class GetLectureIngMemberListViewAjax(LoginRequiredMixin, AccessTestMixin, View)
 
             all_class_member_ticket_list = ClassMemberTicketTb.objects.select_related(
                 'member_ticket_tb__ticket_tb',
-                'member_ticket_tb__member').filter(query_ticket_list, class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW,
+                'member_ticket_tb__member').filter(query_ticket_list,
+                                                   Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS)
+                                                   | Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
+                                                   class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW,
                                                    member_ticket_tb__ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
                                                    member_ticket_tb__ticket_tb__use=USE,
-                                                   member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
                                                    member_ticket_tb__use=USE,
                                                    use=USE).order_by('member_ticket_tb__member__name',
                                                                      'member_ticket_tb__end_date')
@@ -4055,10 +4058,11 @@ class GetTicketIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         ticket_list = []
         class_member_ticket_list = ClassMemberTicketTb.objects.select_related(
             'member_ticket_tb__ticket_tb',
-            'member_ticket_tb__member').filter(class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW,
+            'member_ticket_tb__member').filter(Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS)
+                                               | Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
+                                               class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW,
                                                member_ticket_tb__ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
                                                member_ticket_tb__ticket_tb__use=USE,
-                                               member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
                                                member_ticket_tb__use=USE,
                                                use=USE).order_by('member_ticket_tb__ticket_tb',
                                                                  'member_ticket_tb__member')
@@ -4230,8 +4234,8 @@ class GetTicketIngMemberListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         all_class_member_ticket_list = ClassMemberTicketTb.objects.select_related(
             'member_ticket_tb__ticket_tb',
             'member_ticket_tb__member__user'
-        ).filter(class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__ticket_tb_id=ticket_id,
-                 member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+        ).filter(Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS)|Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
+                 class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__ticket_tb_id=ticket_id,
                  member_ticket_tb__use=USE, use=USE).order_by('member_ticket_tb__member_id',
                                                               'member_ticket_tb__end_date')
         member_list = func_get_member_from_member_ticket_list(all_class_member_ticket_list, None, request.user.id)
@@ -4273,7 +4277,8 @@ class GetTicketEndMemberListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         all_class_member_ticket_list = ClassMemberTicketTb.objects.select_related(
             'member_ticket_tb__ticket_tb',
             'member_ticket_tb__member__user'
-        ).filter(~Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS), class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW,
+        ).filter(~Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS),~Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
+                 class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW,
                  member_ticket_tb__ticket_tb_id=ticket_id, member_ticket_tb__use=USE,
                  use=USE).annotate(member_ticket_ip_count=RawSQL(query_member_ticket_ip_count, [])
                                    ).filter(member_ticket_ip_count=0).order_by('member_ticket_tb__member_id',

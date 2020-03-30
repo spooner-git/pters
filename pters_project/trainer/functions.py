@@ -1084,9 +1084,11 @@ def func_get_lecture_info(class_id, lecture_id, user_id):
             all_member_ticket_list = ClassMemberTicketTb.objects.select_related(
                 'member_ticket_tb__ticket_tb',
                 'member_ticket_tb__member').filter(
-                query_ticket_list, class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW,
+                query_ticket_list,
+                Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS) | Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
+                class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW,
                 member_ticket_tb__ticket_tb__state_cd=STATE_CD_IN_PROGRESS, member_ticket_tb__ticket_tb__use=USE,
-                member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS, member_ticket_tb__use=USE,
+                member_ticket_tb__use=USE,
                 use=USE).order_by('member_ticket_tb__member_id', 'member_ticket_tb__end_date')
 
     member_list = func_get_member_from_member_ticket_list(all_member_ticket_list, lecture_id, user_id)
