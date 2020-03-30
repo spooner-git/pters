@@ -28,7 +28,7 @@ from schedule.forms import AddScheduleTbForm
 from schedule.functions import func_send_push_trainee, func_send_push_trainer, func_get_holiday_schedule, \
     func_upload_daily_record_content_image_logic, func_delete_daily_record_content_image_logic, \
     func_send_push_trainer_trainer, func_get_program_alarm_data, func_get_lecture_member_ticket_id_from_trainee
-from trainee.models import MemberTicketTb
+from trainee.models import MemberTicketTb, MemberTicketHoldHistoryTb
 from trainer.models import LectureTb, ClassTb
 from .functions import func_add_schedule, func_add_schedule_update, func_refresh_member_ticket_count, func_date_check,\
     func_get_lecture_member_ticket_id, func_delete_schedule, func_delete_repeat_schedule, \
@@ -112,8 +112,10 @@ def check_schedule_logic(request):
                                                                                 member_info['member_ticket_id'])
                             except ObjectDoesNotExist:
                                 error_temp = '회원권 정보를 불러오지 못했습니다.'
+
+                            select_date = schedule_start_datetime.date()
+
                             if error_temp is None:
-                                select_date = schedule_start_datetime.date()
                                 if member_ticket_info.ticket_tb.day_schedule_enable < 9999:
                                     # 체크 하기
                                     tomorrow = select_date + datetime.timedelta(days=1)
@@ -126,7 +128,6 @@ def check_schedule_logic(request):
                                         error_temp = member_info['member_name'] +'님의 '+ member_ticket_info.ticket_tb.name + ' 회원권의 하루 최대 이용 횟수를 초과했습니다.'
 
                             if error_temp is None:
-                                select_date = schedule_start_datetime.date()
                                 if member_ticket_info.ticket_tb.week_schedule_enable < 9999:
                                     week_idx = 0
                                     if setting_week_start_date == 'MON':
@@ -145,6 +146,16 @@ def check_schedule_logic(request):
                                         use=USE).count()
                                     if week_schedule_count >= member_ticket_info.ticket_tb.week_schedule_enable:
                                         error_temp = member_info['member_name'] +'님의 '+ member_ticket_info.ticket_tb.name + ' 회원권의 주간 최대 이용 횟수를 초과했습니다.'
+
+                            holding_counter = MemberTicketHoldHistoryTb.objects.filter(
+                                member_ticket_tb_id=member_ticket_info.member_ticket_id, start_date__lte=select_date,
+                                end_date__gte=select_date, use=USE).count()
+
+                            if holding_counter > 0:
+                                if error_temp is None:
+                                    error_temp = member_info['member_name'] +'님의 '+ member_ticket_info.ticket_tb.name + ' 회원권이 홀딩 기간입니다.'
+                                else:
+                                    error_temp = member_info['member_name'] +'님의 '+ member_ticket_info.ticket_tb.name + ' 회원권이 홀딩 기간입니다.<br/>' + error_temp
 
                             if error_temp is not None:
                                 raise InternalError

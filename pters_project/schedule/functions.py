@@ -19,7 +19,7 @@ from configs.const import REPEAT_TYPE_2WEAK, ON_SCHEDULE_TYPE, USE, UN_USE, SCHE
     AUTH_TYPE_VIEW, GROUP_SCHEDULE, OFF_SCHEDULE, FROM_TRAINEE_LESSON_ALARM_ON, TO_SHARED_TRAINER_LESSON_ALARM_OFF, \
     TO_SHARED_TRAINER_LESSON_ALARM_ON, PERMISSION_STATE_CD_WAIT, \
     PERMISSION_STATE_CD_APPROVE, TO_ALL_TRAINEE, TO_ING_TRAINEE, TO_END_TRAINEE, GROUP_TRAINEE, GROUP_TRAINER, \
-    SCHEDULE_PAGINATION_COUNTER
+    SCHEDULE_PAGINATION_COUNTER, STATE_CD_HOLDING
 from configs.settings import DEBUG
 from login.models import PushInfoTb
 from trainee.models import MemberTicketTb
@@ -110,9 +110,9 @@ def func_get_lecture_member_ticket_id(class_id, lecture_id, member_id):
     member_ticket_id = None
     error = None
     class_member_ticket_data = ClassMemberTicketTb.objects.select_related(
-        'member_ticket_tb').filter(class_tb_id=class_id, class_tb__use=USE,  auth_cd=AUTH_TYPE_VIEW,
+        'member_ticket_tb').filter(Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS) | Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
+                                   class_tb_id=class_id, class_tb__use=USE,  auth_cd=AUTH_TYPE_VIEW,
                                    member_ticket_tb__member_id=member_id,
-                                   member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
                                    member_ticket_tb__member_ticket_avail_count__gt=0,
                                    member_ticket_tb__use=USE).order_by('member_ticket_tb__start_date',
                                                                        'member_ticket_tb__reg_dt')
@@ -161,9 +161,10 @@ def func_get_lecture_member_ticket_id_from_trainee(class_id, lecture_id, member_
     member_ticket_id = None
     error = None
     class_member_ticket_data = ClassMemberTicketTb.objects.select_related(
-        'member_ticket_tb').filter(class_tb_id=class_id, class_tb__use=USE,  auth_cd=AUTH_TYPE_VIEW,
+        'member_ticket_tb').filter(Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS)
+                                   | Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
+                                   class_tb_id=class_id, class_tb__use=USE,  auth_cd=AUTH_TYPE_VIEW,
                                    member_ticket_tb__member_id=member_id,
-                                   member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
                                    member_ticket_tb__member_ticket_avail_count__gt=0,
                                    member_ticket_tb__use=USE).order_by('member_ticket_tb__start_date',
                                                                        'member_ticket_tb__reg_dt')
