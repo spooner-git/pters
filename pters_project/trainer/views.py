@@ -59,7 +59,7 @@ from .functions import func_get_trainer_setting_list, \
     func_get_member_lecture_list, func_get_member_ticket_list, func_get_lecture_info, func_add_member_ticket_info,\
     func_get_ticket_info, func_delete_member_ticket_info, func_update_lecture_member_fix_status_cd,\
     update_user_setting_data, update_program_setting_data, func_get_member_ticket_info, func_get_trainer_info,\
-    update_alarm_setting_data, func_hold_member_ticket_info
+    update_alarm_setting_data, func_add_hold_member_ticket_info, func_delete_hold_member_ticket_info
 from .models import ClassMemberTicketTb, LectureTb, ClassTb, MemberClassTb, BackgroundImgTb, \
     SettingTb, TicketTb, TicketLectureTb, CenterTrainerTb, LectureMemberTb, ProgramAuthTb, ProgramBoardTb, \
     ProgramNoticeTb, BugMemberTicketPriceTb, ScheduleClosedTb, ScheduleClosedDayTb
@@ -2635,8 +2635,39 @@ def delete_member_ticket_info_logic(request):
     return render(request, 'ajax/trainer_error_ajax.html')
 
 
+class GetHoldMemberTicketListView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        member_ticket_id = request.GET.get('member_ticket_id', '')
+        error = None
+        hold_member_ticket_list = []
+
+        if member_ticket_id is None or member_ticket_id == '':
+            error = '회원 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            hold_member_ticket_data = MemberTicketHoldHistoryTb.objects.filter(member_ticket_tb_id=member_ticket_id,
+                                                                               use=USE)
+            for hold_member_ticket_info in hold_member_ticket_data:
+                hold_member_ticket_dict = {
+                    'member_ticket_hold_history_id': hold_member_ticket_info.member_ticket_hold_history_id,
+                    'member_ticket_hold_start_date': hold_member_ticket_info.start_date,
+                    'member_ticket_hold_end_date': hold_member_ticket_info.end_date,
+                    'member_ticket_hold_note': hold_member_ticket_info.note,
+                    'member_ticket_hold_extension_flag': hold_member_ticket_info.extension_flag
+                    }
+                hold_member_ticket_list.append(hold_member_ticket_dict)
+
+        if error is not None:
+            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+            messages.error(request, error)
+
+        return JsonResponse({'hold_member_ticket_list':hold_member_ticket_list},
+                            json_dumps_params={'ensure_ascii': True})
+
+
 # 회원권 홀딩
-def hold_member_ticket_info_logic(request):
+def add_hold_member_ticket_info_logic(request):
     member_ticket_id = request.POST.get('member_ticket_id', '')
     start_date = request.POST.get('start_date', '')
     end_date = request.POST.get('end_date', '')
@@ -2655,8 +2686,8 @@ def hold_member_ticket_info_logic(request):
             error = '회원권 정보를 불러오지 못했습니다.'
 
     if error is None:
-        error = func_hold_member_ticket_info(request.user.id, class_id, member_ticket_id,
-                                             start_date, end_date, note, extension_flag)
+        error = func_add_hold_member_ticket_info(request.user.id, class_id, member_ticket_id,
+                                                 start_date, end_date, note, extension_flag)
 
     if error is None:
         # 회원의 고정 수업 정리
@@ -2672,6 +2703,58 @@ def hold_member_ticket_info_logic(request):
                          log_info=member_ticket_info.member.name + ' 회원님의 '
                                   + member_ticket_info.ticket_tb.name + ' 회원권', log_how='홀딩', use=USE)
         log_data.save()
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
+# 회원권 홀딩
+def update_hold_member_ticket_info_logic(request):
+    member_ticket_hold_history_id = request.POST.get('member_ticket_hold_history_id', '')
+    start_date = request.POST.get('start_date', '')
+    end_date = request.POST.get('end_date', '')
+    note = request.POST.get('note', '')
+    extension_flag = request.POST.get('extension_flag', '')
+    class_id = request.session.get('class_id', '')
+    error = None
+    member_ticket_hold_history_info = None
+    if member_ticket_hold_history_id is None or member_ticket_hold_history_id == '':
+        error = '회원권 혿딩 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            member_ticket_hold_history_info = MemberTicketHoldHistoryTb.objects.get(
+                member_ticket_hold_history_id=member_ticket_hold_history_id)
+        except ObjectDoesNotExist:
+            error = '회원권 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        error = func_add_hold_member_ticket_info(request.user.id, class_id,
+                                                 member_ticket_hold_history_info.member_ticket_tb_id,
+                                                 start_date, end_date, note, extension_flag)
+
+    if error is None:
+        error = func_delete_hold_member_ticket_info(member_ticket_hold_history_id)
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
+# 회원권 홀딩
+def delete_hold_member_ticket_info_logic(request):
+    member_ticket_hold_history_id = request.POST.get('member_ticket_hold_history_id', '')
+    error = None
+    if member_ticket_hold_history_id is None or member_ticket_hold_history_id == '':
+        error = '회원권 혿딩 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        error = func_delete_hold_member_ticket_info(member_ticket_hold_history_id)
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
 
     return render(request, 'ajax/trainer_error_ajax.html')
 

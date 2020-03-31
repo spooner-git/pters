@@ -681,7 +681,7 @@ def func_delete_member_ticket_info(user_id, class_id, member_ticket_id):
 
 
 # 회원의 회원권 홀딩하기
-def func_hold_member_ticket_info(user_id, class_id, member_ticket_id, start_date, end_date, note, extension_flag):
+def func_add_hold_member_ticket_info(user_id, class_id, member_ticket_id, start_date, end_date, note, extension_flag):
     error = None
     class_member_ticket_info = None
     date_delta = 0
@@ -767,6 +767,30 @@ def func_hold_member_ticket_info(user_id, class_id, member_ticket_id, start_date
             error = '등록 값의 형태가 문제 있습니다'
         except InternalError:
             error = '등록 값에 문제가 있습니다.'
+
+    return error
+
+
+def func_delete_hold_member_ticket_info(member_ticket_hold_history_id):
+    error = None
+    member_ticket_hold_history_info = None
+    try:
+        member_ticket_hold_history_info = MemberTicketHoldHistoryTb.objects.get(
+            member_ticket_hold_history_id=member_ticket_hold_history_id)
+    except ObjectDoesNotExist:
+        error = '회원권 홀딩 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        if member_ticket_hold_history_info.extension_flag == USE:
+            date_delta = (member_ticket_hold_history_info.end_date - member_ticket_hold_history_info.start_date).days + 1
+            member_ticket_tb = member_ticket_hold_history_info.member_ticket_tb
+
+            unlimited_end_date = datetime.datetime.strptime('9999-12-31', '%Y-%m-%d').date()
+            if member_ticket_tb.end_date < unlimited_end_date:
+                member_ticket_tb.end_date -= datetime.timedelta(days=date_delta)
+                member_ticket_tb.save()
+
+        member_ticket_hold_history_info.delete()
 
     return error
 

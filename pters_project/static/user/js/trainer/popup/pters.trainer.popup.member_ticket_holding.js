@@ -265,7 +265,7 @@ class Member_ticket_holding{
         let data = {"member_ticket_id":this.data.member_ticket_id, "note":this.data.note,
             "price":this.data.holding_price, "start_date":this.data.holding_start_date, "end_date":this.data.holding_end_date, "extension_flag":this.data.holding_extension_flag};
 
-        Member_func.ticket_hold(data, ()=>{
+        Member_func.ticket_add_hold(data, ()=>{
             this.set_initial_data();
             try{
                 current_page.init();

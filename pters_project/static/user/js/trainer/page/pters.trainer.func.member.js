@@ -999,9 +999,9 @@ class Member_func{
         });
     }
 
-    static ticket_hold(data, callback, error_callback){
+    static ticket_add_hold(data, callback, error_callback){
         $.ajax({
-            url:'/trainer/hold_member_ticket_info/',
+            url:'/trainer/add_hold_member_ticket_info/',
             type:'POST',
             data: data,
             dataType : 'html',
