@@ -4,7 +4,7 @@ from django import forms
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.db import IntegrityError
 
-from configs.const import SCHEDULE_DUPLICATION_ENABLE, USE, ON_SCHEDULE_TYPE
+from configs.const import SCHEDULE_DUPLICATION_ENABLE, USE, ON_SCHEDULE_TYPE, UN_USE
 from login.models import MemberTb
 from schedule.functions import func_get_lecture_member_ticket_id
 from trainer.models import LectureTb
@@ -43,6 +43,7 @@ class AddScheduleTbForm(forms.Form):
     end_dt = forms.CharField(label='종료 일시', validators=[date_time_validator], required=True)
     note = forms.CharField(label='강사 메모', required=False)
     duplication_enable_flag = forms.IntegerField(label='중복 여부', initial=SCHEDULE_DUPLICATION_ENABLE, required=False)
+    extension_flag = forms.IntegerField(label='자동 연장', initial=UN_USE, required=False)
     lecture_info = None
 
     def clean_member_ids(self):

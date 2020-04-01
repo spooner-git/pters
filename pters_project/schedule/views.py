@@ -22,7 +22,7 @@ from configs.const import ON_SCHEDULE_TYPE, USE, AUTO_FINISH_OFF, AUTO_FINISH_ON
     TO_TRAINEE_LESSON_ALARM_OFF, SCHEDULE_DUPLICATION_DISABLE, AUTO_ABSENCE_ON, SCHEDULE_DUPLICATION_ENABLE, \
     LECTURE_TYPE_ONE_TO_ONE, STATE_CD_NOT_PROGRESS, PERMISSION_STATE_CD_APPROVE, STATE_CD_FINISH, STATE_CD_ABSENCE, \
     OFF_SCHEDULE_TYPE, TO_SHARED_TRAINER_LESSON_ALARM_OFF, TO_SHARED_TRAINER_LESSON_ALARM_ON, PERMISSION_STATE_CD_WAIT, \
-    CLOSED_SCHEDULE_TYPE
+    CLOSED_SCHEDULE_TYPE, UN_USE
 from configs import settings
 from login.models import LogTb, MemberTb
 from schedule.forms import AddScheduleTbForm
@@ -225,6 +225,7 @@ def add_schedule_logic(request):
         schedule_end_datetime = schedule_input_form.cleaned_data['end_dt']
         en_dis_type = schedule_input_form.cleaned_data['en_dis_type']
         note = schedule_input_form.cleaned_data['note']
+        extension_flag = schedule_input_form.cleaned_data['extension_flag']
         duplication_enable_flag = schedule_input_form.cleaned_data['duplication_enable_flag']
         lecture_id = schedule_input_form.cleaned_data['lecture_id']
         lecture_info = schedule_input_form.get_lecture_info()
@@ -242,6 +243,7 @@ def add_schedule_logic(request):
                 state_cd = STATE_CD_FINISH
             elif str(setting_schedule_auto_finish) == str(AUTO_ABSENCE_ON):
                 state_cd = STATE_CD_ABSENCE
+            extension_flag = UN_USE
 
         log_info_schedule_start_date = str(schedule_start_datetime).split(':')
         log_info_schedule_end_date = str(schedule_end_datetime).split(' ')[1].split(':')
@@ -259,7 +261,7 @@ def add_schedule_logic(request):
                     schedule_result = func_add_schedule(class_id, None, None, lecture_info, None,
                                                         schedule_start_datetime,
                                                         schedule_end_datetime, note, en_dis_type, request.user.id,
-                                                        permission_state_cd, state_cd,
+                                                        permission_state_cd, state_cd, extension_flag,
                                                         duplication_enable_flag)
                     error = schedule_result['error']
 
@@ -302,7 +304,7 @@ def add_schedule_logic(request):
                                                                 schedule_start_datetime, schedule_end_datetime,
                                                                 note, en_dis_type, request.user.id,
                                                                 permission_state_cd,
-                                                                state_cd, duplication_enable_flag)
+                                                                state_cd, UN_USE, duplication_enable_flag)
                             error_temp = schedule_result['error']
                             if error_temp is not None:
                                 raise InternalError()
@@ -1024,6 +1026,7 @@ def add_repeat_schedule_logic(request):
     member_ids = request.POST.getlist('member_ids[]', '')
     en_dis_type = request.POST.get('en_dis_type', ON_SCHEDULE_TYPE)
     note = request.POST.get('note', '')
+    extension_flag = request.POST.get('extension_flag', UN_USE)
     duplication_enable_flag = request.POST.get('duplication_enable_flag', SCHEDULE_DUPLICATION_ENABLE)
     class_id = request.session.get('class_id', '')
     week_info = ['(일)', '(월)', '(화)', '(수)', '(목)', '(금)', '(토)']
@@ -1199,7 +1202,7 @@ def add_repeat_schedule_logic(request):
                                                                 schedule_start_datetime, schedule_end_datetime, note,
                                                                 en_dis_type, request.user.id,
                                                                 permission_state_cd,
-                                                                state_cd, duplication_enable_flag)
+                                                                state_cd, extension_flag, duplication_enable_flag)
 
                             if schedule_result['error'] is not None:
                                 error_date = str(repeat_schedule_date_info).split(' ')[0]
@@ -1405,7 +1408,7 @@ def add_repeat_schedule_confirm(request):
                                                     schedule_info.start_dt, schedule_info.end_dt,
                                                     schedule_info.note,
                                                     ON_SCHEDULE_TYPE, request.user.id, permission_state_cd,
-                                                    state_cd, SCHEDULE_DUPLICATION_ENABLE)
+                                                    state_cd, UN_USE, SCHEDULE_DUPLICATION_ENABLE)
 
                                                 error_temp = schedule_result['error']
 
@@ -1600,7 +1603,7 @@ def add_member_repeat_schedule_to_lecture_schedule_logic(request):
                                                     schedule_info.start_dt, schedule_info.end_dt,
                                                     schedule_info.note,
                                                     ON_SCHEDULE_TYPE, request.user.id, permission_state_cd,
-                                                    state_cd, SCHEDULE_DUPLICATION_ENABLE)
+                                                    state_cd, UN_USE, SCHEDULE_DUPLICATION_ENABLE)
 
                                                 error_temp = schedule_result['error']
 

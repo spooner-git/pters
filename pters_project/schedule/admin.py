@@ -9,7 +9,7 @@ from .models import RepeatScheduleTb, ScheduleTb, DeleteRepeatScheduleTb, Delete
 class RepeatScheduleTbAdmin(admin.ModelAdmin):
     list_display = ('repeat_schedule_id', 'class_tb', 'member_ticket_tb', 'lecture_tb', 'lecture_schedule_id',
                     'repeat_type_cd', 'week_info', 'start_date', 'end_date', 'start_time', 'end_time',
-                    'state_cd', 'en_dis_type', 'reg_member', 'mod_member', 'reg_dt', 'mod_dt')
+                    'state_cd', 'en_dis_type', 'extension_flag', 'reg_member', 'mod_member', 'reg_dt', 'mod_dt')
 
     def get_queryset(self, request):
         return super().get_queryset(request).select_related(
@@ -28,7 +28,7 @@ class ScheduleTbAdmin(admin.ModelAdmin):
                     'repeat_schedule_tb', 'start_dt', 'end_dt', 'max_mem_count', 'state_cd',
                     'permission_state_cd', 'daily_record_tb', 'note', 'member_note', 'en_dis_type',
                     'ing_color_cd', 'ing_font_color_cd',
-                    'end_color_cd', 'end_font_color_cd', 'push_alarm_data',
+                    'end_color_cd', 'end_font_color_cd', 'push_alarm_data', 'extension_flag',
                     'reg_member', 'mod_member', 'reg_dt', 'mod_dt', 'use')
 
     def get_queryset(self, request):
@@ -59,7 +59,7 @@ class DailyRecordTbAdmin(admin.ModelAdmin):
 class DeleteScheduleTbAdmin(admin.ModelAdmin):
     list_display = ('delete_schedule_id', 'schedule_id', 'class_tb', 'member_ticket_tb', 'lecture_tb',
                     'lecture_schedule_id', 'delete_repeat_schedule_tb', 'start_dt', 'end_dt', 'state_cd',
-                    'permission_state_cd', 'note', 'member_note', 'en_dis_type',
+                    'permission_state_cd', 'note', 'member_note', 'en_dis_type', 'extension_flag',
                     'reg_member', 'del_member', 'reg_dt', 'mod_dt', 'use')
 
     def get_queryset(self, request):
@@ -75,7 +75,7 @@ class DeleteScheduleTbAdmin(admin.ModelAdmin):
 @admin.register(DeleteRepeatScheduleTb)
 class DeleteRepeatScheduleTbAdmin(admin.ModelAdmin):
     list_display = ('delete_repeat_schedule_id', 'repeat_schedule_id', 'class_tb', 'member_ticket_tb', 'lecture_tb',
-                    'lecture_schedule_id', 'repeat_type_cd', 'week_info', 'start_date', 'end_date',
+                    'lecture_schedule_id', 'repeat_type_cd', 'week_info', 'start_date', 'end_date', 'extension_flag',
                     'start_time', 'time_duration', 'state_cd', 'en_dis_type', 'reg_member', 'reg_dt', 'mod_dt', 'use')
 
     def get_queryset(self, request):
@@ -95,7 +95,6 @@ class HolidayTbAdmin(admin.ModelAdmin):
 
 
 @admin.register(ScheduleAlarmTb)
-
 class ScheduleAlarmTb(admin.ModelAdmin):
     list_display = ('schedule_alarm_id', 'class_tb', 'member', 'schedule_tb', 'alarm_dt', 'alarm_minute',
                     'reg_dt', 'mod_dt', 'use')

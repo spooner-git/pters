@@ -289,7 +289,8 @@ def func_refresh_lecture_status(lecture_id, lecture_schedule_id, lecture_repeat_
 # 일정 등록
 def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
                       lecture_info, lecture_schedule_id, start_datetime, end_datetime,
-                      note, en_dis_type, user_id, permission_state_cd, state_cd, duplication_enable_flag):
+                      note, en_dis_type, user_id, permission_state_cd, state_cd, extension_flag,
+                      duplication_enable_flag):
     error = None
     context = {'error': None, 'schedule_id': ''}
     if member_ticket_id == '':
@@ -300,6 +301,8 @@ def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
         lecture_schedule_id = None
     if repeat_schedule_id == '':
         repeat_schedule_id = None
+    if extension_flag is None or extension_flag == '':
+        extension_flag = UN_USE
 
     max_mem_count = 1
     ing_color_cd = ''
@@ -349,6 +352,7 @@ def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
                                                max_mem_count=max_mem_count,
                                                ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
                                                ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
+                                               extension_flag=extension_flag,
                                                # Test 용
                                                # alarm_dt=start_datetime-datetime.timedelta(minutes=5),
                                                reg_member_id=user_id,
