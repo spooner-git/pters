@@ -78,10 +78,11 @@ class Plan_repeat_list{
         let lectures_list = this.dom_sub_assembly_lectures();
         let members_list = this.dom_sub_assembly_members();
         let offs_list = this.dom_sub_assembly_offs();
+        let closed_list = this.dom_sub_assembly_closed();
 
         
 
-        let html = lectures_list + members_list + offs_list;
+        let html = closed_list + lectures_list + members_list + offs_list;
 
         if(Object.keys(this.data.lecture_repeat_schedule_list).length == 0 && this.data.member_repeat_schedule_list.length == 0 && this.data.off_repeat_schedule_data.length == 0){
             html = `<div style="font-size:14px;letter-spacing:-0.6px;font-weight:500;padding:20px;">
@@ -166,6 +167,29 @@ class Plan_repeat_list{
             let repeat_id = data.repeat_schedule_id;
             let color = 'var(--font-main)';
             let repeat_name = "OFF";
+            let repeat_period = data.start_date + ' - ' + data.end_date;
+            let repeat_start_time = TimeRobot.to_hhmm(data.start_time.split(':')[0], data.start_time.split(':')[1]).complete;
+            let repeat_end_time = TimeRobot.to_hhmm(data.end_time.split(':')[0], data.end_time.split(':')[1]).complete;
+            let repeat_time = repeat_start_time + ' - ' + repeat_end_time;
+            let repeat_day = data.week_info.split('/').map((item)=>{
+                return DAYNAME_MATCH[item];
+            }).join('');
+
+            let html = this.dom_row_repeat_item(repeat_id, color, repeat_name, repeat_day, repeat_period, repeat_time);
+
+            html_to_join.push(html);
+        }
+
+        return html_to_join.join("");
+    }
+    dom_sub_assembly_closed(){
+        let html_to_join = [];
+        let length = this.data.closed_repeat_schedule_data.length;
+        for(let i=0; i<length; i++){
+            let data = this.data.closed_repeat_schedule_data[i];
+            let repeat_id = data.repeat_schedule_id;
+            let color = 'var(--font-main)';
+            let repeat_name = "휴무일";
             let repeat_period = data.start_date + ' - ' + data.end_date;
             let repeat_start_time = TimeRobot.to_hhmm(data.start_time.split(':')[0], data.start_time.split(':')[1]).complete;
             let repeat_end_time = TimeRobot.to_hhmm(data.end_time.split(':')[0], data.end_time.split(':')[1]).complete;

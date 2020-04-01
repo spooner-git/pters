@@ -914,6 +914,7 @@ class Plan_add{
                 show_error_message({title:'날짜를 선택 해주세요.'});
                 return false;
             }
+            alert(this.list_type);
             if(this.list_type != 'closed'){
                 if(this.data.start_time_text == null){
                     show_error_message({title:'시작 시각을 선택 해주세요.'});

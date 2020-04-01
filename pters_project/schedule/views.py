@@ -1046,6 +1046,10 @@ def add_repeat_schedule_logic(request):
     success_end_date = None
     end_time_check = 0
 
+    if str(en_dis_type) == str(CLOSED_SCHEDULE_TYPE):
+        repeat_start_time = '00:00'
+        repeat_end_time = '24:00'
+
     if repeat_schedule_start_date == repeat_schedule_end_date:
         if repeat_start_time == repeat_end_time:
             error = '일정을 다시 선택해주세요.'
