@@ -49,7 +49,7 @@ class Plan_view{
                 }
             ],
             note: "",
-
+            schedule_holding_extension_flag: OFF,
             //plan_add 팝업의 data보다 추가된 항목
             lecture_color: null,
             lecture_font_color: null,
@@ -201,6 +201,7 @@ class Plan_view{
         this.data.lecture_state_cd = data.schedule_info[0].state_cd;
         this.data.lecture_permission_state_cd = data.schedule_info[0].permission_state_cd;
         this.data.note = data.schedule_info[0].note;
+        this.data.schedule_holding_extension_flag = data.schedule_info[0].extension_flag;
         this.data.schedule_type = data.schedule_info[0].schedule_type;
 
         this.data.reg_member_id = data.schedule_info[0].reg_member_id;
@@ -254,8 +255,8 @@ class Plan_view{
         let top_left = `<span class="icon_left" onclick="plan_view_popup.upper_left_menu();">${CImg.arrow_left([this.data.lecture_font_color])}</span>`;
         let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
         let top_right = `<span class="icon_right">    
-                            ${CImg.memo([this.data.lecture_font_color], this.data.schedule_type == 0 ? {"display":"none"} : null, `plan_view_popup.upper_right_menu(2)`)}
-                            ${CImg.attend_check([this.data.lecture_font_color], this.data.schedule_type == 0 ? {"display":"none"} : null, `plan_view_popup.upper_right_menu(1)`)}
+                            ${CImg.memo([this.data.lecture_font_color], this.data.schedule_type == 0 || this.data.schedule_type == 3 ? {"display":"none"} : null, `plan_view_popup.upper_right_menu(2)`)}
+                            ${CImg.attend_check([this.data.lecture_font_color], this.data.schedule_type == 0 || this.data.schedule_type == 3 ? {"display":"none"} : null, `plan_view_popup.upper_right_menu(1)`)}
                             ${CImg.delete([this.data.lecture_font_color], null, `plan_view_popup.upper_right_menu(0)`)}
                         </span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0;background-color:${this.data.lecture_color}"></section>
@@ -284,8 +285,8 @@ class Plan_view{
         let top_left = `<span class="icon_left" onclick="plan_view_popup.upper_left_menu();">${CImg.arrow_left([this.data.lecture_font_color])}</span>`;
         let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
         let top_right = `<span class="icon_right">    
-                            ${CImg.memo([this.data.lecture_font_color], this.data.schedule_type == 0 ? {"display":"none"} : null, `plan_view_popup.upper_right_menu(2)`)}
-                            ${CImg.attend_check([this.data.lecture_font_color], this.data.schedule_type == 0 ? {"display":"none"} : null, `plan_view_popup.upper_right_menu(1)`)}
+                            ${CImg.memo([this.data.lecture_font_color], this.data.schedule_type == 0 || this.data.schedule_type == 3? {"display":"none"} : null, `plan_view_popup.upper_right_menu(2)`)}
+                            ${CImg.attend_check([this.data.lecture_font_color], this.data.schedule_type == 0 || this.data.schedule_type == 3 ? {"display":"none"} : null, `plan_view_popup.upper_right_menu(1)`)}
                             ${CImg.delete([this.data.lecture_font_color], null, `plan_view_popup.upper_right_menu(0)`)}
                         </span>`;
         return {left: top_left, center:top_center, right:top_right};
@@ -306,6 +307,7 @@ class Plan_view{
         let end_time_select_row = this.dom_row_end_time_select();
         let classic_time_selector = this.dom_row_classic_time_selector();
         let memo_select_row = this.dom_row_memo_select();
+        let schedule_holding_extension_flag = this.dom_row_schedule_holding_extension_select();
         let reg_mod_info = this.dom_row_reg_mod_date();
 
         let display = "";
@@ -333,6 +335,20 @@ class Plan_view{
                         `<div class="obj_input_box_full" style="display:${display};">`+ CComponent.dom_tag('대기 회원') + member_select_plan_wait_row + member_list_plan_wait_row+'</div>' +
                         '<div class="obj_input_box_full" style="padding:18px;">' + reg_mod_info + '<div>';
         }
+        if(this.data.schedule_type == 3){
+            if(this.time_selector == CLASSIC){
+                html =      '<div class="obj_input_box_full">' +  CComponent.dom_tag('일자') + date_select_row + '</div>' +
+                            '<div class="obj_input_box_full">'+ CComponent.dom_tag(`메모 <span style="color:var(--font-highlight);display:${hide_when_off}">(회원님께 공유되는 메모입니다.)</span>`) + memo_select_row + '</div>' +
+                            '<div class="obj_input_box_full">'+ CComponent.dom_tag('자동 기간 연장') + schedule_holding_extension_flag +'</div>'+
+                            '<div class="obj_input_box_full" style="padding:18px;">' + reg_mod_info + '<div>';
+            }else{
+                html =      '<div class="obj_input_box_full">' +  CComponent.dom_tag('일자') + date_select_row + '</div>' +
+                            '<div class="obj_input_box_full">'+ CComponent.dom_tag(`메모 <span style="color:var(--font-highlight);display:${hide_when_off}">(회원님께 공유되는 메모입니다.)</span>`) + memo_select_row + '</div>' +
+                            '<div class="obj_input_box_full">'+ CComponent.dom_tag('자동 기간 연장') + schedule_holding_extension_flag +'</div>'+
+                            '<div class="obj_input_box_full" style="padding:18px;">' + reg_mod_info + '<div>';
+
+            }
+        }
 
         return html;
     }
@@ -358,6 +374,8 @@ class Plan_view{
             // lecture_name = this.data.lecture_name;
         }else if(this.data.schedule_type == 2){
             lecture_name = this.data.lecture_name;
+        }else if(this.data.schedule_type == 3){
+            lecture_name =`휴무일 ${this.data.note != "" ? '('+this.data.note+')' : ''}`;
         }
         
         let id = "plan_view_lecture_name";
@@ -1130,6 +1148,18 @@ class Plan_view{
         return html;
     }
 
+    dom_row_schedule_holding_extension_select(){
+        let id = "schedule_extension_select";
+        let power = this.data.schedule_holding_extension_flag;
+        let style = {"margin-top":"10px", "margin-left":"40px"};
+        let onclick = (on_off)=>{
+            this.data.schedule_holding_extension_flag = on_off;
+            this.render_content();
+        };
+        let html = CComponent.toggle_button (id, power, style, onclick);
+        return html;
+    }
+
     dom_row_reg_mod_date(){
         // let icon_button_style = {"display":"block", "padding":0, "font-size":"12px"};
         let style = {"font-size":"12px", "height":"25px", "line-height":"25px", "padding":"0"};
@@ -1162,8 +1192,16 @@ class Plan_view{
     }
 
     upper_right_menu(number){
+        let title = '정말 OFF 일정을 취소하시겠습니까?';
+        if(this.data.schedule_type == 1 || this.data.schedule_type == 2){
+            title = '정말 '+this.data.lecture_name+' 일정을 취소하시겠습니까?';
+        }
+        else if(this.data.schedule_type == 3){
+            title = '정말 휴무일 일정을 취소하겠습니까?'
+        }
+
         let user_option = [
-            ()=>{ show_user_confirm({title:`정말 ${this.data.schedule_type != "0" ? this.data.lecture_name : 'OFF'} 일정을 취소하시겠습니까?`}, ()=>{
+            ()=>{ show_user_confirm({title:`정말 ${title}`}, ()=>{
                     let inspect = pass_inspector.schedule_delete();
                     if(inspect.barrier == BLOCKED){
                         let message = `${inspect.limit_type}`;
@@ -1440,6 +1478,8 @@ class Plan_view{
                     plan_name = data[i].member_name;
                 }else if(data[i].schedule_type == 2){
                     plan_name = data[i].lecture_name;
+                }else if(data[i].schedule_type == 3){
+                    plan_name = '휴무일 ('+data[i].note+')';
                 }
 
                 let check = Plan_calc.know_whether_plans_has_duplicates (start_time, end_time, plan_starttime, plan_endtime);

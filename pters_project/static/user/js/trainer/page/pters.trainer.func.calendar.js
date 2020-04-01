@@ -862,7 +862,7 @@ class Calendar {
                 if(date_to_search in schedule_data){
                     let schedule_number = 0;
                     schedule_data[date_to_search].forEach((el)=>{
-                        if(el.schedule_type != 0){
+                        if(el.schedule_type != 0 && el.schedule_type != 3){
                             schedule_number++;
                         }
                     });
@@ -1078,6 +1078,10 @@ class Calendar {
                                 plan_status_color = plan.lecture_ing_color_cd;
                                 plan_name = plan.lecture_name + plan_capacity_status;
                                 plan_font_style = `color:${plan.lecture_ing_font_color_cd};`;
+                            }else if(plan.schedule_type == 3){
+                                plan_status_color = '#d2d1cf';
+                                plan_name = plan.note != "" ? plan.note : "휴무일" ;
+                                plan_font_style = 'color:#3b3b3b;';
                             }
 
                             if(plan.state_cd != "NP"){

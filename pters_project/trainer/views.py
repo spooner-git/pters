@@ -40,7 +40,8 @@ from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO
     SORT_LECTURE_NAME, SORT_LECTURE_MEMBER_COUNT, SORT_LECTURE_CAPACITY_COUNT, SORT_LECTURE_CREATE_DATE, \
     CALENDAR_TIME_SELECTOR_BASIC, SORT_END_DATE, SORT_MEMBER_TICKET, SORT_SCHEDULE_DT, STATE_CD_REFUND, \
     SORT_SCHEDULE_MONTHLY, SHARED_PROGRAM, MY_PROGRAM, PROGRAM_SELECT, PROGRAM_LECTURE_CONNECT_DELETE, \
-    PROGRAM_LECTURE_CONNECT_ACCEPT, BOARD_TYPE_CD_NOTICE, ON_SCHEDULE, ALARM_PAGINATION_COUNTER, STATE_CD_HOLDING
+    PROGRAM_LECTURE_CONNECT_ACCEPT, BOARD_TYPE_CD_NOTICE, ON_SCHEDULE, ALARM_PAGINATION_COUNTER, STATE_CD_HOLDING, \
+    CLOSED_SCHEDULE_TYPE
 from board.models import BoardTb, QATb, NoticeTb
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 from schedule.functions import func_refresh_member_ticket_count, func_get_trainer_attend_schedule, \
@@ -292,6 +293,7 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
         class_id = self.request.session.get('class_id', '')
         today = datetime.date.today()
         off_repeat_schedule_list = []
+        closed_repeat_schedule_list = []
         member_repeat_schedule_list = []
         lecture_member_repeat_schedule_ordered_dict = collections.OrderedDict()
 
@@ -312,6 +314,11 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
         off_repeat_schedule_data = RepeatScheduleTb.objects.select_related(
             'reg_member').filter(class_tb_id=class_id,
                                  en_dis_type=OFF_SCHEDULE_TYPE).exclude(end_date__lt=today).order_by('-reg_dt')
+
+        # 휴무일 반복 일정 정보 불러오기
+        closed_repeat_schedule_data = RepeatScheduleTb.objects.select_related(
+            'reg_member').filter(class_tb_id=class_id,
+                                 en_dis_type=CLOSED_SCHEDULE_TYPE).exclude(end_date__lt=today).order_by('-reg_dt')
 
         # 회원의 반복 일정 정보 불러오기
         member_repeat_schedule_data = RepeatScheduleTb.objects.select_related(
@@ -364,6 +371,34 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
                 'reg_dt': str(off_repeat_schedule_info.reg_dt)
             }
             off_repeat_schedule_list.append(off_repeat_schedule)
+
+        for closed_repeat_schedule_info in closed_repeat_schedule_data:
+            week_data = closed_repeat_schedule_info.week_info.split('/')
+            week_data = sorted(week_data, key=lambda week_info: week_order.get(week_info))
+            mod_member_id = ''
+            mod_member_name = ''
+            if closed_repeat_schedule_info.mod_member is not None and closed_repeat_schedule_info.mod_member != '':
+                mod_member_id = closed_repeat_schedule_info.mod_member_id
+                mod_member_name = closed_repeat_schedule_info.mod_member.name
+            closed_repeat_schedule = {
+                'repeat_schedule_id': closed_repeat_schedule_info.repeat_schedule_id,
+                'repeat_type_cd': closed_repeat_schedule_info.repeat_type_cd,
+                'week_info': "/".join(week_data),
+                'start_date': closed_repeat_schedule_info.start_date,
+                'end_date': closed_repeat_schedule_info.end_date,
+                'start_time': closed_repeat_schedule_info.start_time,
+                'end_time': closed_repeat_schedule_info.end_time,
+                'time_duration': closed_repeat_schedule_info.time_duration,
+                'state_cd': closed_repeat_schedule_info.state_cd,
+                'reg_member_id': closed_repeat_schedule_info.reg_member_id,
+                'reg_member_name': closed_repeat_schedule_info.reg_member.name,
+                'mod_member_id': mod_member_id,
+                'mod_member_name': mod_member_name,
+                'mod_dt': str(closed_repeat_schedule_info.mod_dt),
+                'reg_dt': str(closed_repeat_schedule_info.reg_dt)
+            }
+            closed_repeat_schedule_list.append(closed_repeat_schedule)
+
 
         for member_repeat_schedule_info in member_repeat_schedule_data:
             member_profile_url = '/static/common/icon/icon_account.png'
@@ -482,6 +517,7 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
 
         repeat_schedule = collections.OrderedDict()
         repeat_schedule['off_repeat_schedule_data'] = off_repeat_schedule_list
+        repeat_schedule['closed_repeat_schedule_data'] = closed_repeat_schedule_list
         repeat_schedule['member_repeat_schedule_list'] = member_repeat_schedule_list
         repeat_schedule['lecture_repeat_schedule_list'] = lecture_member_repeat_schedule_ordered_dict
         return JsonResponse(repeat_schedule, json_dumps_params={'ensure_ascii': True})
@@ -1058,7 +1094,7 @@ class GetTrainerClosedDateView(LoginRequiredMixin, AccessTestMixin, View):
         return JsonResponse(member_result['member_info'], json_dumps_params={'ensure_ascii': True})
 
 
-class GetMemberClosedDateView(LoginRequiredMixin, AccessTestMixin, View):
+class GetMemberClosedDateListView(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
         class_id = self.request.session.get('class_id', '')
@@ -2744,6 +2780,99 @@ def update_hold_member_ticket_info_logic(request):
 
 # 회원권 홀딩
 def delete_hold_member_ticket_info_logic(request):
+    member_ticket_hold_history_id = request.POST.get('member_ticket_hold_history_id', '')
+    error = None
+    if member_ticket_hold_history_id is None or member_ticket_hold_history_id == '':
+        error = '회원권 혿딩 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        error = func_delete_hold_member_ticket_info(member_ticket_hold_history_id)
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
+# 회원권 홀딩
+def add_member_closed_date_logic(request):
+    member_ticket_id = request.POST.get('member_ticket_id', '')
+    start_date = request.POST.get('start_date', '')
+    end_date = request.POST.get('end_date', '')
+    note = request.POST.get('note', '')
+    extension_flag = request.POST.get('extension_flag', USE)
+    class_id = request.session.get('class_id', '')
+    error = None
+    member_ticket_info = None
+    if member_ticket_id is None or member_ticket_id == '':
+        error = '회원권 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            member_ticket_info = MemberTicketTb.objects.get(member_ticket_id=member_ticket_id)
+        except ObjectDoesNotExist:
+            error = '회원권 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        error = func_add_hold_member_ticket_info(request.user.id, class_id, member_ticket_id,
+                                                 start_date, end_date, note, extension_flag)
+
+    if error is None:
+        # 회원의 고정 수업 정리
+        func_update_lecture_member_fix_status_cd(class_id, member_ticket_info.member_id)
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=member_ticket_info.member.name + ' 회원님의 '
+                                  + member_ticket_info.ticket_tb.name + ' 회원권', log_how='홀딩', use=USE)
+        log_data.save()
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
+# 회원권 홀딩
+def update_member_closed_date_logic(request):
+    member_ticket_hold_history_id = request.POST.get('member_ticket_hold_history_id', '')
+    start_date = request.POST.get('start_date', '')
+    end_date = request.POST.get('end_date', '')
+    note = request.POST.get('note', '')
+    extension_flag = request.POST.get('extension_flag', '')
+    class_id = request.session.get('class_id', '')
+    error = None
+    member_ticket_hold_history_info = None
+    if member_ticket_hold_history_id is None or member_ticket_hold_history_id == '':
+        error = '회원권 혿딩 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            member_ticket_hold_history_info = MemberTicketHoldHistoryTb.objects.get(
+                member_ticket_hold_history_id=member_ticket_hold_history_id)
+        except ObjectDoesNotExist:
+            error = '회원권 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        error = func_add_hold_member_ticket_info(request.user.id, class_id,
+                                                 member_ticket_hold_history_info.member_ticket_tb_id,
+                                                 start_date, end_date, note, extension_flag)
+
+    if error is None:
+        error = func_delete_hold_member_ticket_info(member_ticket_hold_history_id)
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
+# 회원권 홀딩
+def delete_member_closed_date_logic(request):
     member_ticket_hold_history_id = request.POST.get('member_ticket_hold_history_id', '')
     error = None
     if member_ticket_hold_history_id is None or member_ticket_hold_history_id == '':

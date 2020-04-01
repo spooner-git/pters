@@ -54,6 +54,7 @@ class MemberTicketHoldHistoryTb(TimeStampedModel):
     member_ticket_hold_history_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     member_ticket_tb = models.ForeignKey(MemberTicketTb, verbose_name='회원권', on_delete=models.CASCADE,
                                          db_column='lecture_tb_id', null=True)
+    reason_type_cd = models.CharField('불가 이유', db_column='REASON_TYPE_CD', max_length=45, blank=True, default='')
     start_date = models.DateField('시작일', db_column='START_DATE', blank=True, null=True)  # Field name made lowercase.
     end_date = models.DateField('종료일', db_column='END_DATE', blank=True, null=True)  # Field name made lowercase.
     note = models.CharField('메모', db_column='NOTE', max_length=200, blank=True, default='')

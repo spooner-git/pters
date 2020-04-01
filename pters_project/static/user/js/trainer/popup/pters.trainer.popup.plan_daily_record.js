@@ -20,7 +20,7 @@ class Plan_daily_record{
         this.data = [];
         let data = data_.schedule_info[0];
         let schedule_type = data.schedule_type;
-        if(schedule_type == 0){
+        if(schedule_type == 0 || schedule_type == 3){
             return;
         }
         if(schedule_type == 1){

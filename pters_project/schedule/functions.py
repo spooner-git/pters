@@ -327,7 +327,7 @@ def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
             # lecture_id = None
             lecture_schedule_id = None
 
-    if str(en_dis_type) == str(OFF_SCHEDULE):
+    if str(en_dis_type) != str(ON_SCHEDULE_TYPE):
         ing_color_cd = '#d2d1cf'
         end_color_cd = '#d2d1cf'
         ing_font_color_cd = '#3b3b3b'
@@ -356,7 +356,7 @@ def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
                 add_schedule_info.save()
                 schedule_id = add_schedule_info.schedule_id
 
-                if str(en_dis_type) != str(OFF_SCHEDULE):
+                if str(en_dis_type) == str(ON_SCHEDULE_TYPE):
                     for alarm_setting_info in alarm_setting_data:
                         if member_ticket_id is not None:
                             if lecture_schedule_id is None:
@@ -445,7 +445,7 @@ def func_add_schedule_update(class_id, member_ticket_id, repeat_schedule_id,
             # lecture_id = None
             lecture_schedule_id = None
 
-    if str(en_dis_type) == str(OFF_SCHEDULE):
+    if str(en_dis_type) != str(ON_SCHEDULE_TYPE):
         ing_color_cd = '#d2d1cf'
         end_color_cd = '#d2d1cf'
         ing_font_color_cd = '#3b3b3b'
@@ -473,7 +473,7 @@ def func_add_schedule_update(class_id, member_ticket_id, repeat_schedule_id,
                                                mod_member_id=user_id)
                 add_schedule_info.save()
                 schedule_id = add_schedule_info.schedule_id
-                if str(en_dis_type) != str(OFF_SCHEDULE):
+                if str(en_dis_type) == str(ON_SCHEDULE_TYPE):
                     for alarm_setting_info in alarm_setting_data:
                         if member_ticket_id is not None:
                             if lecture_schedule_id is None:

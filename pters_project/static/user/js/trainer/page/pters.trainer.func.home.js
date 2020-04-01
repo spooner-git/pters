@@ -374,7 +374,7 @@ class Home {
         let off_plan_number = 0;
         let html_to_join = [];
         for(let i=0; i<length; i++){
-            if(plans[i].schedule_type == 0){
+            if(plans[i].schedule_type == 0 || plans[i].schedule_type == 3){
                 off_plan_number++;
                 continue;
             }

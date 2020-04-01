@@ -59,8 +59,6 @@ urlpatterns = [
         name='delete_closed_date'),
     url(r'^get_trainer_closed_date/$', views.GetTrainerClosedDateView.as_view(),
         name='get_trainer_closed_date'),
-    url(r'^get_member_closed_date/$', views.GetMemberClosedDateView.as_view(),
-        name='get_member_closed_date'),
 
     # 회원 기능 ##########################################
     # 회원 정보 조회 - refactoring
@@ -116,6 +114,16 @@ urlpatterns = [
     # 회원 수강정보 홀딩 삭제 - refactoring - 확인 필요
     url(r'^delete_hold_member_ticket_info/$',
         views.delete_hold_member_ticket_info_logic, name='delete_hold_member_ticket_info'),
+
+    # 회원 불가일정 설정 기능
+    url(r'^get_member_closed_date/$', views.GetMemberClosedDateListView.as_view(),
+        name='get_member_closed_date'),
+    url(r'^add_member_closed_date/$', views.add_member_closed_date_logic,
+        name='add_member_closed_date'),
+    url(r'^update_member_closed_date/$', views.update_member_closed_date_logic,
+        name='update_member_closed_date'),
+    url(r'^delete_member_closed_date/$', views.delete_member_closed_date_logic,
+        name='delete_member_closed_date'),
 
 
     # 회원 프로필 업데이트/삭제

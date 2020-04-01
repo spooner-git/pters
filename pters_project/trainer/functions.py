@@ -737,8 +737,10 @@ def func_add_hold_member_ticket_info(user_id, class_id, member_ticket_id, start_
     if error is None:
         try:
             with transaction.atomic():
+                member_ticket_info = class_member_ticket_info.member_ticket_tb
 
-                member_ticket_history_info = MemberTicketHoldHistoryTb(member_ticket_tb_id=member_ticket_id,
+                member_ticket_history_info = MemberTicketHoldHistoryTb(member_id=member_ticket_info.member_id,
+                                                                       member_ticket_tb_id=member_ticket_id,
                                                                        start_date=start_date,
                                                                        end_date=end_date,
                                                                        note=note, extension_flag=extension_flag,
@@ -747,8 +749,6 @@ def func_add_hold_member_ticket_info(user_id, class_id, member_ticket_id, start_
 
                 class_member_ticket_info.mod_member_id = user_id
                 class_member_ticket_info.save()
-
-                member_ticket_info = class_member_ticket_info.member_ticket_tb
 
                 unlimited_end_date = datetime.datetime.strptime('9999-12-31', '%Y-%m-%d').date()
                 if member_ticket_info.end_date < unlimited_end_date:

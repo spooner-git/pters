@@ -21,7 +21,8 @@ from django.views.generic import TemplateView
 from configs.const import ON_SCHEDULE_TYPE, USE, AUTO_FINISH_OFF, AUTO_FINISH_ON, TO_TRAINEE_LESSON_ALARM_ON, \
     TO_TRAINEE_LESSON_ALARM_OFF, SCHEDULE_DUPLICATION_DISABLE, AUTO_ABSENCE_ON, SCHEDULE_DUPLICATION_ENABLE, \
     LECTURE_TYPE_ONE_TO_ONE, STATE_CD_NOT_PROGRESS, PERMISSION_STATE_CD_APPROVE, STATE_CD_FINISH, STATE_CD_ABSENCE, \
-    OFF_SCHEDULE_TYPE, TO_SHARED_TRAINER_LESSON_ALARM_OFF, TO_SHARED_TRAINER_LESSON_ALARM_ON, PERMISSION_STATE_CD_WAIT
+    OFF_SCHEDULE_TYPE, TO_SHARED_TRAINER_LESSON_ALARM_OFF, TO_SHARED_TRAINER_LESSON_ALARM_ON, PERMISSION_STATE_CD_WAIT, \
+    CLOSED_SCHEDULE_TYPE
 from configs import settings
 from login.models import LogTb, MemberTb
 from schedule.forms import AddScheduleTbForm
@@ -610,7 +611,7 @@ def update_schedule_logic(request):
                                   + '/' + before_log_info_schedule_end_dt\
                                   + '->' + after_log_info_schedule_start_dt + '/' + after_log_info_schedule_end_dt
 
-                if str(schedule_info.en_dis_type) != str(OFF_SCHEDULE_TYPE):
+                if str(schedule_info.en_dis_type) == str(ON_SCHEDULE_TYPE):
                     if schedule_info.lecture_tb is not None and schedule_info.lecture_tb != '':
                         lecture_name = schedule_info.lecture_tb.name
 
@@ -662,7 +663,8 @@ def update_schedule_logic(request):
                                                        log_detail_info
                                                         + ' [' + lecture_name + '] 수업이 변경됐습니다', request.user.id)
                 else:
-                    if schedule_info.en_dis_type == ON_SCHEDULE_TYPE and str(setting_to_shared_trainer_lesson_alarm) == str(TO_SHARED_TRAINER_LESSON_ALARM_ON):
+                    if str(schedule_info.en_dis_type) == str(ON_SCHEDULE_TYPE) \
+                            and str(setting_to_shared_trainer_lesson_alarm) == str(TO_SHARED_TRAINER_LESSON_ALARM_ON):
                         log_detail_info = log_detail_info.replace('/', '~')
                         func_send_push_trainer_trainer(class_id,
                                                        class_type_name + ' - 일정 알림',
@@ -815,7 +817,8 @@ def update_schedule_state_cd_logic(request):
                 func_send_push_trainer_trainer(class_id, class_type_name + ' - 일정 알림',
                                                member_name + '님의 ' + push_info, request.user.id)
         else:
-            if schedule_info.en_dis_type == ON_SCHEDULE_TYPE and str(setting_to_shared_trainer_lesson_alarm) == str(TO_SHARED_TRAINER_LESSON_ALARM_ON):
+            if str(schedule_info.en_dis_type) == str(ON_SCHEDULE_TYPE)\
+                    and str(setting_to_shared_trainer_lesson_alarm) == str(TO_SHARED_TRAINER_LESSON_ALARM_ON):
                 func_send_push_trainer_trainer(class_id, class_type_name + ' - 일정 알림',
                                                push_info, request.user.id)
 
@@ -928,7 +931,8 @@ def update_schedule_permission_state_cd_logic(request):
                 func_send_push_trainer_trainer(class_id, class_type_name + ' - 일정 알림',
                                                member_name + '님의 ' + push_info, request.user.id)
         else:
-            if schedule_info.en_dis_type == ON_SCHEDULE_TYPE and str(setting_to_shared_trainer_lesson_alarm) == str(TO_SHARED_TRAINER_LESSON_ALARM_ON):
+            if str(schedule_info.en_dis_type) == str(ON_SCHEDULE_TYPE)\
+                    and str(setting_to_shared_trainer_lesson_alarm) == str(TO_SHARED_TRAINER_LESSON_ALARM_ON):
                 func_send_push_trainer_trainer(class_id, class_type_name + ' - 일정 알림',
                                                push_info, request.user.id)
 
@@ -1174,7 +1178,7 @@ def add_repeat_schedule_logic(request):
                         schedule_check = 1
 
                 # OFF 일정이면 바로 등록
-                if str(en_dis_type) == str(OFF_SCHEDULE_TYPE):
+                if str(en_dis_type) != str(ON_SCHEDULE_TYPE):
                     schedule_check = 1
                 # 그룹 수업이면 바로 등록
                 if lecture_info is not None and lecture_info.lecture_type_cd != LECTURE_TYPE_ONE_TO_ONE:
