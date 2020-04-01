@@ -338,7 +338,7 @@ class Plan_view{
         if(this.data.schedule_type == 3){
             html =      '<div class="obj_input_box_full">' +  CComponent.dom_tag('일자') + date_select_row + '</div>' +
                         '<div class="obj_input_box_full">'+ CComponent.dom_tag(`메모 <span style="color:var(--font-highlight);display:${hide_when_off}">(회원님께 공유되는 메모입니다.)</span>`) + memo_select_row + '</div>' +
-                        '<div class="obj_input_box_full">'+ CComponent.dom_tag('자동 기간 연장') + schedule_holding_extension_flag +
+                        '<div class="obj_input_box_full">'+ CComponent.dom_tag('자동 회원권 기간 연장') + schedule_holding_extension_flag +
                                     "<div style='padding-left:42px;font-size:12px;color:var(--font-highlight);letter-spacing:-0.6px;font-weight:normal'>활성:휴무일에 진행중인 모든 회원권이 자동 연장됩니다.</div>" +
                                     "<div style='padding-left:42px;font-size:12px;color:var(--font-highlight);letter-spacing:-0.6px;font-weight:normal'>비활성:연장되었던 회원권이 연장 취소됩니다.</div>"+'</div>'+
                         '<div class="obj_input_box_full" style="padding:18px;">' + reg_mod_info + '<div>';

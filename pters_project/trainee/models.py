@@ -50,8 +50,8 @@ class MemberTicketTb(TimeStampedModel):
         return state_cd_name
 
 
-class MemberTicketHoldHistoryTb(TimeStampedModel):
-    member_ticket_hold_history_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+class MemberClosedDateHistoryTb(TimeStampedModel):
+    member_closed_date_history_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     member = models.ForeignKey(MemberTb, verbose_name='회원', on_delete=models.CASCADE, null=True)
     member_ticket_tb = models.ForeignKey(MemberTicketTb, verbose_name='회원권', on_delete=models.CASCADE,
                                          db_column='lecture_tb_id', null=True)
@@ -64,9 +64,9 @@ class MemberTicketHoldHistoryTb(TimeStampedModel):
 
     class Meta:
         managed = False
-        db_table = 'MEMBER_TICKET_HOLD_HISTORY_TB'
-        verbose_name = '회원권 홀딩 history'
-        verbose_name_plural = '회원권 홀딩 history'
+        db_table = 'MEMBER_CLOSED_DATE_HISTORY_TB'
+        verbose_name = '회원 불가 일정 history'
+        verbose_name_plural = '회원 불가 일정 history'
 
 
 class ProgramNoticeHistoryTb(TimeStampedModel):

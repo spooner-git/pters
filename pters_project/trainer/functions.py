@@ -17,7 +17,7 @@ from configs.const import USE, UN_USE, AUTO_FINISH_OFF, FROM_TRAINEE_LESSON_ALAR
 
 from login.models import MemberTb
 from schedule.models import ScheduleTb, RepeatScheduleTb
-from trainee.models import MemberTicketTb, MemberTicketHoldHistoryTb
+from trainee.models import MemberTicketTb, MemberClosedDateHistoryTb
 from .models import ClassMemberTicketTb, LectureTb, SettingTb, TicketLectureTb, TicketTb, LectureMemberTb, MemberClassTb
 
 
@@ -717,19 +717,22 @@ def func_add_hold_member_ticket_info(user_id, class_id, member_ticket_id, start_
 
     if error is None:
         # 시작일이 사이에 있는 경우
-        duplicate_check_hold_start = MemberTicketHoldHistoryTb.objects.filter(member_ticket_tb_id=member_ticket_id,
+        duplicate_check_hold_start = MemberClosedDateHistoryTb.objects.filter(member_ticket_tb_id=member_ticket_id,
                                                                               start_date__lte=start_date_info,
                                                                               end_date__gte=start_date_info,
+                                                                              reason_type_cd='HD',
                                                                               use=USE).count()
         # 종료일이 사이에 있는 경우
-        duplicate_check_hold_end = MemberTicketHoldHistoryTb.objects.filter(member_ticket_tb_id=member_ticket_id,
+        duplicate_check_hold_end = MemberClosedDateHistoryTb.objects.filter(member_ticket_tb_id=member_ticket_id,
                                                                             start_date__lte=end_date_info,
                                                                             end_date__gte=end_date_info,
+                                                                            reason_type_cd='HD',
                                                                             use=USE).count()
         # 포함하는 경우
-        duplicate_check_hold_start_end = MemberTicketHoldHistoryTb.objects.filter(member_ticket_tb_id=member_ticket_id,
+        duplicate_check_hold_start_end = MemberClosedDateHistoryTb.objects.filter(member_ticket_tb_id=member_ticket_id,
                                                                                   start_date__gt=start_date_info,
                                                                                   end_date__lt=end_date_info,
+                                                                                  reason_type_cd='HD',
                                                                                   use=USE).count()
         if duplicate_check_hold_start > 0 or duplicate_check_hold_end > 0 or duplicate_check_hold_start_end > 0:
             error = '기존 홀딩 기간과 겹칠수 없습니다.'
@@ -739,7 +742,7 @@ def func_add_hold_member_ticket_info(user_id, class_id, member_ticket_id, start_
             with transaction.atomic():
                 member_ticket_info = class_member_ticket_info.member_ticket_tb
 
-                member_ticket_history_info = MemberTicketHoldHistoryTb(member_id=member_ticket_info.member_id,
+                member_ticket_history_info = MemberClosedDateHistoryTb(member_id=member_ticket_info.member_id,
                                                                        member_ticket_tb_id=member_ticket_id,
                                                                        start_date=start_date,
                                                                        end_date=end_date,
@@ -791,20 +794,21 @@ def func_add_hold_closed_date_info(user_id, class_id, member_ticket_id, schedule
             with transaction.atomic():
                 member_ticket_info = class_member_ticket_info.member_ticket_tb
 
-                member_ticket_history_info = MemberTicketHoldHistoryTb(member_id=member_ticket_info.member_id,
+                member_ticket_history_info = MemberClosedDateHistoryTb(member_id=member_ticket_info.member_id,
                                                                        member_ticket_tb_id=member_ticket_id,
                                                                        schedule_tb_id=schedule_id,
                                                                        start_date=start_date,
                                                                        end_date=end_date,
-                                                                       reason_type_cd='CLASS_CLOSED',
+                                                                       reason_type_cd='PROGRAM_CLOSED',
                                                                        note=note, extension_flag=extension_flag,
                                                                        use=USE)
                 member_ticket_history_info.save()
 
                 class_member_ticket_info.mod_member_id = user_id
                 class_member_ticket_info.save()
-                member_ticket_info.end_date += datetime.timedelta(days=date_delta)
-                member_ticket_info.save()
+                if str(extension_flag) == str(USE):
+                    member_ticket_info.end_date += datetime.timedelta(days=date_delta)
+                    member_ticket_info.save()
 
         except ValueError:
             error = '등록 값에 문제가 있습니다.'
@@ -820,12 +824,12 @@ def func_add_hold_closed_date_info(user_id, class_id, member_ticket_id, schedule
     return error
 
 
-def func_delete_hold_member_ticket_info(member_ticket_hold_history_id):
+def func_delete_hold_member_ticket_info(member_closed_date_history_id):
     error = None
     member_ticket_hold_history_info = None
     try:
-        member_ticket_hold_history_info = MemberTicketHoldHistoryTb.objects.get(
-            member_ticket_hold_history_id=member_ticket_hold_history_id)
+        member_ticket_hold_history_info = MemberClosedDateHistoryTb.objects.get(
+            member_closed_date_history_id=member_closed_date_history_id)
     except ObjectDoesNotExist:
         error = '회원권 홀딩 정보를 불러오지 못했습니다.'
 
@@ -846,7 +850,7 @@ def func_delete_hold_member_ticket_info(member_ticket_hold_history_id):
 
 def func_delete_hold_closed_date_info(schedule_id):
     error = None
-    member_ticket_hold_history_data = MemberTicketHoldHistoryTb.objects.filter(schedule_tb_id=schedule_id, use=USE)
+    member_ticket_hold_history_data = MemberClosedDateHistoryTb.objects.filter(schedule_tb_id=schedule_id, use=USE)
     for member_ticket_hold_history_info in member_ticket_hold_history_data:
         if member_ticket_hold_history_info.extension_flag == USE:
             date_delta = (member_ticket_hold_history_info.end_date - member_ticket_hold_history_info.start_date).days + 1

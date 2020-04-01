@@ -102,7 +102,7 @@ urlpatterns = [
     url(r'^update_member_connection_info/$', views.update_member_connection_info_logic,
         name='update_member_connection_info'),
 
-    # 회원이 들을수 있는 수업 조회
+    # 회원이 홀딩 내역 조회
     url(r'^get_hold_member_ticket_list/$',
         views.GetHoldMemberTicketListView.as_view(), name='get_hold_member_ticket_list'),
     # 회원 수강정보 홀딩 - refactoring - 확인 필요
@@ -118,6 +118,9 @@ urlpatterns = [
     # 회원 불가일정 설정 기능
     url(r'^get_member_closed_date/$', views.GetMemberClosedDateListView.as_view(),
         name='get_member_closed_date'),
+    url(r'^get_member_closed_date_history/$', views.GetMemberClosedDateListHistoryView.as_view(),
+        name='get_member_closed_date_history'),
+
     url(r'^add_member_closed_date/$', views.add_member_closed_date_logic,
         name='add_member_closed_date'),
     url(r'^update_member_closed_date/$', views.update_member_closed_date_logic,

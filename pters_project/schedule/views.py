@@ -29,7 +29,7 @@ from schedule.forms import AddScheduleTbForm
 from schedule.functions import func_send_push_trainee, func_send_push_trainer, func_get_holiday_schedule, \
     func_upload_daily_record_content_image_logic, func_delete_daily_record_content_image_logic, \
     func_send_push_trainer_trainer, func_get_program_alarm_data, func_get_lecture_member_ticket_id_from_trainee
-from trainee.models import MemberTicketTb, MemberTicketHoldHistoryTb
+from trainee.models import MemberTicketTb, MemberClosedDateHistoryTb
 from trainer.functions import func_add_hold_closed_date_info, func_delete_hold_closed_date_info
 from trainer.models import LectureTb, ClassTb, ClassMemberTicketTb
 from .functions import func_add_schedule, func_add_schedule_update, func_refresh_member_ticket_count, func_date_check,\
@@ -149,15 +149,30 @@ def check_schedule_logic(request):
                                     if week_schedule_count >= member_ticket_info.ticket_tb.week_schedule_enable:
                                         error_temp = member_info['member_name'] +'님의 '+ member_ticket_info.ticket_tb.name + ' 회원권의 주간 최대 이용 횟수를 초과했습니다.'
 
-                            holding_counter = MemberTicketHoldHistoryTb.objects.filter(
+                            closed_date_data = MemberClosedDateHistoryTb.objects.filter(
                                 member_ticket_tb_id=member_ticket_info.member_ticket_id, start_date__lte=select_date,
-                                end_date__gte=select_date, use=USE).count()
+                                end_date__gte=select_date, use=USE)
 
-                            if holding_counter > 0:
-                                if error_temp is None:
-                                    error_temp = member_info['member_name'] +'님의 '+ member_ticket_info.ticket_tb.name + ' 회원권이 홀딩 기간입니다.'
-                                else:
-                                    error_temp = member_info['member_name'] +'님의 '+ member_ticket_info.ticket_tb.name + ' 회원권이 홀딩 기간입니다.<br/>' + error_temp
+                            if len(closed_date_data) > 0:
+                                for closed_date_info in closed_date_data:
+                                    reason_note = '강사 : '
+                                    if closed_date_info.reason_type_cd == 'MEMBER_CLOSED':
+                                        reason_note = '회원 : '
+                                    if error_temp is None:
+                                        if closed_date_info.reason_type_cd == 'HD':
+                                            error_temp = member_info['member_name'] + '님의 ' + member_ticket_info.ticket_tb.name + ' 회원권이 홀딩 기간입니다.'
+                                        else:
+                                            error_temp = reason_note + closed_date_info.note + '입니다.'
+                                    else:
+                                        if closed_date_info.reason_type_cd == 'HD':
+                                            error_temp = member_info['member_name'] + '님의 ' + member_ticket_info.ticket_tb.name + ' 회원권이 홀딩 기간입니다.<br/>' + error_temp
+                                        else:
+                                            error_temp = reason_note + closed_date_info.note + '입니다.<br/>' + error_temp
+                                #
+                                # if error_temp is None:
+                                #     error_temp = member_info['member_name'] +'님의 '+ member_ticket_info.ticket_tb.name + ' 회원권이 홀딩 기간입니다.'
+                                # else:
+                                #     error_temp = member_info['member_name'] +'님의 '+ member_ticket_info.ticket_tb.name + ' 회원권이 홀딩 기간입니다.<br/>' + error_temp
 
                             if error_temp is not None:
                                 raise InternalError
@@ -648,26 +663,26 @@ def update_schedule_logic(request):
                     if extension_flag is None or extension_flag == '':
                         extension_flag = schedule_info.extension_flag
 
-                    if str(extension_flag) == str(UN_USE):
-                        func_delete_hold_closed_date_info(schedule_info.schedule_id)
-                    elif str(extension_flag) == str(USE):
-                        func_delete_hold_closed_date_info(schedule_info.schedule_id)
-                        start_date = str(start_dt).split(' ')[0]
-                        member_ticket_data = ClassMemberTicketTb.objects.select_related(
-                            'member_ticket_tb').filter(Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS)
-                                                       | Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
-                                                       class_tb_id=class_id,
-                                                       member_ticket_tb__start_date__lte=start_date,
-                                                       member_ticket_tb__end_date__gte=start_date,
-                                                       use=USE).exclude(member_ticket_tb__end_date__gte='9999-12-31')
-                        for member_ticket_info in member_ticket_data:
-                            func_add_hold_closed_date_info(request.user.id, class_id,
-                                                           member_ticket_info.member_ticket_tb_id,
-                                                           schedule_id, start_date, start_date,
-                                                           '휴무일 ' + schedule_info.note + ' 자동 연장',
-                                                           extension_flag)
+                    func_delete_hold_closed_date_info(schedule_info.schedule_id)
+                    start_date = str(start_dt).split(' ')[0]
+                    member_ticket_data = ClassMemberTicketTb.objects.select_related(
+                        'member_ticket_tb').filter(Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS)
+                                                   | Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
+                                                   class_tb_id=class_id,
+                                                   member_ticket_tb__start_date__lte=start_date,
+                                                   member_ticket_tb__end_date__gte=start_date,
+                                                   use=USE).exclude(member_ticket_tb__end_date__gte='9999-12-31')
+                    for member_ticket_info in member_ticket_data:
+                        hold_note = '휴무일'
+                        if schedule_info.note is not None and schedule_info.note != '':
+                            hold_note += ':'+schedule_info.note
+                        func_add_hold_closed_date_info(request.user.id, class_id,
+                                                       member_ticket_info.member_ticket_tb_id,
+                                                       schedule_id, start_date, start_date,
+                                                       hold_note, extension_flag)
 
-                        schedule_info.extension_flag = extension_flag
+                    schedule_info.extension_flag = extension_flag
+
                 schedule_info.start_dt = start_dt
                 schedule_info.end_dt = end_dt
                 schedule_info.mod_member_id = request.user.id

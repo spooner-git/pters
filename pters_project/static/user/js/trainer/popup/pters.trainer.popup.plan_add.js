@@ -286,7 +286,7 @@ class Plan_add{
                                                     CComponent.dom_tag('일자', null, true) + date_select_row + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>' +
                                                     CComponent.dom_tag('반복') + repeat_select_row + '</div>' +
                     '<div class="obj_input_box_full">'+  CComponent.dom_tag(`메모 <span style="color:var(--font-highlight);display:${display}">(회원님께 공유되는 메모입니다.)</span>`) + memo_select_row + '</div>'+
-                    '<div class="obj_input_box_full">'+ CComponent.dom_tag('자동 기간 연장') + schedule_holding_extension_flag +
+                    '<div class="obj_input_box_full">'+ CComponent.dom_tag('자동 회원권 기간 연장') + schedule_holding_extension_flag +
                                     "<div style='padding-left:42px;font-size:12px;color:var(--font-highlight);letter-spacing:-0.6px;font-weight:normal'>활성:휴무일에 진행중인 모든 회원권이 자동 연장됩니다.</div>" +
                                     "<div style='padding-left:42px;font-size:12px;color:var(--font-highlight);letter-spacing:-0.6px;font-weight:normal'>비활성:회원권이 연장되지 않습니다.</div>"+'</div>';
 

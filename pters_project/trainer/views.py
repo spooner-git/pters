@@ -41,7 +41,7 @@ from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO
     CALENDAR_TIME_SELECTOR_BASIC, SORT_END_DATE, SORT_MEMBER_TICKET, SORT_SCHEDULE_DT, STATE_CD_REFUND, \
     SORT_SCHEDULE_MONTHLY, SHARED_PROGRAM, MY_PROGRAM, PROGRAM_SELECT, PROGRAM_LECTURE_CONNECT_DELETE, \
     PROGRAM_LECTURE_CONNECT_ACCEPT, BOARD_TYPE_CD_NOTICE, ON_SCHEDULE, ALARM_PAGINATION_COUNTER, STATE_CD_HOLDING, \
-    CLOSED_SCHEDULE_TYPE
+    CLOSED_SCHEDULE_TYPE, SCHEDULE_PAGINATION_COUNTER
 from board.models import BoardTb, QATb, NoticeTb
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 from schedule.functions import func_refresh_member_ticket_count, func_get_trainer_attend_schedule, \
@@ -52,7 +52,7 @@ from schedule.functions import func_refresh_member_ticket_count, func_get_traine
     func_get_repeat_schedule_date_list
 from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb, ScheduleAlarmTb
 from stats.functions import get_sales_data
-from trainee.models import MemberTicketTb, MemberTicketHoldHistoryTb
+from trainee.models import MemberTicketTb, MemberClosedDateHistoryTb
 from payment.models import PaymentInfoTb, ProductFunctionAuthTb, CouponMemberTb
 from .functions import func_get_trainer_setting_list, \
     func_get_member_ing_list, func_get_member_end_list, func_get_class_member_ing_list, func_get_class_member_end_list,\
@@ -1095,20 +1095,91 @@ class GetTrainerClosedDateView(LoginRequiredMixin, AccessTestMixin, View):
 
 
 class GetMemberClosedDateListView(LoginRequiredMixin, AccessTestMixin, View):
-
     def get(self, request):
-        class_id = self.request.session.get('class_id', '')
         member_id = request.GET.get('member_id', '')
         error = None
-        member_result = {}
-        if member_id == '':
-            error = '회원 ID를 입력해주세요.'
+        today = datetime.date.today()
+        member_closed_list = []
 
+        if member_id is None or member_id == '':
+            error = '회원 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            member_closed_data = MemberClosedDateHistoryTb.objects.select_related(
+                'member_ticket_tb__ticket_tb').filter(member_id=member_id, end_date__gte=today,
+                                                      use=USE).order_by('reason_type_cd', 'start_date', 'end_date')
+
+            for member_closed_info in member_closed_data:
+                member_closed_reason_type_cd_name = '회원권 홀딩'
+                member_ticket_id = ''
+                if member_closed_info.reason_type_cd == 'HD':
+                    if member_closed_info.member_ticket_tb is not None:
+                        member_ticket_id = member_closed_info.member_ticket_tb_id
+                        member_closed_reason_type_cd_name = member_closed_info.member_ticket_tb.ticket_tb.name\
+                                                            + ' ' + member_closed_reason_type_cd_name
+                elif member_closed_info.reason_type_cd == 'PROGRAM_CLOSED':
+                    member_closed_reason_type_cd_name = '강사 휴무일'
+                elif member_closed_info.reason_type_cd == 'MEMBER_CLOSED':
+                    member_closed_reason_type_cd_name = '회원 불가일정'
+                member_closed_dict = {
+                    'member_closed_date_history_id': member_closed_info.member_closed_date_history_id,
+                    'member_closed_date_member_ticket_id': member_ticket_id,
+                    'member_closed_start_date': member_closed_info.start_date,
+                    'member_closed_end_date': member_closed_info.end_date,
+                    'member_closed_note': member_closed_info.note,
+                    'member_closed_reason_type_cd': member_closed_info.reason_type_cd,
+                    'member_closed_reason_type_cd_name': member_closed_reason_type_cd_name,
+                    'member_closed_extension_flag': member_closed_info.extension_flag
+                }
+                member_closed_list.append(member_closed_dict)
         if error is not None:
-            logger.error(request.user.first_name + ' ' + '[' + str(request.user.id) + ']' + error)
+            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
             messages.error(request, error)
 
-        return JsonResponse(member_result['member_info'], json_dumps_params={'ensure_ascii': True})
+        return JsonResponse({'member_closed_list':member_closed_list}, json_dumps_params={'ensure_ascii': True})
+
+
+class GetMemberClosedDateListHistoryView(LoginRequiredMixin, AccessTestMixin, View):
+    def get(self, request):
+        member_id = request.GET.get('member_id', '')
+        page = request.GET.get('page', '')
+        error = None
+        member_closed_list = {'HD': [], 'PROGRAM_CLOSED': [], 'MEMBER_CLOSED': [], 'this_page':0, 'max_page':0}
+
+        if member_id is None or member_id == '':
+            error = '회원 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            member_closed_data = MemberClosedDateHistoryTb.objects.filter(member_id=member_id,
+                                                                          use=USE).order_by('reason_type_cd',
+                                                                                            'start_date',
+                                                                                            'end_date')
+            paginator = Paginator(member_closed_data, SCHEDULE_PAGINATION_COUNTER)
+            try:
+                member_closed_data = paginator.page(page)
+            except EmptyPage:
+                member_closed_data = []
+
+            member_closed_list['max_page'] = paginator.num_pages
+            member_closed_list['this_page'] = page
+
+            for member_closed_info in member_closed_data:
+                member_closed_dict = {
+                    'member_closed_date_history_id': member_closed_info.member_closed_date_history_id,
+                    'member_closed_date_member_ticket_id': member_closed_info.start_date,
+                    'member_closed_start_date': member_closed_info.start_date,
+                    'member_closed_end_date': member_closed_info.end_date,
+                    'member_closed_note': member_closed_info.note,
+                    'member_closed_extension_flag': member_closed_info.extension_flag
+                }
+                member_closed_list[member_closed_info.reason_type_cd].append(member_closed_dict)
+
+        if error is not None:
+            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+            messages.error(request, error)
+
+        return JsonResponse({'member_closed_list': member_closed_list},
+                            json_dumps_params={'ensure_ascii': True})
 
 
 # ############### ############### ############### ############### ############### ############### ##############
@@ -2682,11 +2753,12 @@ class GetHoldMemberTicketListView(LoginRequiredMixin, AccessTestMixin, View):
             error = '회원 정보를 불러오지 못했습니다.'
 
         if error is None:
-            hold_member_ticket_data = MemberTicketHoldHistoryTb.objects.filter(member_ticket_tb_id=member_ticket_id,
+            hold_member_ticket_data = MemberClosedDateHistoryTb.objects.filter(member_ticket_tb_id=member_ticket_id,
+                                                                               reason_type_cd='HD',
                                                                                use=USE)
             for hold_member_ticket_info in hold_member_ticket_data:
                 hold_member_ticket_dict = {
-                    'member_ticket_hold_history_id': hold_member_ticket_info.member_ticket_hold_history_id,
+                    'member_closed_date_history_id': hold_member_ticket_info.member_closed_date_history_id,
                     'member_ticket_hold_start_date': hold_member_ticket_info.start_date,
                     'member_ticket_hold_end_date': hold_member_ticket_info.end_date,
                     'member_ticket_hold_note': hold_member_ticket_info.note,
@@ -2745,7 +2817,7 @@ def add_hold_member_ticket_info_logic(request):
 
 # 회원권 홀딩
 def update_hold_member_ticket_info_logic(request):
-    member_ticket_hold_history_id = request.POST.get('member_ticket_hold_history_id', '')
+    member_closed_date_history_id = request.POST.get('member_closed_date_history_id', '')
     start_date = request.POST.get('start_date', '')
     end_date = request.POST.get('end_date', '')
     note = request.POST.get('note', '')
@@ -2753,13 +2825,13 @@ def update_hold_member_ticket_info_logic(request):
     class_id = request.session.get('class_id', '')
     error = None
     member_ticket_hold_history_info = None
-    if member_ticket_hold_history_id is None or member_ticket_hold_history_id == '':
+    if member_closed_date_history_id is None or member_closed_date_history_id == '':
         error = '회원권 혿딩 정보를 불러오지 못했습니다.'
 
     if error is None:
         try:
-            member_ticket_hold_history_info = MemberTicketHoldHistoryTb.objects.get(
-                member_ticket_hold_history_id=member_ticket_hold_history_id)
+            member_ticket_hold_history_info = MemberClosedDateHistoryTb.objects.get(
+                member_closed_date_history_id=member_closed_date_history_id)
         except ObjectDoesNotExist:
             error = '회원권 정보를 불러오지 못했습니다.'
 
@@ -2769,7 +2841,7 @@ def update_hold_member_ticket_info_logic(request):
                                                  start_date, end_date, note, extension_flag)
 
     if error is None:
-        error = func_delete_hold_member_ticket_info(member_ticket_hold_history_id)
+        error = func_delete_hold_member_ticket_info(member_closed_date_history_id)
 
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
@@ -2780,13 +2852,13 @@ def update_hold_member_ticket_info_logic(request):
 
 # 회원권 홀딩
 def delete_hold_member_ticket_info_logic(request):
-    member_ticket_hold_history_id = request.POST.get('member_ticket_hold_history_id', '')
+    member_closed_date_history_id = request.POST.get('member_closed_date_history_id', '')
     error = None
-    if member_ticket_hold_history_id is None or member_ticket_hold_history_id == '':
+    if member_closed_date_history_id is None or member_closed_date_history_id == '':
         error = '회원권 혿딩 정보를 불러오지 못했습니다.'
 
     if error is None:
-        error = func_delete_hold_member_ticket_info(member_ticket_hold_history_id)
+        error = func_delete_hold_member_ticket_info(member_closed_date_history_id)
 
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
@@ -2838,7 +2910,7 @@ def add_member_closed_date_logic(request):
 
 # 회원권 홀딩
 def update_member_closed_date_logic(request):
-    member_ticket_hold_history_id = request.POST.get('member_ticket_hold_history_id', '')
+    member_closed_date_history_id = request.POST.get('member_closed_date_history_id', '')
     start_date = request.POST.get('start_date', '')
     end_date = request.POST.get('end_date', '')
     note = request.POST.get('note', '')
@@ -2846,13 +2918,13 @@ def update_member_closed_date_logic(request):
     class_id = request.session.get('class_id', '')
     error = None
     member_ticket_hold_history_info = None
-    if member_ticket_hold_history_id is None or member_ticket_hold_history_id == '':
+    if member_closed_date_history_id is None or member_closed_date_history_id == '':
         error = '회원권 혿딩 정보를 불러오지 못했습니다.'
 
     if error is None:
         try:
-            member_ticket_hold_history_info = MemberTicketHoldHistoryTb.objects.get(
-                member_ticket_hold_history_id=member_ticket_hold_history_id)
+            member_ticket_hold_history_info = MemberClosedDateHistoryTb.objects.get(
+                member_closed_date_history_id=member_closed_date_history_id)
         except ObjectDoesNotExist:
             error = '회원권 정보를 불러오지 못했습니다.'
 
@@ -2862,7 +2934,7 @@ def update_member_closed_date_logic(request):
                                                  start_date, end_date, note, extension_flag)
 
     if error is None:
-        error = func_delete_hold_member_ticket_info(member_ticket_hold_history_id)
+        error = func_delete_hold_member_ticket_info(member_closed_date_history_id)
 
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
@@ -2873,13 +2945,13 @@ def update_member_closed_date_logic(request):
 
 # 회원권 홀딩
 def delete_member_closed_date_logic(request):
-    member_ticket_hold_history_id = request.POST.get('member_ticket_hold_history_id', '')
+    member_closed_date_history_id = request.POST.get('member_closed_date_history_id', '')
     error = None
-    if member_ticket_hold_history_id is None or member_ticket_hold_history_id == '':
+    if member_closed_date_history_id is None or member_closed_date_history_id == '':
         error = '회원권 혿딩 정보를 불러오지 못했습니다.'
 
     if error is None:
-        error = func_delete_hold_member_ticket_info(member_ticket_hold_history_id)
+        error = func_delete_hold_member_ticket_info(member_closed_date_history_id)
 
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
@@ -7054,7 +7126,7 @@ def holding_test_logic(request):
     today = datetime.date.today()
     yesterday = today - datetime.timedelta(days=1)
 
-    holding_data = MemberTicketHoldHistoryTb.objects.filter(start_date__lte=today,
+    holding_data = MemberClosedDateHistoryTb.objects.filter(start_date__lte=today,
                                                             end_date__gte=yesterday, use=USE).order_by('start_date')
 
     for holding_info in holding_data:

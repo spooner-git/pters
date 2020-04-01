@@ -36,7 +36,7 @@ from .functions import func_get_class_member_ticket_count, func_get_member_ticke
     func_get_member_ticket_connection_list, func_get_trainee_next_schedule_by_class_id,\
     func_get_trainee_select_schedule, func_get_trainee_ing_member_ticket_list, func_check_select_date_reserve_setting, \
     func_get_trainee_ticket_list, func_get_class_list_only_view, func_get_trainee_setting_list
-from .models import MemberTicketTb, ProgramNoticeHistoryTb, MemberTicketHoldHistoryTb
+from .models import MemberTicketTb, ProgramNoticeHistoryTb, MemberClosedDateHistoryTb
 
 logger = logging.getLogger(__name__)
 
@@ -534,12 +534,25 @@ def add_trainee_schedule_logic(request):
 
     if error is None:
         select_date = start_date.date()
-        holding_counter = MemberTicketHoldHistoryTb.objects.filter(
+        closed_date_data = MemberClosedDateHistoryTb.objects.filter(
             member_ticket_tb_id=member_ticket_info.member_ticket_id, start_date__lte=select_date,
-            end_date__gte=select_date, use=USE).count()
+            end_date__gte=select_date, use=USE)
 
-        if holding_counter > 0:
-            error = member_ticket_info.ticket_tb.name + ' 회원권이 홀딩 기간입니다.'
+        if len(closed_date_data) > 0:
+            for closed_date_info in closed_date_data:
+                reason_note = '강사 : '
+                if closed_date_info.reason_type_cd == 'MEMBER_CLOSED':
+                    reason_note = '회원 : '
+                if error is None:
+                    if closed_date_info.reason_type_cd == 'HD':
+                        error = member_ticket_info.ticket_tb.name + ' 회원권이 홀딩 기간입니다.'
+                    else:
+                        error = reason_note + closed_date_info.note + '입니다.'
+                else:
+                    if closed_date_info.reason_type_cd == 'HD':
+                        error = member_ticket_info.ticket_tb.name + ' 회원권이 홀딩 기간입니다.<br/>' + error
+                    else:
+                        error = reason_note + closed_date_info.note + '입니다.<br/>' + error
 
     if error is None:
         select_date = start_date.date()

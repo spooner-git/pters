@@ -22,7 +22,7 @@ from login.models import PushInfoTb
 from payment.models import BillingInfoTb, PaymentInfoTb
 from schedule.functions import func_send_push_trainer, func_send_push_trainee, func_refresh_member_ticket_count
 from schedule.models import RepeatScheduleTb, ScheduleTb, DeleteScheduleTb, ScheduleAlarmTb
-from trainee.models import MemberTicketHoldHistoryTb
+from trainee.models import MemberClosedDateHistoryTb
 from trainer.functions import func_update_lecture_member_fix_status_cd
 from trainer.models import ClassMemberTicketTb, SettingTb
 
@@ -38,7 +38,7 @@ def func_update_finish_member_ticket_data():
     yesterday = today - datetime.timedelta(days=1)
 
     # 홀딩 반영
-    holding_data = MemberTicketHoldHistoryTb.objects.filter(start_date__lte=today, reason_type_cd='HD',
+    holding_data = MemberClosedDateHistoryTb.objects.filter(start_date__lte=today, reason_type_cd='HD',
                                                             end_date__gte=yesterday, use=USE).order_by('start_date')
 
     for holding_info in holding_data:
