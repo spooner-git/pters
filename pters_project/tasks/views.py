@@ -38,7 +38,7 @@ def func_update_finish_member_ticket_data():
     yesterday = today - datetime.timedelta(days=1)
 
     # 홀딩 반영
-    holding_data = MemberTicketHoldHistoryTb.objects.filter(start_date__lte=today,
+    holding_data = MemberTicketHoldHistoryTb.objects.filter(start_date__lte=today, reason_type_cd='HD',
                                                             end_date__gte=yesterday, use=USE).order_by('start_date')
 
     for holding_info in holding_data:

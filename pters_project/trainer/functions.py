@@ -743,6 +743,7 @@ def func_add_hold_member_ticket_info(user_id, class_id, member_ticket_id, start_
                                                                        member_ticket_tb_id=member_ticket_id,
                                                                        start_date=start_date,
                                                                        end_date=end_date,
+                                                                       reason_type_cd='HD',
                                                                        note=note, extension_flag=extension_flag,
                                                                        use=USE)
                 member_ticket_history_info.save()
@@ -771,6 +772,54 @@ def func_add_hold_member_ticket_info(user_id, class_id, member_ticket_id, start_
     return error
 
 
+# 회원의 휴무일 설정하기
+def func_add_hold_closed_date_info(user_id, class_id, member_ticket_id, schedule_id,
+                                   start_date, end_date, note, extension_flag):
+    error = None
+    class_member_ticket_info = None
+    date_delta = 1
+
+    try:
+        class_member_ticket_info = ClassMemberTicketTb.objects.select_related(
+            'member_ticket_tb__member').get(class_tb_id=class_id, member_ticket_tb_id=member_ticket_id,
+                                            auth_cd=AUTH_TYPE_VIEW, use=USE)
+    except ObjectDoesNotExist:
+        error = '회원권 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                member_ticket_info = class_member_ticket_info.member_ticket_tb
+
+                member_ticket_history_info = MemberTicketHoldHistoryTb(member_id=member_ticket_info.member_id,
+                                                                       member_ticket_tb_id=member_ticket_id,
+                                                                       schedule_tb_id=schedule_id,
+                                                                       start_date=start_date,
+                                                                       end_date=end_date,
+                                                                       reason_type_cd='CLASS_CLOSED',
+                                                                       note=note, extension_flag=extension_flag,
+                                                                       use=USE)
+                member_ticket_history_info.save()
+
+                class_member_ticket_info.mod_member_id = user_id
+                class_member_ticket_info.save()
+                member_ticket_info.end_date += datetime.timedelta(days=date_delta)
+                member_ticket_info.save()
+
+        except ValueError:
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError:
+            error = '등록 값에 문제가 있습니다.'
+        except TypeError:
+            error = '등록 값의 형태가 문제 있습니다.'
+        except ValidationError:
+            error = '등록 값의 형태가 문제 있습니다'
+        except InternalError:
+            error = '등록 값에 문제가 있습니다.'
+
+    return error
+
+
 def func_delete_hold_member_ticket_info(member_ticket_hold_history_id):
     error = None
     member_ticket_hold_history_info = None
@@ -781,6 +830,24 @@ def func_delete_hold_member_ticket_info(member_ticket_hold_history_id):
         error = '회원권 홀딩 정보를 불러오지 못했습니다.'
 
     if error is None:
+        if member_ticket_hold_history_info.extension_flag == USE:
+            date_delta = (member_ticket_hold_history_info.end_date - member_ticket_hold_history_info.start_date).days + 1
+            member_ticket_tb = member_ticket_hold_history_info.member_ticket_tb
+
+            unlimited_end_date = datetime.datetime.strptime('9999-12-31', '%Y-%m-%d').date()
+            if member_ticket_tb.end_date < unlimited_end_date:
+                member_ticket_tb.end_date -= datetime.timedelta(days=date_delta)
+                member_ticket_tb.save()
+
+        member_ticket_hold_history_info.delete()
+
+    return error
+
+
+def func_delete_hold_closed_date_info(schedule_id):
+    error = None
+    member_ticket_hold_history_data = MemberTicketHoldHistoryTb.objects.filter(schedule_tb_id=schedule_id, use=USE)
+    for member_ticket_hold_history_info in member_ticket_hold_history_data:
         if member_ticket_hold_history_info.extension_flag == USE:
             date_delta = (member_ticket_hold_history_info.end_date - member_ticket_hold_history_info.start_date).days + 1
             member_ticket_tb = member_ticket_hold_history_info.member_ticket_tb

@@ -103,7 +103,7 @@ class Plan_view{
         this.data.date = data.data;
         this.data.date_text = data.text;
         this.data.start_dt = DateRobot.to_yyyymmdd(data.data.year, data.data.month, data.data.date);
-        this.render_content();
+        this.render();
     }
 
     get date (){
@@ -114,7 +114,7 @@ class Plan_view{
         this.data.start_time = TimeRobot.to_hhmm(data.data.hour, data.data.minute).complete;
         this.data.start_time_text = data.text + ' 부터';
         this.data.end_time_text = TimeRobot.to_text(this.data.end_time) + ' 까지 <span style="font-size:11px;">('+TimeRobot.diff_min(this.data.start_time, this.data.end_time)+'분 진행)</span>';
-        this.render_content();
+        this.render();
     }
 
     get start_time (){
@@ -124,7 +124,7 @@ class Plan_view{
     set end_time (data){
         this.data.end_time = TimeRobot.to_hhmm(data.data.hour, data.data.minute).complete;
         this.data.end_time_text = data.text + ' 까지 <span style="font-size:11px;">('+TimeRobot.diff_min(this.data.start_time, this.data.end_time)+'분 진행)</span>';
-        this.render_content();
+        this.render();
     }
 
     get end_time (){
@@ -133,7 +133,7 @@ class Plan_view{
 
     set note (text){
         this.data.note = text;
-        this.render_content();
+        this.render();
     }
 
     get note (){
@@ -336,18 +336,12 @@ class Plan_view{
                         '<div class="obj_input_box_full" style="padding:18px;">' + reg_mod_info + '<div>';
         }
         if(this.data.schedule_type == 3){
-            if(this.time_selector == CLASSIC){
-                html =      '<div class="obj_input_box_full">' +  CComponent.dom_tag('일자') + date_select_row + '</div>' +
-                            '<div class="obj_input_box_full">'+ CComponent.dom_tag(`메모 <span style="color:var(--font-highlight);display:${hide_when_off}">(회원님께 공유되는 메모입니다.)</span>`) + memo_select_row + '</div>' +
-                            '<div class="obj_input_box_full">'+ CComponent.dom_tag('자동 기간 연장') + schedule_holding_extension_flag +'</div>'+
-                            '<div class="obj_input_box_full" style="padding:18px;">' + reg_mod_info + '<div>';
-            }else{
-                html =      '<div class="obj_input_box_full">' +  CComponent.dom_tag('일자') + date_select_row + '</div>' +
-                            '<div class="obj_input_box_full">'+ CComponent.dom_tag(`메모 <span style="color:var(--font-highlight);display:${hide_when_off}">(회원님께 공유되는 메모입니다.)</span>`) + memo_select_row + '</div>' +
-                            '<div class="obj_input_box_full">'+ CComponent.dom_tag('자동 기간 연장') + schedule_holding_extension_flag +'</div>'+
-                            '<div class="obj_input_box_full" style="padding:18px;">' + reg_mod_info + '<div>';
-
-            }
+            html =      '<div class="obj_input_box_full">' +  CComponent.dom_tag('일자') + date_select_row + '</div>' +
+                        '<div class="obj_input_box_full">'+ CComponent.dom_tag(`메모 <span style="color:var(--font-highlight);display:${hide_when_off}">(회원님께 공유되는 메모입니다.)</span>`) + memo_select_row + '</div>' +
+                        '<div class="obj_input_box_full">'+ CComponent.dom_tag('자동 기간 연장') + schedule_holding_extension_flag +
+                                    "<div style='padding-left:42px;font-size:12px;color:var(--font-highlight);letter-spacing:-0.6px;font-weight:normal'>활성:휴무일에 진행중인 모든 회원권이 자동 연장됩니다.</div>" +
+                                    "<div style='padding-left:42px;font-size:12px;color:var(--font-highlight);letter-spacing:-0.6px;font-weight:normal'>비활성:연장되었던 회원권이 연장 취소됩니다.</div>"+'</div>'+
+                        '<div class="obj_input_box_full" style="padding:18px;">' + reg_mod_info + '<div>';
         }
 
         return html;
@@ -997,7 +991,7 @@ class Plan_view{
                                                                                                     
                                                                                                     this.check_duplicate_plan_exist((data)=>{
                                                                                                         this.data.duplicate_plan_when_add = data;
-                                                                                                        this.render_content();
+                                                                                                        this.render();
                                                                                                     });
                                                                                                     //셀렉터에서 선택된 값(object)을 this.dataCenter에 셋팅하고 rerender 한다.
                                                                                                 }});
@@ -1037,7 +1031,7 @@ class Plan_view{
                                                                                                     this.end_time = object;
                                                                                                     this.check_duplicate_plan_exist((data)=>{
                                                                                                         this.data.duplicate_plan_when_add = data;
-                                                                                                        this.render_content();
+                                                                                                        this.render();
                                                                                                     });
                                                                                                     //셀렉터에서 선택된 값(object)을 this.dataCenter에 셋팅하고 rerender 한다.
                                                                                                 }});
@@ -1080,7 +1074,7 @@ class Plan_view{
                     // this.render_content();
                     this.check_duplicate_plan_exist((data)=>{
                         this.data.duplicate_plan_when_add = data;
-                        this.render_content();
+                        this.render();
                     });
                 }};
                 time_selector = new TwoTimeSelector("#wrapper_popup_time_selector_function", time_data, user_option);
@@ -1113,7 +1107,7 @@ class Plan_view{
                     // this.render_content();
                     this.check_duplicate_plan_exist((data)=>{
                         this.data.duplicate_plan_when_add = data;
-                        this.render_content();
+                        this.render();
                     });
                 }};
                 time_selector = new TwoTimeSelector("#wrapper_popup_time_selector_function", time_data, user_option);
@@ -1149,12 +1143,12 @@ class Plan_view{
     }
 
     dom_row_schedule_holding_extension_select(){
-        let id = "schedule_extension_select";
+        let id = "schedule_extension_select_view";
         let power = this.data.schedule_holding_extension_flag;
         let style = {"margin-top":"10px", "margin-left":"40px"};
         let onclick = (on_off)=>{
             this.data.schedule_holding_extension_flag = on_off;
-            this.render_content();
+            this.render();
         };
         let html = CComponent.toggle_button (id, power, style, onclick);
         return html;
@@ -1378,7 +1372,7 @@ class Plan_view{
     check_whether_info_changed(){
         let ori_data = this.received_data.schedule_info[0];
         let new_data = this.data;
-        let need_to_check = ["start_dt", "start_time", "end_time", "note"];
+        let need_to_check = ["start_dt", "start_time", "end_time", "note", "schedule_holding_extension_flag"];
         let length = need_to_check.length;
 
         var if_changed_item_exist = false;
@@ -1407,7 +1401,8 @@ class Plan_view{
             );
         }
 
-        let data_to_send = {"schedule_ids[]":schedule_ids, "start_dt":start_dt, "end_dt":end_dt};
+        let data_to_send = {"schedule_ids[]":schedule_ids, "start_dt":start_dt, "end_dt":end_dt,
+            "extension_flag":this.data.schedule_holding_extension_flag};
         let data_to_send_for_memo_update = {"schedule_id": this.schedule_id, "add_memo":this.note};
         let url = '/schedule/update_schedule/';
         let url_update_memo = '/schedule/update_memo_schedule/';

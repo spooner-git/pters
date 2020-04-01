@@ -22,7 +22,7 @@ from configs.const import ON_SCHEDULE_TYPE, USE, AUTO_FINISH_OFF, AUTO_FINISH_ON
     TO_TRAINEE_LESSON_ALARM_OFF, SCHEDULE_DUPLICATION_DISABLE, AUTO_ABSENCE_ON, SCHEDULE_DUPLICATION_ENABLE, \
     LECTURE_TYPE_ONE_TO_ONE, STATE_CD_NOT_PROGRESS, PERMISSION_STATE_CD_APPROVE, STATE_CD_FINISH, STATE_CD_ABSENCE, \
     OFF_SCHEDULE_TYPE, TO_SHARED_TRAINER_LESSON_ALARM_OFF, TO_SHARED_TRAINER_LESSON_ALARM_ON, PERMISSION_STATE_CD_WAIT, \
-    CLOSED_SCHEDULE_TYPE, UN_USE
+    CLOSED_SCHEDULE_TYPE, UN_USE, STATE_CD_IN_PROGRESS, STATE_CD_HOLDING
 from configs import settings
 from login.models import LogTb, MemberTb
 from schedule.forms import AddScheduleTbForm
@@ -30,7 +30,8 @@ from schedule.functions import func_send_push_trainee, func_send_push_trainer, f
     func_upload_daily_record_content_image_logic, func_delete_daily_record_content_image_logic, \
     func_send_push_trainer_trainer, func_get_program_alarm_data, func_get_lecture_member_ticket_id_from_trainee
 from trainee.models import MemberTicketTb, MemberTicketHoldHistoryTb
-from trainer.models import LectureTb, ClassTb
+from trainer.functions import func_add_hold_closed_date_info, func_delete_hold_closed_date_info
+from trainer.models import LectureTb, ClassTb, ClassMemberTicketTb
 from .functions import func_add_schedule, func_add_schedule_update, func_refresh_member_ticket_count, func_date_check,\
     func_get_lecture_member_ticket_id, func_delete_schedule, func_delete_repeat_schedule, \
     func_get_repeat_schedule_date_list, func_add_repeat_schedule, func_refresh_lecture_status
@@ -553,6 +554,7 @@ def update_schedule_logic(request):
     schedule_ids = request.POST.getlist('schedule_ids[]', '')
     schedule_start_datetime = request.POST.get('start_dt', '')
     schedule_end_datetime = request.POST.get('end_dt', '')
+    extension_flag = request.POST.get('extension_flag', '')
     class_id = request.session.get('class_id', '')
     class_type_name = request.session.get('class_type_name', '')
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
@@ -642,6 +644,30 @@ def update_schedule_logic(request):
                     schedule_alarm_info.alarm_dt += time_delta
                     schedule_alarm_info.save()
 
+                if str(schedule_info.en_dis_type) == str(CLOSED_SCHEDULE_TYPE):
+                    if extension_flag is None or extension_flag == '':
+                        extension_flag = schedule_info.extension_flag
+
+                    if str(extension_flag) == str(UN_USE):
+                        func_delete_hold_closed_date_info(schedule_info.schedule_id)
+                    elif str(extension_flag) == str(USE):
+                        func_delete_hold_closed_date_info(schedule_info.schedule_id)
+                        start_date = str(start_dt).split(' ')[0]
+                        member_ticket_data = ClassMemberTicketTb.objects.select_related(
+                            'member_ticket_tb').filter(Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS)
+                                                       | Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
+                                                       class_tb_id=class_id,
+                                                       member_ticket_tb__start_date__lte=start_date,
+                                                       member_ticket_tb__end_date__gte=start_date,
+                                                       use=USE).exclude(member_ticket_tb__end_date__gte='9999-12-31')
+                        for member_ticket_info in member_ticket_data:
+                            func_add_hold_closed_date_info(request.user.id, class_id,
+                                                           member_ticket_info.member_ticket_tb_id,
+                                                           schedule_id, start_date, start_date,
+                                                           '휴무일 ' + schedule_info.note + ' 자동 연장',
+                                                           extension_flag)
+
+                        schedule_info.extension_flag = extension_flag
                 schedule_info.start_dt = start_dt
                 schedule_info.end_dt = end_dt
                 schedule_info.mod_member_id = request.user.id
@@ -1836,6 +1862,9 @@ def delete_repeat_schedule_logic(request):
                                     break
                         schedule_data.delete()
 
+                    elif str(repeat_schedule_info.en_dis_type) == str(CLOSED_SCHEDULE_TYPE):
+                        for schedule_info in schedule_data:
+                            func_delete_schedule(class_id, schedule_info.schedule_id, request.user.id)
                     else:
                         # OFF 일정은 일괄 삭제
                         schedule_data.delete()

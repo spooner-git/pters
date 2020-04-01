@@ -19,12 +19,12 @@ from configs.const import REPEAT_TYPE_2WEAK, ON_SCHEDULE_TYPE, USE, UN_USE, SCHE
     AUTH_TYPE_VIEW, GROUP_SCHEDULE, OFF_SCHEDULE, FROM_TRAINEE_LESSON_ALARM_ON, TO_SHARED_TRAINER_LESSON_ALARM_OFF, \
     TO_SHARED_TRAINER_LESSON_ALARM_ON, PERMISSION_STATE_CD_WAIT, \
     PERMISSION_STATE_CD_APPROVE, TO_ALL_TRAINEE, TO_ING_TRAINEE, TO_END_TRAINEE, GROUP_TRAINEE, GROUP_TRAINER, \
-    SCHEDULE_PAGINATION_COUNTER, STATE_CD_HOLDING
+    SCHEDULE_PAGINATION_COUNTER, STATE_CD_HOLDING, CLOSED_SCHEDULE_TYPE
 from configs.settings import DEBUG
 from login.models import PushInfoTb
 from trainee.models import MemberTicketTb
 from trainer.functions import func_update_lecture_member_fix_status_cd, func_get_member_ing_list, \
-    func_get_member_end_list
+    func_get_member_end_list, func_add_hold_closed_date_info, func_delete_hold_closed_date_info
 from trainer.models import MemberClassTb, ClassMemberTicketTb, LectureTb, TicketLectureTb, SettingTb
 from .models import ScheduleTb, RepeatScheduleTb, DeleteScheduleTb, DeleteRepeatScheduleTb, HolidayTb, DailyRecordTb, \
     ScheduleAlarmTb
@@ -359,6 +359,20 @@ def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
                                                mod_member_id=user_id)
                 add_schedule_info.save()
                 schedule_id = add_schedule_info.schedule_id
+                if str(extension_flag) == str(USE) and str(en_dis_type) == str(CLOSED_SCHEDULE_TYPE):
+                    member_ticket_data = ClassMemberTicketTb.objects.select_related(
+                        'member_ticket_tb').filter(Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS)
+                                                   | Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
+                                                   class_tb_id=class_id,
+                                                   member_ticket_tb__start_date__lte=start_datetime,
+                                                   member_ticket_tb__end_date__gte=start_datetime,
+                                                   use=USE).exclude(member_ticket_tb__end_date__gte='9999-12-31')
+                    start_date_info = str(start_datetime).split(' ')[0]
+                    for member_ticket_info in member_ticket_data:
+                        func_add_hold_closed_date_info(user_id, class_id, member_ticket_info.member_ticket_tb_id,
+                                                       schedule_id, start_date_info, start_date_info,
+                                                       '휴무일 '+note+' 자동 연장',
+                                                       extension_flag)
 
                 if str(en_dis_type) == str(ON_SCHEDULE_TYPE):
                     for alarm_setting_info in alarm_setting_data:
@@ -588,6 +602,9 @@ def func_delete_schedule(class_id, schedule_id,  user_id):
     if error is None:
         try:
             with transaction.atomic():
+                if str(schedule_info.en_dis_type) == str(CLOSED_SCHEDULE_TYPE) \
+                        and str(schedule_info.extension_flag) == str(USE):
+                    func_delete_hold_closed_date_info(schedule_info.schedule_id)
                 delete_schedule_info = DeleteScheduleTb(schedule_id=schedule_info.schedule_id,
                                                         class_tb_id=schedule_info.class_tb_id,
                                                         lecture_tb_id=schedule_info.lecture_tb_id,
@@ -1392,6 +1409,7 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
                                    'permission_state_cd': schedule_info.permission_state_cd,
                                    'schedule_type': schedule_type,
                                    'note': schedule_info.note,
+                                   'extension_flag': schedule_info.extension_flag,
                                    'reg_member_id': str(schedule_info.reg_member_id),
                                    'reg_member_name': schedule_info.reg_member.name,
                                    'mod_member_id': str(mod_member_id),
