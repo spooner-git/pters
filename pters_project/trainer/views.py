@@ -2141,55 +2141,57 @@ def export_excel_member_list_logic(request):
     start_raw = 3
 
     ws1['A2'] = '회원명'
-    ws1['B2'] = '회원권'
+    ws1['B2'] = '연락처'
     ws1['C2'] = '회원 ID'
-    ws1['D2'] = '등록 횟수'
-    ws1['E2'] = '남은 횟수'
-    ws1['F2'] = '시작 일자'
-    ws1['G2'] = '종료 일자'
-    ws1['H2'] = '연락처'
+    # ws1['D2'] = '등록 횟수'
+    # ws1['E2'] = '남은 횟수'
+    # ws1['F2'] = '시작 일자'
+    # ws1['G2'] = '종료 일자'
+    # ws1['H2'] = '연락처'
     ws1.column_dimensions['A'].width = 10
     ws1.column_dimensions['B'].width = 20
     ws1.column_dimensions['C'].width = 20
-    ws1.column_dimensions['D'].width = 10
-    ws1.column_dimensions['E'].width = 10
-    ws1.column_dimensions['F'].width = 15
-    ws1.column_dimensions['G'].width = 15
-    ws1.column_dimensions['H'].width = 20
+    # ws1.column_dimensions['D'].width = 10
+    # ws1.column_dimensions['E'].width = 10
+    # ws1.column_dimensions['F'].width = 15
+    # ws1.column_dimensions['G'].width = 15
+    # ws1.column_dimensions['H'].width = 20
     filename_temp = request.user.first_name + '님_'
     if finish_flag == '0':
         member_list = func_get_member_ing_list(class_id, request.user.id, keyword)
 
-        if sort_info == SORT_MEMBER_NAME:
-            member_list = sorted(member_list, key=attrgetter('name'), reverse=int(sort_order_by))
-        elif sort_info == SORT_REMAIN_COUNT:
-            member_list = sorted(member_list, key=attrgetter('member_ticket_rem_count'), reverse=int(sort_order_by))
-        elif sort_info == SORT_START_DATE:
-            member_list = sorted(member_list, key=attrgetter('start_date'), reverse=int(sort_order_by))
-        elif sort_info == SORT_REG_COUNT:
-            member_list = sorted(member_list, key=attrgetter('member_ticket_reg_count'), reverse=int(sort_order_by))
+        # if sort_info == SORT_MEMBER_NAME:
+        #     member_list = sorted(member_list, key=attrgetter('name'), reverse=int(sort_order_by))
+        # elif sort_info == SORT_REMAIN_COUNT:
+        #     member_list = sorted(member_list, key=attrgetter('member_ticket_rem_count'), reverse=int(sort_order_by))
+        # elif sort_info == SORT_START_DATE:
+        #     member_list = sorted(member_list, key=attrgetter('start_date'), reverse=int(sort_order_by))
+        # elif sort_info == SORT_REG_COUNT:
+        #     member_list = sorted(member_list, key=attrgetter('member_ticket_reg_count'), reverse=int(sort_order_by))
 
         filename_temp += '진행중_회원목록'
         ws1.title = "진행중 회원"
         ws1['A1'] = '진행중 회원정보'
         ws1['A1'].font = Font(bold=True, size=15)
         for member_info in member_list:
-            ws1['A' + str(start_raw)] = member_info.name
-            ws1['B' + str(start_raw)] = member_info.lecture_info
-            ws1['C' + str(start_raw)] = member_info.user.username
-            ws1['D' + str(start_raw)] = member_info.member_ticket_reg_count
-            ws1['E' + str(start_raw)] = member_info.member_ticket_rem_count
-            ws1['F' + str(start_raw)] = member_info.start_date
-            if member_info.end_date == '9999-12-31':
-                ws1['G' + str(start_raw)] = '소진시까지'
-            else:
-                ws1['G' + str(start_raw)] = member_info.end_date
 
-            if member_info.phone is None:
-                ws1['H' + str(start_raw)] = '---'
-            else:
-                ws1['H' + str(start_raw)] = member_info.phone[0:3] + '-' + member_info.phone[3:7]\
-                                            + '-' + member_info.phone[7:]
+            ws1['A' + str(start_raw)] = member_info['member_name']
+            # ws1['B' + str(start_raw)] = member_info.lecture_info
+            ws1['B' + str(start_raw)] = member_info['member_phone']
+            ws1['C' + str(start_raw)] = member_info['member_user_id']
+            # ws1['D' + str(start_raw)] = member_info.member_ticket_reg_count
+            # ws1['E' + str(start_raw)] = member_info.member_ticket_rem_count
+            # ws1['F' + str(start_raw)] = member_info.start_date
+            # if member_info.end_date == '9999-12-31':
+            #     ws1['G' + str(start_raw)] = '소진시까지'
+            # else:
+            #     ws1['G' + str(start_raw)] = member_info.end_date
+            #
+            # if member_info.phone is None:
+            #     ws1['H' + str(start_raw)] = '---'
+            # else:
+            #     ws1['H' + str(start_raw)] = member_info.phone[0:3] + '-' + member_info.phone[3:7]\
+            #                                 + '-' + member_info.phone[7:]
             start_raw += 1
     else:
         member_finish_list = func_get_member_end_list(class_id, request.user.id, keyword)
