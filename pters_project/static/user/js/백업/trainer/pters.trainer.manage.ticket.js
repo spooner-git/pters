@@ -23,7 +23,7 @@ if(Options.auth_class == 0){
     $('._groupaddbutton').append('<img src="/static/user/res/login/icon-lock-grey.png" style="margin-bottom:3px;height:16px;">');
 }
 function purchase_annai(){
-    alert('수강권 기능 이용권 구매후 이용이 가능합니다.');
+    alert('회원권 기능 이용권 구매후 이용이 가능합니다.');
 }
 /////////////옵션
 
@@ -144,7 +144,7 @@ $('#id_ticket_search').click(function(e){
 
 $('.alignSelect_ticket').change(function(){
         //var jsondata = global_json
-        if($(this).val()=="수강권명 가나다 순" || $(this).val()=="名前順" || $(this).val()=="Name" ){
+        if($(this).val()=="회원권명 가나다 순" || $(this).val()=="名前順" || $(this).val()=="Name" ){
             ticket_sort_val = SORT_TICKET_NAME;
             ticket_sort_order_by = SORT_ASC;
         }else if($(this).val()=="참여중 회원 많은 순" || $(this).val()=="残余回数が多い" || $(this).val()=="Remain Count(H)"){
@@ -159,7 +159,7 @@ $('.alignSelect_ticket').change(function(){
         }else if($(this).val()=="종료 회원 적은 순" || $(this).val()=="残余回数が少ない" || $(this).val()=="Remain Count(L)"){
             ticket_sort_val = SORT_TICKET_MEMBER_COUNT;
             ticket_sort_order_by = SORT_ASC;
-        }else if($(this).val()=="수강권 타입 순" || $(this).val()=="残余回数が多い" || $(this).val()=="Remain Count(H)"){
+        }else if($(this).val()=="회원권 타입 순" || $(this).val()=="残余回数が多い" || $(this).val()=="Remain Count(H)"){
             ticket_sort_val = SORT_TICKET_TYPE;
             ticket_sort_order_by = SORT_DESC;
         }else if($(this).val()=="생성 일자 과거 순" || $(this).val()=="開始が過去" || $(this).val()=="Start Date(P)"){
@@ -835,7 +835,7 @@ $(document).on('click', 'div.groupWrap', function(e){
         }
         current_Scroll_Position = $(document).scrollTop();
 
-        // $('#uptext3').text('수강권 - '+package_name);
+        // $('#uptext3').text('회원권 - '+package_name);
         $('#uptext3').text(package_name);
         // $('#page_managemember').css({'height':'0'});
         $('#page_managemember').css({'display':'none'});
@@ -967,7 +967,7 @@ $(document).on('click', '._groupmanage img._info_modify', function(e){
                     package_memo = "";
                 }
                 if(package_name == ''){
-                    alert('수강권명을 입력하세요.');
+                    alert('회원권명을 입력하세요.');
                 }
                 else{
                     // $(this).attr({'data-edit':'view', 'src':'/static/user/res/member/icon-edit.png'});
@@ -1012,7 +1012,7 @@ $(document).on('click', '._groupstatus_disabled_false', function(e){
         display_type = "inline-block";
     }
     if($(this).attr('data-packagestatus') == "IP"){
-        var change_explain_text = '1) 소속된 회원의 수강권이 종료됩니다.';
+        var change_explain_text = '1) 소속된 회원의 회원권이 종료됩니다.';
         $('._explain').html(change_explain_text);
         $('._complete').css('display', display_type);
         $('._resume, ._refund, ._delete').css('display', 'none');
@@ -1030,7 +1030,7 @@ $(document).on('click', '._groupstatus_disabled_false', function(e){
             // $('.lectureStateChangeSelectPopup').attr('data-grouptype','');
         });
     }else if($(this).attr('data-packagestatus') == "PE"){
-        var change_explain_text = '1) 남은 횟수가 있는 소속된 회원의 수강권이 재개됩니다.';
+        var change_explain_text = '1) 남은 횟수가 있는 소속된 회원의 회원권이 재개됩니다.';
         $('._explain').html(change_explain_text);
         $('._resume').css('display', display_type);
         $('._complete, ._refund, ._delete').css('display', 'none');
@@ -1081,7 +1081,7 @@ $(document).on('click', 'img.btn_add_member_to_group, div.btn_add_member_to_tick
     }else{
         pc_add_member('groupmember');
     }
-    $('#uptext2, #uptext2_PC').text('수강권 인원 추가'+' ('+package_name+')');
+    $('#uptext2, #uptext2_PC').text('회원권 인원 추가'+' ('+package_name+')');
     $('#form_member_groupid').val(package_id);
 });
 //그룹 멤버 리스트에서 멤버 추가 버튼을 누른다.
@@ -2148,7 +2148,7 @@ function groupMemberListSet(group_id, jsondata){
 }
 //그룹원 목록을 그룹에 그리기
 
-//수강권 목록에서 관리의 x 버튼으로 수강권에서 회원 빼기
+//회원권 목록에서 관리의 x 버튼으로 회원권에서 회원 빼기
 $(document).on('click', 'img.substract_groupMember, div.substract_groupMember_mobile', function(e){
     e.stopPropagation();
 
@@ -2174,7 +2174,7 @@ $(document).on('click', 'img.substract_groupMember, div.substract_groupMember_mo
     group_delete_JSON.package_id = member_packageid;
 
     $('#cal_popup_plandelete').css('display','block');
-    $('#popup_delete_question').html(`<span style="color:#fe4e65">${name}</span> 수강권 에서 <br/> ${member_name}님을 <span style="color:#fe4e65">제외</span> 하시겠습니까? <br/> <span style="font-weight:400;font-size:12px;">(관련 수강정보 일괄 삭제 및 복구 불가)</span> <br/>`);
+    $('#popup_delete_question').html(`<span style="color:#fe4e65">${name}</span> 회원권 에서 <br/> ${member_name}님을 <span style="color:#fe4e65">제외</span> 하시겠습니까? <br/> <span style="font-weight:400;font-size:12px;">(관련 수강정보 일괄 삭제 및 복구 불가)</span> <br/>`);
     deleteTypeSelect = "ticketMember_Substract_From_Group";
     if(bodywidth < 600){
         shade_index(152);
@@ -2495,11 +2495,11 @@ $(document).on("click", "div.lecture_bubble_mini img", function(e){
     var group_name = $(this).siblings('span').text();
 
     if(package_number < 2){
-        alert("패키지내에는 최소 1개의 수강권이 존재해야 합니다.");
+        alert("패키지내에는 최소 1개의 회원권이 존재해야 합니다.");
     }else{
         deleteTypeSelect = 'package_group_delete';
         $('#cal_popup_plandelete').show().attr({'data-packageid':package_id, 'data-groupid':group_id});
-        $('#popup_delete_question').text(`정말 패키지에서 ${group_name} 수강권을 삭제하시겠습니까?`);
+        $('#popup_delete_question').text(`정말 패키지에서 ${group_name} 회원권을 삭제하시겠습니까?`);
         shade_index(250);
     };
 });
@@ -2540,7 +2540,7 @@ $(document).on("click", "#add_group_to_package_selector li a", function(){
     var group_id = $(this).attr("data-groupid");
     var group_name = $(this).text();
     add_group_from_package(package_id, group_id, "callback", function(){
-        alert(`${group_name}이 수강권에 추가 되었습니다.`);
+        alert(`${group_name}이 회원권에 추가 되었습니다.`);
         if($("#popup_ticket_info_mobile").css('display') == "block"){
             var package_statuscd = $('#mypackagestatuscd').attr('data-status');
             var $targetlecturelist = $('#popup_ticket_info_mobile_lecturelist');
@@ -2936,18 +2936,18 @@ var $targetHTML;
 var text_membernum;
 function package_ListHtml(option, jsondata){ //option : current, finished
     console.log("package_ListHtml", jsondata)
-    $('#uptext').html("수강권 <span style='color:#ff4d63;'>"+jsondata.total_package_num+"</span>");
+    $('#uptext').html("회원권 <span style='color:#ff4d63;'>"+jsondata.total_package_num+"</span>");
     switch(option){
         case 'current':
             $membernum = $('#memberNumber_current_ticket');
             $targetHTML = $('#currentPackageList');
-            text_membernum = "진행중인 수강권 ";
+            text_membernum = "진행중인 회원권 ";
             $targetHTML.attr('total_package_num', jsondata.total_package_num);
             break;
         case 'finished':
             $membernum = $('#memberNumber_finish_ticket');
             $targetHTML = $('#finishedPackageList');
-            text_membernum = "종료 수강권 ";
+            text_membernum = "종료 회원권 ";
             break;
     }
     var htmlToAdd = [];
@@ -3057,13 +3057,13 @@ function package_ListHtml(option, jsondata){ //option : current, finished
     if((htmlToJoin.length+htmlToJoin2.length+htmlToJoin3.length+htmlToAdd.length) == 0){
         if(ticket_keyword == ''){
             if(option == "current"){
-                // htmlToJoin.push('<div class="groupWrap" data-packagestatecd="'+option+'" style="height:50px;padding-top:17px !important">진행중인 수강권이 없습니다.</div>');
+                // htmlToJoin.push('<div class="groupWrap" data-packagestatecd="'+option+'" style="height:50px;padding-top:17px !important">진행중인 회원권이 없습니다.</div>');
             }else if(option == "finished"){
-                htmlToJoin.push('<div class="groupWrap_" data-packagestatecd="'+option+'" style="height:50px;padding-top:17px !important">종료된 수강권이 없습니다.</div>');
+                htmlToJoin.push('<div class="groupWrap_" data-packagestatecd="'+option+'" style="height:50px;padding-top:17px !important">종료된 회원권이 없습니다.</div>');
             }
         }
         else{
-            htmlToJoin.push('<div class="groupWrap_" data-packagestatecd="'+option+'" style="height:50px;padding-top:17px !important">검색된 수강권이 없습니다.</div>');
+            htmlToJoin.push('<div class="groupWrap_" data-packagestatecd="'+option+'" style="height:50px;padding-top:17px !important">검색된 회원권이 없습니다.</div>');
         }
     }
 
@@ -3074,18 +3074,18 @@ function package_ListHtml(option, jsondata){ //option : current, finished
 
 function package_ListHtml_page(option, jsondata){ //option : current, finished
     console.log("package_ListHtml", jsondata)
-    $('#uptext').html("수강권 <span style='color:#ff4d63;'>"+jsondata.total_package_num+"</span>");
+    $('#uptext').html("회원권 <span style='color:#ff4d63;'>"+jsondata.total_package_num+"</span>");
     switch(option){
         case 'current':
             $membernum = $('#memberNumber_current_ticket');
             $targetHTML = $('#currentPackageList');
-            text_membernum = "진행중 수강권 ";
+            text_membernum = "진행중 회원권 ";
             $targetHTML.attr('total_package_num', jsondata.total_package_num);
             break;
         case 'finished':
             $membernum = $('#memberNumber_finish_ticket');
             $targetHTML = $('#finishedPackageList');
-            text_membernum = "종료 수강권 ";
+            text_membernum = "종료 회원권 ";
             break;
     }
     var htmlToAdd = [];
@@ -3195,13 +3195,13 @@ function package_ListHtml_page(option, jsondata){ //option : current, finished
     if((htmlToJoin.length+htmlToJoin2.length+htmlToJoin3.length+htmlToAdd.length) == 0){
         if(ticket_keyword == '') {
             if (option == "current") {
-                // htmlToJoin.push('<div class="groupWrap" data-packagestatecd="'+option+'" style="height:50px;padding-top:17px !important">진행중인 수강권이 없습니다.</div>');
+                // htmlToJoin.push('<div class="groupWrap" data-packagestatecd="'+option+'" style="height:50px;padding-top:17px !important">진행중인 회원권이 없습니다.</div>');
             } else if (option == "finished") {
-                htmlToJoin.push('<div class="groupWrap_" data-packagestatecd="' + option + '" style="height:50px;padding-top:17px !important">종료된 수강권이 없습니다.</div>');
+                htmlToJoin.push('<div class="groupWrap_" data-packagestatecd="' + option + '" style="height:50px;padding-top:17px !important">종료된 회원권이 없습니다.</div>');
             }
         }
         else{
-            htmlToJoin.push('<div class="groupWrap_" data-packagestatecd="' + option + '" style="height:50px;padding-top:17px !important">검색된 수강권이 없습니다.</div>');
+            htmlToJoin.push('<div class="groupWrap_" data-packagestatecd="' + option + '" style="height:50px;padding-top:17px !important">검색된 회원권이 없습니다.</div>');
         }
     }
 
@@ -3211,20 +3211,20 @@ function package_ListHtml_page(option, jsondata){ //option : current, finished
 }
 
 function package_ListHtml_mobile(option, jsondata){ //option : current, finished
-    $('#uptext').html("수강권 <span style='color:#ff4d63;'>"+jsondata.total_package_num+"</span>");
+    $('#uptext').html("회원권 <span style='color:#ff4d63;'>"+jsondata.total_package_num+"</span>");
     var member_status_title = '참여중';
     switch(option){
         case 'current':
             $membernum = $('#memberNumber_current_ticket');
             $targetHTML = $('#currentPackageList');
-            text_membernum = "진행중 수강권 ";
+            text_membernum = "진행중 회원권 ";
             member_status_title = '참여중';
             $targetHTML.attr('total_package_num', jsondata.total_package_num);
             break;
         case 'finished':
             $membernum = $('#memberNumber_finish_ticket');
             $targetHTML = $('#finishedPackageList');
-            text_membernum = "종료 수강권 ";
+            text_membernum = "종료 회원권 ";
             member_status_title = '종료';
             break;
     }
@@ -3321,13 +3321,13 @@ function package_ListHtml_mobile(option, jsondata){ //option : current, finished
     if((htmlToJoin.length+htmlToJoin2.length+htmlToJoin3.length+htmlToAdd.length) == 0){
         if(ticket_keyword == ''){
             if(option == "current"){
-                // htmlToJoin.push('<div class="groupWrap" data-packagestatecd="'+option+'" style="height:50px;padding-top:17px !important">진행중인 수강권이 없습니다.</div>');
+                // htmlToJoin.push('<div class="groupWrap" data-packagestatecd="'+option+'" style="height:50px;padding-top:17px !important">진행중인 회원권이 없습니다.</div>');
             }else if(option == "finished"){
-                htmlToJoin.push('<div class="groupWrap_" data-packagestatecd="'+option+'" style="height:50px;padding-top:17px !important">종료된 수강권이 없습니다.</div>');
+                htmlToJoin.push('<div class="groupWrap_" data-packagestatecd="'+option+'" style="height:50px;padding-top:17px !important">종료된 회원권이 없습니다.</div>');
             }
         }
         else{
-            htmlToJoin.push('<div class="groupWrap_" data-packagestatecd="'+option+'" style="height:50px;padding-top:17px !important">검색된 수강권이 없습니다.</div>');
+            htmlToJoin.push('<div class="groupWrap_" data-packagestatecd="'+option+'" style="height:50px;padding-top:17px !important">검색된 회원권이 없습니다.</div>');
         }
     }
     $membernum.html(text_membernum+'<span style="font-size:16px;">'+jsondata.total_package_num+'개</span>');
@@ -3337,7 +3337,7 @@ function package_ListHtml_mobile(option, jsondata){ //option : current, finished
 //패키지 목록을 화면에 뿌리기
 
 
-//수강권 정보 모바일 팝업
+//회원권 정보 모바일 팝업
 function set_ticket_info_for_mobile_popup(package_id, package_name, package_status, package_statuscd, package_type, package_membernum, package_memo, package_status_cd){
     var color;
     var selected1;
@@ -3359,7 +3359,7 @@ function set_ticket_info_for_mobile_popup(package_id, package_name, package_stat
                         <div class="ticket_finished ${selected2}" data-status="complete">종료</div>
                     </div>`;
 
-    var html = `<div class="pters_table" id="ticketnametitle" data-ticket_name="${package_name}"><div class="pters_table_cell">수강권명</div><div class="pters_table_cell" id="ticketname"><input type="text" class="mobile_memo_input" value="${package_name}" disabled></div></div>
+    var html = `<div class="pters_table" id="ticketnametitle" data-ticket_name="${package_name}"><div class="pters_table_cell">회원권명</div><div class="pters_table_cell" id="ticketname"><input type="text" class="mobile_memo_input" value="${package_name}" disabled></div></div>
                 <div class="pters_table"><div class="pters_table_cell">타입</div><div class="pters_table_cell" id="id_ticket_type">${package_type}</div></div>
                 <div class="pters_table"><div class="pters_table_cell">상태</div><div class="pters_table_cell"><div id='id_ticket_status' data-ticket_status="${package_status_cd}" style="color:${color}">${package_status}</div>${status}</div></div>
                 <div class="pters_table"><div class="pters_table_cell">메모</div><div class="pters_table_cell" id="ticketmemo" data-ticket_memo="${package_memo}"><input type="text" class="mobile_memo_input" value="${package_memo}" disabled></div></div>
@@ -3374,7 +3374,7 @@ function set_ticket_info_for_mobile_popup(package_id, package_name, package_stat
     $('#popup_ticket_info_mobile_basic').html(html);
     $(window).scrollTop(0);
 }
-//수강권 정보 모바일 팝업
+//회원권 정보 모바일 팝업
 
 $(document).on('click', '.mobile_status_color_palette > div', function(){
     $(this).addClass('mobile_status_selected');
@@ -3736,7 +3736,7 @@ function packageMemberListSet_mobile(package_id, ticket_status, jsondata){
     // }
     //$('div.groupMembersWrap[data-groupid="'+package_id+'"]').html(EMPTY_EXPLAIN+html);
 
-    //수업관리에서 수업에 회원을 넣고 빼는건 이제 금지. 수강권에서 한다.
+    //수업관리에서 수업에 회원을 넣고 빼는건 이제 금지. 회원권에서 한다.
     var html = htmlToJoin.join('');
     if(jsondata.db_id.length == 0){
         if($('#currentGroupList').css('display') == "block"){
@@ -3905,7 +3905,7 @@ function draw_grouplist_in_package($targetHTML, jsondata){
                               </div>`
                         );
     }
-    var group_add_button = `<img src="/static/user/res/member/icon-x-red.png" data-packageid="${$targetHTML.attr("data-packageid")}" class="btn_add_lecture_bubble_mini" title="패키지에 수강권 추가하기">`;
+    var group_add_button = `<img src="/static/user/res/member/icon-x-red.png" data-packageid="${$targetHTML.attr("data-packageid")}" class="btn_add_lecture_bubble_mini" title="패키지에 회원권 추가하기">`;
     //var html = htmlToJoin.join("");
     //if(jsondata.group_type_cd != "ONE_TO_ONE"){
      var   html = htmlToJoin.join("")+group_add_button;
@@ -4175,7 +4175,7 @@ function modify_package_from_list(package_id, package_name, package_note, use, c
                 if($('#popup_ticket_info_mobile').css('display') == "block"){
                     if(package_name.length != 0){
                         if(bodywidth<600){
-                            // $('#uptext3').text('수강권 - '+package_name);
+                            // $('#uptext3').text('회원권 - '+package_name);
                             $('#uptext3').text(package_name);
                             $('#ticketnametitle, #ticketdelete, .lecture_bubble_mini img').hide();
                             $('#upbutton-modify').find('img').attr('src', '/static/user/res/icon-pencil.png');
@@ -4299,7 +4299,7 @@ function modify_package_status(package_id, option, use, callback){
 //패키지 완료, 재개하기
 
 
-//새로운 수강권 멤버 정보 서버로 보내 등록하기
+//새로운 회원권 멤버 정보 서버로 보내 등록하기
 function add_ticketmember_form_func(){
     var bodywidth = window.innerWidth;
     $.ajax({
@@ -4437,7 +4437,7 @@ function added_ticket_member_info_to_jsonformat(){
     return dataObject;
 }
 
-//수강권에서 인원 지우기
+//회원권에서 인원 지우기
 function delete_ticketmember_from_grouplist(use, callback){
     console.log(JSON.stringify(group_delete_JSON))
     $.ajax({
@@ -4485,4 +4485,4 @@ function delete_ticketmember_from_grouplist(use, callback){
         }
     });
 }
-//수강권에서 인원 지우기
+//회원권에서 인원 지우기

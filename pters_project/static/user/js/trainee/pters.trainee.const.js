@@ -30,12 +30,12 @@ const NONE = 'None';
 const CALL_AJAX = 0;
 const CALL_PAGE_MOVE = 1;
 
-
 const POPUP_FROM_LEFT = 0;
 const POPUP_FROM_RIGHT = 1;
 const POPUP_FROM_BOTTOM = 2;
 const POPUP_FROM_TOP = 3;
 const POPUP_FROM_PAGE = 4;
+const POPUP_FROM_BASIC = 5;
 
 
 const ADD = 'add';

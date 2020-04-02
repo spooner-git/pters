@@ -63,7 +63,7 @@ class Menu_settings {
         let dom_tag_style = {"font-size":"13px", "color":"var(--font-sub-normal)", "padding-left":"0", "margin-bottom":"8px"};
 
         // let assembly_sharing =
-        //                CComponent.dom_tag('프로그램 설정', dom_tag_style) +
+        //                CComponent.dom_tag('지점 설정', dom_tag_style) +
         //                 // share +
         //                 this.dom_menu_setting_calendar() +
         //                 this.dom_menu_setting_worktime() +
@@ -77,7 +77,7 @@ class Menu_settings {
         //                 this.dom_menu_theme();
         // let assembly_shared =
         let assembly =
-                        CComponent.dom_tag('프로그램 설정', dom_tag_style) + 
+                        CComponent.dom_tag('지점 설정', dom_tag_style) +
                         // share + 
                         this.dom_menu_setting_calendar() + 
                         this.dom_menu_setting_worktime() + 
@@ -120,7 +120,7 @@ class Menu_settings {
 
     dom_menu_program(){
         let id = 'menu_program';
-        let title = '프로그램';
+        let title = '지점';
         let icon = CImg.program();
         let icon_r_visible = NONE;
         let icon_r_text = "";
@@ -172,7 +172,7 @@ class Menu_settings {
 
     dom_menu_ticket(){
         let id = 'menu_ticket';
-        let title = '수강권';
+        let title = '회원권';
         let icon = CImg.ticket();
         let icon_r_visible = NONE;
         let icon_r_text = "";
@@ -341,7 +341,7 @@ class Menu_settings {
 
     dom_menu_setting_sharing(){
         let id = 'menu_setting_sharing';
-        let title = '프로그램 공유';
+        let title = '지점 공유';
         let icon = CImg.share();
         let icon_r_visible = NONE;
         let icon_r_text = "";
@@ -354,7 +354,7 @@ class Menu_settings {
 
     dom_menu_setting_shared(){
         let id = 'menu_setting_shared';
-        let title = '프로그램 공유';
+        let title = '지점 공유';
         let icon = CImg.share();
         let icon_r_visible = NONE;
         let icon_r_text = "";

@@ -8,7 +8,7 @@ from django.utils import timezone
 
 from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, USE, MEMBER_RESERVE_PROHIBITION_ON, LECTURE_TYPE_ONE_TO_ONE, \
     STATE_CD_IN_PROGRESS, STATE_CD_ABSENCE, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, AUTH_TYPE_DELETE, \
-    MEMBER_RESERVE_PROHIBITION_OFF
+    MEMBER_RESERVE_PROHIBITION_OFF, FROM_TRAINER_LESSON_ALARM_ON, STATE_CD_HOLDING
 from login.models import CommonCdTb
 from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb
 from trainer.models import ClassTb, ClassMemberTicketTb, SettingTb, TicketLectureTb
@@ -176,7 +176,7 @@ def func_get_trainee_on_repeat_schedule(context, user_id, class_id):
 def func_get_class_member_ticket_count(context, class_id, user_id):
     error = None
     if class_id is None or class_id == '':
-        error = '수강정보를 불러오지 못했습니다.'
+        error = '회원권 정보를 불러오지 못했습니다.'
 
     member_ticket_reg_count_sum = 0
     member_ticket_rem_count_sum = 0
@@ -190,8 +190,9 @@ def func_get_class_member_ticket_count(context, class_id, user_id):
 
         class_member_ticket_list = ClassMemberTicketTb.objects.select_related(
             'member_ticket_tb__ticket_tb', 'member_ticket_tb__member'
-        ).filter(class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__member_id=user_id,
-                 member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS, member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
+        ).filter(Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS) | Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
+                 class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__member_id=user_id,
+                 member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
                  member_ticket_tb__use=USE, use=USE).order_by('member_ticket_tb__start_date')
 
     if error is None:
@@ -227,7 +228,7 @@ def func_get_member_ticket_list(context, class_id, member_id, auth_cd):
     output_member_ticket_list = []
 
     if class_id is None or class_id == '':
-        error = '수강정보를 불러오지 못했습니다.'
+        error = '회원권 정보를 불러오지 못했습니다.'
 
     if member_id is None or member_id == '':
         error = '회원 정보를 불러오지 못했습니다.'
@@ -304,7 +305,7 @@ def func_get_member_ticket_connection_list(context, class_id, member_id, auth_cd
     output_member_ticket_list = []
 
     if class_id is None or class_id == '':
-        error = '수강정보를 불러오지 못했습니다.'
+        error = '회원권 정보를 불러오지 못했습니다.'
 
     if member_id is None or member_id == '':
         error = '회원 정보를 불러오지 못했습니다.'
@@ -525,8 +526,8 @@ def func_get_trainee_ing_member_ticket_list(context, class_id, user_id):
     member_ticket_list = ClassMemberTicketTb.objects.select_related(
         'member_ticket_tb__member',
         'member_ticket_tb__ticket_tb'
-    ).filter(class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__member_id=user_id,
-             member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+    ).filter(Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS) | Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
+             class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__member_id=user_id,
              member_ticket_tb__ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
              member_ticket_tb__use=USE, member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW, use=USE
              ).order_by('-member_ticket_tb__end_date', 'member_ticket_tb__reg_dt')
@@ -591,7 +592,7 @@ def func_get_trainee_reserve_schedule_list(context, class_id, user_id, lecture_i
     try:
         class_info = ClassTb.objects.get(class_id=class_id)
     except ObjectDoesNotExist:
-        error = '수강정보를 불러오지 못했습니다.'
+        error = '회원권 정보를 불러오지 못했습니다.'
 
     if error is None:
         error = func_check_select_date_reserve_setting(class_id, class_info.member_id, select_date)
@@ -915,3 +916,23 @@ def func_check_select_time_reserve_setting(class_id, trainer_id, start_date, end
                     error = error_comment+' 취소가 가능합니다.'
 
     return error
+
+
+# 회원의 셋팅 정보 가져오기
+def func_get_trainee_setting_list(context, class_id, user_id):
+    # today = datetime.date.today()
+    # lt_lan_01 = 'KOR'
+    setting_push_from_trainer_lesson_alarm = FROM_TRAINER_LESSON_ALARM_ON
+    setting_schedule_alarm_minute = '-1'
+    setting_data = SettingTb.objects.filter(class_tb_id=class_id, member_id=user_id, use=USE)
+
+    for setting_info in setting_data:
+        if setting_info.setting_type_cd == 'LT_PUSH_FROM_TRAINER_LESSON_ALARM':
+            setting_push_from_trainer_lesson_alarm = int(setting_info.setting_info)
+        if setting_info.setting_type_cd == 'LT_PUSH_SCHEDULE_ALARM_MINUTE':
+            setting_schedule_alarm_minute = setting_info.setting_info
+
+    context['setting_push_from_trainer_lesson_alarm'] = setting_push_from_trainer_lesson_alarm
+    context['setting_schedule_alarm_minute'] = setting_schedule_alarm_minute
+
+    return context

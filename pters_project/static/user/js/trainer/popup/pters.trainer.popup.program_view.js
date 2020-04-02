@@ -118,7 +118,7 @@ class Program_view{
         let id = 'program_name_edit';
         let title = this.name == null ? '' : this.name;
         let style = {"font-size":"20px", "font-weight":"bold", "padding":"0"};
-        let placeholder =  '프로그램명*';
+        let placeholder =  '지점명*';
         let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
@@ -239,18 +239,18 @@ class Program_view{
 
     upper_right_menu(){
         if(this.data.program_selected == PROGRAM_SELECTED){
-            show_error_message({title:'선택되어 있는 프로그램은 삭제할 수 없습니다.', comment:'다른 프로그램으로 이동 후 삭제가 가능합니다.'});
+            show_error_message({title:'선택되어 있는 지점은 삭제할 수 없습니다.', comment:'다른 지점으로 이동 후 삭제가 가능합니다.'});
             return false;
         } 
         let message = {
-            title:`"${this.data.program_name}" 프로그램을 삭제 하시겠습니까?`,
+            title:`"${this.data.program_name}" 지점을 삭제 하시겠습니까?`,
             comment:"모든 정보가 삭제되며 복구할 수 없습니다."
         };
         show_user_confirm(message, ()=>{
             layer_popup.close_layer_popup(); // 확인 팝업 닫기
             Program_func.delete({"class_id":this.data.program_id}, ()=>{
                 program_list_popup.init();
-                layer_popup.close_layer_popup(); // 프로그램 정보 팝업 닫기 -> 즉, 프로그램 리스트 팝업으로 나가기
+                layer_popup.close_layer_popup(); // 지점 정보 팝업 닫기 -> 즉, 지점 리스트 팝업으로 나가기
             });
         });
     }

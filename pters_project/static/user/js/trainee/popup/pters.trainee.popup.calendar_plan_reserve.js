@@ -3,7 +3,7 @@
  */
 /* global $, windowHeight, windowWidth, setting_info, select_date */
 
-/*수강권 정보 열고 닫기*/
+/*회원권 정보 열고 닫기*/
 $('#id_ticket_detail_expand_in_reserve').attr("data-open", CLOSE);
 $(document).off("click", '#id_ticket_detail_expand_in_reserve');
 

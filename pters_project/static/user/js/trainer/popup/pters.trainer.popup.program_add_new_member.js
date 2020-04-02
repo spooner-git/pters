@@ -102,13 +102,13 @@ class Program_add_new_member{
 
         let html =  
                     '<div class="obj_input_box_full">'+  CComponent.dom_tag('분야') + program_category_select_row + program_category_sub_select_row + '</div>' + 
-                    '<div class="obj_input_box_full">' +  CComponent.dom_tag('프로그램명') + program_name_input_row + '</div>';
+                    '<div class="obj_input_box_full">' +  CComponent.dom_tag('지점명') + program_name_input_row + '</div>';
 
         return html;
     }
 
     dom_row_toolbox(){
-        let title = "반갑습니다 <p style='font-size:14px;font-weight:500;color:var(--font-sub-normal);'>진행하고자 하는 프로그램을 만들어주세요.<br>입력한 정보는 언제든 다시 수정할 수 있습니다.</p>";
+        let title = "반갑습니다 <p style='font-size:14px;font-weight:500;color:var(--font-sub-normal);'>진행하고자 하는 지점을 만들어주세요.<br>입력한 정보는 언제든 다시 수정할 수 있습니다.</p>";
         let html = `
         <div class="program_add_upper_box" style="">
             <div style="display:inline-block;">
@@ -125,7 +125,7 @@ class Program_add_new_member{
     dom_row_program_name(){
         let id = 'program_name_input';
         let title = this.name == null ? "" : this.name;
-        let placeholder = '프로그램명*';
+        let placeholder = '지점명*';
         let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
@@ -193,7 +193,7 @@ class Program_add_new_member{
     send_data(){
         // let inspect = pass_inspector.program();
         // if(inspect.barrier == BLOCKED){
-        //     show_error_message({title:`[${inspect.limit_type}] 이용자께서는 프로그램을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다.`});
+        //     show_error_message({title:`[${inspect.limit_type}] 이용자께서는 지점을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다.`});
         //     return false;
         // }
 
@@ -245,7 +245,7 @@ class Program_add_new_member{
 
 class Program_func{
     static create(data, callback, error_callback){
-        //프로그램 추가
+        //지점 추가
         $.ajax({
             url:"/trainer/add_program_info/",
             type:'POST',
@@ -294,7 +294,7 @@ class Program_func{
             async = true;
         }
 
-        //프로그램 리스트 서버에서 불러오기
+        //지점 리스트 서버에서 불러오기
         $.ajax({
             url:"/trainer/get_program_list/",
             dataType : 'JSON',
@@ -321,8 +321,8 @@ class Program_func{
                 }
                 if(!select_check){
                     let message = {
-                        title:`프로그램의 공유 연결 해제 되었습니다.`,
-                        comment:`다시 연결하려면 프로그램 소유자에게 요청 해야합니다.`
+                        title:`지점의 공유 연결 해제 되었습니다.`,
+                        comment:`다시 연결하려면 지점 소유자에게 요청 해야합니다.`
                     };
                     show_error_message (message);
                     location.href = '/trainer/refresh_trainer_page/';
@@ -349,7 +349,7 @@ class Program_func{
     }
 
     static update(data, callback, error_callback){
-        //프로그램 추가
+        //지점 추가
         $.ajax({
             url:"/trainer/update_program_info/",
             type:'POST',
@@ -394,7 +394,7 @@ class Program_func{
     }
 
     static delete(data, callback, error_callback){
-        //프로그램 추가
+        //지점 추가
         $.ajax({
             url:"/trainer/delete_program_info/",
             type:'POST',

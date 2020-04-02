@@ -25,7 +25,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta name="google-site-verification" content="EPm2stOoq7M_LaK0htEQNqbitGznovZCakPO78TPtsk" />
     <meta name="naver-site-verification" content="919ceda7d377b0d22cf390ca79de5dc21dc3d0fa"/>
-    <meta name="description" content="PTERS 피터스 PT, 요가, 필라테스, 당구, 골프 등 레슨 회원관리와 일정을 관리하는 서비스 프로그램">
+    <meta name="description" content="PTERS 피터스 PT, 요가, 필라테스, 당구, 골프 등 레슨 회원관리와 일정을 관리하는 서비스 지점">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
@@ -112,7 +112,7 @@
                     <a class="centermenu_text"   onclick="location.href='{% url 'trainee:cal_month'%}'">달력</a>
                 </div>
                 <div class="centermenu_div">
-                    <a class="centermenu_text" onclick="open_lecture_select_popup()">프로그램 선택</a>
+                    <a class="centermenu_text" onclick="open_lecture_select_popup()">지점 선택</a>
                 </div>
                 <div class="centermenu_div">
                     <a class="centermenu_text" onclick="location.href='{% url 'trainee:mypage_trainee' %}'">마이페이지</a>
@@ -142,10 +142,10 @@
             <input type="hidden" name="class_id" id="id_class_id">
             <input type="hidden" name="next_page" id="id_next_page" value="{% url 'trainee:index' %}">
         </form>
-        <label>프로그램 선택<img src="/static/user/res/ptadd/btn-x.png" class="button_close_popup"></label>
-        <p>이동을 원하는 프로그램을 선택해 주세요.</p>
+        <label>지점 선택<img src="/static/user/res/ptadd/btn-x.png" class="button_close_popup"></label>
+        <p>이동을 원하는 지점을 선택해 주세요.</p>
         <div class="pters_table">
-            <div class="pters_table_cell_head table_lecture_name">프로그램명</div>
+            <div class="pters_table_cell_head table_lecture_name">지점명</div>
             <div class="pters_table_cell_head table_trainer_name">강사</div>
             <!--<div class="pters_table_cell">연락처</div>-->
             <div class="pters_table_cell_head table_selection">선택</div>

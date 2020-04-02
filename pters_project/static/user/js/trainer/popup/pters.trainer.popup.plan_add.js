@@ -44,7 +44,7 @@ class Plan_add{
                 }
             ,
             memo:"",
-
+            schedule_holding_extension_flag: OFF,
             duplicate_plan_when_add:[]
         };
 
@@ -255,29 +255,41 @@ class Plan_add{
         let classic_time_selector = this.dom_row_classic_time_selector();
         let repeat_select_row = this.dom_row_repeat_select();
         let memo_select_row = this.dom_row_memo_select();
+        let schedule_holding_extension_flag = this.dom_row_schedule_holding_extension_select();
 
         let display = "";
-        if(this.list_type != "lesson"){
+        if(this.list_type == "off"){
             display = 'none';
         }
 
         let html;
         if(this.time_selector == CLASSIC){
-            html =  `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('수업') + lecture_select_row + '</div>' +
-                    `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('회원') + member_select_row+'</div>' +
+            html =  `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('수업', null, true) + lecture_select_row + '</div>' +
+                    `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('회원', null, this.data.lecture_type_cd[0] === LECTURE_TYPE_ONE_TO_ONE ? true : false) + member_select_row+'</div>' +
                     '<div class="obj_input_box_full">' +  
-                                                    CComponent.dom_tag('일자') + date_select_row + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>' +
-                                                    CComponent.dom_tag('진행 시간') + classic_time_selector +'<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>' +
+                                                    CComponent.dom_tag('일자', null, true) + date_select_row + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>' +
+                                                    CComponent.dom_tag('진행 시간', null, true) + classic_time_selector +'<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>' +
                                                     CComponent.dom_tag('반복') + repeat_select_row + '</div>' +
                     '<div class="obj_input_box_full">'+  CComponent.dom_tag(`메모 <span style="color:var(--font-highlight);display:${display}">(회원님께 공유되는 메모입니다.)</span>`) + memo_select_row + '</div>';
         }else if(this.time_selector == BASIC){
-            html =  `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('수업') + lecture_select_row + '</div>' +
-                    `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('회원') + member_select_row+'</div>' +
+            html =  `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('수업', null, true) + lecture_select_row + '</div>' +
+                    `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('회원', null, this.data.lecture_type_cd[0] === LECTURE_TYPE_ONE_TO_ONE ? true : false) + member_select_row+'</div>' +
                     '<div class="obj_input_box_full">' +  
-                                                    CComponent.dom_tag('일자') + date_select_row + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>' +
-                                                    CComponent.dom_tag('진행 시간') + start_time_select_row + end_time_select_row  +'<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>' +
+                                                    CComponent.dom_tag('일자', null, true) + date_select_row + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>' +
+                                                    CComponent.dom_tag('진행 시간', null, true) + start_time_select_row + end_time_select_row  +'<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>' +
                                                     CComponent.dom_tag('반복') + repeat_select_row + '</div>' +
                     '<div class="obj_input_box_full">'+  CComponent.dom_tag(`메모 <span style="color:var(--font-highlight);display:${display}">(회원님께 공유되는 메모입니다.)</span>`) + memo_select_row + '</div>';
+        }
+
+        if(this.list_type == "closed"){
+            html =  '<div class="obj_input_box_full">' +
+                                                    CComponent.dom_tag('일자', null, true) + date_select_row + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>' +
+                                                    CComponent.dom_tag('반복') + repeat_select_row + '</div>' +
+                    '<div class="obj_input_box_full">'+  CComponent.dom_tag(`메모 <span style="color:var(--font-highlight);display:${display}">(회원님께 공유되는 메모입니다.)</span>`) + memo_select_row + '</div>'+
+                    '<div class="obj_input_box_full">'+ CComponent.dom_tag('자동 회원권 기간 연장') + schedule_holding_extension_flag +
+                                    "<div style='padding-left:42px;font-size:12px;color:var(--font-highlight);letter-spacing:-0.6px;font-weight:normal'>활성:휴무일에 진행중인 모든 회원권이 자동 연장됩니다.</div>" +
+                                    "<div style='padding-left:42px;font-size:12px;color:var(--font-highlight);letter-spacing:-0.6px;font-weight:normal'>비활성:회원권이 연장되지 않습니다.</div>"+'</div>';
+
         }
         
         return html;
@@ -297,7 +309,8 @@ class Plan_add{
         <div class="plan_add_bottom_tools_wrap">
             <div class="list_type_tab_wrap">
                 <div onclick="${this.instance}.switch_type('lesson');" class="list_tab_content ${this.list_type == "lesson" ? "tab_selected anim_pulse_strong" : ""}">수업</div>
-                <div onclick="${this.instance}.switch_type('off');" class="list_tab_content ${this.list_type == "off" ? "tab_selected anim_pulse_strong" : ""}">OFF(일반일정)</div>
+                <div style="padding:0;" onclick="${this.instance}.switch_type('off');" class="list_tab_content ${this.list_type == "off" ? "tab_selected anim_pulse_strong" : ""}">OFF(일반일정)</div>
+                <div onclick="${this.instance}.switch_type('closed');" class="list_tab_content ${this.list_type == "closed" ? "tab_selected anim_pulse_strong" : ""}">휴무일</div>
             </div>
         </div>
         `;
@@ -306,7 +319,7 @@ class Plan_add{
 
     dom_row_lecture_select(){
         let id = 'select_lecture';
-        let title = this.data.lecture_name.length == 0 ? '수업*' : this.data.lecture_name.join(', ');
+        let title = this.data.lecture_name.length == 0 ? '수업' : this.data.lecture_name.join(', ');
         let icon = CImg.lecture();
         let icon_r_visible = SHOW;
         let icon_r_text = "";
@@ -356,7 +369,7 @@ class Plan_add{
 
     dom_row_member_select(){
         let id = 'select_member';
-        let title = this.data.member_name.length == 0 ? '회원*' : this.data.member_name.join(', ');
+        let title = this.data.member_name.length == 0 ? '회원' : this.data.member_name.join(', ');
         let icon = CImg.members();
         let icon_r_visible = SHOW;
         let icon_r_text = "";
@@ -382,7 +395,7 @@ class Plan_add{
     dom_row_date_select(){
         //등록하는 행을 만든다.
         let id = 'select_date';
-        let title = this.data.date_text == null ? '일자*' : this.data.date_text;
+        let title = this.data.date_text == null ? '일자' : this.data.date_text;
         let icon = CImg.date();
         let icon_r_visible = NONE;
         let icon_r_text = "";
@@ -416,7 +429,7 @@ class Plan_add{
 
     dom_row_start_time_select(){
         let id = 'select_start';
-        let title = this.data.start_time_text == null ? '시작 시각*' : this.data.start_time_text;
+        let title = this.data.start_time_text == null ? '시작 시각' : this.data.start_time_text;
         let icon = CImg.blank();
         let icon_r_visible = NONE;
         let icon_r_text = "";
@@ -454,7 +467,7 @@ class Plan_add{
 
     dom_row_end_time_select(){
         let id = 'select_end';
-        let title = this.data.end_time_text == null ? '종료 시각*' : this.data.end_time_text;
+        let title = this.data.end_time_text == null ? '종료 시각' : this.data.end_time_text;
         let icon = CImg.blank();
         let icon_r_visible = NONE;
         let icon_r_text = "";
@@ -520,7 +533,7 @@ class Plan_add{
         let root_content_height = $root_content.height();
 
         let id = 'classic_time_selector';
-        let title = this.data.start_time_text == null ? '시작 시각*' : this.data.start_time_text;
+        let title = this.data.start_time_text == null ? '시작 시각' : this.data.start_time_text;
         let icon = CImg.blank();
         let icon_r_visible = NONE;
         let icon_r_text = "";
@@ -555,7 +568,7 @@ class Plan_add{
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, callback);
 
         let id2 = 'classic_time_selector2';
-        let title2 = this.data.end_time_text == null ? '종료 시각*' : this.data.end_time_text;
+        let title2 = this.data.end_time_text == null ? '종료 시각' : this.data.end_time_text;
         let icon2 = CImg.blank();
         let icon_r_visible2 = NONE;
         let icon_r_text2 = "";
@@ -650,6 +663,19 @@ class Plan_add{
         return html;
     }
 
+    dom_row_schedule_holding_extension_select(){
+        let id = "schedule_extension_select";
+        let power = this.data.schedule_holding_extension_flag;
+        let style = {"margin-top":"10px", "margin-left":"40px"};
+        let onclick = (on_off)=>{
+            console.log('test');
+            this.data.schedule_holding_extension_flag = on_off;
+            this.render_content();
+        };
+        let html = CComponent.toggle_button (id, power, style, onclick);
+        return html;
+    }
+
     switch_type(type){
         if(type == this.list_type){
             return false;
@@ -662,6 +688,11 @@ class Plan_add{
 
             case "off":
                 this.list_type = "off";
+                this.render();
+            break;
+
+            case "closed":
+                this.list_type = "closed";
                 this.render();
             break;
         }
@@ -690,13 +721,25 @@ class Plan_add{
         let end_dt = DateRobot.to_yyyymmdd(this.data.date.year, this.data.date.month, this.data.date.date) + ' ' + this.data.end_time;
         let repeat_start_date = DateRobot.to_yyyymmdd(this.data.date.year, this.data.date.month, this.data.date.date);
         let repeat_end_date = DateRobot.to_yyyymmdd(this.data.repeat.repeat_end.year, this.data.repeat.repeat_end.month, this.data.repeat.repeat_end.date);
-
-        let data = {"lecture_id":this.list_type == "off" ? "" : this.data.lecture_id[0],
+        let en_dis_type = 0;
+        let member_ids = [];
+        let lecture_id = '';
+        if(this.list_type == "closed"){
+            en_dis_type = 3;
+            start_dt = DateRobot.to_yyyymmdd(this.data.date.year, this.data.date.month, this.data.date.date)+ ' 00:00';
+            end_dt = DateRobot.to_yyyymmdd(this.data.date.year, this.data.date.month, this.data.date.date) + ' 24:00';
+        }
+        else if(this.list_type == "lesson"){
+            en_dis_type = 1;
+            member_ids = this.data.member_id;
+            lecture_id = this.data.lecture_id[0];
+        }
+        let data = {"lecture_id":lecture_id,
                     "start_dt": start_dt,
                     "end_dt": end_dt,
                     "note":this.data.memo, "duplication_enable_flag": 1,
-                    "en_dis_type":this.list_type == "off" ? 0 : 1, "member_ids":this.list_type == "off" ? [] : this.data.member_id,
-
+                    "en_dis_type":en_dis_type, "member_ids":member_ids,
+                    "extension_flag":this.data.schedule_holding_extension_flag,
                     //repeat 관련
                     "repeat_freq":"WW", 
                     "repeat_start_date":repeat_start_date,
@@ -819,6 +862,8 @@ class Plan_add{
                     plan_name = data[i].member_name;
                 }else if(data[i].schedule_type == 2){
                     plan_name = data[i].lecture_name;
+                }else if(data[i].schedule_type == 3){
+                    plan_name = '휴무일 ('+data[i].note+')';
                 }
 
                 let check = Plan_calc.know_whether_plans_has_duplicates (start_time, end_time, plan_starttime, plan_endtime);
@@ -864,13 +909,16 @@ class Plan_add{
                 show_error_message({title:'날짜를 선택 해주세요.'});
                 return false;
             }
-            if(this.data.start_time_text == null){
-                show_error_message({title:'시작 시각을 선택 해주세요.'});
-                return false;
-            }
-            if(this.data.end_time_text == null){
-                show_error_message({title:'종료 시각을 선택 해주세요.'});
-                return false;
+
+            if(this.list_type != 'closed'){
+                if(this.data.start_time_text == null){
+                    show_error_message({title:'시작 시각을 선택 해주세요.'});
+                    return false;
+                }
+                if(this.data.end_time_text == null){
+                    show_error_message({title:'종료 시각을 선택 해주세요.'});
+                    return false;
+                }
             }
             if(this.data.repeat.power == ON){
                 if(this.data.repeat.day.length == 0){

@@ -669,7 +669,7 @@ class Statistics_func{
         if(async == undefined){
             async = true;
         }
-        //프로그램 리스트 서버에서 불러오기
+        //지점 리스트 서버에서 불러오기
         $.ajax({
             url: url,
             type:'GET',
@@ -711,7 +711,7 @@ class Statistics_func{
     }
 
     static update(data, callback, error_callback){
-        //프로그램 추가
+        //지점 추가
         $.ajax({
             url:"/trainer/update_statistics_info/",
             type:'POST',
@@ -756,7 +756,7 @@ class Statistics_func{
     }
 
     static delete(data, callback, error_callback){
-        //프로그램 추가
+        //지점 추가
         $.ajax({
             url:"/trainer/delete_statistics_info/",
             type:'POST',

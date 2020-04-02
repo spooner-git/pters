@@ -128,7 +128,7 @@ const TICKET_PAY_METHOD = {
 // 일지 공개 타입
 const DAILY_RECORD_OPEN_TYPE = {
     0:"나만 보기", 
-    1:"수강 회원님과 공유"
+    1:"회원님과 공유"
 };
 
 /* 정렬 관련된 값 */
@@ -215,6 +215,7 @@ const POPUP_MEMBER_SCHEDULE_HISTORY = 'popup_member_schedule_history';
 const POPUP_MEMBER_TICKET_HISTORY = 'popup_member_ticket_history';
 const POPUP_MEMBER_TICKET_MODIFY = 'popup_member_ticket_modify';
 const POPUP_MEMBER_TICKET_REFUND = 'popup_member_ticket_refund';
+const POPUP_MEMBER_TICKET_HOLDING = 'popup_member_ticket_holding';
 
 const POPUP_ADDRESS_MEMBER_ATTEND = 'popup_member_attend';
 const POPUP_ADDRESS_PLAN_DAILY_RECORD = 'popup_plan_daily_record';
@@ -324,7 +325,7 @@ const LECTURE_SCHEDULE_STATUS = {"NP" : "진행전", "PE": "완료"};
 const LECTURE_SCHEDULE_STATUS_COLOR = {"NP" : "var(--font-sub-light)", "PC": "orange", "PE": "var(--font-main)"};
 const APPROVE_SCHEDULE_STATUS = {"AP": "예약 확정", "WP":"대기 예약"};
 const SCHEDULE_STATUS_COLOR = {"NP" : "var(--font-main)", "PC": "orange", "PE": "green"};
-const TICKET_STATUS = {"IP": "진행중", "PE": "종료", "RF": "환불"};
+const TICKET_STATUS = {"IP": "진행중", "PE": "종료", "RF": "환불", "HD":"홀딩"};
 const TICKET_STATUS_COLOR = {"IP": "green", "PE": "var(--font-main)", "RF": "orange"};
 const PAY_TYPE_NAME = {"SINGLE": "1회 결제", "PERIOD": "정기 결제 / 1 개월", "":"없음", "FREE_EVENT":"무료 이벤트", "CHANGE":"상품 변경"};
 const PAY_STATUS = {"paid":"결제 완료", "failed":"결제 실패", "cancelled":"결제 취소", "reserve":"결제 예정"};
@@ -340,7 +341,7 @@ const LECTURE_TYPE_NORMAL = 'NORMAL';
 
 
 
-//프로그램 리스트
+//지점 리스트
 const PROGRAM_CATEGORY = {
     TR:{name:"스포츠",
         sub_category:{
@@ -395,7 +396,7 @@ const PROGRAM_CATEGORY = {
 //     schedule:{KR:"일정", EN:"Schedule", JP:"カレンダー"},
 //     member:{KR:"회원", EN:"Member", JP:"会員"},
 //     lecture:{KR:"수업", EN:"Lecture", JP:"授業"},
-//     ticket:{KR:"수강권", EN:"Ticket", JP:"受講券"},
+//     ticket:{KR:"회원권", EN:"Ticket", JP:"受講券"},
 //     statistics:{KR:"통계", EN:"Statistics", JP:"統計"},
 //     attend_check:{KR:"출석 체크", EN:"Attend check", JP:"セルフ出席チェックモード"},
 //     notification:{KR:"알림", EN:"Notification", JP:"通知"},

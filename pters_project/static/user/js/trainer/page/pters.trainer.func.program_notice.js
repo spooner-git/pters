@@ -63,7 +63,7 @@ class ProgramNotice {
         document.querySelector(this.target.install).innerHTML = html;
 
         // let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();program_notice_list_popup.clear();">${CImg.arrow_left()}</span>`;
-        // let top_center = `<span class="icon_center">프로그램 공지사항</span>`;
+        // let top_center = `<span class="icon_center">지점 공지사항</span>`;
         // let top_right = `<span class="icon_right">
         //                     <span class=".add_program_notice" onclick="${this.instance}.event_add_new();">
         //                         ${CImg.plus("", {"vertical-align":"middle"})}

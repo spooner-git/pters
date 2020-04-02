@@ -240,7 +240,7 @@ class DateRobot{
         let yyyymmdd2 = Number(`${year2}${month2}${date2}`);
 
         if(yyyymmdd1 > yyyymmdd2){
-            return true
+            return true;
         }
         return false;
     }
@@ -876,8 +876,8 @@ class PassInspector{
 
     ticket_create(){
         let limit_number = Number(this.data.auth_package_create.active);
-        // let limit_type = "수강권 작성 권한이 없습니다.";
-        let limit_type = `${this.data.auth_package_create.limit_type}의 수강권 작성 권한이 없습니다.`;
+        // let limit_type = "회원권 작성 권한이 없습니다.";
+        let limit_type = `${this.data.auth_package_create.limit_type}의 회원권 작성 권한이 없습니다.`;
 
         if(limit_number == 0){
             return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
@@ -887,8 +887,8 @@ class PassInspector{
 
     ticket_read(){
         let limit_number = Number(this.data.auth_package_read.active);
-        // let limit_type = "수강권 읽기 권한이 없습니다.";
-        let limit_type = `${this.data.auth_package_read.limit_type}의 수강권 조회 권한이 없습니다.`;
+        // let limit_type = "회원권 읽기 권한이 없습니다.";
+        let limit_type = `${this.data.auth_package_read.limit_type}의 회원권 조회 권한이 없습니다.`;
 
         if(limit_number == 0){
             return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
@@ -898,8 +898,8 @@ class PassInspector{
 
     ticket_update(){
         let limit_number = Number(this.data.auth_package_update.active);
-        // let limit_type = "수강권 수정 권한이 없습니다.";
-        let limit_type = `${this.data.auth_package_update.limit_type}의 수강권 수정 권한이 없습니다.`;
+        // let limit_type = "회원권 수정 권한이 없습니다.";
+        let limit_type = `${this.data.auth_package_update.limit_type}의 회원권 수정 권한이 없습니다.`;
 
         if(limit_number == 0){
             return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
@@ -909,8 +909,8 @@ class PassInspector{
 
     ticket_delete(){
         let limit_number = Number(this.data.auth_package_delete.active);
-        // let limit_type = "수강권 삭제 권한이 없습니다.";
-        let limit_type = `${this.data.auth_package_delete.limit_type}의 수강권 삭제 권한이 없습니다.`;
+        // let limit_type = "회원권 삭제 권한이 없습니다.";
+        let limit_type = `${this.data.auth_package_delete.limit_type}의 회원권 삭제 권한이 없습니다.`;
 
         if(limit_number == 0){
             return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
@@ -962,7 +962,7 @@ class PassInspector{
 
     program_notice_create(){
         let limit_number = Number(this.data.auth_notice_create.active);
-        // let limit_type = "수강권 작성 권한이 없습니다.";
+        // let limit_type = "회원권 작성 권한이 없습니다.";
         let limit_type = `${this.data.auth_notice_create.limit_type}의 공지사항 작성 권한이 없습니다.`;
 
         if(limit_number == 0){
@@ -974,7 +974,7 @@ class PassInspector{
     program_notice_read(){
 
         let limit_number = Number(this.data.auth_notice_read.active);
-        // let limit_type = "수강권 읽기 권한이 없습니다.";
+        // let limit_type = "회원권 읽기 권한이 없습니다.";
         let limit_type = `${this.data.auth_notice_read.limit_type}의 공지사항 조회 권한이 없습니다.`;
 
         if(limit_number == 0){
@@ -985,7 +985,7 @@ class PassInspector{
 
     program_notice_update(){
         let limit_number = Number(this.data.auth_notice_update.active);
-        // let limit_type = "수강권 수정 권한이 없습니다.";
+        // let limit_type = "회원권 수정 권한이 없습니다.";
         let limit_type = `${this.data.auth_notice_update.limit_type}의 공지사항 수정 권한이 없습니다.`;
 
         if(limit_number == 0){
@@ -1017,7 +1017,7 @@ class PassInspector{
 
     program_board_create(){
         // let limit_number = Number(this.data.auth_package_create.active);
-        // // let limit_type = "수강권 작성 권한이 없습니다.";
+        // // let limit_type = "회원권 작성 권한이 없습니다.";
         // let limit_type = `${this.data.auth_package_create.limit_type}의 공지 작성 권한이 없습니다.`;
         //
         // if(limit_number == 0){
@@ -1028,7 +1028,7 @@ class PassInspector{
 
     program_board_read(){
         // let limit_number = Number(this.data.auth_program_notice_read.active);
-        // // let limit_type = "수강권 읽기 권한이 없습니다.";
+        // // let limit_type = "회원권 읽기 권한이 없습니다.";
         // let limit_type = `${this.data.auth_package_read.limit_type}의 공지 조회 권한이 없습니다.`;
         //
         // if(limit_number == 0){
@@ -1039,7 +1039,7 @@ class PassInspector{
 
     program_board_update(){
         // let limit_number = Number(this.data.auth_program_notice_update.active);
-        // // let limit_type = "수강권 수정 권한이 없습니다.";
+        // // let limit_type = "회원권 수정 권한이 없습니다.";
         // let limit_type = `${this.data.auth_program_notice_update.limit_type}의 공지 수정 권한이 없습니다.`;
         //
         // if(limit_number == 0){
@@ -1076,7 +1076,7 @@ class PassInspector{
 
     program_create(){
         let limit_number = Number(this.data.auth_program_create.active);
-        let limit_type = `${this.data.auth_program_create.limit_type}의 프로그램 작성 권한이 없습니다.`;
+        let limit_type = `${this.data.auth_program_create.limit_type}의 지점 작성 권한이 없습니다.`;
 
         if(limit_number == 0){
             return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
@@ -1086,7 +1086,7 @@ class PassInspector{
 
     program_read(){
         let limit_number = Number(this.data.auth_program_read.active);
-        let limit_type = `${this.data.auth_program_read.limit_type}의 프로그램 읽기 권한이 없습니다.`;
+        let limit_type = `${this.data.auth_program_read.limit_type}의 지점 읽기 권한이 없습니다.`;
 
         if(limit_number == 0){
             return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
@@ -1096,7 +1096,7 @@ class PassInspector{
 
     program_update(){
         let limit_number = Number(this.data.auth_program_update.active);
-        let limit_type = `${this.data.auth_program_update.limit_type}의 프로그램 수정 권한이 없습니다.`;
+        let limit_type = `${this.data.auth_program_update.limit_type}의 지점 수정 권한이 없습니다.`;
 
         if(limit_number == 0){
             return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
@@ -1106,7 +1106,7 @@ class PassInspector{
 
     program_delete(){
         let limit_number = Number(this.data.auth_program_delete.active);
-        let limit_type = `${this.data.auth_program_delete.limit_type}의 프로그램 삭제 권한이 없습니다.`;
+        let limit_type = `${this.data.auth_program_delete.limit_type}의 지점 삭제 권한이 없습니다.`;
 
         if(limit_number == 0){
             return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};

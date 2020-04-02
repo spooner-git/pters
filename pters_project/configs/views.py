@@ -305,6 +305,8 @@ def func_setting_data_update(request, group):
 
         request.session['setting_schedule_alarm_minute'] = context['setting_schedule_alarm_minute']
 
+        request.session['setting_attend_mode_max_num_view_available'] = context['setting_attend_mode_max_num_view_available']
+
         if group == 'trainee':
             try:
                 setting_data = SettingTb.objects.get(member_id=request.user.id, setting_type_cd='LT_LAN_01')
@@ -415,7 +417,7 @@ def get_function_auth_type_cd(request):
                 request.session['auth_info'][function_auth_type_cd_name]['active'] = function_info.enable_flag
                 if str(function_info.enable_flag) == '0':
                     request.session['auth_info'][function_auth_type_cd_name]['limit_num'] = function_info.enable_flag
-                request.session['auth_info'][function_auth_type_cd_name]['limit_type'] = str('공유 프로그램')
+                request.session['auth_info'][function_auth_type_cd_name]['limit_type'] = str('공유 지점')
 
 
 def get_background_url(request):

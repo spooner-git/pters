@@ -39,7 +39,7 @@ var multi_language_set = {
                                     "text-groupmanage":"그룹",
                                     "text-classmange":"클래스",
                                     "text-lecturemanage":"수업",
-                                    "text-ticketmanage":"수강권",
+                                    "text-ticketmanage":"회원권",
                                     "text-centermanage":"센터 관리",
                                     "text-employeemanage":"직원 관리",
                                     "text-analytics":"통계",
@@ -47,8 +47,8 @@ var multi_language_set = {
                                     "text-nameAttach":"님",
                                     "text-logout":"로그아웃",
                                     "text-alarm":"알림",
-                                    "text-program":"프로그램",
-                                    "text-programselect":"프로그램 선택",
+                                    "text-program":"지점",
+                                    "text-programselect":"지점 선택",
                                     "text-mypage":"마이페이지",
                                     "text-help":"이용문의",
                                     "text-payment":"PTERS 패스",
@@ -56,7 +56,7 @@ var multi_language_set = {
                                     "text-m":"월",
 
                                     "text-basicsetting":"기본 설정",
-                                    "text-programmanage":"프로그램 관리",
+                                    "text-programmanage":"지점 관리",
                                     "text-reservesetting":"회원 예약 설정",
                                     "text-pushsetting":"푸시 알림 설정",
                                     "text-bgsetting":"배경화면 설정",
@@ -91,7 +91,7 @@ var multi_language_set = {
 
                                     "text-thisgroupmember":"이 그룹 회원",
                                     "text-listloading":"리스트 불러오는 중...",
-                                    "text-moveprogram":"프로그램을 선택하면 이동합니다.",
+                                    "text-moveprogram":"지점을 선택하면 이동합니다.",
                                     "text-memocaution":"레슨일정의 메모는 회원님께 공유됩니다.",
 
                                     "text-deletequestion-plan":"정말 일정을 취소하시겠습니까?",

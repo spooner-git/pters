@@ -201,11 +201,11 @@ class Setting_sharing_member_auth{
     }
 
     dom_sub_assembly_ticket(){
-        let ticket = this.dom_row_share_menu_title("수강권", "ticket");
-        let ticket_auth_create = this.dom_row_share_menu_auth_toggle("수강권", "등록", "ticket", "create");
-        let ticket_auth_read = this.dom_row_share_menu_auth_toggle("수강권", "조회", "ticket", "read");
-        let ticket_auth_update = this.dom_row_share_menu_auth_toggle("수강권", "수정", "ticket", "update");
-        let ticket_auth_delete = this.dom_row_share_menu_auth_toggle("수강권", "삭제", "ticket", "delete");
+        let ticket = this.dom_row_share_menu_title("회원권", "ticket");
+        let ticket_auth_create = this.dom_row_share_menu_auth_toggle("회원권", "등록", "ticket", "create");
+        let ticket_auth_read = this.dom_row_share_menu_auth_toggle("회원권", "조회", "ticket", "read");
+        let ticket_auth_update = this.dom_row_share_menu_auth_toggle("회원권", "수정", "ticket", "update");
+        let ticket_auth_delete = this.dom_row_share_menu_auth_toggle("회원권", "삭제", "ticket", "delete");
 
         let child_assemble = this.data.ticket.read == ON ? ticket_auth_read + ticket_auth_create +  ticket_auth_update + ticket_auth_delete : "";
 
@@ -285,7 +285,7 @@ class Setting_sharing_member_auth{
         }
         let style = {"font-size":"13px", "font-weight":"500", "background-color":"var(--bg-highlight)", "color":"var(--fundamental-white)", "line-height":"40px"};
         let onclick = ()=>{
-            this.event_select_shared_status(`정말 ${this.member_name}님과 현재 프로그램을 ${title} 하시겠습니까?`);
+            this.event_select_shared_status(`정말 ${this.member_name}님과 현재 지점을 ${title} 하시겠습니까?`);
         };
         let html = CComponent.button (id, title, style, onclick);
         return html;
@@ -298,7 +298,7 @@ class Setting_sharing_member_auth{
         //     }},
         //     disconnect:{text:"공유 해제", callback:()=>{
         //         let message = {
-        //             title:`정말 ${this.member_name}님과 현재 프로그램 공유를 해제 하시겠습니까?`
+        //             title:`정말 ${this.member_name}님과 현재 지점 공유를 해제 하시겠습니까?`
         //         };
         //         show_user_confirm (message, ()=>{
         //             this.shared_status = AUTH_TYPE_DELETE;

@@ -96,9 +96,9 @@ class Service_helper {
     dom_content_2(){
         let html = `<div class="content_image_wrapper">
                         <div class="content_text_left_top">
-                            <div style="font-size:13px;font-weight:500;letter-spacing:-1.2px;color:var(--font-highlight);margin-bottom:10px;">Step 1. 프로그램</div>
+                            <div style="font-size:13px;font-weight:500;letter-spacing:-1.2px;color:var(--font-highlight);margin-bottom:10px;">Step 1. 지점</div>
                             <div style="font-size:16px;font-weight:500;letter-spacing:-1.2px;">자신에게 해당되는</div>
-                            <div style="font-size:16px;font-weight:bold;letter-spacing:-1.2px;">프로그램 선택</div>
+                            <div style="font-size:16px;font-weight:bold;letter-spacing:-1.2px;">지점 선택</div>
                         </div>
                         <img src="/static/common/img/tutorial/pters_tutorial_2.png">
                     </div>`;
@@ -120,9 +120,9 @@ class Service_helper {
     dom_content_4(){
         let html = `<div class="content_image_wrapper">
                         <div class="content_text_left_top">
-                            <div style="font-size:13px;font-weight:500;letter-spacing:-1.2px;color:var(--font-highlight);margin-bottom:10px;">Step 3. 수강권</div>
+                            <div style="font-size:13px;font-weight:500;letter-spacing:-1.2px;color:var(--font-highlight);margin-bottom:10px;">Step 3. 회원권</div>
                             <div style="font-size:16px;font-weight:500;letter-spacing:-1.2px;">내가 만든 수업들로</div>
-                            <div style="font-size:16px;font-weight:bold;letter-spacing:-1.2px;">다양한 수강권을 생성</div>
+                            <div style="font-size:16px;font-weight:bold;letter-spacing:-1.2px;">다양한 회원권을 생성</div>
                         </div>
                         <img src="/static/common/img/tutorial/pters_tutorial_4.png">
                     </div>`;
@@ -134,7 +134,7 @@ class Service_helper {
                         <div class="content_text_left_top">
                             <div style="font-size:13px;font-weight:500;letter-spacing:-1.2px;color:var(--font-highlight);margin-bottom:10px;">Step 4. 회원</div>
                             <div style="font-size:16px;font-weight:500;letter-spacing:-1.2px;">회원 정보를 기입하고</div>
-                            <div style="font-size:16px;font-weight:bold;letter-spacing:-1.2px;">등록할 수강권을 선택</div>
+                            <div style="font-size:16px;font-weight:bold;letter-spacing:-1.2px;">등록할 회원권을 선택</div>
                         </div>
                         <img src="/static/common/img/tutorial/pters_tutorial_5.png">
                     </div>`;

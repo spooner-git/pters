@@ -2720,7 +2720,7 @@ class TicketSelector{
 
     dom_add_new_ticket(){
         let id = "add_new_ticket";
-        let title = "새로운 수강권 생성";
+        let title = "새로운 회원권 생성";
         let icon = CImg.plus();
         let icon_r_visible = SHOW;
         let icon_r_text = "";
@@ -3019,7 +3019,7 @@ class MemberSelector{
                     if(this.appendix.lecture_id != null){
                         let member_id_list = this.received_data_lecture_member.map((el)=>{return el.member_id;});
                         if(member_id_list.indexOf(member_id) == -1){ // 선택한 회원이 수업 리스트의 회원이 아니라면 (전체회원에서 선택했다면)
-                            Member_func.read_ticket_list({"member_id":member_id}, (ticket_data)=>{ // 그 회원의 수강권 리스트를 불러온다.
+                            Member_func.read_ticket_list({"member_id":member_id}, (ticket_data)=>{ // 그 회원의 회원권 리스트를 불러온다.
                                 let available_ticket = [];
                                 for(let ticket in ticket_data){
                                     let avail_count = ticket_data[ticket].member_ticket_avail_count;
@@ -3047,7 +3047,7 @@ class MemberSelector{
                                             layer_popup.enable_shade_click_close();
                                         }};
                                     }
-                                    user_option[0] = {text:"<span style='color:var(--font-highlight);'>차감 할 수강권을 선택 해주세요.</span>", callback:()=>{}};
+                                    user_option[0] = {text:"<span style='color:var(--font-highlight);'>차감 할 회원권을 선택 해주세요.</span>", callback:()=>{}};
                                     user_option["close"] = {text:"취소", callback:()=>{
                                         this.render();
                                         layer_popup.close_layer_popup();
@@ -3357,7 +3357,7 @@ class MemberPlanApproveSelector{
                     if(this.appendix.lecture_id != null){
                         let member_id_list = this.received_data_lecture_member.map((el)=>{return el.member_id;});
                         if(member_id_list.indexOf(member_id) == -1){ // 선택한 회원이 수업 리스트의 회원이 아니라면 (전체회원에서 선택했다면)
-                            Member_func.read_ticket_list({"member_id":member_id}, (ticket_data)=>{ // 그 회원의 수강권 리스트를 불러온다.
+                            Member_func.read_ticket_list({"member_id":member_id}, (ticket_data)=>{ // 그 회원의 회원권 리스트를 불러온다.
                                 let available_ticket = [];
                                 for(let ticket in ticket_data){
                                     let avail_count = ticket_data[ticket].member_ticket_avail_count;
@@ -3385,7 +3385,7 @@ class MemberPlanApproveSelector{
                                             layer_popup.enable_shade_click_close();
                                         }};
                                     }
-                                    user_option[0] = {text:"<span style='color:var(--font-highlight);'>차감 할 수강권을 선택 해주세요.</span>", callback:()=>{}};
+                                    user_option[0] = {text:"<span style='color:var(--font-highlight);'>차감 할 회원권을 선택 해주세요.</span>", callback:()=>{}};
                                     user_option["close"] = {text:"취소", callback:()=>{
                                         this.render();
                                         layer_popup.close_layer_popup();
@@ -3714,7 +3714,7 @@ class MemberPlanWaitSelector{
                     if(this.appendix.lecture_id != null){
                         let member_id_list = this.received_data_lecture_member.map((el)=>{return el.member_id;});
                         if(member_id_list.indexOf(member_id) == -1){ // 선택한 회원이 수업 리스트의 회원이 아니라면 (전체회원에서 선택했다면)
-                            Member_func.read_ticket_list({"member_id":member_id}, (ticket_data)=>{ // 그 회원의 수강권 리스트를 불러온다.
+                            Member_func.read_ticket_list({"member_id":member_id}, (ticket_data)=>{ // 그 회원의 회원권 리스트를 불러온다.
                                 let available_ticket = [];
                                 for(let ticket in ticket_data){
                                     let avail_count = ticket_data[ticket].member_ticket_avail_count;
@@ -3742,7 +3742,7 @@ class MemberPlanWaitSelector{
                                             layer_popup.enable_shade_click_close();
                                         }};
                                     }
-                                    user_option[0] = {text:"<span style='color:var(--font-highlight);'>차감 할 수강권을 선택 해주세요.</span>", callback:()=>{}};
+                                    user_option[0] = {text:"<span style='color:var(--font-highlight);'>차감 할 회원권을 선택 해주세요.</span>", callback:()=>{}};
                                     user_option["close"] = {text:"취소", callback:()=>{
                                         this.render();
                                         layer_popup.close_layer_popup();
@@ -5203,18 +5203,22 @@ class CategorySelector{
         this.upper_category = upper_category;
         this.callback = callback;
         this.received_data;
+        this.category_data = {};
         this.multiple_select = multiple_select;
         this.data = {
             name:[],
             code:[]
         };
-        this.init();
+        // this.init();
         this.set_initial_data();
     }
 
 
     init(){
-        this.render();
+        this.request_list((data)=>{
+            this.category_data = data.program_category_data;
+            this.render();
+        });
     }
 
     set_initial_data(){
@@ -5241,7 +5245,7 @@ class CategorySelector{
     }
 
     dom_list (){
-        let category_to_be_drawn = this.upper_category == null ? PROGRAM_CATEGORY : PROGRAM_CATEGORY[this.upper_category].sub_category;
+        let category_to_be_drawn = this.upper_category == null ? this.category_data : this.category_data[this.upper_category].sub_category;
         let html_to_join = [];
         for(let item in category_to_be_drawn){
             let checked = this.data.code.indexOf(item) != -1 ? 1 : 0; //타겟이 이미 가진 데이터를 get
@@ -5274,8 +5278,43 @@ class CategorySelector{
     }
 
     request_list (callback){
-        // this.received_data = color_data;
-        // callback();
+
+        $.ajax({
+            url:'/trainer/get_program_category/',
+            type:'GET',
+            data: {},
+            dataType : 'JSON',
+
+            beforeSend:function (){
+                // ajax_load_image(SHOW);
+            },
+
+            //통신성공시 처리
+            success:function (data){
+                check_app_version(data.app_version);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message({title:data.messageArray[0]});
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(data);
+                }
+
+                return data;
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function (){
+                // ajax_load_image(HIDE);
+            },
+
+            //통신 실패시 처리
+            error:function (){
+                console.log('server error');
+            }
+        });
     }
 
     upper_right_menu(){

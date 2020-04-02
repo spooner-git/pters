@@ -1,8 +1,9 @@
 class PopupBase{
-    static base(top_left, top_center, top_right, content, bottom){
+    static base(top_left, top_center, top_right, content, bottom, top_content){
         let html = `
                     <div class="wrapper_top">
-                        ${PopupBase.wrapper_top(top_left, top_center, top_right)}
+                        <div class="wrapper_top_essential">${PopupBase.wrapper_top(top_left, top_center, top_right)}</div>
+                        <div style="${top_content == undefined ? 'display:none':''}">${top_content}</div>
                     </div>
                     <div class="wrapper_middle">
                         ${PopupBase.wrapper_middle(content)}

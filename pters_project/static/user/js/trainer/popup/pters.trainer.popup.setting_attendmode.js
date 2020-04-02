@@ -6,6 +6,7 @@ class Setting_attendmode{
         this.data = {
                 display_session_start:{text:[], value:[]},
                 display_session_end:{text:[], value:[]},
+                setting_attend_mode_max_num_view_available:ON,
                 password:null
         };
 
@@ -31,6 +32,7 @@ class Setting_attendmode{
             this.data.display_session_start.text[0] = this.data_for_selector.display_session_start.text[ this.data_for_selector.display_session_start.value.indexOf(data.setting_attend_class_prev_display_time)  ];
             this.data.display_session_end.value[0] = data.setting_attend_class_after_display_time;
             this.data.display_session_end.text[0] = this.data_for_selector.display_session_end.text[ this.data_for_selector.display_session_end.value.indexOf(data.setting_attend_class_after_display_time)  ];
+            this.data.setting_attend_mode_max_num_view_available = data.setting_attend_mode_max_num_view_available;
             this.data.password = data.setting_admin_password;
             this.render_content();
         });
@@ -75,6 +77,10 @@ class Setting_attendmode{
                     '<article class="obj_input_box_full">' +
                        this.dom_row_display_session_start() + 
                        this.dom_row_display_session_end() +
+                    '</article>'+
+                    '<article class="obj_input_box_full">' +
+                        this.dom_row_capacity_visible() +
+                        "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>출석체크 모드에서 회원님들이 정원/출석/예약 숫자를 볼 수 있습니다.</span>" +
                     '</article>';
                     // '<article class="obj_input_box_full">' +
                     //     this.dom_row_set_password() +
@@ -84,13 +90,13 @@ class Setting_attendmode{
 
     dom_row_display_session_start(){
         let id = "display_session_start";
-        let title = "수업 시작 표시";
+        let title = "수업 시작 x분전 부터 출석체크 가능";
         let icon = DELETE;
         let icon_r_visible = SHOW;
         let icon_r_text = this.data.display_session_start.text.length == 0 ? '' : this.data.display_session_start.text;
         let style = null;
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            let title = "수업 시작 표시";
+            let title = "수업 시작 x분전 부터 출석체크 가능";
             let install_target = "#wrapper_box_custom_select";
             let multiple_select = 1;
             let data = this.data_for_selector.display_session_start;
@@ -109,13 +115,13 @@ class Setting_attendmode{
 
     dom_row_display_session_end(){
         let id = "display_session_end";
-        let title = "수업 종료 표시";
+        let title = "수업 종료 x분후 까지 출석체크 가능";
         let icon = DELETE;
         let icon_r_visible = SHOW;
         let icon_r_text = this.data.display_session_end.text.length == 0 ? '' : this.data.display_session_end.text;
         let style = null;
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            let title = "수업 종료 표시";
+            let title = "수업 종료 x분후 까지 출석체크 가능";
             let install_target = "#wrapper_box_custom_select";
             let multiple_select = 1;
             let data = this.data_for_selector.display_session_end;
@@ -129,6 +135,24 @@ class Setting_attendmode{
             });
         });
         let html = row;
+        return html;
+    }
+
+    dom_row_capacity_visible(){
+        let id = `capacity_visible`;
+        let power = this.data.setting_attend_mode_max_num_view_available;
+        let style = null;
+        let capacity_visible_toggle = CComponent.toggle_button (id, power, style, (data)=>{
+                                this.data.setting_attend_mode_max_num_view_available = data; // ON or OFF
+                                this.render_content();
+                            });
+        let title_row = CComponent.text_button ("capacity_visible_text", '출석체크 모드 [정원/출석/예약] 숫자 표기', {"font-size":"15px", "font-weight":"500", "letter-spacing":"-0.8px"}, ()=>{});
+        let html = `
+                    <div style="display:table;width:100%;">
+                        <div style="display:table-cell;width:auto;vertical-align:middle">${title_row}</div>
+                        <div style="display:table-cell;width:50px;vertical-align:middle">${capacity_visible_toggle}</div>
+                    </div>
+                   `;
         return html;
     }
 
@@ -212,6 +236,7 @@ class Setting_attendmode{
             "setting_admin_password":this.data.password,
             "setting_attend_class_prev_display_time":this.data.display_session_start.value[0],
             "setting_attend_class_after_display_time":this.data.display_session_end.value[0],
+            "setting_attend_mode_max_num_view_available":this.data.setting_attend_mode_max_num_view_available,
         };
         
         Setting_attendmode_func.update(data, ()=>{

@@ -319,7 +319,7 @@ function pters_option_inspector(option_type, xhr, option_element){
         else if(option_type == "package_create"){
             var current_package_num = option_element;
             if(current_package_num >= limit_num){
-                show_caution_popup(function_lock_message("create", limit_num, "수강권 추가", limit_type));
+                show_caution_popup(function_lock_message("create", limit_num, "회원권 추가", limit_type));
                 if(xhr != ""){
                     xhr.abort(); // ajax중지
                     completeSend(); // ajax 로딩 이미지 숨기기
@@ -338,7 +338,7 @@ function pters_option_inspector(option_type, xhr, option_element){
         }else if(option_type == "package_update"){
             var current_package_num = option_element;
             if(current_package_num >= limit_num){
-                show_caution_popup(function_lock_message("create", limit_num, "진행중 수강권", limit_type));
+                show_caution_popup(function_lock_message("create", limit_num, "진행중 회원권", limit_type));
                 if(xhr != ""){
                     xhr.abort(); // ajax중지
                     completeSend(); // ajax 로딩 이미지 숨기기
@@ -361,12 +361,12 @@ function pters_option_inspector(option_type, xhr, option_element){
         }else if(option_type == "analytics_update"){
         }
 
-        //프로그램
+        //지점
         else if(option_type == "program_create"){
             // if(auth_type_cd.auth_program_create.limit_num > 0){
                 var current_program_num = option_element;
                 if(current_program_num >= limit_num){
-                    show_caution_popup(function_lock_message("create", limit_num, "프로그램 생성", limit_type));
+                    show_caution_popup(function_lock_message("create", limit_num, "지점 생성", limit_type));
                 }else{
                     location.href='/trainer/add_class/?cancel_redirect_url=/trainer/class_setting/';
                 }
@@ -375,7 +375,7 @@ function pters_option_inspector(option_type, xhr, option_element){
             // }
         }else if(option_type == "program_delete"){
             if(limit_num == 0){
-                show_caution_popup(function_lock_message("delete", 1, "프로그램 삭제", limit_type));
+                show_caution_popup(function_lock_message("delete", 1, "지점 삭제", limit_type));
                 if(xhr != ""){
                     xhr.abort(); // ajax중지
                     completeSend(); // ajax 로딩 이미지 숨기기
@@ -389,7 +389,7 @@ function pters_option_inspector(option_type, xhr, option_element){
         }else if(option_type == "program_update"){
             var $this = option_element;
             if(limit_num == 0){
-                show_caution_popup(function_lock_message("delete", 1, "프로그램명 수정", limit_type));
+                show_caution_popup(function_lock_message("delete", 1, "지점명 수정", limit_type));
             }else if(limit_num > 0){
                 if(!$this.hasClass('disabled_button')){
                     var $thiscancel = $this.siblings('._icon_cancel');
@@ -500,7 +500,7 @@ function show_free_member_use_guide(view_page){
         }
     }else if(view_page == "ticket_manage"){
         if(auth_type_cd.auth_package_create.limit_type == "무료"){
-            $popup.show().text(`(${auth_type_cd.auth_package_create.limit_type}이용자) 수강권 등록: 최대 ${auth_type_cd.auth_package_create.limit_num}개 등록 가능(진행중)`);
+            $popup.show().text(`(${auth_type_cd.auth_package_create.limit_type}이용자) 회원권 등록: 최대 ${auth_type_cd.auth_package_create.limit_num}개 등록 가능(진행중)`);
         }
     }else if(view_page == "analytics"){
         if(auth_type_cd.auth_analytics_read.limit_type == "무료"){
@@ -508,7 +508,7 @@ function show_free_member_use_guide(view_page){
         }
     }else if(view_page == "program"){
         if(auth_type_cd.auth_program_create.limit_type == "무료"){
-            $popup.show().text(`(${auth_type_cd.auth_program_create.limit_type}이용자) 프로그램: 최대 ${auth_type_cd.auth_program_create.limit_num}개 생성 가능`);
+            $popup.show().text(`(${auth_type_cd.auth_program_create.limit_type}이용자) 지점: 최대 ${auth_type_cd.auth_program_create.limit_num}개 생성 가능`);
         }
     }else if(view_page == "setting_reserve"){
         if(auth_type_cd.auth_setting_create.limit_type == "무료"){

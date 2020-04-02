@@ -129,7 +129,7 @@ const NOTICE_USAGE = 'SYS_USAGE';
 const NOTICE_UPDATE_HISTORY = 'UPDATE_HISTORY';
 const NOTICE_TYPE = {NOTICE:"공지", FAQ:"FAQ", SYS_USAGE:"사용법", UPDATE_HISTORY:"업데이트 내역"};
 const NOTICE_USE = {1:{text:"공개", color:"green"}, 0:{text:"비공개", color:"#676767"} };
-const NOTICE_TARGET = {ALL:"전체", trainer:"강사", trainee:"수강회원"};
+const NOTICE_TARGET = {ALL:"전체", trainer:"강사", trainee:"회원"};
 
 
 /* 팝업 주소 */
@@ -185,7 +185,7 @@ const COLOR_NAME_CODE = {"#fbf3bd":"바나나", "#dbe6f7":"하늘", "#ffd3d9": "
               "#ead8f2":"블루베리", "#d9c3ab":"고구마", "#ffacb7":"복숭아"};
 const SEX_CODE = {"M": "남성", "W": "여성"};
 const SCHEDULE_STATUS = {"NP" : "진행전", "PC": "결석", "PE": "출석"};
-const TICKET_STATUS = {"IP": "진행중", "PE": "종료", "RF": "환불"};
+const TICKET_STATUS = {"IP": "진행중", "PE": "종료", "RF": "환불", "HD":"홀딩"};
 const PAY_TYPE_NAME = {"SINGLE": "1회 결제", "PERIOD": "정기 결제 / 1 개월", "":"없음"};
 const PAY_STATUS = {"paid":"결제 완료", "failed":"결제 실패", "cancelled":"결제 취소"};
 const PAY_METHOD = {"card":"카드 결제", "iap": "인앱 결제", "":"-"};
@@ -200,7 +200,7 @@ const LECTURE_TYPE_NORMAL = 'NORMAL';
 
 
 
-//프로그램 리스트
+//지점 리스트
 const PROGRAM_CATEGORY = {
     TR:{name:"스포츠",
         sub_category:{
@@ -255,7 +255,7 @@ const TEXT = {
     schedule:{KR:"일정", EN:"Schedule", JP:""},
     member:{KR:"회원", EN:"Member", JP:""},
     lecture:{KR:"수업", EN:"Lecture", JP:""},
-    ticket:{KR:"수강권", EN:"Ticket", JP:""},
+    ticket:{KR:"회원권", EN:"Ticket", JP:""},
     statistics:{KR:"통계", EN:"Statistics", JP:""},
     attend_check:{KR:"출석 체크", EN:"Attend check", JP:""},
     notification:{KR:"알림", EN:"Notification", JP:""},

@@ -6,7 +6,7 @@ const TEXT = {
         schedule:{KOR:"일정", EN:"Schedule", JP:"日程"},
         member:{KOR:"회원", EN:"Member", JP:"会員"},
         lecture:{KOR:"수업", EN:"Lecture", JP:"授業"},
-        ticket:{KOR:"수강권", EN:"Ticket", JP:"受講券"},
+        ticket:{KOR:"회원권", EN:"Ticket", JP:"受講券"},
         statistics:{KOR:"통계", EN:"Statistics", JP:"統計"},
         attend_check:{KOR:"출석 체크", EN:"Attend check", JP:"出席チェック"},
         notification:{KOR:"알림", EN:"Notification", JP:"通知"},
@@ -63,23 +63,23 @@ const TEXT = {
         memo:{KOR:"메모", EN:"Memo", JP:"メモ―"},
 
 
-        //프로그램
-        program:{KOR:"프로그램", EN:"Program", JP:"プログラム"},
-        selected_program:{KOR:"선택된 프로그램", EN:"Selected", JP:"現在"},
-        shared_program:{KOR:"공유 받은 프로그램", EN:"Shared", JP:"共有されている"},
-        my_program:{KOR:"내 프로그램", EN:"My programs", JP:"マイ"},
+        //지점
+        program:{KOR:"지점", EN:"Program", JP:"プログラム"},
+        selected_program:{KOR:"선택된 지점", EN:"Selected", JP:"現在"},
+        shared_program:{KOR:"공유 받은 지점", EN:"Shared", JP:"共有されている"},
+        my_program:{KOR:"내 지점", EN:"My programs", JP:"マイ"},
         no_shared_programs:{
-            KOR:"다른 PTERS 강사님으로부터 공유 받은 프로그램이 없습니다.", 
+            KOR:"다른 PTERS 강사님으로부터 공유 받은 지점이 없습니다.",
             EN:"Any shared programs from the other PTERS teachers.", 
             JP:"他のPTERSユーザから共有してもらったプログラムがありません。"},
         sharing_my_programs:{
-            KOR:"다른 PTERS 강사님께 내 프로그램을 공유하여, 함께 관리합니다.", 
+            KOR:"다른 PTERS 강사님께 내 지점을 공유하여, 함께 관리합니다.",
             EN:"Sharing my program to the other PTERS teachers to manage together.", 
             JP:"他のPTERSユーザに自分のプログラムを共有して、一緒に管理します。"},
         
-        // 프로그램 추가
-        new_program:{KOR:"새로운 프로그램", EN:"New program", JP:"新しいプログラム"},
-        program_name:{KOR:"프로그램명", EN:"Program name", JP:"プログラム名"},
+        // 지점 추가
+        new_program:{KOR:"새로운 지점", EN:"New program", JP:"新しいプログラム"},
+        program_name:{KOR:"지점명", EN:"Program name", JP:"プログラム名"},
         field:{KOR:"분야", EN:"Field", JP:"分野"},
         sub_field:{KOR:"상세 분야", EN:"Field Detail", JP:"詳細分野"},
         please_select_field:{

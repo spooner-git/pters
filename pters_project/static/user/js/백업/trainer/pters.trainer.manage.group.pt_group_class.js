@@ -1060,8 +1060,8 @@ $(document).on('click', '._groupstatus_disabled_false', function(e){
         display_type = "inline-block";
     }
     if($(this).attr('data-groupstatus') == "IP"){
-        // var change_explain_text = '1) 수강권에서 해당 그룹이 제외됩니다.<br/>2) 소속된 회원의 수강권이 종료됩니다.';
-        var change_explain_text = '1) 수강권에서 해당 그룹이 제외됩니다.<br/>';
+        // var change_explain_text = '1) 회원권에서 해당 그룹이 제외됩니다.<br/>2) 소속된 회원의 회원권이 종료됩니다.';
+        var change_explain_text = '1) 회원권에서 해당 그룹이 제외됩니다.<br/>';
         $('._explain').html(change_explain_text);
         $('._complete').css('display', display_type);
         $('._resume, ._refund, ._delete').css('display', 'none');
@@ -1077,8 +1077,8 @@ $(document).on('click', '._groupstatus_disabled_false', function(e){
             // $('.lectureStateChangeSelectPopup').attr('data-grouptype','');
         });
     }else if($(this).attr('data-groupstatus') == "PE"){
-        // var change_explain_text = '1) 해당 그룹이 포함되었던 수강권에 다시 추가됩니다.<br/>2) 남은 횟수가 있는 소속된 회원의 수강권이 재개됩니다.';
-        var change_explain_text = '1) 해당 그룹이 포함되었던 수강권에 다시 추가됩니다.<br/>';
+        // var change_explain_text = '1) 해당 그룹이 포함되었던 회원권에 다시 추가됩니다.<br/>2) 남은 횟수가 있는 소속된 회원의 회원권이 재개됩니다.';
+        var change_explain_text = '1) 해당 그룹이 포함되었던 회원권에 다시 추가됩니다.<br/>';
         $('._explain').html(change_explain_text);
         $('._resume').css('display', display_type);
         $('._complete, ._refund, ._delete').css('display', 'none');
@@ -2406,7 +2406,7 @@ function groupMemberListSet(group_id, jsondata){
     // }
     //$('div.groupMembersWrap[data-groupid="'+group_id+'"]').html(EMPTY_EXPLAIN+html);
 
-    //수업관리에서 수업에 회원을 넣고 빼는건 이제 금지. 수강권에서 한다.
+    //수업관리에서 수업에 회원을 넣고 빼는건 이제 금지. 회원권에서 한다.
     var html = htmlToJoin.join('');
     if(jsondata.db_id.length == 0){
         if($('#currentGroupList').css('display') == "block"){
@@ -2533,7 +2533,7 @@ function groupMemberListSet_mobile(group_id, lecture_status, jsondata){
     // }
     //$('div.groupMembersWrap[data-groupid="'+group_id+'"]').html(EMPTY_EXPLAIN+html);
 
-    // 수업관리에서 수업에 회원을 넣고 빼는건 이제 금지. 수강권에서 한다.
+    // 수업관리에서 수업에 회원을 넣고 빼는건 이제 금지. 회원권에서 한다.
     var html = htmlToJoin.join('');
     // if(jsondata.db_id.length == 0){
     //     if(lecture_tab == TAB_ING){

@@ -111,7 +111,7 @@ class Setting_menu_access{
                                 this.render_content();
                             });
         let icon = power == ON ? CImg.lock("", {"vertical-align":"middle", "margin-bottom":"3px", "width":"20px"}) : CImg.unlock("", {"vertical-align":"middle", "margin-bottom":"3px", "width":"20px"});
-        let title = `${icon} 프로그램`;
+        let title = `${icon} 지점`;
         let title_row = CComponent.text_button ("program_lock_toggle", title, {"font-size":"14px", "font-weight":"500", "letter-spacing":"-0.8px"}, ()=>{});
         let html = `<article class="setting_menu_lock_wrapper obj_input_box_full">
                         <div style="display:table;width:100%;">
@@ -191,7 +191,7 @@ class Setting_menu_access{
                                 this.render_content();
                             });
         let icon = power == ON ? CImg.lock("", {"vertical-align":"middle", "margin-bottom":"3px", "width":"20px"}) : CImg.unlock("", {"vertical-align":"middle", "margin-bottom":"3px", "width":"20px"});
-        let title = `${icon} 수강권`;
+        let title = `${icon} 회원권`;
         let title_row = CComponent.text_button ("ticket_lock_toggle", title, {"font-size":"14px", "font-weight":"500", "letter-spacing":"-0.8px"}, ()=>{});
         let html = `<article class="setting_menu_lock_wrapper obj_input_box_full">
                         <div style="display:table;width:100%;">

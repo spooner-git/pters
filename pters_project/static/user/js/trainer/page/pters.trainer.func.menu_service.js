@@ -112,7 +112,7 @@ class Menu_service {
 
     dom_menu_program(){
         let id = 'menu_program';
-        let title = '프로그램';
+        let title = '지점';
         let icon = CImg.program();
         let icon_r_visible = NONE;
         let icon_r_text = "";
@@ -164,7 +164,7 @@ class Menu_service {
 
     dom_menu_ticket(){
         let id = 'menu_ticket';
-        let title = '수강권';
+        let title = '회원권';
         let icon = CImg.ticket();
         let icon_r_visible = NONE;
         let icon_r_text = "";

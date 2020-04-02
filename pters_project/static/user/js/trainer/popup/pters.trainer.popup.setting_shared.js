@@ -117,7 +117,7 @@ class Setting_shared{
                                 </div>
                             </div>`;
         let auth_ticket = `<div class="shared_member_auth" style="${ticket_auth.length == 0 ? "display:none" : ""}">
-                                <div class="auth_title">수강권</div>
+                                <div class="auth_title">회원권</div>
                                 <div class="auth_setting">
                                     ${ticket_auth.join("/")}
                                 </div>
@@ -159,7 +159,7 @@ class Setting_shared{
 
     dom_row_toolbox(){
         let title = "공유 - 받은 권한";
-        let description = `<p style="font-size:12px;font-weight:500;margin-top:5px;color:var(--font-sub-normal)">공유자가 설정한 현재 프로그램의 내 권한입니다.</p>`;
+        let description = `<p style="font-size:12px;font-weight:500;margin-top:5px;color:var(--font-sub-normal)">공유자가 설정한 현재 지점의 내 권한입니다.</p>`;
         let html = `
         <div class="setting_shared_upper_box" style="">
             <div style="display:inline-block;">
@@ -176,8 +176,8 @@ class Setting_shared{
 
     event_disconnect(){
         let message = {
-            title:`프로그램의 공유 연결을 해제합니다.`,
-            comment:`다시 연결하려면 프로그램 소유자에게 요청 해야합니다.`
+            title:`지점의 공유 연결을 해제합니다.`,
+            comment:`다시 연결하려면 지점 소유자에게 요청 해야합니다.`
         };
         show_user_confirm (message, ()=>{
             let data = {"class_id": this.program_id};

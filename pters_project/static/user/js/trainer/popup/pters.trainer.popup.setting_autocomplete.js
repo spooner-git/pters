@@ -229,7 +229,7 @@ class Setting_autocomplete{
                                 this.render_content();
                             });
         let title_row = CComponent.text_button ("ntd", '회원 자동 완료', {"font-size":"18px", "font-weight":"500", "letter-spacing":"-0.8px"}, ()=>{});
-        let explain_row = CComponent.text_button ('123123', '등록시 입력한 종료일이 지나면 해당 수강권을 종료처리합니다.', {"font-size":"12px", "letter-spacing":"-0.6px"}, ()=>{});
+        let explain_row = CComponent.text_button ('123123', '등록시 입력한 종료일이 지나면 해당 회원권을 종료처리합니다.', {"font-size":"12px", "letter-spacing":"-0.6px"}, ()=>{});
 
         let html = `<article class="setting_autocomplete_wrapper obj_input_box_full">
                         <div style="display:table;width:100%;">
