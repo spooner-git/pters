@@ -791,11 +791,14 @@ class Member_view{
             let icon_button_style_remain_count_info = {"display":"block", "padding":"6px 0 0 38px", "font-size":"13px", "font-weight":"500", "color":"var(--font-sub-normal)", "height":"16px"};
             let icon_button_style_remain_data_info = {"display":"block", "padding":"6px 0 0 38px", "font-size":"13px", "font-weight":"500", "color":"var(--font-sub-normal)", "height":"16px"};
             let icon_button_style_note_info = {"display":"block", "padding":"6px 0 12px 38px", "font-size":"13px", "font-weight":"500", "color":"var(--font-sub-normal)", "height":"auto"};
-            let html_remain_info = CComp.element("div", `등록 <span style="font-size:13px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${this.data.ticket[i].ticket_reg_count >= 99999 ? "무제한" : this.data.ticket[i].ticket_reg_count + '회'}</span>`, icon_button_style_remain_count_info) +
-                                    CComp.element("div", `잔여 <span style="font-size:13px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${this.data.ticket[i].ticket_reg_count >= 99999 ? "무제한" : this.data.ticket[i].ticket_rem_count + '회'}</span>`, icon_button_style_remain_count_info) +
-                                    CComp.element("div", `예약가능 <span style="font-size:13px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${this.data.ticket[i].ticket_reg_count >= 99999 ? "무제한" : this.data.ticket[i].ticket_avail_count + '회'}</span>`, icon_button_style_remain_count_info) +
-                                    CComp.element("div", `기간 <span style="font-size:11px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${this.data.ticket[i].start_date_text} - ${this.data.ticket[i].end_date_text}</span>`, icon_button_style_remain_data_info) +
-                                    CComp.element("div", `특이사항 <span style="display:block; white-space:pre-wrap; font-size:13px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${ticket_note}</span>`, icon_button_style_note_info);
+
+            let html_remain_info =
+                CComp.element("div", `상태 <span style="font-size:13px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${TICKET_STATUS[this.data.ticket[i].member_ticket_state_cd]}</span>`, icon_button_style_remain_count_info)+
+                CComp.element("div", `등록 <span style="font-size:13px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${this.data.ticket[i].ticket_reg_count >= 99999 ? "무제한" : this.data.ticket[i].ticket_reg_count + '회'}</span>`, icon_button_style_remain_count_info) +
+                CComp.element("div", `잔여 <span style="font-size:13px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${this.data.ticket[i].ticket_reg_count >= 99999 ? "무제한" : this.data.ticket[i].ticket_rem_count + '회'}</span>`, icon_button_style_remain_count_info) +
+                CComp.element("div", `예약가능 <span style="font-size:13px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${this.data.ticket[i].ticket_reg_count >= 99999 ? "무제한" : this.data.ticket[i].ticket_avail_count + '회'}</span>`, icon_button_style_remain_count_info) +
+                CComp.element("div", `기간 <span style="font-size:11px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${this.data.ticket[i].start_date_text} - ${this.data.ticket[i].end_date_text}</span>`, icon_button_style_remain_data_info) +
+                CComp.element("div", `특이사항 <span style="display:block; white-space:pre-wrap; font-size:13px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${ticket_note}</span>`, icon_button_style_note_info);
             let html_ticket_lecture_list = `<div>${html_to_join_lecture_list.join('')}</div>`;
 
             html_to_join.push(
