@@ -827,6 +827,7 @@ def func_add_hold_closed_date_info(user_id, class_id, member_ticket_id, schedule
 def func_delete_hold_member_ticket_info(member_closed_date_history_id):
     error = None
     member_ticket_hold_history_info = None
+    today = datetime.date.today()
     try:
         member_ticket_hold_history_info = MemberClosedDateHistoryTb.objects.get(
             member_closed_date_history_id=member_closed_date_history_id)
@@ -842,7 +843,11 @@ def func_delete_hold_member_ticket_info(member_closed_date_history_id):
             if member_ticket_tb.end_date < unlimited_end_date:
                 member_ticket_tb.end_date -= datetime.timedelta(days=date_delta)
 
-        if member_ticket_tb.state_cd == STATE_CD_HOLDING:
+        holding_check = MemberClosedDateHistoryTb.objects.filter(
+            member_ticket_tb_id=member_ticket_tb.member_ticket_id, start_date__lte=today, reason_type_cd='HD',
+            end_date__gte=today, use=USE).exclude(member_closed_date_history_id=member_closed_date_history_id).count()
+
+        if holding_check == 0 and member_ticket_tb.state_cd == STATE_CD_HOLDING:
             member_ticket_tb.state_cd = STATE_CD_IN_PROGRESS
         member_ticket_tb.save()
 
