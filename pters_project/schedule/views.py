@@ -157,19 +157,19 @@ def check_schedule_logic(request):
                                 for closed_date_info in closed_date_data:
                                     if error_temp is None:
                                         if closed_date_info.reason_type_cd == 'HD':
-                                            error_temp = member_info['member_name'] + '님의 ' + member_ticket_info.ticket_tb.name + ' 수강권이 홀딩 기간입니다.'
+                                            error_temp = member_info['member_name'] + '님의 ' + member_ticket_info.ticket_tb.name + ' 수강권이 일시정지 기간입니다.'
                                         else:
                                             error_temp = closed_date_info.note + '입니다.'
                                     else:
                                         if closed_date_info.reason_type_cd == 'HD':
-                                            error_temp = member_info['member_name'] + '님의 ' + member_ticket_info.ticket_tb.name + ' 수강권이 홀딩 기간입니다.<br/>' + error_temp
+                                            error_temp = member_info['member_name'] + '님의 ' + member_ticket_info.ticket_tb.name + ' 수강권이 일시정지 기간입니다.<br/>' + error_temp
                                         else:
                                             error_temp = closed_date_info.note + '입니다.<br/>' + error_temp
                                 #
                                 # if error_temp is None:
-                                #     error_temp = member_info['member_name'] +'님의 '+ member_ticket_info.ticket_tb.name + ' 수강권이 홀딩 기간입니다.'
+                                #     error_temp = member_info['member_name'] +'님의 '+ member_ticket_info.ticket_tb.name + ' 수강권이 일시정지 기간입니다.'
                                 # else:
-                                #     error_temp = member_info['member_name'] +'님의 '+ member_ticket_info.ticket_tb.name + ' 수강권이 홀딩 기간입니다.<br/>' + error_temp
+                                #     error_temp = member_info['member_name'] +'님의 '+ member_ticket_info.ticket_tb.name + ' 수강권이 일시정지 기간입니다.<br/>' + error_temp
 
                             if error_temp is not None:
                                 raise InternalError

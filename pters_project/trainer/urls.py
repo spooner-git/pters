@@ -102,16 +102,16 @@ urlpatterns = [
     url(r'^update_member_connection_info/$', views.update_member_connection_info_logic,
         name='update_member_connection_info'),
 
-    # 회원이 홀딩 내역 조회
+    # 회원이 일시정지 내역 조회
     url(r'^get_hold_member_ticket_list/$',
         views.GetHoldMemberTicketListView.as_view(), name='get_hold_member_ticket_list'),
-    # 회원 수강정보 홀딩 - refactoring - 확인 필요
+    # 회원 수강정보 일시정지 - refactoring - 확인 필요
     url(r'^add_hold_member_ticket_info/$',
         views.add_hold_member_ticket_info_logic, name='add_hold_member_ticket_info'),
-    # 회원 수강정보 홀딩 수정 - refactoring - 확인 필요
+    # 회원 수강정보 일시정지 수정 - refactoring - 확인 필요
     url(r'^update_hold_member_ticket_info/$',
         views.update_hold_member_ticket_info_logic, name='update_hold_member_ticket_info'),
-    # 회원 수강정보 홀딩 삭제 - refactoring - 확인 필요
+    # 회원 수강정보 일시정지 삭제 - refactoring - 확인 필요
     url(r'^delete_hold_member_ticket_info/$',
         views.delete_hold_member_ticket_info_logic, name='delete_hold_member_ticket_info'),
 

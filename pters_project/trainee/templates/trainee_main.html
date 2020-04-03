@@ -180,7 +180,7 @@
                             <span class="obj_font_size_13_weight_bold">{{ ing_member_ticket_info.member_ticket_tb.member_ticket_rem_count }}</span>/{{ ing_member_ticket_info.member_ticket_tb.member_ticket_reg_count }}
                             {% endif %}
                             <br> 기간 : ~{% if ing_member_ticket_info.member_ticket_tb.end_date|date:"Y-m-d"  == "9999-12-31" %}소진시 까지{% else %}{{ ing_member_ticket_info.member_ticket_tb.end_date | date:"Y.m.d (l)"|cut:"요일"  }}{% endif %}
-                                {% if ing_member_ticket_info.member_ticket_tb.state_cd == "HD" %} / <span class="obj_font_size_13_weight_bold obj_font_color_pters_red">홀딩</span>
+                                {% if ing_member_ticket_info.member_ticket_tb.state_cd == "HD" %} / <span class="obj_font_size_13_weight_bold obj_font_color_pters_red">일시정지</span>
                                 {% if ing_member_ticket_info.hold_tb %}({{ ing_member_ticket_info.hold_tb.start_date }}~{{ ing_member_ticket_info.hold_tb.end_date }}) {% endif %}
                                 {% endif %}
                             

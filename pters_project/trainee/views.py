@@ -545,12 +545,12 @@ def add_trainee_schedule_logic(request):
             for closed_date_info in closed_date_data:
                 if error is None:
                     if closed_date_info.reason_type_cd == 'HD':
-                        error = member_ticket_info.ticket_tb.name + ' 수강권이 홀딩 기간입니다.'
+                        error = member_ticket_info.ticket_tb.name + ' 수강권이 일시정지 기간입니다.'
                     else:
                         error = closed_date_info.note + '입니다.'
                 else:
                     if closed_date_info.reason_type_cd == 'HD':
-                        error = member_ticket_info.ticket_tb.name + ' 수강권이 홀딩 기간입니다.<br/>' + error
+                        error = member_ticket_info.ticket_tb.name + ' 수강권이 일시정지 기간입니다.<br/>' + error
                     else:
                         error = closed_date_info.note + '입니다.<br/>' + error
 

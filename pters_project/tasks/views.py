@@ -37,14 +37,14 @@ def func_update_finish_member_ticket_data():
     today = datetime.date.today()
     yesterday = today - datetime.timedelta(days=1)
 
-    # 홀딩 반영
+    # 일시정지 반영
     holding_data = MemberClosedDateHistoryTb.objects.filter(start_date__lte=today, reason_type_cd='HD',
                                                             end_date__gte=yesterday, use=USE).order_by('start_date')
 
     for holding_info in holding_data:
         member_ticket_tb = holding_info.member_ticket_tb
         if holding_info.start_date <= today <= holding_info.end_date:
-            # holding 기간에 속한 경우 홀딩 처리
+            # holding 기간에 속한 경우 일시정지 처리
             member_ticket_tb.state_cd = STATE_CD_HOLDING
 
         elif today > holding_info.end_date:

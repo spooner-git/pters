@@ -1112,12 +1112,12 @@ class GetMemberClosedDateListView(LoginRequiredMixin, AccessTestMixin, View):
                                                                 use=USE).order_by('-start_date', '-end_date')
 
             for member_closed_info in member_closed_data:
-                member_closed_reason_type_cd_name = '홀딩'
+                member_closed_reason_type_cd_name = '일시정지'
                 member_ticket_id = ''
                 if member_closed_info.reason_type_cd == 'HD':
                     if member_closed_info.member_ticket_tb is not None:
                         member_ticket_id = member_closed_info.member_ticket_tb_id
-                        member_closed_reason_type_cd_name = '홀딩 - ' + member_closed_info.member_ticket_tb.ticket_tb.name
+                        member_closed_reason_type_cd_name = member_closed_info.member_ticket_tb.ticket_tb.name
 
                 elif member_closed_info.reason_type_cd == 'PROGRAM_CLOSED':
                     member_closed_reason_type_cd_name = '휴무일 - ' + member_closed_info.member_ticket_tb.ticket_tb.name
@@ -2792,7 +2792,7 @@ class GetHoldMemberTicketListView(LoginRequiredMixin, AccessTestMixin, View):
                             json_dumps_params={'ensure_ascii': True})
 
 
-# 수강권 홀딩
+# 수강권 일시정지
 def add_hold_member_ticket_info_logic(request):
     member_ticket_id = request.POST.get('member_ticket_id', '')
     start_date = request.POST.get('start_date', '')
@@ -2827,13 +2827,13 @@ def add_hold_member_ticket_info_logic(request):
                          from_member_name=request.user.first_name,
                          class_tb_id=class_id,
                          log_info=member_ticket_info.member.name + ' 회원님의 '
-                                  + member_ticket_info.ticket_tb.name + ' 수강권', log_how='홀딩', use=USE)
+                                  + member_ticket_info.ticket_tb.name + ' 수강권', log_how='일시정지', use=USE)
         log_data.save()
 
     return render(request, 'ajax/trainer_error_ajax.html')
 
 
-# 수강권 홀딩
+# 수강권 일시정지
 def update_hold_member_ticket_info_logic(request):
     member_closed_date_history_id = request.POST.get('member_closed_date_history_id', '')
     start_date = request.POST.get('start_date', '')
@@ -2868,7 +2868,7 @@ def update_hold_member_ticket_info_logic(request):
     return render(request, 'ajax/trainer_error_ajax.html')
 
 
-# 수강권 홀딩
+# 수강권 일시정지
 def delete_hold_member_ticket_info_logic(request):
     member_closed_date_history_id = request.POST.get('member_closed_date_history_id', '')
     error = None
@@ -2885,7 +2885,7 @@ def delete_hold_member_ticket_info_logic(request):
     return render(request, 'ajax/trainer_error_ajax.html')
 
 
-# 수강권 홀딩
+# 수강권 일시정지
 def add_member_closed_date_logic(request):
     member_ticket_id = request.POST.get('member_ticket_id', '')
     start_date = request.POST.get('start_date', '')
@@ -2920,13 +2920,13 @@ def add_member_closed_date_logic(request):
                          from_member_name=request.user.first_name,
                          class_tb_id=class_id,
                          log_info=member_ticket_info.member.name + ' 회원님의 '
-                                  + member_ticket_info.ticket_tb.name + ' 수강권', log_how='홀딩', use=USE)
+                                  + member_ticket_info.ticket_tb.name + ' 수강권', log_how='일시정지', use=USE)
         log_data.save()
 
     return render(request, 'ajax/trainer_error_ajax.html')
 
 
-# 수강권 홀딩
+# 수강권 일시정지
 def update_member_closed_date_logic(request):
     member_closed_date_history_id = request.POST.get('member_closed_date_history_id', '')
     start_date = request.POST.get('start_date', '')
@@ -2961,7 +2961,7 @@ def update_member_closed_date_logic(request):
     return render(request, 'ajax/trainer_error_ajax.html')
 
 
-# 수강권 홀딩
+# 수강권 일시정지
 def delete_member_closed_date_logic(request):
     member_closed_date_history_id = request.POST.get('member_closed_date_history_id', '')
     error = None
@@ -7150,7 +7150,7 @@ def holding_test_logic(request):
     for holding_info in holding_data:
         member_ticket_tb = holding_info.member_ticket_tb
         if holding_info.start_date <= today <= holding_info.end_date:
-            # holding 기간에 속한 경우 홀딩 처리
+            # holding 기간에 속한 경우 일시정지 처리
             member_ticket_tb.state_cd = STATE_CD_HOLDING
 
         elif today > holding_info.end_date:

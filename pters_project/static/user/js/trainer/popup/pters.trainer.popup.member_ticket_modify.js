@@ -225,7 +225,7 @@ class Member_ticket_modify{
                     layer_popup.close_layer_popup();}
                 },
                 holding: {
-                    text: "홀딩", callback: () => {
+                    text: "일시정지", callback: () => {
 
                         layer_popup.close_layer_popup();
                         let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
@@ -237,7 +237,7 @@ class Member_ticket_modify{
                             member_ticket_holding = new Member_ticket_holding('.popup_member_ticket_holding', external_data, 'member_ticket_holding');
                         });}
                         // let message = {
-                        //     title: '수강권 홀딩 안내',
+                        //     title: '수강권 일시정지 안내',
                         //     comment: `수강권을 재개 하실때까지
                         //         <span style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">자동으로 종료일자가 연장</span>됩니다.`
                         // };

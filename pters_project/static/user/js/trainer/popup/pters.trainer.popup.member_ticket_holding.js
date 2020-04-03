@@ -103,12 +103,12 @@ class Member_ticket_holding{
 
         let html =
             '<div class="obj_input_box_full">'+
-                CComponent.dom_tag('홀딩 시작일') + holding_start_date +
-                CComponent.dom_tag('홀딩 종료일') + holding_end_date +
+                CComponent.dom_tag('일시정지 시작일') + holding_start_date +
+                CComponent.dom_tag('일시정지 종료일') + holding_end_date +
                 CComponent.dom_tag('특이사항') + holding_note +
                 CComponent.dom_tag('자동 기간 연장') + holding_extension_flag +
                     // `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>`+
-                // + CComponent.dom_tag('홀딩 금액') + holding_price +
+                // + CComponent.dom_tag('일시정지 금액') + holding_price +
             '</div>'
                 + holding_ticket;
 
@@ -116,11 +116,11 @@ class Member_ticket_holding{
     }
 
     dom_row_toolbox(){
-        let title = "수강권 홀딩";
+        let title = "수강권 일시정지";
         let html = `<div class="">
                         <div style="display:inline-block;padding-left:60px;">
                             <span style="font-size:20px;font-weight:bold; letter-spacing: -0.9px; color: var(--font-main);">${title}</span>
-                            <p style="font-size:11px;color:var(--font-sub-dark);margin:12px 0;">홀딩 시작일부터 종료일까지는 회원님의 예약이 불가능합니다.</p>
+                            <p style="font-size:11px;color:var(--font-sub-dark);margin:12px 0;">일시정지 시작일부터 종료일까지는 회원님의 예약이 불가능합니다.</p>
                             <span style="display:none;">${title}</span>
                         </div>
                     </div>
@@ -130,7 +130,7 @@ class Member_ticket_holding{
 
     dom_row_holding_start_date_input(){
         let id = 'member_ticket_start_holding';
-        let title = this.data.holding_start_date == null ||this.data.holding_start_date == 'None' ? '홀딩 시작일' : this.data.holding_start_date.replace(/-/gi, '.');
+        let title = this.data.holding_start_date == null ||this.data.holding_start_date == 'None' ? '일시정지 시작일' : this.data.holding_start_date.replace(/-/gi, '.');
         let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
@@ -147,7 +147,7 @@ class Member_ticket_holding{
                 let month_min = Number(this.data.member_ticket_start_date.split('-')[1]);
                 let date_min = Number(this.data.member_ticket_start_date.split('-')[2]);
                 
-                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'holding_start_date', title:'홀딩 시작일', data:{year:year, month:month, date:date}, min:{year:year_min, month:month_min, date:date_min},callback_when_set: (object)=>{
+                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'holding_start_date', title:'일시정지 시작일', data:{year:year, month:month, date:date}, min:{year:year_min, month:month_min, date:date_min},callback_when_set: (object)=>{
                     this.data.holding_start_date = DateRobot.to_yyyymmdd(object.data.year, object.data.month, object.data.date);
                     if(this.data.holding_start_date > this.data.holding_end_date){
                         this.data.holding_end_date = DateRobot.to_yyyymmdd(object.data.year, object.data.month, object.data.date);
@@ -161,7 +161,7 @@ class Member_ticket_holding{
 
     dom_row_holding_end_date_input(){
         let id = 'member_ticket_end_holding';
-        let title = this.data.holding_end_date == null ||this.data.holding_end_date == 'None' ? '홀딩 종료일' : this.data.holding_end_date.replace(/-/gi, '.');
+        let title = this.data.holding_end_date == null ||this.data.holding_end_date == 'None' ? '일시정지 종료일' : this.data.holding_end_date.replace(/-/gi, '.');
         let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
@@ -183,7 +183,7 @@ class Member_ticket_holding{
                     date = date_min;
                 }
 
-                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'holding_end_date', title:'홀딩 종료일', data:{year:year, month:month, date:date}, min:{year:year_min, month:month_min, date:date_min},callback_when_set: (object)=>{
+                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'holding_end_date', title:'일시정지 종료일', data:{year:year, month:month, date:date}, min:{year:year_min, month:month_min, date:date_min},callback_when_set: (object)=>{
                     this.data.holding_end_date = DateRobot.to_yyyymmdd(object.data.year, object.data.month, object.data.date);
                     this.render_content();
                 }});
@@ -287,10 +287,10 @@ class Member_ticket_holding{
         if(this.data.member_ticket_id == null){
             return false;
         }else if(this.data.holding_start_date == null){
-            show_error_message({title:"홀딩 시작일을 선택해주세요."});
+            show_error_message({title:"일시정지 시작일을 선택해주세요."});
             return false;
         }else if(this.data.holding_end_date == null){
-            show_error_message({title:"홀딩 종료일을 선택해주세요."});
+            show_error_message({title:"일시정지 종료일을 선택해주세요."});
             return false;
         }
 

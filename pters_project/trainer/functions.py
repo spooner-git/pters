@@ -680,7 +680,7 @@ def func_delete_member_ticket_info(user_id, class_id, member_ticket_id):
     return error
 
 
-# 회원의 수강권 홀딩하기
+# 회원의 수강권 일시정지하기
 def func_add_hold_member_ticket_info(user_id, class_id, member_ticket_id, start_date, end_date, note, extension_flag):
     error = None
     class_member_ticket_info = None
@@ -706,7 +706,7 @@ def func_add_hold_member_ticket_info(user_id, class_id, member_ticket_id, start_
 
             if start_date_info.date() < class_member_ticket_info.member_ticket_tb.start_date\
                     or start_date_info.date() > class_member_ticket_info.member_ticket_tb.end_date:
-                error = '홀딩 시작일은 수강권 시작일과 종료일 사이 날짜여야 합니다.'
+                error = '일시정지 시작일은 수강권 시작일과 종료일 사이 날짜여야 합니다.'
 
         except ValueError:
             error = '날짜 오류가 발생했습니다.[0]'
@@ -735,7 +735,7 @@ def func_add_hold_member_ticket_info(user_id, class_id, member_ticket_id, start_
                                                                                   reason_type_cd='HD',
                                                                                   use=USE).count()
         if duplicate_check_hold_start > 0 or duplicate_check_hold_end > 0 or duplicate_check_hold_start_end > 0:
-            error = '기존 홀딩 기간과 겹칠수 없습니다.'
+            error = '기존 일시정지 기간과 겹칠수 없습니다.'
 
     if error is None:
         try:
@@ -833,7 +833,7 @@ def func_delete_hold_member_ticket_info(member_closed_date_history_id):
         member_ticket_hold_history_info = MemberClosedDateHistoryTb.objects.get(
             member_closed_date_history_id=member_closed_date_history_id)
     except ObjectDoesNotExist:
-        error = '수강권 홀딩 정보를 불러오지 못했습니다.'
+        error = '수강권 일시정지 정보를 불러오지 못했습니다.'
 
     if error is None:
         member_ticket_tb = member_ticket_hold_history_info.member_ticket_tb
