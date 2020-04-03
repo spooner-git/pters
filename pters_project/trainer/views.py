@@ -399,7 +399,6 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
             }
             closed_repeat_schedule_list.append(closed_repeat_schedule)
 
-
         for member_repeat_schedule_info in member_repeat_schedule_data:
             member_profile_url = '/static/common/icon/icon_account.png'
             if member_repeat_schedule_info.member_ticket_tb.member.profile_url is not None \
@@ -1108,9 +1107,10 @@ class GetMemberClosedDateListView(LoginRequiredMixin, AccessTestMixin, View):
         if error is None:
             member_closed_data = MemberClosedDateHistoryTb.objects.select_related(
                 'member_ticket_tb__ticket_tb__class_tb').filter(member_id=member_id,
-                                                      member_ticket_tb__ticket_tb__class_tb_id=class_id,
-                                                      # end_date__gte=today,
-                                                      use=USE).order_by('reason_type_cd', 'start_date', 'end_date')
+                                                                member_ticket_tb__ticket_tb__class_tb_id=class_id,
+                                                                # end_date__gte=today,
+                                                                use=USE).order_by('reason_type_cd',
+                                                                                  'start_date', 'end_date')
 
             for member_closed_info in member_closed_data:
                 member_closed_reason_type_cd_name = '홀딩'
@@ -1127,9 +1127,18 @@ class GetMemberClosedDateListView(LoginRequiredMixin, AccessTestMixin, View):
                     member_closed_reason_type_cd_name = '회원 불가일정 - '\
                                                         + member_closed_info.member_ticket_tb.ticket_tb.name
 
+                schedule_id = ''
+                repeat_schedule_id = ''
+                schedule_tb = member_closed_info.schedule_tb
+                if schedule_tb is not None and schedule_tb != '':
+                    schedule_id = schedule_tb.schedule_id
+                    if schedule_tb.repeat_schedule_tb is not None and schedule_tb.repeat_schedule_tb != '':
+                        repeat_schedule_id = schedule_tb.repeat_schedule_tb_id
                 member_closed_dict = {
                     'member_closed_date_history_id': member_closed_info.member_closed_date_history_id,
                     'member_closed_date_member_ticket_id': member_ticket_id,
+                    'member_closed_schedule_id': schedule_id,
+                    'member_closed_repeat_schedule_id': repeat_schedule_id,
                     'member_closed_start_date': member_closed_info.start_date,
                     'member_closed_end_date': member_closed_info.end_date,
                     'member_closed_note': member_closed_info.note,
@@ -1142,7 +1151,7 @@ class GetMemberClosedDateListView(LoginRequiredMixin, AccessTestMixin, View):
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
             messages.error(request, error)
 
-        return JsonResponse({'member_closed_list':member_closed_list}, json_dumps_params={'ensure_ascii': True})
+        return JsonResponse({'member_closed_list': member_closed_list}, json_dumps_params={'ensure_ascii': True})
 
 
 class GetMemberClosedDateListHistoryView(LoginRequiredMixin, AccessTestMixin, View):
