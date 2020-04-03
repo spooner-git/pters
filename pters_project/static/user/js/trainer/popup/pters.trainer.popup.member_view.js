@@ -916,7 +916,7 @@ class Member_view{
             //     }) +
             // `</div>
             // <div>${CComponent.dom_tag('등록불가 일정', {"padding-left":"0", "padding-top":"0"})}</div>
-            `${html_to_join.length == 0 ? `<div style="font-size:12px;color:var(--font-sub-dark);padding:5px;">설정된 등록불가 일정이 없습니다.</div>` : ""}
+            `${html_to_join.length == 0 ? `<div style="font-size:12px;color:var(--font-sub-dark);padding:5px;">설정된 일시정지 내역이 없습니다.</div>` : ""}
             `
         );
         return html_to_join.join("");
@@ -1006,11 +1006,11 @@ class Member_view{
                     </div>`;
         $(document).off('click', `#closed_item_${member_closed_date_history_id}`).on('click', `#closed_item_${member_closed_date_history_id}`, function(e){
             let user_option = {
-                delete:{text:"등록불가 일정 삭제", callback:()=>{
+                delete:{text:"일시정지 내역 삭제", callback:()=>{
                     layer_popup.close_layer_popup();
 
                     let message = {
-                        title:`정말 ${member_closed_date_name} 등록불가 일정을 취소하시겠습니까?`,
+                        title:`정말 ${member_closed_date_name} 일시정지 내역을 취소하시겠습니까?`,
                         comment:`${CImg.warning(["#fe4e65"], {"vertical-align":"middle", "margin-bottom":"4px"})}
                                 <br>
                                 <div style="text-align:center;margin-top:5px; color:var(--font-highlight);">
@@ -1019,7 +1019,7 @@ class Member_view{
                     };
                     if(member_closed_extension_flag == ON){
                         message = {
-                        title:`정말 ${member_closed_date_name} 등록 불가 일정을 취소하시겠습니까?`,
+                        title:`정말 ${member_closed_date_name} 일시정지 내역을 취소하시겠습니까?`,
                         comment:`${CImg.warning(["#fe4e65"], {"vertical-align":"middle", "margin-bottom":"4px"})}
                                 <br>
                                 <div style="text-align:center;margin-top:5px; color:var(--font-highlight);">
@@ -1037,7 +1037,7 @@ class Member_view{
                             return false;
                         }
 
-                        Loading.show(`${member_closed_date_name} 등록불가 일정을 삭제 중입니다.<br>일정이 많은 경우 최대 2~4분까지 소요될 수 있습니다.`);
+                        Loading.show(`${member_closed_date_name} 일시정지 내역을 삭제 중입니다.<br>최대 2~4분까지 소요될 수 있습니다.`);
                         Plan_func.delete_closed_date({"member_closed_date_history_id":member_closed_date_history_id}, ()=>{
                             Loading.hide();
                             try{
