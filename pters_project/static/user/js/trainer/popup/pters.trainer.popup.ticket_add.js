@@ -150,7 +150,7 @@ class Ticket_add{
         let max_reserve_number_daily = this.dom_row_reserve_limit_number_daily();
         let max_reserve_number_weekly = this.dom_row_reserve_limit_number_weekly();
 
-        let html =  '<div class="obj_input_box_full">' + CComponent.dom_tag('회원권명', null, true) + name + '</div>' +
+        let html =  '<div class="obj_input_box_full">' + CComponent.dom_tag('수강권명', null, true) + name + '</div>' +
                     '<div class="obj_input_box_full">' + CComponent.dom_tag('수업 구성') + lecture + lecture_list + '</div>' +
                     '<div class="obj_input_box_full">' + 
                         CComponent.dom_tag('기본 횟수') + 
@@ -176,7 +176,7 @@ class Ticket_add{
         let html = `
         <div class="ticket_add_upper_box">
             <div style="display:inline-block;width:200px;">
-                <span style="font-size:20px;font-weight:bold;letter-spacing: -0.9px;">새로운 회원권</span>
+                <span style="font-size:20px;font-weight:bold;letter-spacing: -0.9px;">새로운 수강권</span>
             </div>
         </div>
         `;
@@ -186,7 +186,7 @@ class Ticket_add{
     dom_row_ticket_name_input(){
         let id = 'input_ticket_name';
         let title = this.data.name == null ? '' : this.data.name;
-        let placeholder = '회원권명';
+        let placeholder = '수강권명';
         let icon = CImg.ticket();
         let icon_r_visible = HIDE;
         let icon_r_text = "";
@@ -554,8 +554,8 @@ class Ticket_add{
         if(inspect.barrier == BLOCKED){
             this.data_sending_now = false;
             let message = {
-                title:`회원권 생성을 완료하지 못했습니다.`,
-                comment:`[${inspect.limit_type}] 이용자께서는 회원권을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다.
+                title:`수강권 생성을 완료하지 못했습니다.`,
+                comment:`[${inspect.limit_type}] 이용자께서는 수강권을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다.
                         <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까?</p>`
             };
             show_user_confirm (message, ()=>{

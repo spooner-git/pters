@@ -570,7 +570,7 @@ def func_get_member_ticket_list(class_id, member_id):
     return member_ticket_list
 
 
-# 회원의 회원권 추가하기
+# 회원의 수강권 추가하기
 def func_add_member_ticket_info(user_id, class_id, ticket_id, counts, price, pay_method,
                                 start_date, end_date, contents, member_id):
     error = None
@@ -623,7 +623,7 @@ def func_add_member_ticket_info(user_id, class_id, ticket_id, counts, price, pay
     return error
 
 
-# 회원의 회원권 삭제하기
+# 회원의 수강권 삭제하기
 def func_delete_member_ticket_info(user_id, class_id, member_ticket_id):
     error = None
     class_member_ticket_info = None
@@ -632,7 +632,7 @@ def func_delete_member_ticket_info(user_id, class_id, member_ticket_id):
             'member_ticket_tb__member').get(class_tb_id=class_id, member_ticket_tb_id=member_ticket_id,
                                             auth_cd=AUTH_TYPE_VIEW, use=USE)
     except ObjectDoesNotExist:
-        error = '회원권 정보를 불러오지 못했습니다.'
+        error = '수강권 정보를 불러오지 못했습니다.'
 
     if error is None:
         schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, member_ticket_tb_id=member_ticket_id,
@@ -680,7 +680,7 @@ def func_delete_member_ticket_info(user_id, class_id, member_ticket_id):
     return error
 
 
-# 회원의 회원권 홀딩하기
+# 회원의 수강권 홀딩하기
 def func_add_hold_member_ticket_info(user_id, class_id, member_ticket_id, start_date, end_date, note, extension_flag):
     error = None
     class_member_ticket_info = None
@@ -694,7 +694,7 @@ def func_add_hold_member_ticket_info(user_id, class_id, member_ticket_id, start_
             'member_ticket_tb__member').get(class_tb_id=class_id, member_ticket_tb_id=member_ticket_id,
                                             auth_cd=AUTH_TYPE_VIEW, use=USE)
     except ObjectDoesNotExist:
-        error = '회원권 정보를 불러오지 못했습니다.'
+        error = '수강권 정보를 불러오지 못했습니다.'
 
     if error is None:
         try:
@@ -787,7 +787,7 @@ def func_add_hold_closed_date_info(user_id, class_id, member_ticket_id, schedule
             'member_ticket_tb__member').get(class_tb_id=class_id, member_ticket_tb_id=member_ticket_id,
                                             auth_cd=AUTH_TYPE_VIEW, use=USE)
     except ObjectDoesNotExist:
-        error = '회원권 정보를 불러오지 못했습니다.'
+        error = '수강권 정보를 불러오지 못했습니다.'
 
     if error is None:
         try:
@@ -831,7 +831,7 @@ def func_delete_hold_member_ticket_info(member_closed_date_history_id):
         member_ticket_hold_history_info = MemberClosedDateHistoryTb.objects.get(
             member_closed_date_history_id=member_closed_date_history_id)
     except ObjectDoesNotExist:
-        error = '회원권 홀딩 정보를 불러오지 못했습니다.'
+        error = '수강권 홀딩 정보를 불러오지 못했습니다.'
 
     if error is None:
         if member_ticket_hold_history_info.extension_flag == USE:
@@ -1194,7 +1194,7 @@ def func_get_lecture_info(class_id, lecture_id, user_id):
             lecture_tb = None
     else:
         if lecture_tb.state_cd == STATE_CD_IN_PROGRESS:
-            # 수업에 속한 회원권을 가지고 있는 회원들을 가지고 오기 위한 작업
+            # 수업에 속한 수강권을 가지고 있는 회원들을 가지고 오기 위한 작업
             all_member_ticket_list = ClassMemberTicketTb.objects.select_related(
                 'member_ticket_tb__ticket_tb',
                 'member_ticket_tb__member').filter(

@@ -28,7 +28,7 @@
         </div>
         <div class="wrapper_current_ticket">
             <div class="obj_box_full">
-                <div class="wrapper_sub_title obj_font_size_11_weight_bold obj_font_color_dark_grey">회원권 정보</div>
+                <div class="wrapper_sub_title obj_font_size_11_weight_bold obj_font_color_dark_grey">수강권 정보</div>
                 {% for ing_ticket_info in ing_ticket_data %}
                 <div class="obj_box_card" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_ticket_info', 90,
                                                                                 POPUP_FROM_BOTTOM, {'ticket_id':'{{ ing_ticket_info.member_ticket_tb.ticket_tb.ticket_id }}',

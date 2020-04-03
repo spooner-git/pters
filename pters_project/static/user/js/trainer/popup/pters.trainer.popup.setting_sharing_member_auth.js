@@ -201,11 +201,11 @@ class Setting_sharing_member_auth{
     }
 
     dom_sub_assembly_ticket(){
-        let ticket = this.dom_row_share_menu_title("회원권", "ticket");
-        let ticket_auth_create = this.dom_row_share_menu_auth_toggle("회원권", "등록", "ticket", "create");
-        let ticket_auth_read = this.dom_row_share_menu_auth_toggle("회원권", "조회", "ticket", "read");
-        let ticket_auth_update = this.dom_row_share_menu_auth_toggle("회원권", "수정", "ticket", "update");
-        let ticket_auth_delete = this.dom_row_share_menu_auth_toggle("회원권", "삭제", "ticket", "delete");
+        let ticket = this.dom_row_share_menu_title("수강권", "ticket");
+        let ticket_auth_create = this.dom_row_share_menu_auth_toggle("수강권", "등록", "ticket", "create");
+        let ticket_auth_read = this.dom_row_share_menu_auth_toggle("수강권", "조회", "ticket", "read");
+        let ticket_auth_update = this.dom_row_share_menu_auth_toggle("수강권", "수정", "ticket", "update");
+        let ticket_auth_delete = this.dom_row_share_menu_auth_toggle("수강권", "삭제", "ticket", "delete");
 
         let child_assemble = this.data.ticket.read == ON ? ticket_auth_read + ticket_auth_create +  ticket_auth_update + ticket_auth_delete : "";
 

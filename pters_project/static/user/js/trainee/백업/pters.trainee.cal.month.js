@@ -1890,7 +1890,7 @@ function fill_remain_count_board(jsondata){
     var $targetHTML = $('#remain_count_board');
     var len = jsondata.package_lecture_avail_count.length;
     
-    var htmlToJoin = [`<p>나의 진행 현황</p><div class="remain_count_board_table" style="margin-bottom:10px;"><div>회원권</div><div>등록 횟수</div><div>남은횟수</div><div>예약중</div><div>예약가능</div></div>`];
+    var htmlToJoin = [`<p>나의 진행 현황</p><div class="remain_count_board_table" style="margin-bottom:10px;"><div>수강권</div><div>등록 횟수</div><div>남은횟수</div><div>예약중</div><div>예약가능</div></div>`];
     for(var i=0; i<len; i++){
         htmlToJoin.push(`<div class="remain_count_board_table">
                             <div>[${jsondata.package_type_cd_name[i]}]${jsondata.package_name[i]}</div>
@@ -1901,7 +1901,7 @@ function fill_remain_count_board(jsondata){
                         </div>`);
     }
     if(len == 0){
-        htmlToJoin.push(`<div style="text-align:center;color:#fe4e65;">진행중인 회원권이 없습니다.</div>`);
+        htmlToJoin.push(`<div style="text-align:center;color:#fe4e65;">진행중인 수강권이 없습니다.</div>`);
     }
     $targetHTML.html(htmlToJoin.join(""));
 }

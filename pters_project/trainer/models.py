@@ -152,11 +152,11 @@ class MemberClassTb(TimeStampedModel):
         verbose_name_plural = '강사->지점 연결 정보'
 
 
-# 강사 지점 <-> 회원권 연결 정보
+# 강사 지점 <-> 수강권 연결 정보
 class ClassMemberTicketTb(TimeStampedModel):
     class_member_ticket_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     class_tb = models.ForeignKey(ClassTb, verbose_name='지점', on_delete=models.CASCADE, null=True)
-    member_ticket_tb = models.ForeignKey(MemberTicketTb, verbose_name='회원권', db_column='lecture_tb_id',
+    member_ticket_tb = models.ForeignKey(MemberTicketTb, verbose_name='수강권', db_column='lecture_tb_id',
                                          on_delete=models.CASCADE, null=True)  # Field name made lowercase.
     auth_cd = models.CharField('권한 코드', db_column='AUTH_CD', max_length=20, blank=True, default='')
     mod_member_id = models.CharField('최종수정 회원 ID', db_column='MOD_MEMBER_ID', max_length=20, blank=True, default='')
@@ -164,8 +164,8 @@ class ClassMemberTicketTb(TimeStampedModel):
     class Meta:
         managed = False
         db_table = 'CLASS_LECTURE_TB'
-        verbose_name = '지점->회원권 연결 정보'
-        verbose_name_plural = '지점->회원권 연결 정보'
+        verbose_name = '지점->수강권 연결 정보'
+        verbose_name_plural = '지점->수강권 연결 정보'
 
     def get_auth_cd_name(self):
 
@@ -254,13 +254,13 @@ class LectureTb(TimeStampedModel):
         return state_cd_name
 
 
-# 회원권 정보
+# 수강권 정보
 class TicketTb(TimeStampedModel):
     ticket_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     class_tb = models.ForeignKey(ClassTb, verbose_name='지점', on_delete=models.CASCADE, blank=True, null=True)
-    name = models.CharField('회원권명', db_column='NAME', max_length=255, blank=True, null=True, default='')
+    name = models.CharField('수강권명', db_column='NAME', max_length=255, blank=True, null=True, default='')
     note = models.CharField('설명', db_column='NOTE', max_length=1000, blank=True, null=True, default='')
-    ticket_type_cd = models.CharField('회원권 종류', db_column='PACKAGE_TYPE_CD', max_length=20, blank=True, null=True, default='')
+    ticket_type_cd = models.CharField('수강권 종류', db_column='PACKAGE_TYPE_CD', max_length=20, blank=True, null=True, default='')
     effective_days = models.IntegerField('기본 유효기간', db_column='EFFECTIVE_DAYS', default=0)
     price = models.IntegerField('기본 가격', db_column='PRICE', default=0)
     reg_count = models.IntegerField('기본 등록횟수', db_column='REG_COUNT', default=0)
@@ -272,18 +272,18 @@ class TicketTb(TimeStampedModel):
     class Meta:
         managed = False
         db_table = 'PACKAGE_TB'
-        verbose_name = '회원권'
-        verbose_name_plural = '회원권'
+        verbose_name = '수강권'
+        verbose_name_plural = '수강권'
 
     def __str__(self):
-        return self.class_tb.__str__()+'-'+self.name.__str__()+'(회원권)'
+        return self.class_tb.__str__()+'-'+self.name.__str__()+'(수강권)'
 
 
-# 회원권 <-> 수업 연결 설정
+# 수강권 <-> 수업 연결 설정
 class TicketLectureTb(TimeStampedModel):
     ticket_lecture_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     class_tb = models.ForeignKey(ClassTb, verbose_name='지점', on_delete=models.CASCADE, blank=True, null=True)
-    ticket_tb = models.ForeignKey(TicketTb, verbose_name='회원권', on_delete=models.CASCADE, db_column='package_tb_id',
+    ticket_tb = models.ForeignKey(TicketTb, verbose_name='수강권', on_delete=models.CASCADE, db_column='package_tb_id',
                                   blank=True, null=True)
     lecture_tb = models.ForeignKey(LectureTb, verbose_name='수업', on_delete=models.CASCADE, db_column='group_tb_id',
                                    blank=True, null=True)
@@ -291,8 +291,8 @@ class TicketLectureTb(TimeStampedModel):
     class Meta:
         managed = False
         db_table = 'PACKAGE_GROUP_TB'
-        verbose_name = '회원권->수업 연결 정보'
-        verbose_name_plural = '회원권->수업 연결 정보'
+        verbose_name = '수강권->수업 연결 정보'
+        verbose_name_plural = '수강권->수업 연결 정보'
 
 
 # 수업 <-> 회원 연결 설정 (고정 회원)
@@ -315,7 +315,7 @@ class SettingTb(TimeStampedModel):
     setting_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     class_tb = models.ForeignKey(ClassTb, verbose_name='지점', on_delete=models.CASCADE, blank=True,
                                  null=True)  # Field name made lowercase.
-    member_ticket_tb = models.ForeignKey(MemberTicketTb, verbose_name='회원권', on_delete=models.CASCADE,
+    member_ticket_tb = models.ForeignKey(MemberTicketTb, verbose_name='수강권', on_delete=models.CASCADE,
                                          db_column='lecture_tb_id', blank=True, null=True)
     member = models.ForeignKey(MemberTb, verbose_name='회원', on_delete=models.CASCADE, null=True)  # Field name made lowercase.
     setting_type_cd = models.CharField('설정 타입', db_column='SETTING_TYPE_CD', max_length=10, default='')
@@ -445,7 +445,7 @@ class ProgramBoardCommentTb(TimeStampedModel):
 
 
 # #######################################  이제 사용 안함  ##################################################
-# 회원권 0원 입력 버그 표시 (이제 사용 안함)
+# 수강권 0원 입력 버그 표시 (이제 사용 안함)
 class BugMemberTicketPriceTb(TimeStampedModel):
     bug_member_ticket_price_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
@@ -457,7 +457,7 @@ class BugMemberTicketPriceTb(TimeStampedModel):
         db_table = 'BUG_MEMBER_TICKET_PRICE_TB'
 
 
-# 수업 <-> 회원권 연결 설정 (이제 사용 안함)
+# 수업 <-> 수강권 연결 설정 (이제 사용 안함)
 class LectureMemberTicketTb(TimeStampedModel):
     lecture_member_ticket_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     lecture_tb = models.ForeignKey(LectureTb, on_delete=models.CASCADE, db_column='group_tb_id', blank=True, null=True)

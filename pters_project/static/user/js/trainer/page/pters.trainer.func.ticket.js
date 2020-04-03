@@ -16,7 +16,7 @@ class Ticket{
 
         this.sort_val = SORT_TICKET_NAME;
         this.sort_order_by = SORT_ORDER_ASC;
-        this.sort_value_text = '회원권명 가나다순';
+        this.sort_value_text = '수강권명 가나다순';
 
         this.received_data_cache = null; // 재랜더링시 스크롤 위치를 기억하도록 먼저 이전 데이터를 그려주기 위해
 
@@ -131,7 +131,7 @@ class Ticket{
             this.list_status_type_text = "종료";
         }
 
-        this.list_type_text = "회원권";
+        this.list_type_text = "수강권";
         this.data_length = length;
 
         let html_temp = [];
@@ -198,7 +198,7 @@ class Ticket{
 
         // 계속 추가되더라도 동적으로 처리하기 위해 작성 - hkkim 20191001
         let user_options_array = [];
-        user_options_array.push(`'${SORT_TICKET_NAME+'_'+SORT_ORDER_ASC}':{text:'회원권명 가나다순', callback:()=>{${this.instance}.sort_val = ${SORT_TICKET_NAME}; ${this.instance}.sort_order_by= ${SORT_ORDER_ASC}; ${this.instance}.sort_value_text = '회원권명 가나다순';${this.instance}.init();layer_popup.close_layer_popup();}}`);
+        user_options_array.push(`'${SORT_TICKET_NAME+'_'+SORT_ORDER_ASC}':{text:'수강권명 가나다순', callback:()=>{${this.instance}.sort_val = ${SORT_TICKET_NAME}; ${this.instance}.sort_order_by= ${SORT_ORDER_ASC}; ${this.instance}.sort_value_text = '수강권명 가나다순';${this.instance}.init();layer_popup.close_layer_popup();}}`);
         user_options_array.push(`'${SORT_TICKET_MEMBER_COUNT+'_'+SORT_ORDER_ASC}':{text:'참여중 회원 많은 순', callback:()=>{${this.instance}.sort_val = '${SORT_TICKET_MEMBER_COUNT}'; ${this.instance}.sort_order_by= ${SORT_ORDER_DESC}; ${this.instance}.sort_value_text = '참여중 회원 많은 순';${this.instance}.init();layer_popup.close_layer_popup();}}`);
         user_options_array.push(`'${SORT_TICKET_MEMBER_COUNT+'_'+SORT_ORDER_DESC}':{text:'참여중 회원 적은 순', callback:()=>{${this.instance}.sort_val = '${SORT_TICKET_MEMBER_COUNT}'; ${this.instance}.sort_order_by= ${SORT_ORDER_ASC};${this.instance}.sort_value_text = '참여중 회원 적은 순';${this.instance}.init();layer_popup.close_layer_popup();}}`);
         user_options_array.push(`'${SORT_TICKET_CREATE_DATE+'_'+SORT_ORDER_ASC}':{text:'생성 일자 최근 순', callback:()=>{${this.instance}.sort_val = '${SORT_TICKET_CREATE_DATE}'; ${this.instance}.sort_order_by= ${SORT_ORDER_DESC};${this.instance}.sort_value_text = '생성 일자 최근 순';${this.instance}.init();layer_popup.close_layer_popup();}}`);
@@ -217,7 +217,7 @@ class Ticket{
 
         let html = `<div class="ticket_upper_box">
                         <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:var(--font-main); letter-spacing: -1px; height:28px;">
-                            <span style="display:inline-block;">회원권 </span>
+                            <span style="display:inline-block;">수강권 </span>
                             <div style="display:inline-block; color:var(--font-highlight); font-weight:900;">${this.data_length}</div>
                         </div>
                         <div class="ticket_tools_wrap">
@@ -316,7 +316,7 @@ class Ticket{
         this.render();
     }
 
-    //회원권 리스트 서버에서 불러오기
+    //수강권 리스트 서버에서 불러오기
     request_ticket_list (status, callback, load_image, async){
         if(async == undefined){
             async = true;

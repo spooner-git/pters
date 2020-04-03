@@ -164,7 +164,7 @@ class Menu_service {
 
     dom_menu_ticket(){
         let id = 'menu_ticket';
-        let title = '회원권';
+        let title = '수강권';
         let icon = CImg.ticket();
         let icon_r_visible = NONE;
         let icon_r_text = "";

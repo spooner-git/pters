@@ -39,7 +39,7 @@ var multi_language_set = {
                                     "text-groupmanage":"그룹",
                                     "text-classmange":"클래스",
                                     "text-lecturemanage":"수업",
-                                    "text-ticketmanage":"회원권",
+                                    "text-ticketmanage":"수강권",
                                     "text-centermanage":"센터 관리",
                                     "text-employeemanage":"직원 관리",
                                     "text-analytics":"통계",

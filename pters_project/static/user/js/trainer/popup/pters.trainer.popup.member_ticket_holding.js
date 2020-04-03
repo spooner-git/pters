@@ -116,7 +116,7 @@ class Member_ticket_holding{
     }
 
     dom_row_toolbox(){
-        let title = "회원권 홀딩";
+        let title = "수강권 홀딩";
         let html = `<div class="">
                         <div style="display:inline-block;padding-left:60px;">
                             <span style="font-size:20px;font-weight:bold; letter-spacing: -0.9px; color: var(--font-main);">${title}</span>
@@ -248,7 +248,7 @@ class Member_ticket_holding{
 
     dom_row_holding_ticket_input(){
         let html = `<div style="display:table;width:100%;font-size:11px;font-weight:500;padding-left:60px;box-sizing:border-box;">
-                        <div style="display:table-cell;color:var(--font-sub-normal);width:56px;">회원권명</div>
+                        <div style="display:table-cell;color:var(--font-sub-normal);width:56px;">수강권명</div>
                         <div style="display:table-cell;color:var(--font-highlight);width:auto;">${this.data.member_ticket_name}</div>
                     </div>
                     <div style="display:table;width:100%;font-size:11px;font-weight:500;padding-left:60px;box-sizing:border-box;">

@@ -60,7 +60,7 @@ def func_update_finish_member_ticket_data():
                                        " WHERE A.CLASS_TB_ID=`CLASS_LECTURE_TB`.`CLASS_TB_ID`" \
                                        " AND A.SETTING_TYPE_CD = \'LT_LECTURE_AUTO_FINISH\' " \
                                        " AND A.USE=1"
-    # 지난 회원권 처리
+    # 지난 수강권 처리
     class_member_ticket_data = ClassMemberTicketTb.objects.select_related(
         'member_ticket_tb__ticket_tb').filter(
         auth_cd='VIEW', member_ticket_tb__end_date__lt=datetime.date.today(),
@@ -255,7 +255,7 @@ def update_finish_schedule_data_logic(request):
     return render(request, 'ajax/task_error_info.html')
 
 
-# 지난 회원권 지난 pass 처리
+# 지난 수강권 지난 pass 처리
 def update_daily_data_logic(request):
     func_update_finish_member_ticket_data()
     func_update_finish_pass_data()
@@ -443,7 +443,7 @@ class SendWaitScheduleCancelPushAlarmDataView(View):
                                                   " WHERE A.CLASS_TB_ID=`SCHEDULE_TB`.`CLASS_TB_ID`" \
                                                   " AND A.SETTING_TYPE_CD = \'LT_RES_WAIT_SCHEDULE_AUTO_CANCEL_TIME\' " \
                                                   " AND A.USE=1"
-        # 지난 회원권 처리
+        # 지난 수강권 처리
         # class_member_ticket_data = ClassMemberTicketTb.objects.select_related(
         #     'member_ticket_tb__ticket_tb').filter(
         #     auth_cd='VIEW', member_ticket_tb__end_date__lt=datetime.date.today(),

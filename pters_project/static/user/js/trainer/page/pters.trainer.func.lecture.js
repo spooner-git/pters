@@ -178,7 +178,7 @@ class Lecture {
 
         // 계속 추가되더라도 동적으로 처리하기 위해 작성 - hkkim 20191001
         let user_options_array = [];
-        user_options_array.push(`'${SORT_LECTURE_NAME+'_'+SORT_ORDER_ASC}':{text:'수업명 가나다순', callback:()=>{${this.instance}.sort_val = '${SORT_LECTURE_NAME}'; ${this.instance}.sort_order_by= ${SORT_ORDER_ASC}; ${this.instance}.sort_value_text = '회원권명 가나다순';${this.instance}.init();layer_popup.close_layer_popup();}}`);
+        user_options_array.push(`'${SORT_LECTURE_NAME+'_'+SORT_ORDER_ASC}':{text:'수업명 가나다순', callback:()=>{${this.instance}.sort_val = '${SORT_LECTURE_NAME}'; ${this.instance}.sort_order_by= ${SORT_ORDER_ASC}; ${this.instance}.sort_value_text = '수강권명 가나다순';${this.instance}.init();layer_popup.close_layer_popup();}}`);
         user_options_array.push(`'${SORT_LECTURE_MEMBER_COUNT+'_'+SORT_ORDER_ASC}':{text:'참여중 회원 많은 순', callback:()=>{${this.instance}.sort_val = '${SORT_LECTURE_MEMBER_COUNT}'; ${this.instance}.sort_order_by= ${SORT_ORDER_DESC}; ${this.instance}.sort_value_text = '참여중 회원 많은 순';${this.instance}.init();layer_popup.close_layer_popup();}}`);
         user_options_array.push(`'${SORT_LECTURE_MEMBER_COUNT+'_'+SORT_ORDER_DESC}':{text:'참여중 회원 적은 순', callback:()=>{${this.instance}.sort_val = '${SORT_LECTURE_MEMBER_COUNT}'; ${this.instance}.sort_order_by= ${SORT_ORDER_ASC};${this.instance}.sort_value_text = '참여중 회원 적은 순';${this.instance}.init();layer_popup.close_layer_popup();}}`);
         user_options_array.push(`'${SORT_LECTURE_CAPACITY_COUNT+'_'+SORT_ORDER_ASC}':{text:'정원 많은 순', callback:()=>{${this.instance}.sort_val = '${SORT_LECTURE_CAPACITY_COUNT}'; ${this.instance}.sort_order_by= ${SORT_ORDER_DESC}; ${this.instance}.sort_value_text = '정원 많은 순';${this.instance}.init();layer_popup.close_layer_popup();}}`);

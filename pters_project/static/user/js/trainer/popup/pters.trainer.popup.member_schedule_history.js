@@ -71,7 +71,7 @@ class Member_schedule_history{
             title = "월별 정렬"+icon;
         }
         else if(this.sort_val == SORT_MEMBER_TICKET){
-            title = "회원권별 정렬"+icon;
+            title = "수강권별 정렬"+icon;
         }
         let style = {"color": "var(--font-sub-normal)", "font-size":"13px", "font-weight":"500"};
         let onclick = ()=>{
@@ -981,7 +981,7 @@ class Member_schedule_history{
         let user_option = {
             by_time:{text:"시간순 정렬", callback:()=>{this.sort_val = SORT_SCHEDULE_DT;this.init();layer_popup.close_layer_popup();}},
             by_monthly:{text:"월별 정렬", callback:()=>{this.sort_val = SORT_SCHEDULE_MONTHLY;this.init();layer_popup.close_layer_popup();}},
-            by_ticket:{text:"회원권별 정렬", callback:()=>{this.sort_val = SORT_MEMBER_TICKET;this.init();layer_popup.close_layer_popup();}}
+            by_ticket:{text:"수강권별 정렬", callback:()=>{this.sort_val = SORT_MEMBER_TICKET;this.init();layer_popup.close_layer_popup();}}
         };
         let options_padding_top_bottom = 16;
         // let button_height = 8 + 8 + 52;

@@ -1615,7 +1615,7 @@ $(document).ready(function(){
                 });
             }
 
-        //회원권 인원 추가
+        //수강권 인원 추가
         }else if(selector_page_addmember.css('display')=='block' && selector_ADD_GROUPMEMBER_NEW.css('display') == "block" && ($('#currentPackageList').css('display')=="block" || $('#finishedPackageList').css('display')=="block") ){
             check_dropdown_selected();
             if(select_all_check == true){
@@ -1675,7 +1675,7 @@ $(document).ready(function(){
             var package_id = $('#mypackageid').attr('data-packageid');
             var package_memo = $('#ticketmemo input').val();
             if(package_name == ''){
-                    alert('회원권명을 입력하세요.');
+                    alert('수강권명을 입력하세요.');
             }else {
                 // $('#popup_ticket_info_mobile_basic').find(".pters_table_cell input").attr("disabled", true).css('border-color', 'transparent');
                 // $(this).attr('data-type', 'view');
@@ -1847,13 +1847,13 @@ $(document).ready(function(){
                 $('#ticketdelete, .lecture_bubble_mini img').show();
                 $('#id_ticket_status').css('display', 'none');
                 $('.mobile_status_color_palette').show();
-                $('#uptext3').text('회원권 수정');
+                $('#uptext3').text('수강권 수정');
             }else if($this.attr('data-type') == "modify" ){
                 var package_name = $('#ticketname input').val();
                 var package_id = $('#mypackageid').attr('data-packageid');
                 var package_memo = $('#ticketmemo input').val();
                 if(package_name == ''){
-                    alert('회원권명을 입력하세요.');
+                    alert('수강권명을 입력하세요.');
                 }else{
                     // var old_package_name = $('#ticketname').attr('data-ticket_name');
                     // var old_package_memo = $('#ticketmemo').attr('data-ticket_memo');
@@ -2229,9 +2229,9 @@ function float_btn_managemember(option){
 
         $('#grouptype option[value="NORMAL"]').attr({'selected':true,'disabled':true});
         $('#form_grouptype').val('NORMAL');
-        $('#addgrouptypename').text('신규 단일 회원권');
+        $('#addgrouptypename').text('신규 단일 수강권');
 
-        $('#uptext2, #uptext2_PC').text('신규 단일 회원권');
+        $('#uptext2, #uptext2_PC').text('신규 단일 수강권');
 
         $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW, ._ADD_PACKAGE_NEW').hide();
         $('._ADD_GROUP_NEW').show();
@@ -2266,9 +2266,9 @@ function float_btn_managemember(option){
 
         $('#grouptype option[value="NORMAL"]').attr({'selected':true,'disabled':true});
         $('#form_grouptype').val('NORMAL');
-        $('#addgrouptypename').text('신규 회원권');
+        $('#addgrouptypename').text('신규 수강권');
 
-        $('#uptext2, #uptext2_PC').text('신규 회원권');
+        $('#uptext2, #uptext2_PC').text('신규 수강권');
 
         $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW, ._ADD_GROUP_NEW').hide();
         $('._ADD_PACKAGE_NEW').show();
@@ -2525,9 +2525,9 @@ function pc_add_member(option){
         selector_page_addmember_input_wrap.css({'height':260+'px'});
         $('#explain_group_lesson, #explain_open_lesson').hide();
         $('#explain_solo_ticket').show();
-        $('#addgrouptypename').text('신규 단일 회원권');
+        $('#addgrouptypename').text('신규 단일 수강권');
 
-        $('#uptext2, #uptext2_PC').text('신규 단일 회원권 추가');
+        $('#uptext2, #uptext2_PC').text('신규 단일 수강권 추가');
 
         $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW, ._ADD_PACKAGE_NEW').hide();
         $('._ADD_GROUP_NEW').show();
@@ -2545,9 +2545,9 @@ function pc_add_member(option){
         });
         selector_page_addmember_input_wrap.css({'height':350+'px'});
 
-        $('#addpackagename').text('회원권을 만들고자 하는 수업 선택 해주세요.');
+        $('#addpackagename').text('수강권을 만들고자 하는 수업 선택 해주세요.');
 
-        $('#uptext2, #uptext2_PC').text('신규 회원권 추가');
+        $('#uptext2, #uptext2_PC').text('신규 수강권 추가');
 
         $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW, ._ADD_GROUP_NEW').hide();
         $('._ADD_PACKAGE_NEW').show();
@@ -2754,7 +2754,7 @@ function package_type_dropdown_set(packagelistJSON){
     }
     // 의미 X (수업을 만들어야함
     // if(len == 1){
-    //     optionsToJoin.push("<option value='go_to_make_new_package' style='font-weight:500;'>+새 회원권 만들기</option>");
+    //     optionsToJoin.push("<option value='go_to_make_new_package' style='font-weight:500;'>+새 수강권 만들기</option>");
     // }
     $('.grouptypeselect').html(optionsToJoin.join(''));
 }
@@ -5803,7 +5803,7 @@ function initialize_add_member_sheet(){
     //그룹추가관련 입력 초기화
     $("#page_addmember input").css({"-webkit-text-fill-color":"#cccccc"});
 
-    //패키지 회원권 입력 초기화
+    //패키지 수강권 입력 초기화
     $('#selected_lectures_to_package_wrap').empty();
 }
 

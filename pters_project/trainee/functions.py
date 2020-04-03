@@ -176,7 +176,7 @@ def func_get_trainee_on_repeat_schedule(context, user_id, class_id):
 def func_get_class_member_ticket_count(context, class_id, user_id):
     error = None
     if class_id is None or class_id == '':
-        error = '회원권 정보를 불러오지 못했습니다.'
+        error = '수강권 정보를 불러오지 못했습니다.'
 
     member_ticket_reg_count_sum = 0
     member_ticket_rem_count_sum = 0
@@ -228,7 +228,7 @@ def func_get_member_ticket_list(context, class_id, member_id, auth_cd):
     output_member_ticket_list = []
 
     if class_id is None or class_id == '':
-        error = '회원권 정보를 불러오지 못했습니다.'
+        error = '수강권 정보를 불러오지 못했습니다.'
 
     if member_id is None or member_id == '':
         error = '회원 정보를 불러오지 못했습니다.'
@@ -305,7 +305,7 @@ def func_get_member_ticket_connection_list(context, class_id, member_id, auth_cd
     output_member_ticket_list = []
 
     if class_id is None or class_id == '':
-        error = '회원권 정보를 불러오지 못했습니다.'
+        error = '수강권 정보를 불러오지 못했습니다.'
 
     if member_id is None or member_id == '':
         error = '회원 정보를 불러오지 못했습니다.'
@@ -592,7 +592,7 @@ def func_get_trainee_reserve_schedule_list(context, class_id, user_id, lecture_i
     try:
         class_info = ClassTb.objects.get(class_id=class_id)
     except ObjectDoesNotExist:
-        error = '회원권 정보를 불러오지 못했습니다.'
+        error = '수강권 정보를 불러오지 못했습니다.'
 
     if error is None:
         error = func_check_select_date_reserve_setting(class_id, class_info.member_id, select_date)

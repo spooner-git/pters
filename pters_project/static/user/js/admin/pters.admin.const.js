@@ -255,7 +255,7 @@ const TEXT = {
     schedule:{KR:"일정", EN:"Schedule", JP:""},
     member:{KR:"회원", EN:"Member", JP:""},
     lecture:{KR:"수업", EN:"Lecture", JP:""},
-    ticket:{KR:"회원권", EN:"Ticket", JP:""},
+    ticket:{KR:"수강권", EN:"Ticket", JP:""},
     statistics:{KR:"통계", EN:"Statistics", JP:""},
     attend_check:{KR:"출석 체크", EN:"Attend check", JP:""},
     notification:{KR:"알림", EN:"Notification", JP:""},

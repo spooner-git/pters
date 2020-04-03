@@ -77,7 +77,7 @@ class Member_ticket_modify{
 
     render(){
         let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();member_ticket_modify.clear();">${CImg.arrow_left()}</span>`;
-        let top_center = `<span class="icon_center"><span>${this.data.member_name}님의 회원권</span></span>`;
+        let top_center = `<span class="icon_center"><span>${this.data.member_name}님의 수강권</span></span>`;
         let top_right = `<span class="icon_right" onclick="member_ticket_modify.send_data()"><span style="color:var(--font-highlight);font-weight: 500;" >완료</span></span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
@@ -104,7 +104,7 @@ class Member_ticket_modify{
     
     dom_assembly_content(){
 
-        let status = CComponent.dom_tag('회원권') + this.dom_row_status_input() +
+        let status = CComponent.dom_tag('수강권') + this.dom_row_status_input() +
                     `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>`;
         let refund_date  = CComponent.dom_tag('환불일') + this.dom_row_refund_date_input() +
                     `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>`;
@@ -151,7 +151,7 @@ class Member_ticket_modify{
 
     dom_row_status_input(){
         let id = 'member_ticket_status_modify';
-        let title = this.data.member_ticket_name == null ||this.data.member_ticket_name == 'None' ? '회원권명' : this.data.member_ticket_name;
+        let title = this.data.member_ticket_name == null ||this.data.member_ticket_name == 'None' ? '수강권명' : this.data.member_ticket_name;
         let icon = CImg.ticket();
         let icon_r_visible = SHOW;
         let icon_r_text = `상태 (<span style="color:${TICKET_STATUS_COLOR[this.data.status]}">${TICKET_STATUS[this.data.status]}</span>)`;
@@ -177,7 +177,7 @@ class Member_ticket_modify{
                     if(inspect.barrier == BLOCKED){
                         this.data_sending_now = false;
                         let message = {
-                            title:'회원권 재개를 완료하지 못했습니다.',
+                            title:'수강권 재개를 완료하지 못했습니다.',
                             comment:`[${inspect.limit_type}] 이용자께서는 회원을 최대 ${inspect.limit_num}명까지 등록하실 수 있습니다.
                                     <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까?</p>`
                         }
@@ -237,8 +237,8 @@ class Member_ticket_modify{
                             member_ticket_holding = new Member_ticket_holding('.popup_member_ticket_holding', external_data, 'member_ticket_holding');
                         });}
                         // let message = {
-                        //     title: '회원권 홀딩 안내',
-                        //     comment: `회원권을 재개 하실때까지
+                        //     title: '수강권 홀딩 안내',
+                        //     comment: `수강권을 재개 하실때까지
                         //         <span style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">자동으로 종료일자가 연장</span>됩니다.`
                         // };
                         // show_user_confirm(message, () => {
@@ -285,7 +285,7 @@ class Member_ticket_modify{
 
     dom_row_start_input(){
         let id = 'member_ticket_start_modify';
-        let title = this.data.start_date == null ||this.data.start_date == 'None' ? '회원권 시작일' : this.data.start_date_text;
+        let title = this.data.start_date == null ||this.data.start_date == 'None' ? '수강권 시작일' : this.data.start_date_text;
         let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";

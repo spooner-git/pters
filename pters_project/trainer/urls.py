@@ -159,30 +159,30 @@ urlpatterns = [
 
 
 
-    # 회원권 기능 #########################################################################################################
-    # 회원권 추가 - refactoring
+    # 수강권 기능 #########################################################################################################
+    # 수강권 추가 - refactoring
     url(r'^add_ticket_info/$', views.add_ticket_info_logic, name='add_ticket_info'),
-    # 회원권 삭제 - refactoring
+    # 수강권 삭제 - refactoring
     url(r'^delete_ticket_info/$', views.delete_ticket_info_logic, name='delete_ticket_info'),
-    # 회원권 수정 - refactoring
+    # 수강권 수정 - refactoring
     url(r'^update_ticket_info/$', views.update_ticket_info_logic, name='update_ticket_info'),
-    # 회원권에 수업 추가 - refactoring
+    # 수강권에 수업 추가 - refactoring
     url(r'^add_ticket_lecture_info/$', views.add_ticket_lecture_info_logic, name='add_ticket_lecture_info'),
-    # 회원권에 수업 삭제 - refactoring
+    # 수강권에 수업 삭제 - refactoring
     url(r'^delete_ticket_lecture_info/$', views.delete_ticket_lecture_info_logic, name='delete_ticket_lecture_info'),
-    # 회원권 상태 변경 - refactoring
+    # 수강권 상태 변경 - refactoring
     url(r'^update_ticket_status_info/$', views.update_ticket_status_info_logic, name='update_ticket_status_info'),
 
-    # 회원권 정보 조회 - refactoring
+    # 수강권 정보 조회 - refactoring
     url(r'^get_ticket_info/$', views.GetTicketInfoViewAjax.as_view(), name='get_ticket_info'),
-    # 진행중 회원권 list 조회 - refactoring
+    # 진행중 수강권 list 조회 - refactoring
     url(r'^get_ticket_ing_list/$', views.GetTicketIngListViewAjax.as_view(), name='get_ticket_ing_list'),
-    # 완료된 회원권 list 조회 - refactoring
+    # 완료된 수강권 list 조회 - refactoring
     url(r'^get_ticket_end_list/$', views.GetTicketEndListViewAjax.as_view(), name='get_ticket_end_list'),
-    # 회원권 회원 조회 - refactoring
+    # 수강권 회원 조회 - refactoring
     url(r'^get_ticket_ing_member_list/$', views.GetTicketIngMemberListViewAjax.as_view(),
         name='get_ticket_ing_member_list'),
-    # 회원권 종료 회원 조회 - refactoring
+    # 수강권 종료 회원 조회 - refactoring
     url(r'^get_ticket_end_member_list/$', views.GetTicketEndMemberListViewAjax.as_view(),
         name='get_ticket_end_member_list'),
 
@@ -390,20 +390,20 @@ urlpatterns = [
     url(r'^popup_lecture_add/$', views.PopupLectureAdd.as_view(), name='popup_lecture_add'),
     # 수업설정 팝업 페이지
     url(r'^popup_lecture_edit/$', views.PopupLectureEdit.as_view(), name='popup_lecture_edit'),
-    # 회원권정보 팝업 페이지
+    # 수강권정보 팝업 페이지
     url(r'^popup_ticket_view/$', views.PopupTicketView.as_view(), name='popup_ticket_view'),
-    # 회원권 간단 정보 팝업 페이지
+    # 수강권 간단 정보 팝업 페이지
     url(r'^popup_ticket_simple_view/$', views.PopupTicketSimpleView.as_view(), name='popup_ticket_simple_view'),
-    # 회원권추가 팝업 페이지
+    # 수강권추가 팝업 페이지
     url(r'^popup_ticket_add/$', views.PopupTicketAdd.as_view(), name='popup_ticket_add'),
-    # 회원권설정 팝업 페이지
+    # 수강권설정 팝업 페이지
     url(r'^popup_ticket_edit/$', views.PopupTicketEdit.as_view(), name='popup_ticket_edit'),
 
     # 회원 선택 팝업 페이지
     url(r'^popup_member_select/$', views.PopupMemberSelect.as_view(), name='popup_member_select'),
     # 수업 선택 팝업 페이지
     url(r'^popup_lecture_select/$', views.PopupLectureSelect.as_view(), name='popup_lecture_select'),
-    # 회원권 선택 팝업 페이지
+    # 수강권 선택 팝업 페이지
     url(r'^popup_ticket_select/$', views.PopupTicketSelect.as_view(), name='popup_ticket_select'),
     # 색상태그 선택 팝업 페이지
     url(r'^popup_color_select/$', views.PopupColorSelect.as_view(), name='popup_color_select'),

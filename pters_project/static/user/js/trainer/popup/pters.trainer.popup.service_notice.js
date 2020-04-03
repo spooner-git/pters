@@ -164,7 +164,7 @@ class Service_notice {
     }
 
 
-    //회원권 리스트 서버에서 불러오기
+    //수강권 리스트 서버에서 불러오기
     request_notice_list (callback, error_callback){
         let url = '/board/get_notice_list/';
 

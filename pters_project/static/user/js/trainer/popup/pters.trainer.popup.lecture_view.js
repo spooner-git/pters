@@ -215,7 +215,7 @@ class Lecture_view{
             lecture_lecture_start_time = '<div class="obj_input_box_full">' + CComponent.dom_tag('회원 예약 시작 시각') + lecture_start_time + '</div>';
         }
         let color_select_assembly =  '<div class="obj_input_box_full">' + CComponent.dom_tag('색상 태그') + color +  '</div>';
-        let ticket_list_assembly = '<div class="obj_input_box_full" style="padding-top:16px;">' + CComponent.dom_tag(`이 수업을 포함하는 회원권 (${this.data.active_ticket_length} 개)`,
+        let ticket_list_assembly = '<div class="obj_input_box_full" style="padding-top:16px;">' + CComponent.dom_tag(`이 수업을 포함하는 수강권 (${this.data.active_ticket_length} 개)`,
                                     {"letter-spacing":"-0.6px", "padding":"0", "padding-left":"40px", "height":"20px"})
                                     + ticket_list + '</div>';
         let member_list_assembly = '<div class="obj_input_box_full" style="padding-top:20px;">' 
@@ -571,14 +571,14 @@ class Lecture_view{
                     let root_content_height = $root_content.height();
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_SIMPLE_VIEW, 100*(251/root_content_height), POPUP_FROM_BOTTOM, {'ticket_id':ticket_id}, ()=>{
                         ticket_simple_view_popup = new Ticket_simple_view('.popup_ticket_simple_view', ticket_id, 'ticket_simple_view_popup');
-                        //회원권 간단 정보 팝업 열기
+                        //수강권 간단 정보 팝업 열기
                     });
                 })
             );
         }
         this.data.active_ticket_length = length - progress_end_ticket;
 
-        let html = `<div style="padding-left:40px">${html_to_join.length > 0 ? html_to_join.join('') : `<span style='color:var(--font-highlight);font-size:12px;font-weight:bold;'>${CImg.warning(["#fe4e65"], {"vertical-align":"middle", "width":"20px", "height":"20px", "margin-bottom":"4px"})} 이 수업을 포함한 회원권이 없습니다.</span>`}</div>`;
+        let html = `<div style="padding-left:40px">${html_to_join.length > 0 ? html_to_join.join('') : `<span style='color:var(--font-highlight);font-size:12px;font-weight:bold;'>${CImg.warning(["#fe4e65"], {"vertical-align":"middle", "width":"20px", "height":"20px", "margin-bottom":"4px"})} 이 수업을 포함한 수강권이 없습니다.</span>`}</div>`;
 
         return html;
     }
@@ -920,7 +920,7 @@ class Lecture_view{
                                 <span style="color:var(--font-highlight); font-size:12px;">
                                 이 수업으로 일정을 등록 할 수 없게 됩니다.<br>
                                 과거 일정은 완료 처리, 미래 일정은 삭제됩니다. <br>
-                                이 수업 하나만 포함하는 회원권은 자동 비활성화 됩니다.</span>`
+                                이 수업 하나만 포함하는 수강권은 자동 비활성화 됩니다.</span>`
                     }
                     show_user_confirm(message, ()=>{
                         Lecture_func.status({"lecture_id":this.lecture_id, "state_cd":STATE_END_PROGRESS}, ()=>{
@@ -951,7 +951,7 @@ class Lecture_view{
                         comment:`데이터를 복구할 수 없습니다.<br><br>
                                 ${CImg.warning(["#fe4e65"], {"vertical-align":"middle", "margin-bottom":"4px"})}
                                 <br>
-                                <span style="color:var(--font-highlight); font-size:12px;">이 수업을 포함하는 회원권에서 수업이 삭제됩니다.</span>`
+                                <span style="color:var(--font-highlight); font-size:12px;">이 수업을 포함하는 수강권에서 수업이 삭제됩니다.</span>`
                     }
                     show_user_confirm(message, ()=>{
                         Lecture_func.delete({"lecture_id":this.lecture_id}, ()=>{

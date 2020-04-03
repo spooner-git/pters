@@ -396,7 +396,7 @@ const PROGRAM_CATEGORY = {
 //     schedule:{KR:"일정", EN:"Schedule", JP:"カレンダー"},
 //     member:{KR:"회원", EN:"Member", JP:"会員"},
 //     lecture:{KR:"수업", EN:"Lecture", JP:"授業"},
-//     ticket:{KR:"회원권", EN:"Ticket", JP:"受講券"},
+//     ticket:{KR:"수강권", EN:"Ticket", JP:"受講券"},
 //     statistics:{KR:"통계", EN:"Statistics", JP:"統計"},
 //     attend_check:{KR:"출석 체크", EN:"Attend check", JP:"セルフ出席チェックモード"},
 //     notification:{KR:"알림", EN:"Notification", JP:"通知"},

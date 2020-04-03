@@ -113,7 +113,7 @@ def check_schedule_logic(request):
                                 member_ticket_info = MemberTicketTb.objects.get(member_ticket_id=
                                                                                 member_info['member_ticket_id'])
                             except ObjectDoesNotExist:
-                                error_temp = '회원권 정보를 불러오지 못했습니다.'
+                                error_temp = '수강권 정보를 불러오지 못했습니다.'
 
                             select_date = schedule_start_datetime.date()
 
@@ -127,7 +127,7 @@ def check_schedule_logic(request):
                                         use=USE).count()
 
                                     if day_schedule_count >= member_ticket_info.ticket_tb.day_schedule_enable:
-                                        error_temp = member_info['member_name'] +'님의 '+ member_ticket_info.ticket_tb.name + ' 회원권의 하루 최대 이용 횟수를 초과했습니다.'
+                                        error_temp = member_info['member_name'] +'님의 '+ member_ticket_info.ticket_tb.name + ' 수강권의 하루 최대 이용 횟수를 초과했습니다.'
 
                             if error_temp is None:
                                 if member_ticket_info.ticket_tb.week_schedule_enable < 9999:
@@ -147,7 +147,7 @@ def check_schedule_logic(request):
                                         start_dt__gte=first_day, start_dt__lt=last_day,
                                         use=USE).count()
                                     if week_schedule_count >= member_ticket_info.ticket_tb.week_schedule_enable:
-                                        error_temp = member_info['member_name'] +'님의 '+ member_ticket_info.ticket_tb.name + ' 회원권의 주간 최대 이용 횟수를 초과했습니다.'
+                                        error_temp = member_info['member_name'] +'님의 '+ member_ticket_info.ticket_tb.name + ' 수강권의 주간 최대 이용 횟수를 초과했습니다.'
 
                             closed_date_data = MemberClosedDateHistoryTb.objects.filter(
                                 member_ticket_tb_id=member_ticket_info.member_ticket_id, start_date__lte=select_date,
@@ -160,19 +160,19 @@ def check_schedule_logic(request):
                                         reason_note = '회원 : '
                                     if error_temp is None:
                                         if closed_date_info.reason_type_cd == 'HD':
-                                            error_temp = member_info['member_name'] + '님의 ' + member_ticket_info.ticket_tb.name + ' 회원권이 홀딩 기간입니다.'
+                                            error_temp = member_info['member_name'] + '님의 ' + member_ticket_info.ticket_tb.name + ' 수강권이 홀딩 기간입니다.'
                                         else:
                                             error_temp = reason_note + closed_date_info.note + '입니다.'
                                     else:
                                         if closed_date_info.reason_type_cd == 'HD':
-                                            error_temp = member_info['member_name'] + '님의 ' + member_ticket_info.ticket_tb.name + ' 회원권이 홀딩 기간입니다.<br/>' + error_temp
+                                            error_temp = member_info['member_name'] + '님의 ' + member_ticket_info.ticket_tb.name + ' 수강권이 홀딩 기간입니다.<br/>' + error_temp
                                         else:
                                             error_temp = reason_note + closed_date_info.note + '입니다.<br/>' + error_temp
                                 #
                                 # if error_temp is None:
-                                #     error_temp = member_info['member_name'] +'님의 '+ member_ticket_info.ticket_tb.name + ' 회원권이 홀딩 기간입니다.'
+                                #     error_temp = member_info['member_name'] +'님의 '+ member_ticket_info.ticket_tb.name + ' 수강권이 홀딩 기간입니다.'
                                 # else:
-                                #     error_temp = member_info['member_name'] +'님의 '+ member_ticket_info.ticket_tb.name + ' 회원권이 홀딩 기간입니다.<br/>' + error_temp
+                                #     error_temp = member_info['member_name'] +'님의 '+ member_ticket_info.ticket_tb.name + ' 수강권이 홀딩 기간입니다.<br/>' + error_temp
 
                             if error_temp is not None:
                                 raise InternalError
@@ -2068,7 +2068,7 @@ def delete_repeat_schedule_logic2(request):
             try:
                 member_ticket_info = MemberTicketTb.objects.get(member_ticket_id=member_ticket_id, use=USE)
             except ObjectDoesNotExist:
-                error = '회원권 정보를 불러오지 못했습니다.'
+                error = '수강권 정보를 불러오지 못했습니다.'
             if error is None:
                 member_info = member_ticket_info.member
             if error is None:
@@ -2804,7 +2804,7 @@ def delete_lecture_repeat_schedule_logic(request):
             try:
                 member_ticket_info = MemberTicketTb.objects.get(member_ticket_id=member_ticket_id, use=USE)
             except ObjectDoesNotExist:
-                error_temp = '회원권 정보를 불러오지 못했습니다.'
+                error_temp = '수강권 정보를 불러오지 못했습니다.'
             if error_temp is None:
                 member_name = member_ticket_info.member.name
 

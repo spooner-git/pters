@@ -6,7 +6,7 @@ const TEXT = {
         schedule:{KOR:"일정", EN:"Schedule", JP:"日程"},
         member:{KOR:"회원", EN:"Member", JP:"会員"},
         lecture:{KOR:"수업", EN:"Lecture", JP:"授業"},
-        ticket:{KOR:"회원권", EN:"Ticket", JP:"受講券"},
+        ticket:{KOR:"수강권", EN:"Ticket", JP:"受講券"},
         statistics:{KOR:"통계", EN:"Statistics", JP:"統計"},
         attend_check:{KOR:"출석 체크", EN:"Attend check", JP:"出席チェック"},
         notification:{KOR:"알림", EN:"Notification", JP:"通知"},

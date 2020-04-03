@@ -158,8 +158,8 @@ class Lecture_add{
                     lecture_lecture_start_time+
                     '<div class="obj_input_box_full">'+CComponent.dom_tag('기본 수업 시간', null, true) + time + '</div>' +
                     '<div class="obj_input_box_full">'+CComponent.dom_tag('색상 태그')+ color+ '</div>' +
-                    '<div class="obj_input_box_full">'+CComponent.dom_tag('생성시 회원권에 추가')+ ticket+ '</div>' +
-                    '<div class="obj_input_box_full">'+CComponent.dom_tag('생성시 같은 이름의 회원권을 함께 생성')+ ticket_make+ '</div>';
+                    '<div class="obj_input_box_full">'+CComponent.dom_tag('생성시 수강권에 추가')+ ticket+ '</div>' +
+                    '<div class="obj_input_box_full">'+CComponent.dom_tag('생성시 같은 이름의 수강권을 함께 생성')+ ticket_make+ '</div>';
 
         return html;
     }
@@ -342,7 +342,7 @@ class Lecture_add{
 
     dom_row_ticket_select(){
         let id = 'lecture_add_ticket_select';
-        let title = this.data.ticket_id.length == 0 ? '회원권' : this.data.ticket_name.join(', ');
+        let title = this.data.ticket_id.length == 0 ? '수강권' : this.data.ticket_name.join(', ');
         let icon = NONE;
         let icon_r_visible = SHOW;
         let icon_r_text = "";
@@ -350,7 +350,7 @@ class Lecture_add{
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_SELECT, 100, popup_style, null, ()=>{
-                ticket_select = new TicketSelector('#wrapper_box_ticket_select', this, 99, {"title":"회원권 선택"}, (set_data)=>{
+                ticket_select = new TicketSelector('#wrapper_box_ticket_select', this, 99, {"title":"수강권 선택"}, (set_data)=>{
                     this.ticket = set_data;
                     // this.render_content();
                 });
@@ -375,8 +375,8 @@ class Lecture_add{
         let inspect = pass_inspector.ticket();
         if(inspect.barrier == BLOCKED){
             let message = {
-                            title:'같은 이름 회원권을 생성하지 못했습니다.',
-                            comment:`[${inspect.limit_type}] 이용자께서는 회원권을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다. 
+                            title:'같은 이름 수강권을 생성하지 못했습니다.',
+                            comment:`[${inspect.limit_type}] 이용자께서는 수강권을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다. 
                                     <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까?</p>`
                             };
             show_user_confirm (message, ()=>{
@@ -388,7 +388,7 @@ class Lecture_add{
         }
 
         let data = {
-                    "ticket_name":this.data.name+' - 회원권',
+                    "ticket_name":this.data.name+' - 수강권',
                     "lecture_id_list[]":[lecture_id],
                     // "ticket_effective_days":30,
                     // "ticket_reg_count":this.data.count,
@@ -452,7 +452,7 @@ class Lecture_add{
 
         Lecture_func.create(data, (received)=>{
             this.data_sending_now = false;
-            //수업추가시 회원권에 바로 집어넣기 - Lecture_func.create에서 서버에서 lecture_id를 반환해줘야함
+            //수업추가시 수강권에 바로 집어넣기 - Lecture_func.create에서 서버에서 lecture_id를 반환해줘야함
             for(let i=0; i<this.ticket.id.length; i++){
                 let data_to_send = {"ticket_id":this.ticket.id[i], "lecture_id":received.lecture_id};
                 Ticket_func.update_lecture(ADD, data_to_send);
@@ -460,7 +460,7 @@ class Lecture_add{
                     this.callback();
                 }
             }
-            //수업 생성시 같은 이름으로 회원권도 함께 만들기
+            //수업 생성시 같은 이름으로 수강권도 함께 만들기
             if(this.data.make_ticket == ON){ 
                 this.send_date_create_ticket_at_the_same_time(received.lecture_id);
             }

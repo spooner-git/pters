@@ -154,7 +154,7 @@ class Ticket_edit{
         <div class="member_add_upper_box" style="padding-bottom:8px;">
             <div style="display:inline-block;width:200px;">
                 <div style="display:inline-block;width:200px;">
-                    <span style="font-size:20px;font-weight:bold;">회원권 수정</span>
+                    <span style="font-size:20px;font-weight:bold;">수강권 수정</span>
                 </div>
             </div>
         </div>
@@ -165,7 +165,7 @@ class Ticket_edit{
     dom_row_ticket_name_input(){
         let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+ 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{1,20}";
         let pattern_message = "+ - _ 제외 특수문자는 입력 불가";
-        let html = CComponent.create_input_row ('input_ticket_name', this.data.name == null ? '회원권명*' : this.data.name, '/static/common/icon/person_black.png', HIDE, false, (input_data)=>{
+        let html = CComponent.create_input_row ('input_ticket_name', this.data.name == null ? '수강권명*' : this.data.name, '/static/common/icon/person_black.png', HIDE, false, (input_data)=>{
             let user_input_data = input_data;
             if(user_input_data == null){
                 user_input_data = this.data.name;

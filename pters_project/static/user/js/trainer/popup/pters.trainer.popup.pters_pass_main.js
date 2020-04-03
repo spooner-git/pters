@@ -133,7 +133,7 @@ class Pters_pass_main{
         let schedule =  this.dom_row_auth_info("일정", `매일 오늘 기준 전/후 ${data["auth_plan_create"].limit_num}일 등록, 취소`);
         let member =  this.dom_row_auth_info("회원", `${data["auth_member_create"].limit_num} 명 (진행중)`);
         // let lecture =  this.dom_row_auth_info("수업", `${data["auth_group_create"].limit_num} 개 (진행중)`);
-        // let ticket =  this.dom_row_auth_info("회원권", `${data["auth_package_create"].limit_num} 개 (진행중)`);
+        // let ticket =  this.dom_row_auth_info("수강권", `${data["auth_package_create"].limit_num} 개 (진행중)`);
         let statistics =  this.dom_row_auth_info("통계", `${data["auth_analytics_read"].limit_num} 개월씩 조회 가능`);
         let program =  this.dom_row_auth_info("지점", `${data["auth_program_create"].limit_num} 개`);
         let notice =  this.dom_row_auth_info("공지사항", `${data['auth_notice_create'].limit_num > 0 ? '이용 가능': '이용 불가'}`);

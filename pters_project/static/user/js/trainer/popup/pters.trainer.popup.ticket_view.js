@@ -218,9 +218,9 @@ class Ticket_view{
                                                 '</div>';
         let ticket_memo_assembly = '<div class="obj_input_box_full">'+CComponent.dom_tag('설명')+memo+ '</div>';
         let ticket_member_list_assembly = '<div class="obj_input_box_full" style="padding-top:16px;">'+
-                                            // CComponent.dom_tag(`회원권 보유 회원 (${this.data.member_id.length} 명)`,
+                                            // CComponent.dom_tag(`수강권 보유 회원 (${this.data.member_id.length} 명)`,
                                             // {"font-size":"13px", "font-weight":"bold", "letter-spacing":"-0.6px", "padding":"0", "padding-bottom":"8px", "color":"var(--font-sub-normal)", "height":"20px"}) + 
-                                            `${this.data.lecture_id.length == 0 && this.data.name != null ? `<span style='color:var(--font-highlight);font-size:12px;font-weight:bold;'>${CImg.warning(["#fe4e65"], {"vertical-align":"middle", "width":"20px", "height":"20px", "margin-bottom":"4px"})} 포함된 수업이 없어, 회원권 보유 회원들이 일정을 등록할 수 없습니다.</span>` : ""}` +
+                                            `${this.data.lecture_id.length == 0 && this.data.name != null ? `<span style='color:var(--font-highlight);font-size:12px;font-weight:bold;'>${CImg.warning(["#fe4e65"], {"vertical-align":"middle", "width":"20px", "height":"20px", "margin-bottom":"4px"})} 포함된 수업이 없어, 수강권 보유 회원들이 일정을 등록할 수 없습니다.</span>` : ""}` +
                                             member_list+ '</div>';
 
         if(this.data.ticket_state == STATE_END_PROGRESS){
@@ -264,7 +264,7 @@ class Ticket_view{
         if(this.data.ticket_state == STATE_END_PROGRESS){
             style["color"] = "var(--font-sub-normal)";
         }
-        let placeholder = '회원권명*';
+        let placeholder = '수강권명*';
         let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
@@ -290,7 +290,7 @@ class Ticket_view{
         let html = `
         <div class="member_add_upper_box">
             <div style="display:inline-block;width:100%;">
-                <span style="position:absolute;top:0;font-size: 12px;display:block;color: var(--font-sub-normal);font-weight: 500;">회원권</span>
+                <span style="position:absolute;top:0;font-size: 12px;display:block;color: var(--font-sub-normal);font-weight: 500;">수강권</span>
                 ${sub_html}
             </div>
             <span style="display:none;">${title}</span>
@@ -861,8 +861,8 @@ class Ticket_view{
                     // if(inspect.barrier == BLOCKED){
                     //     this.data_sending_now = false;
                     //     let message = {
-                    //         title:`회원권 생성을 완료하지 못했습니다.`,
-                    //         comment:`[${inspect.limit_type}] 이용자께서는 회원권을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다.
+                    //         title:`수강권 생성을 완료하지 못했습니다.`,
+                    //         comment:`[${inspect.limit_type}] 이용자께서는 수강권을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다.
                     //                 <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까?</p>`
                     //     };
                     //     show_user_confirm (message, ()=>{
@@ -872,7 +872,7 @@ class Ticket_view{
 
                     //     return false;
                     // }
-                    show_user_confirm({title:"이 회원권의 복제 회원권을 생성하시겠습니까?"}, ()=>{
+                    show_user_confirm({title:"이 수강권의 복제 수강권을 생성하시겠습니까?"}, ()=>{
                         let auth_inspect = pass_inspector.ticket_create();
                         if(auth_inspect.barrier == BLOCKED){
                             let message = `${auth_inspect.limit_type}`;
@@ -891,8 +891,8 @@ class Ticket_view{
                         if(inspect.barrier == BLOCKED){
                             this.data_sending_now = false;
                             let message = {
-                                title:`회원권 생성을 완료하지 못했습니다.`,
-                                comment:`[${inspect.limit_type}] 이용자께서는 회원권을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다.
+                                title:`수강권 생성을 완료하지 못했습니다.`,
+                                comment:`[${inspect.limit_type}] 이용자께서는 수강권을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다.
                                         <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까?</p>`
                             };
                             show_user_confirm (message, ()=>{
@@ -941,7 +941,7 @@ class Ticket_view{
                         return false;
                     }
                     let message = {
-                        title:`"${this.data.name}" <br> 회원권을 활성화 하시겠습니까?`,
+                        title:`"${this.data.name}" <br> 수강권을 활성화 하시겠습니까?`,
                         comment:`활성화 탭에서 다시 확인할 수 있습니다.`
                     };
                     show_user_confirm(message, ()=>{
@@ -957,13 +957,13 @@ class Ticket_view{
                             // let go_to_shop_button = `<div>${CComponent.button (id, title, style, onclick)}</div>`;
                             
                             // layer_popup.close_layer_popup(); //confirm팝업 닫기
-                            // show_error_message({title:`[${inspect.limit_type}] 이용자께서는 진행중 회원권을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다.
-                            //                     <br> 회원권 활성화에 실패했습니다.${go_to_shop_button}`});
+                            // show_error_message({title:`[${inspect.limit_type}] 이용자께서는 진행중 수강권을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다.
+                            //                     <br> 수강권 활성화에 실패했습니다.${go_to_shop_button}`});
 
                             layer_popup.close_layer_popup(); //confirm팝업 닫기
                             let message = {
-                                title:`회원권 활성화를 완료하지 못했습니다.`,
-                                comment:`[${inspect.limit_type}] 이용자께서는 진행중 회원권을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다. 
+                                title:`수강권 활성화를 완료하지 못했습니다.`,
+                                comment:`[${inspect.limit_type}] 이용자께서는 진행중 수강권을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다. 
                                             <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까?</p>`
                             };         
                             show_user_confirm (message, ()=>{
@@ -983,7 +983,7 @@ class Ticket_view{
                             }catch(e){}
                             layer_popup.close_layer_popup(); //confirm팝업 닫기
                             layer_popup.close_layer_popup(); //option 팝업 닫기
-                            layer_popup.close_layer_popup(); //회원권 정보 팝업 닫기
+                            layer_popup.close_layer_popup(); //수강권 정보 팝업 닫기
                         });
                         
                     });
@@ -998,13 +998,13 @@ class Ticket_view{
                         return false;
                     }
                     let message = {
-                        title:`"${this.data.name}" <br>회원권을 비활성화 하시겠습니까?`,
+                        title:`"${this.data.name}" <br>수강권을 비활성화 하시겠습니까?`,
                         comment:`
                                 ${CImg.warning(["#fe4e65"], {"vertical-align":"middle", "margin-bottom":"4px"})}
                                 <br>
-                                <span style="color:var(--font-highlight); font-size:12px;">이 회원권을 가진 회원들에게서 회원권이 삭제됩니다. <br>
+                                <span style="color:var(--font-highlight); font-size:12px;">이 수강권을 가진 회원들에게서 수강권이 삭제됩니다. <br>
                                 과거 일정은 완료 처리, 미래 일정은 삭제됩니다. <br>
-                                이 회원권 하나만 가진 회원은 종료탭으로 이동됩니다.</span>`
+                                이 수강권 하나만 가진 회원은 종료탭으로 이동됩니다.</span>`
                     };
                     show_user_confirm(message, ()=>{
                         Ticket_func.status({"ticket_id":this.ticket_id, "state_cd":STATE_END_PROGRESS}, ()=>{
@@ -1016,7 +1016,7 @@ class Ticket_view{
                             }catch(e){}
                             layer_popup.close_layer_popup(); //confirm팝업 닫기
                             layer_popup.close_layer_popup(); //option 팝업 닫기
-                            layer_popup.close_layer_popup(); //회원권 정보 팝업 닫기
+                            layer_popup.close_layer_popup(); //수강권 정보 팝업 닫기
                         });
                         
                     });
@@ -1031,11 +1031,11 @@ class Ticket_view{
                         return false;
                     }
                     let message = {
-                        title:`"${this.data.name}" <br> 회원권을 영구 삭제 하시겠습니까?`,
+                        title:`"${this.data.name}" <br> 수강권을 영구 삭제 하시겠습니까?`,
                         comment:`데이터를 복구할 수 없습니다. <br><br>
                                 ${CImg.warning(["#fe4e65"], {"vertical-align":"middle", "margin-bottom":"4px"})}
                                 <br>
-                                <span style="color:var(--font-highlight); font-size:12px;">회원권과 연결된 수업, 회원에게서 <br>이 회원권과 관련된 정보가 모두 삭제됩니다.</span>`
+                                <span style="color:var(--font-highlight); font-size:12px;">수강권과 연결된 수업, 회원에게서 <br>이 수강권과 관련된 정보가 모두 삭제됩니다.</span>`
                     };
                     show_user_confirm(message, ()=>{
                         Ticket_func.delete({"ticket_id":this.ticket_id}, ()=>{
@@ -1047,7 +1047,7 @@ class Ticket_view{
                             }catch(e){}
                             layer_popup.close_layer_popup(); //confirm팝업 닫기
                             layer_popup.close_layer_popup(); //option 팝업 닫기
-                            layer_popup.close_layer_popup(); //회원권 정보 팝업 닫기
+                            layer_popup.close_layer_popup(); //수강권 정보 팝업 닫기
                         });
                     });
                 }
@@ -1210,7 +1210,7 @@ class Ticket_simple_view{
     dom_row_toolbox(){
         let text_button_style = {"color":"var(--font-highlight)", "font-size":"13px", "font-weight":"500", "padding":"10px 0"};
         let text_button = CComponent.text_button ("detail_ticket_info", "더보기", text_button_style, ()=>{
-            show_user_confirm({title:`작업중이던 항목을 모두 닫고 회원권 메뉴로 이동합니다.`}, ()=>{
+            show_user_confirm({title:`작업중이던 항목을 모두 닫고 수강권 메뉴로 이동합니다.`}, ()=>{
                 layer_popup.all_close_layer_popup();
                 if($(window).width() > 650){
                     sideGoPage("ticket_page_type");

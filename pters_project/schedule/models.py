@@ -18,7 +18,7 @@ from trainer.models import ClassTb, LectureTb
 class RepeatScheduleTb(TimeStampedModel):
     repeat_schedule_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     class_tb = models.ForeignKey(ClassTb, verbose_name='지점', on_delete=models.SET_NULL, null=True)  # Field name made lowercase.
-    member_ticket_tb = models.ForeignKey(MemberTicketTb, verbose_name='회원권', on_delete=models.SET_NULL, db_column='lecture_tb_id',
+    member_ticket_tb = models.ForeignKey(MemberTicketTb, verbose_name='수강권', on_delete=models.SET_NULL, db_column='lecture_tb_id',
                                          null=True)  # Field name made lowercase.
     lecture_tb = models.ForeignKey(LectureTb, verbose_name='수업', on_delete=models.SET_NULL, db_column='group_tb_id',
                                    null=True)  # Field name made lowercase.
@@ -67,7 +67,7 @@ class RepeatScheduleTb(TimeStampedModel):
 class ScheduleTb(TimeStampedModel):
     schedule_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     class_tb = models.ForeignKey(ClassTb, verbose_name='지점', on_delete=models.CASCADE, null=True)  # Field name made lowercase.
-    member_ticket_tb = models.ForeignKey(MemberTicketTb, verbose_name='회원권', on_delete=models.CASCADE, db_column='lecture_tb_id', null=True)
+    member_ticket_tb = models.ForeignKey(MemberTicketTb, verbose_name='수강권', on_delete=models.CASCADE, db_column='lecture_tb_id', null=True)
     lecture_tb = models.ForeignKey(LectureTb, verbose_name='수업', on_delete=models.CASCADE, db_column='group_tb_id',
                                    null=True)  # Field name made lowercase.
     lecture_schedule_id = models.IntegerField('상위 일정 ID', db_column='GROUP_SCHEDULE_ID', blank=True, null=True, default='')
@@ -125,7 +125,7 @@ class DeleteScheduleTb(models.Model):
     delete_schedule_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     schedule_id = models.IntegerField(db_column='SCHEDULE_ID', null=False)
     class_tb = models.ForeignKey(ClassTb, verbose_name='지점', on_delete=models.CASCADE, null=True)  # Field name made lowercase.
-    member_ticket_tb = models.ForeignKey(MemberTicketTb, verbose_name='회원권', on_delete=models.CASCADE, db_column='lecture_tb_id',
+    member_ticket_tb = models.ForeignKey(MemberTicketTb, verbose_name='수강권', on_delete=models.CASCADE, db_column='lecture_tb_id',
                                          null=True)  # Field name made lowercase.
     lecture_tb = models.ForeignKey(LectureTb, verbose_name='수업', on_delete=models.CASCADE, db_column='group_tb_id', null=True)
     lecture_schedule_id = models.IntegerField('상위 일정 ID', db_column='GROUP_SCHEDULE_ID', blank=True, null=True, default='')
@@ -160,7 +160,7 @@ class DeleteRepeatScheduleTb(models.Model):
     delete_repeat_schedule_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     repeat_schedule_id = models.IntegerField(db_column='REPEAT_SCHEDULE_ID', null=False)
     class_tb = models.ForeignKey(ClassTb, verbose_name='지점', on_delete=models.CASCADE, null=True)  # Field name made lowercase.
-    member_ticket_tb = models.ForeignKey(MemberTicketTb, verbose_name='회원권', on_delete=models.CASCADE, db_column='lecture_tb_id',
+    member_ticket_tb = models.ForeignKey(MemberTicketTb, verbose_name='수강권', on_delete=models.CASCADE, db_column='lecture_tb_id',
                                          null=True)  # Field name made lowercase.
     lecture_tb = models.ForeignKey(LectureTb, verbose_name='수업', on_delete=models.CASCADE, db_column='group_tb_id',
                                    null=True)  # Field name made lowercase.

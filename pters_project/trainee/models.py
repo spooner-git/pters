@@ -13,7 +13,7 @@ class MemberTicketTb(TimeStampedModel):
     member_ticket_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     # class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE)  # Field name made lowercase.
     member = models.ForeignKey(MemberTb, verbose_name='회원', on_delete=models.CASCADE)  # Field name made lowercase.
-    ticket_tb = models.ForeignKey("trainer.TicketTb", verbose_name='회원권', on_delete=models.CASCADE, db_column='package_tb_id', null=True)
+    ticket_tb = models.ForeignKey("trainer.TicketTb", verbose_name='수강권', on_delete=models.CASCADE, db_column='package_tb_id', null=True)
     member_ticket_reg_count = models.IntegerField('등록 횟수', db_column='LECTURE_REG_COUNT', default=0)
     member_ticket_rem_count = models.IntegerField('남은 횟수', db_column='LECTURE_REM_COUNT', default=0)
     member_ticket_avail_count = models.IntegerField('예약 가능 횟수', db_column='LECTURE_AVAIL_COUNT', default=0)
@@ -34,12 +34,12 @@ class MemberTicketTb(TimeStampedModel):
     class Meta:
         managed = False
         db_table = 'LECTURE_TB'
-        verbose_name = '회원권'
-        verbose_name_plural = '회원권'
+        verbose_name = '수강권'
+        verbose_name_plural = '수강권'
 
     def __str__(self):
 
-        return self.ticket_tb.__str__().split('(지점)-')[1]+'-'+self.member.__str__()+'(회원권)'
+        return self.ticket_tb.__str__().split('(지점)-')[1]+'-'+self.member.__str__()+'(수강권)'
 
     def get_state_cd_name(self):
         try:
@@ -53,7 +53,7 @@ class MemberTicketTb(TimeStampedModel):
 class MemberClosedDateHistoryTb(TimeStampedModel):
     member_closed_date_history_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     member = models.ForeignKey(MemberTb, verbose_name='회원', on_delete=models.CASCADE, null=True)
-    member_ticket_tb = models.ForeignKey(MemberTicketTb, verbose_name='회원권', on_delete=models.CASCADE,
+    member_ticket_tb = models.ForeignKey(MemberTicketTb, verbose_name='수강권', on_delete=models.CASCADE,
                                          db_column='lecture_tb_id', null=True)
     schedule_tb = models.ForeignKey("schedule.ScheduleTb", verbose_name='일정', on_delete=models.DO_NOTHING, null=True)
     reason_type_cd = models.CharField('불가 이유', db_column='REASON_TYPE_CD', max_length=45, blank=True, default='')
@@ -82,7 +82,7 @@ class ProgramNoticeHistoryTb(TimeStampedModel):
         verbose_name_plural = '회원 지점 공지 조회 history'
 
 
-# 회원권 연결 정보 (이제 사용 안함)
+# 수강권 연결 정보 (이제 사용 안함)
 class MemberMemberTicketTb(TimeStampedModel):
     member_member_ticket_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.

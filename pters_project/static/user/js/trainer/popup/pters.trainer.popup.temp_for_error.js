@@ -92,7 +92,7 @@ class TempForError {
             `
                 <div ${flex_style}><div ${flex_child1}>회원명</div><div ${flex_child2}>${data.member_name}</div></div>
                 <div ${flex_style}><div ${flex_child1}>등록일</div><div ${flex_child2}>${data.member_ticket_reg_dt.split('.')[0]}</div></div>
-                <div ${flex_style}><div ${flex_child1}>회원권명</div><div ${flex_child2}>${data.member_ticket_name}</div></div>
+                <div ${flex_style}><div ${flex_child1}>수강권명</div><div ${flex_child2}>${data.member_ticket_name}</div></div>
                 <div ${flex_style}><div ${flex_child1}>등록횟수</div><div ${flex_child2}>${member_ticket_reg_count}</div></div>
                 <div ${flex_style}><div ${flex_child1}>기간</div><div ${flex_child2}>${member_ticket_start_end_date}</div></div>
                 <div ${flex_style}><div ${flex_child1}>가격</div><div ${flex_child2}>${data.member_ticket_price} 원</div></div>
