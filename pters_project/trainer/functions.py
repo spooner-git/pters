@@ -95,7 +95,7 @@ def func_get_member_end_list(class_id, user_id, keyword):
                                    " and " + str(class_id) +\
                                    " = (select D.CLASS_TB_ID from CLASS_LECTURE_TB as D" \
                                    " where D.LECTURE_TB_ID=C.ID and D.CLASS_TB_ID=" + str(class_id) + ")" \
-                                   " and C.STATE_CD=\'IP\' and C.USE=1"
+                                   " and (C.STATE_CD=\'IP\' OR C.STATE_CD=\'HD\') and C.USE=1"
 
     all_member_ticket_list = ClassMemberTicketTb.objects.select_related(
         'member_ticket_tb__ticket_tb',
