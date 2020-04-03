@@ -49,7 +49,7 @@ class Plan_view{
                 }
             ],
             note: "",
-            schedule_holding_extension_flag: OFF,
+            extension_flag: OFF,
             //plan_add 팝업의 data보다 추가된 항목
             lecture_color: null,
             lecture_font_color: null,
@@ -201,7 +201,7 @@ class Plan_view{
         this.data.lecture_state_cd = data.schedule_info[0].state_cd;
         this.data.lecture_permission_state_cd = data.schedule_info[0].permission_state_cd;
         this.data.note = data.schedule_info[0].note;
-        this.data.schedule_holding_extension_flag = data.schedule_info[0].extension_flag;
+        this.data.extension_flag = data.schedule_info[0].extension_flag;
         this.data.schedule_type = data.schedule_info[0].schedule_type;
 
         this.data.reg_member_id = data.schedule_info[0].reg_member_id;
@@ -1144,10 +1144,10 @@ class Plan_view{
 
     dom_row_schedule_holding_extension_select(){
         let id = "schedule_extension_select_view";
-        let power = this.data.schedule_holding_extension_flag;
+        let power = this.data.extension_flag;
         let style = {"margin-top":"10px", "margin-left":"40px"};
         let onclick = (on_off)=>{
-            this.data.schedule_holding_extension_flag = on_off;
+            this.data.extension_flag = on_off;
             this.render();
         };
         let html = CComponent.toggle_button (id, power, style, onclick);
@@ -1372,7 +1372,7 @@ class Plan_view{
     check_whether_info_changed(){
         let ori_data = this.received_data.schedule_info[0];
         let new_data = this.data;
-        let need_to_check = ["start_dt", "start_time", "end_time", "note", "schedule_holding_extension_flag"];
+        let need_to_check = ["start_dt", "start_time", "end_time", "note", "extension_flag"];
         let length = need_to_check.length;
 
         var if_changed_item_exist = false;
@@ -1402,7 +1402,7 @@ class Plan_view{
         }
 
         let data_to_send = {"schedule_ids[]":schedule_ids, "start_dt":start_dt, "end_dt":end_dt,
-            "extension_flag":this.data.schedule_holding_extension_flag};
+            "extension_flag":this.data.extension_flag};
         let data_to_send_for_memo_update = {"schedule_id": this.schedule_id, "add_memo":this.note};
         let url = '/schedule/update_schedule/';
         let url_update_memo = '/schedule/update_memo_schedule/';
