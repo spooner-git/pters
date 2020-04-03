@@ -895,7 +895,7 @@ class Member_view{
                     '#d2d1cf',
                     data.member_closed_reason_type_cd_name,
                     data.member_closed_note,
-                    data.member_closed_start_date+' - '+data.member_closed_end_date,
+                    data.member_closed_start_date+' ~ '+data.member_closed_end_date,
                     data.member_closed_extension_flag
                 )
             );
@@ -992,13 +992,15 @@ class Member_view{
         if(member_closed_extension_flag == 1){
             member_extension_tag = '<span style="color:var(--font-highlight);">(수강권 연장)</span>'
         }
-        let html = `<div id="closed_item_${member_closed_date_history_id}" style="display:flex;width:100%;height:60px;padding:15px 0px;box-sizing:border-box;cursor:pointer;">
+        let html = `<div id="closed_item_${member_closed_date_history_id}" style="display:flex;width:100%;height:75px;padding:5px 0px;box-sizing:border-box;cursor:pointer; margin-top:15px;">
                         <div style="flex-basis:16px;">
                             <div style="float:left;width:4px;height:100%;background-color:${color}"></div>
                         </div>
                         <div style="flex:1 1 0">
-                            <div style="font-size:14px;font-weight:500;letter-spacing:-0.7px;color:var(--font-base);">${member_closed_date_name} ${member_extension_tag} </div>
-                            <div style="font-size:12px;font-weight:500;letter-spacing:-0.5px;color:var(--font-sub-normal);">${member_closed_note} / ${member_closed_period}</div>
+                            <div style="font-size:14px;font-weight:500;letter-spacing:-0.7px;color:var(--font-base);">${member_closed_date_name} </div>
+                            <!--<div style="font-size:14px;font-weight:500;letter-spacing:-0.7px;color:var(&#45;&#45;font-base);"> </div>-->
+                            <div style="font-size:14px;font-weight:500;letter-spacing:-0.5px;color:var(--font-base); margin-top:3px;">${member_closed_period} ${member_extension_tag}</div>
+                            <div style="font-size:12px;font-weight:500;letter-spacing:-0.5px;color:var(--font-sub-normal); margin-top:3px;">${member_closed_note}</div>
                         </div>
                         <div style="flex-basis:30px;">
                             ${CImg.more("", {"vertical-align":"top"})}

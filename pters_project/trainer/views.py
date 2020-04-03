@@ -1109,8 +1109,7 @@ class GetMemberClosedDateListView(LoginRequiredMixin, AccessTestMixin, View):
                 'member_ticket_tb__ticket_tb__class_tb').filter(member_id=member_id,
                                                                 member_ticket_tb__ticket_tb__class_tb_id=class_id,
                                                                 # end_date__gte=today,
-                                                                use=USE).order_by('reason_type_cd',
-                                                                                  'start_date', 'end_date')
+                                                                use=USE).order_by('-start_date', '-end_date')
 
             for member_closed_info in member_closed_data:
                 member_closed_reason_type_cd_name = '홀딩'
