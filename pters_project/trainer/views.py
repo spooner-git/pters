@@ -1106,7 +1106,9 @@ class GetMemberClosedDateListView(LoginRequiredMixin, AccessTestMixin, View):
 
         if error is None:
             member_closed_data = MemberClosedDateHistoryTb.objects.select_related(
-                'member_ticket_tb__ticket_tb__class_tb').filter(member_id=member_id,
+                'member_ticket_tb__ticket_tb__class_tb').filter(Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS)
+                                                                | Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
+                                                                member_id=member_id,
                                                                 member_ticket_tb__ticket_tb__class_tb_id=class_id,
                                                                 # end_date__gte=today,
                                                                 use=USE).order_by('-start_date', '-end_date')
