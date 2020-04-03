@@ -1096,6 +1096,7 @@ class GetTrainerClosedDateView(LoginRequiredMixin, AccessTestMixin, View):
 
 class GetMemberClosedDateListView(LoginRequiredMixin, AccessTestMixin, View):
     def get(self, request):
+        class_id = request.session.get('class_id', '')
         member_id = request.GET.get('member_id', '')
         error = None
         today = datetime.date.today()
@@ -1106,22 +1107,25 @@ class GetMemberClosedDateListView(LoginRequiredMixin, AccessTestMixin, View):
 
         if error is None:
             member_closed_data = MemberClosedDateHistoryTb.objects.select_related(
-                'member_ticket_tb__ticket_tb').filter(member_id=member_id,
+                'member_ticket_tb__ticket_tb__class_tb').filter(member_id=member_id,
+                                                      member_ticket_tb__ticket_tb__class_tb_id=class_id,
                                                       # end_date__gte=today,
                                                       use=USE).order_by('reason_type_cd', 'start_date', 'end_date')
 
             for member_closed_info in member_closed_data:
-                member_closed_reason_type_cd_name = '수강권 홀딩'
+                member_closed_reason_type_cd_name = '홀딩'
                 member_ticket_id = ''
                 if member_closed_info.reason_type_cd == 'HD':
                     if member_closed_info.member_ticket_tb is not None:
                         member_ticket_id = member_closed_info.member_ticket_tb_id
                         member_closed_reason_type_cd_name = member_closed_info.member_ticket_tb.ticket_tb.name\
-                                                            + ' ' + member_closed_reason_type_cd_name
+                                                            + ' - ' + member_closed_reason_type_cd_name
                 elif member_closed_info.reason_type_cd == 'PROGRAM_CLOSED':
-                    member_closed_reason_type_cd_name = '강사 휴무일'
+                    member_closed_reason_type_cd_name = member_closed_info.member_ticket_tb.ticket_tb.name\
+                                                        + ' -  휴무일'
                 elif member_closed_info.reason_type_cd == 'MEMBER_CLOSED':
-                    member_closed_reason_type_cd_name = '회원 불가일정'
+                    member_closed_reason_type_cd_name = member_closed_info.member_ticket_tb.ticket_tb.name\
+                                                        + ' -  회원 불가일정'
                 member_closed_dict = {
                     'member_closed_date_history_id': member_closed_info.member_closed_date_history_id,
                     'member_closed_date_member_ticket_id': member_ticket_id,
@@ -1142,6 +1146,7 @@ class GetMemberClosedDateListView(LoginRequiredMixin, AccessTestMixin, View):
 
 class GetMemberClosedDateListHistoryView(LoginRequiredMixin, AccessTestMixin, View):
     def get(self, request):
+        class_id = request.session.get('class_id', '')
         member_id = request.GET.get('member_id', '')
         page = request.GET.get('page', '')
         error = None
@@ -1151,10 +1156,11 @@ class GetMemberClosedDateListHistoryView(LoginRequiredMixin, AccessTestMixin, Vi
             error = '회원 정보를 불러오지 못했습니다.'
 
         if error is None:
-            member_closed_data = MemberClosedDateHistoryTb.objects.filter(member_id=member_id,
-                                                                          use=USE).order_by('reason_type_cd',
-                                                                                            'start_date',
-                                                                                            'end_date')
+            member_closed_data = MemberClosedDateHistoryTb.objects.select_related(
+                'member_ticket_tb__ticket_tb__class_tb').filter(member_id=member_id,
+                                                                member_ticket_tb__ticket_tb__class_tb_id=class_id,
+                                                                use=USE).order_by('reason_type_cd',
+                                                                                  'start_date', 'end_date')
             paginator = Paginator(member_closed_data, SCHEDULE_PAGINATION_COUNTER)
             try:
                 member_closed_data = paginator.page(page)

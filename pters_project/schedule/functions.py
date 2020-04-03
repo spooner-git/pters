@@ -367,6 +367,7 @@ def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
                                                    class_tb_id=class_id,
                                                    member_ticket_tb__start_date__lte=start_datetime,
                                                    member_ticket_tb__end_date__gte=start_datetime,
+                                                   auth_cd=AUTH_TYPE_VIEW,
                                                    use=USE)
                     start_date_info = str(start_datetime).split(' ')[0]
                     for member_ticket_info in member_ticket_data:

@@ -22,7 +22,7 @@ from configs.const import ON_SCHEDULE_TYPE, USE, AUTO_FINISH_OFF, AUTO_FINISH_ON
     TO_TRAINEE_LESSON_ALARM_OFF, SCHEDULE_DUPLICATION_DISABLE, AUTO_ABSENCE_ON, SCHEDULE_DUPLICATION_ENABLE, \
     LECTURE_TYPE_ONE_TO_ONE, STATE_CD_NOT_PROGRESS, PERMISSION_STATE_CD_APPROVE, STATE_CD_FINISH, STATE_CD_ABSENCE, \
     OFF_SCHEDULE_TYPE, TO_SHARED_TRAINER_LESSON_ALARM_OFF, TO_SHARED_TRAINER_LESSON_ALARM_ON, PERMISSION_STATE_CD_WAIT, \
-    CLOSED_SCHEDULE_TYPE, UN_USE, STATE_CD_IN_PROGRESS, STATE_CD_HOLDING
+    CLOSED_SCHEDULE_TYPE, UN_USE, STATE_CD_IN_PROGRESS, STATE_CD_HOLDING, AUTH_TYPE_VIEW
 from configs import settings
 from login.models import LogTb, MemberTb
 from schedule.forms import AddScheduleTbForm
@@ -669,6 +669,7 @@ def update_schedule_logic(request):
                                                    class_tb_id=class_id,
                                                    member_ticket_tb__start_date__lte=start_date,
                                                    member_ticket_tb__end_date__gte=start_date,
+                                                   auth_cd=AUTH_TYPE_VIEW,
                                                    use=USE)
                     for member_ticket_info in member_ticket_data:
                         hold_note = '휴무일'
