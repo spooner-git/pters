@@ -12,7 +12,7 @@ from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, USE, MEMBER_RESERVE_PR
 from login.models import CommonCdTb
 from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb
 from trainer.models import ClassTb, ClassMemberTicketTb, SettingTb, TicketLectureTb
-from .models import MemberTicketTb
+from .models import MemberTicketTb, MemberClosedDateHistoryTb
 
 
 def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_date):
@@ -540,6 +540,7 @@ def func_get_trainee_select_schedule(context, class_id, user_id, select_date):
 
 def func_get_trainee_ing_member_ticket_list(context, class_id, user_id):
 
+    today = datetime.date.today()
     member_ticket_list = ClassMemberTicketTb.objects.select_related(
         'member_ticket_tb__member',
         'member_ticket_tb__ticket_tb'
@@ -554,6 +555,15 @@ def func_get_trainee_ing_member_ticket_list(context, class_id, user_id):
         member_ticket_info.ticket_lecture_data = TicketLectureTb.objects.filter(
             ticket_tb_id=member_ticket_info_ticket_tb.ticket_id, ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
             lecture_tb__state_cd=STATE_CD_IN_PROGRESS, use=USE)
+        # 오늘 날짜 기준 holding 내역 가져오기 (어차피 1개만 있음)
+        try:
+            member_ticket_info.hold_tb = MemberClosedDateHistoryTb.objects.get(member_ticket_tb_id=member_ticket_info.member_ticket_tb_id,
+                                                                               reason_type_cd=STATE_CD_HOLDING,
+                                                                               start_date__lte=today,
+                                                                               end_date__gte=today,
+                                                                               use=USE)
+        except ObjectDoesNotExist:
+            member_ticket_info.hold_tb = None
 
     context['ing_member_ticket_data'] = member_ticket_list
     return context
