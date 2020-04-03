@@ -606,8 +606,7 @@ def func_delete_schedule(class_id, schedule_id,  user_id):
     if error is None:
         try:
             with transaction.atomic():
-                if str(schedule_info.en_dis_type) == str(CLOSED_SCHEDULE_TYPE) \
-                        and str(schedule_info.extension_flag) == str(USE):
+                if str(schedule_info.en_dis_type) == str(CLOSED_SCHEDULE_TYPE):
                     func_delete_hold_closed_date_info(schedule_info.schedule_id)
                 delete_schedule_info = DeleteScheduleTb(schedule_id=schedule_info.schedule_id,
                                                         class_tb_id=schedule_info.class_tb_id,
