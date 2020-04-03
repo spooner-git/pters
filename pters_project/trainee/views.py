@@ -1761,6 +1761,7 @@ class PopupMemberTicketInfoView(LoginRequiredMixin, AccessTestMixin, TemplateVie
         member_ticket_info = None
         ticket_info = None
         schedule_list = None
+        closed_date_history_data = None
 
         class_list = ClassMemberTicketTb.objects.select_related(
             'class_tb__member').filter(member_ticket_tb_id=member_ticket_id, auth_cd=AUTH_TYPE_VIEW,
@@ -1807,11 +1808,15 @@ class PopupMemberTicketInfoView(LoginRequiredMixin, AccessTestMixin, TemplateVie
             ).filter(ticket_tb_id=member_ticket_info.ticket_tb_id, ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
                      lecture_tb__state_cd=STATE_CD_IN_PROGRESS, lecture_tb__use=USE,
                      use=USE).order_by('lecture_tb__reg_dt')
+        if error is None:
+            closed_date_history_data = MemberClosedDateHistoryTb.objects.filter(member_ticket_tb_id=member_ticket_id,
+                                                                                use=USE).order_by('start_date',
+                                                                                                  'end_date')
         context['ticket_info'] = ticket_info
         context['class_data'] = class_list
         context['member_ticket_info'] = member_ticket_info
         context['schedule_data'] = schedule_list
-
+        context['closed_date_history_data'] = closed_date_history_data
         return context
 
 
