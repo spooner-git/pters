@@ -807,8 +807,9 @@ def func_add_hold_closed_date_info(user_id, class_id, member_ticket_id, schedule
                 class_member_ticket_info.mod_member_id = user_id
                 class_member_ticket_info.save()
                 if str(extension_flag) == str(USE):
-                    member_ticket_info.end_date += datetime.timedelta(days=date_delta)
-                    member_ticket_info.save()
+                    if str(member_ticket_info.end_date) < '9999-12-31':
+                        member_ticket_info.end_date += datetime.timedelta(days=date_delta)
+                        member_ticket_info.save()
 
         except ValueError:
             error = '등록 값에 문제가 있습니다.'

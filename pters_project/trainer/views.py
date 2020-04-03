@@ -1118,14 +1118,15 @@ class GetMemberClosedDateListView(LoginRequiredMixin, AccessTestMixin, View):
                 if member_closed_info.reason_type_cd == 'HD':
                     if member_closed_info.member_ticket_tb is not None:
                         member_ticket_id = member_closed_info.member_ticket_tb_id
-                        member_closed_reason_type_cd_name = member_closed_info.member_ticket_tb.ticket_tb.name\
-                                                            + ' - ' + member_closed_reason_type_cd_name
+                        member_closed_reason_type_cd_name = '홀딩 - ' + member_closed_info.member_ticket_tb.ticket_tb.name
+
                 elif member_closed_info.reason_type_cd == 'PROGRAM_CLOSED':
-                    member_closed_reason_type_cd_name = member_closed_info.member_ticket_tb.ticket_tb.name\
-                                                        + ' -  휴무일'
+                    member_closed_reason_type_cd_name = '휴무일 - ' + member_closed_info.member_ticket_tb.ticket_tb.name
+
                 elif member_closed_info.reason_type_cd == 'MEMBER_CLOSED':
-                    member_closed_reason_type_cd_name = member_closed_info.member_ticket_tb.ticket_tb.name\
-                                                        + ' -  회원 불가일정'
+                    member_closed_reason_type_cd_name = '회원 불가일정 - '\
+                                                        + member_closed_info.member_ticket_tb.ticket_tb.name
+
                 member_closed_dict = {
                     'member_closed_date_history_id': member_closed_info.member_closed_date_history_id,
                     'member_closed_date_member_ticket_id': member_ticket_id,
