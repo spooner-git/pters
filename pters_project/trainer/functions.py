@@ -834,14 +834,17 @@ def func_delete_hold_member_ticket_info(member_closed_date_history_id):
         error = '수강권 홀딩 정보를 불러오지 못했습니다.'
 
     if error is None:
+        member_ticket_tb = member_ticket_hold_history_info.member_ticket_tb
         if member_ticket_hold_history_info.extension_flag == USE:
             date_delta = (member_ticket_hold_history_info.end_date - member_ticket_hold_history_info.start_date).days + 1
-            member_ticket_tb = member_ticket_hold_history_info.member_ticket_tb
 
             unlimited_end_date = datetime.datetime.strptime('9999-12-31', '%Y-%m-%d').date()
             if member_ticket_tb.end_date < unlimited_end_date:
                 member_ticket_tb.end_date -= datetime.timedelta(days=date_delta)
-                member_ticket_tb.save()
+
+        if member_ticket_tb.state_cd == STATE_CD_HOLDING:
+            member_ticket_tb.state_cd = STATE_CD_IN_PROGRESS
+        member_ticket_tb.save()
 
         member_ticket_hold_history_info.delete()
 
