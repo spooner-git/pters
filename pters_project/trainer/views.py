@@ -1161,8 +1161,10 @@ class GetMemberClosedDateListHistoryView(LoginRequiredMixin, AccessTestMixin, Vi
         member_id = request.GET.get('member_id', '')
         page = request.GET.get('page', '')
         error = None
-        member_closed_list = {'HD': [], 'PROGRAM_CLOSED': [], 'MEMBER_CLOSED': [], 'this_page':0, 'max_page':0}
-
+        member_closed_list = []
+        # member_closed_list = {'HD': [], 'PROGRAM_CLOSED': [], 'MEMBER_CLOSED': [], 'this_page':0, 'max_page':0}
+        this_page = page
+        max_page = 0
         if member_id is None or member_id == '':
             error = '회원 정보를 불러오지 못했습니다.'
 
@@ -1170,33 +1172,57 @@ class GetMemberClosedDateListHistoryView(LoginRequiredMixin, AccessTestMixin, Vi
             member_closed_data = MemberClosedDateHistoryTb.objects.select_related(
                 'member_ticket_tb__ticket_tb__class_tb').filter(member_id=member_id,
                                                                 member_ticket_tb__ticket_tb__class_tb_id=class_id,
-                                                                use=USE).order_by('reason_type_cd',
-                                                                                  'start_date', 'end_date')
+                                                                # end_date__gte=today,
+                                                                use=USE).order_by('-start_date', '-end_date')
             paginator = Paginator(member_closed_data, SCHEDULE_PAGINATION_COUNTER)
             try:
                 member_closed_data = paginator.page(page)
             except EmptyPage:
                 member_closed_data = []
 
-            member_closed_list['max_page'] = paginator.num_pages
-            member_closed_list['this_page'] = page
+            max_page = paginator.num_pages
 
             for member_closed_info in member_closed_data:
+                member_closed_reason_type_cd_name = '일시정지'
+                member_ticket_id = ''
+                if member_closed_info.reason_type_cd == 'HD':
+                    if member_closed_info.member_ticket_tb is not None:
+                        member_ticket_id = member_closed_info.member_ticket_tb_id
+                        member_closed_reason_type_cd_name = member_closed_info.member_ticket_tb.ticket_tb.name
+
+                elif member_closed_info.reason_type_cd == 'PROGRAM_CLOSED':
+                    member_closed_reason_type_cd_name = '휴무일 - ' + member_closed_info.member_ticket_tb.ticket_tb.name
+
+                elif member_closed_info.reason_type_cd == 'MEMBER_CLOSED':
+                    member_closed_reason_type_cd_name = '회원 불가일정 - '\
+                                                        + member_closed_info.member_ticket_tb.ticket_tb.name
+
+                schedule_id = ''
+                repeat_schedule_id = ''
+                schedule_tb = member_closed_info.schedule_tb
+                if schedule_tb is not None and schedule_tb != '':
+                    schedule_id = schedule_tb.schedule_id
+                    if schedule_tb.repeat_schedule_tb is not None and schedule_tb.repeat_schedule_tb != '':
+                        repeat_schedule_id = schedule_tb.repeat_schedule_tb_id
                 member_closed_dict = {
                     'member_closed_date_history_id': member_closed_info.member_closed_date_history_id,
-                    'member_closed_date_member_ticket_id': member_closed_info.start_date,
+                    'member_closed_date_member_ticket_id': member_ticket_id,
+                    'member_closed_schedule_id': schedule_id,
+                    'member_closed_repeat_schedule_id': repeat_schedule_id,
                     'member_closed_start_date': member_closed_info.start_date,
                     'member_closed_end_date': member_closed_info.end_date,
                     'member_closed_note': member_closed_info.note,
+                    'member_closed_reason_type_cd': member_closed_info.reason_type_cd,
+                    'member_closed_reason_type_cd_name': member_closed_reason_type_cd_name,
                     'member_closed_extension_flag': member_closed_info.extension_flag
                 }
-                member_closed_list[member_closed_info.reason_type_cd].append(member_closed_dict)
+                member_closed_list.append(member_closed_dict)
 
         if error is not None:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
             messages.error(request, error)
 
-        return JsonResponse({'member_closed_list': member_closed_list},
+        return JsonResponse({'member_closed_list': member_closed_list, 'this_page':this_page, 'max_page':max_page},
                             json_dumps_params={'ensure_ascii': True})
 
 
