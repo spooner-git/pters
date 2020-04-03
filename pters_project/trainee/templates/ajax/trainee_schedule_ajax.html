@@ -38,6 +38,9 @@
       "offTimeArray_end_date" :
       [{% for off_schedule_info in off_schedule_data %}"{{ off_schedule_info.end_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
+      "closed_date_array" :
+      [{% for closed_schedule_info in closed_schedule_data %}"{{ closed_schedule_info.closed_date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
       "lecture_schedule_id":
       [{% for lecture_schedule_info in lecture_schedule_data %}"{{ lecture_schedule_info.schedule_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "lecture_schedule_lecture_id":

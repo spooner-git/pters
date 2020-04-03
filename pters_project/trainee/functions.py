@@ -157,6 +157,22 @@ def func_get_trainee_off_schedule(context, class_id, start_date, end_date):
         if schedule_info.note is not None and schedule_info.note != '':
             schedule_info.note = schedule_info.note.replace('\n', '<br/>')
     context['off_schedule_data'] = schedule_data
+    return context
+
+
+def func_get_trainee_closed_schedule(context, class_id, start_date, end_date):
+    # off_schedule_list = []
+
+    # off 스케쥴 전달
+    schedule_data = ScheduleTb.objects.filter(
+        class_tb_id=class_id, start_dt__gte=start_date, en_dis_type=CLOSED_SCHEDULE_TYPE,
+        start_dt__lt=end_date, use=USE).order_by('start_dt')
+
+    for schedule_info in schedule_data:
+        if schedule_info.note is not None and schedule_info.note != '':
+            schedule_info.note = schedule_info.note.replace('\n', '<br/>')
+        schedule_info.closed_date = str(schedule_info.start_dt).split(' ')[0]
+    context['closed_schedule_data'] = schedule_data
 
     return context
 

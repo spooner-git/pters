@@ -35,7 +35,8 @@ from .functions import func_get_class_member_ticket_count, func_get_member_ticke
     func_get_trainee_on_repeat_schedule, func_check_select_time_reserve_setting, \
     func_get_member_ticket_connection_list, func_get_trainee_next_schedule_by_class_id,\
     func_get_trainee_select_schedule, func_get_trainee_ing_member_ticket_list, func_check_select_date_reserve_setting, \
-    func_get_trainee_ticket_list, func_get_class_list_only_view, func_get_trainee_setting_list
+    func_get_trainee_ticket_list, func_get_class_list_only_view, func_get_trainee_setting_list, \
+    func_get_trainee_closed_schedule
 from .models import MemberTicketTb, ProgramNoticeHistoryTb, MemberClosedDateHistoryTb
 
 logger = logging.getLogger(__name__)
@@ -838,6 +839,7 @@ class GetTraineeScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             # context = func_get_holiday_schedule(context, start_date, end_date)
             context = func_get_trainee_on_schedule(context, class_id, self.request.user.id, start_date, end_date)
             context = func_get_trainee_off_schedule(context, class_id, start_date, end_date)
+            context = func_get_trainee_closed_schedule(context, class_id, start_date, end_date)
             # 그룹 스케쥴과 예약 가능 횟수 동시에 들고 와야할듯
             context = func_get_trainee_lecture_schedule(context, self.request.user.id, class_id, start_date, end_date)
             context = func_get_class_member_ticket_count(context, class_id, self.request.user.id)

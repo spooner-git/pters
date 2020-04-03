@@ -364,7 +364,7 @@ function pters_month_calendar(calendar_name, calendar_options){
         });
     }
 
-    function func_set_avail_date(avail_date_array){
+    function func_set_avail_date(avail_date_array, closed_date_array){
         let length = avail_date_array.length;
         let temp_array = [];
         for(let i=0; i<length; i++){
@@ -373,7 +373,13 @@ function pters_month_calendar(calendar_name, calendar_options){
                 $(`#calendar_plan_cell_${avail_date_array[i]}`).parent('.obj_table_cell_x7').css('background-color', 'rgba(255, 59, 68, 0.07)').attr('onclick', `show_error_message({title:'강사님이 예약기능을 일시정지했습니다.'})`);
             }
             else{
-                $(`#calendar_plan_cell_${avail_date_array[i]}`).parent('.obj_table_cell_x7').css('background-color', 'rgba(255, 59, 68, 0.07)').attr('onclick', `layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_reserve', 90, POPUP_FROM_BOTTOM, {'select_date':'${avail_date_array[i]}'})`);
+                // let closed_date_idx = closed_date_array.indexOf(avail_date_array[i]);
+                // if(closed_date_idx > 0){
+                //     $(`#calendar_plan_cell_${avail_date_array[i]}`).parent('.obj_table_cell_x7').css('background-color', 'rgba(255, 59, 68, 0.07)').attr('onclick', `show_error_message({title:'일시정지했습니다.'})`);
+                // }
+                // else{
+                    $(`#calendar_plan_cell_${avail_date_array[i]}`).parent('.obj_table_cell_x7').css('background-color', 'rgba(255, 59, 68, 0.07)').attr('onclick', `layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_reserve', 90, POPUP_FROM_BOTTOM, {'select_date':'${avail_date_array[i]}'})`);
+                // }
             }
         }
         let $first_day = $(`${temp_array.shift()}`);
@@ -731,7 +737,7 @@ function pters_month_calendar(calendar_name, calendar_options){
             func_get_ajax_holiday_data(reference_date, 30, (holiday_data)=>{
                 func_draw_holiday_data(holiday_data);
                 func_get_ajax_schedule_data(reference_date, "callback", function(jsondata){
-                    func_set_avail_date(jsondata.avail_date_data);
+                    func_set_avail_date(jsondata.avail_date_data, jsondata.closed_date_array);
                     func_draw_schedule_data(jsondata);
                     func_draw_schedule_timeline_data(jsondata, holiday_data, type);
                     func_set_timeline_to_today_or_near();
@@ -794,12 +800,12 @@ function pters_month_calendar(calendar_name, calendar_options){
             }
             func_get_ajax_holiday_data(input_reference_date, 30, (holiday_data)=>{
                     func_draw_holiday_data(holiday_data);
-                func_get_ajax_schedule_data(input_reference_date, "callback", function (jsondata){
-                    func_set_avail_date(jsondata.avail_date_data);
-                    func_draw_schedule_data(jsondata);
-                    func_draw_schedule_timeline_data(jsondata, holiday_data, SCHEDULE_NOT_FINISH);
-                    func_set_timeline_to_today_or_near();
-                });
+                    func_get_ajax_schedule_data(input_reference_date, "callback", function (jsondata){
+                        func_set_avail_date(jsondata.avail_date_data, jsondata.closed_date_array);
+                        func_draw_schedule_data(jsondata);
+                        func_draw_schedule_timeline_data(jsondata, holiday_data, SCHEDULE_NOT_FINISH);
+                        func_set_timeline_to_today_or_near();
+                    });
             });
         },
         "get_current_month":function(){
