@@ -8,7 +8,7 @@ from django.utils import timezone
 
 from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, USE, MEMBER_RESERVE_PROHIBITION_ON, LECTURE_TYPE_ONE_TO_ONE, \
     STATE_CD_IN_PROGRESS, STATE_CD_ABSENCE, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, AUTH_TYPE_DELETE, \
-    MEMBER_RESERVE_PROHIBITION_OFF, FROM_TRAINER_LESSON_ALARM_ON, STATE_CD_HOLDING
+    MEMBER_RESERVE_PROHIBITION_OFF, FROM_TRAINER_LESSON_ALARM_ON, STATE_CD_HOLDING, CLOSED_SCHEDULE_TYPE
 from login.models import CommonCdTb
 from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb
 from trainer.models import ClassTb, ClassMemberTicketTb, SettingTb, TicketLectureTb
@@ -151,6 +151,7 @@ def func_get_trainee_off_schedule(context, class_id, start_date, end_date):
     schedule_data = ScheduleTb.objects.filter(
         class_tb_id=class_id, start_dt__gte=start_date,
         start_dt__lt=end_date, use=USE).exclude(state_cd=STATE_CD_ABSENCE).order_by('start_dt')
+    schedule_data = schedule_data.exclude(en_dis_type=CLOSED_SCHEDULE_TYPE)
 
     for schedule_info in schedule_data:
         if schedule_info.note is not None and schedule_info.note != '':

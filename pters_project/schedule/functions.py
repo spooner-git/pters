@@ -360,22 +360,22 @@ def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
                 add_schedule_info.save()
                 schedule_id = add_schedule_info.schedule_id
                 if str(en_dis_type) == str(CLOSED_SCHEDULE_TYPE):
-                    if str(extension_flag) == str(USE):
-                        member_ticket_data = ClassMemberTicketTb.objects.select_related(
-                            'member_ticket_tb').filter(Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS)
-                                                       | Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
-                                                       class_tb_id=class_id,
-                                                       member_ticket_tb__start_date__lte=start_datetime,
-                                                       member_ticket_tb__end_date__gte=start_datetime,
-                                                       use=USE).exclude(member_ticket_tb__end_date__gte='9999-12-31')
-                        start_date_info = str(start_datetime).split(' ')[0]
-                        for member_ticket_info in member_ticket_data:
-                            hold_note = '휴무일'
-                            if note is not None and note != '':
-                                hold_note += ':'+note
-                            func_add_hold_closed_date_info(user_id, class_id, member_ticket_info.member_ticket_tb_id,
-                                                           schedule_id, start_date_info, start_date_info,
-                                                           hold_note, extension_flag)
+                    # if str(extension_flag) == str(USE):
+                    member_ticket_data = ClassMemberTicketTb.objects.select_related(
+                        'member_ticket_tb').filter(Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS)
+                                                   | Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
+                                                   class_tb_id=class_id,
+                                                   member_ticket_tb__start_date__lte=start_datetime,
+                                                   member_ticket_tb__end_date__gte=start_datetime,
+                                                   use=USE)
+                    start_date_info = str(start_datetime).split(' ')[0]
+                    for member_ticket_info in member_ticket_data:
+                        hold_note = '휴무일'
+                        if note is not None and note != '':
+                            hold_note += ':'+note
+                        func_add_hold_closed_date_info(user_id, class_id, member_ticket_info.member_ticket_tb_id,
+                                                       schedule_id, start_date_info, start_date_info,
+                                                       hold_note, extension_flag)
 
                 if str(en_dis_type) == str(ON_SCHEDULE_TYPE):
                     for alarm_setting_info in alarm_setting_data:

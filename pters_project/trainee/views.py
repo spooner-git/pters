@@ -540,19 +540,16 @@ def add_trainee_schedule_logic(request):
 
         if len(closed_date_data) > 0:
             for closed_date_info in closed_date_data:
-                reason_note = '강사 : '
-                if closed_date_info.reason_type_cd == 'MEMBER_CLOSED':
-                    reason_note = '회원 : '
                 if error is None:
                     if closed_date_info.reason_type_cd == 'HD':
                         error = member_ticket_info.ticket_tb.name + ' 수강권이 홀딩 기간입니다.'
                     else:
-                        error = reason_note + closed_date_info.note + '입니다.'
+                        error = closed_date_info.note + '입니다.'
                 else:
                     if closed_date_info.reason_type_cd == 'HD':
                         error = member_ticket_info.ticket_tb.name + ' 수강권이 홀딩 기간입니다.<br/>' + error
                     else:
-                        error = reason_note + closed_date_info.note + '입니다.<br/>' + error
+                        error = closed_date_info.note + '입니다.<br/>' + error
 
     if error is None:
         select_date = start_date.date()
