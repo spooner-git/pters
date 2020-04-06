@@ -1702,10 +1702,15 @@ class Member_simple_view{
             let html_ticket_name = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
 
             });
-
+            let ticket_rem_count = this.data.ticket[i].ticket_rem_count + '회';
+            let ticket_avail_count = this.data.ticket[i].ticket_avail_count + '회';
+            if(this.data.ticket[i].ticket_reg_count >= 9999){
+                ticket_rem_count = '무제한';
+                ticket_avail_count = '무제한';
+            }
             let html_remain_info = `<div style="font-size:11px;font-weight:bold;letter-spacing:-0.5px;color:var(--font-highlight);margin-bottom:5px">
                                         <div style="display:flex;">
-                                            <div style="flex-basis:68px"></div><div style="flex:1 1 0;height:20px;">잔여 ${this.data.ticket[i].ticket_rem_count} 회 / 예약가능 ${this.data.ticket[i].ticket_avail_count} 회</div>
+                                            <div style="flex-basis:68px"></div><div style="flex:1 1 0;height:20px;">잔여 ${ticket_rem_count} / 예약가능 ${ticket_avail_count}</div>
                                         </div>
                                         <div style="display:flex;">
                                             <div style="flex-basis:68px"></div><div style="flex:1 1 0;height:20px;">~ ${this.data.ticket[i].end_date_text}</div>
