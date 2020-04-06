@@ -211,6 +211,7 @@ const POPUP_ADDRESS_TICKET_ADD = 'popup_ticket_add';
 const POPUP_ADDRESS_TICKET_EDIT = 'popup_ticket_edit';
 const POPUP_ADDRESS_TICKET_LIST = 'popup_ticket_list';
 
+const POPUP_MEMBER_CLOSED_DATE_HISTORY = 'popup_member_closed_date_history';
 const POPUP_MEMBER_SCHEDULE_HISTORY = 'popup_member_schedule_history';
 const POPUP_MEMBER_TICKET_HISTORY = 'popup_member_ticket_history';
 const POPUP_MEMBER_TICKET_MODIFY = 'popup_member_ticket_modify';

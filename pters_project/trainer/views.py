@@ -1110,7 +1110,7 @@ class GetMemberClosedDateListView(LoginRequiredMixin, AccessTestMixin, View):
                                                                 | Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
                                                                 member_id=member_id,
                                                                 member_ticket_tb__ticket_tb__class_tb_id=class_id,
-                                                                # end_date__gte=today,
+                                                                end_date__gte=today,
                                                                 use=USE).order_by('-start_date', '-end_date')
 
             for member_closed_info in member_closed_data:
@@ -1181,6 +1181,7 @@ class GetMemberClosedDateListHistoryView(LoginRequiredMixin, AccessTestMixin, Vi
                 member_closed_data = []
 
             max_page = paginator.num_pages
+            member_closed_date_idx = paginator.count - SCHEDULE_PAGINATION_COUNTER*(int(page)-1)
 
             for member_closed_info in member_closed_data:
                 member_closed_reason_type_cd_name = '일시정지'
@@ -1205,6 +1206,7 @@ class GetMemberClosedDateListHistoryView(LoginRequiredMixin, AccessTestMixin, Vi
                     if schedule_tb.repeat_schedule_tb is not None and schedule_tb.repeat_schedule_tb != '':
                         repeat_schedule_id = schedule_tb.repeat_schedule_tb_id
                 member_closed_dict = {
+                    'member_closed_date_idx': member_closed_date_idx,
                     'member_closed_date_history_id': member_closed_info.member_closed_date_history_id,
                     'member_closed_date_member_ticket_id': member_ticket_id,
                     'member_closed_schedule_id': schedule_id,
@@ -1217,12 +1219,13 @@ class GetMemberClosedDateListHistoryView(LoginRequiredMixin, AccessTestMixin, Vi
                     'member_closed_extension_flag': member_closed_info.extension_flag
                 }
                 member_closed_list.append(member_closed_dict)
+                member_closed_date_idx -= 1
 
         if error is not None:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
             messages.error(request, error)
 
-        return JsonResponse({'member_closed_list': member_closed_list, 'this_page':this_page, 'max_page':max_page},
+        return JsonResponse({'member_closed_list': member_closed_list, 'this_page': this_page, 'max_page': max_page},
                             json_dumps_params={'ensure_ascii': True})
 
 

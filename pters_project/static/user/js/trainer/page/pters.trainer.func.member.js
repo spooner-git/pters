@@ -1175,6 +1175,50 @@ class Member_func{
             }
         });
     }
+    static closed_date_list_history(data, callback, error_callback){
+        //데이터 형태 {"member_id":""};
+        $.ajax({
+            url:'/trainer/get_member_closed_date_history/',
+            type:'GET',
+            data: data,
+            dataType : 'html',
+
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function(){
+
+            },
+
+            //통신성공시 처리
+            success:function(data_){
+                let data = JSON.parse(data_);
+                check_app_version(data.app_version);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message({title:data.messageArray[0]});
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(data);
+                }
+            },
+
+            //통신 실패시 처리
+            error:function(data){
+                if(error_callback != undefined){
+                    error_callback(data);
+                }
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
+                // location.reload();
+            }
+        });
+    }
 }
 
 
