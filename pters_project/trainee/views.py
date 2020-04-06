@@ -839,7 +839,7 @@ class GetTraineeScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             # context = func_get_holiday_schedule(context, start_date, end_date)
             context = func_get_trainee_on_schedule(context, class_id, self.request.user.id, start_date, end_date)
             context = func_get_trainee_off_schedule(context, class_id, start_date, end_date)
-            context = func_get_trainee_closed_schedule(context, class_id, start_date, end_date)
+            context = func_get_trainee_closed_schedule(context, class_id, self.request.user.id, today, end_date)
             # 그룹 스케쥴과 예약 가능 횟수 동시에 들고 와야할듯
             context = func_get_trainee_lecture_schedule(context, self.request.user.id, class_id, start_date, end_date)
             context = func_get_class_member_ticket_count(context, class_id, self.request.user.id)
@@ -874,6 +874,116 @@ class GetTraineeScheduleHistoryView(LoginRequiredMixin, AccessTestMixin, Templat
             messages.error(self.request, context['error'])
 
         return context
+
+
+# 일정 추가
+def check_trainee_schedule_logic(request):
+    class_id = request.session.get('class_id', '')
+    training_date = request.POST.get('training_date', '')
+    setting_week_start_date = request.session.get('setting_week_start_date', 'SUN')
+    error = None
+    class_info = None
+    start_date = None
+    end_date = None
+    context = {'push_class_id': None, 'push_title': None, 'push_message': None}
+    member_ticket_id = None
+    member_ticket_info = None
+    error = None
+
+    if class_id is None or class_id == '':
+        error = '수강권 정보를 불러오지 못했습니다.'
+    if training_date == '':
+        error = '날짜를 선택해 주세요.'
+
+    if error is None:
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+        except ObjectDoesNotExist:
+            error = '수강권 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        error = func_check_select_date_reserve_setting(class_id, class_info.member_id, training_date)
+
+    if error is None:
+        error = func_check_select_time_reserve_setting(class_id, class_info.member_id,
+                                                       start_date, end_date, ADD_SCHEDULE)
+
+    if error is None:
+        if member_ticket_id is None:
+            error = '예약가능 횟수를 확인해주세요.'
+
+    if error is None:
+        try:
+            member_ticket_info = MemberTicketTb.objects.get(member_ticket_id=member_ticket_id)
+        except ObjectDoesNotExist:
+            error = '수강권 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        select_date = start_date.date()
+        if member_ticket_info.ticket_tb.day_schedule_enable < 9999:
+            # 체크 하기
+            tomorrow = select_date + datetime.timedelta(days=1)
+            day_schedule_count = ScheduleTb.objects.filter(member_ticket_tb_id=member_ticket_info.member_ticket_id,
+                                                           start_dt__gte=select_date, start_dt__lt=tomorrow,
+                                                           use=USE).count()
+
+            if day_schedule_count >= member_ticket_info.ticket_tb.day_schedule_enable:
+                error = member_ticket_info.ticket_tb.name + ' 수강권의 하루 최대 이용 횟수를 초과했습니다.'
+
+    if error is None:
+        select_date = start_date.date()
+        closed_date_data = MemberClosedDateHistoryTb.objects.filter(
+            member_ticket_tb_id=member_ticket_info.member_ticket_id, start_date__lte=select_date,
+            end_date__gte=select_date, use=USE)
+
+        if len(closed_date_data) > 0:
+            for closed_date_info in closed_date_data:
+                if error is None:
+                    if closed_date_info.reason_type_cd == 'HD':
+                        error = member_ticket_info.ticket_tb.name + ' 수강권이 일시정지 기간입니다.'
+                    else:
+                        error = closed_date_info.note + '입니다.'
+                else:
+                    if closed_date_info.reason_type_cd == 'HD':
+                        error = member_ticket_info.ticket_tb.name + ' 수강권이 일시정지 기간입니다.<br/>' + error
+                    else:
+                        error = closed_date_info.note + '입니다.<br/>' + error
+
+    if error is None:
+        select_date = start_date.date()
+        if member_ticket_info.ticket_tb.week_schedule_enable < 9999:
+            week_idx = 0
+            if setting_week_start_date == 'MON':
+                week_idx = 1
+
+            # 주의 마지막 날짜 찾기
+            week_idx -= int(select_date.strftime('%w'))
+            first_day = select_date + datetime.timedelta(days=week_idx)
+
+            # 주의 첫번째 날짜 찾기
+            last_day = first_day + datetime.timedelta(days=7)
+
+            week_schedule_count = ScheduleTb.objects.filter(member_ticket_tb_id=member_ticket_info.member_ticket_id,
+                                                            start_dt__gte=first_day, start_dt__lt=last_day,
+                                                            use=USE).count()
+            if week_schedule_count >= member_ticket_info.ticket_tb.week_schedule_enable:
+                error = member_ticket_info.ticket_tb.name + ' 수강권의 주간 최대 이용 횟수를 초과했습니다.'
+
+        if error is None:
+            if member_ticket_info.member_auth_cd == AUTH_TYPE_WAIT:
+                error = '알림 -> 지점 연결 허용 선택후 이용 가능합니다.'
+            elif member_ticket_info.member_auth_cd == AUTH_TYPE_DELETE:
+                error = '강사님에게 지점 연결을 요청하세요.'
+
+        if error is None:
+            if start_date.date() > member_ticket_info.end_date:
+                error = '수강권 종료일 이후의 일정은 등록이 불가능합니다.'
+
+    if error is not None:
+        logger.error(request.user.first_name+'['+str(request.user.id)+']'+error)
+        messages.error(request, error)
+
+    return render(request, 'ajax/trainee_error_info.html', context)
 
 
 class GetTraineeClassListView(LoginRequiredMixin, AccessTestMixin, View):
@@ -1601,6 +1711,8 @@ class PopupCalendarPlanView(TemplateView):
 
         if class_id is not None and class_id != '':
             context = func_get_trainee_select_schedule(context, class_id, self.request.user.id, select_date)
+            context = func_get_trainee_closed_schedule(context, class_id, self.request.user.id,
+                                                       select_date, select_date)
             try:
                 class_info = ClassTb.objects.get(class_id=class_id)
             except ObjectDoesNotExist:

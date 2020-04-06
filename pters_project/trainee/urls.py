@@ -31,6 +31,8 @@ urlpatterns = [
     url(r'^get_trainee_schedule_history/$', views.GetTraineeScheduleHistoryView.as_view(),
         name='get_trainee_schedule_history'),
 
+    url(r'^check_trainee_schedule/$', views.check_trainee_schedule_logic, name='check_trainee_schedule'),
+
     # 수강 정보 기능 #####################################################################################################
     # 강좌 정보 list 조회
     url(r'^get_trainee_class_list/$', views.GetTraineeClassListView.as_view(), name='get_trainee_class_list'),

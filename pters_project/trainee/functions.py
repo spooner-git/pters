@@ -1,4 +1,5 @@
 import datetime
+import copy
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
@@ -160,19 +161,29 @@ def func_get_trainee_off_schedule(context, class_id, start_date, end_date):
     return context
 
 
-def func_get_trainee_closed_schedule(context, class_id, start_date, end_date):
-    # off_schedule_list = []
+def func_get_trainee_closed_schedule(context, class_id, user_id, start_date, end_date):
+    closed_date_list = []
+    member_closed_date_data = MemberClosedDateHistoryTb.objects.select_related(
+        'member_ticket_tb__ticket_tb__class_tb').filter(Q(end_date__lte=end_date) & Q(end_date__gte=start_date),
+                                                        Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS)
+                                                        | Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
+                                                        member_id=user_id,
+                                                        member_ticket_tb__ticket_tb__class_tb_id=class_id,
+                                                        use=USE).order_by('start_date', 'end_date')
 
-    # off 스케쥴 전달
-    schedule_data = ScheduleTb.objects.filter(
-        class_tb_id=class_id, start_dt__gte=start_date, en_dis_type=CLOSED_SCHEDULE_TYPE,
-        start_dt__lt=end_date, use=USE).order_by('start_dt')
-
-    for schedule_info in schedule_data:
-        if schedule_info.note is not None and schedule_info.note != '':
-            schedule_info.note = schedule_info.note.replace('\n', '<br/>')
-        schedule_info.closed_date = str(schedule_info.start_dt).split(' ')[0]
-    context['closed_schedule_data'] = schedule_data
+    for member_closed_date_info in member_closed_date_data:
+        if member_closed_date_info.start_date == member_closed_date_info.end_date:
+            closed_date_list.append(member_closed_date_info)
+        else:
+            member_closed_start_date = member_closed_date_info.start_date
+            member_closed_end_date = member_closed_date_info.end_date
+            check_date = member_closed_start_date
+            while check_date <= member_closed_end_date:
+                select_closed_date_info = copy.copy(member_closed_date_info)
+                select_closed_date_info.start_date = check_date
+                closed_date_list.append(select_closed_date_info)
+                check_date += datetime.timedelta(days=1)
+    context['closed_date_data'] = closed_date_list
 
     return context
 

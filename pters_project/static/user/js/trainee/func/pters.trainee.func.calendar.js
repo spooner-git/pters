@@ -364,27 +364,33 @@ function pters_month_calendar(calendar_name, calendar_options){
         });
     }
 
-    function func_set_avail_date(avail_date_array, closed_date_array){
+    function func_set_avail_date(avail_date_array, jsondata){
+        // console.log(jsondata);
         let length = avail_date_array.length;
         let temp_array = [];
         for(let i=0; i<length; i++){
             temp_array.push(`#calendar_plan_cell_${avail_date_array[i]}`);
             if(setting_info.setting_member_reserve_prohibition=='1'){
-                $(`#calendar_plan_cell_${avail_date_array[i]}`).parent('.obj_table_cell_x7').css('background-color', 'rgba(255, 59, 68, 0.07)').attr('onclick', `show_error_message({title:'강사님이 예약기능을 일시정지했습니다.'})`);
+                $(`#calendar_plan_cell_${avail_date_array[i]}`).parent('.obj_table_cell_x7').attr('onclick', `show_error_message({title:'강사님이 예약기능을 일시정지했습니다.'})`);
             }
             else{
-                // let closed_date_idx = closed_date_array.indexOf(avail_date_array[i]);
-                // if(closed_date_idx > 0){
-                //     $(`#calendar_plan_cell_${avail_date_array[i]}`).parent('.obj_table_cell_x7').css('background-color', 'rgba(255, 59, 68, 0.07)').attr('onclick', `show_error_message({title:'일시정지했습니다.'})`);
-                // }
-                // else{
+                let closed_date_idx = jsondata.closed_date.indexOf(avail_date_array[i]);
+
+                if(closed_date_idx >= 0){
+                    let message = '수강권이 일시정지 기간입니다.';
+                    if(jsondata.closed_date_reason_type_cd[closed_date_idx] != 'HD'){
+                        message = jsondata.closed_date_note[closed_date_idx] + '입니다.';
+                    }
+                    $(`#calendar_plan_cell_${avail_date_array[i]}`).parent('.obj_table_cell_x7').attr('onclick', `show_error_message({title:'${message}'})`);
+                }
+                else{
                     $(`#calendar_plan_cell_${avail_date_array[i]}`).parent('.obj_table_cell_x7').css('background-color', 'rgba(255, 59, 68, 0.07)').attr('onclick', `layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_reserve', 90, POPUP_FROM_BOTTOM, {'select_date':'${avail_date_array[i]}'})`);
-                // }
+                }
             }
         }
         let $first_day = $(`${temp_array.shift()}`);
         $first_day.siblings('div.calendar_date_number').css({'height':'20px', 'width':'20px', 'border-radius':'50%', 'background-color':'#ff3b44', 'margin':'0 auto', 'color':'#ffffff'});
-        $first_day.parent('.obj_table_cell_x7').css({'background-color': 'rgba(255, 59, 68, 0.07)'});
+        // $first_day.parent('.obj_table_cell_x7').css({'background-color': 'rgba(255, 59, 68, 0.07)'});
         // $first_day.parent('.obj_table_cell_x7').css({'background-color': 'rgba(0, 0, 0, 0.1)', 'border-top-left-radius':'5px', 'border-bottom-left-radius':'5px'});
         // $(`${temp_array.pop()}`).parent('.obj_table_cell_x7').css({'background-color': 'rgba(0, 0, 0, 0.1)', 'border-top-right-radius':'5px', 'border-bottom-right-radius':'5px'});
         // $(`${temp_array.join(', ')}`).parent('.obj_table_cell_x7').css('background-color', 'rgba(255, 59, 68, 0.07)').attr('onclick', `"layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_reserve', 90, POPUP_FROM_BOTTOM, {'select_date':'${temp_array.join(', ')}'})"`);
@@ -434,7 +440,12 @@ function pters_month_calendar(calendar_name, calendar_options){
             if(compare_date > 0){//오늘보다 과거
 
             }else{ //오늘을 포함하는 미래
-                $(`#calendar_lecture_plan_cell_${date_lecture}`).css('background-color', 'rgba(255, 59, 68, 0.38)');
+
+                let closed_date_idx = jsondata.closed_date.indexOf(date_lecture);
+                let avail_date_idx = jsondata.avail_date_data.indexOf(date_lecture);
+                if(closed_date_idx < 0 && avail_date_idx >= 0){
+                    $(`#calendar_lecture_plan_cell_${date_lecture}`).css('background-color', 'rgba(255, 59, 68, 0.38)');
+                }
             }
         }
     }
@@ -737,7 +748,7 @@ function pters_month_calendar(calendar_name, calendar_options){
             func_get_ajax_holiday_data(reference_date, 30, (holiday_data)=>{
                 func_draw_holiday_data(holiday_data);
                 func_get_ajax_schedule_data(reference_date, "callback", function(jsondata){
-                    func_set_avail_date(jsondata.avail_date_data, jsondata.closed_date_array);
+                    func_set_avail_date(jsondata.avail_date_data, jsondata);
                     func_draw_schedule_data(jsondata);
                     func_draw_schedule_timeline_data(jsondata, holiday_data, type);
                     func_set_timeline_to_today_or_near();
@@ -801,7 +812,7 @@ function pters_month_calendar(calendar_name, calendar_options){
             func_get_ajax_holiday_data(input_reference_date, 30, (holiday_data)=>{
                     func_draw_holiday_data(holiday_data);
                     func_get_ajax_schedule_data(input_reference_date, "callback", function (jsondata){
-                        func_set_avail_date(jsondata.avail_date_data, jsondata.closed_date_array);
+                        func_set_avail_date(jsondata.avail_date_data, jsondata);
                         func_draw_schedule_data(jsondata);
                         func_draw_schedule_timeline_data(jsondata, holiday_data, SCHEDULE_NOT_FINISH);
                         func_set_timeline_to_today_or_near();
