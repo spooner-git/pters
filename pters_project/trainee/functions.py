@@ -507,11 +507,11 @@ def func_get_trainee_next_schedule_by_class_id(context, class_id, user_id):
 
     now = timezone.now()
     next_schedule_info = ''
-    next_schedule_data = ScheduleTb.objects.filter(class_tb=class_id, member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
-                                                   member_ticket_tb__member_id=user_id,
-                                                   en_dis_type=ON_SCHEDULE_TYPE,
-                                                   start_dt__gte=now,
-                                                   use=USE).order_by('start_dt')
+    next_schedule_data = ScheduleTb.objects.select_related(
+        'member_ticket_tb__member',
+        'member_ticket_tb__ticket_tb').filter(class_tb=class_id, member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
+                                              member_ticket_tb__member_id=user_id, en_dis_type=ON_SCHEDULE_TYPE,
+                                              start_dt__gte=now, use=USE).order_by('start_dt')
 
     if len(next_schedule_data) > 0:
         next_schedule_info = next_schedule_data[0]
@@ -539,7 +539,7 @@ def func_get_trainee_select_schedule(context, class_id, user_id, select_date):
     if error is None:
         end_dt = start_dt + datetime.timedelta(hours=23, minutes=59)
 
-    schedule_data = ScheduleTb.objects.filter(
+    schedule_data = ScheduleTb.objects.select_related('member_ticket_tb__member', 'member_ticket_tb__ticket_tb').filter(
         class_tb=class_id, member_ticket_tb__member_id=user_id, member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
         member_ticket_tb__use=USE, en_dis_type=ON_SCHEDULE_TYPE, start_dt__gte=start_dt,
         start_dt__lte=end_dt, use=USE).order_by('start_dt')
