@@ -583,6 +583,8 @@ def add_trainee_schedule_logic(request):
         if error is None:
             if start_date.date() > member_ticket_info.end_date:
                 error = '수강권 종료일 이후의 일정은 등록이 불가능합니다.'
+            if start_date.date() < member_ticket_info.start_date:
+                error = '수강권 시작일 이전 일정은 등록이 불가능합니다.'
 
     if error is None:
         schedule_result = pt_add_logic_func(training_date, start_date, end_date, request.user.id, member_ticket_id,
