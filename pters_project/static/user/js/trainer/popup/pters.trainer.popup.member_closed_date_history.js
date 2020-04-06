@@ -110,21 +110,14 @@ class Member_closed_date_history{
         for(let i=0; i<length; i++){
         // for(let i=0; i<length; i++){
             let data = received_data.member_closed_list[i];
-            let numbering = data.member_closed_date_idx + ' 회차';
+            let numbering = data.member_closed_date_idx + '.';
             // let numbering = Number(i+1) + ' 회차';
             let member_closed_date_history_id = data.member_closed_date_history_id;
-            let date =  DateRobot.to_text(data.start_date, '', '', SHORT) + ' ~ ' + DateRobot.to_text(data.end_date, '', '', SHORT);
-            let reason_type_cd = data.reason_type_cd;
-            let attend_status = data.state_cd;
-            let member_closed_extension_flag = data.extension_flag;
-            let memo = data.note;
-
-            let reason_type_cd_name = '수강권 일시정지';
-            if(reason_type_cd == 'PROGRAM_CLOSED'){
-                reason_type_cd_name = '휴무일'
-            }else if(reason_type_cd == 'MEMBER_CLOSED'){
-                reason_type_cd_name = '회원 불가일'
-            }
+            let date =  DateRobot.to_text(data.member_closed_start_date, '', '', SHORT) + ' ~ ' + DateRobot.to_text(data.member_closed_end_date, '', '', SHORT);
+            let reason_type_cd = data.member_closed_reason_type_cd;
+            let member_closed_extension_flag = data.member_closed_extension_flag;
+            let memo = data.member_closed_note;
+            let reason_type_cd_name = data.member_closed_reason_type_cd_name;
             let onclick = ()=>{
                 let user_option = {
                     delete:{text:"일시정지 내역 삭제", callback:()=>{

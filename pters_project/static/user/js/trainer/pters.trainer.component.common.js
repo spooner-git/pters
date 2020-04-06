@@ -775,18 +775,16 @@ class CComponent{
         if(extension_flag == ON){
             extension_flag_name = '수강권 연장';
         }
-        let html = `<li class="closed_date_history_row" id="closed_date_history_row_${closed_date_history_id}">`;
+        let html = `<li class="schedule_history_row" id="closed_date_history_row_${closed_date_history_id}">`;
         let raw_1 = `<div class="obj_table_raw">
-                        <div class="cell_schedule_num">${numbering}</div>
+                        <div class="cell_schedule_num" style="width:auto;">${numbering}</div>
                         <div class="cell_schedule_info">${closed_date_reason_type_name}</div>
                         <div class="cell_schedule_attend"></div>
                     </div>`;
         let raw_2 = `<div class="obj_table_raw table_date_info">
-                        <div class="cell_schedule_num" style="display:none;"></div>
                         <div class="cell_schedule_info">${date}</div>
                     </div>`;
         let raw_3 = `<div class="obj_table_raw table_memo_info">
-                        <div class="cell_schedule_num"></div>
                         <div class="cell_schedule_info">${memo}</div>
                     </div>`;
 
@@ -806,7 +804,7 @@ class CComponent{
             html += raw_3;
         }
         html += '</li>';
-        $(document).off('click', `#schedule_closed_date_history_row_${closed_date_history_id}`).on('click', `#schedule_closed_date_history_row_${closed_date_history_id}`, function(){
+        $(document).off('click', `#closed_date_history_row_${closed_date_history_id}`).on('click', `#closed_date_history_row_${closed_date_history_id}`, function(){
             callback();
         });
         return html;
