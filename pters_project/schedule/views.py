@@ -170,6 +170,9 @@ def check_schedule_logic(request):
                                 #     error_temp = member_info['member_name'] +'님의 '+ member_ticket_info.ticket_tb.name + ' 수강권이 일시정지 기간입니다.'
                                 # else:
                                 #     error_temp = member_info['member_name'] +'님의 '+ member_ticket_info.ticket_tb.name + ' 수강권이 일시정지 기간입니다.<br/>' + error_temp
+                            if error_temp is None:
+                                if member_ticket_info.end_date < select_date:
+                                    error_temp = member_info['member_name'] + '님의 ' + member_ticket_info.ticket_tb.name + ' 수강권이 종료일 이후입니다.'
 
                             if error_temp is not None:
                                 raise InternalError
