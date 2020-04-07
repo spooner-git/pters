@@ -68,9 +68,9 @@ class Pters_pass_shop_agreement{
     
     dom_assembly_content(){
         let page1 =  '<article class="obj_input_box_full">' +
-                        this.dom_row_pters_pass_agreement_view() + 
                         this.dom_row_pters_pass_agreement_checkbox() + 
                         this.dom_row_pters_pass_button_go_to_page_2() +
+                        this.dom_row_pters_pass_agreement_view() +
                     '</article>';
         let page2 = '<article class="obj_input_box_full">' +
                         this.dom_row_pters_pass_pay_method_checkbox() + 
@@ -102,7 +102,7 @@ class Pters_pass_shop_agreement{
             // this.render_content();
         };
         let html_checkbox = CComponent.radio_button (id, checked, style, onclick);
-        let text = `<span style="font-size:14px;font-weight:bold;line-height:30px;">약관에 동의합니다.</span>`;
+        let text = `<span style="font-size:14px;font-weight:bold;line-height:30px;">아래 약관에 동의합니다.</span>`;
 
 
         let id2 = "pters_pass_agreement_check";
