@@ -773,7 +773,7 @@ class Plan_add{
                 let inspect_date = DateRobot.to_yyyymmdd(this.data.repeat.repeat_end.year, this.data.repeat.repeat_end.month, this.data.repeat.repeat_end.date);
                 let pass_inspect = this.pass_inspect(inspect_date);
                 if(pass_inspect == false){
-                    data_sending_now = false;
+                    this.data_sending_now = false;
                     return false;
                 }
 
