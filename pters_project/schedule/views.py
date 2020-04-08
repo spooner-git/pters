@@ -243,6 +243,7 @@ def add_schedule_logic(request):
         schedule_end_datetime = schedule_input_form.cleaned_data['end_dt']
         en_dis_type = schedule_input_form.cleaned_data['en_dis_type']
         note = schedule_input_form.cleaned_data['note']
+        private_note = schedule_input_form.cleaned_data['private_note']
         extension_flag = schedule_input_form.cleaned_data['extension_flag']
         duplication_enable_flag = schedule_input_form.cleaned_data['duplication_enable_flag']
         lecture_id = schedule_input_form.cleaned_data['lecture_id']
@@ -278,7 +279,8 @@ def add_schedule_logic(request):
                 if lecture_info is None or lecture_info.lecture_type_cd != LECTURE_TYPE_ONE_TO_ONE:
                     schedule_result = func_add_schedule(class_id, None, None, lecture_info, None,
                                                         schedule_start_datetime,
-                                                        schedule_end_datetime, note, en_dis_type, request.user.id,
+                                                        schedule_end_datetime, note, private_note,
+                                                        en_dis_type, request.user.id,
                                                         permission_state_cd, state_cd, extension_flag,
                                                         duplication_enable_flag)
                     error = schedule_result['error']
@@ -320,7 +322,7 @@ def add_schedule_logic(request):
                             schedule_result = func_add_schedule(class_id, member_info['member_ticket_id'], None,
                                                                 lecture_info, lecture_schedule_id,
                                                                 schedule_start_datetime, schedule_end_datetime,
-                                                                note, en_dis_type, request.user.id,
+                                                                note, private_note, en_dis_type, request.user.id,
                                                                 permission_state_cd,
                                                                 state_cd, UN_USE, duplication_enable_flag)
                             error_temp = schedule_result['error']
@@ -1029,6 +1031,7 @@ def upload_sign_image_logic(request):
 def update_memo_schedule_logic(request):
     schedule_id = request.POST.get('schedule_id')
     note = request.POST.get('add_memo', '')
+    private_note = request.POST.get('add_private_memo', '')
     error = None
     schedule_info = None
     context = {'messageArray': ''}
@@ -1048,6 +1051,7 @@ def update_memo_schedule_logic(request):
             lecture_schedule_data.update(note=note)
 
         schedule_info.note = note
+        schedule_info.private_note = private_note
         schedule_info.mod_member_id = request.user.id
         schedule_info.save()
 
@@ -1071,6 +1075,7 @@ def add_repeat_schedule_logic(request):
     member_ids = request.POST.getlist('member_ids[]', '')
     en_dis_type = request.POST.get('en_dis_type', ON_SCHEDULE_TYPE)
     note = request.POST.get('note', '')
+    private_note = request.POST.get('private_note', '')
     extension_flag = request.POST.get('extension_flag', UN_USE)
     duplication_enable_flag = request.POST.get('duplication_enable_flag', SCHEDULE_DUPLICATION_ENABLE)
     class_id = request.session.get('class_id', '')
@@ -1245,6 +1250,7 @@ def add_repeat_schedule_logic(request):
                                                                 repeat_schedule_info.repeat_schedule_id,
                                                                 lecture_info, None,
                                                                 schedule_start_datetime, schedule_end_datetime, note,
+                                                                private_note,
                                                                 en_dis_type, request.user.id,
                                                                 permission_state_cd,
                                                                 state_cd, extension_flag, duplication_enable_flag)
@@ -1451,7 +1457,7 @@ def add_repeat_schedule_confirm(request):
                                                     member_repeat_schedule_info.repeat_schedule_id,
                                                     lecture_info, schedule_info.schedule_id,
                                                     schedule_info.start_dt, schedule_info.end_dt,
-                                                    schedule_info.note,
+                                                    schedule_info.note, schedule_info.private_note,
                                                     ON_SCHEDULE_TYPE, request.user.id, permission_state_cd,
                                                     state_cd, UN_USE, SCHEDULE_DUPLICATION_ENABLE)
 
@@ -1659,7 +1665,7 @@ def add_member_repeat_schedule_to_lecture_schedule_logic(request):
                                                     member_repeat_schedule_info.repeat_schedule_id,
                                                     lecture_info, schedule_info.schedule_id,
                                                     schedule_info.start_dt, schedule_info.end_dt,
-                                                    schedule_info.note,
+                                                    schedule_info.note, schedule_info.private_note,
                                                     ON_SCHEDULE_TYPE, request.user.id, permission_state_cd,
                                                     state_cd, UN_USE, SCHEDULE_DUPLICATION_ENABLE)
 

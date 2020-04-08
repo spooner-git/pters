@@ -204,6 +204,7 @@ class GetLectureMemberScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, 
                                  'end_dt': str(lecture_schedule_info.end_dt),
                                  'state_cd': lecture_schedule_info.state_cd,
                                  'note': lecture_schedule_info.note,
+                                 'private_note': lecture_schedule_info.private_note,
                                  'reg_member_id': lecture_schedule_info.reg_member_id,
                                  'reg_member_name': lecture_schedule_info.reg_member.name,
                                  'mod_member_id': mod_member_id,
@@ -6644,7 +6645,8 @@ def attend_mode_finish_logic(request):
                             schedule_result = func_add_schedule(class_id, member_ticket_id, None,
                                                                 schedule_info.lecture_tb, schedule_id,
                                                                 schedule_info.start_dt, schedule_info.end_dt,
-                                                                schedule_info.note, ON_SCHEDULE_TYPE,
+                                                                schedule_info.note, schedule_info.private_note,
+                                                                ON_SCHEDULE_TYPE,
                                                                 member_id, PERMISSION_STATE_CD_APPROVE,
                                                                 STATE_CD_FINISH, UN_USE, SCHEDULE_DUPLICATION_ENABLE)
                             error = schedule_result['error']
