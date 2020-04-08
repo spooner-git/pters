@@ -756,7 +756,7 @@ class Lecture_view{
                         let external_data = {"lecture_id":lecture_id, "lecture_repeat_schedule_id":repeat_id,"lecture_name":repeat_name,
                                              "lecture_max_num":lecture_max_member_num,
                                              "lecture_repeat_start_date":start_date, "lecture_repeat_end_date":end_date};
-                        lecture_add_repeat = new Lecture_add_repeat('.popup_lecture_add_repeat', external_data, 'lecture_add_repeat', lecture_view_popup);
+                        lecture_add_repeat = new Lecture_add_repeat('.popup_lecture_add_repeat', external_data, 'lecture_add_repeat', lecture_view);
                     });
 
                 }},
@@ -812,7 +812,7 @@ class Lecture_view{
     }
 
     dom_row_repeat_participants(repeat_id, member_id, member_name, member_photo, repeat_period){
-        let html = `<div id="repeat_item_${repeat_id}" style="display:flex;width:100%;height:45px;padding:0 36px;box-sizing:border-box;cursor:pointer;">
+        let html = `<div id="repeat_item_${repeat_id}" style="display:flex;width:100%;height:45px;padding:0 15px;box-sizing:border-box;cursor:pointer;">
                         <div style="flex-basis:24px; margin-top:5px;"><img src="${member_photo}" style="border-radius:50%;width:20px;vertical-align:middle;"></div>                       
                         <div style="flex:1 1 0">
                             <div style="font-size:14px;font-weight:500;letter-spacing:-0.7px;color:var(--font-main);">${member_name}</div>
