@@ -115,7 +115,7 @@ const MY_PROGRAM = 0;
 const SHARED_PROGRAM = 1;
 
 const TICKET_PAY_METHOD = {
-    "NONE":"선택 안함",
+    "NONE":"결제수단 미입력",
     "CASH":"현금",
     "CARD":"카드",
     "TRANS":"계좌이체",
@@ -156,6 +156,11 @@ const SORT_SCHEDULE_MONTHLY = 2;
 const SORT_ORDER_ASC = 0;
 const SORT_ORDER_DESC = 1;
 
+const SORT_ALL_STATISTICS = 0;
+const SORT_NONE_STATISTICS = 1;
+const SORT_CASH_STATISTICS = 2;
+const SORT_TRANS_STATISTICS = 3;
+const SORT_CARD_STATISTICS = 4;
 
 /* px */
 const MAX_WIDTH = 800;

@@ -5,17 +5,17 @@ class Statistics_detail{
         this.target_yyyy_mm = `${target_month_date.split('-')[0]}년 ${target_month_date.split('-')[1]}월`;
 
         this.data = null;
-
+        this.sort_val = SORT_ALL_STATISTICS;
         this.init();
+        this.render();
     }
 
     init(){
-        this.render();
         this.set_initial_data();
     }
 
     set_initial_data (){
-        let data = {"month_date": this.target_month_date};
+        let data = {"month_date": this.target_month_date, "sort_val":this.sort_val};
         Statistics_func.read("sales_detail", data, (data)=>{
             this.data = data;
             this.render();
@@ -33,12 +33,16 @@ class Statistics_detail{
         let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();statistics_detail_popup.clear();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span id="ticket_name_in_popup">${this.target_yyyy_mm}</span></span>`;
         let top_right = `<span class="icon_right"></span>`;
-        let content =   `<section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
+        let content = `<section id="${this.target.content}" class="popup_content">
+                            ${this.dom_arrange_select()}
+                            ${this.dom_assembly_content()}
+                        </section>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
 
         document.querySelector(this.target.install).innerHTML = html;
         document.querySelector('.popup_statistics_detail .wrapper_top').style.border = 0;
+
     }
 
     render_content(){
@@ -50,6 +54,52 @@ class Statistics_detail{
         return html;
     }
 
+    dom_arrange_select(){
+        let icon = CImg.arrow_expand(['var(--img-sub1)'], {"vertical-align":"middle"});
+        let id = "list_arrange_select";
+        let title = "전체"+icon;
+        if(this.sort_val == SORT_NONE_STATISTICS){
+            title = "결제수단 미입력"+icon;
+        }
+        else if(this.sort_val == SORT_CASH_STATISTICS){
+            title = "현금"+icon;
+        }
+        else if(this.sort_val == SORT_TRANS_STATISTICS){
+            title = "계좌이체"+icon;
+        }
+        else if(this.sort_val == SORT_CARD_STATISTICS){
+            title = "카드"+icon;
+        }
+        let style = {"color": "var(--font-sub-normal)", "font-size":"13px", "font-weight":"500"};
+        let onclick = ()=>{
+            this.switch_type();
+        };
+        let dom = CComponent.text_button (id, title, style, onclick);
+
+        let html = `<div style="text-align:right;padding:5px 10px 10px 10px;">
+                        ${dom}
+                    </div>`;
+
+        return html;
+    }
+
+    switch_type(){
+        let user_option = {
+            by_total:{text:"전체", callback:()=>{this.sort_val = SORT_ALL_STATISTICS;this.init();layer_popup.close_layer_popup();}},
+            by_none:{text:"결제수단 미입력", callback:()=>{this.sort_val = SORT_NONE_STATISTICS;this.init();layer_popup.close_layer_popup();}},
+            by_cash:{text:"현금", callback:()=>{this.sort_val = SORT_CASH_STATISTICS;this.init();layer_popup.close_layer_popup();}},
+            by_trans:{text:"계좌이체", callback:()=>{this.sort_val = SORT_TRANS_STATISTICS;this.init();layer_popup.close_layer_popup();}},
+            by_card:{text:"카드", callback:()=>{this.sort_val = SORT_CARD_STATISTICS;this.init();layer_popup.close_layer_popup();}}
+        };
+        let options_padding_top_bottom = 16;
+        // let button_height = 8 + 8 + 52;
+        let button_height = 52;
+        let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
+        let root_content_height = $root_content.height();
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
+            option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+        });
+    }
     dom_row_sales_data(){
         if(this.data == null){
             let html = `<div style="position:fixed;top:50%;left:50%;transform:translate(-50%, -50%);text-align:center;">
