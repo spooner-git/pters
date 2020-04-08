@@ -683,7 +683,8 @@ class Lecture_view{
                         data2.repeat_schedule_id, 
                         data2.member_id, 
                         data2.member_name, 
-                        data2.member_profile_url)
+                        data2.member_profile_url,
+                        data2.start_date+' - '+data2.end_date)
                 );
             }
             let html_repeat_participants = '<div style="margin-bottom:20px;">' + html_to_join_participants.join("") + '</div>';
@@ -810,10 +811,13 @@ class Lecture_view{
         return html;
     }
 
-    dom_row_repeat_participants(repeat_id, member_id, member_name, member_photo){
-        let html = `<div id="repeat_item_${repeat_id}" style="display:flex;width:100%;height:32px;padding:0 15px;box-sizing:border-box;cursor:pointer;">
-                        <div style="flex-basis:24px;"><img src="${member_photo}" style="border-radius:50%;width:20px;vertical-align:middle;"></div>
-                        <div style="flex:1 1 0;font-size:14px;font-weight:500;letter-spacing:-0.6px;color:var(--font-main);line-height:32px;">${member_name}</div>
+    dom_row_repeat_participants(repeat_id, member_id, member_name, member_photo, repeat_period){
+        let html = `<div id="repeat_item_${repeat_id}" style="display:flex;width:100%;height:45px;padding:0 15px;box-sizing:border-box;cursor:pointer;">
+                        <div style="flex-basis:24px; margin-top:5px;"><img src="${member_photo}" style="border-radius:50%;width:20px;vertical-align:middle;"></div>                       
+                        <div style="flex:1 1 0">
+                            <div style="font-size:14px;font-weight:500;letter-spacing:-0.7px;color:var(--font-main);">${member_name}</div>
+                            <div style="font-size:12px;font-weight:500;letter-spacing:-0.5px;color:var(--font-sub-normal);">${repeat_period}</div>
+                        </div>
                     </div>`;
         $(document).off('click', `#repeat_item_${repeat_id}`).on('click', `#repeat_item_${repeat_id}`, function(e){
             let user_option = {
