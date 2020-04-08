@@ -174,7 +174,7 @@ def check_schedule_logic(request):
                                 if member_ticket_info.end_date < select_date:
                                     error_temp = member_info['member_name'] + '님의 ' + member_ticket_info.ticket_tb.name + ' 수강권이 종료일 이후입니다.'
                                 if member_ticket_info.start_date > select_date:
-                                    error_temp = member_info['member_name'] + '님의 ' + member_ticket_info.ticket_tb.name + ' 수강권이 종료일 이후입니다.'
+                                    error_temp = member_info['member_name'] + '님의 ' + member_ticket_info.ticket_tb.name + ' 수강권이 시작일 이전입니다.'
 
                             if error_temp is not None:
                                 raise InternalError
