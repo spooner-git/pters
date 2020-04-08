@@ -1558,6 +1558,8 @@ def add_member_repeat_schedule_to_lecture_schedule_logic(request):
         error = '시작 날짜를 선택해 주세요.'
     elif repeat_schedule_end_date == '':
         error = '종료 날짜를 선택해 주세요.'
+    if len(member_ids) == 0:
+        error = '회원을 선택해주세요.'
 
     if error is None:
         try:
@@ -1586,6 +1588,17 @@ def add_member_repeat_schedule_to_lecture_schedule_logic(request):
         start_date = repeat_schedule_info.start_date
         end_date = repeat_schedule_info.end_date
         en_dis_type = repeat_schedule_info.en_dis_type
+        if repeat_schedule_start_date < start_date:
+            error = '시작일은 기존 반복일정 사이에 있어야 합니다.'
+        elif repeat_schedule_end_date > end_date:
+            error = '종료일은 기존 반복일정 사이에 있어야 합니다.'
+
+    if error is None:
+        for lecture_member_id in member_ids:
+            check_repeat_schedule_data_count = RepeatScheduleTb.objects.filter(
+                lecture_schedule_id=repeat_schedule_id, member_ticket_tb__member=lecture_member_id).count()
+            if check_repeat_schedule_data_count > 0:
+                error = '이미 포함된 회원이 있습니다.'
 
     if error is None:
         if str(en_dis_type) == str(ON_SCHEDULE_TYPE):
@@ -1607,7 +1620,7 @@ def add_member_repeat_schedule_to_lecture_schedule_logic(request):
                 if member_info is not None:
                     repeat_member_ticket_id = None
                     repeat_member_ticket_result = func_get_lecture_member_ticket_id(class_id, lecture_info.lecture_id,
-                                                                             member_info.member_id)
+                                                                                    member_info.member_id)
                     if repeat_member_ticket_result['error'] is not None:
                         error = repeat_member_ticket_result['error']
                     else:

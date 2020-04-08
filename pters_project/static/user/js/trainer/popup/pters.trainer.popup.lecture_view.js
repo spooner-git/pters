@@ -665,7 +665,9 @@ class Lecture_view{
                     }).join(''),
                     data.member_name != undefined ? data.member_name+' /' : "",
                     data.start_date+' - '+data.end_date,
-                    data.start_time+' - '+data.end_time
+                    data.start_time+' - '+data.end_time,
+                    data.lecture_id,
+                    data.lecture_max_member_num
                 );
             if(data.lecture_member_repeat_schedule_list == undefined){
                 html_to_join.push(html_repeat_parent);
@@ -705,8 +707,8 @@ class Lecture_view{
                 // }) +
                 CComp.button("view_schedule_history", `${CImg.history([""], {"vertical-align":"middle", "margin-bottom":"3px", "margin-right":"2px", "width":"18px"})} 일정 이력`, {"font-size":"12px", "float":"left", "padding-left":"0"}, null, ()=>{
                     let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
-                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_LECTURE_SCHEDULE_HISTORY, 100, popup_style, null, ()=>{
-                        lecture_schedule_history = new Lecture_schedule_history('.popup_lecture_schedule_history', this.lecture_id, null);
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SCHEDULE_HISTORY, 100, popup_style, null, ()=>{
+                        lecture_schedule_history = new Lecture_schedule_history('.POPUP_ADDRESS_LECTURE_SCHEDULE_HISTORY', this.lecture_id, null);
                     });
                 }) +
             `</div>
@@ -717,7 +719,7 @@ class Lecture_view{
         return html_to_join.join("");
     }
 
-    dom_row_repeat_item(repeat_id, color, repeat_name, repeat_day, repeat_period, repeat_time){
+    dom_row_repeat_item(repeat_id, color, repeat_name, repeat_day, repeat_period, repeat_time, lecture_id, lecture_max_member_num){
         if(repeat_name == '일월화수목금토'){
             repeat_name = '매일';
         }
@@ -735,6 +737,28 @@ class Lecture_view{
                     </div>`;
         $(document).off('click', `#repeat_item_${repeat_id}`).on('click', `#repeat_item_${repeat_id}`, function(e){
             let user_option = {
+
+                add_member:{text:"회원 추가", callback:()=>{
+                    layer_popup.close_layer_popup();
+                    let inspect = pass_inspector.schedule_create();
+                    if(inspect.barrier == BLOCKED){
+                        let message = `${inspect.limit_type}`;
+                        show_error_message({title:message});
+                        return false;
+                    }
+
+                    let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_ADD_REPEAT, 100, popup_style, null, ()=>{
+                        let repeat_period_split = repeat_period.split(' - ');
+                        let start_date = repeat_period_split[0];
+                        let end_date = repeat_period_split[1];
+                        let external_data = {"lecture_id":lecture_id, "lecture_repeat_schedule_id":repeat_id,"lecture_name":repeat_name,
+                                             "lecture_max_num":lecture_max_member_num,
+                                             "lecture_repeat_start_date":start_date, "lecture_repeat_end_date":end_date};
+                        lecture_add_repeat = new Lecture_add_repeat('.popup_lecture_add_repeat', external_data, 'lecture_add_repeat');
+                    });
+
+                }},
                 delete:{text:"삭제", callback:()=>{
                     layer_popup.close_layer_popup();
                     let message = {
