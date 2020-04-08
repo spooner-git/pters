@@ -1668,6 +1668,7 @@ def add_member_repeat_schedule_to_lecture_schedule_logic(request):
                                                                                       repeat_schedule_info.en_dis_type,
                                                                                       request.user.id)
                                     member_repeat_schedule_info = repeat_schedule_result['schedule_info']
+                                    end_date_check = repeat_schedule_end_date_info
                                     for schedule_info in schedule_data:
                                         if schedule_info.end_dt < repeat_schedule_check_end_date_info:
                                             member_ticket_result = func_get_lecture_member_ticket_id(class_id,
@@ -1686,8 +1687,19 @@ def add_member_repeat_schedule_to_lecture_schedule_logic(request):
                                                     schedule_info.state_cd, UN_USE, SCHEDULE_DUPLICATION_ENABLE)
 
                                                 error_temp = schedule_result['error']
-                                                # if error_temp is not None:
+                                                if error_temp is None:
+                                                    end_date_check = schedule_info.end_dt.date()
                                                 #     raise InternalError
+
+                                    try:
+                                        update_repeat_schedule_info = RepeatScheduleTb.objects.get(
+                                            repeat_schedule_id=member_repeat_schedule_info.repeat_schedule_id)
+                                    except ObjectDoesNotExist:
+                                        update_repeat_schedule_info = None
+
+                                    if update_repeat_schedule_info is not None:
+                                        update_repeat_schedule_info.end_date = end_date_check
+                                        update_repeat_schedule_info.save()
 
                             except TypeError:
                                 error = '오류가 발생했습니다.[1]'
