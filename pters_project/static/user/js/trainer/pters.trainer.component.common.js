@@ -777,7 +777,7 @@ class CComponent{
         }
         let html = `<li class="schedule_history_row" id="closed_date_history_row_${closed_date_history_id}">`;
         let raw_1 = `<div class="obj_table_raw">
-                        <div class="cell_schedule_num" style="width:auto;">${numbering}</div>
+                        <div class="cell_schedule_num" style="width:15px;">${numbering}</div>
                         <div class="cell_schedule_info">${closed_date_reason_type_name}</div>
                         <div class="cell_schedule_attend"></div>
                     </div>`;
