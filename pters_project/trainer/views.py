@@ -341,8 +341,7 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
         lecture_member_repeat_schedule_data = RepeatScheduleTb.objects.select_related(
             'lecture_tb', 'member_ticket_tb__member', 'reg_member').filter(
             class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, lecture_tb__isnull=False,
-            lecture_schedule_id__isnull=False).exclude(end_date__lt=today).order_by('-reg_dt', 'lecture_tb',
-                                                                                    'lecture_schedule_id')
+            lecture_schedule_id__isnull=False).order_by('-reg_dt', 'lecture_tb', 'lecture_schedule_id')
 
         week_order = ['SUN', 'MON', 'TUE', 'WED', 'THS', 'FRI', 'SAT']
         week_order = {key: i for i, key in enumerate(week_order)}
@@ -512,8 +511,11 @@ class GetRepeatScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
                 'member_profile_url': member_profile_url
             }
             lecture_schedule_id = lecture_member_repeat_schedule_info.lecture_schedule_id
-            lecture_member_repeat_schedule_ordered_dict[
-                lecture_schedule_id]['lecture_member_repeat_schedule_list'].append(lecture_member_repeat_schedule_dict)
+            try:
+                lecture_member_repeat_schedule_ordered_dict[
+                    lecture_schedule_id]['lecture_member_repeat_schedule_list'].append(lecture_member_repeat_schedule_dict)
+            except KeyError:
+                lecture_member_repeat_schedule_dict = None
 
         repeat_schedule = collections.OrderedDict()
         repeat_schedule['off_repeat_schedule_data'] = off_repeat_schedule_list
@@ -672,8 +674,8 @@ class GetLectureRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, 
                 lecture_member_repeat_schedule_data = RepeatScheduleTb.objects.select_related(
                     'lecture_tb', 'member_ticket_tb__member', 'reg_member').filter(
                     class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, lecture_tb_id=lecture_id,
-                    lecture_schedule_id__isnull=False).exclude(end_date__lt=today).order_by('-reg_dt', 'lecture_tb',
-                                                                                            'lecture_schedule_id')
+                    lecture_schedule_id__isnull=False).order_by('-reg_dt', 'lecture_tb',
+                                                                'lecture_schedule_id')
 
                 for lecture_repeat_schedule_info in lecture_repeat_schedule_data:
                     week_data = lecture_repeat_schedule_info.week_info.split('/')
@@ -746,9 +748,12 @@ class GetLectureRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, 
                         'member_profile_url': member_profile_url
                     }
                     lecture_schedule_id = lecture_member_repeat_schedule_info.lecture_schedule_id
-                    lecture_member_repeat_schedule_ordered_dict[
-                        lecture_schedule_id]['lecture_member_repeat_schedule_list'].append(
-                        lecture_member_repeat_schedule_dict)
+                    try:
+                        lecture_member_repeat_schedule_ordered_dict[
+                            lecture_schedule_id]['lecture_member_repeat_schedule_list'].append(
+                            lecture_member_repeat_schedule_dict)
+                    except KeyError:
+                        lecture_member_repeat_schedule_dict = None
 
                 lecture_repeat_schedule_list = lecture_member_repeat_schedule_ordered_dict
         else:

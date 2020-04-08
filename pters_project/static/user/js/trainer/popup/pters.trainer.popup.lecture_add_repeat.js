@@ -1,10 +1,11 @@
 class Lecture_add_repeat{
-    constructor(install_target, data, instance){
+    constructor(install_target, data, instance, from_popup){
 
         this.target = {install: install_target, toolbox:'section_lecture_add_repeat_toolbox', content:'section_lecture_add_repeat_content'};
         this.instance = instance;
         this.external_data = data;
         this.form_id = 'id_lecture_add_repeat_form';
+        this.from_popup = from_popup;
 
         let d = new Date();
         this.dates = {
@@ -151,9 +152,9 @@ class Lecture_add_repeat{
                 let month = this.data.lecture_repeat_start_date == null ? this.dates.current_month : Number(this.data.lecture_repeat_start_date.split('-')[1]);
                 let date = this.data.lecture_repeat_start_date == null ? this.dates.current_date : Number(this.data.lecture_repeat_start_date.split('-')[2]);
 
-                let year_min = Number(this.data.lecture_repeat_start_date.split('-')[0]);
-                let month_min = Number(this.data.lecture_repeat_start_date.split('-')[1]);
-                let date_min = Number(this.data.lecture_repeat_start_date.split('-')[2]);
+                let year_min = Number(this.external_data.lecture_repeat_start_date.split('-')[0]);
+                let month_min = Number(this.external_data.lecture_repeat_start_date.split('-')[1]);
+                let date_min = Number(this.external_data.lecture_repeat_start_date.split('-')[2]);
                 
                 date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'lecture_repeat_start_date', title:'반복일정 시작일', data:{year:year, month:month, date:date}, min:{year:year_min, month:month_min, date:date_min},callback_when_set: (object)=>{
                     this.data.lecture_repeat_start_date = DateRobot.to_yyyymmdd(object.data.year, object.data.month, object.data.date);
@@ -250,7 +251,9 @@ class Lecture_add_repeat{
             Loading.hide();
             layer_popup.close_layer_popup();
             current_page.init();
-            lecture_view_popup.init();
+            this.from_popup.init();
+            // plan_repeat_list_popup.init();
+            // lecture_view_popup.init();
         }, ()=>{Loading.hide();});
 
     }

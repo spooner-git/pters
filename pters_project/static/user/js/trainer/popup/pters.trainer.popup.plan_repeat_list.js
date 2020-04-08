@@ -100,6 +100,8 @@ class Plan_repeat_list{
             let data = this.data.lecture_repeat_schedule_list[item];
             let repeat_id = data.repeat_schedule_id;
             let color = data.lecture_ing_color_cd;
+            let lecture_id = data.lecture_id;
+            let lecture_max_member_num = data.lecture_max_member_num;
             let repeat_name = data.lecture_name;
             let repeat_period = data.start_date + ' - ' + data.end_date;
             let repeat_start_time = TimeRobot.to_hhmm(data.start_time.split(':')[0], data.start_time.split(':')[1]).complete;
@@ -109,7 +111,7 @@ class Plan_repeat_list{
                 return DAYNAME_MATCH[item];
             }).join('');
 
-            let html_main = this.dom_row_repeat_item(repeat_id, color, repeat_name, repeat_day, repeat_period, repeat_time);
+            let html_main = this.dom_row_repeat_item(repeat_id, color, repeat_name, repeat_day, repeat_period, repeat_time, lecture_id, lecture_max_member_num);
 
 
             let length = data.lecture_member_repeat_schedule_list.length;
@@ -120,7 +122,8 @@ class Plan_repeat_list{
                 let member_id = data2.member_id;
                 let member_name = data2.member_name;
                 let member_photo = data2.member_profile_url;
-                let html = this.dom_row_repeat_participants(repeat_id, member_id, member_name, member_photo);
+                let repeat_period = data2.start_date + ' - ' + data2.end_date;
+                let html = this.dom_row_repeat_participants(repeat_id, member_id, member_name, member_photo, repeat_period);
                 html_to_join_participants.push(html);
             }
             let html_participants = '<div style="margin-bottom:20px;">' + html_to_join_participants.join("") + '</div>';
@@ -143,6 +146,8 @@ class Plan_repeat_list{
             let data = this.data.member_repeat_schedule_list[i];
             let repeat_id = data.repeat_schedule_id;
             let color = data.lecture_ing_color_cd;
+            let lecture_id = data.lecture_id;
+            let lecture_max_num = data.lecture_max_num;
             let repeat_name = data.member_name;
             let repeat_period = data.repeat_start_date + ' - ' + data.repeat_end_date;
             let repeat_start_time = TimeRobot.to_hhmm(data.repeat_start_time.split(':')[0], data.repeat_start_time.split(':')[1]).complete;
@@ -152,7 +157,7 @@ class Plan_repeat_list{
                 return DAYNAME_MATCH[item];
             }).join('');
 
-            let html = this.dom_row_repeat_item(repeat_id, color, repeat_name, repeat_day, repeat_period, repeat_time);
+            let html = this.dom_row_repeat_item(repeat_id, color, repeat_name, repeat_day, repeat_period, repeat_time, '', 1);
 
             html_to_join.push(html);
         }
@@ -167,6 +172,8 @@ class Plan_repeat_list{
             let data = this.data.off_repeat_schedule_data[i];
             let repeat_id = data.repeat_schedule_id;
             let color = 'var(--font-main)';
+            let lecture_id = data.lecture_id;
+            let lecture_max_num = data.lecture_max_num;
             let repeat_name = "OFF";
             let repeat_period = data.start_date + ' - ' + data.end_date;
             let repeat_start_time = TimeRobot.to_hhmm(data.start_time.split(':')[0], data.start_time.split(':')[1]).complete;
@@ -176,7 +183,7 @@ class Plan_repeat_list{
                 return DAYNAME_MATCH[item];
             }).join('');
 
-            let html = this.dom_row_repeat_item(repeat_id, color, repeat_name, repeat_day, repeat_period, repeat_time);
+            let html = this.dom_row_repeat_item(repeat_id, color, repeat_name, repeat_day, repeat_period, repeat_time, '', 0);
 
             html_to_join.push(html);
         }
@@ -199,7 +206,7 @@ class Plan_repeat_list{
                 return DAYNAME_MATCH[item];
             }).join('');
 
-            let html = this.dom_row_repeat_item(repeat_id, color, repeat_name, repeat_day, repeat_period, repeat_time);
+            let html = this.dom_row_repeat_item(repeat_id, color, repeat_name, repeat_day, repeat_period, repeat_time, '', 0);
 
             html_to_join.push(html);
         }
@@ -208,10 +215,11 @@ class Plan_repeat_list{
     }
 
 
-    dom_row_repeat_item(repeat_id, color, repeat_name, repeat_day, repeat_period, repeat_time){
+    dom_row_repeat_item(repeat_id, color, repeat_name, repeat_day, repeat_period, repeat_time, lecture_id, lecture_max_member_num){
         if(repeat_day == '일월화수목금토'){
             repeat_day = '매일';
         }
+        console.log(lecture_max_member_num)
         let html = `<div class="repeat_wrapper" id="repeat_item_${repeat_id}">
                         <div style="flex-basis:16px;">
                             <div style="float:left;width:4px;height:100%;background-color:${color}"></div>
@@ -226,6 +234,28 @@ class Plan_repeat_list{
                     </div>`;
         $(document).off('click', `#repeat_item_${repeat_id}`).on('click', `#repeat_item_${repeat_id}`, function(e){
             let user_option = {
+
+                add_member:{text:"회원 추가", callback:()=>{
+                    layer_popup.close_layer_popup();
+                    let inspect = pass_inspector.schedule_create();
+                    if(inspect.barrier == BLOCKED){
+                        let message = `${inspect.limit_type}`;
+                        show_error_message({title:message});
+                        return false;
+                    }
+
+                    let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_ADD_REPEAT, 100, popup_style, null, ()=>{
+                        let repeat_period_split = repeat_period.split(' - ');
+                        let start_date = repeat_period_split[0];
+                        let end_date = repeat_period_split[1];
+                        let external_data = {"lecture_id":lecture_id, "lecture_repeat_schedule_id":repeat_id,"lecture_name":repeat_name,
+                                             "lecture_max_num":lecture_max_member_num,
+                                             "lecture_repeat_start_date":start_date, "lecture_repeat_end_date":end_date};
+                        lecture_add_repeat = new Lecture_add_repeat('.popup_lecture_add_repeat', external_data, 'lecture_add_repeat', plan_repeat_list_popup);
+                    });
+
+                }},
                 delete:{text:"삭제", callback:()=>{
                     layer_popup.close_layer_popup();
                     let message = {
@@ -260,6 +290,10 @@ class Plan_repeat_list{
                     });
                 }}
             };
+
+            if(lecture_max_member_num <= 1){
+                delete user_option.add_member;
+            }
             let options_padding_top_bottom = 16;
             // let button_height = 8 + 8 + 52;
             let button_height = 52;
@@ -273,10 +307,13 @@ class Plan_repeat_list{
         return html;
     }
 
-    dom_row_repeat_participants(repeat_id, member_id, member_name, member_photo){
-        let html = `<div class="repeat_member_wrapper" id="repeat_item_${repeat_id}">
-                        <div style="flex-basis:24px;"><img src="${member_photo}" style="border-radius:50%;width:20px;vertical-align:middle;"></div>
-                        <div style="flex:1 1 0;font-size:14px;font-weight:500;letter-spacing:-0.6px;color:var(--font-main);line-height:32px;">${member_name}</div>
+    dom_row_repeat_participants(repeat_id, member_id, member_name, member_photo, repeat_period){
+        let html = `<div class="repeat_member_wrapper" id="repeat_item_${repeat_id}" style="display:flex;width:100%;height:45px;padding:0 15px;box-sizing:border-box;cursor:pointer;">
+                        <div style="flex-basis:24px; margin-top:5px;"><img src="${member_photo}" style="border-radius:50%;width:20px;vertical-align:middle;"></div>                       
+                        <div style="flex:1 1 0">
+                            <div style="font-size:14px;font-weight:500;letter-spacing:-0.7px;color:var(--font-main);">${member_name}</div>
+                            <div style="font-size:12px;font-weight:500;letter-spacing:-0.5px;color:var(--font-sub-normal);">${repeat_period}</div>
+                        </div>
                     </div>`;
         $(document).off('click', `#repeat_item_${repeat_id}`).on('click', `#repeat_item_${repeat_id}`, function(e){
             let user_option = {

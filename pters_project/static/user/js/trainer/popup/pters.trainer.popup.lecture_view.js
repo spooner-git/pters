@@ -756,7 +756,7 @@ class Lecture_view{
                         let external_data = {"lecture_id":lecture_id, "lecture_repeat_schedule_id":repeat_id,"lecture_name":repeat_name,
                                              "lecture_max_num":lecture_max_member_num,
                                              "lecture_repeat_start_date":start_date, "lecture_repeat_end_date":end_date};
-                        lecture_add_repeat = new Lecture_add_repeat('.popup_lecture_add_repeat', external_data, 'lecture_add_repeat');
+                        lecture_add_repeat = new Lecture_add_repeat('.popup_lecture_add_repeat', external_data, 'lecture_add_repeat', lecture_view_popup);
                     });
 
                 }},

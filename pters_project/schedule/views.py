@@ -1545,6 +1545,9 @@ def add_member_repeat_schedule_to_lecture_schedule_logic(request):
     setting_to_shared_trainer_lesson_alarm = request.session.get('setting_to_shared_trainer_lesson_alarm',
                                                                  TO_SHARED_TRAINER_LESSON_ALARM_OFF)
     trainer_name = request.session.get('trainer_name', '')
+
+    today = datetime.date.today()
+
     error = None
     repeat_schedule_info = None
     start_date = None
@@ -1560,9 +1563,8 @@ def add_member_repeat_schedule_to_lecture_schedule_logic(request):
 
     if repeat_schedule_id == '':
         error = '반복 일정을 선택해주세요.'
-
     if repeat_schedule_start_date == repeat_schedule_end_date:
-        error = '일정을 다시 선택해주세요.'
+        error = '시작일과 종요일이 같습니다.'
     if repeat_schedule_start_date == '':
         error = '시작 날짜를 선택해 주세요.'
     elif repeat_schedule_end_date == '':
@@ -1604,12 +1606,21 @@ def add_member_repeat_schedule_to_lecture_schedule_logic(request):
 
     if error is None:
         for lecture_member_id in member_ids:
-            try:
-                check_repeat_schedule_info = RepeatScheduleTb.objects.get(
-                    lecture_schedule_id=repeat_schedule_id, member_ticket_tb__member=lecture_member_id)
-                error = check_repeat_schedule_info.member_ticket_tb.member.name + ' 회원님이 이미 수업 반복일정이 설정되어 있습니다.'
-            except ObjectDoesNotExist:
-                check_repeat_schedule_info = None
+            check_repeat_schedule_data = RepeatScheduleTb.objects.filter(
+                lecture_schedule_id=repeat_schedule_id,
+                member_ticket_tb__member=lecture_member_id)
+            if len(check_repeat_schedule_data) > 0:
+                start_date_duplicate_counter = check_repeat_schedule_data.filter(
+                    Q(start_date__lte=repeat_schedule_start_date) & Q(end_date__gte=repeat_schedule_start_date)).count()
+
+                end_date_duplicate_counter = check_repeat_schedule_data.filter(
+                    Q(start_date__lte=repeat_schedule_end_date) & Q(end_date__gte=repeat_schedule_end_date)).count()
+
+                date_duplicate_counter = check_repeat_schedule_data.filter(
+                    Q(start_date__gte=repeat_schedule_start_date) & Q(end_date__lte=repeat_schedule_end_date)).count()
+
+                if start_date_duplicate_counter > 0 or end_date_duplicate_counter > 0 or date_duplicate_counter > 0:
+                    error = '선택하신 기간에 '+check_repeat_schedule_data[0].member_ticket_tb.member.name + ' 회원님이 이미 수업 반복일정이 설정되어 있습니다.'
 
     if error is None:
         if str(en_dis_type) == str(ON_SCHEDULE_TYPE):
