@@ -335,7 +335,7 @@ class Plan_view{
             html =      '<div class="obj_input_box_full">' +  CComponent.dom_tag('일자') + date_select_row +
                                                         CComponent.dom_tag('진행시간') + classic_time_selector + '</div>' +
                         '<div class="obj_input_box_full">'+ CComponent.dom_tag(`메모 <span style="color:var(--font-highlight);display:${hide_when_off}">(회원님께 공유되는 메모입니다.)</span>`) + memo_select_row + '</div>' +
-                        `<div class="obj_input_box_full" style="display:${hide_when_off};">`+ CComponent.dom_tag(`내 메모 <span style="color:var(--font-highlight);">(지점 공유 강사들에게만 공유되는 메모입니다.)</span>`) + private_memo_select_row + '</div>' +
+                        `<div class="obj_input_box_full" style="display:${hide_when_off};">`+ CComponent.dom_tag(`내 메모`) + private_memo_select_row + '</div>' +
                         `<div class="obj_input_box_full" style="display:${display};">`+ CComponent.dom_tag('회원') + member_select_plan_approve_row + member_list_plan_approve_row+'</div>' +
                         `<div class="obj_input_box_full" style="display:${display};">`+ CComponent.dom_tag('대기 회원') + member_select_plan_wait_row + member_list_plan_wait_row+'</div>' +
                         '<div class="obj_input_box_full" style="padding:18px;">' + reg_mod_info + '<div>';
@@ -343,7 +343,7 @@ class Plan_view{
             html =      '<div class="obj_input_box_full">' +  CComponent.dom_tag('일자') + date_select_row +
                                                         CComponent.dom_tag('진행시간') + start_time_select_row + end_time_select_row + '</div>' +
                         '<div class="obj_input_box_full">'+ CComponent.dom_tag(`메모 <span style="color:var(--font-highlight);display:${hide_when_off}">(회원님께 공유되는 메모입니다.)</span>`) + memo_select_row + '</div>' +
-                        `<div class="obj_input_box_full" style="display:${hide_when_off};">`+ CComponent.dom_tag(`내 메모 <span style="color:var(--font-highlight);">(지점 공유 강사들에게만 공유되는 메모입니다.)</span>`) + private_memo_select_row + '</div>' +
+                        `<div class="obj_input_box_full" style="display:${hide_when_off};">`+ CComponent.dom_tag(`내 메모`) + private_memo_select_row + '</div>' +
                         `<div class="obj_input_box_full" style="display:${display};">`+ CComponent.dom_tag('회원') + member_select_plan_approve_row + member_list_plan_approve_row+'</div>' +
                         `<div class="obj_input_box_full" style="display:${display};">`+ CComponent.dom_tag('대기 회원') + member_select_plan_wait_row + member_list_plan_wait_row+'</div>' +
                         '<div class="obj_input_box_full" style="padding:18px;">' + reg_mod_info + '<div>';
@@ -351,7 +351,7 @@ class Plan_view{
         if(this.data.schedule_type == 3){
             html =      '<div class="obj_input_box_full">' +  CComponent.dom_tag('일자') + date_select_row + '</div>' +
                         '<div class="obj_input_box_full">'+ CComponent.dom_tag(`메모 <span style="color:var(--font-highlight);display:${hide_when_off}">(회원님께 공유되는 메모입니다.)</span>`) + memo_select_row + '</div>' +
-                        `<div class="obj_input_box_full" style="display:${hide_when_off};">`+ CComponent.dom_tag(`내 메모 <span style="color:var(--font-highlight);">(지점 공유 강사들에게만 공유되는 메모입니다.)</span>`) + private_memo_select_row + '</div>' +
+                        `<div class="obj_input_box_full" style="display:${hide_when_off};">`+ CComponent.dom_tag(`내 메모`) + private_memo_select_row + '</div>' +
                         '<div class="obj_input_box_full">'+ CComponent.dom_tag('자동 수강권 기간 연장') + schedule_holding_extension_flag +
                                     "<div style='padding-left:42px;font-size:12px;color:var(--font-highlight);letter-spacing:-0.6px;font-weight:normal'>활성:휴무일에 진행중인 모든 수강권이 자동 연장됩니다.</div>" +
                                     "<div style='padding-left:42px;font-size:12px;color:var(--font-highlight);letter-spacing:-0.6px;font-weight:normal'>비활성:연장되었던 수강권이 연장 취소됩니다.</div>"+'</div>'+
