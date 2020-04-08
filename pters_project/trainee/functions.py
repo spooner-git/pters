@@ -108,8 +108,9 @@ def func_get_trainee_lecture_schedule(context, user_id, class_id, start_date, en
     #       " and A.MEMBER_AUTH_CD=\'VIEW\' and A.MEMBER_ID="+str(user_id)
 
     member_ticket_data = ClassMemberTicketTb.objects.select_related(
-        'member_ticket_tb__ticket_tb').filter(class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW,
-                                              member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+        'member_ticket_tb__ticket_tb').filter(Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS)
+                                              | Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
+                                              class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW,
                                               member_ticket_tb__member_id=user_id,
                                               member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
                                               member_ticket_tb__use=USE,
@@ -129,14 +130,14 @@ def func_get_trainee_lecture_schedule(context, user_id, class_id, start_date, en
 
         for ticket_lecture_info in ticket_lecture_data:
             query_lecture_list |= Q(lecture_tb_id=ticket_lecture_info.lecture_tb_id)
-
-        lecture_schedule_data = ScheduleTb.objects.select_related(
-            'lecture_tb').filter(query_lecture_list, class_tb_id=class_id, lecture_tb__isnull=False,
-                                 member_ticket_tb__isnull=True,
-                                 en_dis_type=ON_SCHEDULE_TYPE, start_dt__gte=start_date,
-                                 start_dt__lt=end_date, use=USE
-                                 ).annotate(lecture_current_member_num=RawSQL(query, []),
-                                            lecture_wait_member_num=RawSQL(query_wait, [])).order_by('start_dt')
+        if len(ticket_lecture_data) > 0:
+            lecture_schedule_data = ScheduleTb.objects.select_related(
+                'lecture_tb').filter(query_lecture_list, class_tb_id=class_id, lecture_tb__isnull=False,
+                                     member_ticket_tb__isnull=True,
+                                     en_dis_type=ON_SCHEDULE_TYPE, start_dt__gte=start_date,
+                                     start_dt__lt=end_date, use=USE
+                                     ).annotate(lecture_current_member_num=RawSQL(query, []),
+                                                lecture_wait_member_num=RawSQL(query_wait, [])).order_by('start_dt')
         for lecture_schedule_info in lecture_schedule_data:
             if lecture_schedule_info.note is not None and lecture_schedule_info.note != '':
                 lecture_schedule_info.note = lecture_schedule_info.note.replace('\n', '<br/>')
@@ -192,7 +193,8 @@ def func_get_trainee_on_repeat_schedule(context, user_id, class_id):
     # repeat_schedule_list = []
     pt_repeat_schedule_data = RepeatScheduleTb.objects.select_related(
         'member_ticket_tb'
-    ).filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+    ).filter(Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS) | Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
+             class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,
              member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__member_id=user_id,
              member_ticket_tb__use=USE).order_by('member_ticket_tb__start_date')
 

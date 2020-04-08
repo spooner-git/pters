@@ -89,7 +89,14 @@ function pters_month_calendar(calendar_name, calendar_options){
         let reference_date_month_last_day = func_get_month_end_day(reference_date_year, reference_date_month);
 
         let current_month_first_date_day = new Date(`${reference_date_year}`,`${reference_date_month-1}`,`${'1'}`).getDay();
-
+        let help_calendar_indicator = `<div class="help_calendar_indicator obj_font_size_10_weight_500">`;
+        if(one_to_one_lecture_check > 0){
+            help_calendar_indicator += '<div style="background-color:rgba(255, 59, 68, 0.07)">개인수업 예약</div>';
+        }
+        if(group_lecture_check > 0){
+            help_calendar_indicator += '<div style="background-color:rgba(255, 59, 68, 0.38)">그룹수업 예약</div>';
+        }
+        help_calendar_indicator += '</div>';
         let month_calendar_upper_tool = `<div class="pters_month_cal_upper_tool_box">
                                             <div id="${calendar_name}_go_prev_month" class="next_prev_month" style="display:${design_options.move_buttons};">
                                                 <img src="/static/common/icon/icon_arrow_l_black.png" class="obj_icon_basic"> 
@@ -105,12 +112,9 @@ function pters_month_calendar(calendar_name, calendar_options){
                                             </div>
                                             <div id="${calendar_name}_go_next_month" class="next_prev_month" style="display:${design_options.move_buttons};">
                                                 <img src="/static/common/icon/icon_arrow_r_small_black.png" class="obj_icon_basic">
-                                            </div>
-                                            <div class="help_calendar_indicator obj_font_size_10_weight_500">
-                                                <div style="background-color:rgba(255, 59, 68, 0.07)">개인 수업 예약</div>
-                                                <div style="background-color:rgba(255, 59, 68, 0.38)">그룹 수업 예약</div>
-                                            </div>
-                                        </div>`;
+                                            </div>`
+                                            + help_calendar_indicator +
+                                        '</div>';
 
         //달력의 월화수목금 표기를 만드는 부분
         let month_day_name_text = `<div class="pters_month_cal_day_name_box obj_table_raw ${design_options["font_day_names"]}"> 

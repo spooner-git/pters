@@ -21,7 +21,8 @@ from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, DEL_SCHEDULE, USE, UN_
     SCHEDULE_DUPLICATION_ENABLE, LECTURE_TYPE_ONE_TO_ONE, STATE_CD_IN_PROGRESS, STATE_CD_FINISH, STATE_CD_ABSENCE, \
     STATE_CD_NOT_PROGRESS, PERMISSION_STATE_CD_APPROVE, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, AUTH_TYPE_DELETE, \
     PERMISSION_STATE_CD_WAIT, TO_TRAINEE_LESSON_ALARM_ON, TO_SHARED_TRAINER_LESSON_ALARM_ON, TO_TRAINEE_LESSON_ALARM_OFF, \
-    TO_SHARED_TRAINER_LESSON_ALARM_OFF, TO_END_TRAINEE, TO_ING_TRAINEE, TO_ALL_TRAINEE, STATE_CD_HOLDING
+    TO_SHARED_TRAINER_LESSON_ALARM_OFF, TO_END_TRAINEE, TO_ING_TRAINEE, TO_ALL_TRAINEE, STATE_CD_HOLDING, \
+    LECTURE_TYPE_NORMAL
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 from schedule.functions import func_get_member_ticket_id, func_add_schedule, func_refresh_member_ticket_count, \
     func_get_lecture_member_ticket_id_from_trainee, func_send_push_trainee, func_get_holiday_schedule, \
@@ -242,9 +243,28 @@ class TraineeCalendarView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         start_date = today - datetime.timedelta(days=int(day))
         end_date = today + datetime.timedelta(days=int(day))
 
+        one_to_one_lecture_check = 0
+        group_lecture_check = 0
+
+        member_ticket_data = ClassMemberTicketTb.objects.select_related(
+            'member_ticket_tb__member',
+            'member_ticket_tb__ticket_tb'
+        ).filter(Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS) | Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
+                 class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__member_id=self.request.user.id,
+                 member_ticket_tb__ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+                 member_ticket_tb__use=USE, member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW, use=USE)
+
+        for member_ticket_info in member_ticket_data:
+            ticket_lecture_data = TicketLectureTb.objects.filter(
+                ticket_tb_id=member_ticket_info.member_ticket_tb.ticket_tb_id,
+                lecture_tb__state_cd=STATE_CD_IN_PROGRESS, lecture_tb__use=USE, use=USE)
+            one_to_one_lecture_check += ticket_lecture_data.filter(lecture_tb__lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE).count()
+            group_lecture_check += ticket_lecture_data.filter(lecture_tb__lecture_type_cd=LECTURE_TYPE_NORMAL).count()
+
         func_setting_data_update(self.request, 'trainee')
         # context = func_get_class_member_ticket_count(context, class_id, self.request.user.id)
-
+        context['one_to_one_lecture_check'] = one_to_one_lecture_check
+        context['group_lecture_check'] = group_lecture_check
         context['holiday'] = func_get_holiday_schedule(start_date, end_date)
 
         if class_id is not None and class_id != '':
@@ -266,8 +286,8 @@ class TraineeProgramNoticeView(LoginRequiredMixin, AccessTestMixin, TemplateView
             member_ticket_num = ClassMemberTicketTb.objects.select_related(
                 'member_ticket_tb__member',
                 'member_ticket_tb__ticket_tb'
-            ).filter(class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__member_id=self.request.user.id,
-                     member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+            ).filter(Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS)|Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
+                     class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__member_id=self.request.user.id,
                      member_ticket_tb__ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
                      member_ticket_tb__use=USE, member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW, use=USE
                      ).count()
@@ -2306,8 +2326,8 @@ def check_alarm_program_notice_qa_comment(context, class_id, user_id):
     member_ticket_num = ClassMemberTicketTb.objects.select_related(
         'member_ticket_tb__member',
         'member_ticket_tb__ticket_tb'
-    ).filter(class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__member_id=user_id,
-             member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+    ).filter(Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS)|Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
+             class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__member_id=user_id,
              member_ticket_tb__ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
              member_ticket_tb__use=USE, member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW, use=USE
              ).count()
