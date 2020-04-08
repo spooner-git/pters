@@ -769,9 +769,9 @@ class Lecture_view{
                                     하위에 다른 반복일정이 존재할 경우 함께 취소됩니다. <br>
                                     과거일정은 보존되지만, 등록한 미래일정은 취소됩니다.
                                 </div>`
-                    }
+                    };
                     show_user_confirm(message, ()=>{
-                        layer_popup.close_layer_popup();
+                        // layer_popup.close_layer_popup();
                         let inspect = pass_inspector.schedule_delete();
                         if(inspect.barrier == BLOCKED){
                             let message = `${inspect.limit_type}`;
@@ -788,11 +788,15 @@ class Lecture_view{
                             try{
                                 this.init();
                             }catch(e){}
-                            layer_popup.close_layer_popup();
+                            // layer_popup.close_layer_popup();
                         }, ()=>{Loading.hide();});
                     });
                 }}
             };
+
+            if(lecture_max_member_num <= 1){
+                delete user_option.add_member;
+            }
             let options_padding_top_bottom = 16;
             // let button_height = 8 + 8 + 52;
             let button_height = 52;
