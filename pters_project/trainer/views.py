@@ -204,6 +204,7 @@ class GetLectureMemberScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, 
                                  'end_dt': str(lecture_schedule_info.end_dt),
                                  'state_cd': lecture_schedule_info.state_cd,
                                  'note': lecture_schedule_info.note,
+                                 'private_note': lecture_schedule_info.private_note,
                                  'reg_member_id': lecture_schedule_info.reg_member_id,
                                  'reg_member_name': lecture_schedule_info.reg_member.name,
                                  'mod_member_id': mod_member_id,
@@ -1110,7 +1111,7 @@ class GetMemberClosedDateListView(LoginRequiredMixin, AccessTestMixin, View):
                                                                 | Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
                                                                 member_id=member_id,
                                                                 member_ticket_tb__ticket_tb__class_tb_id=class_id,
-                                                                # end_date__gte=today,
+                                                                end_date__gte=today,
                                                                 use=USE).order_by('-start_date', '-end_date')
 
             for member_closed_info in member_closed_data:
@@ -1140,8 +1141,8 @@ class GetMemberClosedDateListView(LoginRequiredMixin, AccessTestMixin, View):
                     'member_closed_date_member_ticket_id': member_ticket_id,
                     'member_closed_schedule_id': schedule_id,
                     'member_closed_repeat_schedule_id': repeat_schedule_id,
-                    'member_closed_start_date': member_closed_info.start_date,
-                    'member_closed_end_date': member_closed_info.end_date,
+                    'member_closed_start_date': str(member_closed_info.start_date),
+                    'member_closed_end_date': str(member_closed_info.end_date),
                     'member_closed_note': member_closed_info.note,
                     'member_closed_reason_type_cd': member_closed_info.reason_type_cd,
                     'member_closed_reason_type_cd_name': member_closed_reason_type_cd_name,
@@ -1181,6 +1182,7 @@ class GetMemberClosedDateListHistoryView(LoginRequiredMixin, AccessTestMixin, Vi
                 member_closed_data = []
 
             max_page = paginator.num_pages
+            member_closed_date_idx = paginator.count - SCHEDULE_PAGINATION_COUNTER*(int(page)-1)
 
             for member_closed_info in member_closed_data:
                 member_closed_reason_type_cd_name = '일시정지'
@@ -1205,24 +1207,26 @@ class GetMemberClosedDateListHistoryView(LoginRequiredMixin, AccessTestMixin, Vi
                     if schedule_tb.repeat_schedule_tb is not None and schedule_tb.repeat_schedule_tb != '':
                         repeat_schedule_id = schedule_tb.repeat_schedule_tb_id
                 member_closed_dict = {
+                    'member_closed_date_idx': member_closed_date_idx,
                     'member_closed_date_history_id': member_closed_info.member_closed_date_history_id,
                     'member_closed_date_member_ticket_id': member_ticket_id,
                     'member_closed_schedule_id': schedule_id,
                     'member_closed_repeat_schedule_id': repeat_schedule_id,
-                    'member_closed_start_date': member_closed_info.start_date,
-                    'member_closed_end_date': member_closed_info.end_date,
+                    'member_closed_start_date': str(member_closed_info.start_date),
+                    'member_closed_end_date': str(member_closed_info.end_date),
                     'member_closed_note': member_closed_info.note,
                     'member_closed_reason_type_cd': member_closed_info.reason_type_cd,
                     'member_closed_reason_type_cd_name': member_closed_reason_type_cd_name,
                     'member_closed_extension_flag': member_closed_info.extension_flag
                 }
                 member_closed_list.append(member_closed_dict)
+                member_closed_date_idx -= 1
 
         if error is not None:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
             messages.error(request, error)
 
-        return JsonResponse({'member_closed_list': member_closed_list, 'this_page':this_page, 'max_page':max_page},
+        return JsonResponse({'member_closed_list': member_closed_list, 'this_page': this_page, 'max_page': max_page},
                             json_dumps_params={'ensure_ascii': True})
 
 
@@ -6641,7 +6645,8 @@ def attend_mode_finish_logic(request):
                             schedule_result = func_add_schedule(class_id, member_ticket_id, None,
                                                                 schedule_info.lecture_tb, schedule_id,
                                                                 schedule_info.start_dt, schedule_info.end_dt,
-                                                                schedule_info.note, ON_SCHEDULE_TYPE,
+                                                                schedule_info.note, schedule_info.private_note,
+                                                                ON_SCHEDULE_TYPE,
                                                                 member_id, PERMISSION_STATE_CD_APPROVE,
                                                                 STATE_CD_FINISH, UN_USE, SCHEDULE_DUPLICATION_ENABLE)
                             error = schedule_result['error']

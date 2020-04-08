@@ -115,7 +115,7 @@ const MY_PROGRAM = 0;
 const SHARED_PROGRAM = 1;
 
 const TICKET_PAY_METHOD = {
-    "NONE":"선택 안함",
+    "NONE":"결제수단 미입력",
     "CASH":"현금",
     "CARD":"카드",
     "TRANS":"계좌이체",
@@ -156,6 +156,11 @@ const SORT_SCHEDULE_MONTHLY = 2;
 const SORT_ORDER_ASC = 0;
 const SORT_ORDER_DESC = 1;
 
+const SORT_ALL_STATISTICS = 0;
+const SORT_NONE_STATISTICS = 1;
+const SORT_CASH_STATISTICS = 2;
+const SORT_TRANS_STATISTICS = 3;
+const SORT_CARD_STATISTICS = 4;
 
 /* px */
 const MAX_WIDTH = 800;
@@ -203,7 +208,8 @@ const POPUP_ADDRESS_LECTURE_SIMPLE_VIEW = 'popup_lecture_simple_view';
 const POPUP_ADDRESS_LECTURE_ADD = 'popup_lecture_add';
 const POPUP_ADDRESS_LECTURE_EDIT = 'popup_lecture_edit';
 const POPUP_ADDRESS_LECTURE_LIST = 'popup_lecture_list';
-const POPUP_LECTURE_SCHEDULE_HISTORY = 'popup_lecture_schedule_history';
+const POPUP_ADDRESS_LECTURE_SCHEDULE_HISTORY = 'popup_lecture_schedule_history';
+const POPUP_ADDRESS_LECTURE_ADD_REPEAT = 'popup_lecture_add_repeat';
 
 const POPUP_ADDRESS_TICKET_VIEW = 'popup_ticket_view';
 const POPUP_ADDRESS_TICKET_SIMPLE_VIEW = 'popup_ticket_simple_view';
@@ -211,6 +217,7 @@ const POPUP_ADDRESS_TICKET_ADD = 'popup_ticket_add';
 const POPUP_ADDRESS_TICKET_EDIT = 'popup_ticket_edit';
 const POPUP_ADDRESS_TICKET_LIST = 'popup_ticket_list';
 
+const POPUP_MEMBER_CLOSED_DATE_HISTORY = 'popup_member_closed_date_history';
 const POPUP_MEMBER_SCHEDULE_HISTORY = 'popup_member_schedule_history';
 const POPUP_MEMBER_TICKET_HISTORY = 'popup_member_ticket_history';
 const POPUP_MEMBER_TICKET_MODIFY = 'popup_member_ticket_modify';
@@ -557,9 +564,10 @@ const payment_agreement = {
                 ③ 회사는 다음 각 호와 같은 유료서비스를 제공하며, 회사의 사정, 기타 제반 여건에 따라 서비스 내용을 추가하거나 변경할 수 있습니다.
                 각 유료서비스의 내용은 이 약관 제7조(PTERS 부가서비스 이용권)에서 홈페이지 내 해당 유료서비스 구매페이지 등에서 회원에게 자세히 표시하고 있습니다. <br/>
                     1.이용권/서비스의 내용/속성에 따른 분류 <br/>
-                        1) 광고 제거 기능 이용권 : PTERS 사용시 광고 제거 상태로 이용 가능 <br/>
+                        1) 베이직 : 무료 이용자에게 적용되는 기능제한이 제거된 상태로 이용이 가능하며, 상세한 제한 해제 내역은 해당 유료서비스 구매페이지에 명시 <br/>
                         2) 스탠다드 : 무료 이용자에게 적용되는 기능제한이 제거된 상태로 이용이 가능하며, 상세한 제한 해제 내역은 해당 유료서비스 구매페이지에 명시 <br/>
-                        3) 비즈니스 : 사업자 전용 기능을 이용 가능<br/>
+                        3) 프리미엄 : 무료 이용자에게 적용되는 기능제한이 제거된 상태로 이용이 가능하며, 상세한 제한 해제 내역은 해당 유료서비스 구매페이지에 명시 <br/>
+                        4) 비즈니스 : 사업자 전용 기능을 이용 가능<br/>
                     2.이용권/서비스의 이용기간/정기결제 여부에 따른 분류 <br/>
                         <!-- 1) 기간만료형 이용권 : 이용 가능 기간이 만료되는 경우, 유료서비스의 이용이 종료되는 서비스 <br/> -->
                         1) 정기결제형 이용권 : 회원이 등록한 결제수단을 통하여 월 단위로 이용요금이 자동으로 결제되고 이용기간이 자동 갱신되는 서비스 <br/>

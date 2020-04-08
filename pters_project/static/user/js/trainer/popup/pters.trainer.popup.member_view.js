@@ -901,13 +901,13 @@ class Member_view{
             );
         }
         html_to_join.unshift(
-            // `<div style="margin-top:10px;margin-bottom:10px;height:33px;">`+
-            //     CComp.button("view_schedule_history", `${CImg.history([""], {"vertical-align":"middle", "margin-bottom":"3px", "margin-right":"2px", "width":"18px"})} 과거 이력`, {"font-size":"12px", "float":"left", "padding-left":"0"}, null, ()=>{
-            //         let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
-            //         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_SCHEDULE_HISTORY, 100, popup_style, null, ()=>{
-            //             member_schedule_history = new Member_schedule_history('.popup_member_schedule_history', this.member_id, null);
-            //         });
-            //     }) +
+            `<div style="margin-top:10px;margin-bottom:10px;height:33px;">`+
+                CComp.button("view_closed_date_history", `${CImg.history([""], {"vertical-align":"middle", "margin-bottom":"3px", "margin-right":"2px", "width":"18px"})} 일시정지 이력`, {"font-size":"12px", "float":"left", "padding-left":"0"}, null, ()=>{
+                    let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_CLOSED_DATE_HISTORY, 100, popup_style, null, ()=>{
+                        member_closed_date_history = new Member_closed_date_history('.popup_member_closed_date_history', this.member_id, null);
+                    });
+                }) +
             //     CComp.button("add_new_ticket", `${CImg.plus([""], {"vertical-align":"middle", "margin-bottom":"3px", "margin-right":"2px", "width":"18px"})}`, {"font-size":"12px", "float":"right", "padding-right":"0"}, null, ()=>{
             //         let member_add_initial_data = {member_id: this.member_id};
             //         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_ADD, 100, POPUP_FROM_BOTTOM, null, ()=>{
@@ -1032,13 +1032,6 @@ class Member_view{
                     }
                     show_user_confirm(message, ()=>{
                         layer_popup.close_layer_popup();
-                        let inspect = pass_inspector.schedule_delete();
-                        if(inspect.barrier == BLOCKED){
-                            let message = `${inspect.limit_type}`;
-                            show_error_message({title:message});
-                            return false;
-                        }
-
                         Loading.show(`${member_closed_date_name} 일시정지 내역을 삭제 중입니다.<br>최대 2~4분까지 소요될 수 있습니다.`);
                         Plan_func.delete_closed_date({"member_closed_date_history_id":member_closed_date_history_id}, ()=>{
                             Loading.hide();

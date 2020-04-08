@@ -41,7 +41,8 @@ class AddScheduleTbForm(forms.Form):
     lecture_id = forms.IntegerField(label='수업 정보', required=False)
     start_dt = forms.CharField(label='시작 일시', validators=[date_time_validator], required=True)
     end_dt = forms.CharField(label='종료 일시', validators=[date_time_validator], required=True)
-    note = forms.CharField(label='강사 메모', required=False)
+    note = forms.CharField(label='메모', required=False)
+    private_note = forms.CharField(label='내 메모', required=False)
     duplication_enable_flag = forms.IntegerField(label='중복 여부', initial=SCHEDULE_DUPLICATION_ENABLE, required=False)
     extension_flag = forms.IntegerField(label='자동 연장', initial=UN_USE, required=False)
     lecture_info = None

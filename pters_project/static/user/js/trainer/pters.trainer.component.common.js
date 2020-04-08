@@ -770,6 +770,45 @@ class CComponent{
         return html;
     }
 
+    static closed_date_history_row (numbering, closed_date_history_id, date, closed_date_reason_type_name, extension_flag, memo, callback){
+        let extension_flag_name = "";
+        if(extension_flag == ON){
+            extension_flag_name = '수강권 연장';
+        }
+        let html = `<li class="schedule_history_row" id="closed_date_history_row_${closed_date_history_id}">`;
+        let raw_1 = `<div class="obj_table_raw">
+                        <div class="cell_schedule_num" style="width:auto;">${numbering}</div>
+                        <div class="cell_schedule_info">${closed_date_reason_type_name}</div>
+                        <div class="cell_schedule_attend"></div>
+                    </div>`;
+        let raw_2 = `<div class="obj_table_raw table_date_info">
+                        <div class="cell_schedule_info">${date}</div>
+                    </div>`;
+        let raw_3 = `<div class="obj_table_raw table_memo_info">
+                        <div class="cell_schedule_info">${memo}</div>
+                    </div>`;
+
+        let sub_assemble = `<div style="display:flex;">
+                                <div style="flex:1 1 0;">${raw_1} ${raw_2}</div>
+                                <div style="flex-basis:80px;text-align:right;">${extension_flag_name}</div>
+                            </div>`;
+        if(extension_flag == ON){
+            sub_assemble = `<div style="display:flex;">
+                                <div style="flex:1 1 0;">${raw_1} ${raw_2}</div>
+                                <div style="flex-basis:80px;text-align:right;"><span style="color:var(--font-highlight);">${extension_flag_name}</span></div>
+                            </div>`;
+        }
+
+        html += sub_assemble;
+        if(memo != ''){
+            html += raw_3;
+        }
+        html += '</li>';
+        $(document).off('click', `#closed_date_history_row_${closed_date_history_id}`).on('click', `#closed_date_history_row_${closed_date_history_id}`, function(){
+            callback();
+        });
+        return html;
+    }
     //회원의 수강권 이력에 사용되는 행
     static ticket_history_row (numbering, ticket_id, date, ticket_name, ticket_pay_method, ticket_price, ticket_refund_price, reg_count, remain_count, avail_count, status_code, note, onclick){
         let status_color = "";

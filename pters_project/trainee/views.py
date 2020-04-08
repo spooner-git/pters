@@ -583,6 +583,8 @@ def add_trainee_schedule_logic(request):
         if error is None:
             if start_date.date() > member_ticket_info.end_date:
                 error = '수강권 종료일 이후의 일정은 등록이 불가능합니다.'
+            if start_date.date() < member_ticket_info.start_date:
+                error = '수강권 시작일 이전 일정은 등록이 불가능합니다.'
 
     if error is None:
         schedule_result = pt_add_logic_func(training_date, start_date, end_date, request.user.id, member_ticket_id,
@@ -1445,6 +1447,7 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
     lecture_schedule_info = None
     # lecture_info = None
     note = ''
+    private_note = ''
     schedule_duplication = SCHEDULE_DUPLICATION_DISABLE
     schedule_result = {'error': None, 'schedule_id': ''}
     setting_member_private_class_auto_permission = USE
@@ -1534,8 +1537,8 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
                         log_how = '대기 예약'
                 schedule_result = func_add_schedule(class_id, member_ticket_id, None,
                                                     lecture_info, lecture_schedule_id,
-                                                    start_date, end_date, note, ON_SCHEDULE_TYPE, request.user.id,
-                                                    permission_state_cd,
+                                                    start_date, end_date, note, private_note,
+                                                    ON_SCHEDULE_TYPE, request.user.id, permission_state_cd,
                                                     STATE_CD_NOT_PROGRESS, UN_USE, schedule_duplication)
                 error = schedule_result['error']
 

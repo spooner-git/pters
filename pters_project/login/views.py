@@ -1401,6 +1401,7 @@ def activate_sms_logic(request):
 
     if error is None:
         max_range = 99999
+        request.session['sms_count'] = sms_count + 1
         request.session['sms_activation_check'] = False
         request.session['sms_activation_time'] = str(timezone.now())
         sms_activation_number = str(random.randrange(0, max_range)).zfill(len(str(max_range)))
@@ -1855,6 +1856,7 @@ class ResetActivateView(View):
         sms_activation_count = settings.PTERS_SMS_ACTIVATION_MAX_COUNT
         error = None
         max_range = 99999
+        request.session['sms_count'] = sms_count + 1
         request.session['reset_activation_check'] = False
         request.session['reset_activation_time'] = str(timezone.now())
         reset_activation_number = str(random.randrange(0, max_range)).zfill(len(str(max_range)))

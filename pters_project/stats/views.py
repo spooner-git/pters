@@ -6,6 +6,7 @@ from django.views.generic import TemplateView
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from configs.const import SORT_ALL_STATISTICS
 from .functions import get_sales_data, get_sales_info, get_stats_member_data
 
 logger = logging.getLogger(__name__)
@@ -70,6 +71,7 @@ class GetSalesInfoViewAjax(LoginRequiredMixin, TemplateView):
         context = super(GetSalesInfoViewAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
         month_date = self.request.GET.get('month_date', '')
+        sort_val = self.request.GET.get('sort_val', SORT_ALL_STATISTICS)
         error = None
         sales_data_result = {}
         if month_date == '' or month_date is None:
@@ -78,7 +80,7 @@ class GetSalesInfoViewAjax(LoginRequiredMixin, TemplateView):
             try:
                 month_first_day = datetime.datetime.strptime(month_date, '%Y-%m-%d')
                 month_first_day = month_first_day.replace(day=1)
-                sales_data_result = get_sales_info(class_id, month_first_day)
+                sales_data_result = get_sales_info(class_id, month_first_day, sort_val)
             except TypeError:
                 error = '날짜 형식에 문제 있습니다.'
             except ValueError:
@@ -88,7 +90,6 @@ class GetSalesInfoViewAjax(LoginRequiredMixin, TemplateView):
                 context['price_data'] = sales_data_result['price_data']
             else:
                 error = sales_data_result['error']
-
         if error is not None:
             logger.error(self.request.user.first_name + '[' + str(self.request.user.id) + ']' + error)
             # messages.error(self.request, error)

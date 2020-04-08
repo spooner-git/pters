@@ -44,6 +44,7 @@ class Plan_add{
                 }
             ,
             memo:"",
+            private_memo:"",
             schedule_holding_extension_flag: OFF,
             duplicate_plan_when_add:[]
         };
@@ -124,6 +125,15 @@ class Plan_add{
 
     get memo(){
         return this.data.memo;
+    }
+
+    set private_memo(text){
+        this.data.private_memo = text;
+        this.render_content();
+    }
+
+    get private_memo(){
+        return this.data.private_memo;
     }
 
     set repeat(data){
@@ -255,6 +265,7 @@ class Plan_add{
         let classic_time_selector = this.dom_row_classic_time_selector();
         let repeat_select_row = this.dom_row_repeat_select();
         let memo_select_row = this.dom_row_memo_select();
+        let private_memo_select_row = this.dom_row_private_memo_select();
         let schedule_holding_extension_flag = this.dom_row_schedule_holding_extension_select();
 
         let display = "";
@@ -270,7 +281,9 @@ class Plan_add{
                                                     CComponent.dom_tag('일자', null, true) + date_select_row + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>' +
                                                     CComponent.dom_tag('진행 시간', null, true) + classic_time_selector +'<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>' +
                                                     CComponent.dom_tag('반복') + repeat_select_row + '</div>' +
-                    '<div class="obj_input_box_full">'+  CComponent.dom_tag(`메모 <span style="color:var(--font-highlight);display:${display}">(회원님께 공유되는 메모입니다.)</span>`) + memo_select_row + '</div>';
+                    '<div class="obj_input_box_full">'+  CComponent.dom_tag(`메모 <span style="color:var(--font-highlight);display:${display}">(회원님께 공유되는 메모입니다.)</span>`) + memo_select_row + '</div>'+
+                    `<div class="obj_input_box_full" style="display:${display};">`+ CComponent.dom_tag(`내 메모 <span style="color:var(--font-highlight);">(지점 공유 강사들에게만 공유되는 메모입니다.)</span>`) + private_memo_select_row + '</div>';
+
         }else if(this.time_selector == BASIC){
             html =  `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('수업', null, true) + lecture_select_row + '</div>' +
                     `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('회원', null, this.data.lecture_type_cd[0] === LECTURE_TYPE_ONE_TO_ONE ? true : false) + member_select_row+'</div>' +
@@ -278,7 +291,9 @@ class Plan_add{
                                                     CComponent.dom_tag('일자', null, true) + date_select_row + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>' +
                                                     CComponent.dom_tag('진행 시간', null, true) + start_time_select_row + end_time_select_row  +'<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>' +
                                                     CComponent.dom_tag('반복') + repeat_select_row + '</div>' +
-                    '<div class="obj_input_box_full">'+  CComponent.dom_tag(`메모 <span style="color:var(--font-highlight);display:${display}">(회원님께 공유되는 메모입니다.)</span>`) + memo_select_row + '</div>';
+                    '<div class="obj_input_box_full">'+  CComponent.dom_tag(`메모 <span style="color:var(--font-highlight);display:${display}">(회원님께 공유되는 메모입니다.)</span>`) + memo_select_row + '</div>'+
+                    `<div class="obj_input_box_full" style="display:${display};">`+ CComponent.dom_tag(`내 메모 <span style="color:var(--font-highlight);">(지점 공유 강사들에게만 공유되는 메모입니다.)</span>`) + private_memo_select_row + '</div>';
+
         }
 
         if(this.list_type == "closed"){
@@ -286,6 +301,7 @@ class Plan_add{
                                                     CComponent.dom_tag('일자', null, true) + date_select_row + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>' +
                                                     CComponent.dom_tag('반복') + repeat_select_row + '</div>' +
                     '<div class="obj_input_box_full">'+  CComponent.dom_tag(`메모 <span style="color:var(--font-highlight);display:${display}">(회원님께 공유되는 메모입니다.)</span>`) + memo_select_row + '</div>'+
+                    `<div class="obj_input_box_full" style="display:${display};">`+ CComponent.dom_tag(`내 메모 <span style="color:var(--font-highlight);">(지점 공유 강사들에게만 공유되는 메모입니다.)</span>`) + private_memo_select_row + '</div>' +
                     '<div class="obj_input_box_full">'+ CComponent.dom_tag('자동 수강권 기간 연장') + schedule_holding_extension_flag +
                                     "<div style='padding-left:42px;font-size:12px;color:var(--font-highlight);letter-spacing:-0.6px;font-weight:normal'>활성:휴무일에 진행중인 모든 수강권이 자동 연장됩니다.</div>" +
                                     "<div style='padding-left:42px;font-size:12px;color:var(--font-highlight);letter-spacing:-0.6px;font-weight:normal'>비활성:수강권이 연장되지 않습니다.</div>"+'</div>';
@@ -663,6 +679,27 @@ class Plan_add{
         return html;
     }
 
+    dom_row_private_memo_select(){
+        let id = 'select_private_memo';
+        let title = this.data.private_memo == "" ? '' : this.data.private_memo;
+        let placeholder = '내 메모';
+        let icon = CImg.memo();
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
+        let style = null;
+        let disabled = false;
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_:+.,\\s\\n 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
+        let pattern_message = "+ - _ : . , 제외 특수문자는 입력 불가";
+        let required = "";
+        let html = CComponent.create_input_textarea_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, (input_data)=>{
+            let user_input_data = input_data;
+            if(user_input_data != null){
+                this.private_memo = user_input_data;
+            }
+        }, pattern, pattern_message, required);
+        return html;
+    }
+
     dom_row_schedule_holding_extension_select(){
         let id = "schedule_extension_select";
         let power = this.data.schedule_holding_extension_flag;
@@ -737,7 +774,7 @@ class Plan_add{
         let data = {"lecture_id":lecture_id,
                     "start_dt": start_dt,
                     "end_dt": end_dt,
-                    "note":this.data.memo, "duplication_enable_flag": 1,
+                    "note":this.data.memo, "private_note":this.data.private_memo, "duplication_enable_flag": 1,
                     "en_dis_type":en_dis_type, "member_ids":member_ids,
                     "extension_flag":this.data.schedule_holding_extension_flag,
                     //repeat 관련
@@ -773,7 +810,7 @@ class Plan_add{
                 let inspect_date = DateRobot.to_yyyymmdd(this.data.repeat.repeat_end.year, this.data.repeat.repeat_end.month, this.data.repeat.repeat_end.date);
                 let pass_inspect = this.pass_inspect(inspect_date);
                 if(pass_inspect == false){
-                    data_sending_now = false;
+                    this.data_sending_now = false;
                     return false;
                 }
 
