@@ -675,7 +675,7 @@ class PassInspector{
     schedule_create(){
         let limit_number = Number(this.data.auth_plan_create.active);
         // let limit_type = "일정 작성 권한이 없습니다.";
-        let limit_type = `${this.data.auth_plan_create.limit_type}의 일정 작성 권한이 없습니다.`;
+        let limit_type = `${this.data.auth_plan_create.limit_type}의 일정 추가 권한이 없습니다.`;
 
         if(limit_number == 0){
             return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};

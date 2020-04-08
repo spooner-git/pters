@@ -708,7 +708,7 @@ class Lecture_view{
                 CComp.button("view_schedule_history", `${CImg.history([""], {"vertical-align":"middle", "margin-bottom":"3px", "margin-right":"2px", "width":"18px"})} 일정 이력`, {"font-size":"12px", "float":"left", "padding-left":"0"}, null, ()=>{
                     let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SCHEDULE_HISTORY, 100, popup_style, null, ()=>{
-                        lecture_schedule_history = new Lecture_schedule_history('.POPUP_ADDRESS_LECTURE_SCHEDULE_HISTORY', this.lecture_id, null);
+                        lecture_schedule_history = new Lecture_schedule_history('.popup_lecture_schedule_history', this.lecture_id, null);
                     });
                 }) +
             `</div>

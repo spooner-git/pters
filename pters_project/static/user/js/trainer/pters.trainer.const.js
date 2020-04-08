@@ -203,7 +203,7 @@ const POPUP_ADDRESS_LECTURE_SIMPLE_VIEW = 'popup_lecture_simple_view';
 const POPUP_ADDRESS_LECTURE_ADD = 'popup_lecture_add';
 const POPUP_ADDRESS_LECTURE_EDIT = 'popup_lecture_edit';
 const POPUP_ADDRESS_LECTURE_LIST = 'popup_lecture_list';
-const POPUP_ADDRESS_LECTURE_SCHEDULE_HISTORY = 'POPUP_ADDRESS_LECTURE_SCHEDULE_HISTORY';
+const POPUP_ADDRESS_LECTURE_SCHEDULE_HISTORY = 'popup_lecture_schedule_history';
 const POPUP_ADDRESS_LECTURE_ADD_REPEAT = 'popup_lecture_add_repeat';
 
 const POPUP_ADDRESS_TICKET_VIEW = 'popup_ticket_view';

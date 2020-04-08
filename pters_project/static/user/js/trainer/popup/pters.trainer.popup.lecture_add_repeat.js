@@ -113,6 +113,8 @@ class Lecture_add_repeat{
         let html =
             '<div class="obj_input_box_full">'+
                 CComponent.dom_tag('회원') + lecture_repeat_member +
+            '</div>'+
+            '<div class="obj_input_box_full">'+
                 CComponent.dom_tag('반복일정 시작일') + lecture_repeat_start_date +
                 CComponent.dom_tag('반복일정 종료일') + lecture_repeat_end_date +
                     // `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>`+
@@ -125,12 +127,10 @@ class Lecture_add_repeat{
 
     dom_row_toolbox(){
         let title = "반복일정 추가";
-        let html = `<div class="">
-                        <div style="display:inline-block;padding-left:60px;">
-                            <span style="font-size:20px;font-weight:bold; letter-spacing: -0.9px; color: var(--font-main);">${title}</span>
-                            <p style="font-size:11px;color:var(--font-sub-dark);margin:12px 0;">기존 수업 반복일정에 회원님을 추가합니다.</p>
-                            <span style="display:none;">${title}</span>
-                        </div>
+        let html = `<div style="display:inline-block;">
+                        <span style="font-size:20px;font-weight:bold; letter-spacing: -0.9px; color: var(--font-main);">${title}</span>
+                        <p style="font-size:11px;color:var(--font-sub-dark);margin:12px 0;">기존 수업 반복일정에 회원님을 추가합니다.</p>
+                        <span style="display:none;">${title}</span>
                     </div>
                     `;
         return html;
@@ -155,7 +155,7 @@ class Lecture_add_repeat{
                 let month_min = Number(this.data.lecture_repeat_start_date.split('-')[1]);
                 let date_min = Number(this.data.lecture_repeat_start_date.split('-')[2]);
                 
-                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'lecture_repeat_start_date', title:'일시정지 시작일', data:{year:year, month:month, date:date}, min:{year:year_min, month:month_min, date:date_min},callback_when_set: (object)=>{
+                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'lecture_repeat_start_date', title:'반복일정 시작일', data:{year:year, month:month, date:date}, min:{year:year_min, month:month_min, date:date_min},callback_when_set: (object)=>{
                     this.data.lecture_repeat_start_date = DateRobot.to_yyyymmdd(object.data.year, object.data.month, object.data.date);
                     if(this.data.lecture_repeat_start_date > this.data.lecture_repeat_end_date){
                         this.data.lecture_repeat_end_date = DateRobot.to_yyyymmdd(object.data.year, object.data.month, object.data.date);
@@ -191,7 +191,7 @@ class Lecture_add_repeat{
                     date = date_min;
                 }
 
-                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'lecture_repeat_end_date', title:'일시정지 종료일', data:{year:year, month:month, date:date}, min:{year:year_min, month:month_min, date:date_min},callback_when_set: (object)=>{
+                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'lecture_repeat_end_date', title:'반복일정 종료일', data:{year:year, month:month, date:date}, min:{year:year_min, month:month_min, date:date_min},callback_when_set: (object)=>{
                     this.data.lecture_repeat_end_date = DateRobot.to_yyyymmdd(object.data.year, object.data.month, object.data.date);
                     this.render_content();
                 }});
@@ -226,24 +226,33 @@ class Lecture_add_repeat{
     }
 
     send_data(){
+        let auth_inspect = pass_inspector.schedule_create();
+        if(auth_inspect.barrier == BLOCKED){
+            let message = `${auth_inspect.limit_type}`;
+            layer_popup.close_layer_popup();
+            show_error_message({title:message});
+            return false;
+        }
+        let inspect_date = DateRobot.to_yyyymmdd(this.data.lecture_repeat_end_date.year, this.data.lecture_repeat_end_date.month, this.data.lecture_repeat_end_date.date);
+        let pass_inspect = this.pass_inspect(inspect_date);
+        if(pass_inspect == false){
+            return false;
+        }
+
         if(this.check_before_send() == false){
             return false;
         }
-        let data = {"lecture_repeat_schedule_id":this.data.lecture_repeat_schedule_id, "member_id":this.data.member_id,
-                    "start_date":this.data.lecture_repeat_start_date, "end_date":this.data.lecture_repeat_end_date};
+        let data = {"repeat_schedule_id":this.data.lecture_repeat_schedule_id, "member_ids":this.data.member_id,
+                    "repeat_start_date":this.data.lecture_repeat_start_date, "repeat_end_date":this.data.lecture_repeat_end_date};
 
-        Member_func.ticket_add_hold(data, ()=>{
-            this.set_initial_data();
-            try{
-                current_page.init();
-            }catch(e){}
-            try{
-                layer_popup.close_layer_popup();
-                member_view_popup.init();
-                member_ticket_history.init();
-            }catch(e){}
+        Loading.show("반복 일정을 배치중입니다.<br>일정이 많은 경우 최대 2~4분까지 소요될 수 있습니다.");
+        Plan_func.add_member_repeat_schedule_to_lecture_schedule(data, ()=>{
+            Loading.hide();
             layer_popup.close_layer_popup();
-        });
+            current_page.init();
+            lecture_view_popup.init();
+        }, ()=>{Loading.hide();});
+
     }
 
     upper_right_menu(){
@@ -252,6 +261,9 @@ class Lecture_add_repeat{
 
     check_before_send(){
         if(this.data.lecture_repeat_schedule_id == null){
+            return false;
+        }else if(this.data.member_id.length == 0){
+            show_error_message({title:'회원을 선택해주세요.'});
             return false;
         }else if(this.data.lecture_repeat_start_date == null){
             show_error_message({title:"반복일정 시작일을 선택해주세요."});
@@ -270,6 +282,22 @@ class Lecture_add_repeat{
         }
         else{
             return true;
+        }
+    }
+
+    pass_inspect(selected_date){
+        let inspect = pass_inspector.schedule(selected_date);
+        if(inspect.barrier == BLOCKED){
+            let message = {
+                title:"일정 등록을 완료하지 못했습니다.",
+                comment:`[${inspect.limit_type}] 이용자께서는 오늘 기준 전/후 ${inspect.limit_num}일간 일정 관리 하실 수 있습니다.
+                        <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까?</p>`
+            };
+            show_user_confirm (message, ()=>{
+                layer_popup.close_layer_popup();
+                sideGoPopup("pters_pass_main");
+            });
+            return false;
         }
     }
 }
