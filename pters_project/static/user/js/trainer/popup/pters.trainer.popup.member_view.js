@@ -915,8 +915,7 @@ class Member_view{
             //         );
             //     }) +
             // `</div>
-            // <div>${CComponent.dom_tag('등록불가 일정', {"padding-left":"0", "padding-top":"0"})}</div>
-            `${html_to_join.length == 0 ? `<div style="font-size:12px;color:var(--font-sub-dark);padding:5px;">설정된 일시정지 내역이 없습니다.</div>` : ""}
+            `${html_to_join.length == 0 ? `<div style="width:100%; font-size:12px;color:var(--font-sub-dark);padding:5px; display:inline-block;">설정된 일시정지 내역이 없습니다.</div>` : ""}
             `
         );
         return html_to_join.join("");

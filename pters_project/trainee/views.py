@@ -1945,8 +1945,8 @@ class PopupMemberTicketInfoView(LoginRequiredMixin, AccessTestMixin, TemplateVie
                      use=USE).order_by('lecture_tb__reg_dt')
         if error is None:
             closed_date_history_data = MemberClosedDateHistoryTb.objects.filter(member_ticket_tb_id=member_ticket_id,
-                                                                                use=USE).order_by('start_date',
-                                                                                                  'end_date')
+                                                                                use=USE).order_by('-start_date',
+                                                                                                  '-end_date')
         context['ticket_info'] = ticket_info
         context['class_data'] = class_list
         context['member_ticket_info'] = member_ticket_info

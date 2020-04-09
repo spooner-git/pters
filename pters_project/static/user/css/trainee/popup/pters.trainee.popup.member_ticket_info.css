@@ -189,13 +189,13 @@
 	}
 
 	.popup_member_ticket_info .wrapper_my_ticket_closed_history_detail_count{
-		width: 20%;
-	}
-	.popup_member_ticket_info .wrapper_my_ticket_closed_history_detail_reason{
-		width: 30%;
+		width: 15%;
 	}
 	.popup_member_ticket_info .wrapper_my_ticket_closed_history_detail_date{
-		width: 50%;
+		width: 70%;
+	}
+	.popup_member_ticket_info .wrapper_my_ticket_closed_history_detail_reason{
+		width: 15%;
 	}
 	/*.popup_member_ticket_info .wrapper_my_history_detail_member_ticket_week{*/
 		/*width: 40px;*/
