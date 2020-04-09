@@ -1693,7 +1693,7 @@ def add_member_repeat_schedule_to_lecture_schedule_logic(request):
 
                                                 if member_ticket_id is not None and member_ticket_id != '':
                                                     permission_state_cd = PERMISSION_STATE_CD_APPROVE
-                                                    schedule_result = func_add_schedule(
+                                                    schedule_result = func_add_schedule_update(
                                                         class_id, member_ticket_id,
                                                         member_repeat_schedule_info.repeat_schedule_id,
                                                         lecture_info, schedule_info.schedule_id,
@@ -2594,8 +2594,9 @@ def add_member_lecture_schedule_logic(request):
                     schedule_result = func_add_schedule_update(class_id, member_ticket_id, None,
                                                                lecture_info, lecture_schedule_id,
                                                                schedule_info.start_dt, schedule_info.end_dt,
-                                                               schedule_info.note, ON_SCHEDULE_TYPE,
-                                                               request.user.id, permission_state_cd, state_cd,
+                                                               schedule_info.note, schedule_info.private_note,
+                                                               ON_SCHEDULE_TYPE,
+                                                               request.user.id, permission_state_cd, state_cd, UN_USE,
                                                                SCHEDULE_DUPLICATION_ENABLE)
                     error = schedule_result['error']
 
@@ -2731,8 +2732,9 @@ def add_other_member_lecture_schedule_logic(request):
                     schedule_result = func_add_schedule_update(class_id, member_ticket_id, None,
                                                                lecture_info, lecture_schedule_id,
                                                                schedule_info.start_dt, schedule_info.end_dt,
-                                                               schedule_info.note, ON_SCHEDULE_TYPE,
-                                                               request.user.id, permission_state_cd, state_cd,
+                                                               schedule_info.note, schedule_info.private_note,
+                                                               ON_SCHEDULE_TYPE,
+                                                               request.user.id, permission_state_cd, state_cd, UN_USE,
                                                                SCHEDULE_DUPLICATION_ENABLE)
                     error = schedule_result['error']
 

@@ -436,7 +436,8 @@ def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
 def func_add_schedule_update(class_id, member_ticket_id, repeat_schedule_id,
                              lecture_info, lecture_schedule_id,
                              start_datetime, end_datetime,
-                             note, en_dis_type, user_id, permission_state_cd, state_cd, duplication_enable_flag):
+                             note, private_note, en_dis_type, user_id, permission_state_cd, state_cd, extension_flag,
+                             duplication_enable_flag):
     error = None
     context = {'error': None, 'schedule_id': ''}
     if member_ticket_id == '':
@@ -485,10 +486,12 @@ def func_add_schedule_update(class_id, member_ticket_id, repeat_schedule_id,
                                                repeat_schedule_tb_id=repeat_schedule_id,
                                                start_dt=start_datetime, end_dt=end_datetime,
                                                state_cd=state_cd, permission_state_cd=permission_state_cd,
-                                               note=note, member_note='', en_dis_type=en_dis_type,
+                                               note=note, private_note=private_note,
+                                               member_note='', en_dis_type=en_dis_type,
                                                max_mem_count=max_mem_count,
                                                ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
                                                ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
+                                               extension_flag=extension_flag,
                                                # Test 용
                                                # alarm_dt=start_datetime-datetime.timedelta(minutes=5),
                                                reg_member_id=user_id,
