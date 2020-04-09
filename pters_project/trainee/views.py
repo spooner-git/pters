@@ -1794,7 +1794,16 @@ class PopupCalendarPlanReserveView(LoginRequiredMixin, AccessTestMixin, Template
                                      lecture_tb__lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE,
                                      lecture_tb__state_cd=STATE_CD_IN_PROGRESS,
                                      lecture_tb__use=USE, use=USE).order_by('reg_dt')
-            context['one_to_one_lecture_data'] = ticket_lecture_data
+            lecture_list = []
+            ticket_lecture_list = []
+            for ticket_lecture_info in ticket_lecture_data:
+                try:
+                    idx = lecture_list.index(ticket_lecture_info.lecture_tb_id)
+                except ValueError:
+                    lecture_list.append(ticket_lecture_info.lecture_tb_id)
+                    ticket_lecture_list.append(ticket_lecture_info)
+
+            context['one_to_one_lecture_data'] = ticket_lecture_list
             if len(ticket_lecture_data) == 0:
                 context['one_to_one_lecture_check'] = False
                 context['one_to_one_lecture_time_duration'] = 60
