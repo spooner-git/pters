@@ -318,37 +318,38 @@ def add_schedule_logic(request):
                             # if lecture_info.lecture_type_cd == LECTURE_TYPE_ONE_TO_ONE:
                             #     lecture_info = None
                             #     lecture_schedule_id = None
+                            member_ticket_id = member_info['member_ticket_id']
+                            if member_ticket_id is not None and member_ticket_id != '':
+                                schedule_result = func_add_schedule(class_id, member_info['member_ticket_id'], None,
+                                                                    lecture_info, lecture_schedule_id,
+                                                                    schedule_start_datetime, schedule_end_datetime,
+                                                                    note, private_note, en_dis_type, request.user.id,
+                                                                    permission_state_cd,
+                                                                    state_cd, UN_USE, duplication_enable_flag)
+                                error_temp = schedule_result['error']
+                                if error_temp is not None:
+                                    raise InternalError()
+                                # ###################################### 로그/푸시 처리 ######################################
+                                LogTb(log_type='LS02', auth_member_id=request.user.id, from_member_name=trainer_name,
+                                      to_member_name=member_info['member_name'], class_tb_id=class_id,
+                                      member_ticket_tb_id=member_info['member_ticket_id'], log_info=lecture_name + ' 수업',
+                                      log_how='등록',
+                                      log_detail=str(log_info_schedule_start_date) + '/' + str(log_info_schedule_end_date),
+                                      use=USE).save()
 
-                            schedule_result = func_add_schedule(class_id, member_info['member_ticket_id'], None,
-                                                                lecture_info, lecture_schedule_id,
-                                                                schedule_start_datetime, schedule_end_datetime,
-                                                                note, private_note, en_dis_type, request.user.id,
-                                                                permission_state_cd,
-                                                                state_cd, UN_USE, duplication_enable_flag)
-                            error_temp = schedule_result['error']
-                            if error_temp is not None:
-                                raise InternalError()
-                            # ###################################### 로그/푸시 처리 ######################################
-                            LogTb(log_type='LS02', auth_member_id=request.user.id, from_member_name=trainer_name,
-                                  to_member_name=member_info['member_name'], class_tb_id=class_id,
-                                  member_ticket_tb_id=member_info['member_ticket_id'], log_info=lecture_name + ' 수업',
-                                  log_how='등록',
-                                  log_detail=str(log_info_schedule_start_date) + '/' + str(log_info_schedule_end_date),
-                                  use=USE).save()
+                                if str(setting_to_trainee_lesson_alarm) == str(TO_TRAINEE_LESSON_ALARM_ON):
+                                    func_send_push_trainer(class_id, member_info['member_ticket_id'],
+                                                           class_type_name + ' - 일정 알림',
+                                                           log_info_schedule_start_date + '~' + log_info_schedule_end_date
+                                                           + ' [' + lecture_name + '] 수업이 등록됐습니다')
 
-                            if str(setting_to_trainee_lesson_alarm) == str(TO_TRAINEE_LESSON_ALARM_ON):
-                                func_send_push_trainer(class_id, member_info['member_ticket_id'],
-                                                       class_type_name + ' - 일정 알림',
-                                                       log_info_schedule_start_date + '~' + log_info_schedule_end_date
-                                                       + ' [' + lecture_name + '] 수업이 등록됐습니다')
-
-                            if str(setting_to_shared_trainer_lesson_alarm) == str(TO_SHARED_TRAINER_LESSON_ALARM_ON):
-                                func_send_push_trainer_trainer(class_id, class_type_name + ' - 일정 알림',
-                                                               member_info['member_name'] + '님의 ' +
-                                                               log_info_schedule_start_date + '~'
-                                                               + log_info_schedule_end_date
-                                                               + ' [' + lecture_name + '] 수업이 등록됐습니다',
-                                                               request.user.id)
+                                if str(setting_to_shared_trainer_lesson_alarm) == str(TO_SHARED_TRAINER_LESSON_ALARM_ON):
+                                    func_send_push_trainer_trainer(class_id, class_type_name + ' - 일정 알림',
+                                                                   member_info['member_name'] + '님의 ' +
+                                                                   log_info_schedule_start_date + '~'
+                                                                   + log_info_schedule_end_date
+                                                                   + ' [' + lecture_name + '] 수업이 등록됐습니다',
+                                                                   request.user.id)
 
                         # ###################################### 에러 처리 ######################################
                         except TypeError:
@@ -1437,8 +1438,9 @@ def add_repeat_schedule_confirm(request):
                                                                                   repeat_schedule_info.en_dis_type,
                                                                                   request.user.id)
                                 member_repeat_schedule_info = repeat_schedule_result['schedule_info']
+                                end_date_check = repeat_schedule_info.end_date
                                 for schedule_info in schedule_data:
-                                    member_ticket_id = None
+                                    # member_ticket_id = None
                                     # 반복일정 일정 등록시 종료일 고려해서 등록
                                     member_ticket_result = func_get_lecture_member_ticket_id_from_trainee(
                                         class_id, lecture_info.lecture_id, member_info.member_id,
@@ -1447,36 +1449,48 @@ def add_repeat_schedule_confirm(request):
 
                                     if member_ticket_result['error'] is None:
                                         member_ticket_id = member_ticket_result['member_ticket_id']
+                                        if member_ticket_id is not None and member_ticket_id != '':
+                                            try:
+                                                with transaction.atomic():
+                                                    state_cd = STATE_CD_NOT_PROGRESS
+                                                    permission_state_cd = PERMISSION_STATE_CD_APPROVE
+                                                    schedule_result = func_add_schedule(
+                                                        class_id, member_ticket_id,
+                                                        member_repeat_schedule_info.repeat_schedule_id,
+                                                        lecture_info, schedule_info.schedule_id,
+                                                        schedule_info.start_dt, schedule_info.end_dt,
+                                                        schedule_info.note, schedule_info.private_note,
+                                                        ON_SCHEDULE_TYPE, request.user.id, permission_state_cd,
+                                                        state_cd, UN_USE, SCHEDULE_DUPLICATION_ENABLE)
 
-                                        try:
-                                            with transaction.atomic():
-                                                state_cd = STATE_CD_NOT_PROGRESS
-                                                permission_state_cd = PERMISSION_STATE_CD_APPROVE
-                                                schedule_result = func_add_schedule(
-                                                    class_id, member_ticket_id,
-                                                    member_repeat_schedule_info.repeat_schedule_id,
-                                                    lecture_info, schedule_info.schedule_id,
-                                                    schedule_info.start_dt, schedule_info.end_dt,
-                                                    schedule_info.note, schedule_info.private_note,
-                                                    ON_SCHEDULE_TYPE, request.user.id, permission_state_cd,
-                                                    state_cd, UN_USE, SCHEDULE_DUPLICATION_ENABLE)
+                                                    error_temp = schedule_result['error']
 
-                                                error_temp = schedule_result['error']
+                                                    if error_temp is None:
+                                                        end_date_check = schedule_info.start_dt.date()
+                                                    #     raise InternalError
 
-                                                if error_temp is not None:
-                                                    raise InternalError
+                                                    if error_temp is not None:
+                                                        raise InternalError
 
-                                        except TypeError:
-                                            error = 'TypeError'
-                                        except ValueError:
-                                            error = 'ValueError'
-                                        except IntegrityError:
-                                            error = 'IntegrityError'
-                                        except InternalError:
-                                            error = 'InternalError'
+                                            except TypeError:
+                                                error = 'TypeError'
+                                            except ValueError:
+                                                error = 'ValueError'
+                                            except IntegrityError:
+                                                error = 'IntegrityError'
+                                            except InternalError:
+                                                error = 'InternalError'
 
-                                            # if error_temp is not None:
-                                            #     error_message = error_temp
+                                try:
+                                    update_repeat_schedule_info = RepeatScheduleTb.objects.get(
+                                        repeat_schedule_id=member_repeat_schedule_info.repeat_schedule_id)
+                                except ObjectDoesNotExist:
+                                    update_repeat_schedule_info = None
+
+                                if update_repeat_schedule_info is not None:
+                                    update_repeat_schedule_info.end_date = end_date_check
+                                    update_repeat_schedule_info.save()
+
                         if repeat_member_ticket_id is not None and repeat_member_ticket_id != '':
                             log_data = LogTb(log_type='LR01', auth_member_id=request.user.id,
                                              from_member_name=trainer_name,
@@ -1676,19 +1690,21 @@ def add_member_repeat_schedule_to_lecture_schedule_logic(request):
                                                                                                      member_info.member_id)
                                             if member_ticket_result['error'] is None:
                                                 member_ticket_id = member_ticket_result['member_ticket_id']
-                                                permission_state_cd = PERMISSION_STATE_CD_APPROVE
-                                                schedule_result = func_add_schedule(
-                                                    class_id, member_ticket_id,
-                                                    member_repeat_schedule_info.repeat_schedule_id,
-                                                    lecture_info, schedule_info.schedule_id,
-                                                    schedule_info.start_dt, schedule_info.end_dt,
-                                                    schedule_info.note, schedule_info.private_note,
-                                                    ON_SCHEDULE_TYPE, request.user.id, permission_state_cd,
-                                                    schedule_info.state_cd, UN_USE, SCHEDULE_DUPLICATION_ENABLE)
 
-                                                error_temp = schedule_result['error']
-                                                if error_temp is None:
-                                                    end_date_check = schedule_info.end_dt.date()
+                                                if member_ticket_id is not None and member_ticket_id != '':
+                                                    permission_state_cd = PERMISSION_STATE_CD_APPROVE
+                                                    schedule_result = func_add_schedule(
+                                                        class_id, member_ticket_id,
+                                                        member_repeat_schedule_info.repeat_schedule_id,
+                                                        lecture_info, schedule_info.schedule_id,
+                                                        schedule_info.start_dt, schedule_info.end_dt,
+                                                        schedule_info.note, schedule_info.private_note,
+                                                        ON_SCHEDULE_TYPE, request.user.id, permission_state_cd,
+                                                        schedule_info.state_cd, UN_USE, SCHEDULE_DUPLICATION_ENABLE)
+
+                                                    error_temp = schedule_result['error']
+                                                    if error_temp is None:
+                                                        end_date_check = schedule_info.start_dt.date()
                                                 #     raise InternalError
 
                                     try:
@@ -1773,7 +1789,6 @@ def delete_repeat_schedule_logic(request):
     class_id = request.session.get('class_id', '')
     class_type_name = request.session.get('class_type_name', '')
     trainer_name = request.session.get('trainer_name', '')
-
     error = None
     repeat_schedule_info = None
     context = {'messageArray': ''}
