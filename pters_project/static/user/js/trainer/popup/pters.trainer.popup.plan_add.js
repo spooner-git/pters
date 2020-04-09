@@ -371,10 +371,11 @@ class Plan_add{
                             show_error_message({title:`예약 횟수가 없는 고정회원 ${omitted_fixed_member_name.length}명 
                                             (${omitted_fixed_member_name.join(" ,")})은 제외 되었습니다.`});
                         }
-                        
-                        let end_time_calc = this.calc_end_time_by_start_time(this.data.start_time, this.lecture_minute, this.work_time.end_hour);
-                        this.data.end_time = end_time_calc.data;
-                        this.data.end_time_text = end_time_calc.text + ' 까지 <span style="font-size:11px;">('+ TimeRobot.diff_min(this.data.start_time, this.data.end_time) +'분 진행)</span>';
+                        if(this.data.start_time != null){
+                            let end_time_calc = this.calc_end_time_by_start_time(this.data.start_time, this.lecture_minute, this.work_time.end_hour);
+                            this.data.end_time = end_time_calc.data;
+                            this.data.end_time_text = end_time_calc.text + ' 까지 <span style="font-size:11px;">('+ TimeRobot.diff_min(this.data.start_time, this.data.end_time) +'분 진행)</span>';
+                        }
                         this.member = data_to_set;
                     });
                 });
