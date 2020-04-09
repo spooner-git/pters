@@ -165,7 +165,7 @@ def func_get_trainee_off_schedule(context, class_id, start_date, end_date):
 def func_get_trainee_closed_schedule(context, class_id, user_id, start_date, end_date):
     closed_date_list = []
     member_closed_date_data = MemberClosedDateHistoryTb.objects.select_related(
-        'member_ticket_tb__ticket_tb__class_tb').filter(Q(end_date__lte=end_date) & Q(end_date__gte=start_date),
+        'member_ticket_tb__ticket_tb__class_tb').filter(Q(start_date__lte=end_date) & Q(end_date__gte=start_date),
                                                         Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS)
                                                         | Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
                                                         member_id=user_id,
