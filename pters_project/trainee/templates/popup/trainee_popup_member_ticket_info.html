@@ -167,21 +167,21 @@
 
         <div id="wrapper_my_ticket_closed_history_detail" style="display:none;">
             <div class="wrapper_my_ticket_closed_history_detail_title obj_table_raw obj_font_size_11_weight_normal obj_font_color_light_grey">
-                <div class="wrapper_my_ticket_closed_history_detail_count obj_table_cell_x3">번호</div>
+                <div class="wrapper_my_ticket_closed_history_detail_count obj_table_cell_x3" style="padding-left:10px;">번호</div>
                 <div class="wrapper_my_ticket_closed_history_detail_date obj_table_cell_x3">일자</div>
-                <div class="wrapper_my_ticket_closed_history_detail_reason obj_table_cell_x3">분류</div>
+                <div class="wrapper_my_ticket_closed_history_detail_reason obj_table_cell_x3" style="text-align: center;">분류</div>
             </div>
             {% for closed_date_history_info in closed_date_history_data %}
             <div class="obj_table_raw obj_font_size_11_weight_500" style="border-top:1px solid #f5f2f3;padding:7px 0px;">
                 <div class="obj_table_raw">
-                    <div class="wrapper_my_ticket_closed_history_detail_count obj_table_cell_x3" style="text-align:center;">
+                    <div class="wrapper_my_ticket_closed_history_detail_count obj_table_cell_x3" style="text-align:left; padding-left:10px;">
                         <div>{{ forloop.revcounter }}.</div>
                     </div>
 
-                    <div class="wrapper_my_ticket_closed_history_detail_date obj_table_cell_x3" style="text-align:center;overflow:hidden;text-overflow: ellipsis;white-space: nowrap;">
+                    <div class="wrapper_my_ticket_closed_history_detail_date obj_table_cell_x3" style="text-align:left;overflow:hidden;text-overflow: ellipsis;white-space: nowrap;">
                         {{ closed_date_history_info.start_date | date:'Y.m.d (l)' | cut:'요일' }} ~ {{ closed_date_history_info.end_date | date:'Y.m.d (l)' | cut:'요일' }}
                     </div>
-                    <div class="wrapper_my_ticket_closed_history_detail_reason obj_table_cell_x3" style="text-align:center;word-break: keep-all;">
+                    <div class="wrapper_my_ticket_closed_history_detail_reason obj_table_cell_x3" style="text-align: center;word-break: keep-all;">
                         {% if closed_date_history_info.reason_type_cd == "HD" %}
                             일시정지
                         {% elif closed_date_history_info.reason_type_cd == "PROGRAM_CLOSED" %}
@@ -193,7 +193,10 @@
 
                 </div>
                 <div class="obj_table_raw">
-                    <div class="wrapper_my_ticket_closed_history_detail_memo obj_font_color_grey" style="text-align:center;word-break: keep-all; margin-top:5px;">
+                    <div class="obj_table_cell_x2" style="width:15%; text-align:left; padding-left:10px;word-break: keep-all; margin-top:5px;">
+
+                    </div>
+                    <div class="wrapper_my_ticket_closed_history_detail_memo obj_font_color_grey obj_table_cell_x2" style="text-align:left; word-break:keep-all; margin-top:5px;">
                         {{ closed_date_history_info.note }}
                     </div>
                 </div>
