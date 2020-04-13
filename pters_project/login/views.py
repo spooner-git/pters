@@ -291,7 +291,18 @@ def logout_trainer(request):
     # logout 끝나면 login page로 이동
     # token = request.session.get('push_token', '')
     device_id = request.session.get('device_id', 'pc')
+    group_name = request.session.get('group_name', '')
     error = None
+
+    if group_name == '':
+        group_list = request.user.groups.filter(user=request.user.id)
+        if len(group_list) == 1:
+            group_name = group_list[0].name
+
+    redirect_url = '/'
+    if group_name == 'trainee':
+        redirect_url = '/index_trainee/'
+
     logout(request)
     if device_id == 'pc':
         token_data = PushInfoTb.objects.filter(member_id=request.user.id, device_id=device_id)
@@ -303,7 +314,7 @@ def logout_trainer(request):
     # logger.info('device_info::'+str(request.session['device_info']))
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
-    return redirect('/')
+    return redirect(redirect_url)
 
 
 class AddSocialMemberInfoView(RegistrationView, View):

@@ -40,6 +40,7 @@ def index(request):
     request.session['PTERS_NAVER_ID_LOGIN_CLIENT_SECRET'] = settings.PTERS_NAVER_ID_LOGIN_CLIENT_SECRET
     # request.session['device_info'] = 'web'
     request.session['setting_theme'] = 'light'
+    request.session['group_name'] = 'trainer'
     if request.user.is_authenticated():
         next_page = '/check/'
     else:
@@ -49,6 +50,36 @@ def index(request):
         return render(request, template_name)
     else:
         return redirect(next_page)
+
+
+def index_trainee(request):
+    # login 완료시 main page 이동
+    template_name = 'index_trainee.html'
+    request.session['APP_VERSION'] = settings.APP_VERSION
+    current_site = get_current_site(request)
+    request.session['domain'] = current_site.domain
+    request.session['PTERS_NAVER_ID_LOGIN_CLIENT_ID'] = settings.PTERS_NAVER_ID_LOGIN_CLIENT_ID
+    request.session['PTERS_NAVER_ID_LOGIN_CLIENT_SECRET'] = settings.PTERS_NAVER_ID_LOGIN_CLIENT_SECRET
+    # request.session['device_info'] = 'web'
+    request.session['setting_theme'] = 'light'
+    request.session['group_name'] = 'trainee'
+    if request.user.is_authenticated():
+        next_page = '/check/'
+    else:
+        next_page = ''
+
+    if next_page == '':
+        return render(request, template_name)
+    else:
+        return redirect(next_page)
+
+
+class TraineeFunctionIntroduceView(TemplateView):
+    template_name = 'for_trainee.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(TraineeFunctionIntroduceView, self).get_context_data(**kwargs)
+        return context
 
 
 class CheckView(LoginRequiredMixin, RedirectView):
@@ -72,12 +103,14 @@ class CheckView(LoginRequiredMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         return super(CheckView, self).get_redirect_url(*args, **kwargs)
 
+
 class ServiceIntroduceView(TemplateView):
     template_name = 'introduce.html'
 
     def get_context_data(self, **kwargs):
         context = super(ServiceIntroduceView, self).get_context_data(**kwargs)
         return context
+
 
 class TutorFunctionIntroduceView(TemplateView):
     template_name = 'for_tutor.html'
@@ -86,12 +119,14 @@ class TutorFunctionIntroduceView(TemplateView):
         context = super(TutorFunctionIntroduceView, self).get_context_data(**kwargs)
         return context
 
+
 class TuteeFunctionIntroduceView(TemplateView):
     template_name = 'for_tutee.html'
 
     def get_context_data(self, **kwargs):
         context = super(TuteeFunctionIntroduceView, self).get_context_data(**kwargs)
         return context
+
 
 class SiteUsePolicyView(TemplateView):
     template_name = 'policy.html'
