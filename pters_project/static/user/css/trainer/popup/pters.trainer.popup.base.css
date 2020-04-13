@@ -22,19 +22,23 @@
     }
         .popup_mobile .wrapper_top{
             line-height: 20px;
-            height: 60px;
+            /* height: 60px; */
             text-align: center;
             /* padding: 20px 16px 20px 16px; */
             padding: 0;
-            position: sticky;
-            position: -webkit-sticky;
+            /* position: sticky;
+            position: -webkit-sticky; */
             top: 0;
             background-color: var(--bg-main);
             box-sizing: border-box;
             border-bottom: var(--border-article);
-            position: fixed;
+            /* position: fixed; */
+            position: relative;
             width: 100%;
             z-index: 2;
+        }
+        .popup_mobile .wrapper_top_essential{
+            height: 60px;
         }
         @media(min-width:650px){
             .popup_mobile .wrapper_top{
@@ -107,7 +111,8 @@
             overflow-y:auto;
             -webkit-overflow-scrolling: touch;
             height: 100%;
-            padding: 60px 0;
+            /* padding: 60px 0; */
+            padding-bottom: 60px;
             box-sizing: border-box;
         }
 

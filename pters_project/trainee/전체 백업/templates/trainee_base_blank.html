@@ -87,7 +87,7 @@
                     <a class="centermenu_text"   onclick="location.href='{% url 'trainee:cal_month_blank'%}'">달력</a>
                 </div>
                 <div class="centermenu_div">
-                    <a class="centermenu_text" onclick="open_lecture_select_popup()">프로그램 선택</a>
+                    <a class="centermenu_text" onclick="open_lecture_select_popup()">지점 선택</a>
                     <!--<a class="centermenu_text" style="color: #cccccc">클래스 선택</a>-->
                 </div>
                 <div class="centermenu_div">
@@ -118,10 +118,10 @@
             <input type="hidden" name="class_id" id="id_class_id">
             <input type="hidden" name="next_page" id="id_next_page" value="{% url 'trainee:index' %}">
         </form>
-        <label>프로그램 선택<img src="/static/user/res/ptadd/btn-x.png" class="button_close_popup"></label>
-        <p>일정 확인을 원하는 프로그램을 선택해 주세요.</p>
+        <label>지점 선택<img src="/static/user/res/ptadd/btn-x.png" class="button_close_popup"></label>
+        <p>일정 확인을 원하는 지점을 선택해 주세요.</p>
         <div class="pters_table">
-            <div class="pters_table_cell_head table_lecture_name">프로그램</div>
+            <div class="pters_table_cell_head table_lecture_name">지점</div>
             <div class="pters_table_cell_head table_trainer_name">강사</div>
             <!--<div class="pters_table_cell">연락처</div>-->
             <div class="pters_table_cell_head table_selection">선택</div>

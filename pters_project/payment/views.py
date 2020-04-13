@@ -1904,9 +1904,9 @@ def add_coupon_product_info_logic(request):
 
             if error is None:
                 # 예약 데이터 업데이트
-                # if product_id is None or product_id == '':
-                product_id = payment_info.product_tb_id
-
+                if product_id is None or product_id == '':
+                    product_id = payment_info.product_tb_id
+                    payment_name = payment_info.product_tb.name+'-'+payment_name,
                 # 다음 결제 예정일 업데이트
                 next_paid_date = str(func_get_end_date_by_day(payment_info.paid_date,
                                                               coupon_info.product_effective_days))
@@ -1924,7 +1924,7 @@ def add_coupon_product_info_logic(request):
                     paid_date=today,
                     period_month=0,
                     price=0,
-                    name=payment_info.product_tb.name+'-'+payment_name,
+                    name=payment_name,
                     imp_uid=str(coupon_member_id),
                     channel='coupon',
                     card_name='coupon',
@@ -2004,11 +2004,12 @@ def add_coupon_product_info_logic(request):
                 start_date = payment_info.end_date + datetime.timedelta(days=1)
                 if product_id is None or product_id == '':
                     product_id = payment_info.product_tb_id
-                payment_name = payment_info.product_tb.name + '-' + payment_name
+                    payment_name = payment_info.product_tb.name + '-' + payment_name
             except ObjectDoesNotExist:
-                product_id = 8
-                payment_name = '스탠다드-'+payment_name
-                start_date = today
+                if product_id is None or product_id == '':
+                    product_id = 8
+                    payment_name = '스탠다드-'+payment_name
+                    start_date = today
 
             if error is None:
                 try:

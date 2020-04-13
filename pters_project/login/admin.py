@@ -17,7 +17,7 @@ class MemberTbAdmin(admin.ModelAdmin):
             for group_info in group_data:
                 group_info_name = '강사'
                 if group_info.name == 'trainee':
-                    group_info_name = '수강 회원'
+                    group_info_name = '회원'
                 elif group_info.name == 'admin':
                     group_info_name = '관리자'
                 if group_name == '':
@@ -46,7 +46,7 @@ class MemberOutInfoTbAdmin(admin.ModelAdmin):
             for group_info in group_data:
                 group_info_name = '강사'
                 if group_info.name == 'trainee':
-                    group_info_name = '수강 회원'
+                    group_info_name = '회원'
                 elif group_info.name == 'admin':
                     group_info_name = '관리자'
                 if group_name == '':

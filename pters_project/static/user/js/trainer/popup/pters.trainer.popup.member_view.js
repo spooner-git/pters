@@ -21,7 +21,7 @@ class Member_view{
 
         this.data = {
             name: null,
-            user_id:null,
+            user_id: null,
             phone: null,
             birth: null,
             sex: null,
@@ -32,32 +32,31 @@ class Member_view{
             connection: null,
             active: null,
 
-            ticket:
-                [
-                    {
-                        ticket_id:[],
-                        member_ticket_id:null,
-                        ticket_name:null,
-                        ticket_effective_days:null,
-                        ticket_reg_count:null,
-                        ticket_rem_count:null,
-                        ticket_avail_count:null,
-                        ticket_price:null,
-                        ticket_state:null,
-                        start_date:null,
-                        start_date_text:null,
-                        end_date:null,
-                        end_date_text:null,
-                        lecture_id:[],
-                        lecture_name:[],
-                        lecture_state:[],
-                        lecture_color:[],
-                    }
-                ],
-            
-            repeat:[
+            ticket: [
+                {
+                    ticket_id: [],
+                    member_ticket_id: null,
+                    member_ticket_state_cd: null,
+                    ticket_name: null,
+                    ticket_effective_days: null,
+                    ticket_reg_count: null,
+                    ticket_rem_count: null,
+                    ticket_avail_count: null,
+                    ticket_price: null,
+                    ticket_state: null,
+                    start_date: null,
+                    start_date_text: null,
+                    end_date: null,
+                    end_date_text: null,
+                    lecture_id: [],
+                    lecture_name: [],
+                    lecture_state: [],
+                    lecture_color: [],
+                }
+            ],
 
-            ]
+            repeat: [],
+            closed_date: []
         };
 
         //팝업의 날짜, 시간등의 입력란을 미리 외부에서 온 데이터로 채워서 보여준다.
@@ -229,7 +228,7 @@ class Member_view{
                             return return_val;
                         });
                         for(let i=0; i<member_ticket_list.length; i++){
-                            if(member_ticket_list[i].member_ticket_state_cd != 'IP'){
+                            if(member_ticket_list[i].member_ticket_state_cd != 'IP' && member_ticket_list[i].member_ticket_state_cd != 'HD'){
                                 continue;
                             }
                             let ticket_rem_count_of_this_member = member_ticket_list[i].member_ticket_rem_count;
@@ -264,6 +263,7 @@ class Member_view{
                                                     ticket_refund_price: ticket_refund_price_of_this_member,
                                                     ticket_pay_method:ticket_pay_method,
                                                     member_ticket_id:member_ticket_list[i].member_ticket_id,
+                                                    member_ticket_state_cd:member_ticket_list[i].member_ticket_state_cd,
                                                     start_date:ticket_reg_date_of_this_member,
                                                     start_date_text:DateRobot.to_text(ticket_reg_date_of_this_member, '', '', SHORT),
                                                     end_date:ticket_end_date_of_this_member,
@@ -278,7 +278,13 @@ class Member_view{
                                 // this.init();
                             // });
                         }
-                        this.render();
+
+                    Member_func.closed_date_list(
+                        {"member_id":this.member_id}, (data)=> {
+                            this.data.closed_date = data.member_closed_list;
+                            console.log(this.data.closed_date);
+                            this.render();
+                        });
                     });
                 }
             );
@@ -336,6 +342,7 @@ class Member_view{
         let sex = this.dom_row_member_sex_input();
         let ticket = this.dom_row_ticket();
         let repeat = this.dom_row_repeat();
+        let member_closed = this.dom_row_member_closed();
         // let memo = this.dom_row_member_memo_input();
         let tag_id = this.data.active == 'True' || this.data.active == null ? '아이디' : '아이디 <span style="color:var(--font-highlight);margin-left:3px;">(임시아이디, 비밀번호 0000)</span>';
 
@@ -350,7 +357,7 @@ class Member_view{
         
         let tab_ticket_info =
             '<div class="obj_input_box_full" style="padding-right:18px">' +
-                // CComponent.dom_tag('진행중인 수강권', {"padding-left":"0"}) + 
+                // CComponent.dom_tag('진행중인 수강권', {"padding-left":"0"}) +
                 ticket +
             '</div>';
         
@@ -360,6 +367,12 @@ class Member_view{
                 repeat +
             '</div>';
 
+        let tab_member_closed_info =
+            '<div class="obj_input_box_full" style="padding-right:18px">' +
+                // CComponent.dom_tag('반복 일정', {"padding-left":"0"}) +
+                member_closed +
+            '</div>';
+
         let selected_tab;
         if(this.list_type == "basic_info"){
             selected_tab = tab_basic_info;
@@ -367,6 +380,8 @@ class Member_view{
             selected_tab = tab_ticket_info;
         }else if(this.list_type == "repeat_info"){
             selected_tab = tab_repeat_info;
+        }else if(this.list_type == "member_closed_info"){
+            selected_tab = tab_member_closed_info;
         }
 
         let html =
@@ -418,10 +433,16 @@ class Member_view{
 
     dom_row_list_type_tab(){
         let html = 
+        // `<div class="list_type_tab_wrap" style="width:100%;padding-left:45px;text-align:left;box-sizing:border-box;height:auto">
+        //     ${CComp.element("div", "기본 정보", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_basic_info", class:`list_tab_content ${this.list_type == "basic_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("basic_info");}})}
+        //     ${CComp.element("div", "수강권", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_ticket_info", class:`list_tab_content ${this.list_type == "ticket_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("ticket_info");}})}
+        //     ${CComp.element("div", "일정", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_repeat_info", class:`list_tab_content ${this.list_type == "repeat_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("repeat_info");}})}
+        // </div>`;
         `<div class="list_type_tab_wrap" style="width:100%;padding-left:45px;text-align:left;box-sizing:border-box;height:auto">
             ${CComp.element("div", "기본 정보", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_basic_info", class:`list_tab_content ${this.list_type == "basic_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("basic_info");}})}
             ${CComp.element("div", "수강권", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_ticket_info", class:`list_tab_content ${this.list_type == "ticket_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("ticket_info");}})}
             ${CComp.element("div", "일정", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_repeat_info", class:`list_tab_content ${this.list_type == "repeat_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("repeat_info");}})}
+            ${CComp.element("div", "일시정지 내역", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_member_closed_info", class:`list_tab_content ${this.list_type == "member_closed_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("member_closed_info");}})}
         </div>`;
         return html;
     }
@@ -445,6 +466,12 @@ class Member_view{
                 this.list_type = "repeat_info";
                 this.render();
             break;
+
+            case "member_closed_info":
+                this.list_type = "member_closed_info";
+                this.render();
+            break;
+
         }
     }
 
@@ -611,7 +638,7 @@ class Member_view{
             //행을 클릭했을때 실행할 내용
 
             if(disabled == true){
-                show_error_message({title:"수강 회원님께서 PTERS에 직접 접속하신 이후로는 <br> 타인이 정보를 수정할 수 없습니다."});
+                show_error_message({title:"이용 회원님께서 PTERS에 직접 접속하신 이후로는 <br> 타인이 정보를 수정할 수 없습니다."});
                 return false;
             }
             let root_content_height = $root_content.height();
@@ -650,7 +677,7 @@ class Member_view{
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
 
             if(disabled == true){
-                show_error_message({title:"수강 회원님께서 PTERS에 직접 접속하신 이후로는 <br> 타인이 정보를 수정할 수 없습니다."});
+                show_error_message({title:"이용 회원님께서 PTERS에 직접 접속하신 이후로는 <br> 타인이 정보를 수정할 수 없습니다."});
                 return false;
             }
 
@@ -701,6 +728,7 @@ class Member_view{
             let ticket_name = this.data.ticket[i].ticket_name;
             let ticket_id =  this.data.ticket[i].ticket_id;
             let member_ticket_id =  this.data.ticket[i].member_ticket_id;
+            let member_ticket_status = this.data.ticket[i].member_ticket_state_cd;
             let ticket_start_date =  this.data.ticket[i].start_date;
             let ticket_end_date =  this.data.ticket[i].end_date;
             let ticket_reg_count =  this.data.ticket[i].ticket_reg_count;
@@ -727,7 +755,7 @@ class Member_view{
                     let data = {"member_id":this.member_id, "member_name":this.name, "member_ticket_id":member_ticket_id, "member_ticket_name":ticket_name, 
                                 "start_date": DateRobot.to_split(ticket_start_date), "start_date_text": DateRobot.to_text(ticket_start_date, "", "", SHORT),
                                 "end_date": DateRobot.to_split(ticket_end_date), "end_date_text": ticket_end_date == "9999-12-31" ? "소진 시까지" : DateRobot.to_text(ticket_end_date, "", "", SHORT),
-                                "reg_count":ticket_reg_count, "price":ticket_price, "status":ticket_status,
+                                "reg_count":ticket_reg_count, "price":ticket_price, "status":member_ticket_status,
                                 "refund_date": ticket_refund_date == null ? null : DateRobot.to_split(ticket_refund_date), 
                                 "refund_date_text": ticket_refund_date == null ? null : DateRobot.to_text(ticket_refund_date, "", "", SHORT),
                                 "refund_price":ticket_refund_price, "note":ticket_note, "pay_method":ticket_pay_method};
@@ -763,11 +791,14 @@ class Member_view{
             let icon_button_style_remain_count_info = {"display":"block", "padding":"6px 0 0 38px", "font-size":"13px", "font-weight":"500", "color":"var(--font-sub-normal)", "height":"16px"};
             let icon_button_style_remain_data_info = {"display":"block", "padding":"6px 0 0 38px", "font-size":"13px", "font-weight":"500", "color":"var(--font-sub-normal)", "height":"16px"};
             let icon_button_style_note_info = {"display":"block", "padding":"6px 0 12px 38px", "font-size":"13px", "font-weight":"500", "color":"var(--font-sub-normal)", "height":"auto"};
-            let html_remain_info = CComp.element("div", `등록 <span style="font-size:13px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${this.data.ticket[i].ticket_reg_count >= 99999 ? "무제한" : this.data.ticket[i].ticket_reg_count + '회'}</span>`, icon_button_style_remain_count_info) +
-                                    CComp.element("div", `잔여 <span style="font-size:13px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${this.data.ticket[i].ticket_reg_count >= 99999 ? "무제한" : this.data.ticket[i].ticket_rem_count + '회'}</span>`, icon_button_style_remain_count_info) +
-                                    CComp.element("div", `예약가능 <span style="font-size:13px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${this.data.ticket[i].ticket_reg_count >= 99999 ? "무제한" : this.data.ticket[i].ticket_avail_count + '회'}</span>`, icon_button_style_remain_count_info) +
-                                    CComp.element("div", `기간 <span style="font-size:11px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${this.data.ticket[i].start_date_text} - ${this.data.ticket[i].end_date_text}</span>`, icon_button_style_remain_data_info) +
-                                    CComp.element("div", `특이사항 <span style="display:block; white-space:pre-wrap; font-size:13px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${ticket_note}</span>`, icon_button_style_note_info);
+
+            let html_remain_info =
+                CComp.element("div", `상태 <span style="font-size:13px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${TICKET_STATUS[this.data.ticket[i].member_ticket_state_cd]}</span>`, icon_button_style_remain_count_info)+
+                CComp.element("div", `등록 <span style="font-size:13px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${this.data.ticket[i].ticket_reg_count >= 99999 ? "무제한" : this.data.ticket[i].ticket_reg_count + '회'}</span>`, icon_button_style_remain_count_info) +
+                CComp.element("div", `잔여 <span style="font-size:13px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${this.data.ticket[i].ticket_reg_count >= 99999 ? "무제한" : this.data.ticket[i].ticket_rem_count + '회'}</span>`, icon_button_style_remain_count_info) +
+                CComp.element("div", `예약가능 <span style="font-size:13px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${this.data.ticket[i].ticket_reg_count >= 99999 ? "무제한" : this.data.ticket[i].ticket_avail_count + '회'}</span>`, icon_button_style_remain_count_info) +
+                CComp.element("div", `기간 <span style="font-size:11px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${this.data.ticket[i].start_date_text} - ${this.data.ticket[i].end_date_text}</span>`, icon_button_style_remain_data_info) +
+                CComp.element("div", `특이사항 <span style="display:block; white-space:pre-wrap; font-size:13px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${ticket_note}</span>`, icon_button_style_note_info);
             let html_ticket_lecture_list = `<div>${html_to_join_lecture_list.join('')}</div>`;
 
             html_to_join.push(
@@ -853,6 +884,43 @@ class Member_view{
         return html_to_join.join("");
     }
 
+    dom_row_member_closed(){
+        let html_to_join = [];
+        let length = this.data.closed_date.length;
+        for(let i=0; i<length; i++){
+            let data = this.data.closed_date[i];
+            html_to_join.push(
+                this.dom_row_closed_date_item(
+                    data.member_closed_date_history_id,
+                    '#d2d1cf',
+                    data.member_closed_reason_type_cd_name,
+                    data.member_closed_note,
+                    data.member_closed_start_date+' ~ '+data.member_closed_end_date,
+                    data.member_closed_extension_flag
+                )
+            );
+        }
+        html_to_join.unshift(
+            `<div style="margin-top:10px;margin-bottom:10px;height:33px;">`+
+                CComp.button("view_closed_date_history", `${CImg.history([""], {"vertical-align":"middle", "margin-bottom":"3px", "margin-right":"2px", "width":"18px"})} 일시정지 이력`, {"font-size":"12px", "float":"left", "padding-left":"0"}, null, ()=>{
+                    let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_CLOSED_DATE_HISTORY, 100, popup_style, null, ()=>{
+                        member_closed_date_history = new Member_closed_date_history('.popup_member_closed_date_history', this.member_id, null);
+                    });
+                }) +
+            //     CComp.button("add_new_ticket", `${CImg.plus([""], {"vertical-align":"middle", "margin-bottom":"3px", "margin-right":"2px", "width":"18px"})}`, {"font-size":"12px", "float":"right", "padding-right":"0"}, null, ()=>{
+            //         let member_add_initial_data = {member_id: this.member_id};
+            //         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_ADD, 100, POPUP_FROM_BOTTOM, null, ()=>{
+            //             member_add_popup = new Member_add('.popup_member_add', member_add_initial_data, 'member_add_popup');}
+            //         );
+            //     }) +
+            // `</div>
+            `${html_to_join.length == 0 ? `<div style="width:100%; font-size:12px;color:var(--font-sub-dark);padding:5px; display:inline-block;">설정된 일시정지 내역이 없습니다.</div>` : ""}
+            `
+        );
+        return html_to_join.join("");
+    }
+
     dom_row_repeat_item(repeat_id, color, repeat_name, repeat_day, repeat_period, repeat_time){
         if(repeat_name == '일월화수목금토'){
             repeat_name = '매일';
@@ -893,6 +961,78 @@ class Member_view{
 
                         Loading.show(`${repeat_name}의 반복 일정을 삭제 중입니다.<br>일정이 많은 경우 최대 2~4분까지 소요될 수 있습니다.`);
                         Plan_func.delete_plan_repeat({"repeat_schedule_id":repeat_id}, ()=>{
+                            Loading.hide();
+                            try{
+                                current_page.init();
+                            }catch(e){}
+                            try{
+                                this.init();
+                            }catch(e){}
+                            layer_popup.close_layer_popup();
+                        }, ()=>{Loading.hide();});
+                    });
+                }}
+            };
+            let options_padding_top_bottom = 16;
+            // let button_height = 8 + 8 + 52;
+            let button_height = 52;
+            let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
+            let root_content_height = $root_content.height();
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
+                option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+            });
+        });
+
+        return html;
+    }
+
+    dom_row_closed_date_item(member_closed_date_history_id, color, member_closed_date_name, member_closed_note, member_closed_period, member_closed_extension_flag){
+        let member_extension_tag = '';
+        if(member_closed_extension_flag == 1){
+            member_extension_tag = '<span style="color:var(--font-highlight);">(수강권 연장)</span>'
+        }
+        let html = `<div id="closed_item_${member_closed_date_history_id}" style="display:flex;width:100%;height:75px;padding:5px 0px;box-sizing:border-box;cursor:pointer; margin-top:15px;">
+                        <div style="flex-basis:16px;">
+                            <div style="float:left;width:4px;height:100%;background-color:${color}"></div>
+                        </div>
+                        <div style="flex:1 1 0">
+                            <div style="font-size:14px;font-weight:500;letter-spacing:-0.7px;color:var(--font-base);">${member_closed_date_name} </div>
+                            <!--<div style="font-size:14px;font-weight:500;letter-spacing:-0.7px;color:var(&#45;&#45;font-base);"> </div>-->
+                            <div style="font-size:14px;font-weight:500;letter-spacing:-0.5px;color:var(--font-base); margin-top:3px;">${member_closed_period} ${member_extension_tag}</div>
+                            <div style="font-size:12px;font-weight:500;letter-spacing:-0.5px;color:var(--font-sub-normal); margin-top:3px;">${member_closed_note}</div>
+                        </div>
+                        <div style="flex-basis:30px;">
+                            ${CImg.more("", {"vertical-align":"top"})}
+                        </div>
+                    </div>`;
+        $(document).off('click', `#closed_item_${member_closed_date_history_id}`).on('click', `#closed_item_${member_closed_date_history_id}`, function(e){
+            let user_option = {
+                delete:{text:"일시정지 내역 삭제", callback:()=>{
+                    layer_popup.close_layer_popup();
+
+                    let message = {
+                        title:`정말 ${member_closed_date_name} 일시정지 내역을 취소하시겠습니까?`,
+                        comment:`${CImg.warning(["#fe4e65"], {"vertical-align":"middle", "margin-bottom":"4px"})}
+                                <br>
+                                <div style="text-align:center;margin-top:5px; color:var(--font-highlight);">
+                                    회원님이 해당 일자에 일정을 등록 할 수있습니다.
+                                </div>`
+                    };
+                    if(member_closed_extension_flag == ON){
+                        message = {
+                        title:`정말 ${member_closed_date_name} 일시정지 내역을 취소하시겠습니까?`,
+                        comment:`${CImg.warning(["#fe4e65"], {"vertical-align":"middle", "margin-bottom":"4px"})}
+                                <br>
+                                <div style="text-align:center;margin-top:5px; color:var(--font-highlight);">
+                                    연장되었던 수강권이 연장 취소됩니다.<br>
+                                    회원님이 해당 일자에 일정을 등록 할 수있습니다.
+                                </div>`
+                        }
+                    }
+                    show_user_confirm(message, ()=>{
+                        layer_popup.close_layer_popup();
+                        Loading.show(`${member_closed_date_name} 일시정지 내역을 삭제 중입니다.<br>최대 2~4분까지 소요될 수 있습니다.`);
+                        Plan_func.delete_closed_date({"member_closed_date_history_id":member_closed_date_history_id}, ()=>{
                             Loading.hide();
                             try{
                                 current_page.init();
@@ -1189,6 +1329,7 @@ class Member_simple_view{
                         ticket_price:null,
                         ticket_state:null,
                         member_ticket_id:null,
+                        member_ticket_state_cd:null,
                         start_date:null,
                         start_date_text:null,
                         end_date:null,
@@ -1256,7 +1397,7 @@ class Member_simple_view{
                     return return_val;
                 });
                 for(let i=member_ticket_list.length-1; i>=0; i--){
-                    if(member_ticket_list[i].member_ticket_state_cd != 'IP'){
+                    if(member_ticket_list[i].member_ticket_state_cd != 'IP' && member_ticket_list[i].member_ticket_state_cd != 'HD'){
                         continue;
                     }
                     let ticket_rem_count_of_this_member = member_ticket_list[i].member_ticket_rem_count;
@@ -1282,7 +1423,7 @@ class Member_simple_view{
                                             ticket_rem_count:ticket_rem_count_of_this_member,
                                             ticket_avail_count:ticket_avail_count_of_this_member,
                                             ticket_price:ticket_reg_price_of_this_member,
-                                            ticket_state:member_ticket_list[i].ticket_state_cd,
+                                            ticket_state:member_ticket_list[i].member_ticket_state_cd,
                                             start_date:ticket_reg_date_of_this_member,
                                             start_date_text:DateRobot.to_text(ticket_reg_date_of_this_member, '', '', SHORT),
                                             end_date:ticket_end_date_of_this_member,
@@ -1553,10 +1694,15 @@ class Member_simple_view{
             let html_ticket_name = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
 
             });
-
+            let ticket_rem_count = this.data.ticket[i].ticket_rem_count + '회';
+            let ticket_avail_count = this.data.ticket[i].ticket_avail_count + '회';
+            if(this.data.ticket[i].ticket_reg_count >= 9999){
+                ticket_rem_count = '무제한';
+                ticket_avail_count = '무제한';
+            }
             let html_remain_info = `<div style="font-size:11px;font-weight:bold;letter-spacing:-0.5px;color:var(--font-highlight);margin-bottom:5px">
                                         <div style="display:flex;">
-                                            <div style="flex-basis:68px"></div><div style="flex:1 1 0;height:20px;">잔여 ${this.data.ticket[i].ticket_rem_count} 회 / 예약가능 ${this.data.ticket[i].ticket_avail_count} 회</div>
+                                            <div style="flex-basis:68px"></div><div style="flex:1 1 0;height:20px;">잔여 ${ticket_rem_count} / 예약가능 ${ticket_avail_count}</div>
                                         </div>
                                         <div style="display:flex;">
                                             <div style="flex-basis:68px"></div><div style="flex:1 1 0;height:20px;">~ ${this.data.ticket[i].end_date_text}</div>

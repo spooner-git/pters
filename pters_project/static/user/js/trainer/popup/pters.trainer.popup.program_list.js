@@ -338,7 +338,7 @@ class Program_list{
             let owner_name = data.program_program_owner_name;
             let owner_id = data.program_program_owner_id;
             let category_code = data.program_upper_subject_cd != "" ? data.program_upper_subject_cd : "ETC";
-            let category_sub_name = PROGRAM_CATEGORY[category_code].sub_category[data.program_subject_cd].name;
+            let category_sub_name = data.program_subject_cd_name;
             let category_sub_code = data.program_subject_cd;
 
             let html = `<article class="program_wrapper " data-program_id="${id}" onclick="event.stopPropagation();program_list_popup.event_program_click(${id}, '${name}', '${category_code}', '${category_sub_code}', '${selected}', '${shared}');">
@@ -521,7 +521,7 @@ class Program_list{
 
 class Program_func{
     static create(data, callback, error_callback){
-        //프로그램 추가
+        //지점 추가
         $.ajax({
             url:"/trainer/add_program_info/",
             type:'POST',
@@ -570,7 +570,7 @@ class Program_func{
             async = true;
         }
 
-        //프로그램 리스트 서버에서 불러오기
+        //지점 리스트 서버에서 불러오기
         $.ajax({
             url:"/trainer/get_program_list/",
             dataType : 'JSON',
@@ -597,8 +597,8 @@ class Program_func{
                 }
                 if(!select_check){
                     let message = {
-                        title:`프로그램의 공유 연결 해제 되었습니다.`,
-                        comment:`다시 연결하려면 프로그램 소유자에게 요청 해야합니다.`
+                        title:`지점의 공유 연결 해제 되었습니다.`,
+                        comment:`다시 연결하려면 지점 소유자에게 요청 해야합니다.`
                     };
                     show_error_message (message);
                     location.href = '/trainer/refresh_trainer_page/';
@@ -625,7 +625,7 @@ class Program_func{
     }
 
     static update(data, callback, error_callback){
-        //프로그램 추가
+        //지점 추가
         $.ajax({
             url:"/trainer/update_program_info/",
             type:'POST',
@@ -670,7 +670,7 @@ class Program_func{
     }
 
     static delete(data, callback, error_callback){
-        //프로그램 추가
+        //지점 추가
         $.ajax({
             url:"/trainer/delete_program_info/",
             type:'POST',

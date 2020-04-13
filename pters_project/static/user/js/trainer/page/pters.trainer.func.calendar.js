@@ -403,13 +403,21 @@ class Calendar {
         this.current_month = month;
         this.current_date = date;
         let first_day_of_the_date = new Date(year, month-1, 1).getDay();
+        let target_row_for_date_zoomed = new Date(year, month-1, date).getDay() + 1;
         if(this.date_start == 1){
             if(first_day_of_the_date == 0){
                 first_day_of_the_date = 6;
             }else{
                 first_day_of_the_date--;
             }
+            if(target_row_for_date_zoomed == 0){
+                target_row_for_date_zoomed = 6;
+            }else{
+                target_row_for_date_zoomed--;
+            }
         }
+        this.week_zoomed.target_row = target_row_for_date_zoomed;
+
         this.current_week = Math.ceil( (date + first_day_of_the_date )/7 ) - 1;
 
         this.render_upper_box("week");
@@ -854,7 +862,7 @@ class Calendar {
                 if(date_to_search in schedule_data){
                     let schedule_number = 0;
                     schedule_data[date_to_search].forEach((el)=>{
-                        if(el.schedule_type != 0){
+                        if(el.schedule_type != 0 && el.schedule_type != 3){
                             schedule_number++;
                         }
                     });
@@ -889,7 +897,10 @@ class Calendar {
                 let saturday = "";
                 let border_style = "";
                 let today_marking = "";
-                let today_text_style = "";
+                let today_text_style = "position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);z-index:1";
+                if(month_or_week == "month"){
+                    today_text_style = "";
+                }
                 border_style = month_or_week == "week" ? "no_border" : "";
 
                 
@@ -1067,6 +1078,10 @@ class Calendar {
                                 plan_status_color = plan.lecture_ing_color_cd;
                                 plan_name = plan.lecture_name + plan_capacity_status;
                                 plan_font_style = `color:${plan.lecture_ing_font_color_cd};`;
+                            }else if(plan.schedule_type == 3){
+                                plan_status_color = '#d2d1cf';
+                                plan_name = plan.note != "" ? plan.note : "휴무일" ;
+                                plan_font_style = 'color:#3b3b3b;';
                             }
 
                             if(plan.state_cd != "NP"){
@@ -2281,6 +2296,52 @@ class Plan_func{
             }
         });
     }
+    static delete_closed_date(data, callback, error_callback){
+        $.ajax({
+            url:'/trainer/delete_member_closed_date/',
+            type:'POST',
+            data: data,
+            dataType : 'JSON',
+
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function(){
+
+            },
+
+            //통신성공시 처리
+            success:function(data){
+                check_app_version(data.app_version);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message({title:data.messageArray});
+                        if(error_callback != undefined){
+                            error_callback();
+                        }
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback();
+                }
+
+            },
+
+            //통신 실패시 처리
+            error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
+                // location.reload();
+            }
+        });
+    }
 
     static upload_sign(data, callback, error_callback){
         // let data = {"schedule_id":"", "upload_file":""}
@@ -2315,6 +2376,51 @@ class Plan_func{
                 }
             },
     
+            //통신 실패시 처리
+            error:function(){
+                if(error_callback != undefined){
+                    error_callback();
+                }
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
+                // location.reload();
+            }
+        });
+    }
+
+    static add_member_repeat_schedule_to_lecture_schedule(data, callback, error_callback){
+
+        $.ajax({
+            url:'/schedule/add_member_repeat_schedule_to_lecture_schedule/',
+            type:'POST',
+            data: data,
+            dataType : 'JSON',
+
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function(){
+
+            },
+
+            //통신성공시 처리
+            success:function(data){
+                check_app_version(data.app_version);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message({title:data.messageArray});
+                        Loading.hide();
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(data);
+                }
+            },
+
             //통신 실패시 처리
             error:function(){
                 if(error_callback != undefined){

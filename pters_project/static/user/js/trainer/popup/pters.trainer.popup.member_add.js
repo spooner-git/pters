@@ -199,7 +199,7 @@ class Member_add{
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
         
-        let html = PopupBase.base(top_left, top_center, top_right, content, "", this.instance);
+        let html = PopupBase.base(top_left, top_center, top_right, content, "");
 
         document.querySelector(this.target.install).innerHTML = html;
         document.querySelector('.popup_member_add .wrapper_top').style.border = 0;
@@ -245,19 +245,13 @@ class Member_add{
 
         let html =
             '<div class="obj_input_box_full">'
-                + CComponent.dom_tag('회원명') + name + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag('회원명', null, true) + name + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('휴대폰 번호') + phone + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('생년월일') + birth + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('성별') + sex +
             '</div>' +
             '<div class="obj_input_box_full">'
-                + CComponent.dom_tag('수강권') + ticket + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
-                // + CComponent.dom_tag('횟수') + reg_count + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
-                // + CComponent.dom_tag('시작일') + start_date + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
-                // + CComponent.dom_tag('종료일') + end_date + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
-                // + CComponent.dom_tag('가격') + reg_price + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
-                // + CComponent.dom_tag('지불 방법') + pay_method + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
-                // + CComponent.dom_tag('특이사항') + memo +
+                + CComponent.dom_tag('수강권', null, true) + ticket + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
                 + ticket_sub_assembly +
             '</div>';
         
@@ -267,13 +261,7 @@ class Member_add{
                 + CComponent.dom_tag('회원명') + name +
             '</div>' +
             '<div class="obj_input_box_full">'
-                + CComponent.dom_tag('수강권') + ticket + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
-                // + CComponent.dom_tag('횟수') + reg_count + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
-                // + CComponent.dom_tag('시작일') + start_date + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
-                // + CComponent.dom_tag('종료일') + end_date + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
-                // + CComponent.dom_tag('가격') + reg_price + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
-                // + CComponent.dom_tag('지불 방법') + pay_method + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
-                // + CComponent.dom_tag('특이사항') + memo +
+                + CComponent.dom_tag('수강권', null, true) + ticket + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
                 + ticket_sub_assembly +
             '</div>';
         }
@@ -318,7 +306,7 @@ class Member_add{
     dom_row_member_name_input(){
         let id = 'input_member_name';
         let title = this.data.name == null ? '' : this.data.name;
-        let placeholder = '회원명*';
+        let placeholder = '회원명';
         let icon = CImg.members();
         let icon_r_visible = HIDE;
         let icon_r_text = "";
@@ -449,7 +437,7 @@ class Member_add{
 
     dom_row_ticket_select(){
         let id = 'input_ticket_select';
-        let title = this.data.ticket_id.length == 0 ? '수강권*' : this.data.ticket_name.join(', ');
+        let title = this.data.ticket_id.length == 0 ? '수강권' : this.data.ticket_name.join(', ');
         let icon = CImg.ticket();
         let icon_r_visible = SHOW;
         let icon_r_text = "";
@@ -469,7 +457,7 @@ class Member_add{
     dom_row_start_date_select(){
         //등록하는 행을 만든다.
         let id = 'start_date_select';
-        let title = this.data.start_date == null ? '시작일*' : this.data.start_date_text;
+        let title = this.data.start_date == null ? '시작일' : this.data.start_date_text;
         let icon = NONE;
         let icon_r_visible = NONE;
         let icon_r_text = "";
@@ -489,13 +477,27 @@ class Member_add{
                                                                                                 // min:{year:year, month:month, date:date},
                                                                                                 callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
                                                                                                     if(this.data.end_date != null){
-                                                                                                        let compare = DateRobot.compare(
-                                                                                                            object.data.year+'-'+object.data.month+'-'+object.data.date, 
-                                                                                                            this.data.end_date.year+'-'+this.data.end_date.month+'-'+this.data.end_date.date
-                                                                                                        );
-                                                                                                        if(compare == true){
-                                                                                                            this.data.end_date = object.data;
-                                                                                                            this.data.end_date_text = object.text;
+                                                                                                        //종료일자가 있을때, 선택한 시작일자가 이 종료일자보다 미래이면 종료일을 시작일과 같도록 한다
+                                                                                                        // let compare = DateRobot.compare(
+                                                                                                        //     object.data.year+'-'+object.data.month+'-'+object.data.date, 
+                                                                                                        //     this.data.end_date.year+'-'+this.data.end_date.month+'-'+this.data.end_date.date
+                                                                                                        // );
+                                                                                                        // if(compare == true){
+                                                                                                        //     this.data.end_date = object.data;
+                                                                                                        //     this.data.end_date_text = object.text;
+                                                                                                        // }
+                                                                                                        if(this.data.ticket_effective_days >= 99999){ //수강권 유효날짜가 99999 (소진시까지)
+                                                                                                            // this.data.end_date = {year:9999, month:12, date:31};
+                                                                                                            // this.data.end_date_text = "소진 시까지";
+                                                                                                        }else{
+                                                                                                            let end_date = DateRobot.to_yyyymmdd(object.data.year, object.data.month, object.data.date);
+                                                                                                            let new_date = DateRobot.add_date(end_date, this.data.ticket_effective_days);
+                                                                                                            let new_date_year = new_date.split('-')[0];
+                                                                                                            let new_date_month = new_date.split('-')[1];
+                                                                                                            let new_date_date = new_date.split('-')[2];
+                                                                                                    
+                                                                                                            this.data.end_date = {year:Number(new_date_year), month:Number(new_date_month), date:Number(new_date_date)};
+                                                                                                            this.data.end_date_text = DateRobot.to_text(new_date_year, new_date_month, new_date_date, SHORT);
                                                                                                         }
                                                                                                     }
                                                                                                     
@@ -518,7 +520,7 @@ class Member_add{
         }
         //등록하는 행을 만든다.
         let id = 'end_date_select';
-        let title = this.data.end_date == null ? '종료일*' : this.data.end_date_text + diff_date;
+        let title = this.data.end_date == null ? '종료일' : this.data.end_date_text + diff_date;
         let icon = NONE;
         let icon_r_visible = NONE;
         let icon_r_text = "";
@@ -676,7 +678,7 @@ class Member_add{
         let unit = '회';
         let id = 'input_reg_count';
         let title = this.data.ticket_reg_count.length == 0 || this.data.ticket_reg_count[0] == null ? '' : this.data.ticket_reg_count[0];
-        let placeholder = '횟수*';
+        let placeholder = '횟수';
         let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
@@ -906,7 +908,6 @@ class Member_add{
             }, ()=>{this.data_sending_now = false;});
         }
 
-        
         layer_popup.close_layer_popup();
     }
 
@@ -921,6 +922,10 @@ class Member_add{
             return false;
         }
         else{
+            if(this.data.ticket_id.length == 0){
+                show_error_message({title:'등록할 수강권을 선택 해주세요.'});
+                return false;
+            }
             if(this.data.start_date == null){
                 show_error_message({title:'시작일을 입력 해주세요.'});
                 return false;
@@ -929,10 +934,7 @@ class Member_add{
                 show_error_message({title:'종료일을 입력 해주세요.'});
                 return false;
             }
-            if(this.data.ticket_id.length == 0){
-                show_error_message({title:'등록할 수강권을 선택 해주세요.'});
-                return false;
-            }
+            
             return true;
         }
     }

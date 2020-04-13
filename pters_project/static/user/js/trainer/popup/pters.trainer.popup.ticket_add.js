@@ -150,7 +150,7 @@ class Ticket_add{
         let max_reserve_number_daily = this.dom_row_reserve_limit_number_daily();
         let max_reserve_number_weekly = this.dom_row_reserve_limit_number_weekly();
 
-        let html =  '<div class="obj_input_box_full">' + CComponent.dom_tag('수강권명') + name + '</div>' +
+        let html =  '<div class="obj_input_box_full">' + CComponent.dom_tag('수강권명', null, true) + name + '</div>' +
                     '<div class="obj_input_box_full">' + CComponent.dom_tag('수업 구성') + lecture + lecture_list + '</div>' +
                     '<div class="obj_input_box_full">' + 
                         CComponent.dom_tag('기본 횟수') + 
@@ -186,7 +186,7 @@ class Ticket_add{
     dom_row_ticket_name_input(){
         let id = 'input_ticket_name';
         let title = this.data.name == null ? '' : this.data.name;
-        let placeholder = '수강권명*';
+        let placeholder = '수강권명';
         let icon = CImg.ticket();
         let icon_r_visible = HIDE;
         let icon_r_text = "";

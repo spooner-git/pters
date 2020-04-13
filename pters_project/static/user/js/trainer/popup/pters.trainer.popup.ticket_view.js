@@ -218,7 +218,7 @@ class Ticket_view{
                                                 '</div>';
         let ticket_memo_assembly = '<div class="obj_input_box_full">'+CComponent.dom_tag('설명')+memo+ '</div>';
         let ticket_member_list_assembly = '<div class="obj_input_box_full" style="padding-top:16px;">'+
-                                            // CComponent.dom_tag(`수강권 보유 회원 (${this.data.member_id.length} 명)`, 
+                                            // CComponent.dom_tag(`수강권 보유 회원 (${this.data.member_id.length} 명)`,
                                             // {"font-size":"13px", "font-weight":"bold", "letter-spacing":"-0.6px", "padding":"0", "padding-bottom":"8px", "color":"var(--font-sub-normal)", "height":"20px"}) + 
                                             `${this.data.lecture_id.length == 0 && this.data.name != null ? `<span style='color:var(--font-highlight);font-size:12px;font-weight:bold;'>${CImg.warning(["#fe4e65"], {"vertical-align":"middle", "width":"20px", "height":"20px", "margin-bottom":"4px"})} 포함된 수업이 없어, 수강권 보유 회원들이 일정을 등록할 수 없습니다.</span>` : ""}` +
                                             member_list+ '</div>';
@@ -957,7 +957,7 @@ class Ticket_view{
                             // let go_to_shop_button = `<div>${CComponent.button (id, title, style, onclick)}</div>`;
                             
                             // layer_popup.close_layer_popup(); //confirm팝업 닫기
-                            // show_error_message({title:`[${inspect.limit_type}] 이용자께서는 진행중 수강권을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다. 
+                            // show_error_message({title:`[${inspect.limit_type}] 이용자께서는 진행중 수강권을 최대 ${inspect.limit_num}개까지 등록하실 수 있습니다.
                             //                     <br> 수강권 활성화에 실패했습니다.${go_to_shop_button}`});
 
                             layer_popup.close_layer_popup(); //confirm팝업 닫기

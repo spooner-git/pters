@@ -1,0 +1,26 @@
+.popup_lecture_add_repeat{
+	/* -webkit-overflow-scrolling: touch; */
+}
+
+.popup_lecture_add_repeat .obj_input_box_full{
+	padding: 4px 8px 4px 18px;
+}
+
+.popup_lecture_add_repeat .popup_toolbox{
+	/* position: sticky;
+	position: -webkit-sticky; */
+	position: relative;
+	top: 0;
+	padding: 0px 16px 10px 50px;
+	box-sizing: border-box
+}
+
+.popup_lecture_add_repeat .lecture_add_repeat_upper_box{
+	padding-bottom:8px;
+	box-sizing:border-box;
+}
+
+.popup_lecture_add_repeat .popup_content{
+	padding-top: 1px;
+	padding-bottom: 20px;
+}

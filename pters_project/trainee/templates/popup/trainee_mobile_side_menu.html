@@ -3,19 +3,22 @@
 {% block popup_base_css %}
     <link rel="stylesheet" href={% static_url "user/css/trainee/popup/pters.trainee.popup.mobile_side_menu.css" %}>
 {% endblock %}
-{% block popup_base_wrapper_top_left %}
 
-    <!--
-    <span  class="logo_pters" onclick="location.href='{% url 'trainee:trainee_main' %}'"
-           style='color:#fe4e65; width:150px; font-size:25px; font-weight:bold; text-align:center;' alt="피터스 로고" id="logo">PTERS</span>
-   -->
-    <img src="/static/common/icon/logo/PTERS_logo_short.png" class="logo_pters" style="width:36px;"
-         onclick="location.href='{% url 'trainee:trainee_main' %}'">
-{% endblock %}
+
+{% block popup_base_wrapper_top %}
+    <div class="wrapper_top" style="background-color:unset;">
+        <div style="padding:20px;text-align: left;">
+            <img src="/static/common/icon/logo/PTERS_logo_short.png" class="logo_pters" style="width:36px;"
+            onclick="location.href='{% url 'trainee:trainee_main' %}'">
+            <img src="/static/common/icon/icon_x_black.png" onclick="layer_popup.close_layer_popup()" class="obj_icon_x" style="float:right;">
+        </div>
+    </div>
+    {% endblock %}
 
 {% block popup_base_contents %}
     <div class="pters_mobile_side_menu">
         <div class="wrapper_side_menu_main obj_font_size_18_weight_900" onclick="location.href='{% url 'trainee:trainee_mypage' %}'">마이페이지</div>
+        <div class="wrapper_side_menu_main obj_font_size_18_weight_900" onclick="location.href='{% url 'trainee:trainee_setting' %}'">설정</div>
         <!-- <div class="wrapper_side_menu_main obj_font_size_20_weight_bold">설정</div> -->
         <div class="wrapper_side_menu_main wrapper_menu_inquiry obj_font_size_18_weight_900 obj_font_color_coral" onclick="location.href='{% url 'trainee:trainee_inquiry' %}'">피터스에게 문의하기</div>
         <!-- <div class="wrapper_side_menu_sub obj_font_size_16_weight_bold">서비스 소개</div> -->

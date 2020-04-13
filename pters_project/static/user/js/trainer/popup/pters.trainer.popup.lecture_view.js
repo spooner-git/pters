@@ -665,7 +665,9 @@ class Lecture_view{
                     }).join(''),
                     data.member_name != undefined ? data.member_name+' /' : "",
                     data.start_date+' - '+data.end_date,
-                    data.start_time+' - '+data.end_time
+                    data.start_time+' - '+data.end_time,
+                    data.lecture_id,
+                    data.lecture_max_member_num
                 );
             if(data.lecture_member_repeat_schedule_list == undefined){
                 html_to_join.push(html_repeat_parent);
@@ -681,7 +683,8 @@ class Lecture_view{
                         data2.repeat_schedule_id, 
                         data2.member_id, 
                         data2.member_name, 
-                        data2.member_profile_url)
+                        data2.member_profile_url,
+                        data2.start_date+' - '+data2.end_date)
                 );
             }
             let html_repeat_participants = '<div style="margin-bottom:20px;">' + html_to_join_participants.join("") + '</div>';
@@ -705,7 +708,7 @@ class Lecture_view{
                 // }) +
                 CComp.button("view_schedule_history", `${CImg.history([""], {"vertical-align":"middle", "margin-bottom":"3px", "margin-right":"2px", "width":"18px"})} 일정 이력`, {"font-size":"12px", "float":"left", "padding-left":"0"}, null, ()=>{
                     let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
-                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_LECTURE_SCHEDULE_HISTORY, 100, popup_style, null, ()=>{
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SCHEDULE_HISTORY, 100, popup_style, null, ()=>{
                         lecture_schedule_history = new Lecture_schedule_history('.popup_lecture_schedule_history', this.lecture_id, null);
                     });
                 }) +
@@ -717,7 +720,7 @@ class Lecture_view{
         return html_to_join.join("");
     }
 
-    dom_row_repeat_item(repeat_id, color, repeat_name, repeat_day, repeat_period, repeat_time){
+    dom_row_repeat_item(repeat_id, color, repeat_name, repeat_day, repeat_period, repeat_time, lecture_id, lecture_max_member_num){
         if(repeat_name == '일월화수목금토'){
             repeat_name = '매일';
         }
@@ -735,6 +738,28 @@ class Lecture_view{
                     </div>`;
         $(document).off('click', `#repeat_item_${repeat_id}`).on('click', `#repeat_item_${repeat_id}`, function(e){
             let user_option = {
+
+                add_member:{text:"회원 추가", callback:()=>{
+                    layer_popup.close_layer_popup();
+                    let inspect = pass_inspector.schedule_create();
+                    if(inspect.barrier == BLOCKED){
+                        let message = `${inspect.limit_type}`;
+                        show_error_message({title:message});
+                        return false;
+                    }
+
+                    let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_ADD_REPEAT, 100, popup_style, null, ()=>{
+                        let repeat_period_split = repeat_period.split(' - ');
+                        let start_date = repeat_period_split[0];
+                        let end_date = repeat_period_split[1];
+                        let external_data = {"lecture_id":lecture_id, "lecture_repeat_schedule_id":repeat_id,"lecture_name":repeat_name,
+                                             "lecture_max_num":lecture_max_member_num,
+                                             "lecture_repeat_start_date":start_date, "lecture_repeat_end_date":end_date};
+                        lecture_add_repeat = new Lecture_add_repeat('.popup_lecture_add_repeat', external_data, 'lecture_add_repeat', lecture_view);
+                    });
+
+                }},
                 delete:{text:"삭제", callback:()=>{
                     layer_popup.close_layer_popup();
                     let message = {
@@ -745,9 +770,9 @@ class Lecture_view{
                                     하위에 다른 반복일정이 존재할 경우 함께 취소됩니다. <br>
                                     과거일정은 보존되지만, 등록한 미래일정은 취소됩니다.
                                 </div>`
-                    }
+                    };
                     show_user_confirm(message, ()=>{
-                        layer_popup.close_layer_popup();
+                        // layer_popup.close_layer_popup();
                         let inspect = pass_inspector.schedule_delete();
                         if(inspect.barrier == BLOCKED){
                             let message = `${inspect.limit_type}`;
@@ -764,11 +789,15 @@ class Lecture_view{
                             try{
                                 this.init();
                             }catch(e){}
-                            layer_popup.close_layer_popup();
+                            // layer_popup.close_layer_popup();
                         }, ()=>{Loading.hide();});
                     });
                 }}
             };
+
+            if(lecture_max_member_num <= 1){
+                delete user_option.add_member;
+            }
             let options_padding_top_bottom = 16;
             // let button_height = 8 + 8 + 52;
             let button_height = 52;
@@ -782,10 +811,13 @@ class Lecture_view{
         return html;
     }
 
-    dom_row_repeat_participants(repeat_id, member_id, member_name, member_photo){
-        let html = `<div id="repeat_item_${repeat_id}" style="display:flex;width:100%;height:32px;padding:0 15px;box-sizing:border-box;cursor:pointer;">
-                        <div style="flex-basis:24px;"><img src="${member_photo}" style="border-radius:50%;width:20px;vertical-align:middle;"></div>
-                        <div style="flex:1 1 0;font-size:14px;font-weight:500;letter-spacing:-0.6px;color:var(--font-main);line-height:32px;">${member_name}</div>
+    dom_row_repeat_participants(repeat_id, member_id, member_name, member_photo, repeat_period){
+        let html = `<div id="repeat_item_${repeat_id}" style="display:flex;width:100%;height:45px;padding:0 15px;box-sizing:border-box;cursor:pointer;">
+                        <div style="flex-basis:24px; margin-top:5px;"><img src="${member_photo}" style="border-radius:50%;width:20px;vertical-align:middle;"></div>                       
+                        <div style="flex:1 1 0">
+                            <div style="font-size:14px;font-weight:500;letter-spacing:-0.7px;color:var(--font-main);">${member_name}</div>
+                            <div style="font-size:12px;font-weight:500;letter-spacing:-0.5px;color:var(--font-sub-normal);">${repeat_period}</div>
+                        </div>
                     </div>`;
         $(document).off('click', `#repeat_item_${repeat_id}`).on('click', `#repeat_item_${repeat_id}`, function(e){
             let user_option = {

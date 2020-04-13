@@ -16,10 +16,11 @@
                 <div class="obj_font_size_13_weight_500 obj_font_color_white" style="float:right">수강권</div>
             </div>
 
-            <div class="wrapper_my_ticket_tab obj_font_color_white obj_font_size_13_weight_normal">
+            <div class="wrapper_my_ticket_tab obj_font_color_white obj_font_size_12_weight_bold">
                 <div id="ticket_basic_info" class="wrapper_my_ticket_basic_info" onclick="ticket_basic_info();">기본 정보</div>
                 <div id="ticket_lesson_history" class="wrapper_my_ticket_lesson_history" onclick="ticket_lesson_history();">일정 내역</div>
                 <div id="ticket_lecture_list" class="wrapper_my_ticket_lecture_list" onclick="ticket_lecture_list();">참여가능 수업</div>
+                <div id="ticket_closed_history" class="wrapper_my_ticket_closed_history" onclick="ticket_closed_list();">일시정지 내역</div>
             </div>
         </div>
         <div id="wrapper_my_ticket_detail">
@@ -164,6 +165,45 @@
             {% endfor %}
         </div>
 
+        <div id="wrapper_my_ticket_closed_history_detail" style="display:none;">
+            <div class="wrapper_my_ticket_closed_history_detail_title obj_table_raw obj_font_size_11_weight_normal obj_font_color_light_grey">
+                <div class="wrapper_my_ticket_closed_history_detail_count obj_table_cell_x3" style="padding-left:10px;">번호</div>
+                <div class="wrapper_my_ticket_closed_history_detail_date obj_table_cell_x3">일자</div>
+                <div class="wrapper_my_ticket_closed_history_detail_reason obj_table_cell_x3" style="text-align: center;">분류</div>
+            </div>
+            {% for closed_date_history_info in closed_date_history_data %}
+            <div class="obj_table_raw obj_font_size_11_weight_500" style="border-top:1px solid #f5f2f3;padding:7px 0px;">
+                <div class="obj_table_raw">
+                    <div class="wrapper_my_ticket_closed_history_detail_count obj_table_cell_x3" style="text-align:left; padding-left:10px;">
+                        <div>{{ forloop.revcounter }}.</div>
+                    </div>
+
+                    <div class="wrapper_my_ticket_closed_history_detail_date obj_table_cell_x3" style="text-align:left;overflow:hidden;text-overflow: ellipsis;white-space: nowrap;">
+                        {{ closed_date_history_info.start_date | date:'Y.m.d (l)' | cut:'요일' }} ~ {{ closed_date_history_info.end_date | date:'Y.m.d (l)' | cut:'요일' }}
+                    </div>
+                    <div class="wrapper_my_ticket_closed_history_detail_reason obj_table_cell_x3" style="text-align: center;word-break: keep-all;">
+                        {% if closed_date_history_info.reason_type_cd == "HD" %}
+                            일시정지
+                        {% elif closed_date_history_info.reason_type_cd == "PROGRAM_CLOSED" %}
+                            휴무일
+                        {% elif closed_date_history_info.reason_type_cd == "MEMBER_CLOSED" %}
+                            회원 불가일
+                        {% endif %}
+                    </div>
+
+                </div>
+                <div class="obj_table_raw">
+                    <div class="obj_table_cell_x2" style="width:15%; text-align:left; padding-left:10px;word-break: keep-all; margin-top:5px;">
+
+                    </div>
+                    <div class="wrapper_my_ticket_closed_history_detail_memo obj_font_color_grey obj_table_cell_x2" style="text-align:left; word-break:keep-all; margin-top:5px;">
+                        {{ closed_date_history_info.note }}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
     </div>
 {% endblock %}
 
@@ -189,26 +229,43 @@
         $('#ticket_basic_info').addClass('ticket_info_selected');
         $('#ticket_lesson_history').removeClass('ticket_info_selected');
         $('#ticket_lecture_list').removeClass('ticket_info_selected');
+        $('#ticket_closed_history').removeClass('ticket_info_selected');
         $('#wrapper_my_ticket_detail').show();
         $('#wrapper_my_history_detail').hide();
         $('#wrapper_my_lecture_list_detail').hide();
+        $('#wrapper_my_ticket_closed_history_detail').hide();
     }
     function ticket_lesson_history(){
         $('#ticket_basic_info').removeClass('ticket_info_selected');
         $('#ticket_lesson_history').addClass('ticket_info_selected');
         $('#ticket_lecture_list').removeClass('ticket_info_selected');
+        $('#ticket_closed_history').removeClass('ticket_info_selected');
         $('#wrapper_my_ticket_detail').hide();
         $('#wrapper_my_history_detail').show();
         $('#wrapper_my_lecture_list_detail').hide();
+        $('#wrapper_my_ticket_closed_history_detail').hide();
 
     }
     function ticket_lecture_list(){
         $('#ticket_basic_info').removeClass('ticket_info_selected');
         $('#ticket_lesson_history').removeClass('ticket_info_selected');
         $('#ticket_lecture_list').addClass('ticket_info_selected');
+        $('#ticket_closed_history').removeClass('ticket_info_selected');
         $('#wrapper_my_ticket_detail').hide();
         $('#wrapper_my_history_detail').hide();
         $('#wrapper_my_lecture_list_detail').show();
+        $('#wrapper_my_ticket_closed_history_detail').hide();
+
+    }
+    function ticket_closed_list(){
+        $('#ticket_basic_info').removeClass('ticket_info_selected');
+        $('#ticket_lesson_history').removeClass('ticket_info_selected');
+        $('#ticket_lecture_list').removeClass('ticket_info_selected');
+        $('#ticket_closed_history').addClass('ticket_info_selected');
+        $('#wrapper_my_ticket_detail').hide();
+        $('#wrapper_my_history_detail').hide();
+        $('#wrapper_my_lecture_list_detail').hide();
+        $('#wrapper_my_ticket_closed_history_detail').show();
 
     }
     function popup_member_ticket_info_swipe_close(){

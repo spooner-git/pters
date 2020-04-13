@@ -31,6 +31,8 @@ urlpatterns = [
     url(r'^get_trainee_schedule_history/$', views.GetTraineeScheduleHistoryView.as_view(),
         name='get_trainee_schedule_history'),
 
+    url(r'^check_trainee_schedule/$', views.check_trainee_schedule_logic, name='check_trainee_schedule'),
+
     # 수강 정보 기능 #####################################################################################################
     # 강좌 정보 list 조회
     url(r'^get_trainee_class_list/$', views.GetTraineeClassListView.as_view(), name='get_trainee_class_list'),
@@ -69,7 +71,7 @@ urlpatterns = [
     url(r'^trainee_calendar/$', views.TraineeCalendarView.as_view(), name='trainee_calendar'),
     # 공지 사항 페이지
     url(r'^trainee_program_notice/$', views.TraineeProgramNoticeView.as_view(), name='trainee_program_notice'),
-    # 프로그램 선택 페이지
+    # 지점 선택 페이지
     url(r'^trainee_program/$', views.ProgramSelectView.as_view(), name='trainee_program'),
 
     # 이용약관
@@ -82,6 +84,11 @@ urlpatterns = [
 
     # Mypage 페이지
     url(r'^trainee_mypage/$', views.MyPageView.as_view(), name='trainee_mypage'),
+
+    # 설정 페이지
+    url(r'^trainee_setting/$', views.TraineeSettingView.as_view(), name='trainee_setting'),
+    url(r'^update_trainee_setting_push', views.update_trainee_setting_push_logic, name='update_trainee_setting_push'),
+
 
     # 회원 탈퇴 페이지
     # url(r'^delete_trainee_account/$', views.DeleteTraineeAccountView.as_view(), name='delete_trainee_account'),
@@ -102,7 +109,7 @@ urlpatterns = [
     url(r'^popup_calendar_plan_reserve_complete/$', views.PopupCalendarPlanReserveCompleteView.as_view(),
         name='popup_calendar_plan_reserve_complete'),
 
-    # 회원 수강권 정보 팝업 페이지
+    # 수강권 정보 팝업 페이지
     url(r'^popup_member_ticket_info/$', views.PopupMemberTicketInfoView.as_view(),
         name='popup_member_ticket_info'),
 
@@ -123,7 +130,7 @@ urlpatterns = [
     url(r'^popup_plan_daily_record/$', views.PopupPlanDailyRecordView.as_view(),
         name='popup_plan_daily_record'),
 
-    # 회원 프로그램 공지 팝업 페이지
+    # 회원 지점 공지 팝업 페이지
     url(r'^popup_program_notice/$', views.PopupProgramNoticeView.as_view(),
         name='popup_program_notice'),
 

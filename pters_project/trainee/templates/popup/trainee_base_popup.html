@@ -1,23 +1,35 @@
 {% block popup_base_css %}
 {% endblock %}
 <div class="popup_mobile popup_full">
-    {% block popup_base_wrapper_top %}
-    <div class="wrapper_top">
-        {% block popup_base_wrapper_top_left %}
+    <div style="height:100%;display:flex;flex-direction: column;">
+        {% block popup_base_wrapper_top %}
+        <div class="wrapper_top" style="padding:15px 20px;">
+            <div style="display: flex;">
+                <div style="flex:1 1 0;text-align:left;">
+                    {% block popup_base_wrapper_top_left %}
+                    {% endblock %}
+                </div>
+                {% block popup_base_wrapper_top_right %}
+                <div style="flex-basis: 50px;text-align:right;">
+                    <img src="/static/common/icon/icon_x_black.png" onclick="layer_popup.close_layer_popup()" class="obj_icon_x">
+                </div>
+                {% endblock %}
+            </div>
+        </div>
         {% endblock %}
-        <img src="/static/common/icon/icon_x_black.png" onclick="layer_popup.close_layer_popup()" class="obj_icon_x">
-    </div>
-    {% endblock %}
 
-    {% block popup_base_contents %}
-    {% endblock %}
+        <div class="wrapper_middle" style="flex:1 1 0;padding-bottom: 0;">
+            {% block popup_base_contents %}
+            {% endblock %}
+        </div>
 
-    {% block popup_base_wrapper_bottom %}
-    <div class="wrapper_bottom">
-        {% block popoup_base_wrapper_bottom_inside %}
+        {% block popup_base_wrapper_bottom %}
+        <div class="wrapper_bottom" style="flex-basis:55px">
+            {% block popoup_base_wrapper_bottom_inside %}
+            {% endblock %}
+        </div>
         {% endblock %}
     </div>
-    {% endblock %}
 </div>
 {% block popup_base_js %}
 {% endblock %}

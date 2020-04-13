@@ -1,33 +1,23 @@
+#popup_my_info_change .popup_mobile.popup_full{
+	background-color: #f2f2f2;
+	border-bottom-left-radius: 0;
+}
 	#popup_my_info_change .popup_mobile .wrapper_top{
-		height: 30px;
+		/* height: 30px; */
 		margin-bottom: 10px;
+	}
+
+	#popup_my_info_change .wrapper_popup_title{
+		padding: 0px;
+	}
+	#popup_my_info_change .wrapper_popup_title_text{
+		height: 35px;
+		line-height: 35px;
 	}
 
 	.popup_my_info_change{
 		/*min-height: 100%;*/
 	}	
-
-		.popup_my_info_change .wrapper_popup_title{
-				padding: 0px;
-			}
-			.popup_my_info_change .wrapper_popup_title_text{
-				position: absolute;
-				top: 20px;
-
-				padding: 0 20px;
-				height: 35px;
-				line-height: 35px;
-			}
-			.popup_my_info_change .obj_font_size_14_weight_500{
-
-				padding: 0 20px;
-				height: 20px;
-				line-height: 20px;
-			}
-			.popup_my_info_change .wrapper_calendar_plan_view_title .wrapper_popup_title_date{
-				position: absolute;
-				top: 55px;
-			}
 
 		.popup_my_info_change > .obj_box_full{
 

@@ -1,3 +1,7 @@
+#calendar_wrap{
+	height: 100%;
+	overflow: hidden;
+}
 #cal_display_panel{
 	position: absolute;
 	height: auto;
@@ -110,12 +114,16 @@
 	transition: 0.2s ease-in-out;
 	background-color: var(--bg-main);
 	z-index: 1;
-	padding-bottom: 56px;
+	/* padding-bottom: 56px; */
+	height: calc(100% - 116px); /*상단 툴바 60px, 하단 탭바:56px*/
+	overflow-y: auto;
+	overflow-x: hidden;
 }
 
 @media(min-width:600px){
 	#calendar_wrap .pages{
 		padding-bottom: 0;
+		height: calc(100% - 60px);
 	}
 }
 

@@ -29,6 +29,9 @@
 
 .popup_pters_pass_shop_agreement .agreement_wrapper{
 	font-size: 12px;
+	padding-top: 10px;
+	margin-top: 20px;
+	border-top: var(--border-article);
 }
 
 .popup_pters_pass_shop_agreement .caution_wrapper{

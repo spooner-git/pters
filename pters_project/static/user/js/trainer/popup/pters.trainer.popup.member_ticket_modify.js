@@ -104,7 +104,7 @@ class Member_ticket_modify{
     
     dom_assembly_content(){
 
-        let status = CComponent.dom_tag('수강권') + this.dom_row_status_input() + 
+        let status = CComponent.dom_tag('수강권') + this.dom_row_status_input() +
                     `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>`;
         let refund_date  = CComponent.dom_tag('환불일') + this.dom_row_refund_date_input() +
                     `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>`;
@@ -223,6 +223,42 @@ class Member_ticket_modify{
                         layer_popup.close_layer_popup();
                     });
                     layer_popup.close_layer_popup();}
+                },
+                holding: {
+                    text: "일시정지", callback: () => {
+
+                        layer_popup.close_layer_popup();
+                        let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_TICKET_HOLDING, 100, popup_style, null, ()=>{
+                            let start_date = DateRobot.to_yyyymmdd(this.data.start_date.year, this.data.start_date.month, this.data.start_date.date);
+                            let end_date = DateRobot.to_yyyymmdd(this.data.end_date.year, this.data.end_date.month, this.data.end_date.date);
+                            let external_data = {"member_ticket_id":this.data.member_ticket_id,"member_ticket_name":this.data.member_ticket_name, "member_ticket_price":this.data.price,
+                                                 "member_ticket_start_date":start_date, "member_ticket_end_date":end_date};
+                            member_ticket_holding = new Member_ticket_holding('.popup_member_ticket_holding', external_data, 'member_ticket_holding');
+                        });}
+                        // let message = {
+                        //     title: '수강권 일시정지 안내',
+                        //     comment: `수강권을 재개 하실때까지
+                        //         <span style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">자동으로 종료일자가 연장</span>됩니다.`
+                        // };
+                        // show_user_confirm(message, () => {
+                        //     Member_func.ticket_hold({"member_ticket_id": this.data.member_ticket_id}, () => {
+                        //         this.data.status = "HD";
+                        //         this.render_content();
+                        //         try {
+                        //             current_page.init();
+                        //         } catch (e) {
+                        //         }
+                        //         try {
+                        //             member_view_popup.init();
+                        //             member_ticket_history.init();
+                        //         } catch (e) {
+                        //         }
+                        //         layer_popup.close_layer_popup();
+                        //     });
+                        //     layer_popup.close_layer_popup();
+                        // });
+                    // }
                 }
             };
 
@@ -230,6 +266,7 @@ class Member_ticket_modify{
                 delete user_option.resume;
                 delete user_option.delete;
             }else{
+                // delete user_option.holding;
                 delete user_option.refund;
                 delete user_option.finish;
             }

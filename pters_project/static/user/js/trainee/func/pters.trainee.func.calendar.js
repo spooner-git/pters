@@ -21,7 +21,7 @@ function pters_month_calendar(calendar_name, calendar_options){
     }
     let design_options = calendar_options.design_options;
 
-    const nav_height = parseInt($('body').css('padding-top'), 10);
+    const nav_height = 50;
     const calendar_height = $(window).height() - nav_height - 5;
     const calendar_toolbox_height = 61;
     const calendar_month_day_name_text_height = 40;
@@ -42,7 +42,7 @@ function pters_month_calendar(calendar_name, calendar_options){
     function func_month_calendar_basic_size(calendar_height){
         //달력을 감싸는 wrapper의 높이를 창크기에 맞춘다. (스크롤링 영역을 달력 안쪽으로만 잡기 위해서)
         // $('.content_page').css("overflow-y", "hidden");
-        $('.pters_calendar').css({"height":calendar_height});
+        // $('.pters_calendar').css({"height":calendar_height});
     }
 
     function func_draw_month_calendar_size(calendar_height, calendar_toolbox_height, calendar_month_day_name_text_height){
@@ -89,7 +89,14 @@ function pters_month_calendar(calendar_name, calendar_options){
         let reference_date_month_last_day = func_get_month_end_day(reference_date_year, reference_date_month);
 
         let current_month_first_date_day = new Date(`${reference_date_year}`,`${reference_date_month-1}`,`${'1'}`).getDay();
-
+        let help_calendar_indicator = `<div class="help_calendar_indicator obj_font_size_10_weight_500">`;
+        if(one_to_one_lecture_check > 0){
+            help_calendar_indicator += '<div style="background-color:rgba(255, 59, 68, 0.07)">개인수업 예약</div>';
+        }
+        if(group_lecture_check > 0){
+            help_calendar_indicator += '<div style="background-color:rgba(255, 59, 68, 0.38)">그룹수업 예약</div>';
+        }
+        help_calendar_indicator += '</div>';
         let month_calendar_upper_tool = `<div class="pters_month_cal_upper_tool_box">
                                             <div id="${calendar_name}_go_prev_month" class="next_prev_month" style="display:${design_options.move_buttons};">
                                                 <img src="/static/common/icon/icon_arrow_l_black.png" class="obj_icon_basic"> 
@@ -105,12 +112,9 @@ function pters_month_calendar(calendar_name, calendar_options){
                                             </div>
                                             <div id="${calendar_name}_go_next_month" class="next_prev_month" style="display:${design_options.move_buttons};">
                                                 <img src="/static/common/icon/icon_arrow_r_small_black.png" class="obj_icon_basic">
-                                            </div>
-                                            <div class="help_calendar_indicator obj_font_size_10_weight_500">
-                                                <div style="background-color:rgba(255, 59, 68, 0.07)">개인 수업 예약</div>
-                                                <div style="background-color:rgba(255, 59, 68, 0.38)">그룹 수업 예약</div>
-                                            </div>
-                                        </div>`;
+                                            </div>`
+                                            + help_calendar_indicator +
+                                        '</div>';
 
         //달력의 월화수목금 표기를 만드는 부분
         let month_day_name_text = `<div class="pters_month_cal_day_name_box obj_table_raw ${design_options["font_day_names"]}"> 
@@ -186,8 +190,9 @@ function pters_month_calendar(calendar_name, calendar_options){
                                             </div>`;
 
 
-        let time_line_height = calendar_height  - calendar_toolbox_height - calendar_month_day_name_text_height - calendar_month_week_row_total_height - calendar_timeline_toolbox_height;
+        let time_line_height = calendar_height - calendar_toolbox_height - calendar_month_day_name_text_height - calendar_month_week_row_total_height - calendar_timeline_toolbox_height;
         time_line_height = time_line_height + "px";
+        console.log(time_line_height)
         //상단의 연월 표기, 일월화수목 표기, 달력숫자를 합쳐서 화면에 그린다.
         $targetHTML.html(`${month_calendar_upper_tool}
                          <div class="obj_box_full ${calendar_name}_wrapper_month_cal">
@@ -363,21 +368,33 @@ function pters_month_calendar(calendar_name, calendar_options){
         });
     }
 
-    function func_set_avail_date(avail_date_array){
+    function func_set_avail_date(avail_date_array, jsondata){
+        // console.log(jsondata);
         let length = avail_date_array.length;
         let temp_array = [];
         for(let i=0; i<length; i++){
             temp_array.push(`#calendar_plan_cell_${avail_date_array[i]}`);
             if(setting_info.setting_member_reserve_prohibition=='1'){
-                $(`#calendar_plan_cell_${avail_date_array[i]}`).parent('.obj_table_cell_x7').css('background-color', 'rgba(255, 59, 68, 0.07)').attr('onclick', `show_error_message({title:'강사님이 예약기능을 일시정지했습니다.'})`);
+                $(`#calendar_plan_cell_${avail_date_array[i]}`).parent('.obj_table_cell_x7').attr('onclick', `show_error_message({title:'강사님이 예약기능을 일시정지했습니다.'})`);
             }
             else{
-                $(`#calendar_plan_cell_${avail_date_array[i]}`).parent('.obj_table_cell_x7').css('background-color', 'rgba(255, 59, 68, 0.07)').attr('onclick', `layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_reserve', 90, POPUP_FROM_BOTTOM, {'select_date':'${avail_date_array[i]}'})`);
+                let closed_date_idx = jsondata.closed_date.indexOf(avail_date_array[i]);
+
+                if(closed_date_idx >= 0){
+                    let message = '수강권이 일시정지 기간입니다.';
+                    if(jsondata.closed_date_reason_type_cd[closed_date_idx] != 'HD'){
+                        message = jsondata.closed_date_note[closed_date_idx] + '입니다.';
+                    }
+                    $(`#calendar_plan_cell_${avail_date_array[i]}`).parent('.obj_table_cell_x7').attr('onclick', `show_error_message({title:'${message}'})`);
+                }
+                else{
+                    $(`#calendar_plan_cell_${avail_date_array[i]}`).parent('.obj_table_cell_x7').css('background-color', 'rgba(255, 59, 68, 0.07)').attr('onclick', `layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_reserve', 90, POPUP_FROM_BOTTOM, {'select_date':'${avail_date_array[i]}'})`);
+                }
             }
         }
         let $first_day = $(`${temp_array.shift()}`);
         $first_day.siblings('div.calendar_date_number').css({'height':'20px', 'width':'20px', 'border-radius':'50%', 'background-color':'#ff3b44', 'margin':'0 auto', 'color':'#ffffff'});
-        $first_day.parent('.obj_table_cell_x7').css({'background-color': 'rgba(255, 59, 68, 0.07)'});
+        // $first_day.parent('.obj_table_cell_x7').css({'background-color': 'rgba(255, 59, 68, 0.07)'});
         // $first_day.parent('.obj_table_cell_x7').css({'background-color': 'rgba(0, 0, 0, 0.1)', 'border-top-left-radius':'5px', 'border-bottom-left-radius':'5px'});
         // $(`${temp_array.pop()}`).parent('.obj_table_cell_x7').css({'background-color': 'rgba(0, 0, 0, 0.1)', 'border-top-right-radius':'5px', 'border-bottom-right-radius':'5px'});
         // $(`${temp_array.join(', ')}`).parent('.obj_table_cell_x7').css('background-color', 'rgba(255, 59, 68, 0.07)').attr('onclick', `"layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_reserve', 90, POPUP_FROM_BOTTOM, {'select_date':'${temp_array.join(', ')}'})"`);
@@ -427,7 +444,12 @@ function pters_month_calendar(calendar_name, calendar_options){
             if(compare_date > 0){//오늘보다 과거
 
             }else{ //오늘을 포함하는 미래
-                $(`#calendar_lecture_plan_cell_${date_lecture}`).css('background-color', 'rgba(255, 59, 68, 0.38)');
+
+                let closed_date_idx = jsondata.closed_date.indexOf(date_lecture);
+                let avail_date_idx = jsondata.avail_date_data.indexOf(date_lecture);
+                if(closed_date_idx < 0 && avail_date_idx >= 0){
+                    $(`#calendar_lecture_plan_cell_${date_lecture}`).css('background-color', 'rgba(255, 59, 68, 0.38)');
+                }
             }
         }
     }
@@ -730,7 +752,7 @@ function pters_month_calendar(calendar_name, calendar_options){
             func_get_ajax_holiday_data(reference_date, 30, (holiday_data)=>{
                 func_draw_holiday_data(holiday_data);
                 func_get_ajax_schedule_data(reference_date, "callback", function(jsondata){
-                    func_set_avail_date(jsondata.avail_date_data);
+                    func_set_avail_date(jsondata.avail_date_data, jsondata);
                     func_draw_schedule_data(jsondata);
                     func_draw_schedule_timeline_data(jsondata, holiday_data, type);
                     func_set_timeline_to_today_or_near();
@@ -793,12 +815,12 @@ function pters_month_calendar(calendar_name, calendar_options){
             }
             func_get_ajax_holiday_data(input_reference_date, 30, (holiday_data)=>{
                     func_draw_holiday_data(holiday_data);
-                func_get_ajax_schedule_data(input_reference_date, "callback", function (jsondata){
-                    func_set_avail_date(jsondata.avail_date_data);
-                    func_draw_schedule_data(jsondata);
-                    func_draw_schedule_timeline_data(jsondata, holiday_data, SCHEDULE_NOT_FINISH);
-                    func_set_timeline_to_today_or_near();
-                });
+                    func_get_ajax_schedule_data(input_reference_date, "callback", function (jsondata){
+                        func_set_avail_date(jsondata.avail_date_data, jsondata);
+                        func_draw_schedule_data(jsondata);
+                        func_draw_schedule_timeline_data(jsondata, holiday_data, SCHEDULE_NOT_FINISH);
+                        func_set_timeline_to_today_or_near();
+                    });
             });
         },
         "get_current_month":function(){

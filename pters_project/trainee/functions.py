@@ -1,4 +1,5 @@
 import datetime
+import copy
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
@@ -8,11 +9,11 @@ from django.utils import timezone
 
 from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, USE, MEMBER_RESERVE_PROHIBITION_ON, LECTURE_TYPE_ONE_TO_ONE, \
     STATE_CD_IN_PROGRESS, STATE_CD_ABSENCE, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, AUTH_TYPE_DELETE, \
-    MEMBER_RESERVE_PROHIBITION_OFF
+    MEMBER_RESERVE_PROHIBITION_OFF, FROM_TRAINER_LESSON_ALARM_ON, STATE_CD_HOLDING, CLOSED_SCHEDULE_TYPE
 from login.models import CommonCdTb
 from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb
 from trainer.models import ClassTb, ClassMemberTicketTb, SettingTb, TicketLectureTb
-from .models import MemberTicketTb
+from .models import MemberTicketTb, MemberClosedDateHistoryTb
 
 
 def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_date):
@@ -107,8 +108,9 @@ def func_get_trainee_lecture_schedule(context, user_id, class_id, start_date, en
     #       " and A.MEMBER_AUTH_CD=\'VIEW\' and A.MEMBER_ID="+str(user_id)
 
     member_ticket_data = ClassMemberTicketTb.objects.select_related(
-        'member_ticket_tb__ticket_tb').filter(class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW,
-                                              member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+        'member_ticket_tb__ticket_tb').filter(Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS)
+                                              | Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
+                                              class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW,
                                               member_ticket_tb__member_id=user_id,
                                               member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
                                               member_ticket_tb__use=USE,
@@ -128,14 +130,14 @@ def func_get_trainee_lecture_schedule(context, user_id, class_id, start_date, en
 
         for ticket_lecture_info in ticket_lecture_data:
             query_lecture_list |= Q(lecture_tb_id=ticket_lecture_info.lecture_tb_id)
-
-        lecture_schedule_data = ScheduleTb.objects.select_related(
-            'lecture_tb').filter(query_lecture_list, class_tb_id=class_id, lecture_tb__isnull=False,
-                                 member_ticket_tb__isnull=True,
-                                 en_dis_type=ON_SCHEDULE_TYPE, start_dt__gte=start_date,
-                                 start_dt__lt=end_date, use=USE
-                                 ).annotate(lecture_current_member_num=RawSQL(query, []),
-                                            lecture_wait_member_num=RawSQL(query_wait, [])).order_by('start_dt')
+        if len(ticket_lecture_data) > 0:
+            lecture_schedule_data = ScheduleTb.objects.select_related(
+                'lecture_tb').filter(query_lecture_list, class_tb_id=class_id, lecture_tb__isnull=False,
+                                     member_ticket_tb__isnull=True,
+                                     en_dis_type=ON_SCHEDULE_TYPE, start_dt__gte=start_date,
+                                     start_dt__lt=end_date, use=USE
+                                     ).annotate(lecture_current_member_num=RawSQL(query, []),
+                                                lecture_wait_member_num=RawSQL(query_wait, [])).order_by('start_dt')
         for lecture_schedule_info in lecture_schedule_data:
             if lecture_schedule_info.note is not None and lecture_schedule_info.note != '':
                 lecture_schedule_info.note = lecture_schedule_info.note.replace('\n', '<br/>')
@@ -151,11 +153,38 @@ def func_get_trainee_off_schedule(context, class_id, start_date, end_date):
     schedule_data = ScheduleTb.objects.filter(
         class_tb_id=class_id, start_dt__gte=start_date,
         start_dt__lt=end_date, use=USE).exclude(state_cd=STATE_CD_ABSENCE).order_by('start_dt')
+    schedule_data = schedule_data.exclude(en_dis_type=CLOSED_SCHEDULE_TYPE)
 
     for schedule_info in schedule_data:
         if schedule_info.note is not None and schedule_info.note != '':
             schedule_info.note = schedule_info.note.replace('\n', '<br/>')
     context['off_schedule_data'] = schedule_data
+    return context
+
+
+def func_get_trainee_closed_schedule(context, class_id, user_id, start_date, end_date):
+    closed_date_list = []
+    member_closed_date_data = MemberClosedDateHistoryTb.objects.select_related(
+        'member_ticket_tb__ticket_tb__class_tb').filter(Q(start_date__lte=end_date) & Q(end_date__gte=start_date),
+                                                        Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS)
+                                                        | Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
+                                                        member_id=user_id,
+                                                        member_ticket_tb__ticket_tb__class_tb_id=class_id,
+                                                        use=USE).order_by('start_date', 'end_date')
+
+    for member_closed_date_info in member_closed_date_data:
+        if member_closed_date_info.start_date == member_closed_date_info.end_date:
+            closed_date_list.append(member_closed_date_info)
+        else:
+            member_closed_start_date = member_closed_date_info.start_date
+            member_closed_end_date = member_closed_date_info.end_date
+            check_date = member_closed_start_date
+            while check_date <= member_closed_end_date:
+                select_closed_date_info = copy.copy(member_closed_date_info)
+                select_closed_date_info.start_date = check_date
+                closed_date_list.append(select_closed_date_info)
+                check_date += datetime.timedelta(days=1)
+    context['closed_date_data'] = closed_date_list
 
     return context
 
@@ -164,7 +193,8 @@ def func_get_trainee_on_repeat_schedule(context, user_id, class_id):
     # repeat_schedule_list = []
     pt_repeat_schedule_data = RepeatScheduleTb.objects.select_related(
         'member_ticket_tb'
-    ).filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+    ).filter(Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS) | Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
+             class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,
              member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__member_id=user_id,
              member_ticket_tb__use=USE).order_by('member_ticket_tb__start_date')
 
@@ -176,7 +206,7 @@ def func_get_trainee_on_repeat_schedule(context, user_id, class_id):
 def func_get_class_member_ticket_count(context, class_id, user_id):
     error = None
     if class_id is None or class_id == '':
-        error = '수강정보를 불러오지 못했습니다.'
+        error = '수강권 정보를 불러오지 못했습니다.'
 
     member_ticket_reg_count_sum = 0
     member_ticket_rem_count_sum = 0
@@ -190,8 +220,9 @@ def func_get_class_member_ticket_count(context, class_id, user_id):
 
         class_member_ticket_list = ClassMemberTicketTb.objects.select_related(
             'member_ticket_tb__ticket_tb', 'member_ticket_tb__member'
-        ).filter(class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__member_id=user_id,
-                 member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS, member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
+        ).filter(Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS) | Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
+                 class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__member_id=user_id,
+                 member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
                  member_ticket_tb__use=USE, use=USE).order_by('member_ticket_tb__start_date')
 
     if error is None:
@@ -227,7 +258,7 @@ def func_get_member_ticket_list(context, class_id, member_id, auth_cd):
     output_member_ticket_list = []
 
     if class_id is None or class_id == '':
-        error = '수강정보를 불러오지 못했습니다.'
+        error = '수강권 정보를 불러오지 못했습니다.'
 
     if member_id is None or member_id == '':
         error = '회원 정보를 불러오지 못했습니다.'
@@ -304,7 +335,7 @@ def func_get_member_ticket_connection_list(context, class_id, member_id, auth_cd
     output_member_ticket_list = []
 
     if class_id is None or class_id == '':
-        error = '수강정보를 불러오지 못했습니다.'
+        error = '수강권 정보를 불러오지 못했습니다.'
 
     if member_id is None or member_id == '':
         error = '회원 정보를 불러오지 못했습니다.'
@@ -478,11 +509,11 @@ def func_get_trainee_next_schedule_by_class_id(context, class_id, user_id):
 
     now = timezone.now()
     next_schedule_info = ''
-    next_schedule_data = ScheduleTb.objects.filter(class_tb=class_id, member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
-                                                   member_ticket_tb__member_id=user_id,
-                                                   en_dis_type=ON_SCHEDULE_TYPE,
-                                                   start_dt__gte=now,
-                                                   use=USE).order_by('start_dt')
+    next_schedule_data = ScheduleTb.objects.select_related(
+        'member_ticket_tb__member',
+        'member_ticket_tb__ticket_tb').filter(class_tb=class_id, member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
+                                              member_ticket_tb__member_id=user_id, en_dis_type=ON_SCHEDULE_TYPE,
+                                              start_dt__gte=now, use=USE).order_by('start_dt')
 
     if len(next_schedule_data) > 0:
         next_schedule_info = next_schedule_data[0]
@@ -510,7 +541,7 @@ def func_get_trainee_select_schedule(context, class_id, user_id, select_date):
     if error is None:
         end_dt = start_dt + datetime.timedelta(hours=23, minutes=59)
 
-    schedule_data = ScheduleTb.objects.filter(
+    schedule_data = ScheduleTb.objects.select_related('member_ticket_tb__member', 'member_ticket_tb__ticket_tb').filter(
         class_tb=class_id, member_ticket_tb__member_id=user_id, member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
         member_ticket_tb__use=USE, en_dis_type=ON_SCHEDULE_TYPE, start_dt__gte=start_dt,
         start_dt__lte=end_dt, use=USE).order_by('start_dt')
@@ -522,11 +553,12 @@ def func_get_trainee_select_schedule(context, class_id, user_id, select_date):
 
 def func_get_trainee_ing_member_ticket_list(context, class_id, user_id):
 
+    today = datetime.date.today()
     member_ticket_list = ClassMemberTicketTb.objects.select_related(
         'member_ticket_tb__member',
         'member_ticket_tb__ticket_tb'
-    ).filter(class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__member_id=user_id,
-             member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+    ).filter(Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS) | Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
+             class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__member_id=user_id,
              member_ticket_tb__ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
              member_ticket_tb__use=USE, member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW, use=USE
              ).order_by('-member_ticket_tb__end_date', 'member_ticket_tb__reg_dt')
@@ -536,6 +568,15 @@ def func_get_trainee_ing_member_ticket_list(context, class_id, user_id):
         member_ticket_info.ticket_lecture_data = TicketLectureTb.objects.filter(
             ticket_tb_id=member_ticket_info_ticket_tb.ticket_id, ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
             lecture_tb__state_cd=STATE_CD_IN_PROGRESS, use=USE)
+        # 오늘 날짜 기준 holding 내역 가져오기 (어차피 1개만 있음)
+        try:
+            member_ticket_info.hold_tb = MemberClosedDateHistoryTb.objects.get(member_ticket_tb_id=member_ticket_info.member_ticket_tb_id,
+                                                                               reason_type_cd=STATE_CD_HOLDING,
+                                                                               start_date__lte=today,
+                                                                               end_date__gte=today,
+                                                                               use=USE)
+        except ObjectDoesNotExist:
+            member_ticket_info.hold_tb = None
 
     context['ing_member_ticket_data'] = member_ticket_list
     return context
@@ -591,7 +632,7 @@ def func_get_trainee_reserve_schedule_list(context, class_id, user_id, lecture_i
     try:
         class_info = ClassTb.objects.get(class_id=class_id)
     except ObjectDoesNotExist:
-        error = '수강정보를 불러오지 못했습니다.'
+        error = '수강권 정보를 불러오지 못했습니다.'
 
     if error is None:
         error = func_check_select_date_reserve_setting(class_id, class_info.member_id, select_date)
@@ -915,3 +956,23 @@ def func_check_select_time_reserve_setting(class_id, trainer_id, start_date, end
                     error = error_comment+' 취소가 가능합니다.'
 
     return error
+
+
+# 회원의 셋팅 정보 가져오기
+def func_get_trainee_setting_list(context, class_id, user_id):
+    # today = datetime.date.today()
+    # lt_lan_01 = 'KOR'
+    setting_push_from_trainer_lesson_alarm = FROM_TRAINER_LESSON_ALARM_ON
+    setting_schedule_alarm_minute = '-1'
+    setting_data = SettingTb.objects.filter(class_tb_id=class_id, member_id=user_id, use=USE)
+
+    for setting_info in setting_data:
+        if setting_info.setting_type_cd == 'LT_PUSH_FROM_TRAINER_LESSON_ALARM':
+            setting_push_from_trainer_lesson_alarm = int(setting_info.setting_info)
+        if setting_info.setting_type_cd == 'LT_PUSH_SCHEDULE_ALARM_MINUTE':
+            setting_schedule_alarm_minute = setting_info.setting_info
+
+    context['setting_push_from_trainer_lesson_alarm'] = setting_push_from_trainer_lesson_alarm
+    context['setting_schedule_alarm_minute'] = setting_schedule_alarm_minute
+
+    return context

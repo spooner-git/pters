@@ -5,7 +5,8 @@ from django.db.models import Q
 from django.db.models.expressions import RawSQL
 
 from configs.const import USE, ON_SCHEDULE_TYPE, STATS_RE_REG, STATS_NEW_REG, STATS_PART_REFUND, STATS_ALL_REFUND, \
-    STATE_CD_FINISH, AUTH_TYPE_VIEW, STATE_CD_REFUND
+    STATE_CD_FINISH, AUTH_TYPE_VIEW, STATE_CD_REFUND, SORT_ALL_STATISTICS, SORT_CASH_STATISTICS, SORT_CARD_STATISTICS, \
+    SORT_NONE_STATISTICS, SORT_TRANS_STATISTICS
 from schedule.models import ScheduleTb
 from trainer.models import ClassMemberTicketTb
 
@@ -102,7 +103,7 @@ def get_sales_data(class_id, month_first_day, finish_date):
     return context
 
 
-def get_sales_info(class_id, month_first_day):
+def get_sales_info(class_id, month_first_day, sort_val):
 
     price_list = []
     error = None
@@ -126,6 +127,14 @@ def get_sales_info(class_id, month_first_day):
             Q(member_ticket_tb__start_date__gte=month_first_day) & Q(member_ticket_tb__start_date__lte=month_last_day),
             class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__use=USE,
             use=USE).order_by('member_ticket_tb__start_date', 'member_ticket_tb__reg_dt')
+        if str(sort_val) == str(SORT_NONE_STATISTICS):
+            price_data = price_data.filter(member_ticket_tb__pay_method='NONE')
+        elif str(sort_val) == str(SORT_CASH_STATISTICS):
+            price_data = price_data.filter(member_ticket_tb__pay_method__contains='CASH')
+        elif str(sort_val) == str(SORT_TRANS_STATISTICS):
+            price_data = price_data.filter(member_ticket_tb__pay_method__contains='TRANS')
+        elif str(sort_val) == str(SORT_CARD_STATISTICS):
+            price_data = price_data.filter(member_ticket_tb__pay_method__contains='CARD')
 
         for price_info in price_data:
             try:
@@ -169,6 +178,14 @@ def get_sales_info(class_id, month_first_day):
                                                   member_ticket_tb__use=USE,
                                                   use=USE).order_by('member_ticket_tb__refund_date',
                                                                     'member_ticket_tb__reg_dt')
+        if str(sort_val) == str(SORT_NONE_STATISTICS):
+            refund_price_data = refund_price_data.filter(member_ticket_tb__pay_method='NONE')
+        elif str(sort_val) == str(SORT_CASH_STATISTICS):
+            refund_price_data = refund_price_data.filter(member_ticket_tb__pay_method__contains='CASH')
+        elif str(sort_val) == str(SORT_TRANS_STATISTICS):
+            refund_price_data = refund_price_data.filter(member_ticket_tb__pay_method__contains='TRANS')
+        elif str(sort_val) == str(SORT_CARD_STATISTICS):
+            refund_price_data = refund_price_data.filter(member_ticket_tb__pay_method__contains='CARD')
 
         for refund_price_info in refund_price_data:
             if refund_price_info.member_ticket_tb.price != refund_price_info.member_ticket_tb.refund_price:

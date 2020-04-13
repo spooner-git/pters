@@ -1,4 +1,7 @@
+
     {
+      "member_ticket_id" :
+        "{{ member_ticket_id }}",
       "messageArray" :
       [{% for message in messages %}"{% if message.tags == "error" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}]
     }

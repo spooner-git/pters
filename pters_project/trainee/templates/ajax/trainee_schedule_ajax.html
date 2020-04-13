@@ -38,6 +38,13 @@
       "offTimeArray_end_date" :
       [{% for off_schedule_info in off_schedule_data %}"{{ off_schedule_info.end_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
+      "closed_date" :
+      [{% for closed_date_info in closed_date_data %}"{{ closed_date_info.start_date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "closed_date_reason_type_cd" :
+      [{% for closed_date_info in closed_date_data %}"{{ closed_date_info.reason_type_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "closed_date_note" :
+      [{% for closed_date_info in closed_date_data %}"{{ closed_date_info.note }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
       "lecture_schedule_id":
       [{% for lecture_schedule_info in lecture_schedule_data %}"{{ lecture_schedule_info.schedule_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "lecture_schedule_lecture_id":

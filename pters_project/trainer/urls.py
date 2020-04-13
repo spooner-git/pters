@@ -51,6 +51,15 @@ urlpatterns = [
         name='get_member_repeat_schedule'),
 
 
+    url(r'^add_closed_date/$', views.add_closed_date_logic,
+        name='add_closed_date'),
+    url(r'^update_closed_date/$', views.update_closed_date_logic,
+        name='update_closed_date'),
+    url(r'^delete_closed_date/$', views.delete_closed_date_logic,
+        name='delete_closed_date'),
+    url(r'^get_trainer_closed_date/$', views.GetTrainerClosedDateView.as_view(),
+        name='get_trainer_closed_date'),
+
     # 회원 기능 ##########################################
     # 회원 정보 조회 - refactoring
     url(r'^get_member_info/$', views.GetMemberInfoView.as_view(), name='get_member_info'),
@@ -85,12 +94,40 @@ urlpatterns = [
     url(r'^update_member_ticket_info/$', views.update_member_ticket_info_logic, name='update_member_ticket_info'),
     # 회원 수강정보 삭제 - refactoring - 확인 필요
     url(r'^delete_member_ticket_info/$', views.delete_member_ticket_info_logic, name='delete_member_ticket_info'),
+
     # 회원 수강정보 상태 변경 - refactoring - 확인 필요
     url(r'^update_member_ticket_status_info/$', views.update_member_ticket_status_info_logic,
         name='update_member_ticket_status_info'),
     # 회원 연동 상태 변경 - refactoring
     url(r'^update_member_connection_info/$', views.update_member_connection_info_logic,
         name='update_member_connection_info'),
+
+    # 회원이 일시정지 내역 조회
+    url(r'^get_hold_member_ticket_list/$',
+        views.GetHoldMemberTicketListView.as_view(), name='get_hold_member_ticket_list'),
+    # 회원 수강정보 일시정지 - refactoring - 확인 필요
+    url(r'^add_hold_member_ticket_info/$',
+        views.add_hold_member_ticket_info_logic, name='add_hold_member_ticket_info'),
+    # 회원 수강정보 일시정지 수정 - refactoring - 확인 필요
+    url(r'^update_hold_member_ticket_info/$',
+        views.update_hold_member_ticket_info_logic, name='update_hold_member_ticket_info'),
+    # 회원 수강정보 일시정지 삭제 - refactoring - 확인 필요
+    url(r'^delete_hold_member_ticket_info/$',
+        views.delete_hold_member_ticket_info_logic, name='delete_hold_member_ticket_info'),
+
+    # 회원 불가일정 설정 기능
+    url(r'^get_member_closed_date/$', views.GetMemberClosedDateListView.as_view(),
+        name='get_member_closed_date'),
+    url(r'^get_member_closed_date_history/$', views.GetMemberClosedDateListHistoryView.as_view(),
+        name='get_member_closed_date_history'),
+
+    url(r'^add_member_closed_date/$', views.add_member_closed_date_logic,
+        name='add_member_closed_date'),
+    url(r'^update_member_closed_date/$', views.update_member_closed_date_logic,
+        name='update_member_closed_date'),
+    url(r'^delete_member_closed_date/$', views.delete_member_closed_date_logic,
+        name='delete_member_closed_date'),
+
 
     # 회원 프로필 업데이트/삭제
     url(r'^update_member_profile_img', views.update_member_profile_img_logic, name='update_member_profile_img'),
@@ -154,6 +191,8 @@ urlpatterns = [
     # 강좌 기능 ##########################################################################################################
     # 강좌 정보 조회
     url(r'^get_program_list/$', views.GetProgramListViewAjax.as_view(), name='get_program_list'),
+    # 강좌 정보 조회
+    url(r'^get_program_category/$', views.GetProgramCategoryViewAjax.as_view(), name='get_program_category'),
     # 강좌 추가
     url(r'^add_program_info/$', views.add_program_info_logic, name='add_program_info'),
     # 강좌 삭제
@@ -165,21 +204,21 @@ urlpatterns = [
 
     # 강사 검색 기능
     url(r'^search_trainer_info/$', views.SearchTrainerInfoView.as_view(), name='search_trainer_info'),
-    # 프로그램 공유 기능
+    # 지점 공유 기능
     url(r'^update_share_program_info/$', views.update_share_program_info_logic, name='update_share_program_info'),
-    # 프로그램 공유 내역 조회
+    # 지점 공유 내역 조회
     url(r'^get_share_program_data/$', views.GetShareProgramDataViewAjax.as_view(), name='get_share_program_data'),
 
-    # 나에게 프로그램 공유 권한 내역 조회
+    # 나에게 지점 공유 권한 내역 조회
     url(r'^get_shared_program_data/$', views.GetSharedProgramDataViewAjax.as_view(), name='get_share_program_data'),
 
-    # 프로그램 공유 연결 안된 정보 조회
+    # 지점 공유 연결 안된 정보 조회
     url(r'^get_trainer_program_connection_list/$', views.GetTrainerProgramConnectionListView.as_view(),
         name='get_trainer_program_connection_list'),
-    # 프로그램 공유 수락/거절 기능
+    # 지점 공유 수락/거절 기능
     url(r'^update_trainer_program_connection_info/$', views.update_trainer_program_connection_info_logic,
         name='update_trainer_program_connection_info'),
-    # 프로그램 공유 해제 기능
+    # 지점 공유 해제 기능
     url(r'^delete_trainer_program_connection/$', views.delete_trainer_program_connection_logic,
         name='delete_trainer_program_connection'),
 
@@ -369,7 +408,7 @@ urlpatterns = [
     # 색상태그 선택 팝업 페이지
     url(r'^popup_color_select/$', views.PopupColorSelect.as_view(), name='popup_color_select'),
 
-    # 프로그램 추가 페이지
+    # 지점 추가 페이지
     url(r'^add_program/$', views.add_program_logic, name='add_program'),
     # url(r'^refresh_all_data/$', views.refresh_all_data_logic, name='refresh_all_data')
 
@@ -383,4 +422,5 @@ urlpatterns = [
         views.delete_trainer_member_ticket_price_bug_check_logic, name='delete_trainer_member_ticket_price_bug_check'),
     url(r'^get_trainer_member_ticket_price_bug_list/$',
         views.GetTrainerMemberTicketPriceBugListView.as_view(), name='get_trainer_member_ticket_price_bug_list'),
+    url(r'^holding_test/$', views.holding_test_logic, name='holding_test')
 ]

@@ -19,19 +19,19 @@ from configs.const import REPEAT_TYPE_2WEAK, ON_SCHEDULE_TYPE, USE, UN_USE, SCHE
     AUTH_TYPE_VIEW, GROUP_SCHEDULE, OFF_SCHEDULE, FROM_TRAINEE_LESSON_ALARM_ON, TO_SHARED_TRAINER_LESSON_ALARM_OFF, \
     TO_SHARED_TRAINER_LESSON_ALARM_ON, PERMISSION_STATE_CD_WAIT, \
     PERMISSION_STATE_CD_APPROVE, TO_ALL_TRAINEE, TO_ING_TRAINEE, TO_END_TRAINEE, GROUP_TRAINEE, GROUP_TRAINER, \
-    SCHEDULE_PAGINATION_COUNTER
+    SCHEDULE_PAGINATION_COUNTER, STATE_CD_HOLDING, CLOSED_SCHEDULE_TYPE
 from configs.settings import DEBUG
 from login.models import PushInfoTb
 from trainee.models import MemberTicketTb
 from trainer.functions import func_update_lecture_member_fix_status_cd, func_get_member_ing_list, \
-    func_get_member_end_list
+    func_get_member_end_list, func_add_hold_closed_date_info, func_delete_hold_closed_date_info
 from trainer.models import MemberClassTb, ClassMemberTicketTb, LectureTb, TicketLectureTb, SettingTb
 from .models import ScheduleTb, RepeatScheduleTb, DeleteScheduleTb, DeleteRepeatScheduleTb, HolidayTb, DailyRecordTb, \
     ScheduleAlarmTb
 
 if DEBUG is False:
     from tasks.tasks import task_send_fire_base_push_multi, \
-        task_send_fire_base_push_multi_without_badge
+        task_send_fire_base_push_multi_without_badge, task_send_fire_base_push, task_send_fire_base_push_without_badge
 
 
 def func_get_holiday_schedule(start_date, end_date):
@@ -110,9 +110,9 @@ def func_get_lecture_member_ticket_id(class_id, lecture_id, member_id):
     member_ticket_id = None
     error = None
     class_member_ticket_data = ClassMemberTicketTb.objects.select_related(
-        'member_ticket_tb').filter(class_tb_id=class_id, class_tb__use=USE,  auth_cd=AUTH_TYPE_VIEW,
+        'member_ticket_tb').filter(Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS) | Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
+                                   class_tb_id=class_id, class_tb__use=USE,  auth_cd=AUTH_TYPE_VIEW,
                                    member_ticket_tb__member_id=member_id,
-                                   member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
                                    member_ticket_tb__member_ticket_avail_count__gt=0,
                                    member_ticket_tb__use=USE).order_by('member_ticket_tb__start_date',
                                                                        'member_ticket_tb__reg_dt')
@@ -133,6 +133,27 @@ def func_get_lecture_member_ticket_id(class_id, lecture_id, member_id):
     return {'error': error, 'member_ticket_id': member_ticket_id}
 
 
+# 1:1 member_ticket id 조회 - 자유형 문제
+def func_get_member_ticket_id_old(class_id, member_id):
+    today = datetime.date.today()
+    member_ticket_id = None
+    # 강좌에 해당하는 수강/회원 정보 가져오기
+    class_member_ticket_data = ClassMemberTicketTb.objects.select_related(
+        'member_ticket_tb').filter(class_tb_id=class_id, class_tb__use=USE,  auth_cd=AUTH_TYPE_VIEW,
+                                   member_ticket_tb__member_id=member_id,
+                                   member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+                                   member_ticket_tb__member_ticket_avail_count__gt=0,
+                                   # member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
+                                   # member_ticket_tb__end_date__gte=today,
+                                   member_ticket_tb__use=USE).order_by('member_ticket_tb__start_date',
+                                                                       'member_ticket_tb__reg_dt')
+    for class_member_ticket_info in class_member_ticket_data:
+        member_ticket_id = class_member_ticket_info.member_ticket_tb_id
+        break
+
+    return member_ticket_id
+
+
 # 그룹 Lecture Id 조회
 def func_get_lecture_member_ticket_id_from_trainee(class_id, lecture_id, member_id, target_date):
 
@@ -140,9 +161,10 @@ def func_get_lecture_member_ticket_id_from_trainee(class_id, lecture_id, member_
     member_ticket_id = None
     error = None
     class_member_ticket_data = ClassMemberTicketTb.objects.select_related(
-        'member_ticket_tb').filter(class_tb_id=class_id, class_tb__use=USE,  auth_cd=AUTH_TYPE_VIEW,
+        'member_ticket_tb').filter(Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS)
+                                   | Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
+                                   class_tb_id=class_id, class_tb__use=USE,  auth_cd=AUTH_TYPE_VIEW,
                                    member_ticket_tb__member_id=member_id,
-                                   member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
                                    member_ticket_tb__member_ticket_avail_count__gt=0,
                                    member_ticket_tb__use=USE).order_by('member_ticket_tb__start_date',
                                                                        'member_ticket_tb__reg_dt')
@@ -162,7 +184,7 @@ def func_get_lecture_member_ticket_id_from_trainee(class_id, lecture_id, member_
         error = '예약 가능 횟수를 확인해주세요.'
 
     if len(class_member_ticket_data) > 0 and member_ticket_id is None:
-        error = '수강 종료일 이후의 일정은 등록이 불가능합니다.'
+        error = '수강권 종료일 이후의 일정은 등록이 불가능합니다.'
 
     return {'error': error, 'member_ticket_id': member_ticket_id}
 
@@ -174,14 +196,14 @@ def func_refresh_member_ticket_count(class_id, member_ticket_id):
     check_member_ticket_state_cd = ''
 
     if member_ticket_id is None or member_ticket_id == '':
-        error = '수강정보를 불러오지 못했습니다.[0]'
+        error = '수강권 정보를 불러오지 못했습니다.[0]'
 
     if error is None:
         try:
             member_ticket_info = MemberTicketTb.objects.get(member_ticket_id=member_ticket_id, use=USE)
             check_member_ticket_state_cd = member_ticket_info.state_cd
         except ObjectDoesNotExist:
-            error = '수강정보를 불러오지 못했습니다.[1]'
+            error = '수강권 정보를 불러오지 못했습니다.[1]'
 
     if error is None:
         schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, member_ticket_tb_id=member_ticket_id,
@@ -267,7 +289,8 @@ def func_refresh_lecture_status(lecture_id, lecture_schedule_id, lecture_repeat_
 # 일정 등록
 def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
                       lecture_info, lecture_schedule_id, start_datetime, end_datetime,
-                      note, en_dis_type, user_id, permission_state_cd, state_cd, duplication_enable_flag):
+                      note, private_note, en_dis_type, user_id, permission_state_cd, state_cd, extension_flag,
+                      duplication_enable_flag):
     error = None
     context = {'error': None, 'schedule_id': ''}
     if member_ticket_id == '':
@@ -278,6 +301,8 @@ def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
         lecture_schedule_id = None
     if repeat_schedule_id == '':
         repeat_schedule_id = None
+    if extension_flag is None or extension_flag == '':
+        extension_flag = UN_USE
 
     max_mem_count = 1
     ing_color_cd = ''
@@ -305,7 +330,7 @@ def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
             # lecture_id = None
             lecture_schedule_id = None
 
-    if str(en_dis_type) == str(OFF_SCHEDULE):
+    if str(en_dis_type) != str(ON_SCHEDULE_TYPE):
         ing_color_cd = '#d2d1cf'
         end_color_cd = '#d2d1cf'
         ing_font_color_cd = '#3b3b3b'
@@ -323,18 +348,37 @@ def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
                                                repeat_schedule_tb_id=repeat_schedule_id,
                                                start_dt=start_datetime, end_dt=end_datetime,
                                                state_cd=state_cd, permission_state_cd=permission_state_cd,
-                                               note=note, member_note='', en_dis_type=en_dis_type,
-                                               max_mem_count=max_mem_count,
+                                               note=note, private_note=private_note, member_note='',
+                                               en_dis_type=en_dis_type, max_mem_count=max_mem_count,
                                                ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
                                                ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
+                                               extension_flag=extension_flag,
                                                # Test 용
                                                # alarm_dt=start_datetime-datetime.timedelta(minutes=5),
                                                reg_member_id=user_id,
                                                mod_member_id=user_id)
                 add_schedule_info.save()
                 schedule_id = add_schedule_info.schedule_id
+                if str(en_dis_type) == str(CLOSED_SCHEDULE_TYPE):
+                    # if str(extension_flag) == str(USE):
+                    member_ticket_data = ClassMemberTicketTb.objects.select_related(
+                        'member_ticket_tb').filter(Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS)
+                                                   | Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
+                                                   class_tb_id=class_id,
+                                                   member_ticket_tb__start_date__lte=start_datetime,
+                                                   member_ticket_tb__end_date__gte=start_datetime,
+                                                   auth_cd=AUTH_TYPE_VIEW,
+                                                   use=USE)
+                    start_date_info = str(start_datetime).split(' ')[0]
+                    for member_ticket_info in member_ticket_data:
+                        hold_note = '휴무일'
+                        if note is not None and note != '':
+                            hold_note += ':'+note
+                        func_add_hold_closed_date_info(user_id, class_id, member_ticket_info.member_ticket_tb_id,
+                                                       schedule_id, start_date_info, start_date_info,
+                                                       hold_note, extension_flag)
 
-                if str(en_dis_type) != str(OFF_SCHEDULE):
+                if str(en_dis_type) == str(ON_SCHEDULE_TYPE):
                     for alarm_setting_info in alarm_setting_data:
                         if member_ticket_id is not None:
                             if lecture_schedule_id is None:
@@ -392,7 +436,8 @@ def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
 def func_add_schedule_update(class_id, member_ticket_id, repeat_schedule_id,
                              lecture_info, lecture_schedule_id,
                              start_datetime, end_datetime,
-                             note, en_dis_type, user_id, permission_state_cd, state_cd, duplication_enable_flag):
+                             note, private_note, en_dis_type, user_id, permission_state_cd, state_cd, extension_flag,
+                             duplication_enable_flag):
     error = None
     context = {'error': None, 'schedule_id': ''}
     if member_ticket_id == '':
@@ -423,7 +468,7 @@ def func_add_schedule_update(class_id, member_ticket_id, repeat_schedule_id,
             # lecture_id = None
             lecture_schedule_id = None
 
-    if str(en_dis_type) == str(OFF_SCHEDULE):
+    if str(en_dis_type) != str(ON_SCHEDULE_TYPE):
         ing_color_cd = '#d2d1cf'
         end_color_cd = '#d2d1cf'
         ing_font_color_cd = '#3b3b3b'
@@ -441,17 +486,19 @@ def func_add_schedule_update(class_id, member_ticket_id, repeat_schedule_id,
                                                repeat_schedule_tb_id=repeat_schedule_id,
                                                start_dt=start_datetime, end_dt=end_datetime,
                                                state_cd=state_cd, permission_state_cd=permission_state_cd,
-                                               note=note, member_note='', en_dis_type=en_dis_type,
+                                               note=note, private_note=private_note,
+                                               member_note='', en_dis_type=en_dis_type,
                                                max_mem_count=max_mem_count,
                                                ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
                                                ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
+                                               extension_flag=extension_flag,
                                                # Test 용
                                                # alarm_dt=start_datetime-datetime.timedelta(minutes=5),
                                                reg_member_id=user_id,
                                                mod_member_id=user_id)
                 add_schedule_info.save()
                 schedule_id = add_schedule_info.schedule_id
-                if str(en_dis_type) != str(OFF_SCHEDULE):
+                if str(en_dis_type) == str(ON_SCHEDULE_TYPE):
                     for alarm_setting_info in alarm_setting_data:
                         if member_ticket_id is not None:
                             if lecture_schedule_id is None:
@@ -562,6 +609,8 @@ def func_delete_schedule(class_id, schedule_id,  user_id):
     if error is None:
         try:
             with transaction.atomic():
+                if str(schedule_info.en_dis_type) == str(CLOSED_SCHEDULE_TYPE):
+                    func_delete_hold_closed_date_info(schedule_info.schedule_id)
                 delete_schedule_info = DeleteScheduleTb(schedule_id=schedule_info.schedule_id,
                                                         class_tb_id=schedule_info.class_tb_id,
                                                         lecture_tb_id=schedule_info.lecture_tb_id,
@@ -786,16 +835,22 @@ def func_date_check(class_id, schedule_id, pt_schedule_date, add_start_dt, add_e
 
 
 # # 강사 -> 회원 push 메시지 전달
-def func_send_push_trainer(member_ticket_id, title, message):
+def func_send_push_trainer(class_id, member_ticket_id, title, message):
     error = None
     if member_ticket_id is not None and member_ticket_id != '':
         registration_ids = []
         multi_badge_counter = -1
+        query_trainee_push_setting = "SELECT count(*) FROM SETTING_TB AS A" \
+                                     " WHERE A.CLASS_TB_ID="+str(class_id) + \
+                                     " AND A.SETTING_TYPE_CD = \'LT_PUSH_FROM_TRAINER_LESSON_ALARM\' " \
+                                     " AND A.MEMBER_ID=`LECTURE_TB`.`MEMBER_ID`" \
+                                     " AND A.SETTING_INFO='0'"\
+                                     " AND A.USE=1"
         member_ticket_data = MemberTicketTb.objects.select_related(
-            'member').filter(member_ticket_id=member_ticket_id, member_auth_cd=AUTH_TYPE_VIEW, use=USE)
-
+            'member').filter(member_ticket_id=member_ticket_id, member_auth_cd=AUTH_TYPE_VIEW,
+                             use=USE).annotate(trainee_push_setting=RawSQL(query_trainee_push_setting,
+                                                                           [])).filter(trainee_push_setting=0)
         token_data = PushInfoTb.objects.filter(use=USE)
-
         for member_ticket_info in member_ticket_data:
             # token_data = PushInfoTb.objects.filter(member_id=member_ticket_info.member_id, use=USE)
             for token_info in token_data:
@@ -818,6 +873,12 @@ def func_send_push_trainer(member_ticket_id, title, message):
         if DEBUG is False:
             check_async = True
         if len(registration_ids) > 0:
+            # if len(registration_ids) == 1:
+            #     if check_async:
+            #         error = task_send_fire_base_push.delay(registration_ids, title, message, multi_badge_counter)
+            #     else:
+            #         error = send_fire_base_push(registration_ids, title, message, multi_badge_counter)
+            # else:
             if check_async:
                 task_send_fire_base_push_multi.delay(registration_ids, title, message, multi_badge_counter)
             else:
@@ -898,6 +959,12 @@ def func_send_push_trainee(class_id, title, message):
         if DEBUG is False:
             check_async = True
         if len(registration_ids) > 0:
+            # if len(registration_ids) == 1:
+            #     if check_async:
+            #         error = task_send_fire_base_push.delay(registration_ids, title, message, multi_badge_counter)
+            #     else:
+            #         error = send_fire_base_push(registration_ids, title, message, multi_badge_counter)
+            # else:
             if check_async:
                 task_send_fire_base_push_multi.delay(registration_ids, title, message, multi_badge_counter)
             else:
@@ -963,6 +1030,13 @@ def func_send_push_trainer_trainer(class_id, title, message, member_id):
         if DEBUG is False:
             check_async = True
         if len(registration_ids) > 0:
+
+            # if len(registration_ids) == 1:
+            #     if check_async:
+            #         error = task_send_fire_base_push.delay(registration_ids, title, message, multi_badge_counter)
+            #     else:
+            #         error = send_fire_base_push(registration_ids, title, message, multi_badge_counter)
+            # else:
             if check_async:
                 task_send_fire_base_push_multi.delay(registration_ids, title, message, multi_badge_counter)
             else:
@@ -999,6 +1073,13 @@ def func_send_push_notice(to_member_type_cd, class_id, title, message):
     if DEBUG is False:
         check_async = True
     if len(registration_ids) > 0:
+
+        # if len(registration_ids) == 1:
+        #     if check_async:
+        #         error = task_send_fire_base_push_without_badge.delay(registration_ids, title, message)
+        #     else:
+        #         error = send_fire_base_push_without_badge(registration_ids, title, message)
+        # else:
         if check_async:
             task_send_fire_base_push_multi_without_badge.delay(registration_ids, title, message)
         else:
@@ -1016,6 +1097,29 @@ def send_fire_base_push(instance_id, title, message, badge_counter):
             'title': title,
             'body': message,
             'badge': badge_counter,
+            'sound': 'default'
+        }
+    }
+    body = json.dumps(data)
+    h = httplib2.Http()
+
+    resp, content = h.request("https://fcm.googleapis.com/fcm/send", method="POST", body=body,
+                              headers={'Content-Type': 'application/json;',
+                                       'Authorization': 'key=' + push_server_id})
+
+    if resp['status'] != '200':
+        error = '오류가 발생했습니다.'
+    return error
+
+
+def send_fire_base_push_without_badge(instance_id, title, message):
+    push_server_id = getattr(settings, "PTERS_PUSH_SERVER_KEY", '')
+    error = None
+    data = {
+        'to': instance_id,
+        'notification': {
+            'title': title,
+            'body': message,
             'sound': 'default'
         }
     }
@@ -1158,6 +1262,7 @@ def func_get_trainer_schedule_all(class_id, start_date, end_date):
                                    'permission_state_cd': schedule_info.permission_state_cd,
                                    'schedule_type': schedule_type,
                                    'note': schedule_info.note,
+                                   'private_note': schedule_info.private_note,
                                    'reg_member_id': str(schedule_info.reg_member_id),
                                    'reg_member_name': schedule_info.reg_member.name,
                                    'mod_member_id': str(mod_member_id),
@@ -1287,6 +1392,7 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
                                      'state_cd': lecture_member_schedule_info.state_cd,
                                      'permission_state_cd': lecture_member_schedule_info.permission_state_cd,
                                      'note': lecture_member_schedule_info.note,
+                                     'private_note': lecture_member_schedule_info.private_note,
                                      'reg_member_id': str(lecture_member_schedule_info.reg_member_id),
                                      'reg_member_name': lecture_member_schedule_info.reg_member.name,
                                      'mod_member_id': str(mod_member_id),
@@ -1312,6 +1418,8 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
                                    'permission_state_cd': schedule_info.permission_state_cd,
                                    'schedule_type': schedule_type,
                                    'note': schedule_info.note,
+                                   'private_note': schedule_info.private_note,
+                                   'extension_flag': schedule_info.extension_flag,
                                    'reg_member_id': str(schedule_info.reg_member_id),
                                    'reg_member_name': schedule_info.reg_member.name,
                                    'mod_member_id': str(mod_member_id),
@@ -1405,6 +1513,7 @@ def func_get_member_schedule_all_by_member_ticket(class_id, member_id, page):
                          'state_cd': member_schedule_info.state_cd,
                          'permission_state_cd': member_schedule_info.permission_state_cd,
                          'note': member_schedule_info.note,
+                         'private_note': member_schedule_info.private_note,
                          'reg_member_id': str(member_schedule_info.reg_member_id),
                          'reg_member_name': member_schedule_info.reg_member.name,
                          'mod_member_id': str(mod_member_id),
@@ -1509,6 +1618,7 @@ def func_get_member_schedule_all_by_schedule_dt(class_id, member_id, page):
                          'state_cd': member_schedule_info.state_cd,
                          'permission_state_cd': member_schedule_info.permission_state_cd,
                          'note': member_schedule_info.note,
+                         'private_note': member_schedule_info.private_note,
                          'reg_member_id': str(member_schedule_info.reg_member_id),
                          'reg_member_name': member_schedule_info.reg_member.name,
                          'mod_member_id': str(mod_member_id),
@@ -1624,6 +1734,7 @@ def func_get_permission_wait_schedule_all(class_id, page):
                          'state_cd': member_schedule_info.state_cd,
                          'permission_state_cd': member_schedule_info.permission_state_cd,
                          'note': member_schedule_info.note,
+                         'private_note': member_schedule_info.private_note,
                          'reg_member_id': str(member_schedule_info.reg_member_id),
                          'reg_member_name': member_schedule_info.reg_member.name,
                          'mod_member_id': str(mod_member_id),
@@ -1711,6 +1822,7 @@ def func_get_member_schedule_all_by_monthly(class_id, member_id, page):
                          'state_cd': member_schedule_info.state_cd,
                          'permission_state_cd': member_schedule_info.permission_state_cd,
                          'note': member_schedule_info.note,
+                         'private_note': member_schedule_info.private_note,
                          'reg_member_id': str(member_schedule_info.reg_member_id),
                          'reg_member_name': member_schedule_info.reg_member.name,
                          'mod_member_id': str(mod_member_id),
@@ -1810,6 +1922,7 @@ def func_get_lecture_schedule_all(class_id, lecture_id, page):
                                       'permission_state_cd': schedule_info.permission_state_cd,
                                       'schedule_type': schedule_type,
                                       'note': schedule_info.note,
+                                      'private_note': schedule_info.private_note,
                                       'reg_member_id': str(schedule_info.reg_member_id),
                                       'reg_member_name': schedule_info.reg_member.name,
                                       'mod_member_id': str(mod_member_id),
@@ -1833,7 +1946,7 @@ def func_get_trainer_attend_schedule(context, class_id, start_date, end_date, no
     # func_get_trainer_attend_lecture_schedule(context, class_id, start_date, end_date, now, '')
 
     query = "select count(B.ID) from SCHEDULE_TB as B where B.GROUP_SCHEDULE_ID = `SCHEDULE_TB`.`ID` " \
-            "AND B.STATE_CD = \'AP\' AND B.USE=1"
+            "AND B.STATE_CD = \'NP\' AND PERMISSION_STATE_CD=\'AP\' AND B.USE=1"
     finish_member_query = "select count(B.ID) from SCHEDULE_TB as B where B.GROUP_SCHEDULE_ID = `SCHEDULE_TB`.`ID` " \
                           "AND B.STATE_CD = \'PE\' AND B.USE=1"
 
@@ -1847,7 +1960,7 @@ def func_get_trainer_attend_schedule(context, class_id, start_date, end_date, no
                                                          use=USE).order_by('start_dt', 'reg_dt').annotate(
         lecture_current_member_num=RawSQL(query, []),
         lecture_current_finish_member_num=RawSQL(finish_member_query, []))
-
+    # print(str(len(context['attend_schedule_data'])))
     return context
 
 
