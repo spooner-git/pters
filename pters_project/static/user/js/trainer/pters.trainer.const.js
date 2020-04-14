@@ -203,6 +203,12 @@ const POPUP_ADDRESS_MEMBER_EDIT = 'popup_member_edit';
 const POPUP_ADDRESS_MEMBER_SEARCH = 'popup_member_search';
 const POPUP_ADDRESS_MEMBER_VIEW_PHOTO_UPDATE = 'popup_member_view_photo_update';
 
+const POPUP_ADDRESS_TRAINER_VIEW = 'popup_trainer_view';
+const POPUP_ADDRESS_TRAINER_SIMPLE_VIEW = 'popup_trainer_simple_view';
+const POPUP_ADDRESS_TRAINER_ADD = 'popup_trainer_add';
+const POPUP_ADDRESS_TRAINER_EDIT = 'popup_trainer_edit';
+const POPUP_ADDRESS_TRAINER_LIST = 'popup_trainer_list';
+
 const POPUP_ADDRESS_LECTURE_VIEW = 'popup_lecture_view';
 const POPUP_ADDRESS_LECTURE_SIMPLE_VIEW = 'popup_lecture_simple_view';
 const POPUP_ADDRESS_LECTURE_ADD = 'popup_lecture_add';

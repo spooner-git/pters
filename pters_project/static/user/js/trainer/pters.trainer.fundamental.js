@@ -784,6 +784,72 @@ class PassInspector{
         return {barrier:PASSED};
     }
 
+    trainer(){
+        let async = false;
+        let data1;
+        let data2;
+        trainer.request_trainer_list("ing", (d1)=>{
+            data1 = d1;
+        }, OFF, async);
+        trainer.request_trainer_list("end", (d2)=>{
+            data2 = d2;
+        }, OFF, async);
+        let current_trainer_number = data1.current_trainer_data.length;
+        let finish_trainer_number = data2.finish_trainer_data.length;
+        let total_number = current_trainer_number;
+        let limit_number = this.data.auth_trainer_create.limit_num;
+        let limit_type = this.data.auth_trainer_create.limit_type;
+
+        if(total_number >= limit_number){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
+    }
+
+    trainer_create(){
+        let limit_number = Number(this.data.auth_trainer_create.active);
+        // let limit_type = "수업 작성 권한이 없습니다.";
+        let limit_type = `${this.data.auth_group_create.limit_type}의 수업 작성 권한이 없습니다.`;
+
+        if(limit_number == 0){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
+    }
+
+    trainer_read(){
+        let limit_number = Number(this.data.auth_trainer_read.active);
+        // let limit_type = "수업 읽기 권한이 없습니다.";
+        let limit_type = `${this.data.auth_group_read.limit_type}의 수업 조회 권한이 없습니다.`;
+
+        if(limit_number == 0){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
+    }
+
+    trainer_update(){
+        let limit_number = Number(this.data.auth_trainer_update.active);
+        // let limit_type = "수업 수정 권한이 없습니다.";
+        let limit_type = `${this.data.auth_group_update.limit_type}의 수업 수정 권한이 없습니다.`;
+
+        if(limit_number == 0){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
+    }
+
+    trainer_delete(){
+        let limit_number = Number(this.data.auth_trainer_delete.active);
+        // let limit_type = "수업 삭제 권한이 없습니다.";
+        let limit_type = `${this.data.auth_group_delete.limit_type}의 수업 삭제 권한이 없습니다.`;
+
+        if(limit_number == 0){
+            return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
+        }
+        return {barrier:PASSED};
+    }
+
     lecture(){
         let async = false;
         let data1;

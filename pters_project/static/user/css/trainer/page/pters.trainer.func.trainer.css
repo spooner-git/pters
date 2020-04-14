@@ -1,0 +1,171 @@
+#trainer_display_panel{
+	position: sticky;
+	position: -webkit-sticky;
+	height: auto;
+	z-index: 10;
+	width: 100%;
+	top: 0;
+	/* text-align: center; */
+}
+	.trainer_upper_box{
+		position: relative;
+		height: 60px;
+		line-height: 28px;
+		/* background-color: var(--bg-main); */
+		background-color: var(--root-content-bg-color);
+		/* border-bottom: 1px solid #cccccc; */
+		padding: 20px 16px 12px;
+		box-sizing: border-box;
+	}
+	.trainer_tools_wrap{
+		display: table;
+		position: absolute;
+		right: 0;
+		top: 0;
+		width: 100px;
+		height: 100%;
+	}
+	.trainer_tools_wrap > .search_trainer{
+		display: table-cell;
+		height: 100%;
+		background-image: url("/static/common/icon/icon_search_black.png");
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: 23px;
+		cursor: pointer;
+	}
+	.trainer_tools_wrap > .add_trainer{
+		display: table-cell;
+		height: 100%;
+		background-image: url("/static/common/icon/icon_plus_pink.png");
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: 23px;
+		cursor: pointer;
+	}
+	/* .trainer_tools_wrap > .swap_list{
+		display: table-cell;
+		height: 100%;
+		background-image: url("/static/common/icon/icon_swap.png?v2");
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: 23px;
+	} */
+	.trainer_bottom_tools_wrap{
+		background-color: var(--bg-main);
+		/*border-bottom: 1px solid #cccccc;*/
+		padding: 6px 16px;
+		font-size: 13px;
+		height: 24px;
+		line-height: 24px;
+	}
+	.trainer_search_tool{
+		background-color: var(--bg-main);
+		padding-bottom: 5px;
+		text-align: center;
+	}
+	.trainer_search_tool > input{
+		width: 95%;
+		height: 35px;
+		border: var(--border-article-dark);
+		border-radius: 2px;
+		padding: 0 10px;
+		box-sizing: border-box;
+	}
+
+
+
+.trainer_wrapper{
+	display: block;
+	width: 100%;
+	height: 60px;
+	padding: 5px 16px;
+	background-color: var(--bg-main);
+	margin: 0px auto;
+	box-sizing: border-box;
+	cursor: pointer;
+}
+.trainer_wrapper > div{
+	/* display: table; */
+	display: flex;
+	width: 100%;
+}
+@media(min-width:651px){
+    .trainer_wrapper{
+		display: inline-block;
+		vertical-align: top;
+		width: 48%;
+		margin: 1%;
+		padding: 10px;
+		box-shadow:var(--box-shadow-article);
+	}
+	.trainer_wrapper:hover{
+		box-shadow:0 0 16px 0 #28282850;
+		transition:0.1s;
+		transform: scale(1.03);
+	}
+}
+@media(min-width:1024px){
+    .trainer_wrapper{
+		width: 31%;
+	}
+}
+
+
+.trainer_data_l{
+	/* display: table-cell;
+	vertical-align: middle;
+	width: 12px;
+	text-align: left;
+	position: relative; */
+	flex-basis: 12px;
+}
+.trainer_data_c{
+	/* display: table-cell;
+	width: auto;
+	vertical-align: middle; */
+	flex: 1 1 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.trainer_data_r{
+	/* display: table-cell;
+	width: auto;
+	vertical-align: middle; */
+	flex-basis: 50px;
+}
+
+.trainer_name{
+	font-size: 16px;
+	font-weight: 500;
+	letter-spacing: -0.8px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.trainer_member_number{
+	float: right;
+	font-size: 18px;
+	font-weight: 500;
+	letter-spacing: -0.8px;
+}
+.trainer_note{
+	/* margin-bottom: 5px; */
+	height: 20px;
+	color: var(--font-sub-normal);
+	font-size: 11px;
+	font-weight: 500;
+	box-sizing: border-box;
+}
+
+.trainer_tag{
+	width: 5px;
+	height: 32px;
+	border-radius: 10px;
+	display: inline-block;
+	vertical-align: middle;
+	margin-bottom: 2px;
+	margin-right: 16px;
+}

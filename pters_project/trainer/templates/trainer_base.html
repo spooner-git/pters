@@ -308,6 +308,7 @@
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.calendar.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.ticket.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.lecture.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.trainer.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.member.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.program_board.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.program_notice.js" %}></script>
@@ -328,6 +329,7 @@
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.member_search.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.member_view.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.member_view_photo_update.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.trainer_list.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.lecture_list.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.lecture_add.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.lecture_view.js" %}></script>
@@ -496,6 +498,7 @@
     var calendar = new Calendar('#root_content', 'calendar');
     var ticket = new Ticket('#root_content', 'ticket');
     var lecture = new Lecture('#root_content', 'lecture');
+    var trainer = new Trainer('#root_content', 'trainer');
     var program_notice = new ProgramNotice('#root_content', 'program_notice');
     var member = new Member('#root_content', 'member');
     var menu = new Menu('#root_content', 'menu');
@@ -520,6 +523,15 @@
     var ticket_simple_view_popup;
     var ticket_edit_popup;
     var ticket_list_popup;
+
+    var trainer_add_popup;
+    var trainer_view_popup;
+    var trainer_simple_view_popup;
+    var trainer_edit_popup;
+    var trainer_list_popup;
+    var trainer_schedule_history;
+    var trainer_add_repeat;
+
     var lecture_add_popup;
     var lecture_view_popup;
     var lecture_simple_view_popup;
@@ -591,6 +603,7 @@
     var date_selector;
     var spinner_selector;
     var lecture_select;
+    var trainer_select;
     var ticket_select;
     var member_select;
     var member_select_plan_approve;
@@ -670,6 +683,17 @@
 
                 current_page = lecture;
                 lecture.init();
+            break;
+            case 'trainer_page_type':
+                auth_inspect = pass_inspector.trainer_read();
+                if(auth_inspect.barrier == BLOCKED){
+                    let message = `${auth_inspect.limit_type}`;
+                    show_error_message({title:message});
+                    return false;
+                }
+
+                current_page = trainer;
+                trainer.init();
             break;
             case 'program_notice_page_type':
                 auth_inspect = pass_inspector.program_notice_read();
