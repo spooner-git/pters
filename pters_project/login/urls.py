@@ -92,9 +92,10 @@ urlpatterns = [
     url(r'^activate_email/$', views.activate_email_logic, name='activate_email'),
     url(r'^activate_email_confirm/$', views.ActivateEmailConfirmView.as_view(), name='activate_email_confirm'),
 
-    # 강사가 등록하는 회원용
+    # 강사가 등록하는 회원 - 인증 없이 ID 생성
     url(r'^add_member_info_no_email/$', views.AddMemberNoEmailView.as_view(), name='add_member_info_no_email'),
-
+    # 강사가 등록하는 강사 - 인증 없이 ID 생성
+    url(r'^add_trainer_info_no_email/$', views.AddTrainerNoEmailView.as_view(), name='add_trainer_info_no_email'),
 
 
     # 비밀번호 초기화 문자 인증 처리 기능

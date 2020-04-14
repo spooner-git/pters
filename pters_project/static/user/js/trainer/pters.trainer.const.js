@@ -214,6 +214,7 @@ const POPUP_ADDRESS_TRAINER_ADD = 'popup_trainer_add';
 const POPUP_ADDRESS_TRAINER_EDIT = 'popup_trainer_edit';
 const POPUP_ADDRESS_TRAINER_LIST = 'popup_trainer_list';
 const POPUP_ADDRESS_TRAINER_SEARCH = 'popup_trainer_search';
+const POPUP_ADDRESS_TRAINER_AUTH = 'popup_trainer_auth';
 
 const POPUP_ADDRESS_LECTURE_VIEW = 'popup_lecture_view';
 const POPUP_ADDRESS_LECTURE_SIMPLE_VIEW = 'popup_lecture_simple_view';

@@ -31,30 +31,6 @@ class Trainer_view{
 
             connection: null,
             active: null,
-
-            ticket: [
-                {
-                    ticket_id: [],
-                    trainer_ticket_id: null,
-                    trainer_ticket_state_cd: null,
-                    ticket_name: null,
-                    ticket_effective_days: null,
-                    ticket_reg_count: null,
-                    ticket_rem_count: null,
-                    ticket_avail_count: null,
-                    ticket_price: null,
-                    ticket_state: null,
-                    start_date: null,
-                    start_date_text: null,
-                    end_date: null,
-                    end_date_text: null,
-                    lecture_id: [],
-                    lecture_name: [],
-                    lecture_state: [],
-                    lecture_color: [],
-                }
-            ],
-
             repeat: [],
             closed_date: []
         };
@@ -109,28 +85,6 @@ class Trainer_view{
     get sex(){
         return this.data.sex;
     }
-
-    set start_date(data){
-        this.data.start_date = data.data;
-        this.data.start_date_text = data.text;
-        this.render_content();
-    }
-
-    get start_date(){
-        return this.data.start_date;
-    }
-
-    set end_date(data){
-        this.data.end_date = data.data;
-        this.data.end_date_text = data.text;
-        this.render_content();
-    }
-
-    get end_date(){
-        return this.data.end_date;
-    }
-
-
     set memo(text){
         this.data.memo = text;
         this.render_content();
@@ -139,36 +93,6 @@ class Trainer_view{
     get memo(){
         return this.data.memo;
     }
-
-    set ticket(data){
-        this.data.ticket_id = data.id;
-        this.data.ticket_name = data.name;
-        this.data.ticket_effective_days = data.effective_days;
-        this.render_content();
-    }
-
-    get ticket(){
-        return {id:this.data.ticket_id, name:this.data.ticket_name, effective_days: this.data.ticket_effective_days};
-    }
-
-    set reg_count(number){
-        this.data.ticket_reg_count = number;
-        this.render_content();
-    }
-
-    get reg_count(){
-        return this.data.ticket_reg_count;
-    }
-
-    set reg_price(number){
-        this.data.ticket_price = number;
-        this.render_content();
-    }
-
-    get reg_price(){
-        return this.data.ticket_price;
-    }
-
 
     init(){
         this.render();
@@ -193,91 +117,6 @@ class Trainer_view{
                     let repeat_list = data.trainer_repeat_schedule_data; //array
 
                     this.data.repeat = repeat_list;
-                    
-                    Trainer_func.read_ticket_list({"trainer_id":this.trainer_id}, (data)=>{
-                        let ticket_list = data;
-                        this.data.ticket = [];
-                        let trainer_ticket_list = [];
-                        for(let ticket in ticket_list){
-                            trainer_ticket_list.push(ticket_list[ticket]);
-                        }
-                        trainer_ticket_list.sort(function(a, b){
-                            let return_val = 0;
-                            if(a.trainer_ticket_start_date < b.trainer_ticket_start_date){
-                                return_val = -1;
-                            }
-                            else if(a.trainer_ticket_start_date > b.trainer_ticket_start_date){
-                                return_val = 1;
-                            }
-                            else{
-                                if(a.trainer_ticket_end_date < b.trainer_ticket_end_date) {
-                                    return_val = -1;
-                                }
-                                else if(a.trainer_ticket_end_date > b.trainer_ticket_end_date){
-                                    return_val = 1;
-                                }
-                                else{
-                                    if(a.trainer_ticket_reg_dt < b.trainer_ticket_reg_dt) {
-                                        return_val = -1;
-                                    }
-                                    else if(a.trainer_ticket_reg_dt > b.trainer_ticket_reg_dt) {
-                                        return_val = 1;
-                                    }
-                                }
-                            }
-                            return return_val;
-                        });
-                        for(let i=0; i<trainer_ticket_list.length; i++){
-                            if(trainer_ticket_list[i].trainer_ticket_state_cd != 'IP' && trainer_ticket_list[i].trainer_ticket_state_cd != 'HD'){
-                                continue;
-                            }
-                            let ticket_rem_count_of_this_trainer = trainer_ticket_list[i].trainer_ticket_rem_count;
-                            let ticket_reg_count_of_this_trainer = trainer_ticket_list[i].trainer_ticket_reg_count;
-                            let ticket_avail_count_of_this_trainer = trainer_ticket_list[i].trainer_ticket_avail_count;
-                            let ticket_reg_price_of_this_trainer = trainer_ticket_list[i].trainer_ticket_price;
-                            let ticket_reg_date_of_this_trainer = trainer_ticket_list[i].trainer_ticket_start_date;
-                            let ticket_end_date_of_this_trainer = trainer_ticket_list[i].trainer_ticket_end_date;
-                            let ticket_refund_date_of_this_trainer = trainer_ticket_list[i].trainer_ticket_refund_date;
-                            let ticket_refund_price_of_this_trainer = trainer_ticket_list[i].trainer_ticket_refund_price;
-                            // let ticket_remain_date = Math.round((new Date(ticket_end_date_of_this_trainer).getTime() - new Date().getTime()) / (1000*60*60*24));
-                            let ticket_remain_date = DateRobot.diff_date(ticket_end_date_of_this_trainer, `${this.dates.current_year}-${this.dates.current_month}-${this.dates.current_date}`);
-                            let ticket_pay_method = trainer_ticket_list[i].trainer_ticket_pay_method;
-                            let ticket_remain_alert_text = "";
-                            if(ticket_remain_date < 0){
-                                ticket_remain_alert_text = " 지남";
-                                ticket_remain_date = Math.abs(ticket_remain_date);
-                            }
-
-                            // Ticket_func.read({"ticket_id": ticket_list[ticket].trainer_ticket_ticket_id}, (data)=>{
-                                let ticket_of_trainer = {
-                                                    ticket_id:trainer_ticket_list[i].ticket_id,
-                                                    ticket_name:trainer_ticket_list[i].trainer_ticket_name,
-                                                    ticket_effective_days:trainer_ticket_list[i].ticket_effective_days,
-                                                    ticket_reg_count:ticket_reg_count_of_this_trainer,
-                                                    ticket_rem_count:ticket_rem_count_of_this_trainer,
-                                                    ticket_avail_count:ticket_avail_count_of_this_trainer,
-                                                    ticket_price:ticket_reg_price_of_this_trainer,
-                                                    ticket_state:trainer_ticket_list[i].ticket_state_cd,
-                                                    ticket_note:trainer_ticket_list[i].trainer_ticket_note,
-                                                    ticket_refund_date: ticket_refund_date_of_this_trainer,
-                                                    ticket_refund_price: ticket_refund_price_of_this_trainer,
-                                                    ticket_pay_method:ticket_pay_method,
-                                                    trainer_ticket_id:trainer_ticket_list[i].trainer_ticket_id,
-                                                    trainer_ticket_state_cd:trainer_ticket_list[i].trainer_ticket_state_cd,
-                                                    start_date:ticket_reg_date_of_this_trainer,
-                                                    start_date_text:DateRobot.to_text(ticket_reg_date_of_this_trainer, '', '', SHORT),
-                                                    end_date:ticket_end_date_of_this_trainer,
-                                                    end_date_text:ticket_end_date_of_this_trainer == "9999-12-31" ? "소진 시까지" :  DateRobot.to_text(ticket_end_date_of_this_trainer, '', '', SHORT)+' ('+ticket_remain_date+'일'+ ticket_remain_alert_text+')',
-                                                    lecture_id:trainer_ticket_list[i].ticket_lecture_id_list,
-                                                    lecture_name:trainer_ticket_list[i].ticket_lecture_list,
-                                                    lecture_state:trainer_ticket_list[i].ticket_lecture_state_cd_list,
-                                                    lecture_color:trainer_ticket_list[i].ticket_lecture_ing_color_cd_list,
-                                                };
-                                this.data.ticket.push(ticket_of_trainer);
-
-                                // this.init();
-                            // });
-                        }
 
                     Trainer_func.closed_date_list(
                         {"trainer_id":this.trainer_id}, (data)=> {
@@ -285,7 +124,6 @@ class Trainer_view{
                             console.log(this.data.closed_date);
                             this.render();
                         });
-                    });
                 }
             );
         });
@@ -340,12 +178,10 @@ class Trainer_view{
         let phone = this.dom_row_trainer_phone_input();
         let birth = this.dom_row_trainer_birth_input();
         let sex = this.dom_row_trainer_sex_input();
-        let ticket = this.dom_row_ticket();
         let repeat = this.dom_row_repeat();
         let trainer_closed = this.dom_row_trainer_closed();
         // let memo = this.dom_row_trainer_memo_input();
         let tag_id = this.data.active == 'True' || this.data.active == null ? '아이디' : '아이디 <span style="color:var(--font-highlight);margin-left:3px;">(임시아이디, 비밀번호 0000)</span>';
-
 
         let tab_basic_info =
             '<div class="obj_input_box_full">'
@@ -354,13 +190,7 @@ class Trainer_view{
                 + CComponent.dom_tag('생년월일') + birth + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('성별') + sex +
             '</div>';
-        
-        let tab_ticket_info =
-            '<div class="obj_input_box_full" style="padding-right:18px">' +
-                // CComponent.dom_tag('진행중인 수강권', {"padding-left":"0"}) +
-                ticket +
-            '</div>';
-        
+
         let tab_repeat_info = 
             '<div class="obj_input_box_full" style="padding-right:18px">' +
                 // CComponent.dom_tag('반복 일정', {"padding-left":"0"}) + 
@@ -376,8 +206,6 @@ class Trainer_view{
         let selected_tab;
         if(this.list_type == "basic_info"){
             selected_tab = tab_basic_info;
-        }else if(this.list_type == "ticket_info"){
-            selected_tab = tab_ticket_info;
         }else if(this.list_type == "repeat_info"){
             selected_tab = tab_repeat_info;
         }else if(this.list_type == "trainer_closed_info"){
@@ -440,7 +268,6 @@ class Trainer_view{
         // </div>`;
         `<div class="list_type_tab_wrap" style="width:100%;padding-left:45px;text-align:left;box-sizing:border-box;height:auto">
             ${CComp.element("div", "기본 정보", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_basic_info", class:`list_tab_content ${this.list_type == "basic_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("basic_info");}})}
-            ${CComp.element("div", "수강권", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_ticket_info", class:`list_tab_content ${this.list_type == "ticket_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("ticket_info");}})}
             ${CComp.element("div", "일정", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_repeat_info", class:`list_tab_content ${this.list_type == "repeat_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("repeat_info");}})}
             ${CComp.element("div", "일시정지 내역", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_trainer_closed_info", class:`list_tab_content ${this.list_type == "trainer_closed_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("trainer_closed_info");}})}
         </div>`;
@@ -454,11 +281,6 @@ class Trainer_view{
         switch(type){
             case "basic_info":
                 this.list_type = "basic_info";
-                this.render();
-            break;
-
-            case "ticket_info":
-                this.list_type = "ticket_info";
                 this.render();
             break;
 
@@ -1197,30 +1019,7 @@ class Trainer_simple_view{
             email:null,
 
             connection:null,
-            active:null,
-
-            ticket:
-                [
-                    {
-                        ticket_id:[],
-                        ticket_name:null,
-                        ticket_effective_days:null,
-                        ticket_reg_count:null,
-                        ticket_rem_count:null,
-                        ticket_avail_count:null,
-                        ticket_price:null,
-                        ticket_state:null,
-                        trainer_ticket_id:null,
-                        trainer_ticket_state_cd:null,
-                        start_date:null,
-                        start_date_text:null,
-                        end_date:null,
-                        end_date_text:null,
-                        lecture_id:[],
-                        lecture_name:[],
-                        lecture_state:[]
-                    }
-                ]
+            active:null
         };
 
         //팝업의 날짜, 시간등의 입력란을 미리 외부에서 온 데이터로 채워서 보여준다.
@@ -1243,85 +1042,7 @@ class Trainer_simple_view{
             this.data.connection = data.trainer_connection_check;
             this.data.active = data.trainer_is_active;
             this.data.email = data.trainer_email;
-
-
-            Trainer_func.read_ticket_list({"trainer_id":this.trainer_id}, (data)=>{
-                let ticket_list = data;
-                this.data.ticket = [];
-                let trainer_ticket_list = [];
-                for(let ticket in ticket_list){
-                    trainer_ticket_list.push(ticket_list[ticket]);
-                }
-                trainer_ticket_list.sort(function(a, b){
-                    let return_val = 0;
-                    if(a.trainer_ticket_start_date < b.trainer_ticket_start_date){
-                        return_val = -1;
-                    }
-                    else if(a.trainer_ticket_start_date > b.trainer_ticket_start_date){
-                        return_val = 1;
-                    }
-                    else{
-                        if(a.trainer_ticket_end_date < b.trainer_ticket_end_date) {
-                            return_val = -1;
-                        }
-                        else if(a.trainer_ticket_end_date > b.trainer_ticket_end_date){
-                            return_val = 1;
-                        }
-                        else{
-                            if(a.trainer_ticket_reg_dt < b.trainer_ticket_reg_dt) {
-                                return_val = -1;
-                            }
-                            else if(a.trainer_ticket_reg_dt > b.trainer_ticket_reg_dt) {
-                                return_val = 1;
-                            }
-                        }
-                    }
-                    return return_val;
-                });
-                for(let i=trainer_ticket_list.length-1; i>=0; i--){
-                    if(trainer_ticket_list[i].trainer_ticket_state_cd != 'IP' && trainer_ticket_list[i].trainer_ticket_state_cd != 'HD'){
-                        continue;
-                    }
-                    let ticket_rem_count_of_this_trainer = trainer_ticket_list[i].trainer_ticket_rem_count;
-                    let ticket_reg_count_of_this_trainer = trainer_ticket_list[i].trainer_ticket_reg_count;
-                    let ticket_avail_count_of_this_trainer = trainer_ticket_list[i].trainer_ticket_avail_count;
-                    let ticket_reg_price_of_this_trainer = trainer_ticket_list[i].trainer_ticket_price;
-                    let ticket_reg_date_of_this_trainer = trainer_ticket_list[i].trainer_ticket_start_date;
-                    let ticket_end_date_of_this_trainer = trainer_ticket_list[i].trainer_ticket_end_date;
-                    // let ticket_remain_date = Math.round((new Date(ticket_end_date_of_this_trainer).getTime() - new Date().getTime()) / (1000*60*60*24));
-                    let ticket_remain_date = DateRobot.diff_date(ticket_end_date_of_this_trainer, `${this.dates.current_year}-${this.dates.current_month}-${this.dates.current_date}`);
-                    let ticket_remain_alert_text = "";
-                    if(ticket_remain_date < 0){
-                        ticket_remain_alert_text = " 지남";
-                        ticket_remain_date = Math.abs(ticket_remain_date);
-                    }
-
-                    // Ticket_func.read({"ticket_id": ticket_list[ticket].trainer_ticket_ticket_id}, (data)=>{
-                        let ticket_of_trainer = {
-                                            ticket_id:trainer_ticket_list[i].ticket_id,
-                                            ticket_name:trainer_ticket_list[i].trainer_ticket_name,
-                                            ticket_effective_days:trainer_ticket_list[i].ticket_effective_days,
-                                            ticket_reg_count:ticket_reg_count_of_this_trainer,
-                                            ticket_rem_count:ticket_rem_count_of_this_trainer,
-                                            ticket_avail_count:ticket_avail_count_of_this_trainer,
-                                            ticket_price:ticket_reg_price_of_this_trainer,
-                                            ticket_state:trainer_ticket_list[i].trainer_ticket_state_cd,
-                                            start_date:ticket_reg_date_of_this_trainer,
-                                            start_date_text:DateRobot.to_text(ticket_reg_date_of_this_trainer, '', '', SHORT),
-                                            end_date:ticket_end_date_of_this_trainer,
-                                            end_date_text:ticket_end_date_of_this_trainer == "9999-12-31" ? "소진 시까지" :  DateRobot.to_text(ticket_end_date_of_this_trainer, '', '', SHORT)+' ('+ticket_remain_date+'일'+ ticket_remain_alert_text+')',
-                                            lecture_id:trainer_ticket_list[i].ticket_lecture_id_list,
-                                            lecture_name:trainer_ticket_list[i].ticket_lecture_list,
-                                            lecture_state:trainer_ticket_list[i].ticket_lecture_state_cd_list,
-                                            lecture_color:trainer_ticket_list[i].ticket_lecture_ing_color_cd_list,
-                                        };
-                        this.data.ticket.push(ticket_of_trainer);
-
-                        // this.init();
-                    // });
-                }
-                this.render();
-            });
+            this.render();
         });
     }
 
@@ -1345,10 +1066,10 @@ class Trainer_simple_view{
         let birth = this.dom_row_trainer_birth_input();
         let sex = this.dom_row_trainer_sex_input();
         // let memo = this.dom_row_trainer_memo_input();
-        let ticket = this.dom_row_ticket();
+        // let ticket = this.dom_row_ticket();
 
-        let html =  '<div class="obj_box_full">'+id+phone+birth+sex+connection+'</div>' +
-                    '<div class="obj_box_full" style="border-bottom:0">'+ticket+ '</div>';
+        let html =  '<div class="obj_box_full">'+id+phone+birth+sex+connection+'</div>';
+                    // '<div class="obj_box_full" style="border-bottom:0">'+ticket+ '</div>';
 
         // document.getElementById(this.target.content).innerHTML = html;
         return html;
@@ -1552,54 +1273,6 @@ class Trainer_simple_view{
                         <div style="flex-basis:68px;font-size:11px;font-weight:500;letter-spacing:-0.5px;color:var(--font-inactive);line-height:24px;padding:8px 0;">특이사항</div>
                         ${html_data}
                     </div>`;
-
-        return html;
-    }
-
-    dom_row_ticket(){
-        let ticket_length = this.data.ticket.length;
-
-        let html_to_join = [];
-        for(let i=0; i<ticket_length; i++){
-            let ticket_name = this.data.ticket[i].ticket_name;
-            if(this.data.ticket[i].ticket_state == STATE_END_PROGRESS){
-                ticket_name = `<span style="color:var(--font-sub-normal);">${this.data.ticket[i].ticket_name}</span><span style="font-size:13px;"> (비활성)</span>`;
-            }
-
-            //티켓 이름 표기 부분
-            let id = `input_ticket_select_${i}`;
-            let title = this.data.ticket[i].ticket_id.length == 0 ? '' : ticket_name;
-            let icon = DELETE;
-            let icon_r_visible = NONE;
-            let icon_r_text = "";
-            let style = {"flex":"1 1 0", "padding-top":"8px", "padding-bottom":"0", "font-size":"13px"};
-            let html_ticket_name = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
-
-            });
-            let ticket_rem_count = this.data.ticket[i].ticket_rem_count + '회';
-            let ticket_avail_count = this.data.ticket[i].ticket_avail_count + '회';
-            if(this.data.ticket[i].ticket_reg_count >= 9999){
-                ticket_rem_count = '무제한';
-                ticket_avail_count = '무제한';
-            }
-            let html_remain_info = `<div style="font-size:11px;font-weight:bold;letter-spacing:-0.5px;color:var(--font-highlight);margin-bottom:5px">
-                                        <div style="display:flex;">
-                                            <div style="flex-basis:68px"></div><div style="flex:1 1 0;height:20px;">잔여 ${ticket_rem_count} / 예약가능 ${ticket_avail_count}</div>
-                                        </div>
-                                        <div style="display:flex;">
-                                            <div style="flex-basis:68px"></div><div style="flex:1 1 0;height:20px;">~ ${this.data.ticket[i].end_date_text}</div>
-                                        </div>
-                                    </div>`;
-
-            let html_name = `<div style="display:flex;">
-                            <div style="flex-basis:68px;font-size:11px;font-weight:500;letter-spacing:-0.5px;color:var(--font-inactive);line-height:24px;padding-top:8px;padding-bottom:0;">${i==0 ? "수강권" : ""}</div>
-                            ${html_ticket_name}
-                        </div>`;
-
-            html_to_join.push(html_name + html_remain_info);
-        }
-        let html = html_to_join.join('');
-
 
         return html;
     }

@@ -238,10 +238,9 @@ class Trainer{
             old:{text:"PTERS 아이디가 있는 강사", callback:()=>{
                 layer_popup.close_layer_popup();
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_BOTTOM;
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SETTING_SHARING_MEMBER_SEARCH, 100, popup_style, null, ()=>{
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TRAINER_SEARCH, 100, popup_style, null, ()=>{
 
-                    let external_data = {"program_id": 127};
-                    setting_sharing_member_search_popup = new Setting_sharing_member_search('.popup_setting_sharing_member_search', external_data);
+                    trainer_search_popup = new Trainer_search('.popup_trainer_search', null);
                     // trainer_search_popup = new Setting_sharing_member_search('.popup_trainer_search', null, 'trainer_search_popup');
                 });
             }},
@@ -326,15 +325,7 @@ class Trainer{
     static_component (){
         // 계속 추가되더라도 동적으로 처리하기 위해 작성 - hkkim 20191001
         let user_options_array = [];
-        user_options_array.push(`'${SORT_TRAINER_NAME+'_'+SORT_ORDER_ASC}':{text:'회원명 가나다순', callback:()=>{trainer.sort_val = ${SORT_TRAINER_NAME}; trainer.sort_order_by= ${SORT_ORDER_ASC}; trainer.sort_value_text = '회원명 가나다순';trainer.init();layer_popup.close_layer_popup();}}`);
-        user_options_array.push(`'${SORT_REG_COUNT+'_'+SORT_ORDER_ASC}':{text:'등록 횟수 많은 순', callback:()=>{trainer.sort_val = '${SORT_REG_COUNT}'; trainer.sort_order_by= ${SORT_ORDER_DESC}; trainer.sort_value_text = '등록 횟수 많은 순';trainer.init();layer_popup.close_layer_popup();}}`);
-        user_options_array.push(`'${SORT_REG_COUNT+'_'+SORT_ORDER_DESC}':{text:'등록 횟수 적은 순', callback:()=>{trainer.sort_val = '${SORT_REG_COUNT}'; trainer.sort_order_by= ${SORT_ORDER_ASC};trainer.sort_value_text = '등록 횟수 적은 순';trainer.init();layer_popup.close_layer_popup();}}`);
-        user_options_array.push(`'${SORT_REMAIN_COUNT+'_'+SORT_ORDER_ASC}':{text:'잔여 횟수 많은 순', callback:()=>{trainer.sort_val = '${SORT_REMAIN_COUNT}'; trainer.sort_order_by= ${SORT_ORDER_DESC};trainer.sort_value_text = '잔여 횟수 많은 순';trainer.init();layer_popup.close_layer_popup();}}`);
-        user_options_array.push(`'${SORT_REMAIN_COUNT+'_'+SORT_ORDER_DESC}':{text:'잔여 횟수 적은 순', callback:()=>{trainer.sort_val = '${SORT_REMAIN_COUNT}'; trainer.sort_order_by= ${SORT_ORDER_ASC};trainer.sort_value_text = '잔여 횟수 적은 순';trainer.init();layer_popup.close_layer_popup();}}`);
-        user_options_array.push(`'${SORT_START_DATE+'_'+SORT_ORDER_ASC}':{text:'시작 일자 최근 순', callback:()=>{trainer.sort_val = '${SORT_START_DATE}'; trainer.sort_order_by= ${SORT_ORDER_DESC};trainer.sort_value_text = '시작 일자 최근 순';trainer.init();layer_popup.close_layer_popup();}}`);
-        user_options_array.push(`'${SORT_START_DATE+'_'+SORT_ORDER_DESC}':{text:'시작 일자 과거 순', callback:()=>{trainer.sort_val = '${SORT_START_DATE}'; trainer.sort_order_by= ${SORT_ORDER_ASC};trainer.sort_value_text = '시작 일자 과거 순';trainer.init();layer_popup.close_layer_popup();}}`);
-        user_options_array.push(`'${SORT_END_DATE+'_'+SORT_ORDER_ASC}':{text:'남은 일자 많은 순', callback:()=>{trainer.sort_val = '${SORT_END_DATE}'; trainer.sort_order_by= ${SORT_ORDER_DESC};trainer.sort_value_text = '남은 일자 많은 순';trainer.init();layer_popup.close_layer_popup();}}`);
-        user_options_array.push(`'${SORT_END_DATE+'_'+SORT_ORDER_DESC}':{text:'남은 일자 적은 순', callback:()=>{trainer.sort_val = '${SORT_END_DATE}'; trainer.sort_order_by= ${SORT_ORDER_ASC};trainer.sort_value_text = '남은 일자 적은 순';trainer.init();layer_popup.close_layer_popup();}}`);
+        user_options_array.push(`'${SORT_TRAINER_NAME+'_'+SORT_ORDER_ASC}':{text:'강사명 가나다순', callback:()=>{trainer.sort_val = ${SORT_TRAINER_NAME}; trainer.sort_order_by= ${SORT_ORDER_ASC}; trainer.sort_value_text = '강사명 가나다순';trainer.init();layer_popup.close_layer_popup();}}`);
         let user_option = `{`;
         for(let i=0; i<user_options_array.length; i++){
             user_option += user_options_array[i] + ',';

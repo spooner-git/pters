@@ -181,7 +181,7 @@ class Trainer_list {
                 layer_popup.close_layer_popup();
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_BOTTOM;
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TRAINER_SEARCH, 100, popup_style, null, ()=>{
-                    trainer_search_popup = new Setting_sharing_member_search('.popup_trainer_search', null, 'trainer_search_popup');});
+                    trainer_search_popup = new Trainer_search('.popup_trainer_search', null);});
             }},
             new:{text:"새로운 강사", callback:()=>{
                 layer_popup.close_layer_popup();
@@ -204,13 +204,7 @@ class Trainer_list {
 
         // 계속 추가되더라도 동적으로 처리하기 위해 작성 - hkkim 20191001
         let user_options_array = [];
-        user_options_array.push(`'${SORT_TRAINER_NAME+'_'+SORT_ORDER_ASC}':{text:'강사명 가나다순', callback:()=>{trainer_list_popup.sort_val = ${SORT_TRAINER_NAME}; trainer_list_popup.sort_order_by= ${SORT_ORDER_ASC}; trainer_list_popup.sort_value_text = '수강권명 가나다순';trainer_list_popup.init();layer_popup.close_layer_popup();}}`);
-        user_options_array.push(`'${SORT_TRAINER_MEMBER_COUNT+'_'+SORT_ORDER_ASC}':{text:'참여중 회원 많은 순', callback:()=>{trainer_list_popup.sort_val = '${SORT_TRAINER_MEMBER_COUNT}'; trainer_list_popup.sort_order_by= ${SORT_ORDER_DESC}; trainer_list_popup.sort_value_text = '참여중 회원 많은 순';trainer_list_popup.init();layer_popup.close_layer_popup();}}`);
-        user_options_array.push(`'${SORT_TRAINER_MEMBER_COUNT+'_'+SORT_ORDER_DESC}':{text:'참여중 회원 적은 순', callback:()=>{trainer_list_popup.sort_val = '${SORT_TRAINER_MEMBER_COUNT}'; trainer_list_popup.sort_order_by= ${SORT_ORDER_ASC};trainer_list_popup.sort_value_text = '참여중 회원 적은 순';trainer_list_popup.init();layer_popup.close_layer_popup();}}`);
-        user_options_array.push(`'${SORT_TRAINER_CAPACITY_COUNT+'_'+SORT_ORDER_ASC}':{text:'정원 많은 순', callback:()=>{trainer_list_popup.sort_val = '${SORT_TRAINER_CAPACITY_COUNT}'; trainer_list_popup.sort_order_by= ${SORT_ORDER_DESC}; trainer_list_popup.sort_value_text = '정원 많은 순';trainer_list_popup.init();layer_popup.close_layer_popup();}}`);
-        user_options_array.push(`'${SORT_TRAINER_CAPACITY_COUNT+'_'+SORT_ORDER_DESC}':{text:'정원 적은 순', callback:()=>{trainer_list_popup.sort_val = '${SORT_TRAINER_CAPACITY_COUNT}'; trainer_list_popup.sort_order_by= ${SORT_ORDER_ASC};trainer_list_popup.sort_value_text = '정원 적은 순';trainer_list_popup.init();layer_popup.close_layer_popup();}}`);
-        user_options_array.push(`'${SORT_TRAINER_CREATE_DATE+'_'+SORT_ORDER_ASC}':{text:'생성 일자 최근 순', callback:()=>{trainer_list_popup.sort_val = '${SORT_TRAINER_CREATE_DATE}'; trainer_list_popup.sort_order_by= ${SORT_ORDER_DESC};trainer_list_popup.sort_value_text = '생성 일자 최근 순';trainer_list_popup.init();layer_popup.close_layer_popup();}}`);
-        user_options_array.push(`'${SORT_TRAINER_CREATE_DATE+'_'+SORT_ORDER_DESC}':{text:'생성 일자 과거 순', callback:()=>{trainer_list_popup.sort_val = '${SORT_TRAINER_CREATE_DATE}'; trainer_list_popup.sort_order_by= ${SORT_ORDER_ASC};trainer_list_popup.sort_value_text = '생성 일자 과거 순';trainer_list_popup.init();layer_popup.close_layer_popup();}}`);
+        user_options_array.push(`'${SORT_TRAINER_NAME+'_'+SORT_ORDER_ASC}':{text:'강사명 가나다순', callback:()=>{trainer_list_popup.sort_val = ${SORT_TRAINER_NAME}; trainer_list_popup.sort_order_by= ${SORT_ORDER_ASC}; trainer_list_popup.sort_value_text = '강사명 가나다순';trainer_list_popup.init();layer_popup.close_layer_popup();}}`);
         let user_option = `{`;
         for(let i=0; i<user_options_array.length; i++){
             user_option += user_options_array[i] + ',';
