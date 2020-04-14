@@ -11,14 +11,146 @@ from django.utils import timezone
 
 from configs import DEBUG
 from configs.const import USE, UN_USE, AUTO_FINISH_OFF, FROM_TRAINEE_LESSON_ALARM_ON, \
-    TO_TRAINEE_LESSON_ALARM_OFF, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, STATE_CD_IN_PROGRESS, STATE_CD_FINISH,\
+    TO_TRAINEE_LESSON_ALARM_OFF, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, STATE_CD_IN_PROGRESS, STATE_CD_FINISH, \
     AUTH_TYPE_DELETE, STATE_CD_NOT_PROGRESS, SHOW, CALENDAR_TIME_SELECTOR_BASIC, ING_MEMBER_TRUE, ING_MEMBER_FALSE, \
-    TO_SHARED_TRAINER_LESSON_ALARM_OFF, STATE_CD_HOLDING
+    TO_SHARED_TRAINER_LESSON_ALARM_OFF, STATE_CD_HOLDING, OWN_TYPE_EMPLOYEE
 
 from login.models import MemberTb
 from schedule.models import ScheduleTb, RepeatScheduleTb
 from trainee.models import MemberTicketTb, MemberClosedDateHistoryTb
 from .models import ClassMemberTicketTb, LectureTb, SettingTb, TicketLectureTb, TicketTb, LectureMemberTb, MemberClassTb
+
+
+# 전체 회원 id 정보 가져오기
+def func_get_class_trainer_id_list(class_id):
+    class_trainer_data = MemberClassTb.objects.select_related(
+        'member__user'
+    ).filter(class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, own_cd=OWN_TYPE_EMPLOYEE, member__use=USE,
+             use=USE).values('member_id').order_by('member_id').distinct()
+
+    return class_trainer_data
+
+
+# 진행중 회원 id 정보 가져오기
+def func_get_class_trainer_ing_list(class_id, keyword):
+    # all_member = []
+    class_trainer_data = MemberClassTb.objects.select_related(
+        'member__user'
+    ).filter(Q(member__name__contains=keyword) |
+             Q(member__user__username__contains=keyword),
+             Q(auth_cd=AUTH_TYPE_VIEW) | Q(auth_cd=AUTH_TYPE_WAIT),
+             class_tb_id=class_id, own_cd=OWN_TYPE_EMPLOYEE, member__use=USE,
+             use=USE).values('member_id').order_by('member_id').distinct()
+
+    return class_trainer_data
+
+
+# 종료된 회원 id 정보 가져오기
+def func_get_class_trainer_end_list(class_id, keyword):
+    class_trainer_data = MemberClassTb.objects.select_related(
+        'member__user'
+    ).filter(Q(member__name__contains=keyword) |
+             Q(member__user__username__contains=keyword),
+             class_tb_id=class_id, auth_cd=AUTH_TYPE_DELETE, own_cd=OWN_TYPE_EMPLOYEE, member__use=USE,
+             use=USE
+             ).values('member_id').order_by('member_id').distinct()
+
+    return class_trainer_data
+
+
+# 진행중 회원 리스트 가져오기
+def func_get_trainer_ing_list(class_id, user_id, keyword):
+
+    all_trainer_list = MemberClassTb.objects.select_related(
+        'member__user'
+    ).filter(Q(member__name__contains=keyword) |
+             Q(member__user__username__contains=keyword),
+             Q(auth_cd=AUTH_TYPE_VIEW) | Q(auth_cd=AUTH_TYPE_WAIT),
+             class_tb_id=class_id, own_cd=OWN_TYPE_EMPLOYEE,
+             member__use=USE, use=USE).order_by('member_id')
+
+    ordered_trainer_dict = collections.OrderedDict()
+
+    for all_trainer_info in all_trainer_list:
+        trainer_info = all_trainer_info.member
+        trainer_id = str(trainer_info.member_id)
+
+        if trainer_info.reg_info is None or str(trainer_info.reg_info) != str(user_id):
+            if trainer_info.auth_cd != AUTH_TYPE_VIEW:
+                trainer_info.sex = ''
+                trainer_info.birthday_dt = ''
+                if trainer_info.phone is None or trainer_info.phone == '':
+                    trainer_info.phone = ''
+                else:
+                    trainer_info.phone = '***-****-' + trainer_info.phone[7:]
+                trainer_info.user.email = ''
+                trainer_info.profile_url = '/static/common/icon/icon_account.png'
+        if trainer_info.profile_url is None or trainer_info.profile_url == '':
+            trainer_info.profile_url = '/static/common/icon/icon_account.png'
+
+        trainer_data = {'trainer_id': trainer_id,
+                        'trainer_user_id': trainer_info.user.username,
+                        'trainer_name': trainer_info.name,
+                        'trainer_phone': str(trainer_info.phone),
+                        'trainer_email': str(trainer_info.user.email),
+                        'trainer_sex': str(trainer_info.sex),
+                        'trainer_profile_url': trainer_info.profile_url,
+                        'trainer_birthday_dt': str(trainer_info.birthday_dt)}
+
+        ordered_trainer_dict[trainer_id] = trainer_data
+
+    trainer_list = []
+    for trainer_id in ordered_trainer_dict:
+        trainer_list.append(ordered_trainer_dict[trainer_id])
+
+    return trainer_list
+
+
+# 종료된 회원 리스트 가져오기
+def func_get_trainer_end_list(class_id, user_id, keyword):
+    class_trainer_data = MemberClassTb.objects.select_related(
+        'member__user'
+    ).filter(Q(member__name__contains=keyword) |
+             Q(member__user__username__contains=keyword),
+             class_tb_id=class_id, auth_cd=AUTH_TYPE_DELETE, own_cd=OWN_TYPE_EMPLOYEE, member__use=USE,
+             use=USE
+             ).order_by('member_id')
+
+    ordered_trainer_dict = collections.OrderedDict()
+
+    for class_trainer_info in class_trainer_data:
+        trainer_info = class_trainer_info.member
+        trainer_id = str(trainer_info.member_id)
+
+        if trainer_info.reg_info is None or str(trainer_info.reg_info) != str(user_id):
+            if trainer_info.auth_cd != AUTH_TYPE_VIEW:
+                trainer_info.sex = ''
+                trainer_info.birthday_dt = ''
+                if trainer_info.phone is None or trainer_info.phone == '':
+                    trainer_info.phone = ''
+                else:
+                    trainer_info.phone = '***-****-' + trainer_info.phone[7:]
+                trainer_info.user.email = ''
+                trainer_info.profile_url = '/static/common/icon/icon_account.png'
+        if trainer_info.profile_url is None or trainer_info.profile_url == '':
+            trainer_info.profile_url = '/static/common/icon/icon_account.png'
+
+        trainer_data = {'trainer_id': trainer_id,
+                        'trainer_user_id': trainer_info.user.username,
+                        'trainer_name': trainer_info.name,
+                        'trainer_phone': str(trainer_info.phone),
+                        'trainer_email': str(trainer_info.user.email),
+                        'trainer_sex': str(trainer_info.sex),
+                        'trainer_profile_url': trainer_info.profile_url,
+                        'trainer_birthday_dt': str(trainer_info.birthday_dt)}
+
+        ordered_trainer_dict[trainer_id] = trainer_data
+
+    trainer_list = []
+    for trainer_id in ordered_trainer_dict:
+        trainer_list.append(ordered_trainer_dict[trainer_id])
+
+    return trainer_list
 
 
 # 전체 회원 id 정보 가져오기

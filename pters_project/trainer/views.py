@@ -41,7 +41,7 @@ from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO
     CALENDAR_TIME_SELECTOR_BASIC, SORT_END_DATE, SORT_MEMBER_TICKET, SORT_SCHEDULE_DT, STATE_CD_REFUND, \
     SORT_SCHEDULE_MONTHLY, SHARED_PROGRAM, MY_PROGRAM, PROGRAM_SELECT, PROGRAM_LECTURE_CONNECT_DELETE, \
     PROGRAM_LECTURE_CONNECT_ACCEPT, BOARD_TYPE_CD_NOTICE, ON_SCHEDULE, ALARM_PAGINATION_COUNTER, STATE_CD_HOLDING, \
-    CLOSED_SCHEDULE_TYPE, SCHEDULE_PAGINATION_COUNTER
+    CLOSED_SCHEDULE_TYPE, SCHEDULE_PAGINATION_COUNTER, OWN_TYPE_OWNER, OWN_TYPE_SHARE, SORT_TRAINER_NAME
 from board.models import BoardTb, QATb, NoticeTb
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 from schedule.functions import func_refresh_member_ticket_count, func_get_trainer_attend_schedule, \
@@ -55,12 +55,14 @@ from stats.functions import get_sales_data
 from trainee.models import MemberTicketTb, MemberClosedDateHistoryTb
 from payment.models import PaymentInfoTb, ProductFunctionAuthTb, CouponMemberTb
 from .functions import func_get_trainer_setting_list, \
-    func_get_member_ing_list, func_get_member_end_list, func_get_class_member_ing_list, func_get_class_member_end_list,\
-    func_get_member_info, func_get_member_from_member_ticket_list, func_check_member_connection_info,\
-    func_get_member_lecture_list, func_get_member_ticket_list, func_get_lecture_info, func_add_member_ticket_info,\
-    func_get_ticket_info, func_delete_member_ticket_info, func_update_lecture_member_fix_status_cd,\
-    update_user_setting_data, update_program_setting_data, func_get_member_ticket_info, func_get_trainer_info,\
-    update_alarm_setting_data, func_add_hold_member_ticket_info, func_delete_hold_member_ticket_info
+    func_get_member_ing_list, func_get_member_end_list, func_get_class_member_ing_list, func_get_class_member_end_list, \
+    func_get_member_info, func_get_member_from_member_ticket_list, func_check_member_connection_info, \
+    func_get_member_lecture_list, func_get_member_ticket_list, func_get_lecture_info, func_add_member_ticket_info, \
+    func_get_ticket_info, func_delete_member_ticket_info, func_update_lecture_member_fix_status_cd, \
+    update_user_setting_data, update_program_setting_data, func_get_member_ticket_info, func_get_trainer_info, \
+    update_alarm_setting_data, func_add_hold_member_ticket_info, func_delete_hold_member_ticket_info, \
+    func_get_trainer_ing_list, func_get_class_trainer_end_list, func_get_trainer_end_list, \
+    func_get_class_trainer_ing_list
 from .models import ClassMemberTicketTb, LectureTb, ClassTb, MemberClassTb, BackgroundImgTb, \
     SettingTb, TicketTb, TicketLectureTb, CenterTrainerTb, LectureMemberTb, ProgramAuthTb, ProgramBoardTb, \
     ProgramNoticeTb, BugMemberTicketPriceTb, ScheduleClosedTb, ScheduleClosedDayTb
@@ -4778,7 +4780,8 @@ def add_program_info_logic(request):
                 class_info.save()
 
                 member_class_info = MemberClassTb(member_id=request.user.id, class_tb_id=class_info.class_id,
-                                                  auth_cd=AUTH_TYPE_VIEW, mod_member_id=request.user.id, use=USE)
+                                                  auth_cd=AUTH_TYPE_VIEW, mod_member_id=request.user.id,
+                                                  own_cd=OWN_TYPE_OWNER, use=USE)
                 member_class_info.save()
 
                 one_to_one_lecture_info = LectureTb(class_tb_id=class_info.class_id, name='개인 수업',
@@ -4984,7 +4987,7 @@ def update_share_program_info_logic(request):
             class_member_info.save()
         except ObjectDoesNotExist:
             class_member_info = MemberClassTb(class_tb_id=class_id, member_id=trainer_id, auth_cd=auth_cd,
-                                              mod_member_id=request.user.id, use=USE)
+                                              mod_member_id=request.user.id, own_cd=OWN_TYPE_SHARE, use=USE)
             class_member_info.save()
 
         if auth_cd == AUTH_TYPE_DELETE:
@@ -7068,6 +7071,66 @@ def delete_member_profile_img_logic(request):
         log_data.save()
 
     return render(request, 'ajax/trainer_error_ajax.html')
+
+
+class GetTrainerIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        class_id = self.request.session.get('class_id', '')
+        trainer_sort = request.GET.get('sort_val', SORT_TRAINER_NAME)
+        sort_order_by = request.GET.get('sort_order_by', SORT_ASC)
+        keyword = request.GET.get('keyword', '')
+        current_trainer_data = func_get_trainer_ing_list(class_id, request.user.id, keyword)
+        finish_trainer_num = len(func_get_class_trainer_end_list(class_id, keyword))
+        sort_info = int(trainer_sort)
+
+        if sort_info == SORT_TRAINER_NAME:
+            current_trainer_data = sorted(current_trainer_data, key=lambda elem: elem['trainer_name'],
+                                          reverse=int(sort_order_by))
+        # context['total_member_num'] = len(member_data)
+        # if page != 0:
+        #     paginator = Paginator(member_data, 20)  # Show 20 contacts per page
+        #     try:
+        #         member_data = paginator.page(page)
+        #     except EmptyPage:
+        #         member_data = None
+        #
+        # context['member_data'] = member_data
+        # end_dt = timezone.now()
+
+        return JsonResponse({'current_trainer_data': current_trainer_data, 'finish_trainer_num': finish_trainer_num},
+                            json_dumps_params={'ensure_ascii': True})
+
+
+class GetTrainerEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        # start_dt = timezone.now()
+        class_id = self.request.session.get('class_id', '')
+        # page = request.GET.get('page', 0)
+        trainer_sort = request.GET.get('sort_val', SORT_TRAINER_NAME)
+        sort_order_by = request.GET.get('sort_order_by', SORT_ASC)
+        keyword = request.GET.get('keyword', '')
+
+        finish_trainer_data = func_get_trainer_end_list(class_id, request.user.id, keyword)
+        current_trainer_num = len(func_get_class_trainer_ing_list(class_id, keyword))
+
+        sort_info = int(trainer_sort)
+        if sort_info == SORT_TRAINER_NAME:
+            finish_trainer_data = sorted(finish_trainer_data, key=lambda elem: elem['trainer_name'],
+                                         reverse=int(sort_order_by))
+
+        # context['total_member_num'] = len(member_data)
+        # if page != 0:
+        #     paginator = Paginator(member_data, 20)  # Show 20 contacts per page
+        #     try:
+        #         member_data = paginator.page(page)
+        #     except EmptyPage:
+        #         member_data = None
+        #
+        # end_dt = timezone.now()
+        return JsonResponse({'finish_trainer_data': finish_trainer_data, 'current_trainer_num': current_trainer_num},
+                            json_dumps_params={'ensure_ascii': True})
 
 
 class GetTrainerMemberTicketPriceBugListView(LoginRequiredMixin, AccessTestMixin, View):

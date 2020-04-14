@@ -129,6 +129,14 @@
                 </svg>
                 <span class="sidemenu_text">수강권</span>
             </div>
+            <div class="side_menu_item" onclick="sideGoPage('trainer_page_type')" id="side_trainer_page_type">
+                <svg style="vertical-align:middle;margin-right:15px;" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <g id="데스크탑/아이콘/강사/5C5859" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                        <path class="nav_svg" id="Combined-Shape" fill="var(--img-main)" d="M10.0184713,18.0003512 C10.2797037,18.0079012 13.2355556,18.1777778 14,22 L14,22 L12,22 C11.6,20 10,20 10,20 L10,20 L6,20 C6,20 4.4,20 4,22 L4,22 L2,22 C2.76444444,18.1777778 5.7202963,18.0079012 5.98152867,18.0003512 Z M8,8 C10.4852814,8 12.5,10.0147186 12.5,12.5 C12.5,14.9852814 10.4852814,17 8,17 C5.51471863,17 3.5,14.9852814 3.5,12.5 C3.5,10.0147186 5.51471863,8 8,8 Z M18.0135393,12.0003015 C18.2322184,12.0076894 21.0392157,12.1960784 22,17 L22,17 L20,17 C19.4,14 18,14 18,14 L18,14 L13.5,14 C13.5,12.137931 15.2336504,12.0095125 15.4727746,12.000656 Z M8,10 C6.61928813,10 5.5,11.1192881 5.5,12.5 C5.5,13.8807119 6.61928813,15 8,15 C9.38071187,15 10.5,13.8807119 10.5,12.5 C10.5,11.1192881 9.38071187,10 8,10 Z M16,2 C18.4852814,2 20.5,4.01471863 20.5,6.5 C20.5,8.98528137 18.4852814,11 16,11 C13.5147186,11 11.5,8.98528137 11.5,6.5 C11.5,4.01471863 13.5147186,2 16,2 Z M16,4 C14.6192881,4 13.5,5.11928813 13.5,6.5 C13.5,7.88071187 14.6192881,9 16,9 C17.3807119,9 18.5,7.88071187 18.5,6.5 C18.5,5.11928813 17.3807119,4 16,4 Z" ></path>
+                    </g>
+                </svg>
+                <span class="sidemenu_text">강사</span>
+            </div>
             <div class="side_menu_item" onclick="sideGoPopup('statistics')" id="side_statistics">
                 <!-- <img src={% static_url "common/icon/icon_statistics_grey.png" %} alt=""> -->
                 <svg style="vertical-align:middle;margin-right:15px;" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -329,7 +337,6 @@
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.member_search.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.member_view.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.member_view_photo_update.js" %}></script>
-<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.trainer_list.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.lecture_list.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.lecture_add.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.lecture_view.js" %}></script>
@@ -341,6 +348,9 @@
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.program_list.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.program_add.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.program_view.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.trainer_add.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.trainer_list.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.trainer_view.js" %}></script>
 
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.member_closed_date_history.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.member_schedule_history.js" %}></script>
@@ -529,8 +539,11 @@
     var trainer_simple_view_popup;
     var trainer_edit_popup;
     var trainer_list_popup;
-    var trainer_schedule_history;
     var trainer_add_repeat;
+    var trainer_view_photo_update_popup;
+    var trainer_closed_date_history
+    var trainer_schedule_history;
+    var trainer_search_popup;
 
     var lecture_add_popup;
     var lecture_view_popup;
@@ -609,6 +622,7 @@
     var member_select_plan_approve;
     var member_select_plan_wait;
     var member_contacts_select;
+    var trainer_contacts_select;
     var color_select;
     var board_type_select;
     var custom_selector;
@@ -825,6 +839,19 @@
 
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_LIST, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     lecture_list_popup = new Lecture_list('.popup_lecture_list', 'lecture_list_popup')});
+                    };
+            break;
+            case 'trainer':
+                open = ()=>{
+                    auth_inspect = pass_inspector.trainer_read();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `${auth_inspect.limit_type}`;
+                        show_error_message({title:message});
+                        return false;
+                    }
+
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TRAINER_LIST, 100, POPUP_FROM_RIGHT, null, ()=>{
+                                                    trainer_list_popup = new Trainer_list('.popup_trainer_list', 'trainer_list_popup')});
                     };
             break;
             case 'program':

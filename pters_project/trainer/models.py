@@ -4,7 +4,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 
-from configs.const import LECTURE_TYPE_ONE_TO_ONE, BOARD_TYPE_CD_NOTICE, TO_MEMBER_BOARD_TYPE_CD_TRAINEE
+from configs.const import LECTURE_TYPE_ONE_TO_ONE, BOARD_TYPE_CD_NOTICE, TO_MEMBER_BOARD_TYPE_CD_TRAINEE, OWN_TYPE_OWNER
 from configs.models import TimeStampedModel
 from login.models import MemberTb, CommonCdTb
 from payment.models import FunctionAuthTb
@@ -143,6 +143,8 @@ class MemberClassTb(TimeStampedModel):
     class_tb = models.ForeignKey(ClassTb, verbose_name='지점', on_delete=models.CASCADE, null=True)
     auth_cd = models.CharField('권한 코드', db_column='AUTH_CD', max_length=20, blank=True,
                                default='')  # Field name made lowercase.
+    own_cd = models.CharField('권한 코드', db_column='OWN_CD', max_length=20, blank=True,
+                              default=OWN_TYPE_OWNER)  # Field name made lowercase.
     mod_member_id = models.CharField('최종수정 회원 ID', db_column='MOD_MEMBER_ID', max_length=20, blank=True, default='')
 
     class Meta:

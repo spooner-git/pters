@@ -128,11 +128,16 @@ urlpatterns = [
     url(r'^delete_member_closed_date/$', views.delete_member_closed_date_logic,
         name='delete_member_closed_date'),
 
-
     # 회원 프로필 업데이트/삭제
     url(r'^update_member_profile_img', views.update_member_profile_img_logic, name='update_member_profile_img'),
     url(r'^delete_member_profile_img', views.delete_member_profile_img_logic, name='delete_member_profile_img'),
 
+
+    # 강사 관리 기능 ###################################################################################################
+    # 진행중 회원 목록 조회 - refactoring
+    url(r'^get_trainer_ing_list/$', views.GetTrainerIngListViewAjax.as_view(), name='get_trainer_ing_list'),
+    # 진행 완료 회원 목록 조회 - refactoring
+    url(r'^get_trainer_end_list/$', views.GetTrainerEndListViewAjax.as_view(), name='get_trainer_end_list'),
 
     # 수업 기능 ##########################################################################################################
     # 수업 추가 - refactoring
