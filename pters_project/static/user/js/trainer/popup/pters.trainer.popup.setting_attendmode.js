@@ -12,7 +12,7 @@ class Setting_attendmode{
 
         this.data_for_selector = {
             display_session_start :
-                {value:[0, 5, 10, 15, 20, 25, 30], text:["시작 0분 부터", "시작 5분 전부터", "시작 10분 전부터", "시작 15분 전부터", "시작 20분 전부터", "시작 25분 전부터", "시작 30분 전부터"]},
+                {value:[0, 5, 10, 15, 20, 25, 30], text:["시작 0분 전부터", "시작 5분 전부터", "시작 10분 전부터", "시작 15분 전부터", "시작 20분 전부터", "시작 25분 전부터", "시작 30분 전부터"]},
             display_session_end:
             {value:[0, 5, 10, 15, 20, 25, 30], text:["종료 0분 후까지", "종료 5분 후까지", "종료 10분 후까지", "종료 15분 후까지", "종료 20분 후까지", "종료 25분 후까지", "종료 30분 후까지"]}
         };
@@ -90,13 +90,13 @@ class Setting_attendmode{
 
     dom_row_display_session_start(){
         let id = "display_session_start";
-        let title = "수업 시작 x분전 부터 출석체크 가능";
+        let title = "출석체크 시작 시간";
         let icon = DELETE;
         let icon_r_visible = SHOW;
         let icon_r_text = this.data.display_session_start.text.length == 0 ? '' : this.data.display_session_start.text;
         let style = null;
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            let title = "수업 시작 x분전 부터 출석체크 가능";
+            let title = "출석체크 시작 시간";
             let install_target = "#wrapper_box_custom_select";
             let multiple_select = 1;
             let data = this.data_for_selector.display_session_start;
@@ -115,13 +115,13 @@ class Setting_attendmode{
 
     dom_row_display_session_end(){
         let id = "display_session_end";
-        let title = "수업 종료 x분후 까지 출석체크 가능";
+        let title = "출석체크 종료 시간";
         let icon = DELETE;
         let icon_r_visible = SHOW;
         let icon_r_text = this.data.display_session_end.text.length == 0 ? '' : this.data.display_session_end.text;
         let style = null;
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
-            let title = "수업 종료 x분후 까지 출석체크 가능";
+            let title = "출석체크 종료 시간";
             let install_target = "#wrapper_box_custom_select";
             let multiple_select = 1;
             let data = this.data_for_selector.display_session_end;
@@ -146,7 +146,7 @@ class Setting_attendmode{
                                 this.data.setting_attend_mode_max_num_view_available = data; // ON or OFF
                                 this.render_content();
                             });
-        let title_row = CComponent.text_button ("capacity_visible_text", '출석체크 모드 [정원/출석/예약] 숫자 표기', {"font-size":"15px", "font-weight":"500", "letter-spacing":"-0.8px"}, ()=>{});
+        let title_row = CComponent.text_button ("capacity_visible_text", '[정원/출석/예약] 숫자 표기', {"font-size":"15px", "font-weight":"500", "letter-spacing":"-0.8px"}, ()=>{});
         let html = `
                     <div style="display:table;width:100%;">
                         <div style="display:table-cell;width:auto;vertical-align:middle">${title_row}</div>
