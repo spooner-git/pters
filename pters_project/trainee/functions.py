@@ -117,27 +117,36 @@ def func_get_trainee_lecture_schedule(context, user_id, class_id, start_date, en
                                               use=USE).order_by('-member_ticket_tb__start_date',
                                                                 '-member_ticket_tb__reg_dt')
     lecture_schedule_data = []
+    ticket_lecture_data = []
     query_lecture_list = Q()
+    query_lecture_counter = 0
     if len(member_ticket_data) > 0:
         query_ticket_list = Q()
+        query_ticket_counter = 0
         for member_ticket_info in member_ticket_data:
             ticket_info = member_ticket_info.member_ticket_tb.ticket_tb
             query_ticket_list |= Q(ticket_tb_id=ticket_info.ticket_id)
+            query_ticket_counter += 1
 
-        ticket_lecture_data = TicketLectureTb.objects.select_related(
-            'lecture_tb').filter(query_ticket_list, class_tb_id=class_id, lecture_tb__state_cd=STATE_CD_IN_PROGRESS,
-                                 lecture_tb__use=USE, use=USE)
+        if query_ticket_counter > 0:
+            ticket_lecture_data = TicketLectureTb.objects.select_related(
+                'lecture_tb').filter(query_ticket_list, class_tb_id=class_id, lecture_tb__state_cd=STATE_CD_IN_PROGRESS,
+                                     lecture_tb__use=USE, use=USE)
 
         for ticket_lecture_info in ticket_lecture_data:
             query_lecture_list |= Q(lecture_tb_id=ticket_lecture_info.lecture_tb_id)
+            query_lecture_counter += 1
+
         if len(ticket_lecture_data) > 0:
-            lecture_schedule_data = ScheduleTb.objects.select_related(
-                'lecture_tb').filter(query_lecture_list, class_tb_id=class_id, lecture_tb__isnull=False,
-                                     member_ticket_tb__isnull=True,
-                                     en_dis_type=ON_SCHEDULE_TYPE, start_dt__gte=start_date,
-                                     start_dt__lt=end_date, use=USE
-                                     ).annotate(lecture_current_member_num=RawSQL(query, []),
-                                                lecture_wait_member_num=RawSQL(query_wait, [])).order_by('start_dt')
+            if query_lecture_counter > 0:
+                lecture_schedule_data = ScheduleTb.objects.select_related(
+                    'lecture_tb').filter(query_lecture_list, class_tb_id=class_id, lecture_tb__isnull=False,
+                                         member_ticket_tb__isnull=True,
+                                         en_dis_type=ON_SCHEDULE_TYPE, start_dt__gte=start_date,
+                                         start_dt__lt=end_date, use=USE
+                                         ).annotate(lecture_current_member_num=RawSQL(query, []),
+                                                    lecture_wait_member_num=RawSQL(query_wait, [])).order_by('start_dt')
+
         for lecture_schedule_info in lecture_schedule_data:
             if lecture_schedule_info.note is not None and lecture_schedule_info.note != '':
                 lecture_schedule_info.note = lecture_schedule_info.note.replace('\n', '<br/>')
