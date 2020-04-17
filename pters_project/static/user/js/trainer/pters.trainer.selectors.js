@@ -5890,6 +5890,7 @@ class BoardWriter{
                 this.data[item] = this.external_data[item];
             }
         }
+        this.data.category_selected['type'] = {value:'공지', text:'NOTICE'};
     }
 
     clear(){
@@ -6143,10 +6144,10 @@ class BoardWriter{
             maximumImageFileSize: 10485760,
             callbacks:{
                 onImageUpload: function(files) {
-                    if(board_writer.data.category_selected['type'].text.length == 0){
-                        show_error_message({title:'게시글 분류부터 선택해주세요.'});
-                        return false;
-                    }
+                    // if(board_writer.data.category_selected['type'].text.length == 0){
+                    //     show_error_message({title:'게시글 분류부터 선택해주세요.'});
+                    //     return false;
+                    // }
                     // upload image to server and create imgNode...
                     let img_error_flag = false;
                     for (let i = files.length - 1; i >= 0; i--) {
@@ -6310,6 +6311,7 @@ class BoardWriter{
             let selected_value_ok = true;
             let category_type = "";
             for(let item in this.data.category_selected){
+                console.log(this.data.category_selected[item]);
                 if(this.data.category_selected[item].value.length == 0){
                     selected_value_ok = false;
                     category_type = PROGRAM_BOARD_CATEGORY[item];
