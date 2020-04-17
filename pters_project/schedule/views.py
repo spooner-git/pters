@@ -1824,7 +1824,7 @@ def delete_repeat_schedule_logic(request):
                         # 반복일정에 해당하는 일정 불러오기
                         lecture_member_schedule_data = ScheduleTb.objects.select_related(
                             'member_ticket_tb__member').filter(
-                            class_tb_id=class_id,
+                            class_tb_id=class_id, state_cd=STATE_CD_NOT_PROGRESS,
                             repeat_schedule_tb_id=lecture_member_repeat_schedule_info.repeat_schedule_id,
                             start_dt__gt=timezone.now())
                         # 반복일정에 해당하는 회원 수강정보 저장
@@ -1906,7 +1906,7 @@ def delete_repeat_schedule_logic(request):
 
                 # 반복일정에 해당하는 일정 불러오기
                 schedule_data = ScheduleTb.objects.select_related('member_ticket_tb__member').filter(
-                    class_tb_id=class_id,
+                    class_tb_id=class_id, state_cd=STATE_CD_NOT_PROGRESS,
                     repeat_schedule_tb_id=repeat_schedule_info.repeat_schedule_id, start_dt__gt=timezone.now())
 
                 # OFF or 그룹 껍데기인 경우 일정 삭제하기
