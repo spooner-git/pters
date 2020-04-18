@@ -824,7 +824,7 @@ class AddMemberNoEmailView(View):
         birthday_dt = request.POST.get('birthday', '')
         phone = request.POST.get('phone', '')
         class_id = request.session.get('class_id', '')
-        context = add_member_no_email_func(request.user.id, first_name, phone, sex, birthday_dt)
+        context = add_member_no_email_func(request.user.id, first_name, phone, sex, birthday_dt, 'trainee')
         error = context['error']
 
         if error is not None:
@@ -841,6 +841,40 @@ class AddMemberNoEmailView(View):
                                  from_member_name=request.user.first_name,
                                  class_tb_id=class_id,
                                  log_info=name+' 회원님', log_how='추가', use=USE)
+                log_data.save()
+
+            return render(request, self.template_name, {'username': context['username'],
+                                                        'user_db_id': context['user_db_id']})
+
+
+class AddTrainerNoEmailView(View):
+    template_name = 'ajax/registration_error_ajax.html'
+
+    def post(self, request):
+
+        first_name = request.POST.get('first_name', '')
+        name = request.POST.get('name', '')
+        sex = request.POST.get('sex', '')
+        birthday_dt = request.POST.get('birthday', '')
+        phone = request.POST.get('phone', '')
+        class_id = request.session.get('class_id', '')
+        context = add_member_no_email_func(request.user.id, first_name, phone, sex, birthday_dt, 'trainer')
+        error = context['error']
+
+        if error is not None:
+            logger.error(name + '[강사 회원가입]' + error)
+            messages.error(request, error)
+            return render(request, self.template_name, {'username': '',
+                                                        'user_db_id': ''})
+        else:
+            if context['error'] is not None:
+                logger.error(name + '[강사 회원가입]' + context['error'])
+                messages.error(request, context['error'])
+            else:
+                log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+                                 from_member_name=request.user.first_name,
+                                 class_tb_id=class_id,
+                                 log_info=name+' 강사님', log_how='추가', use=USE)
                 log_data.save()
 
             return render(request, self.template_name, {'username': context['username'],
@@ -1220,7 +1254,7 @@ def clear_badge_counter_logic(request):
     return render(request, 'ajax/token_check_ajax.html', {'token_check': token_check})
 
 
-def add_member_no_email_func(user_id, first_name, phone, sex, birthday_dt):
+def add_member_no_email_func(user_id, first_name, phone, sex, birthday_dt, group_type):
     error = None
     name = ''
     password = '0000'
@@ -1269,7 +1303,7 @@ def add_member_no_email_func(user_id, first_name, phone, sex, birthday_dt):
             with transaction.atomic():
                 user = User.objects.create_user(username=username, first_name=first_name,
                                                 password=password, is_active=0)
-                group = Group.objects.get(name='trainee')
+                group = Group.objects.get(name=group_type)
                 user.groups.add(group)
                 if birthday_dt == '':
                     member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex, reg_info=user_id,
@@ -1282,7 +1316,7 @@ def add_member_no_email_func(user_id, first_name, phone, sex, birthday_dt):
                 context['user_db_id'] = user.id
 
         except ValueError:
-            error = '이미 가입된 회원입니다.'
+            error = '이미 가입된 아이디입니다.'
         except IntegrityError:
             error = '등록 값에 문제가 있습니다.'
         except TypeError:
@@ -1290,7 +1324,7 @@ def add_member_no_email_func(user_id, first_name, phone, sex, birthday_dt):
         except ValidationError:
             error = '등록 값에 문제가 있습니다.'
         except InternalError:
-            error = '이미 가입된 회원입니다.'
+            error = '이미 가입된 아이디입니다.'
 
     context['error'] = error
 

@@ -144,6 +144,11 @@ const SORT_LECTURE_MEMBER_COUNT = 1;
 const SORT_LECTURE_CAPACITY_COUNT = 2;
 const SORT_LECTURE_CREATE_DATE = 3;
 
+const SORT_TRAINER_NAME = 0;
+const SORT_TRAINER_MEMBER_COUNT = 1;
+const SORT_TRAINER_CAPACITY_COUNT = 2;
+const SORT_TRAINER_CREATE_DATE = 3;
+
 const SORT_TICKET_TYPE = 0;
 const SORT_TICKET_NAME = 1;
 const SORT_TICKET_MEMBER_COUNT = 2;
@@ -202,12 +207,14 @@ const POPUP_ADDRESS_MEMBER_ADD = 'popup_member_add';
 const POPUP_ADDRESS_MEMBER_EDIT = 'popup_member_edit';
 const POPUP_ADDRESS_MEMBER_SEARCH = 'popup_member_search';
 const POPUP_ADDRESS_MEMBER_VIEW_PHOTO_UPDATE = 'popup_member_view_photo_update';
-
+const POPUP_ADDRESS_TRAINER_VIEW_PHOTO_UPDATE = 'popup_trainer_view_photo_update';
 const POPUP_ADDRESS_TRAINER_VIEW = 'popup_trainer_view';
 const POPUP_ADDRESS_TRAINER_SIMPLE_VIEW = 'popup_trainer_simple_view';
 const POPUP_ADDRESS_TRAINER_ADD = 'popup_trainer_add';
 const POPUP_ADDRESS_TRAINER_EDIT = 'popup_trainer_edit';
 const POPUP_ADDRESS_TRAINER_LIST = 'popup_trainer_list';
+const POPUP_ADDRESS_TRAINER_SEARCH = 'popup_trainer_search';
+const POPUP_ADDRESS_TRAINER_AUTH = 'popup_trainer_auth';
 
 const POPUP_ADDRESS_LECTURE_VIEW = 'popup_lecture_view';
 const POPUP_ADDRESS_LECTURE_SIMPLE_VIEW = 'popup_lecture_simple_view';
@@ -229,6 +236,8 @@ const POPUP_MEMBER_TICKET_HISTORY = 'popup_member_ticket_history';
 const POPUP_MEMBER_TICKET_MODIFY = 'popup_member_ticket_modify';
 const POPUP_MEMBER_TICKET_REFUND = 'popup_member_ticket_refund';
 const POPUP_MEMBER_TICKET_HOLDING = 'popup_member_ticket_holding';
+const POPUP_TRAINER_SCHEDULE_HISTORY = 'popup_trainer_schedule_history';
+const POPUP_TRAINER_CLOSED_DATE_HISTORY = 'popup_trainer_closed_date_history';
 
 const POPUP_ADDRESS_MEMBER_ATTEND = 'popup_member_attend';
 const POPUP_ADDRESS_PLAN_DAILY_RECORD = 'popup_plan_daily_record';
@@ -287,6 +296,7 @@ const POPUP_ADDRESS_MEMBER_SELECT = 'popup_member_select';
 const POPUP_ADDRESS_MEMBER_PLAN_APPROVE_SELECT = 'popup_member_plan_approve_select';
 const POPUP_ADDRESS_MEMBER_PLAN_WAIT_SELECT = 'popup_member_plan_wait_select';
 const POPUP_ADDRESS_MEMBER_CONTACTS_SELECT = 'popup_member_contacts_select';
+const POPUP_ADDRESS_TRAINER_CONTACTS_SELECT = 'popup_trainer_contacts_select';
 const POPUP_ADDRESS_LECTURE_SELECT = 'popup_lecture_select';
 const POPUP_ADDRESS_TICKET_SELECT = 'popup_ticket_select';
 const POPUP_ADDRESS_COLOR_SELECT = 'popup_color_select';
