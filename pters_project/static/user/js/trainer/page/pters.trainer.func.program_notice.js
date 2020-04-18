@@ -228,7 +228,7 @@ class ProgramNotice {
                                         },
                                         new_check:false
                 };
-                board_writer = new BoardWriter("공지 수정", '.popup_board_writer_update', 'board_writer', external_data, (data_written)=>{
+                board_writer_notice = new BoardWriter("공지 수정", '.popup_board_writer_update', 'board_writer_notice', external_data, (data_written)=>{
                     let data = {"program_notice_id":data_written.id, "notice_type_cd":NOTICE, "title":data_written.title,
                                 "contents":data_written.content, "to_member_type_cd":data_written.category_selected.to_member_type_cd.value[0],
                                 "push_use":data_written.category_selected.push_use.value[0],
@@ -288,7 +288,7 @@ class ProgramNotice {
                                         },
                                         new_check:true
             };
-            board_writer = new BoardWriter("새 공지사항", '.popup_board_writer', 'board_writer', external_data, (data_written)=>{
+            board_writer_notice = new BoardWriter("새 공지사항", '.popup_board_writer', 'board_writer_notice', external_data, (data_written)=>{
                 let data = {"notice_type_cd": NOTICE, "title":data_written.title,
                             "contents":data_written.content, "to_member_type_cd":data_written.category_selected.to_member_type_cd.value[0],
                             "push_use":data_written.category_selected.push_use.value[0],

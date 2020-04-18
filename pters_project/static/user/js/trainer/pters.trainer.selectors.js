@@ -5890,6 +5890,7 @@ class BoardWriter{
                 this.data[item] = this.external_data[item];
             }
         }
+        this.data.category_selected['type'] = {value:'공지', text:'NOTICE'};
     }
 
     clear(){
@@ -6016,7 +6017,7 @@ class BoardWriter{
     }
 
     dom_row_content_input(){
-        let row = `<div id="board_writer_content_input"></div>`;
+        let row = `<div id="notice_board_writer_content_input"></div>`;
         let html = row;
         return html;
     }
@@ -6123,9 +6124,9 @@ class BoardWriter{
         let summer_note_textarea_height = $root_content.height() - wrapper_top_height - category_height - title_input_height - summer_note_toolbar_height -summer_note_textarea_padding - wrapper_bottom_padding_height;
 
         let summernote_attachment = {"name":[], "size":[]};
-        $(`#board_writer_content_input`).summernote({
+        $(`#notice_board_writer_content_input`).summernote({
             minHeight: 150,
-            maxHeight:summer_note_textarea_height,
+            maxHeight: os == IOS ? summer_note_textarea_height : "",
             fontSizes:['12', '14', '16'],
             placeholder: this.data.placeholder,
             tabsize: 2,
@@ -6143,10 +6144,10 @@ class BoardWriter{
             maximumImageFileSize: 10485760,
             callbacks:{
                 onImageUpload: function(files) {
-                    if(board_writer.data.category_selected['type'].text.length == 0){
-                        show_error_message({title:'게시글 분류부터 선택해주세요.'});
-                        return false;
-                    }
+                    // if(board_writer.data.category_selected['type'].text.length == 0){
+                    //     show_error_message({title:'게시글 분류부터 선택해주세요.'});
+                    //     return false;
+                    // }
                     // upload image to server and create imgNode...
                     let img_error_flag = false;
                     for (let i = files.length - 1; i >= 0; i--) {
@@ -6160,7 +6161,7 @@ class BoardWriter{
                         for (let i = files.length - 1; i >= 0; i--) {
                             summernote_attachment["name"].push(files[i].name);
                             summernote_attachment["size"].push(files[i].size/1024000);
-                            board_writer.update_content_img(files[i]);
+                            board_writer_notice.update_content_img(files[i]);
                         }
                     }
                 }
@@ -6170,13 +6171,18 @@ class BoardWriter{
             this.data.content = " ";
         }
         if(this.data.content != " "){
-            $(`#board_writer_content_input`).summernote('code', this.data.content);
+            $(`#notice_board_writer_content_input`).summernote('code', this.data.content);
         }
-        $('#board_writer_content_input').on('summernote.blur', ()=>{
-            this.data.content = $('#board_writer_content_input').summernote('code');
-            this.if_user_changed_any_information = true;
-            this.render();
-        });
+        // if(this.data.content != this.external_data.content){
+        //     this.if_user_changed_any_information = true;
+            // this.render();
+        // }
+        // $('#notice_board_writer_content_input').on('summernote.blur', ()=>{
+        //     this.data.content = $('#notice_board_writer_content_input').summernote('code');
+        //     this.if_user_changed_any_information = true;
+        //     this.render();
+        // });
+        $('.note-editable').blur();
     }
 
     update_content_img(file){
@@ -6211,7 +6217,7 @@ class BoardWriter{
                     }
                 }
                 this.if_user_changed_any_information = true;
-                $('#board_writer_content_input').summernote('insertImage', data.img_url);
+                $('#notice_board_writer_content_input').summernote('insertImage', data.img_url);
             },
 
             complete:function(){
@@ -6235,7 +6241,7 @@ class BoardWriter{
     }
     upper_left_menu(){
 
-        let content_value = $('#board_writer_content_input').summernote('code');
+        let content_value = $('#notice_board_writer_content_input').summernote('code');
         if(this.data.content != content_value){
             this.data.content = content_value;
             this.if_user_changed_any_information = true;
@@ -6296,7 +6302,7 @@ class BoardWriter{
     }
 
     save_data(){
-        let content_value = $('#board_writer_content_input').summernote('code');
+        let content_value = $('#notice_board_writer_content_input').summernote('code');
         this.data.content = content_value;
         if(this.data.title == null){
             show_error_message({title:"제목을 입력해주세요."});
@@ -6310,6 +6316,7 @@ class BoardWriter{
             let selected_value_ok = true;
             let category_type = "";
             for(let item in this.data.category_selected){
+                console.log(this.data.category_selected[item]);
                 if(this.data.category_selected[item].value.length == 0){
                     selected_value_ok = false;
                     category_type = PROGRAM_BOARD_CATEGORY[item];

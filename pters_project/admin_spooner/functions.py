@@ -16,7 +16,8 @@ def func_upload_board_content_image_logic(file, file_name, board_type_cd, user_i
     bucket = s3.Bucket(bucket_name)
     exists = True
     img_url = None
-
+    if board_type_cd is None or board_type_cd == '':
+        board_type_cd = 'NOTICE'
     try:
         s3.meta.client.head_bucket(Bucket=getattr(settings, "PTERS_AWS_S3_BUCKET_NAME", ''))
     except ClientError as e:

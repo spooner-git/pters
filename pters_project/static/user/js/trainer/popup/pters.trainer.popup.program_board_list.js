@@ -218,7 +218,7 @@ class ProgramBoard_list {
                                                                         use:{text:[PROGRAM_BOARD_USE[use].text], value:[use]}
                                                                     }
                                             };
-                                            board_writer = new BoardWriter("공지 수정", '.popup_board_writer_update', 'board_writer', external_data, (data_written)=>{
+                                            board_writer_notice = new BoardWriter("공지 수정", '.popup_board_writer_update', 'board_writer_notice', external_data, (data_written)=>{
                                                 let data = {"program_board_id":data_written.id, "program_board_type_cd":data_written.category_selected.type.value[0], "title":data_written.title, 
                                                             "contents":data_written.content, "to_member_type_cd":data_written.category_selected.open.value[0],
                                                             "use":data_written.category_selected.use.value[0]};
@@ -298,7 +298,7 @@ class ProgramBoard_list {
                                             use:{text:[], value:[]}
                                         }
             };
-            board_writer = new BoardWriter("새 공지사항", '.popup_board_writer', 'board_writer', external_data, (data_written)=>{
+            board_writer_notice = new BoardWriter("새 공지사항", '.popup_board_writer', 'board_writer_notice', external_data, (data_written)=>{
                 let data = {"program_board_type_cd":data_written.category_selected.type.value[0], "title":data_written.title,
                             "contents":data_written.content, "to_member_type_cd":data_written.category_selected.open.value[0],
                             "use":data_written.category_selected.use.value[0]};

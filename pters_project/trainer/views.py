@@ -3245,9 +3245,10 @@ def delete_lecture_info_logic(request):
     ticket_lecture_data = TicketLectureTb.objects.filter(lecture_tb_id=lecture_id, use=USE)
 
     query_ticket_info = Q()
-
+    query_ticket_counter = 0
     for ticket_lecture_info in ticket_lecture_data:
         query_ticket_info |= Q(member_ticket_tb__ticket_tb_id=ticket_lecture_info.ticket_tb.ticket_id)
+        query_ticket_counter += 1
 
     try:
         with transaction.atomic():
@@ -3282,16 +3283,17 @@ def delete_lecture_info_logic(request):
 
                 # 관련 수간권 회원들 수강정보 업데이트
                 if len(ticket_lecture_data) > 0:
-                    class_member_ticket_data = ClassMemberTicketTb.objects.select_related(
-                        'class_tb',
-                        'member_ticket_tb__ticket_tb').filter(query_ticket_info, class_tb_id=class_id,
-                                                              auth_cd=AUTH_TYPE_VIEW,
-                                                              member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
-                                                              member_ticket_tb__use=USE, use=USE)
+                    if query_ticket_counter > 0:
+                        class_member_ticket_data = ClassMemberTicketTb.objects.select_related(
+                            'class_tb',
+                            'member_ticket_tb__ticket_tb').filter(query_ticket_info, class_tb_id=class_id,
+                                                                  auth_cd=AUTH_TYPE_VIEW,
+                                                                  member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+                                                                  member_ticket_tb__use=USE, use=USE)
 
-                    for class_member_ticket_info in class_member_ticket_data:
-                        error = func_refresh_member_ticket_count(class_member_ticket_info.class_tb_id,
-                                                                 class_member_ticket_info.member_ticket_tb_id)
+                        for class_member_ticket_info in class_member_ticket_data:
+                            error = func_refresh_member_ticket_count(class_member_ticket_info.class_tb_id,
+                                                                     class_member_ticket_info.member_ticket_tb_id)
 
             if error is None:
                 lecture_info.state_cd = STATE_CD_FINISH
@@ -3479,8 +3481,10 @@ def update_lecture_status_info_logic(request):
     if error is None:
         ticket_lecture_data = TicketLectureTb.objects.filter(class_tb_id=class_id, lecture_tb_id=lecture_id, use=USE)
         query_ticket_info = Q()
+        query_ticket_counter = 0
         for ticket_lecture_info in ticket_lecture_data:
             query_ticket_info |= Q(member_ticket_tb__ticket_tb_id=ticket_lecture_info.ticket_tb.ticket_id)
+            query_ticket_counter += 1
 
         if state_cd == STATE_CD_FINISH:
             schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, lecture_tb_id=lecture_id,
@@ -3501,15 +3505,16 @@ def update_lecture_status_info_logic(request):
 
             # 관련 수간권 회원들 수강정보 업데이트
             if len(ticket_lecture_data) > 0:
-                class_member_ticket_data = ClassMemberTicketTb.objects.select_related(
-                    'member_ticket_tb__ticket_tb').filter(query_ticket_info, class_tb_id=class_id,
-                                                          auth_cd=AUTH_TYPE_VIEW,
-                                                          member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
-                                                          member_ticket_tb__use=USE, use=USE)
+                if query_ticket_counter > 0:
+                    class_member_ticket_data = ClassMemberTicketTb.objects.select_related(
+                        'member_ticket_tb__ticket_tb').filter(query_ticket_info, class_tb_id=class_id,
+                                                              auth_cd=AUTH_TYPE_VIEW,
+                                                              member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+                                                              member_ticket_tb__use=USE, use=USE)
 
-                for class_member_ticket_info in class_member_ticket_data:
-                    error = func_refresh_member_ticket_count(class_member_ticket_info.class_tb_id,
-                                                             class_member_ticket_info.member_ticket_tb_id)
+                    for class_member_ticket_info in class_member_ticket_data:
+                        error = func_refresh_member_ticket_count(class_member_ticket_info.class_tb_id,
+                                                                 class_member_ticket_info.member_ticket_tb_id)
 
             lecture_member_fix_data = LectureMemberTb.objects.filter(class_tb_id=class_id,
                                                                      lecture_tb_id=lecture_id, use=USE)
@@ -3874,23 +3879,26 @@ class GetLectureIngMemberListViewAjax(LoginRequiredMixin, AccessTestMixin, View)
         if len(lecture_ticket_data) > 0:
             # 수업에 속한 수강권을 가지고 있는 회원들을 가지고 오기 위한 작업
             query_ticket_list = Q()
+            query_ticket_counter = 0
             for lecture_ticket_info in lecture_ticket_data:
                 query_ticket_list |= Q(member_ticket_tb__ticket_tb_id=lecture_ticket_info.ticket_tb_id)
+                query_ticket_counter += 1
 
-            all_class_member_ticket_list = ClassMemberTicketTb.objects.select_related(
-                'member_ticket_tb__ticket_tb',
-                'member_ticket_tb__member').filter(query_ticket_list,
-                                                   Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS)
-                                                   | Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
-                                                   class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW,
-                                                   member_ticket_tb__ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
-                                                   member_ticket_tb__ticket_tb__use=USE,
-                                                   member_ticket_tb__use=USE,
-                                                   use=USE).order_by('member_ticket_tb__member__name',
-                                                                     'member_ticket_tb__end_date')
+            if query_ticket_counter > 0:
+                all_class_member_ticket_list = ClassMemberTicketTb.objects.select_related(
+                    'member_ticket_tb__ticket_tb',
+                    'member_ticket_tb__member').filter(query_ticket_list,
+                                                       Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS)
+                                                       | Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
+                                                       class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW,
+                                                       member_ticket_tb__ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+                                                       member_ticket_tb__ticket_tb__use=USE,
+                                                       member_ticket_tb__use=USE,
+                                                       use=USE).order_by('member_ticket_tb__member__name',
+                                                                         'member_ticket_tb__end_date')
 
-            member_list = func_get_member_from_member_ticket_list(all_class_member_ticket_list, lecture_id,
-                                                                  request.user.id)
+                member_list = func_get_member_from_member_ticket_list(all_class_member_ticket_list, lecture_id,
+                                                                      request.user.id)
 
         if error is not None:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
@@ -7197,5 +7205,28 @@ def holding_test_logic(request):
                 member_ticket_tb.state_cd = STATE_CD_IN_PROGRESS
 
         member_ticket_tb.save()
+
+    return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+
+def member_setting_test_logic(request):
+    context = {}
+    today = datetime.date.today()
+
+    schedule_alarm_data = ScheduleAlarmTb.objects.select_related('member', 'schedule_tb__member_ticket_tb').filter()
+    for schedule_alarm_info in schedule_alarm_data:
+        member = schedule_alarm_info.member
+        member_id = schedule_alarm_info.member.member_id
+        schedule_tb = schedule_alarm_info.schedule_tb
+        member_ticket_tb = ''
+        member_ticket_tb_member_id = ''
+        if schedule_tb is not None and schedule_tb != '':
+            member_ticket_tb = schedule_alarm_info.schedule_tb.member_ticket_tb
+
+        if member_ticket_tb is not None and member_ticket_tb != '':
+            member_ticket_tb_member_id = member_ticket_tb.member_id
+        if str(member_id) != member_ticket_tb_member_id:
+            if str(member.user.groups.all()[0]) == 'trainee':
+                print('alarm_id::'+str(schedule_alarm_info.schedule_alarm_id))
+                # schedule_alarm_info.delete()
 
     return JsonResponse(context, json_dumps_params={'ensure_ascii': True})

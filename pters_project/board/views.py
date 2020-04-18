@@ -110,8 +110,10 @@ class GetNoticeDataView(LoginRequiredMixin, View):
         member_type_cd = request.session.get('group_name')
 
         query_notice_type_list = Q()
+        query_notice_type_counter = 0
         for notice_type_cd_info in notice_type_cd:
             query_notice_type_list |= Q(notice_type_cd=notice_type_cd_info)
+            query_notice_type_counter += 1
         query_notice_group_cd = Q(to_member_type_cd='ALL') | Q(to_member_type_cd=member_type_cd)
 
         query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `NOTICE_TB`.`NOTICE_TYPE_CD`"

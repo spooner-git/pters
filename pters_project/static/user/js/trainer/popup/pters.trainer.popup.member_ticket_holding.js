@@ -105,7 +105,7 @@ class Member_ticket_holding{
             '<div class="obj_input_box_full">'+
                 CComponent.dom_tag('일시정지 시작일') + holding_start_date +
                 CComponent.dom_tag('일시정지 종료일') + holding_end_date +
-                CComponent.dom_tag(`특이사항 <span style="color:var(--font-highlight);display:${display}">(회원님께 공유됩니다.)</span>`) + holding_note +
+                CComponent.dom_tag(`특이사항 <span style="color:var(--font-highlight);">(회원님께 공유됩니다.)</span>`) + holding_note +
                 CComponent.dom_tag('자동 기간 연장') + holding_extension_flag +
                     // `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>`+
                 // + CComponent.dom_tag('일시정지 금액') + holding_price +
