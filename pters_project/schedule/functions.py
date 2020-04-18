@@ -387,7 +387,7 @@ def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
                                     if str(alarm_setting_info.user_group) == GROUP_TRAINEE:
                                         continue
                             else:
-                                if str(alarm_setting_info.user_group) == GROUP_TRAINEE:
+                                if str(alarm_setting_info.user_group) == GROUP_TRAINER:
                                     continue
                                 # 그룹 수업 - 회원 포함
                                 if str(add_schedule_info.member_ticket_tb.member_id) != str(alarm_setting_info.member_id):
@@ -510,7 +510,7 @@ def func_add_schedule_update(class_id, member_ticket_id, repeat_schedule_id,
                                         continue
                             else:
                                 # 그룹 수업 - 회원 포함
-                                if str(alarm_setting_info.user_group) == GROUP_TRAINEE:
+                                if str(alarm_setting_info.user_group) == GROUP_TRAINER:
                                     continue
                                 if str(add_schedule_info.member_ticket_tb.member_id) != str(alarm_setting_info.member_id):
                                     if str(alarm_setting_info.user_group) == GROUP_TRAINEE:
