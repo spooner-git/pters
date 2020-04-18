@@ -7207,3 +7207,26 @@ def holding_test_logic(request):
         member_ticket_tb.save()
 
     return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+
+def member_setting_test_logic(request):
+    context = {}
+    today = datetime.date.today()
+
+    schedule_alarm_data = ScheduleAlarmTb.objects.select_related('member', 'schedule_tb__member_ticket_tb').filter()
+    for schedule_alarm_info in schedule_alarm_data:
+        member = schedule_alarm_info.member
+        member_id = schedule_alarm_info.member.member_id
+        schedule_tb = schedule_alarm_info.schedule_tb
+        member_ticket_tb = ''
+        member_ticket_tb_member_id = ''
+        if schedule_tb is not None and schedule_tb != '':
+            member_ticket_tb = schedule_alarm_info.schedule_tb.member_ticket_tb
+
+        if member_ticket_tb is not None and member_ticket_tb != '':
+            member_ticket_tb_member_id = member_ticket_tb.member_id
+        if str(member_id) != member_ticket_tb_member_id:
+            if str(member.user.groups.all()[0]) == 'trainee':
+                print('alarm_id::'+str(schedule_alarm_info.schedule_alarm_id))
+                # schedule_alarm_info.delete()
+
+    return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
