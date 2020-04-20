@@ -338,10 +338,11 @@ class Program_list{
             let owner_name = data.program_program_owner_name;
             let owner_id = data.program_program_owner_id;
             let category_code = data.program_upper_subject_cd != "" ? data.program_upper_subject_cd : "ETC";
+            let category_code_name = data.program_upper_subject_type_name;
             let category_sub_name = data.program_subject_cd_name;
             let category_sub_code = data.program_subject_cd;
 
-            let html = `<article class="program_wrapper " data-program_id="${id}" onclick="event.stopPropagation();program_list_popup.event_program_click(${id}, '${name}', '${category_code}', '${category_sub_code}', '${selected}', '${shared}');">
+            let html = `<article class="program_wrapper " data-program_id="${id}" onclick="event.stopPropagation();program_list_popup.event_program_click(${id}, '${name}', '${category_code_name}', '${category_sub_name}', '${category_code}', '${category_sub_code}', '${selected}', '${shared}');">
                             <div class="program_data_u">
                                 <div>
                                     <span>${name}</span>
@@ -458,7 +459,7 @@ class Program_list{
         return html;
     }
 
-    event_program_click(id, name, category, category_sub, selected, shared){
+    event_program_click(id, name, category_code_name, category_sub_name, category, category_sub, selected, shared){
         let user_option = {
             goto:{text:`${TEXT.word.program[language]} ${TEXT.word.move[language]}`, callback:()=>{ 
                     window.location.href=`/trainer/select_program_processing/?class_id=${id}&next_page=/trainer/`; 
@@ -471,8 +472,8 @@ class Program_list{
                         let external_data = {   
                                                 id:id,
                                                 name:name, 
-                                                category:{name:[PROGRAM_CATEGORY[category].name], code:[category]}, 
-                                                category_sub:{name:[PROGRAM_CATEGORY[category].sub_category[category_sub].name], code:[category_sub]},
+                                                category:{name:[category_code_name], code:[category]},
+                                                category_sub:{name:[category_sub_name], code:[category_sub]},
                                                 selected:selected
                                             };
                         program_view_popup = new Program_view('.popup_program_view', external_data);
