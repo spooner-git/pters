@@ -71,6 +71,8 @@ urlpatterns = [
     url(r'^trainee_calendar/$', views.TraineeCalendarView.as_view(), name='trainee_calendar'),
     # 공지 사항 페이지
     url(r'^trainee_program_notice/$', views.TraineeProgramNoticeView.as_view(), name='trainee_program_notice'),
+    # 피터스 공지 사항 페이지
+    url(r'^trainee_system_notice/$', views.TraineeSystemNoticeView.as_view(), name='trainee_system_notice'),
     # 지점 선택 페이지
     url(r'^trainee_program/$', views.ProgramSelectView.as_view(), name='trainee_program'),
 

@@ -21,10 +21,13 @@
             cursor: pointer;
         }
         .pters_mobile_side_menu .wrapper_menu_inquiry{
-            padding: 20px 0;
+            padding: 5px 0;
             margin: 25px 0;
             border-top: 1px solid #e6e6e6;
             border-bottom: 1px solid #e6e6e6;
+            height: 90px;
+            line-height: 45px;
+
         }
 
         .pters_mobile_side_menu .wrapper_top .logo_pters{

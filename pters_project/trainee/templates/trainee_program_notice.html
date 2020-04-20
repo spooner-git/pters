@@ -45,9 +45,9 @@
     <script type="text/javascript">
         //Nav바에 현재 페이지에 밑줄 표기
         $('#nav_btn_program_notice').addClass("nav_selected");
-        function program_notice_read_check(program_notioce_id) {
+        function program_notice_read_check(program_notice_id) {
             let arr;
-            let element = document.getElementById("program_notice_title_"+program_notioce_id);
+            let element = document.getElementById("program_notice_title_"+program_notice_id);
             arr = element.className.split(" ");
               if (arr.indexOf("obj_font_color_grey") == -1) {
                 element.className += " " + "obj_font_color_grey";

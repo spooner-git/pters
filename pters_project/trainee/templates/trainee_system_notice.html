@@ -1,0 +1,59 @@
+{% extends "trainee_base.html" %}
+{% load static_url %}
+
+{% block local_css %}
+    <link rel="stylesheet" href={% static_url "user/css/trainee/page/pters.trainee.page.program_notice.css" %}>
+    <style type="text/css">
+        .wrapper_system_notice_title_box{
+            padding: 15px 20px 20px 20px;
+            background-image: linear-gradient(4deg, #fb767d, #ff3b44);
+            border: 1px solid #e6e6e6;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="trainee_program_notice">
+
+        <div class="wrapper_system_notice_title_box">
+            <div class="obj_font_size_15_weight_900 obj_font_color_white">피터스 공지사항</div>
+        </div>
+
+        <div class="wrapper_program_notice_list obj_box_full">
+            <div class="obj_table_raw wrapper_program_notice_element" style="padding:0; margin-top: 10px; background-color:#f8f9fa">
+                <div class="obj_table_cell_x3 obj_font_size_12_weight_500 obj_font_color_light_grey" style="width: 10%; text-align: center;">
+                    번호
+                </div>
+                <div class="obj_table_cell_x3 wrapper_program_notice_element_title obj_font_size_12_weight_normal obj_font_color_light_grey" style="width: 70%;text-align:center;">
+                    <div class="program_notice_status">제목</div>
+                </div>
+                <div class="obj_table_cell_x3 wrapper_program_notice_element_text" style="width: 20%; text-align: center;">
+                    <span class="obj_font_size_12_weight_500 obj_font_color_light_grey">날짜</span>
+                </div>
+            </div>
+        {% for notice_info in notice_data %}
+            <div class="obj_table_raw wrapper_program_notice_element" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_system_notice', 90, POPUP_FROM_BOTTOM,
+                                                                                {'notice_id':'{{ notice_info.notice_id }}'});">
+                <div class="obj_table_cell_x3 obj_font_size_12_weight_500 " style="width: 10%; text-align: center;">
+                    {{ forloop.revcounter }}
+                </div>
+                <div id="program_notice_title_{{notice_info.notice_id}}"
+                     class="obj_table_cell_x3 wrapper_program_notice_element_title obj_font_size_14_weight_normal "
+                     style="width: 70%; padding-left: 10px;">
+                    <div class="program_notice_status">{{ notice_info.notice_title }}</div>
+                </div>
+                <div class="obj_table_cell_x3 wrapper_program_notice_element_text" style="width: 20%; text-align: center;">
+                    <span class="obj_font_size_12_weight_500 ">{{ notice_info.notice_mod_dt | date:'Y.m.d' }}</span>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block local_js_footer %}
+{% endblock %}

@@ -12,32 +12,33 @@
         <div class="wrapper_popup_title_text obj_font_size_18_weight_900">
             {{ notice_info.notice_type_cd_name }}
         </div>
+    </div>
+</div>
+{% endblock %}
+{% block popup_base_wrapper_top_right %}
         <div class="wrapper_popup_title_date obj_font_size_13_weight_500">
 {#                    <div class="obj_box_full">#}
                 <div class="obj_table_raw">
 {#                            <div class="obj_table_cell_x3" style="width:60px;">#}
 {#                                <div class="obj_font_size_12_weight_500">작성자 : </div>#}
 {#                            </div>#}
-                    <!--
+
                     <div class="obj_table_cell_x2" style="width:40px;">
                         <img src="/static/common/icon/logo/PTERS_logo_short.png" class="obj_box_photo">
                     </div>
                     <div class="obj_table_cell_x2" style="width:auto;">
-                        <div class="obj_font_size_12_weight_500">PTERS 관리자</div>
+                        <div class="obj_font_size_12_weight_500">PTERS</div>
                     </div>
-                    -->
                 </div>
 {#                    </div>#}
         </div>
-    </div>
-</div>
 {% endblock %}
 {% block popup_base_contents %}
     <div class="popup_system_notice">
         {% if notice_info %}
             
             <div class="wrapper_system_notice_content obj_font_size_14_weight_500">
-                <div class="obj_box_full">
+                <div class="obj_box_full obj_font_color_light_black obj_font_size_15_weight_900">
                         <div style="width:auto;">
                             {{ notice_info.notice_title }}
                         </div>
@@ -45,7 +46,7 @@
                 <div class="obj_table_raw obj_box_full">
                         <div class="obj_font_color_grey obj_font_size_12_weight_normal" style="height:35px">
                             <div style="float:right;">
-                                {{ notice_info.notice_reg_dt | date:'Y.m.d (l)'|cut:"요일" }} {{ notice_info.notice_reg_dt | time:'H:i' }}
+                                {{ notice_info.notice_mod_dt | date:'Y.m.d (l)'|cut:"요일" }} {{ notice_info.notice_mod_dt | time:'H:i' }}
                             </div>
                         </div>
                         <div style="width:auto;" id="daily_record_content_wrap">
@@ -60,6 +61,9 @@
             작성된 공지사항이 없습니다.
         {% endif %}
     </div>
+{% endblock %}
+{% block popoup_base_wrapper_bottom_inside %}
+        <div class="obj_button_big obj_font_bg_pink_white" onclick="layer_popup.all_close_layer_popup()">닫기</div>
 {% endblock %}
 
 {% block popup_base_js %}
