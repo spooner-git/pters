@@ -134,6 +134,12 @@ urlpatterns = [
     url(r'^popup_program_notice/$', views.PopupProgramNoticeView.as_view(),
         name='popup_program_notice'),
 
+    url(r'^popup_system_notice/$', views.PopupSystemNoticeView.as_view(),
+        name='popup_system_notice'),
+
+    url(r'^popup_system_popup_notice/$', views.PopupSystemPopupNoticeView.as_view(),
+        name='popup_system_popup_notice'),
+
     # 회원 문의 내역 팝업 페이지
     url(r'^popup_inquiry/$', views.PopupInquiryView.as_view(), name='popup_inquiry'),
     url(r'^popup_inquiry_history/$', views.PopupInquiryHistoryView.as_view(), name='popup_inquiry_history'),

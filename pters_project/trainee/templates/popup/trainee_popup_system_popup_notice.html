@@ -1,0 +1,122 @@
+{% extends "popup/trainee_base_popup.html" %}
+{% load static_url %}
+{% load background_trainee_data %}
+
+{% block popup_base_css %}
+    <!-- pters.trainee.popup.system_popup_notice.css -->
+    <link rel="stylesheet" href={% static_url "user/css/trainee/popup/pters.trainee.popup.system_popup_notice.css" %}>
+{% endblock %}
+{% block popup_base_wrapper_top_left %}
+<div class="wrapper_popup_title">
+    <div class="wrapper_system_popup_notice_title">
+        <div class="wrapper_popup_title_text obj_font_size_18_weight_900">
+            {{ notice_info.notice_type_cd_name }}
+        </div>
+        <div class="wrapper_popup_title_date obj_font_size_13_weight_500">
+{#                    <div class="obj_box_full">#}
+                <div class="obj_table_raw">
+{#                            <div class="obj_table_cell_x3" style="width:60px;">#}
+{#                                <div class="obj_font_size_12_weight_500">작성자 : </div>#}
+{#                            </div>#}
+                    <!--
+                    <div class="obj_table_cell_x2" style="width:40px;">
+                        <img src="/static/common/icon/logo/PTERS_logo_short.png" class="obj_box_photo">
+                    </div>
+                    <div class="obj_table_cell_x2" style="width:auto;">
+                        <div class="obj_font_size_12_weight_500">PTERS 관리자</div>
+                    </div>
+                    -->
+                </div>
+{#                    </div>#}
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block popup_base_wrapper_top_right %}
+{% endblock %}
+{% block popup_base_contents %}
+    <div class="popup_system_popup_notice">
+        {% if notice_info %}
+            
+            <div class="wrapper_system_popup_notice_content obj_font_size_14_weight_500">
+                <div class="obj_box_full obj_font_color_light_black obj_font_size_15_weight_900">
+                        <div style="width:auto;">
+                            {{ notice_info.notice_title }}
+                        </div>
+                </div>
+                <div class="obj_table_raw obj_box_full">
+                        <div class="obj_font_color_grey obj_font_size_12_weight_normal" style="height:35px">
+                            <div style="float:right;">
+                                {{ notice_info.notice_reg_dt | date:'Y.m.d (l)'|cut:"요일" }} {{ notice_info.notice_reg_dt | time:'H:i' }}
+                            </div>
+                        </div>
+                        <div style="width:auto;" id="daily_record_content_wrap">
+                            {% autoescape off %}
+                                {{ notice_info.notice_contents }}
+                            {% endautoescape %}
+                        </div>
+                </div>
+            </div>
+
+        {% else %}
+            작성된 공지사항이 없습니다.
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block popoup_base_wrapper_bottom_inside %}
+    <div class="wrapper_popup_basic_buttons obj_table_raw" style="border:var(--border-article-dark);">
+        <div class="popup_basic_cancel obj_table_cell_x2 obj_font_bg_pink_white" onclick="update_popup_notice_unread({{ notice_info.notice_id}}, ()=> {layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)});" style="border-right:var(--border-article-dark);">다시보지 않기</div>
+        <div class="popup_basic_confirm obj_table_cell_x2 obj_font_bg_pink_white" onclick="layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)">닫기</div>
+     </div>
+{% endblock %}
+
+{% block popup_base_js %}
+    <script type="text/javascript">
+        window.addEventListener('load', function () {
+            {% for message in messages %}
+                {% if message.tags == "error" %}
+                    alert('{{ message }}');
+                {% endif %}
+            {% endfor %}
+        });
+        function update_popup_notice_unread(data, callback){
+            let url = '/board/update_popup_notice_unread/';
+
+            $.ajax({
+                url:url,
+                type:'POST',
+                data: {'notice_id':data},
+                dataType : 'JSON',
+
+                beforeSend:function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                },
+
+                //통신성공시 처리
+                success:function (data){
+                    if(data.messageArray != undefined){
+                        if(data.messageArray.length > 0){
+                            show_error_message({title:data.messageArray[0]});
+                            return false;
+                        }
+                    }
+                    if(callback != undefined){
+                        callback(data);
+                    }
+                },
+
+                //보내기후 팝업창 닫기
+                complete:function (){
+                },
+
+                //통신 실패시 처리
+                error:function (){
+                    console.log('server error');
+                }
+            });
+        }
+    </script>
+{% endblock %}
