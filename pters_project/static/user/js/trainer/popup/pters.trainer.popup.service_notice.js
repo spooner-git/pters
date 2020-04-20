@@ -343,20 +343,32 @@ class Setting_service_notice{
     }
 
     // 조회수 확인을 위해
-    static update_popup_notice_unread(data){
+    static update_popup_notice_unread(data, callback){
         let url = '/board/update_popup_notice_unread/';
 
         $.ajax({
             url:url,
-            type:'GET',
-            data: data,
+            type:'POST',
+            data: {'notice_id':data},
             dataType : 'JSON',
 
-            beforeSend:function (){
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
             },
 
             //통신성공시 처리
-            success:function (){
+            success:function (data){
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message({title:data.messageArray[0]});
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(data);
+                }
             },
 
             //보내기후 팝업창 닫기

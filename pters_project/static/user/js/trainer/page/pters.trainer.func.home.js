@@ -155,11 +155,12 @@ class Home {
                                     let length = data.notice_data.length;
                                     for(let i=0; i<length; i++){
                                         let notice_info = data.notice_data[i];
-                                        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_READER, 100, popup_style, null, () => {
+                                        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_EVENT_BOARD_READER, 100, popup_style, null, () => {
                                             let input_data = {
-                                                title: notice_info.notice_title, content: notice_info.notice_contents, date: notice_info.notice_mod_dt
+                                                title: notice_info.notice_title, content: notice_info.notice_contents, date: notice_info.notice_mod_dt,
+                                                notice_id: notice_info.notice_id
                                             };
-                                            board_reader = new BoardReader(notice_info.notice_type_cd_name, '.popup_board_reader', "board_reader", input_data);
+                                            event_board_reader = new EventBoardReader(notice_info.notice_type_cd_name, '.popup_event_board_reader', "event_board_reader", input_data);
                                         });
                                     }
                                 });

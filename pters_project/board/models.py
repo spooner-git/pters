@@ -89,7 +89,7 @@ class NoticeReadCheckTb(TimeStampedModel):
 
     class Meta:
         managed = False
-        db_table = 'NOTICE_TB'
+        db_table = 'NOTICE_READ_CHECK_TB'
         verbose_name = '공지사항 다시보지 않기'
         verbose_name_plural = '공지사항 다시보지 않기'
 
