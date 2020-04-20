@@ -86,7 +86,7 @@ class Notice {
         let html = `<div class="notice_upper_box">
                         <div style="display:inline-block;width:auto;font-size:22px;font-weight:bold;color:var(--font-main); letter-spacing: -1px; height:28px;">
                             <div style="display:inline-block;">
-                                공지 & 업데이트 내역
+                                공지 & 이벤트 & 업데이트 내역
                             </div>
                         </div>
                         ${this.button_sort()}
@@ -103,6 +103,8 @@ class Notice {
             title = "전체" + CImg.arrow_expand("", {"width":"17px", "height":"17px", "vertical-align":"middle"});
         }else if(this.sort == "notice"){
             title = "공지만" + CImg.arrow_expand("", {"width":"17px", "height":"17px", "vertical-align":"middle"});
+        }else if(this.sort == "event"){
+            title = "이벤트" + CImg.arrow_expand("", {"width":"17px", "height":"17px", "vertical-align":"middle"});
         }else if(this.sort == "update_history"){
             title = "업데이트 내역만" + CImg.arrow_expand("", {"width":"17px", "height":"17px", "vertical-align":"middle"});
         }
@@ -120,7 +122,7 @@ class Notice {
         let numbering = 1;
         for(let item in this.data.all){
             let type = this.data.all[item].notice_type_cd;
-            if(type != NOTICE && type != NOTICE_UPDATE_HISTORY){
+            if(type != NOTICE && type != NOTICE_UPDATE_HISTORY && type != EVENT){
                 continue;
             }
             
@@ -130,6 +132,10 @@ class Notice {
                 }
             }else if(this.sort == "update_history"){
                 if(type != NOTICE_UPDATE_HISTORY){
+                    continue;
+                }
+            }else if(this.sort == "event"){
+                if(type != EVENT){
                     continue;
                 }
             }
@@ -160,7 +166,8 @@ class Notice {
         let mod_dt = data.notice_mod_dt;
         let hits = data.notice_hits; //조회수
         let use = data.notice_use; //공개여부
-
+        let home_display = data.home_display; // 홈화면 공개 여부
+        let popup_display = data.popup_display; // 홈화면 공개 여부
 
         let html = `<article id="notice_article_${id}" class="notice_article">
                         <div class="notice_article_upper">
@@ -186,17 +193,23 @@ class Notice {
                                                                     category:[
                                                                         {id:"open", title:"공개범위", data: {text:["전체", "강사", "회원"], value:["ALL", "trainer", "trainee"]} },
                                                                         {id:"type", title:"분류", data: {text:["공지", "업데이트 내역"], value:[NOTICE, NOTICE_UPDATE_HISTORY]} },
+                                                                        {id:"home_display", title:"홈 화면 노출", data: {text:["공개", "비공개"], value:[ON, OFF]} },
+                                                                        {id:"popup_display", title:"팝업 화면 노출", data: {text:["공개", "비공개"], value:[ON, OFF]} },
                                                                         {id:"use", title:"상태", data: {text:["공개", "비공개"], value:[ON, OFF]} }
                                                                     ],
                                                                     category_selected:{
                                                                         open:{text:[target], value:[data.notice_to_member_type_cd]},
                                                                         type:{text:[NOTICE_TYPE[type] ], value:[type]},
+                                                                        home_display:{text:[NOTICE_USE[home_display].text], value:[home_display]},
+                                                                        popup_display:{text:[NOTICE_USE[popup_display].text], value:[popup_display]},
                                                                         use:{text:[NOTICE_USE[use].text], value:[use]}
                                                                     }
                                             };
                                             board_writer = new BoardWriter("공지 수정", '.popup_board_writer', 'board_writer', external_data, (data_written)=>{
                                                 let data = {"notice_id":data_written.id, "notice_type_cd":data_written.category_selected.type.value[0], "title":data_written.title, 
                                                             "contents":data_written.content, "to_member_type_cd":data_written.category_selected.open.value[0],
+                                                            "home_display":data_written.category_selected.home_display.value[0],
+                                                            "popup_display":data_written.category_selected.popup_display.value[0],
                                                             "use":data_written.category_selected.use.value[0]};
                                                 Notice_func.update(data, ()=>{
                                                     this.init_content();
@@ -245,6 +258,11 @@ class Notice {
                 this.render();
                 layer_popup.close_layer_popup();
             }},
+            event:{text:"이벤트만", callback:()=>{
+                this.sort = "event";
+                this.render();
+                layer_popup.close_layer_popup();
+            }},
             update_history:{text:"업데이트 내역만", callback:()=>{
                 this.sort = "update_history";
                 this.render();
@@ -266,17 +284,23 @@ class Notice {
                                         category:[
                                             {id:"open", title:"공개범위", data: {text:["전체", "강사", "회원"], value:["ALL", "trainer", "trainee"]} },
                                             {id:"type", title:"분류", data: {text:["공지", "업데이트 내역"], value:[NOTICE, NOTICE_UPDATE_HISTORY]} },
+                                            {id:"home_display", title:"홈 화면 노출", data: {text:["공개", "비공개"], value:[ON, OFF]} },
+                                            {id:"popup_display", title:"팝업 노출", data: {text:["공개", "비공개"], value:[ON, OFF]} },
                                             {id:"use", title:"상태", data: {text:["공개", "비공개"], value:[ON, OFF]} }
                                         ],
                                         category_selected:{
                                             open:{text:[], value:[]},
                                             type:{text:[], value:[]},
+                                            home_display:{text:[], value:[]},
+                                            popup_display:{text:[], value:[]},
                                             use:{text:[], value:[]}
                                         }
             };
             board_writer = new BoardWriter("새 공지사항", '.popup_board_writer', 'board_writer', external_data, (data_written)=>{
                 let data = {"notice_type_cd":data_written.category_selected.type.value[0], "title":data_written.title, 
                             "contents":data_written.content, "to_member_type_cd":data_written.category_selected.open.value[0],
+                            "home_display":data_written.category_selected.home_display.value[0],
+                            "popup_display":data_written.category_selected.popup_display.value[0],
                             "use":data_written.category_selected.use.value[0]};
                 Notice_func.create(data, ()=>{
                     this.init();

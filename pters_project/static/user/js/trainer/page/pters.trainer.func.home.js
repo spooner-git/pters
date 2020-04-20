@@ -149,6 +149,21 @@ class Home {
                                 let html = notice_dom + current_date + program_dom + plan_dom + end_alert_dom + sales_summary_dom;
                                 document.querySelector('#home_content_wrap').innerHTML = html;
                                 this.swiper_init();
+
+                                Setting_service_notice.read_for_popup((data)=> {
+                                    let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_BOTTOM;
+                                    let length = data.notice_data.length;
+                                    for(let i=0; i<length; i++){
+                                        let notice_info = data.notice_data[i];
+                                        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_BOARD_READER, 100, popup_style, null, () => {
+                                            let input_data = {
+                                                title: notice_info.notice_title, content: notice_info.notice_contents, date: notice_info.notice_mod_dt
+                                            };
+                                            board_reader = new BoardReader(notice_info.notice_type_cd_name, '.popup_board_reader', "board_reader", input_data);
+                                        });
+                                    }
+                                });
+
                             });
 
 
