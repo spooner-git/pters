@@ -4851,13 +4851,13 @@ def add_program_info_logic(request):
         except InternalError:
             error = '등록 값에 문제가 있습니다.'
 
-    if error is None:
-        request.session['class_id'] = class_info.class_id
-        request.session['class_hour'] = class_info.class_hour
-        request.session['class_type_code'] = class_info.subject_cd
-        request.session['class_type_name'] = class_info.get_class_type_cd_name()
-        request.session['class_center_name'] = class_info.get_center_name()
-        request.session['trainer_name'] = class_info.member.name
+    # if error is None:
+    #     request.session['class_id'] = class_info.class_id
+    #     request.session['class_hour'] = class_info.class_hour
+    #     request.session['class_type_code'] = class_info.subject_cd
+    #     request.session['class_type_name'] = class_info.get_class_type_cd_name()
+    #     request.session['class_center_name'] = class_info.get_center_name()
+    #     request.session['trainer_name'] = class_info.member.name
 
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
