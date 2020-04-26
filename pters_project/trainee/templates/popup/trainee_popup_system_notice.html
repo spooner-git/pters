@@ -3,52 +3,55 @@
 {% load background_trainee_data %}
 
 {% block popup_base_css %}
-    <!-- pters.trainee.popup.program_notice.css -->
-    <link rel="stylesheet" href={% static_url "user/css/trainee/popup/pters.trainee.popup.program_notice.css" %}>
+    <!-- pters.trainee.popup.system_notice.css -->
+    <link rel="stylesheet" href={% static_url "user/css/trainee/popup/pters.trainee.popup.system_notice.css" %}>
 {% endblock %}
 {% block popup_base_wrapper_top_left %}
 <div class="wrapper_popup_title">
-    <div class="wrapper_program_notice_title">
+    <div class="wrapper_system_notice_title">
         <div class="wrapper_popup_title_text obj_font_size_18_weight_900">
-            공지 사항
+            {{ notice_info.notice_type_cd_name }}
         </div>
+    </div>
+</div>
+{% endblock %}
+{% block popup_base_wrapper_top_right %}
         <div class="wrapper_popup_title_date obj_font_size_13_weight_500">
 {#                    <div class="obj_box_full">#}
                 <div class="obj_table_raw">
 {#                            <div class="obj_table_cell_x3" style="width:60px;">#}
 {#                                <div class="obj_font_size_12_weight_500">작성자 : </div>#}
 {#                            </div>#}
+
                     <div class="obj_table_cell_x2" style="width:40px;">
-                        <img src="{{ program_notice_info.member.profile_url }}" class="obj_box_photo">
+                        <img src="/static/common/icon/logo/PTERS_logo_short.png" class="obj_box_photo">
                     </div>
                     <div class="obj_table_cell_x2" style="width:auto;">
-                        <div class="obj_font_size_12_weight_500">{{ program_notice_info.member.name }}</div>
+                        <div class="obj_font_size_12_weight_500">PTERS</div>
                     </div>
                 </div>
 {#                    </div>#}
         </div>
-    </div>
-</div>
 {% endblock %}
 {% block popup_base_contents %}
-    <div class="popup_program_notice">
-        {% if program_notice_info %}
+    <div class="popup_system_notice">
+        {% if notice_info %}
             
-            <div class="wrapper_program_notice_content obj_font_size_14_weight_500">
+            <div class="wrapper_system_notice_content obj_font_size_14_weight_500">
                 <div class="obj_box_full obj_font_color_light_black obj_font_size_15_weight_900">
                         <div style="width:auto;">
-                            {{ program_notice_info.title }}
+                            {{ notice_info.notice_title }}
                         </div>
                 </div>
                 <div class="obj_table_raw obj_box_full">
                         <div class="obj_font_color_grey obj_font_size_12_weight_normal" style="height:35px">
                             <div style="float:right;">
-                                {{ program_notice_info.reg_dt | date:'Y.m.d (l)'|cut:"요일" }} {{ program_notice_info.reg_dt | time:'H:i' }}
+                                {{ notice_info.notice_mod_dt | date:'Y.m.d (l)'|cut:"요일" }} {{ notice_info.notice_mod_dt | time:'H:i' }}
                             </div>
                         </div>
                         <div style="width:auto;" id="daily_record_content_wrap">
                             {% autoescape off %}
-                                {{ program_notice_info.contents }}
+                                {{ notice_info.notice_contents }}
                             {% endautoescape %}
                         </div>
                 </div>
@@ -59,6 +62,18 @@
         {% endif %}
     </div>
 {% endblock %}
+{% block popoup_base_wrapper_bottom_inside %}
+        <div class="obj_button_big obj_font_bg_pink_white" onclick="layer_popup.all_close_layer_popup()">닫기</div>
+{% endblock %}
 
 {% block popup_base_js %}
+    <script type="text/javascript">
+        window.addEventListener('load', function () {
+            {% for message in messages %}
+                {% if message.tags == "error" %}
+                    alert('{{ message }}');
+                {% endif %}
+            {% endfor %}
+        });
+    </script>
 {% endblock %}

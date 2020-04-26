@@ -70,7 +70,8 @@ class NoticeTb(TimeStampedModel):
     contents = models.CharField('내용', db_column='CONTENTS', max_length=3000, blank=True, default='')
     to_member_type_cd = models.CharField('공지 대상', db_column='TO_MEMBER_TYPE_CD', max_length=20,
                                          blank=True, default=TO_MEMBER_BOARD_TYPE_CD_ALL)
-    home_display = models.IntegerField('홈 화면 공개여부', db_column='HOME_DISPLAY', default=0)  # Field name made lowercase.
+    home_display = models.IntegerField('홈 화면 공개여부', db_column='HOME_DISPLAY', default=0)
+    popup_display = models.IntegerField('팝 공개여부', db_column='POPUP_DISPLAY', default=0)
     hits = models.IntegerField('조회수', db_column='HITS', default=0)  # Field name made lowercase.
 
     class Meta:
@@ -78,6 +79,19 @@ class NoticeTb(TimeStampedModel):
         db_table = 'NOTICE_TB'
         verbose_name = '관리자 공지사항'
         verbose_name_plural = '관리자 공지사항'
+
+
+class NoticeReadCheckTb(TimeStampedModel):
+    notice_read_check_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    notice_tb = models.ForeignKey(NoticeTb, verbose_name='공지사항', on_delete=models.CASCADE, null=True)
+    member = models.ForeignKey(MemberTb, verbose_name='회원', on_delete=models.CASCADE, null=True)
+    unread_check = models.IntegerField('다시 보지 않기 여부', db_column='UNREAD_CHECK', default=0)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'NOTICE_READ_CHECK_TB'
+        verbose_name = '공지사항 다시보지 않기'
+        verbose_name_plural = '공지사항 다시보지 않기'
 
 
 # 아직 사용 안함

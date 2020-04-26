@@ -16,7 +16,7 @@ from django.views.generic import TemplateView
 from configs.functions import func_send_email
 from configs.settings import DEBUG
 from configs.const import USE
-from .models import QATb, BoardTb, NoticeTb, QACommentTb
+from .models import QATb, BoardTb, NoticeTb, QACommentTb, NoticeReadCheckTb
 
 if DEBUG is False:
     from tasks.tasks import task_send_email
@@ -130,6 +130,8 @@ class GetNoticeDataView(LoginRequiredMixin, View):
                                 'notice_contents': notice_info.contents,
                                 'notice_to_member_type_cd': notice_info.to_member_type_cd,
                                 'notice_hits': notice_info.hits,
+                                'home_display': notice_info.home_display,
+                                'popup_display': notice_info.popup_display,
                                 'notice_mod_dt': str(notice_info.mod_dt),
                                 'notice_reg_dt': str(notice_info.reg_dt),
                                 'notice_use': notice_info.use})
@@ -150,8 +152,7 @@ class GetHomeNoticeDataView(LoginRequiredMixin, View):
 
         query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `NOTICE_TB`.`NOTICE_TYPE_CD`"
         notice_data = NoticeTb.objects.filter(query_notice_type_list, query_notice_group_cd,
-                                              home_display=USE
-                                              # use=USE
+                                              home_display=USE, use=USE
                                               ).annotate(notice_type_cd_name=RawSQL(query_type_cd, []),
                                                          ).order_by('-reg_dt')
         notice_list = []
@@ -168,6 +169,73 @@ class GetHomeNoticeDataView(LoginRequiredMixin, View):
                                 'notice_use': notice_info.use})
 
         return JsonResponse({'notice_data': notice_list}, json_dumps_params={'ensure_ascii': True})
+
+
+class GetPopupNoticeDataView(LoginRequiredMixin, View):
+
+    def get(self, request):
+        notice_type_cd = request.GET.getlist('notice_type[]')
+        member_type_cd = request.session.get('group_name')
+
+        query_notice_type_list = Q()
+        for notice_type_cd_info in notice_type_cd:
+            query_notice_type_list |= Q(notice_type_cd=notice_type_cd_info)
+        query_notice_group_cd = Q(to_member_type_cd='ALL') | Q(to_member_type_cd=member_type_cd)
+
+        query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `NOTICE_TB`.`NOTICE_TYPE_CD`"
+        notice_read_check_data = NoticeReadCheckTb.objects.filter(member_id=request.user.id, unread_check=USE, use=USE)
+        notice_data = NoticeTb.objects.filter(query_notice_type_list, query_notice_group_cd,
+                                              popup_display=USE, use=USE
+                                              ).annotate(notice_type_cd_name=RawSQL(query_type_cd, []),
+                                                         ).order_by('-reg_dt')
+        notice_list = []
+        for notice_info in notice_data:
+            unread_check_test = False
+            for notice_read_check_info in notice_read_check_data:
+                if str(notice_read_check_info.notice_tb.notice_id) == str(notice_info.notice_id):
+                    unread_check_test = True
+            if not unread_check_test:
+                notice_list.append({'notice_id': notice_info.notice_id,
+                                    'notice_type_cd': notice_info.notice_type_cd,
+                                    'notice_type_cd_name': notice_info.notice_type_cd_name,
+                                    'notice_title': notice_info.title,
+                                    'notice_contents': notice_info.contents,
+                                    'notice_to_member_type_cd': notice_info.to_member_type_cd,
+                                    'notice_hits': notice_info.hits,
+                                    'notice_mod_dt': str(notice_info.mod_dt),
+                                    'notice_reg_dt': str(notice_info.reg_dt),
+                                    'notice_use': notice_info.use})
+                notice_info.hits += 1
+                notice_info.save()
+
+        return JsonResponse({'notice_data': notice_list}, json_dumps_params={'ensure_ascii': True})
+
+
+def update_popup_notice_unread_logic(request):
+    notice_id = request.POST.get('notice_id')
+    error = None
+    context = {}
+
+    if notice_id is None or notice_id == '':
+        error = '공지사항을 불러오는데 실패했습니다.[1]'
+
+    if error is None:
+        try:
+            notice_info = NoticeTb.objects.get(notice_id=notice_id)
+            notice_info.hits += 1
+            notice_info.save()
+        except ObjectDoesNotExist:
+            error = '공지사항을 불러오는데 실패했습니다.[2]'
+
+    if error is None:
+        notice_read_check_info = NoticeReadCheckTb(notice_tb_id=notice_id, member_id=request.user.id,
+                                                   unread_check=USE, use=USE)
+        notice_read_check_info.save()
+    if error is not None:
+        messages.error(request, error)
+        context['messageArray'] = error
+
+    return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
 
 
 def update_notice_hits_logic(request):

@@ -1,6 +1,10 @@
 	#popup_inquiry_history .popup_mobile .wrapper_top{
-		height: 40px;
+		/*height: 40px;*/
 		margin-bottom: 10px;
+	}
+	#popup_inquiry_history .wrapper_popup_title_text{
+		height: 35px;
+		line-height: 35px;
 	}
 
 	.popup_inquiry_history{

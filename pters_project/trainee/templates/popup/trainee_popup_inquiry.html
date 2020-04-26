@@ -15,7 +15,7 @@
             border:0;
             font-size:13px;
         }
-        .wrapper_trainee_iquiry_textarea{
+        .wrapper_trainee_inquiry_textarea{
             resize: none;
             width: 100%;
             padding: 20px;
@@ -28,12 +28,19 @@
     </style>
 {% endblock %}
 <!-- pters.trainee.popup.plan_reserve.css -->
+
+{% block popup_base_wrapper_top_left %}
+<div class="wrapper_popup_title">
+    <div class="wrapper_popup_title_text obj_font_size_18_weight_900">피터스에게 문의하기</div>
+</div>
+{% endblock %}
 {% block popup_base_contents %}
     <div class="popup_inquiry">
+        <!--
         <div class="wrapper_inquiry_title">
-            <div class="wrapper_popup_title_text obj_font_size_18_weight_900">피터스에게 문의하기</div>
+            <div class="wrapper_popup_title_text obj_font_size_18_weight_900"></div>
         </div>
-
+        -->
         <div class="obj_box_full">
             <select class="wrapper_inquiry_type_select">
                 <option disabled selected>문의 유형 선택</option>
@@ -50,7 +57,7 @@
                 <input type="hidden" name="inquire_body" id="id_inquire_body">
                 <input type="hidden" name="inquire_subject" id="id_inquire_subject" value="[회원문의]">
             </form>
-            <textarea id="inquiry_textarea" class="wrapper_trainee_iquiry_textarea obj_box_full" placeholder="문의 내용을 입력 해주세요.&#13;&#10;"></textarea>
+            <textarea id="inquiry_textarea" class="wrapper_trainee_inquiry_textarea obj_box_full" placeholder="문의 내용을 입력 해주세요.&#13;&#10;"></textarea>
         </div>
 
     </div>
@@ -68,9 +75,9 @@
         let nav_bar_height = parseInt($('body').css('padding-top')) + 80;
         let iphone_scroll_vibe_margin = 2;
 
-        $('.wrapper_trainee_iquiry_textarea').css('height', device_height-nav_bar_height-select_box_height-button_height-margins-iphone_scroll_vibe_margin);
+        $('.wrapper_trainee_inquiry_textarea').css('height', device_height-nav_bar_height-select_box_height-button_height-margins-iphone_scroll_vibe_margin);
 
-        func_set_webkit_overflow_scrolling('.wrapper_trainee_iquiry_textarea');
+        func_set_webkit_overflow_scrolling('.wrapper_trainee_inquiry_textarea');
 
 
         $('#button_inquiry_send').click(function(){

@@ -269,11 +269,15 @@
     	$('#nav_btn_home').addClass("nav_selected");
 
         window.addEventListener('load', function () {
-        {% for message in messages %}
-            {% if message.tags == "error" %}
-                alert('{{ message }}');
-            {% endif %}
-        {% endfor %}
+            {% for message in messages %}
+                {% if message.tags == "error" %}
+                    alert('{{ message }}');
+                {% endif %}
+            {% endfor %}
+            {% for popup_notice_info in popup_notice_data %}
+                layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_system_popup_notice', 90, POPUP_FROM_BOTTOM,
+                    {'notice_id':'{{ popup_notice_info.notice_id }}'});
+            {% endfor %}
         });
 
         $(document).on("change", "select[title='program_select']", function(){

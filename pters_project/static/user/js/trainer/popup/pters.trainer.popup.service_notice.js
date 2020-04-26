@@ -297,6 +297,91 @@ class Setting_service_notice{
             }
         });
     }
+
+    static read_for_popup(callback, error_callback){
+        let url = '/board/get_popup_notice_list/';
+
+        $.ajax({
+            url:url,
+            type:'GET',
+            data: {"notice_type": [NOTICE, EVENT]},
+            dataType : 'JSON',
+
+            beforeSend:function (){
+                // ajax_load_image(SHOW);
+            },
+
+            //통신성공시 처리
+            success:function (data){
+                check_app_version(data.app_version);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message({title:data.messageArray[0]});
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(data);
+                }
+                return data;
+                // }
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function (){
+                // ajax_load_image(HIDE);
+            },
+
+            //통신 실패시 처리
+            error:function (){
+                if(error_callback != undefined){
+                    error_callback();
+                }
+                console.log('server error');
+            }
+        });
+    }
+
+    // 조회수 확인을 위해
+    static update_popup_notice_unread(data, callback){
+        let url = '/board/update_popup_notice_unread/';
+
+        $.ajax({
+            url:url,
+            type:'POST',
+            data: {'notice_id':data},
+            dataType : 'JSON',
+
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+
+            //통신성공시 처리
+            success:function (data){
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message({title:data.messageArray[0]});
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(data);
+                }
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function (){
+            },
+
+            //통신 실패시 처리
+            error:function (){
+                console.log('server error');
+            }
+        });
+    }
+
     // 조회수 확인을 위해
     static update_notice_hits(data){
         let url = '/board/update_notice_hits/';
