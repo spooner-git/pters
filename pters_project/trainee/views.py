@@ -196,10 +196,11 @@ class TraineeMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                 query_notice_type_list = Q(notice_type_cd='NOTICE') | Q(notice_type_cd='EVENT')
                 query_notice_group_cd = Q(to_member_type_cd='ALL') | Q(to_member_type_cd='trainee')
 
-                notice_read_check_data = NoticeReadCheckTb.objects.filter(member_id=self.request.user.id, unread_check=USE,
+                notice_read_check_data = NoticeReadCheckTb.objects.filter(member_id=self.request.user.id,
+                                                                          unread_check=USE,
                                                                           use=USE)
                 notice_data = NoticeTb.objects.filter(query_notice_type_list, query_notice_group_cd,
-                                                      popup_display=USE).order_by('-reg_dt')
+                                                      popup_display=USE, use=USE).order_by('-reg_dt')
                 notice_list = []
                 for notice_info in notice_data:
                     unread_check_test = False

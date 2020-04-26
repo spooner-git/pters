@@ -185,7 +185,7 @@ class GetPopupNoticeDataView(LoginRequiredMixin, View):
         query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `NOTICE_TB`.`NOTICE_TYPE_CD`"
         notice_read_check_data = NoticeReadCheckTb.objects.filter(member_id=request.user.id, unread_check=USE, use=USE)
         notice_data = NoticeTb.objects.filter(query_notice_type_list, query_notice_group_cd,
-                                              popup_display=USE
+                                              popup_display=USE, use=USE
                                               ).annotate(notice_type_cd_name=RawSQL(query_type_cd, []),
                                                          ).order_by('-reg_dt')
         notice_list = []
