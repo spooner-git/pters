@@ -77,7 +77,8 @@ class GetNoticeAllView(LoginRequiredMixin, AccessTestMixin, View):
                                                        'notice_contents': notice_info.contents,
                                                        'notice_to_member_type_cd': notice_info.to_member_type_cd,
                                                        'notice_hits': notice_info.hits,
-                                                       'notice_home_display': notice_info.home_display,
+                                                       'home_display': notice_info.home_display,
+                                                       'popup_display': notice_info.popup_display,
                                                        'notice_mod_dt': notice_info.mod_dt,
                                                        'notice_reg_dt': notice_info.reg_dt,
                                                        'notice_use': notice_info.use}
@@ -93,7 +94,8 @@ class AddNoticeInfoView(LoginRequiredMixin, AccessTestMixin, View):
         title = request.POST.get('title', '')
         contents = request.POST.get('contents', '')
         to_member_type_cd = request.POST.get('to_member_type_cd')
-        home_display = request.POST.get('home_display', 0)
+        home_display = request.POST.get('home_display', UN_USE)
+        popup_display = request.POST.get('popup_display', UN_USE)
         use = request.POST.get('use', USE)
         member_type_cd = request.session.get('group_name')
 
@@ -108,7 +110,7 @@ class AddNoticeInfoView(LoginRequiredMixin, AccessTestMixin, View):
         if error is None:
             notice_info = NoticeTb(member_id=request.user.id, notice_type_cd=notice_type_cd,
                                    title=title, contents=contents, to_member_type_cd=to_member_type_cd,
-                                   home_display=home_display,
+                                   home_display=home_display, popup_display=popup_display,
                                    use=use)
             notice_info.save()
 
@@ -277,7 +279,8 @@ class UpdateNoticeInfoView(LoginRequiredMixin, AccessTestMixin, View):
         title = request.POST.get('title', '')
         contents = request.POST.get('contents', '')
         to_member_type_cd = request.POST.get('to_member_type_cd')
-        home_display = request.POST.get('home_display', 0)
+        home_display = request.POST.get('home_display', UN_USE)
+        popup_display = request.POST.get('popup_display', UN_USE)
         use = request.POST.get('use', USE)
         member_type_cd = request.session.get('group_name')
 
@@ -307,6 +310,7 @@ class UpdateNoticeInfoView(LoginRequiredMixin, AccessTestMixin, View):
             notice_info.contents = contents
             notice_info.to_member_type_cd = to_member_type_cd
             notice_info.home_display = home_display
+            notice_info.popup_display = popup_display
             notice_info.use = use
             notice_info.save()
 

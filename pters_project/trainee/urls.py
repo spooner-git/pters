@@ -71,6 +71,8 @@ urlpatterns = [
     url(r'^trainee_calendar/$', views.TraineeCalendarView.as_view(), name='trainee_calendar'),
     # 공지 사항 페이지
     url(r'^trainee_program_notice/$', views.TraineeProgramNoticeView.as_view(), name='trainee_program_notice'),
+    # 피터스 공지 사항 페이지
+    url(r'^trainee_system_notice/$', views.TraineeSystemNoticeView.as_view(), name='trainee_system_notice'),
     # 지점 선택 페이지
     url(r'^trainee_program/$', views.ProgramSelectView.as_view(), name='trainee_program'),
 
@@ -133,6 +135,12 @@ urlpatterns = [
     # 회원 지점 공지 팝업 페이지
     url(r'^popup_program_notice/$', views.PopupProgramNoticeView.as_view(),
         name='popup_program_notice'),
+
+    url(r'^popup_system_notice/$', views.PopupSystemNoticeView.as_view(),
+        name='popup_system_notice'),
+
+    url(r'^popup_system_popup_notice/$', views.PopupSystemPopupNoticeView.as_view(),
+        name='popup_system_popup_notice'),
 
     # 회원 문의 내역 팝업 페이지
     url(r'^popup_inquiry/$', views.PopupInquiryView.as_view(), name='popup_inquiry'),

@@ -13,7 +13,7 @@ from django.utils import timezone
 from django.views import View
 from django.views.generic import TemplateView, RedirectView
 
-from board.models import QATb, QACommentTb
+from board.models import QATb, QACommentTb, NoticeReadCheckTb, NoticeTb
 from configs import settings
 from configs.views import AccessTestMixin, func_setting_data_update
 from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, DEL_SCHEDULE, USE, UN_USE, FROM_TRAINEE_LESSON_ALARM_ON, \
@@ -192,6 +192,26 @@ class TraineeMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                 cancel_disable_time = timezone.now() + datetime.timedelta(minutes=cancel_prohibition_time)
                 context['cancel_disable_time'] = cancel_disable_time
                 check_alarm_program_notice_qa_comment(context, class_id, self.request.user.id)
+
+                query_notice_type_list = Q(notice_type_cd='NOTICE') | Q(notice_type_cd='EVENT')
+                query_notice_group_cd = Q(to_member_type_cd='ALL') | Q(to_member_type_cd='trainee')
+
+                notice_read_check_data = NoticeReadCheckTb.objects.filter(member_id=self.request.user.id,
+                                                                          unread_check=USE,
+                                                                          use=USE)
+                notice_data = NoticeTb.objects.filter(query_notice_type_list, query_notice_group_cd,
+                                                      popup_display=USE, use=USE).order_by('-reg_dt')
+                notice_list = []
+                for notice_info in notice_data:
+                    unread_check_test = False
+                    for notice_read_check_info in notice_read_check_data:
+                        if str(notice_read_check_info.notice_tb.notice_id) == str(notice_info.notice_id):
+                            unread_check_test = True
+                    if not unread_check_test:
+                        notice_list.append({'notice_id': notice_info.notice_id,
+                                            'notice_use': notice_info.use})
+                context['popup_notice_data'] = notice_list
+
         return context
 
 
@@ -306,6 +326,37 @@ class TraineeProgramNoticeView(LoginRequiredMixin, AccessTestMixin, TemplateView
 
             check_alarm_program_notice_qa_comment(context, class_id, self.request.user.id)
 
+        return context
+
+
+class TraineeSystemNoticeView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'trainee_system_notice.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(TraineeSystemNoticeView, self).get_context_data(**kwargs)
+
+        query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `NOTICE_TB`.`NOTICE_TYPE_CD`"
+
+        query_notice_type_list = Q(notice_type_cd='NOTICE') | Q(notice_type_cd='EVENT') \
+                                 | Q(notice_type_cd='SYS_USAGE') | Q(notice_type_cd='FAQ')
+        query_notice_group_cd = Q(to_member_type_cd='ALL') | Q(to_member_type_cd='trainee')
+        notice_data = NoticeTb.objects.filter(query_notice_type_list, query_notice_group_cd,
+                                              use=USE).annotate(notice_type_cd_name=RawSQL(query_type_cd, []),
+                                                                ).order_by('-reg_dt')
+        notice_list = []
+        for notice_info in notice_data:
+            notice_list.append({'notice_id': notice_info.notice_id,
+                                'notice_type_cd': notice_info.notice_type_cd,
+                                'notice_type_cd_name': notice_info.notice_type_cd_name,
+                                'notice_title': notice_info.title,
+                                'notice_contents': notice_info.contents,
+                                'notice_to_member_type_cd': notice_info.to_member_type_cd,
+                                'notice_hits': notice_info.hits,
+                                'notice_reg_dt': notice_info.reg_dt,
+                                'notice_mod_dt': notice_info.mod_dt,
+                                'notice_use': notice_info.use})
+            notice_info.save()
+        context['notice_data'] = notice_list
         return context
 
 
@@ -2242,6 +2293,88 @@ class PopupProgramNoticeView(TemplateView):
 
         if error is None:
             context['program_notice_info'] = program_notice_info
+        return context
+
+
+class PopupSystemNoticeView(TemplateView):
+    template_name = 'popup/trainee_popup_system_notice.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PopupSystemNoticeView, self).get_context_data(**kwargs)
+        notice_id = self.request.GET.get('notice_id')
+        notice_info = None
+        error = None
+        if notice_id is None or notice_id == '':
+            error = '피터스 공지사항 정보를 불러오지 못했습니다.[0]'
+        if error is None:
+            try:
+                notice_info = NoticeTb.objects.get(notice_id=notice_id)
+                notice_info.hits += 1
+                notice_info.save()
+            except ObjectDoesNotExist:
+                error = '피터스 공지사항 정보를 불러오지 못했습니다.[1]'
+
+        if error is None:
+            try:
+                notice_type_cd_name = CommonCdTb.objects.get(common_cd=notice_info.notice_type_cd).common_cd_nm
+            except ObjectDoesNotExist:
+                notice_type_cd_name = ''
+            context['notice_info'] = {'notice_id': notice_info.notice_id,
+                                      'notice_type_cd': notice_info.notice_type_cd,
+                                      'notice_type_cd_name': notice_type_cd_name,
+                                      'notice_title': notice_info.title,
+                                      'notice_contents': notice_info.contents,
+                                      'notice_to_member_type_cd': notice_info.to_member_type_cd,
+                                      'notice_hits': notice_info.hits,
+                                      'notice_mod_dt': notice_info.mod_dt,
+                                      'notice_reg_dt': notice_info.reg_dt,
+                                      'notice_use': notice_info.use}
+
+        if error is not None:
+            logger.error('[' + str(self.request.user.id) + ']' + str(error))
+            messages.error(self.request, str(error))
+
+        return context
+
+
+class PopupSystemPopupNoticeView(TemplateView):
+    template_name = 'popup/trainee_popup_system_popup_notice.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PopupSystemPopupNoticeView, self).get_context_data(**kwargs)
+        notice_id = self.request.GET.get('notice_id')
+        notice_info = None
+        error = None
+        if notice_id is None or notice_id == '':
+            error = '피터스 공지사항 정보를 불러오지 못했습니다.[0]'
+        if error is None:
+            try:
+                notice_info = NoticeTb.objects.get(notice_id=notice_id)
+                notice_info.hits += 1
+                notice_info.save()
+            except ObjectDoesNotExist:
+                error = '피터스 공지사항 정보를 불러오지 못했습니다.[1]'
+
+        if error is None:
+            try:
+                notice_type_cd_name = CommonCdTb.objects.get(common_cd=notice_info.notice_type_cd).common_cd_nm
+            except ObjectDoesNotExist:
+                notice_type_cd_name = ''
+            context['notice_info'] = {'notice_id': notice_info.notice_id,
+                                      'notice_type_cd': notice_info.notice_type_cd,
+                                      'notice_type_cd_name': notice_type_cd_name,
+                                      'notice_title': notice_info.title,
+                                      'notice_contents': notice_info.contents,
+                                      'notice_to_member_type_cd': notice_info.to_member_type_cd,
+                                      'notice_hits': notice_info.hits,
+                                      'notice_mod_dt': notice_info.mod_dt,
+                                      'notice_reg_dt': notice_info.reg_dt,
+                                      'notice_use': notice_info.use}
+
+        if error is not None:
+            logger.error('[' + str(self.request.user.id) + ']' + str(error))
+            messages.error(self.request, str(error))
+
         return context
 
 

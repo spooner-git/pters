@@ -6900,6 +6900,164 @@ class BoardReader{
     }
 }
 
+class EventBoardReader{
+    constructor(title, install_target, instance, data){
+        this.title = title;
+        this.target = {install:install_target, instance:instance};
+        this.external_data = data;
+        this.data = {
+            title:null,
+            content:null,
+            date:null,
+            writer:null,
+            status:null,
+            type:null,
+            notice_id:null,
+
+            answer_title:null,
+            answer_content:null,
+            answer_date:null,
+            answer_writer:null,
+            andwer_type:null
+        };
+        this.set_initial_data();
+        this.init();
+    }
+
+    init(){
+        this.render();
+    }
+
+    set_initial_data(){
+        for(let item in this.external_data){
+            if(this.external_data[item] != undefined){
+                this.data[item] = this.external_data[item];
+            }
+        }
+        // this.data.title = this.external_data.title != null ? this.external_data.title : null;
+        // this.data.content = this.external_data.content != null ? this.external_data.content : null;
+    }
+
+    clear(){
+        setTimeout(()=>{
+            document.querySelector(this.target.install).innerHTML = "";
+        }, 300);
+    }
+
+    render(){
+        let top_left = `<span class="icon_left"></span>`;
+        let top_center = `<span class="icon_center">
+                            <span id="">${this.title}</span>
+                          </span>`;
+        let top_right = `<span class="icon_right">
+                        </span>`;
+        let content =   `<section>${this.dom_assembly()}</section>`;
+        let bottom = `<div class="wrapper_popup_basic_buttons obj_table_raw" style="border:var(--border-article-dark);">
+                        <div class="popup_basic_cancel obj_table_cell_x2" onclick="Setting_service_notice.update_popup_notice_unread(${this.data.notice_id}, ()=> {layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)});" style="border-right:var(--border-article-dark);">다시보지 않기</div>
+                        <div class="popup_basic_confirm obj_table_cell_x2" onclick="layer_popup.close_layer_popup(POPUP_SIZE_WINDOW)">닫기</div>
+                     </div>`;
+        let html = PopupBase.base(top_left, top_center, top_right, content, bottom);
+
+        document.querySelector(this.target.install).innerHTML = html;
+    }
+
+    dom_assembly (){
+        let title = this.dom_row_title();
+        let content = this.dom_row_content();
+        let answer = this.dom_assemble_answer();
+        if(this.data.answer_title == null && this.data.answer_content == null){
+            answer = "";
+        }
+
+        let html = `<div style="padding:20px;">`+ title + `</div>` +
+                    `<div style="padding:20px;">` + content + `</div>` +
+                    answer;
+
+        return html;
+    }
+
+    dom_row_title(){
+        let date = this.data.date == null ? "" : this.data.date;
+        if(this.data.date != null){
+            let date_info_split = date.split(' ')[0];
+            let date_info = date_info_split.split('-');
+            let date_text = DateRobot.to_text(date_info[0], date_info[1], date_info[2]);
+            let time_info_split = date.split(' ')[1];
+            let time_text = TimeRobot.to_text(time_info_split.split(':')[0] ,time_info_split.split(':')[1]);
+            date = date_text + '  ' + time_text;
+        }
+
+        let html = `<div style="font-size:20px;font-weight:bold;color:var(--font-main);letter-spacing:-0.9px;">
+                        <span>${this.data.type == null ? "" : '['+this.data.type+']'}</span> 
+                        ${this.data.title == null ? "" : this.data.title} 
+                        <span style="float:right;font-size:13px;letter-spacing:-0.6px">${this.data.status == null ? "" : this.data.status}</span>
+                        <div style="font-size:12px;font-weight:500;letter-spacing:-0.6px;color:var(--font-sub-normal);">${date}</div>
+                    </div>`;
+        return html;
+    }
+
+    dom_row_content(){
+        let html = `<div style="font-size:15px;font-weight:500;letter-spacing:-0.6px;color:var(--font-sub-dark);" id="event_board_reader_content">
+                        ${this.data.content == null ? "" : this.data.content}
+                    </div>`;
+        $(document).off('click', '#event_board_reader_content img').on('click', '#event_board_reader_content img', function(){
+            let event_board_reader_content_width = $('#event_board_reader_content').width();
+            if($(this).hasClass('zoomed') == false){
+                let original_size = 100*$(this).width()/event_board_reader_content_width + '%';
+                $(this).css({'transition':'0.4s', 'width':"100%"});
+                $(this).addClass('zoomed');
+                $(this).attr('data-oriwidth', original_size);
+            }else{
+                let original_size = $(this).attr('data-oriwidth');
+                $(this).css({'width':original_size});
+                $(this).removeClass('zoomed');
+            }
+        });
+        return html;
+    }
+
+    dom_assemble_answer(){
+        let title = this.dom_row_answer_title();
+        let content = this.dom_row_answer_content();
+
+        let html = `<div class="obj_input_box_full" style="padding:20px 20px 20px 40px;">` + title + content + `</div>`;
+        return html;
+    }
+
+    dom_row_answer_title(){
+        let date = this.data.answer_date == null ? "" : this.data.answer_date;
+        if(date != ""){
+            let date_info_split = date.split(' ')[0];
+            let date_info = date_info_split.split('-');
+            let date_text = DateRobot.to_text(date_info[0], date_info[1], date_info[2]);
+            let time_info_split = date.split(' ')[1];
+            let time_text = TimeRobot.to_text(time_info_split.split(':')[0] ,time_info_split.split(':')[1]);
+            date = date_text + '  ' + time_text;
+        }
+
+        let html = `<div style="font-size:16px;font-weight:bold;color:var(--font-main);letter-spacing:-0.9px;margin-bottom:40px;">
+                        PTERS 답변 : ${this.data.answer_title == null ? "" : this.data.answer_title}
+                        <div style="font-size:12px;font-weight:500;letter-spacing:-0.5px;color:var(--font-sub-normal);">${date}</div>
+                    </div>`;
+        return html;
+    }
+
+    dom_row_answer_content(){
+        let html = `<div style="font-size:15px;font-weight:500;letter-spacing:-0.6px;color:var(--font-sub-dark);">
+                        ${this.data.answer_content == null ? "" : this.data.answer_content}
+                    </div>`;
+        return html;
+    }
+
+
+    request_list (callback){
+    }
+
+    upper_right_menu(){
+        layer_popup.close_layer_popup();
+        this.clear();
+    }
+}
 
 class DrawingBoard{
     constructor(install_target, instance, data){

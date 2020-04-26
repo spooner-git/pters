@@ -177,6 +177,7 @@ const NOTICE = 'NOTICE';
 const NOTICE_FAQ = 'FAQ';
 const NOTICE_USAGE = 'SYS_USAGE';
 const NOTICE_UPDATE_HISTORY = 'UPDATE_HISTORY';
+const EVENT = 'EVENT';
 
 /* 시간 입력기 */
 const BASIC = 0;
@@ -310,6 +311,7 @@ const POPUP_ADDRESS_PASSWORD_4D_INPUT = 'popup_password_4d_input';
 const POPUP_ADDRESS_BOARD_WRITER = 'popup_board_writer';
 const POPUP_ADDRESS_BOARD_WRITER_UPDATE = 'popup_board_writer_update';
 const POPUP_ADDRESS_BOARD_READER = 'popup_board_reader';
+const POPUP_ADDRESS_EVENT_BOARD_READER = 'popup_event_board_reader';
 const POPUP_ADDRESS_DRAWING_BOARD = 'popup_drawing_board';
 
 const POPUP_ADDRESS_PTERS_PASS_MAIN = 'popup_pters_pass_main';
