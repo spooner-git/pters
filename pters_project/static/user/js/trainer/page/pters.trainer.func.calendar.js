@@ -897,7 +897,7 @@ class Calendar {
                 let saturday = "";
                 let border_style = "";
                 let today_marking = "";
-                let today_text_style = "position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);z-index:1";
+                let today_text_style = "position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);z-index:1;";
                 if(month_or_week == "month"){
                     today_text_style = "";
                 }
@@ -927,7 +927,7 @@ class Calendar {
                 
                 if(`${_year[i]}-${_month[i]}-${_date[i]}` == this.today){
                     today_marking = `<div class="today_marking" style="top:-4px;"></div>`;
-                    today_text_style = 'color:var(--fundamental-white);font-weight:bold;position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);z-index:1';
+                    today_text_style = 'color:var(--fundamental-white);font-weight:bold;position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);z-index:1;';
                     if(month_or_week == "month"){
                         today_text_style = 'color:var(--fundamental-white);font-weight:bold;';
                         today_marking = `<div class="today_marking" style="top:-2px; width:20px; height:20px; border-radius:12px;z-index:-1;"></div>`;
@@ -943,7 +943,7 @@ class Calendar {
                         holiday_name = this.holiday[this_date_yyyymmdd].holiday_name;
                     }
                 }
-                
+
 
                 
                 let onclick = month_or_week == "week" ? `${this.instance}.zoom_week_cal(this, ${_year[i]}, ${_month[i]}, ${_date[i]})` : `;calendar.week_zoomed.activate = true;calendar.week_zoomed.target_row = this.dataset.row;${this.instance}.go_week(${_year[i]}, ${_month[i]}, ${_date[i]});`;
