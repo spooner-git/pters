@@ -434,8 +434,9 @@ class TraineeSettingView(LoginRequiredMixin, AccessTestMixin, View):
         error = None
         class_id = request.session.get('class_id', '')
         trainer_id = request.session.get('trainer_id', '')
-        context = func_get_trainer_setting_list(context, class_id, trainer_id)
-        func_get_trainee_setting_list(context, class_id, request.user.id)
+        if class_id is not None and class_id != '':
+            context = func_get_trainer_setting_list(context, class_id, trainer_id)
+            func_get_trainee_setting_list(context, class_id, request.user.id)
         return render(request, self.template_name, context)
 
 
