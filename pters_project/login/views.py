@@ -464,6 +464,9 @@ class AddOldSocialMemberInfoView(RegistrationView, View):
         error = None
         user = None
 
+        if email is None or email == '':
+            email = sns_id
+
         try:
             user = User.objects.get(email=email)
         except ObjectDoesNotExist:
@@ -584,7 +587,6 @@ class CheckSocialMemberInfoView(TemplateView):
         username = ''
         if user_email is None or user_email == '':
             user_email = sns_id
-
         # 소셜 회원가입하지 않고 email 정보도 없는 회원
         context['social_check'] = '0'
 
@@ -606,7 +608,7 @@ class CheckSocialMemberInfoView(TemplateView):
                 username = ''
 
         # 소셜 회원가입하지 않았으나 email은 등록된 회원
-        if username == '':
+        if username == '' and user_email != '':
             try:
                 user_info = User.objects.get(username=user_email)
                 username = user_info.username
