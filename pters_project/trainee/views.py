@@ -266,22 +266,23 @@ class TraineeCalendarView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         one_to_one_lecture_check = 0
         group_lecture_check = 0
 
-        member_ticket_data = ClassMemberTicketTb.objects.select_related(
-            'member_ticket_tb__member',
-            'member_ticket_tb__ticket_tb'
-        ).filter(Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS) | Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
-                 class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__member_id=self.request.user.id,
-                 member_ticket_tb__ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
-                 member_ticket_tb__use=USE, member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW, use=USE)
+        if class_id is not None and class_id != '':
+            member_ticket_data = ClassMemberTicketTb.objects.select_related(
+                'member_ticket_tb__member',
+                'member_ticket_tb__ticket_tb'
+            ).filter(Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS) | Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
+                     class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__member_id=self.request.user.id,
+                     member_ticket_tb__ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+                     member_ticket_tb__use=USE, member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW, use=USE)
 
-        for member_ticket_info in member_ticket_data:
-            ticket_lecture_data = TicketLectureTb.objects.filter(
-                ticket_tb_id=member_ticket_info.member_ticket_tb.ticket_tb_id,
-                lecture_tb__state_cd=STATE_CD_IN_PROGRESS, lecture_tb__use=USE, use=USE)
-            one_to_one_lecture_check += ticket_lecture_data.filter(lecture_tb__lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE).count()
-            group_lecture_check += ticket_lecture_data.filter(lecture_tb__lecture_type_cd=LECTURE_TYPE_NORMAL).count()
+            for member_ticket_info in member_ticket_data:
+                ticket_lecture_data = TicketLectureTb.objects.filter(
+                    ticket_tb_id=member_ticket_info.member_ticket_tb.ticket_tb_id,
+                    lecture_tb__state_cd=STATE_CD_IN_PROGRESS, lecture_tb__use=USE, use=USE)
+                one_to_one_lecture_check += ticket_lecture_data.filter(lecture_tb__lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE).count()
+                group_lecture_check += ticket_lecture_data.filter(lecture_tb__lecture_type_cd=LECTURE_TYPE_NORMAL).count()
 
-        func_setting_data_update(self.request, 'trainee')
+            func_setting_data_update(self.request, 'trainee')
         # context = func_get_class_member_ticket_count(context, class_id, self.request.user.id)
         context['one_to_one_lecture_check'] = one_to_one_lecture_check
         context['group_lecture_check'] = group_lecture_check
