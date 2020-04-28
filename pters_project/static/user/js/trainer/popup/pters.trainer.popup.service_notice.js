@@ -260,7 +260,7 @@ class Setting_service_notice{
         $.ajax({
             url:url,
             type:'GET',
-            data: {"notice_type": [NOTICE, NOTICE_UPDATE_HISTORY]},
+            data: {"notice_type": [NOTICE, NOTICE_UPDATE_HISTORY, EVENT]},
             dataType : 'JSON',
 
             beforeSend:function (){

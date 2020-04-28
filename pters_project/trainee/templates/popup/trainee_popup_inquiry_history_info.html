@@ -6,8 +6,7 @@
     <!-- pters.trainee.popup.inquiry_history_info.css -->
     <link rel="stylesheet" href={% static_url "user/css/trainee/popup/pters.trainee.popup.inquiry_history_info.css" %}>
 {% endblock %}
-{% block popup_base_contents %}
-    <div class="popup_inquiry_history_info">
+{% block popup_base_wrapper_top_left %}
         {% if qa_info %}
             <div class="wrapper_inquiry_history_info_title">
                 <div class="wrapper_popup_title_text obj_font_size_18_weight_900">
@@ -29,6 +28,12 @@
 {#                    </div>#}
                 </div>
             </div>
+    {% endif %}
+{% endblock %}
+
+{% block popup_base_contents %}
+    <div class="popup_inquiry_history_info">
+        {% if qa_info %}
             <div class="wrapper_inquiry_history_info_content obj_font_size_14_weight_500">
                 <div class="obj_table_raw obj_box_full">
                         <div style="height:35px">

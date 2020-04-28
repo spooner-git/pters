@@ -237,7 +237,7 @@ class Home {
         let length = this.received_data.notice.notice_data.length;
         for(let i=0; i<length; i++){
             let data = this.received_data.notice.notice_data[i];
-            if(data.notice_type_cd != NOTICE){
+            if(data.notice_type_cd != NOTICE && data.notice_type_cd != EVENT){
                 continue;
             }
 
