@@ -7383,12 +7383,10 @@ class GetTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
         if error is None:
             connection_check = 0
-            print(str(class_info.auth_cd))
             if class_info.auth_cd == AUTH_TYPE_VIEW:
                 connection_check = 2
             elif class_info.auth_cd == AUTH_TYPE_WAIT:
                 connection_check = 1
-            print(str(connection_check))
             if user_member_info.reg_info is None or str(user_member_info.reg_info) != str(request.user.id):
                 # 연결이 안되어 있는 경우 회원 정보 표시 안함
                 if connection_check != 2:
