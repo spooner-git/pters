@@ -73,47 +73,47 @@ class Trainer_auth{
         // Trainer_auth_func.read({"class_id": this.program_id}, (data)=>{
             // let my_auth = data[this.trainer_db_id];
             //
-            // if(my_auth != undefined){
-            //     this.data.schedule.create = my_auth.auth_plan_create != undefined ? my_auth.auth_plan_create : OFF;
-            //     this.data.schedule.read = my_auth.auth_plan_read != undefined ? my_auth.auth_plan_read : OFF;
-            //     this.data.schedule.update = my_auth.auth_plan_update != undefined ? my_auth.auth_plan_update : OFF;
-            //     this.data.schedule.delete = my_auth.auth_plan_delete != undefined ? my_auth.auth_plan_delete : OFF;
-            //
-            //     this.data.member.create = my_auth.auth_member_create != undefined ? my_auth.auth_member_create : OFF;
-            //     this.data.member.read = my_auth.auth_member_read != undefined ? my_auth.auth_member_read : OFF;
-            //     this.data.member.update = my_auth.auth_member_update != undefined ? my_auth.auth_member_update : OFF;
-            //     this.data.member.delete = my_auth.auth_member_delete != undefined ? my_auth.auth_member_delete : OFF;
-            //
-            //     this.data.lecture.create = my_auth.auth_group_create != undefined ? my_auth.auth_group_create : OFF;
-            //     this.data.lecture.read = my_auth.auth_group_read != undefined ? my_auth.auth_group_read : OFF;
-            //     this.data.lecture.update = my_auth.auth_group_update != undefined ? my_auth.auth_group_update : OFF;
-            //     this.data.lecture.delete = my_auth.auth_group_delete != undefined ? my_auth.auth_group_delete : OFF;
-            //
-            //     this.data.ticket.create = my_auth.auth_package_create != undefined ? my_auth.auth_package_create : OFF;
-            //     this.data.ticket.read = my_auth.auth_package_read != undefined ? my_auth.auth_package_read : OFF;
-            //     this.data.ticket.update = my_auth.auth_package_update != undefined ? my_auth.auth_package_update : OFF;
-            //     this.data.ticket.delete = my_auth.auth_package_delete != undefined ? my_auth.auth_package_delete : OFF;
-            //
-            //     this.data.trainer.create = my_auth.auth_trainer_create != undefined ? my_auth.auth_trainer_create : OFF;
-            //     this.data.trainer.read = my_auth.auth_trainer_read != undefined ? my_auth.auth_trainer_read : OFF;
-            //     this.data.trainer.update = my_auth.auth_trainer_update != undefined ? my_auth.auth_trainer_update : OFF;
-            //     this.data.trainer.delete = my_auth.auth_trainer_delete != undefined ? my_auth.auth_trainer_delete : OFF;
-            //
-            //     this.data.notice.create = my_auth.auth_notice_create != undefined ? my_auth.auth_notice_create : OFF;
-            //     this.data.notice.read = my_auth.auth_notice_read != undefined ? my_auth.auth_notice_read : OFF;
-            //     this.data.notice.update = my_auth.auth_notice_update != undefined ? my_auth.auth_notice_update : OFF;
-            //     this.data.notice.delete = my_auth.auth_notice_delete != undefined ? my_auth.auth_notice_delete : OFF;
-            //
-            //     this.data.statistics.read = my_auth.auth_analytics_read != undefined ? my_auth.auth_analytics_read : OFF;
-            //
-            //     this.data.setting.create = my_auth.auth_setting_create != undefined ? my_auth.auth_setting_create : OFF;
-            //     this.data.setting.read = my_auth.auth_setting_read != undefined ? my_auth.auth_setting_read : OFF;
-            //     this.data.setting.update = my_auth.auth_setting_update != undefined ? my_auth.auth_setting_update : OFF;
-            //     this.data.setting.delete = my_auth.auth_setting_delete != undefined ? my_auth.auth_setting_delete : OFF;
-            //
-            //     this.shared_status = my_auth.trainer_info.auth_cd;
-            //     this.current_shared_status = my_auth.trainer_info.auth_cd;
-            // }
+            if(this.external_data.trainer_auth != {}){
+                this.data.schedule.create = this.external_data.trainer_auth.auth_plan_create != undefined ? this.external_data.trainer_auth.auth_plan_create : OFF;
+                this.data.schedule.read = this.external_data.trainer_auth.auth_plan_read != undefined ? this.external_data.trainer_auth.auth_plan_read : OFF;
+                this.data.schedule.update = this.external_data.trainer_auth.auth_plan_update != undefined ? this.external_data.trainer_auth.auth_plan_update : OFF;
+                this.data.schedule.delete = this.external_data.trainer_auth.auth_plan_delete != undefined ? this.external_data.trainer_auth.auth_plan_delete : OFF;
+
+                this.data.member.create = this.external_data.trainer_auth.auth_member_create != undefined ? this.external_data.trainer_auth.auth_member_create : OFF;
+                this.data.member.read = this.external_data.trainer_auth.auth_member_read != undefined ? this.external_data.trainer_auth.auth_member_read : OFF;
+                this.data.member.update = this.external_data.trainer_auth.auth_member_update != undefined ? this.external_data.trainer_auth.auth_member_update : OFF;
+                this.data.member.delete = this.external_data.trainer_auth.auth_member_delete != undefined ? this.external_data.trainer_auth.auth_member_delete : OFF;
+
+                this.data.lecture.create = this.external_data.trainer_auth.auth_group_create != undefined ? this.external_data.trainer_auth.auth_group_create : OFF;
+                this.data.lecture.read = this.external_data.trainer_auth.auth_group_read != undefined ? this.external_data.trainer_auth.auth_group_read : OFF;
+                this.data.lecture.update = this.external_data.trainer_auth.auth_group_update != undefined ? this.external_data.trainer_auth.auth_group_update : OFF;
+                this.data.lecture.delete = this.external_data.trainer_auth.auth_group_delete != undefined ? this.external_data.trainer_auth.auth_group_delete : OFF;
+
+                this.data.ticket.create = this.external_data.trainer_auth.auth_package_create != undefined ? this.external_data.trainer_auth.auth_package_create : OFF;
+                this.data.ticket.read = this.external_data.trainer_auth.auth_package_read != undefined ? this.external_data.trainer_auth.auth_package_read : OFF;
+                this.data.ticket.update = this.external_data.trainer_auth.auth_package_update != undefined ? this.external_data.trainer_auth.auth_package_update : OFF;
+                this.data.ticket.delete = this.external_data.trainer_auth.auth_package_delete != undefined ? this.external_data.trainer_auth.auth_package_delete : OFF;
+
+                this.data.trainer.create = this.external_data.trainer_auth.auth_trainer_create != undefined ? this.external_data.trainer_auth.auth_trainer_create : OFF;
+                this.data.trainer.read = this.external_data.trainer_auth.auth_trainer_read != undefined ? this.external_data.trainer_auth.auth_trainer_read : OFF;
+                this.data.trainer.update = this.external_data.trainer_auth.auth_trainer_update != undefined ? this.external_data.trainer_auth.auth_trainer_update : OFF;
+                this.data.trainer.delete = this.external_data.trainer_auth.auth_trainer_delete != undefined ? this.external_data.trainer_auth.auth_trainer_delete : OFF;
+
+                this.data.notice.create = this.external_data.trainer_auth.auth_notice_create != undefined ? this.external_data.trainer_auth.auth_notice_create : OFF;
+                this.data.notice.read = this.external_data.trainer_auth.auth_notice_read != undefined ? this.external_data.trainer_auth.auth_notice_read : OFF;
+                this.data.notice.update = this.external_data.trainer_auth.auth_notice_update != undefined ? this.external_data.trainer_auth.auth_notice_update : OFF;
+                this.data.notice.delete = this.external_data.trainer_auth.auth_notice_delete != undefined ? this.external_data.trainer_auth.auth_notice_delete : OFF;
+
+                this.data.statistics.read = this.external_data.trainer_auth.auth_analytics_read != undefined ? this.external_data.trainer_auth.auth_analytics_read : OFF;
+
+                this.data.setting.create = this.external_data.trainer_auth.auth_setting_create != undefined ? this.external_data.trainer_auth.auth_setting_create : OFF;
+                this.data.setting.read = this.external_data.trainer_auth.auth_setting_read != undefined ? this.external_data.trainer_auth.auth_setting_read : OFF;
+                this.data.setting.update = this.external_data.trainer_auth.auth_setting_update != undefined ? this.external_data.trainer_auth.auth_setting_update : OFF;
+                this.data.setting.delete = this.external_data.trainer_auth.auth_setting_delete != undefined ? this.external_data.trainer_auth.auth_setting_delete : OFF;
+
+                // this.shared_status = this.external_data.trainer_auth.trainer_info.auth_cd;
+                // this.current_shared_status = this.external_data.trainer_auth.trainer_info.auth_cd;
+            }
         // });
 
         this.render();

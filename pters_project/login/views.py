@@ -862,7 +862,6 @@ class AddTrainerNoEmailView(View):
         class_id = request.session.get('class_id', '')
         context = add_member_no_email_func(request.user.id, first_name, phone, sex, birthday_dt, 'trainer')
         error = context['error']
-
         if error is not None:
             logger.error(name + '[강사 회원가입]' + error)
             messages.error(request, error)

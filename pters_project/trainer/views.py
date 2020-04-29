@@ -5070,11 +5070,18 @@ class GetShareProgramDataViewAjax(LoginRequiredMixin, AccessTestMixin, View):
             error = '오류가 발생했습니다.'
 
         if error is None:
+            member_program_data = MemberClassTb.objects.select_related(
+                'class_tb', 'member').filter(class_tb_id=class_id, own_cd=OWN_TYPE_EMPLOYEE,
+                                             use=USE)
+            exclude_member = Q()
+            for member_program_info in member_program_data:
+                exclude_member |= Q(member_id=member_program_info.member_id)
             program_auth_data = ProgramAuthTb.objects.select_related('class_tb', 'member',
                                                                      'function_auth_tb').filter(class_tb_id=class_id,
-                                                                                                use=USE)
+                                                                                                use=USE).exclude(exclude_member)
 
             for program_auth_info in program_auth_data:
+
                 if program_auth_info.auth_type_cd is None:
                     function_auth_type_cd_name = str(program_auth_info.function_auth_tb.function_auth_type_cd)
                 else:
@@ -7145,12 +7152,16 @@ class GetTrainerEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 def add_trainer_program_info_logic(request):
     trainer_id = request.POST.get('trainer_id', '')
     auth_cd = request.POST.get('auth_cd', '')
-    class_id = request.POST.get('class_id', '')
+    class_id = request.session.get('class_id', '')
 
     error = None
     member_info = None
     if trainer_id is None or trainer_id == '':
         error = '강사 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        if str(request.user.id) == str(trainer_id):
+            error = '본인은 등록할수 없습니다.'
 
     if error is None:
         try:
@@ -7163,6 +7174,7 @@ def add_trainer_program_info_logic(request):
             class_member_info = MemberClassTb.objects.select_related(
                 'class_tb', 'member').get(class_tb_id=class_id, member_id=trainer_id, use=USE)
             class_member_info.auth_cd = auth_cd
+            class_member_info.own_cd = OWN_TYPE_EMPLOYEE
             class_member_info.mod_member_id = request.user.id
             class_member_info.save()
         except ObjectDoesNotExist:

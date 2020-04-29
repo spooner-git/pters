@@ -79,14 +79,15 @@ class Trainer_add{
             return null;
         }
 
-        Trainer_func.read(data, (received)=>{
-            this.data.name = received.trainer_name;
-            this.data.trainer_id = received.trainer_id;
-            this.data.phone = received.trainer_phone == "None" ? null : received.trainer_phone;
-            this.data.birth = received.trainer_birthday_dt == "None" ? null : DateRobot.to_split(received.trainer_birthday_dt);
-            this.data.sex = received.trainer_sex == "None" ? null :  received.trainer_sex;
+        // Trainer_func.read(data, (received)=>{
+            this.data.name = data.trainer_name;
+            // alert(received.trainer_name)
+            this.data.trainer_id = data.trainer_id;
+            // this.data.phone = received.trainer_phone == "None" ? null : received.trainer_phone;
+            // this.data.birth = received.trainer_birthday_dt == "None" ? null : DateRobot.to_split(received.trainer_birthday_dt);
+            // this.data.sex = received.trainer_sex == "None" ? null :  received.trainer_sex;
             this.init();
-        });
+        // });
     }
 
     clear(){
@@ -127,7 +128,7 @@ class Trainer_add{
         let birth = this.dom_row_trainer_birth_input();
         let sex = this.dom_row_trainer_sex_input();
         let trainer_auth = this.dom_row_trainer_auth();
-        let trainer_auth_list = this.dom_row_trainer_auth_list();
+        // let trainer_auth_list = this.dom_row_trainer_auth_list();
         let html =
             '<div class="obj_input_box_full">'
                 + CComponent.dom_tag('강사명', null, true) + name + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
@@ -136,8 +137,7 @@ class Trainer_add{
                 + CComponent.dom_tag('성별') + sex + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
                 +'</div>' +
             '<div class="obj_input_box_full">'
-                + CComponent.dom_tag('권한', null, true) + trainer_auth + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
-                + trainer_auth_list +
+                + CComponent.dom_tag('권한', null, true) + trainer_auth + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'+
             '</div>';
 
         if(this.data_from_external != null){ // 재등록
@@ -146,8 +146,7 @@ class Trainer_add{
                 + CComponent.dom_tag('강사명') + name +
             '</div>' +
             '<div class="obj_input_box_full">'
-                + CComponent.dom_tag('권한', null, true) + trainer_auth + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
-                + trainer_auth_list +
+                + CComponent.dom_tag('권한', null, true) + trainer_auth + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'+
             '</div>';
         }
 
@@ -306,13 +305,15 @@ class Trainer_add{
         let icon = CImg.ticket();
         let icon_r_visible = SHOW;
         let icon_r_text = "";
-        let style ={"color":"var(--font-inactive)"};
-
+        let style ={"color":"var(--font-inactive)", "height":"auto"};
+        if(Object.keys(this.data.trainer_auth).length > 0) {
+            title = this.dom_row_trainer_auth_list();
+        }
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TRAINER_AUTH, 100, popup_style, null, ()=>{
                 trainer_auth_popup = new Trainer_auth('.popup_trainer_auth',
-                    {"title":"허용 권한 선택"}, (set_data)=>{
+                    {"title":"허용 권한 선택", "trainer_auth":this.data.trainer_auth}, (set_data)=>{
                     this.data.trainer_auth = set_data;
                     this.render_content();
                 });
@@ -323,7 +324,7 @@ class Trainer_add{
 
     dom_row_trainer_auth_list(){
         let html = "";
-        if(this.data.trainer_auth != {}){
+        if(Object.keys(this.data.trainer_auth).length > 0) {
             let auth_plan_create = this.data.trainer_auth.auth_plan_create == 1 ? "등록" : null;
             let auth_plan_read = this.data.trainer_auth.auth_plan_read == 1 ? "조회" :  null;
             let auth_plan_update = this.data.trainer_auth.auth_plan_update == 1 ? "수정" :  null;
@@ -367,68 +368,67 @@ class Trainer_add{
             let notice_auth = [auth_notice_create, auth_notice_read, auth_notice_update, auth_notice_delete].filter((el)=>{ if(el == null){return false;} return true; }).map((el)=>{return el;});
             let statistics_auth = [auth_statistics_read].filter((el)=>{ if(el == null){return false;} return true; }).map((el)=>{return el;});
             let setting_auth = [auth_setting_read, auth_setting_update].filter((el)=>{ if(el == null){return false;} return true; }).map((el)=>{return el;});
-
-            let auth_schedule = `<div class="shared_member_auth" style="${schedule_auth.length == 0 ? "display:none" : ""}">
+            let auth_schedule = `<div class="trainer_auth">
                                     <div class="auth_title">일정</div>
                                     <div class="auth_setting">
-                                        ${schedule_auth.join("/")}
+                                        ${schedule_auth.length == 0 ? "권한 없음" : schedule_auth.join("/")}
                                     </div>
                                 </div>`;
-            let auth_member = `<div class="shared_member_auth" style="${member_auth.length == 0 ? "display:none" : ""}">
+            let auth_member = `<div class="trainer_auth">
                                     <div class="auth_title">회원</div>
                                     <div class="auth_setting">
-                                        ${member_auth.join("/")}
+                                        ${member_auth.length == 0 ? "권한 없음" : member_auth.join("/")}
                                     </div>
                                 </div>`;
-            let auth_lecture = `<div class="shared_member_auth" style="${lecture_auth.length == 0 ? "display:none" : ""}">
+            let auth_lecture = `<div class="trainer_auth">
                                     <div class="auth_title">수업</div>
                                     <div class="auth_setting">
-                                        ${lecture_auth.join("/")}
+                                        ${lecture_auth.length == 0 ? "권한 없음" : lecture_auth.join("/")}
                                     </div>
                                 </div>`;
-            let auth_ticket = `<div class="shared_member_auth" style="${ticket_auth.length == 0 ? "display:none" : ""}">
+            let auth_ticket = `<div class="trainer_auth">
                                     <div class="auth_title">수강권</div>
                                     <div class="auth_setting">
-                                        ${ticket_auth.join("/")}
+                                        ${ticket_auth.length == 0 ? "권한 없음" : ticket_auth.join("/")}
                                     </div>
                                 </div>`;
-            let auth_trainer = `<div class="shared_member_auth" style="${trainer_auth.length == 0 ? "display:none" : ""}">
+            let auth_trainer = `<div class="trainer_auth">
                                     <div class="auth_title">강사</div>
                                     <div class="auth_setting">
-                                        ${trainer_auth.join("/")}
+                                        ${trainer_auth.length == 0 ? "권한 없음" : trainer_auth.join("/")}
                                     </div>
                                 </div>`;
-            let auth_notice= `<div class="shared_member_auth" style="${notice_auth.length == 0 ? "display:none" : ""}">
+            let auth_notice= `<div class="trainer_auth">
                                     <div class="auth_title">공지사항</div>
                                     <div class="auth_setting">
-                                        ${notice_auth.join("/")}
+                                        ${notice_auth.length == 0 ? "권한 없음" : notice_auth.join("/")}
                                     </div>
                                 </div>`;
-            let auth_statistics = `<div class="shared_member_auth" style="${statistics_auth.length == 0 ? "display:none" : ""}">
+            let auth_statistics = `<div class="trainer_auth">
                                     <div class="auth_title">통계</div>
                                     <div class="auth_setting">
-                                        ${statistics_auth.join("/")}
+                                        ${statistics_auth.length == 0 ? "권한 없음" : statistics_auth.join("/")}
                                     </div>
                                 </div>`;
-            let auth_setting = `<div class="shared_member_auth" style="${setting_auth.length == 0 ? "display:none" : ""}">
+            let auth_setting = `<div class="trainer_auth">
                                     <div class="auth_title">설정</div>
                                     <div class="auth_setting">
-                                        ${setting_auth.join("/")}
+                                        ${setting_auth.length == 0 ? "권한 없음" : setting_auth.join("/")}
                                     </div>
                                 </div>`;
 
-            html = `<article class="obj_input_box_full" id="trainer_auth_row">
-                            <div class="shared_members_auth_wrapper">
-                                ${auth_schedule == null ? "" : auth_schedule}
-                                ${auth_member == null ? "" : auth_member}
-                                ${auth_lecture == null ? "" : auth_lecture}
-                                ${auth_ticket == null ? "" : auth_ticket}
-                                ${auth_trainer == null ? "" : auth_trainer}
-                                ${auth_notice == null ? "" : auth_notice}
-                                ${auth_statistics == null ? "" : auth_statistics}
-                                ${auth_setting == null ? "" : auth_setting}
-                            </div>                 
-                        </article>`;
+            html = `<article class="obj_input_box_full" id="trainer_auth_row" style="border-top:0px;">
+                        <div class="trainer_auth_wrapper">
+                            ${auth_schedule == null ? "" : auth_schedule}
+                            ${auth_member == null ? "" : auth_member}
+                            ${auth_lecture == null ? "" : auth_lecture}
+                            ${auth_ticket == null ? "" : auth_ticket}
+                            ${auth_trainer == null ? "" : auth_trainer}
+                            ${auth_notice == null ? "" : auth_notice}
+                            ${auth_statistics == null ? "" : auth_statistics}
+                            ${auth_setting == null ? "" : auth_setting}
+                        </div>                 
+                    </article>`;
         }
         return html;
     }
@@ -451,16 +451,20 @@ class Trainer_add{
         }else if(this.data_sending_now == false){
             this.data_sending_now = true;
         }
+        if(Object.keys(this.data.trainer_auth).length == 0){
+            show_error_message({title:"허용 권한을 선택해주세요."});
+            return false;
+        }
 
         let recontract = this.data_from_external == null ? OFF : ON;
-        let inspect = pass_inspector.trainer(recontract, this.data.trainer_id);
+        let inspect = pass_inspector.trainer();
         if(inspect.barrier == BLOCKED){
             this.data_sending_now = false;
             let message = {
                 title:'강사 등록을 완료하지 못했습니다.',
                 comment:`[${inspect.limit_type}] 이용자께서는 강사을 최대 ${inspect.limit_num}명까지 등록하실 수 있습니다.
                         <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까?</p>`
-            }
+            };
             show_user_confirm (message, ()=>{
                 layer_popup.all_close_layer_popup();
                 sideGoPopup("pters_pass_main");
@@ -481,10 +485,80 @@ class Trainer_add{
                     "phone":this.data.phone,
                     "birthday": `${this.data.birth != null ? this.data.birth.year+'-'+this.data.birth.month+'-'+this.data.birth.date : ''}`,
                     "sex":this.data.sex,
+                    "auth_cd": AUTH_TYPE_VIEW,
+                    "auth_plan_create":this.data.trainer_auth.auth_plan_create,
+                    "auth_plan_read":this.data.trainer_auth.auth_plan_read,
+                    "auth_plan_update":this.data.trainer_auth.auth_plan_update,
+                    "auth_plan_delete":this.data.trainer_auth.auth_plan_delete,
+
+                    "auth_member_create":this.data.trainer_auth.auth_member_create,
+                    "auth_member_read":this.data.trainer_auth.auth_member_read,
+                    "auth_member_update":this.data.trainer_auth.auth_member_update,
+                    "auth_member_delete":this.data.trainer_auth.auth_member_delete,
+
+                    "auth_group_create":this.data.trainer_auth.auth_group_create,
+                    "auth_group_read":this.data.trainer_auth.auth_group_read,
+                    "auth_group_update":this.data.trainer_auth.auth_group_update,
+                    "auth_group_delete":this.data.trainer_auth.auth_group_delete,
+
+                    "auth_package_create":this.data.trainer_auth.auth_package_create,
+                    "auth_package_read":this.data.trainer_auth.auth_package_read,
+                    "auth_package_update":this.data.trainer_auth.auth_package_update,
+                    "auth_package_delete":this.data.trainer_auth.auth_package_delete,
+
+                    "auth_trainer_create":this.data.trainer_auth.auth_trainer_create,
+                    "auth_trainer_read":this.data.trainer_auth.auth_trainer_read,
+                    "auth_trainer_update":this.data.trainer_auth.auth_trainer_update,
+                    "auth_trainer_delete":this.data.trainer_auth.auth_trainer_delete,
+
+                    "auth_notice_create":this.data.trainer_auth.auth_notice_create,
+                    "auth_notice_read":this.data.trainer_auth.auth_notice_read,
+                    "auth_notice_update":this.data.trainer_auth.auth_notice_update,
+                    "auth_notice_delete":this.data.trainer_auth.auth_notice_delete,
+
+                    "auth_analytics_read":this.data.trainer_auth.auth_analytics_read,
+
+                    "auth_setting_read":this.data.trainer_auth.auth_setting_read,
+                    "auth_setting_update":this.data.trainer_auth.auth_setting_update,
         };
 
         let data_for_re = {
             "trainer_id":this.data.trainer_id,
+            "auth_cd": AUTH_TYPE_WAIT,
+            "auth_plan_create":this.data.trainer_auth.auth_plan_create,
+            "auth_plan_read":this.data.trainer_auth.auth_plan_read,
+            "auth_plan_update":this.data.trainer_auth.auth_plan_update,
+            "auth_plan_delete":this.data.trainer_auth.auth_plan_delete,
+
+            "auth_member_create":this.data.trainer_auth.auth_member_create,
+            "auth_member_read":this.data.trainer_auth.auth_member_read,
+            "auth_member_update":this.data.trainer_auth.auth_member_update,
+            "auth_member_delete":this.data.trainer_auth.auth_member_delete,
+
+            "auth_group_create":this.data.trainer_auth.auth_group_create,
+            "auth_group_read":this.data.trainer_auth.auth_group_read,
+            "auth_group_update":this.data.trainer_auth.auth_group_update,
+            "auth_group_delete":this.data.trainer_auth.auth_group_delete,
+
+            "auth_package_create":this.data.trainer_auth.auth_package_create,
+            "auth_package_read":this.data.trainer_auth.auth_package_read,
+            "auth_package_update":this.data.trainer_auth.auth_package_update,
+            "auth_package_delete":this.data.trainer_auth.auth_package_delete,
+
+            "auth_trainer_create":this.data.trainer_auth.auth_trainer_create,
+            "auth_trainer_read":this.data.trainer_auth.auth_trainer_read,
+            "auth_trainer_update":this.data.trainer_auth.auth_trainer_update,
+            "auth_trainer_delete":this.data.trainer_auth.auth_trainer_delete,
+
+            "auth_notice_create":this.data.trainer_auth.auth_notice_create,
+            "auth_notice_read":this.data.trainer_auth.auth_notice_read,
+            "auth_notice_update":this.data.trainer_auth.auth_notice_update,
+            "auth_notice_delete":this.data.trainer_auth.auth_notice_delete,
+
+            "auth_analytics_read":this.data.trainer_auth.auth_analytics_read,
+
+            "auth_setting_read":this.data.trainer_auth.auth_setting_read,
+            "auth_setting_update":this.data.trainer_auth.auth_setting_update,
         };
 
         if(this.data_from_external == null){ //신규 강사 등록

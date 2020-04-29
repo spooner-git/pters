@@ -383,7 +383,7 @@ class Trainer{
 class Trainer_func{
     static create(data, callback, error_callback){
         $.ajax({
-            url:'/trainer/add_trainer_ticket_info/',
+            url:'/trainer/add_trainer_program_info/',
             type:'POST',
             data: data,
             dataType : 'html',
