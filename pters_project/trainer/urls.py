@@ -49,16 +49,16 @@ urlpatterns = [
     # 회원 반복 일정 조회 - refactoring
     url(r'^get_member_repeat_schedule/$', views.GetMemberRepeatScheduleView.as_view(),
         name='get_member_repeat_schedule'),
+    # 강사 반복 일정 조회
+    url(r'^get_trainer_repeat_schedule/$', views.GetTrainerRepeatScheduleView.as_view(),
+        name='get_trainer_repeat_schedule'),
 
-
-    url(r'^add_closed_date/$', views.add_closed_date_logic,
-        name='add_closed_date'),
-    url(r'^update_closed_date/$', views.update_closed_date_logic,
-        name='update_closed_date'),
-    url(r'^delete_closed_date/$', views.delete_closed_date_logic,
-        name='delete_closed_date'),
-    url(r'^get_trainer_closed_date/$', views.GetTrainerClosedDateView.as_view(),
-        name='get_trainer_closed_date'),
+    url(r'^add_program_closed_date/$', views.add_program_closed_date_logic,
+        name='add_program_closed_date'),
+    url(r'^update_program_closed_date/$', views.update_program_closed_date_logic,
+        name='update_program_closed_date'),
+    url(r'^delete_program_closed_date/$', views.delete_program_closed_date_logic,
+        name='delete_program_closed_date'),
 
     # 회원 기능 ##########################################
     # 회원 정보 조회 - refactoring
@@ -142,7 +142,17 @@ urlpatterns = [
     url(r'^add_trainer_program_info/$', views.add_trainer_program_info_logic, name='add_trainer_program_info'),
     # 강사 연결 내역 조회
     url(r'^get_trainer_program_data/$', views.GetTrainerProgramDataViewAjax.as_view(), name='get_trainer_program_data'),
+    url(r'^get_trainer_info/$', views.GetTrainerInfoView.as_view(), name='get_trainer_info'),
+    # 강사 휴무 내역
+    url(r'^get_trainer_closed_date/$', views.GetTrainerClosedDateListView.as_view(),
+        name='get_trainer_closed_date'),
 
+    url(r'^add_trainer_closed_date/$', views.add_trainer_closed_date_logic,
+        name='add_trainer_closed_date'),
+    url(r'^update_trainer_closed_date/$', views.update_trainer_closed_date_logic,
+        name='update_trainer_closed_date'),
+    url(r'^delete_trainer_closed_date/$', views.delete_trainer_closed_date_logic,
+        name='delete_trainer_closed_date'),
 
     # 수업 기능 ##########################################################################################################
     # 수업 추가 - refactoring
@@ -250,10 +260,10 @@ urlpatterns = [
 
 
     # Mypage/Setting 기능 ###############################################################################################
-    # 강사 정보 조회
-    url(r'^get_trainer_info/$', views.GetTrainerInfoView.as_view(), name='get_trainer_info'),
-    # 강사 정보 수정
-    url(r'^update_trainer_info/$', views.update_trainer_info_logic, name='update_trainer_info'),
+    # 내 정보 조회
+    url(r'^get_my_info/$', views.GetMyInfoView.as_view(), name='get_my_info'),
+    # 내 정보 수정
+    url(r'^update_my_info/$', views.update_my_info_logic, name='update_my_info'),
     # 푸시 - to 외부 Setting 수정
     url(r'^update_setting_push/$', views.update_setting_push_logic, name='update_setting_push'),
 
