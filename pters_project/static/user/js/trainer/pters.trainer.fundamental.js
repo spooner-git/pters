@@ -809,7 +809,7 @@ class PassInspector{
     trainer_create(){
         let limit_number = Number(this.data.auth_trainer_create.active);
         // let limit_type = "수업 작성 권한이 없습니다.";
-        let limit_type = `${this.data.auth_group_create.limit_type}의 강사 추가 권한이 없습니다.`;
+        let limit_type = `${this.data.auth_trainer_create.limit_type}의 강사 추가 권한이 없습니다.`;
 
         if(limit_number == 0){
             return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
@@ -820,7 +820,7 @@ class PassInspector{
     trainer_read(){
         let limit_number = Number(this.data.auth_trainer_read.active);
         // let limit_type = "수업 읽기 권한이 없습니다.";
-        let limit_type = `${this.data.auth_group_read.limit_type}의 강사 조회 권한이 없습니다.`;
+        let limit_type = `${this.data.auth_trainer_read.limit_type}의 강사 조회 권한이 없습니다.`;
 
         if(limit_number == 0){
             return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
@@ -831,7 +831,7 @@ class PassInspector{
     trainer_update(){
         let limit_number = Number(this.data.auth_trainer_update.active);
         // let limit_type = "수업 수정 권한이 없습니다.";
-        let limit_type = `${this.data.auth_group_update.limit_type}의 강사 수정 권한이 없습니다.`;
+        let limit_type = `${this.data.auth_trainer_update.limit_type}의 강사 수정 권한이 없습니다.`;
 
         if(limit_number == 0){
             return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
@@ -842,7 +842,7 @@ class PassInspector{
     trainer_delete(){
         let limit_number = Number(this.data.auth_trainer_delete.active);
         // let limit_type = "수업 삭제 권한이 없습니다.";
-        let limit_type = `${this.data.auth_group_delete.limit_type}의 강사 삭제 권한이 없습니다.`;
+        let limit_type = `${this.data.auth_trainer_delete.limit_type}의 강사 삭제 권한이 없습니다.`;
 
         if(limit_number == 0){
             return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};

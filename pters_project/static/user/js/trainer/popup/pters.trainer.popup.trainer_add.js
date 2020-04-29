@@ -25,23 +25,8 @@ class Trainer_add{
                 phone: null,
                 birth: null,
                 sex: null,
-                memo: null,
-                ticket_id:[],
-                ticket_name:[],
-                ticket_effective_days:[],
-                ticket_reg_count:[null],
-                ticket_price:[null],
-                pay_method:{value:["NONE"], text:["선택 안함"]},
-                start_date:null,
-                start_date_text:null,
-                end_date:null,
-                end_date_text:null
+                trainer_auth:{},
         };
-        this.date_start = 0;
-        Setting_reserve_func.read((data)=>{
-            let date_start_array = {"SUN":0, "MON":1};
-            this.date_start = date_start_array[data.setting_week_start_date];
-        });
 
         //팝업의 날짜, 시간등의 입력란을 미리 외부에서 온 데이터로 채워서 보여준다.
         this.set_initial_data(this.data_from_external);
@@ -83,88 +68,6 @@ class Trainer_add{
     get sex(){
         return this.data.sex;
     }
-
-    set start_date(data){
-        this.data.start_date = data.data;
-        this.data.start_date_text = data.text;
-        this.render_content();
-    }
-
-    get start_date(){
-        return this.data.start_date;
-    }
-
-    set end_date(data){
-        this.data.end_date = data.data;
-        this.data.end_date_text = data.text;
-        this.render_content();
-    }
-
-    get end_date(){
-        return this.data.end_date;
-    }
-
-    set memo(text){
-        this.data.memo = text;
-        this.render_content();
-    }
-
-    get memo(){
-        return this.data.memo;
-    }
-
-    set ticket(data){
-        this.data.ticket_id = data.id;
-        this.data.ticket_name = data.name;
-        this.data.ticket_effective_days = data.effective_days;
-        this.data.ticket_reg_count = data.reg_count;
-        this.data.ticket_price = data.reg_price;
-
-        //시작일자가 없는 경우 오늘로 셋팅
-        if(this.data.start_date == null){
-            this.data.start_date = {year: this.dates.current_year, month:this.dates.current_month, date:this.dates.current_date};
-            this.data.start_date_text = DateRobot.to_text(this.data.start_date.year, this.data.start_date.month, this.data.start_date.date, SHORT); 
-        }
-        //종료일자를 수강권의 기본 유효기간 만큼 시작일자에 더한 날짜로
-        if(this.data.ticket_effective_days >= 99999){ //수강권 유효날짜가 -1 (소진시까지)
-            this.data.end_date = {year:9999, month:12, date:31};
-            this.data.end_date_text = "소진 시까지";
-        }else{
-            let end_date = DateRobot.to_yyyymmdd(this.start_date.year, this.start_date.month, this.start_date.date);
-            let new_date = DateRobot.add_date(end_date, data.effective_days[0]);
-            let new_date_year = new_date.split('-')[0];
-            let new_date_month = new_date.split('-')[1];
-            let new_date_date = new_date.split('-')[2];
-    
-            this.data.end_date = {year:Number(new_date_year), month:Number(new_date_month), date:Number(new_date_date)};
-            this.data.end_date_text = DateRobot.to_text(new_date_year, new_date_month, new_date_date, SHORT);
-        }
-
-        this.render_content();
-    }
-
-    get ticket(){
-        return {id:this.data.ticket_id, name:this.data.ticket_name, effective_days: this.data.ticket_effective_days, reg_count:this.data.reg_count, reg_price:this.data.reg_price};
-    }
-
-    set reg_count(number){
-        this.data.ticket_reg_count = [number];
-        this.render_content();
-    }
-
-    get reg_count(){
-        return this.data.ticket_reg_count;
-    }
-
-    set reg_price(number){
-        this.data.ticket_price = [number];
-        this.render_content();
-    }
-
-    get reg_price(){
-        return this.data.ticket_price;
-    }
-
 
     init(){
         this.render();
@@ -223,19 +126,18 @@ class Trainer_add{
         let phone = this.dom_row_trainer_phone_input();
         let birth = this.dom_row_trainer_birth_input();
         let sex = this.dom_row_trainer_sex_input();
-        let memo = this.dom_row_trainer_memo_input();
-        let ticket = this.dom_row_ticket_select();
-
+        let trainer_auth = this.dom_row_trainer_auth();
+        let trainer_auth_list = this.dom_row_trainer_auth_list();
         let html =
             '<div class="obj_input_box_full">'
                 + CComponent.dom_tag('강사명', null, true) + name + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('휴대폰 번호') + phone + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('생년월일') + birth + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('성별') + sex + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
-                + CComponent.dom_tag('특이사항') + memo +
-            '</div>' +
+                +'</div>' +
             '<div class="obj_input_box_full">'
-                + CComponent.dom_tag('권한', null, true) + ticket + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>' +
+                + CComponent.dom_tag('권한', null, true) + trainer_auth + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
+                + trainer_auth_list +
             '</div>';
 
         if(this.data_from_external != null){ // 재등록
@@ -244,7 +146,8 @@ class Trainer_add{
                 + CComponent.dom_tag('강사명') + name +
             '</div>' +
             '<div class="obj_input_box_full">'
-                + CComponent.dom_tag('권한', null, true) + ticket + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'+
+                + CComponent.dom_tag('권한', null, true) + trainer_auth + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
+                + trainer_auth_list +
             '</div>';
         }
 
@@ -397,42 +300,136 @@ class Trainer_add{
         return html;
     }
 
-    dom_row_trainer_memo_input(){
-        let id = 'input_trainer_memo';
-        let title = this.data.memo == null ? '' : this.data.memo;
-        let placeholder = '특이사항';
-        let icon = NONE;
-        let icon_r_visible = HIDE;
-        let icon_r_text = "";
-        let style = null;
-        let input_disabled = false;
-        // let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+.,@\\s 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
-        // let pattern_message = "+ - _ @ . , 제외 특수문자는 입력 불가";
-        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+.,:()\\[\\]\\s\\n 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,3000}";
-        let pattern_message = "+ - _ : ()[] . , 제외 특수문자는 입력 불가";
-        let required = "";
-        let html = CComponent.create_input_textarea_row(id, title, placeholder, icon, icon_r_visible, icon_r_text, style, (input_data)=>{
-            this.memo = input_data;
-        }, pattern, pattern_message, required);
-        return html;
-    }
-
-    dom_row_ticket_select(){
-        let id = 'input_ticket_select';
-        let title = this.data.ticket_id.length == 0 ? '수강권' : this.data.ticket_name.join(', ');
+    dom_row_trainer_auth(){
+        let id = 'input_trainer_auth';
+        let title = '허용 권한';
         let icon = CImg.ticket();
         let icon_r_visible = SHOW;
         let icon_r_text = "";
-        let style = this.data.ticket_id.length == 0 ? {"color":"var(--font-inactive)"} : null;
+        let style ={"color":"var(--font-inactive)"};
+
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ 
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
-            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TICKET_SELECT, 100, popup_style, null, ()=>{
-                ticket_select = new TicketSelector('#wrapper_box_ticket_select', this, 1, {"title":"수강권 선택"}, (set_data)=>{
-                    this.ticket = set_data;
-                    // this.render_content();
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TRAINER_AUTH, 100, popup_style, null, ()=>{
+                trainer_auth_popup = new Trainer_auth('.popup_trainer_auth',
+                    {"title":"허용 권한 선택"}, (set_data)=>{
+                    this.data.trainer_auth = set_data;
+                    this.render_content();
                 });
             });
         });
+        return html;
+    }
+
+    dom_row_trainer_auth_list(){
+        let html = "";
+        if(this.data.trainer_auth != {}){
+            let auth_plan_create = this.data.trainer_auth.auth_plan_create == 1 ? "등록" : null;
+            let auth_plan_read = this.data.trainer_auth.auth_plan_read == 1 ? "조회" :  null;
+            let auth_plan_update = this.data.trainer_auth.auth_plan_update == 1 ? "수정" :  null;
+            let auth_plan_delete = this.data.trainer_auth.auth_plan_delete == 1 ? "삭제" :  null;
+
+            let auth_member_create = this.data.trainer_auth.auth_member_create == 1 ? "등록" :  null;
+            let auth_member_read = this.data.trainer_auth.auth_member_read == 1 ? "조회" :  null;
+            let auth_member_update = this.data.trainer_auth.auth_member_update == 1 ? "수정" :  null;
+            let auth_member_delete = this.data.trainer_auth.auth_member_delete == 1 ? "삭제" :  null;
+
+            let auth_lecture_create = this.data.trainer_auth.auth_group_create == 1 ? "등록" :  null;
+            let auth_lecture_read = this.data.trainer_auth.auth_group_read == 1 ? "조회" :  null;
+            let auth_lecture_update = this.data.trainer_auth.auth_group_update == 1 ? "수정" :  null;
+            let auth_lecture_delete = this.data.trainer_auth.auth_group_delete == 1 ? "삭제" :  null;
+
+            let auth_ticket_create = this.data.trainer_auth.auth_package_create == 1 ? "등록" :  null;
+            let auth_ticket_read = this.data.trainer_auth.auth_package_read == 1 ? "조회" :  null;
+            let auth_ticket_update = this.data.trainer_auth.auth_package_update == 1 ? "수정" :  null;
+            let auth_ticket_delete = this.data.trainer_auth.auth_package_delete == 1 ? "삭제" :  null;
+
+            let auth_trainer_create = this.data.trainer_auth.auth_trainer_create == 1 ? "등록" :  null;
+            let auth_trainer_read = this.data.trainer_auth.auth_trainer_read == 1 ? "조회" :  null;
+            let auth_trainer_update = this.data.trainer_auth.auth_trainer_update == 1 ? "수정" :  null;
+            let auth_trainer_delete = this.data.trainer_auth.auth_trainer_delete == 1 ? "삭제" :  null;
+
+            let auth_notice_create = this.data.trainer_auth.auth_notice_create == 1 ? "등록" :  null;
+            let auth_notice_read = this.data.trainer_auth.auth_notice_read == 1 ? "조회" :  null;
+            let auth_notice_update = this.data.trainer_auth.auth_notice_update == 1 ? "수정" :  null;
+            let auth_notice_delete = this.data.trainer_auth.auth_notice_delete == 1 ? "삭제" :  null;
+
+            let auth_statistics_read = this.data.trainer_auth.auth_analytics_read == 1 ? "조회" :  null;
+
+            let auth_setting_read = this.data.trainer_auth.auth_setting_read == 1 ? "조회" :  null;
+            let auth_setting_update = this.data.trainer_auth.auth_setting_update == 1 ? "수정" :  null;
+
+            let schedule_auth = [auth_plan_create, auth_plan_read, auth_plan_update, auth_plan_delete].filter((el)=>{ if(el == null){return false;} return true; }).map((el)=>{return el;});
+            let member_auth = [auth_member_create, auth_member_read, auth_member_update, auth_member_delete].filter((el)=>{ if(el == null){return false;} return true; }).map((el)=>{return el;});
+            let lecture_auth = [auth_lecture_create, auth_lecture_read, auth_lecture_update, auth_lecture_delete].filter((el)=>{ if(el == null){return false;} return true; }).map((el)=>{return el;});
+            let ticket_auth = [auth_ticket_create, auth_ticket_read, auth_ticket_update, auth_ticket_delete].filter((el)=>{ if(el == null){return false;} return true; }).map((el)=>{return el;});
+            let trainer_auth = [auth_trainer_create, auth_trainer_read, auth_trainer_update, auth_trainer_delete].filter((el)=>{ if(el == null){return false;} return true; }).map((el)=>{return el;});
+            let notice_auth = [auth_notice_create, auth_notice_read, auth_notice_update, auth_notice_delete].filter((el)=>{ if(el == null){return false;} return true; }).map((el)=>{return el;});
+            let statistics_auth = [auth_statistics_read].filter((el)=>{ if(el == null){return false;} return true; }).map((el)=>{return el;});
+            let setting_auth = [auth_setting_read, auth_setting_update].filter((el)=>{ if(el == null){return false;} return true; }).map((el)=>{return el;});
+
+            let auth_schedule = `<div class="shared_member_auth" style="${schedule_auth.length == 0 ? "display:none" : ""}">
+                                    <div class="auth_title">일정</div>
+                                    <div class="auth_setting">
+                                        ${schedule_auth.join("/")}
+                                    </div>
+                                </div>`;
+            let auth_member = `<div class="shared_member_auth" style="${member_auth.length == 0 ? "display:none" : ""}">
+                                    <div class="auth_title">회원</div>
+                                    <div class="auth_setting">
+                                        ${member_auth.join("/")}
+                                    </div>
+                                </div>`;
+            let auth_lecture = `<div class="shared_member_auth" style="${lecture_auth.length == 0 ? "display:none" : ""}">
+                                    <div class="auth_title">수업</div>
+                                    <div class="auth_setting">
+                                        ${lecture_auth.join("/")}
+                                    </div>
+                                </div>`;
+            let auth_ticket = `<div class="shared_member_auth" style="${ticket_auth.length == 0 ? "display:none" : ""}">
+                                    <div class="auth_title">수강권</div>
+                                    <div class="auth_setting">
+                                        ${ticket_auth.join("/")}
+                                    </div>
+                                </div>`;
+            let auth_trainer = `<div class="shared_member_auth" style="${trainer_auth.length == 0 ? "display:none" : ""}">
+                                    <div class="auth_title">강사</div>
+                                    <div class="auth_setting">
+                                        ${trainer_auth.join("/")}
+                                    </div>
+                                </div>`;
+            let auth_notice= `<div class="shared_member_auth" style="${notice_auth.length == 0 ? "display:none" : ""}">
+                                    <div class="auth_title">공지사항</div>
+                                    <div class="auth_setting">
+                                        ${notice_auth.join("/")}
+                                    </div>
+                                </div>`;
+            let auth_statistics = `<div class="shared_member_auth" style="${statistics_auth.length == 0 ? "display:none" : ""}">
+                                    <div class="auth_title">통계</div>
+                                    <div class="auth_setting">
+                                        ${statistics_auth.join("/")}
+                                    </div>
+                                </div>`;
+            let auth_setting = `<div class="shared_member_auth" style="${setting_auth.length == 0 ? "display:none" : ""}">
+                                    <div class="auth_title">설정</div>
+                                    <div class="auth_setting">
+                                        ${setting_auth.join("/")}
+                                    </div>
+                                </div>`;
+
+            html = `<article class="obj_input_box_full" id="trainer_auth_row">
+                            <div class="shared_members_auth_wrapper">
+                                ${auth_schedule == null ? "" : auth_schedule}
+                                ${auth_member == null ? "" : auth_member}
+                                ${auth_lecture == null ? "" : auth_lecture}
+                                ${auth_ticket == null ? "" : auth_ticket}
+                                ${auth_trainer == null ? "" : auth_trainer}
+                                ${auth_notice == null ? "" : auth_notice}
+                                ${auth_statistics == null ? "" : auth_statistics}
+                                ${auth_setting == null ? "" : auth_setting}
+                            </div>                 
+                        </article>`;
+        }
         return html;
     }
 
@@ -484,12 +481,10 @@ class Trainer_add{
                     "phone":this.data.phone,
                     "birthday": `${this.data.birth != null ? this.data.birth.year+'-'+this.data.birth.month+'-'+this.data.birth.date : ''}`,
                     "sex":this.data.sex,
-                    "contents":this.data.memo
         };
 
         let data_for_re = {
             "trainer_id":this.data.trainer_id,
-            "contents":this.data.memo
         };
 
         if(this.data_from_external == null){ //신규 강사 등록
@@ -503,7 +498,7 @@ class Trainer_add{
                 }, ()=>{this.data_sending_now = false;});
             }, ()=>{this.data_sending_now = false;});
         }else{ // 재등록
-            Trainer_func.create_ticket_re(data_for_re, ()=>{
+            Trainer_func.create(data_for_re, ()=>{
                 // trainer_ticket_history.init();
                 this.data_sending_now = false;
                 try{
