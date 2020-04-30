@@ -880,6 +880,8 @@ class Calendar {
         
         let dates_to_join = [];
 
+        let week_holiday_color = ["", "", "", "", "", "", ""];
+
         if(week_dates_info == false){
             dates_to_join.push(
                 `<div class="cal_week_line">
@@ -924,15 +926,6 @@ class Calendar {
                     }
                 }
                 
-                
-                if(`${_year[i]}-${_month[i]}-${_date[i]}` == this.today){
-                    today_marking = `<div class="today_marking" style="top:-4px;"></div>`;
-                    today_text_style = 'color:var(--fundamental-white);font-weight:bold;position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);z-index:1;';
-                    if(month_or_week == "month"){
-                        today_text_style = 'color:var(--fundamental-white);font-weight:bold;';
-                        today_marking = `<div class="today_marking" style="top:-2px; width:20px; height:20px; border-radius:12px;z-index:-1;"></div>`;
-                    }
-                }
 
                 let this_date_yyyymmdd = DateRobot.to_yyyymmdd(_year[i], _month[i], _date[i]);
                 let holiday_color = "";
@@ -941,7 +934,19 @@ class Calendar {
                     if(Object.keys(this.holiday).indexOf(this_date_yyyymmdd) != -1){
                         holiday_color = "color:var(--font-highlight);";
                         holiday_name = this.holiday[this_date_yyyymmdd].holiday_name;
+                        week_holiday_color[i] = "obj_font_color_sunday_red";
                     }
+                }
+
+                if(`${_year[i]}-${_month[i]}-${_date[i]}` == this.today){
+                    today_marking = `<div class="today_marking" style="top:-4px;"></div>`;
+                    today_text_style = 'color:var(--fundamental-white);font-weight:bold;position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);z-index:1;';
+                    if(month_or_week == "month"){
+                        today_text_style = 'color:var(--fundamental-white);font-weight:bold;';
+                        today_marking = `<div class="today_marking" style="top:-2px; width:20px; height:20px; border-radius:12px;z-index:-1;"></div>`;
+                    }
+                    holiday_color = "";
+                    holiday_name = "";
                 }
 
 
@@ -967,19 +972,19 @@ class Calendar {
         let result_html = dates_to_join.join("");
         // let week_date_name_data = this.static_component().week_cal_upper_box_date_tool;
         let day_names = `<div class="_week_row_1 obj_font_color_sunday_red" ${this.dayoff.indexOf(0) != -1 && this.dayoff_hide == 1? "style=display:none": ""}>일</div>
-                        <div class="_week_row_2" ${this.dayoff.indexOf(1) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>월</div>
-                        <div class="_week_row_3" ${this.dayoff.indexOf(2) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>화</div>
-                        <div class="_week_row_4" ${this.dayoff.indexOf(3) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>수</div>
-                        <div class="_week_row_5" ${this.dayoff.indexOf(4) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>목</div>
-                        <div class="_week_row_6" ${this.dayoff.indexOf(5) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>금</div>
-                        <div class="_week_row_7 obj_font_color_saturday_blue" ${this.dayoff.indexOf(6) != -1 && this.dayoff_hide == 1? "style=display:none": ""}>토</div>`;
+                        <div class="_week_row_2 ${week_holiday_color[1]}" ${this.dayoff.indexOf(1) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>월</div>
+                        <div class="_week_row_3 ${week_holiday_color[2]}" ${this.dayoff.indexOf(2) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>화</div>
+                        <div class="_week_row_4 ${week_holiday_color[3]}" ${this.dayoff.indexOf(3) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>수</div>
+                        <div class="_week_row_5 ${week_holiday_color[4]}" ${this.dayoff.indexOf(4) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>목</div>
+                        <div class="_week_row_6 ${week_holiday_color[5]}" ${this.dayoff.indexOf(5) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>금</div>
+                        <div class="_week_row_7 ${week_holiday_color[6]} obj_font_color_saturday_blue" ${this.dayoff.indexOf(6) != -1 && this.dayoff_hide == 1? "style=display:none": ""}>토</div>`;
         if(this.date_start == 1){
-            day_names = `<div class="_week_row_1" ${this.dayoff.indexOf(0) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>월</div>
-                        <div class="_week_row_2" ${this.dayoff.indexOf(1) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>화</div>
-                        <div class="_week_row_3" ${this.dayoff.indexOf(2) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>수</div>
-                        <div class="_week_row_4" ${this.dayoff.indexOf(3) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>목</div>
-                        <div class="_week_row_5" ${this.dayoff.indexOf(4) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>금</div>
-                        <div class="_week_row_6 obj_font_color_saturday_blue" ${this.dayoff.indexOf(5) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>토</div>
+            day_names = `<div class="_week_row_1 ${week_holiday_color[0]}" ${this.dayoff.indexOf(0) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>월</div>
+                        <div class="_week_row_2 ${week_holiday_color[1]}" ${this.dayoff.indexOf(1) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>화</div>
+                        <div class="_week_row_3 ${week_holiday_color[2]}" ${this.dayoff.indexOf(2) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>수</div>
+                        <div class="_week_row_4 ${week_holiday_color[3]}" ${this.dayoff.indexOf(3) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>목</div>
+                        <div class="_week_row_5 ${week_holiday_color[4]}" ${this.dayoff.indexOf(4) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>금</div>
+                        <div class="_week_row_6 ${week_holiday_color[5]} obj_font_color_saturday_blue" ${this.dayoff.indexOf(5) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>토</div>
                         <div class="_week_row_7 obj_font_color_sunday_red" ${this.dayoff.indexOf(6) != -1  && this.dayoff_hide == 1 ? "style=display:none": ""}>일</div>`;
         }
         let week_date_name_data = `<div class="cal_week_line_dates" style="border-bottom:0;font-size:11px;">
