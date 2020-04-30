@@ -76,7 +76,7 @@ def func_get_trainer_ing_list(class_id, user_id, keyword):
         trainer_id = str(trainer_info.member_id)
 
         if trainer_info.reg_info is None or str(trainer_info.reg_info) != str(user_id):
-            if trainer_info.auth_cd != AUTH_TYPE_VIEW:
+            if all_trainer_info.auth_cd != AUTH_TYPE_VIEW:
                 trainer_info.sex = ''
                 trainer_info.birthday_dt = ''
                 if trainer_info.phone is None or trainer_info.phone == '':
@@ -123,7 +123,7 @@ def func_get_trainer_end_list(class_id, user_id, keyword):
         trainer_id = str(trainer_info.member_id)
 
         if trainer_info.reg_info is None or str(trainer_info.reg_info) != str(user_id):
-            if trainer_info.auth_cd != AUTH_TYPE_VIEW:
+            if class_trainer_info.auth_cd != AUTH_TYPE_VIEW:
                 trainer_info.sex = ''
                 trainer_info.birthday_dt = ''
                 if trainer_info.phone is None or trainer_info.phone == '':

@@ -32,8 +32,9 @@ class RepeatScheduleTb(TimeStampedModel):
     state_cd = models.CharField('진행 상태', db_column='STATE_CD', max_length=10, blank=True, null=True, default='')
     en_dis_type = models.CharField('일정 타입', db_column='EN_DIS_TYPE', max_length=10, blank=True, null=True, default='')
     extension_flag = models.IntegerField('자동 연장', db_column='EXTENSION_FLAG', default=0)
-    reg_member = models.ForeignKey(MemberTb, verbose_name='최초등록 회원', on_delete=models.CASCADE, null=True)
-    mod_member = models.ForeignKey(MemberTb, verbose_name='최종수정 회원', on_delete=models.CASCADE, related_name='MOD_MEMBER_ID', null=True)
+    reg_member = models.ForeignKey(MemberTb, verbose_name='최초등록 회원', on_delete=models.SET_NULL, null=True)
+    mod_member = models.ForeignKey(MemberTb, verbose_name='최종수정 회원', on_delete=models.SET_NULL, related_name='MOD_MEMBER_ID', null=True)
+    repeat_trainer = models.ForeignKey(MemberTb, verbose_name='담당 강사', on_delete=models.SET_NULL, related_name='REPEAT_TRAINER_ID', null=True)
 
     time_duration = models.CharField(db_column='TIME_DURATION', max_length=20, blank=True, default='')
 
@@ -89,8 +90,9 @@ class ScheduleTb(TimeStampedModel):
     end_font_color_cd = models.CharField('종료 폰트 색상', db_column='END_FONT_COLOR_CD', max_length=20, default='#282828')
     push_alarm_data = models.TextField('PUSH 알림', db_column='PUSH_ALARM_DATA')
     extension_flag = models.IntegerField('자동 연장', db_column='EXTENSION_FLAG', default=0)
-    reg_member = models.ForeignKey(MemberTb, verbose_name='최초등록 회원', on_delete=models.CASCADE, null=True)
-    mod_member = models.ForeignKey(MemberTb, verbose_name='최종수정 회원', on_delete=models.CASCADE, related_name='LAST_MOD_MEMBER_ID', null=True)
+    reg_member = models.ForeignKey(MemberTb, verbose_name='최초등록 회원', on_delete=models.SET_NULL, null=True)
+    mod_member = models.ForeignKey(MemberTb, verbose_name='최종수정 회원', on_delete=models.SET_NULL, related_name='LAST_MOD_MEMBER_ID', null=True)
+    trainer = models.ForeignKey(MemberTb, verbose_name='담당 강사', on_delete=models.SET_NULL, related_name='TRAINER_ID', null=True)
 
     sign_data_url = models.CharField(db_column='SIGN_DATA_URL', max_length=255, blank=True, default='')
     alarm_dt = models.DateTimeField(db_column='ALARM_DT', blank=True, null=True)  # Field name made lowercase.

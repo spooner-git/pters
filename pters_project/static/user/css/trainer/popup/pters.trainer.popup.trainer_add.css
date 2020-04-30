@@ -26,3 +26,22 @@
 	padding-top: 1px;
 	padding-bottom: 20px;
 }
+
+.popup_trainer_add .trainer_auth{
+	display: flex;
+	font-size: 15px;
+	font-weight: 500;
+	padding: 3px 5px;
+}
+
+.popup_trainer_add .auth_title{
+	flex-basis: 60px;
+	color: var(--font-sub-dark);
+}
+.popup_trainer_add .auth_setting{
+	flex: 1 1 0;
+	color: var(--font-sub-dark);
+	text-align: right;
+}
+
+

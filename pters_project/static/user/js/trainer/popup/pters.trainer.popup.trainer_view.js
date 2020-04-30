@@ -121,7 +121,6 @@ class Trainer_view{
                     Trainer_func.closed_date_list(
                         {"trainer_id":this.trainer_id}, (data)=> {
                             this.data.closed_date = data.trainer_closed_list;
-                            console.log(this.data.closed_date);
                             this.render();
                         });
                 }
@@ -460,7 +459,7 @@ class Trainer_view{
             //행을 클릭했을때 실행할 내용
 
             if(disabled == true){
-                show_error_message({title:"이용 회원님께서 PTERS에 직접 접속하신 이후로는 <br> 타인이 정보를 수정할 수 없습니다."});
+                show_error_message({title:"이용 강사님께서 PTERS에 직접 접속하신 이후로는 <br> 타인이 정보를 수정할 수 없습니다."});
                 return false;
             }
             let root_content_height = $root_content.height();

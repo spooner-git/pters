@@ -146,7 +146,7 @@ class Trainer_search {
             layer_popup.close_layer_popup();
             this.clear();
 
-            let external_data = {"db_id":this.data.selected_member_id, "trainer_name":this.data.selected_member_name, "shared_status": AUTH_TYPE_WAIT};
+            let external_data = {"trainer_id":this.data.selected_member_id, "trainer_name":this.data.selected_member_name};
             // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TRAINER_AUTH, 100, POPUP_FROM_RIGHT, null, ()=>{
             //     trainer_auth_popup = new Trainer_auth('.popup_trainer_auth', external_data);
             // });

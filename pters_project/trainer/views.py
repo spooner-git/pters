@@ -865,7 +865,105 @@ class GetMemberRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, View):
                             json_dumps_params={'ensure_ascii': True})
 
 
-def add_closed_date_logic(request):
+class GetTrainerRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        class_id = request.session.get('class_id', '')
+        trainer_id = self.request.GET.get('trainer_id', '')
+        error = None
+        trainer_repeat_schedule_list = []
+        today = datetime.date.today()
+
+        if trainer_id == '':
+            error = '강사 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            # 회원의 반복 일정중 강사가 볼수 있는 수강정보의 일정을 불러오기 위한 query
+            query_auth = "select "+ClassMemberTicketTb._meta.get_field('auth_cd').column + \
+                         " from "+ClassMemberTicketTb._meta.db_table + \
+                         " as B where B."+ClassMemberTicketTb._meta.get_field('member_ticket_tb').column+" = " \
+                         "`"+RepeatScheduleTb._meta.db_table+"`.`" + \
+                         RepeatScheduleTb._meta.get_field('member_ticket_tb').column + \
+                         "` and B.CLASS_TB_ID = " + str(class_id) + \
+                         " and B."+ClassMemberTicketTb._meta.get_field('use').column+"="+str(USE)
+            trainer_repeat_schedule_data = RepeatScheduleTb.objects.select_related(
+                'member_ticket_tb__member',
+                'lecture_tb').filter(
+                class_tb_id=class_id, repeat_trainer_id=trainer_id
+            ).annotate(auth_cd=RawSQL(query_auth, [])).filter(auth_cd=AUTH_TYPE_VIEW).exclude(end_date__lt=today).order_by('start_date')
+
+            # 반복일정 정보 셋팅
+            week_order = ['SUN', 'MON', 'TUE', 'WED', 'THS', 'FRI', 'SAT']
+            week_order = {key: i for i, key in enumerate(week_order)}
+            for trainer_repeat_schedule_info in trainer_repeat_schedule_data:
+                schedule_type = ON_SCHEDULE
+                try:
+                    lecture_id = trainer_repeat_schedule_info.lecture_tb.lecture_id
+                    lecture_name = trainer_repeat_schedule_info.lecture_tb.name
+                    lecture_max_member_num = trainer_repeat_schedule_info.lecture_tb.member_num
+                    lecture_ing_color_cd = trainer_repeat_schedule_info.lecture_tb.ing_color_cd
+                    lecture_end_color_cd = trainer_repeat_schedule_info.lecture_tb.end_color_cd
+                    lecture_ing_font_color_cd = trainer_repeat_schedule_info.lecture_tb.ing_font_color_cd
+                    lecture_end_font_color_cd = trainer_repeat_schedule_info.lecture_tb.end_font_color_cd
+                    # lecture_max_member_num_view_flag = member_repeat_schedule_info.lecture_tb.member_num_view_flag
+                    if trainer_repeat_schedule_info.lecture_tb.lecture_type_cd != LECTURE_TYPE_ONE_TO_ONE:
+                        schedule_type = GROUP_SCHEDULE
+                except AttributeError:
+                    lecture_id = ''
+                    lecture_name = ''
+                    lecture_max_member_num = ''
+                    lecture_ing_color_cd = ''
+                    lecture_end_color_cd = ''
+                    lecture_ing_font_color_cd = ''
+                    lecture_end_font_color_cd = ''
+                    # lecture_max_member_num_view_flag = ''
+
+                week_data = member_repeat_schedule_info.week_info.split('/')
+                week_data = sorted(week_data, key=lambda week_info: week_order.get(week_info))
+
+                mod_member_id = ''
+                mod_member_name = ''
+                if trainer_repeat_schedule_info.mod_member is not None and trainer_repeat_schedule_info.mod_member != '':
+                    mod_member_id = trainer_repeat_schedule_info.mod_member_id
+                    mod_member_name = trainer_repeat_schedule_info.mod_member.name
+                trainer_repeat_schedule = {'repeat_schedule_id': trainer_repeat_schedule_info.repeat_schedule_id,
+                                           'repeat_type_cd': trainer_repeat_schedule_info.repeat_type_cd,
+                                           'week_info': "/".join(week_data),
+                                           'start_date': trainer_repeat_schedule_info.start_date,
+                                           'end_date': trainer_repeat_schedule_info.end_date,
+                                           'start_time': trainer_repeat_schedule_info.start_time,
+                                           'end_time': trainer_repeat_schedule_info.end_time,
+                                           'time_duration': trainer_repeat_schedule_info.time_duration,
+                                           'state_cd': trainer_repeat_schedule_info.state_cd,
+                                           'reg_member_id': trainer_repeat_schedule_info.reg_member_id,
+                                           'reg_member_name': trainer_repeat_schedule_info.reg_member.name,
+                                           'mod_member_id': mod_member_id,
+                                           'mod_member_name': mod_member_name,
+                                           'mod_dt': str(trainer_repeat_schedule_info.mod_dt),
+                                           'reg_dt': str(trainer_repeat_schedule_info.reg_dt),
+                                           'lecture_repeat_schedule_id':
+                                               trainer_repeat_schedule_info.lecture_schedule_id,
+                                           'member_id': trainer_repeat_schedule_info.member_ticket_tb.member.member_id,
+                                           'member_name': trainer_repeat_schedule_info.member_ticket_tb.member.name,
+                                           'lecture_id': lecture_id,
+                                           'lecture_name': lecture_name,
+                                           'lecture_max_member_num': lecture_max_member_num,
+                                           'lecture_ing_color_cd': lecture_ing_color_cd,
+                                           'lecture_end_color_cd': lecture_end_color_cd,
+                                           'lecture_ing_font_color_cd': lecture_ing_font_color_cd,
+                                           'lecture_end_font_color_cd': lecture_end_font_color_cd,
+                                           # 'lecture_max_member_num_view_flag': lecture_max_member_num_view_flag,
+                                           'schedule_type': schedule_type}
+                trainer_repeat_schedule_list.append(trainer_repeat_schedule)
+        else:
+            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+            messages.error(request, error)
+
+        return JsonResponse({'trainer_repeat_schedule_data': trainer_repeat_schedule_list},
+                            json_dumps_params={'ensure_ascii': True})
+
+
+def add_program_closed_date_logic(request):
     class_id = request.session.get('class_id', '')
     member_id = request.POST.get('member_id', '')
     start_date = request.POST.get('start_date', '')
@@ -969,7 +1067,7 @@ def add_closed_date_logic(request):
     return JsonResponse({'schedule_closed_id': str(schedule_closed_id)}, json_dumps_params={'ensure_ascii': True})
 
 
-def update_closed_date_logic(request):
+def update_program_closed_date_logic(request):
     class_id = request.session.get('class_id', '')
     schedule_closed_id = request.POST.get('schedule_closed_id', '')
     member_id = request.POST.get('member_id', '')
@@ -1061,7 +1159,7 @@ def update_closed_date_logic(request):
     return JsonResponse({'schedule_closed_id': str(schedule_closed_id)}, json_dumps_params={'ensure_ascii': True})
 
 
-def delete_closed_date_logic(request):
+def delete_program_closed_date_logic(request):
     class_id = request.session.get('class_id', '')
     schedule_closed_id = request.POST.get('schedule_closed_id', '')
     error = None
@@ -1086,20 +1184,6 @@ def delete_closed_date_logic(request):
         log_data.save()
 
     return JsonResponse({'schedule_closed_id': str(schedule_closed_id)}, json_dumps_params={'ensure_ascii': True})
-
-
-class GetTrainerClosedDateView(LoginRequiredMixin, AccessTestMixin, View):
-
-    def get(self, request):
-        class_id = self.request.session.get('class_id', '')
-        error = None
-        member_result = {}
-
-        if error is not None:
-            logger.error(request.user.first_name + ' ' + '[' + str(request.user.id) + ']' + error)
-            messages.error(request, error)
-
-        return JsonResponse(member_result['member_info'], json_dumps_params={'ensure_ascii': True})
 
 
 class GetMemberClosedDateListView(LoginRequiredMixin, AccessTestMixin, View):
@@ -5070,11 +5154,18 @@ class GetShareProgramDataViewAjax(LoginRequiredMixin, AccessTestMixin, View):
             error = '오류가 발생했습니다.'
 
         if error is None:
+            member_program_data = MemberClassTb.objects.select_related(
+                'class_tb', 'member').filter(class_tb_id=class_id, own_cd=OWN_TYPE_EMPLOYEE,
+                                             use=USE)
+            exclude_member = Q()
+            for member_program_info in member_program_data:
+                exclude_member |= Q(member_id=member_program_info.member_id)
             program_auth_data = ProgramAuthTb.objects.select_related('class_tb', 'member',
                                                                      'function_auth_tb').filter(class_tb_id=class_id,
-                                                                                                use=USE)
+                                                                                                use=USE).exclude(exclude_member)
 
             for program_auth_info in program_auth_data:
+
                 if program_auth_info.auth_type_cd is None:
                     function_auth_type_cd_name = str(program_auth_info.function_auth_tb.function_auth_type_cd)
                 else:
@@ -5435,7 +5526,7 @@ def delete_background_img_info_logic(request):
     return render(request, template_name)
 
 
-class GetTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):
+class GetMyInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
         # context = {}
@@ -5498,7 +5589,7 @@ class GetTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
 
 # 회원수정 api
-def update_trainer_info_logic(request):
+def update_my_info_logic(request):
     # member_id = request.POST.get('id')
     # email = request.POST.get('email', '')
     first_name = request.POST.get('first_name', '')
@@ -7145,12 +7236,16 @@ class GetTrainerEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 def add_trainer_program_info_logic(request):
     trainer_id = request.POST.get('trainer_id', '')
     auth_cd = request.POST.get('auth_cd', '')
-    class_id = request.POST.get('class_id', '')
+    class_id = request.session.get('class_id', '')
 
     error = None
     member_info = None
     if trainer_id is None or trainer_id == '':
         error = '강사 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        if str(request.user.id) == str(trainer_id):
+            error = '본인은 등록할수 없습니다.'
 
     if error is None:
         try:
@@ -7163,6 +7258,7 @@ def add_trainer_program_info_logic(request):
             class_member_info = MemberClassTb.objects.select_related(
                 'class_tb', 'member').get(class_tb_id=class_id, member_id=trainer_id, use=USE)
             class_member_info.auth_cd = auth_cd
+            class_member_info.own_cd = OWN_TYPE_EMPLOYEE
             class_member_info.mod_member_id = request.user.id
             class_member_info.save()
         except ObjectDoesNotExist:
@@ -7250,6 +7346,322 @@ class GetTrainerProgramDataViewAjax(LoginRequiredMixin, AccessTestMixin, View):
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
             messages.error(request, error)
         return JsonResponse(member_program_auth_list, json_dumps_params={'ensure_ascii': True})
+
+
+class GetTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        # context = {}
+        # context = super(GetTrainerInfoView, self).get_context_data(**kwargs)
+        trainer_id = request.GET.get('trainer_id', '')
+        class_id = request.session.get('class_id', '')
+        error = None
+        # class_info = None
+
+        # center_name = '없음'
+        user_member_info = None
+        class_info = None
+        # off_repeat_schedule_data = None
+        trainer_data = collections.OrderedDict()
+
+        if class_id is None or class_id == '':
+            error = '오류가 발생했습니다.'
+        if trainer_id is None or trainer_id == '':
+            error = '오류가 발생했습니다.[2]'
+
+        if error is None:
+            try:
+                class_info = MemberClassTb.objects.get(class_tb_id=class_id, member_id=trainer_id)
+            except ObjectDoesNotExist:
+                error = '지점 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            try:
+                user_member_info = MemberTb.objects.get(member_id=trainer_id)
+            except ObjectDoesNotExist:
+                error = '회원 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            connection_check = 0
+            if class_info.auth_cd == AUTH_TYPE_VIEW:
+                connection_check = 2
+            elif class_info.auth_cd == AUTH_TYPE_WAIT:
+                connection_check = 1
+            if user_member_info.reg_info is None or str(user_member_info.reg_info) != str(request.user.id):
+                # 연결이 안되어 있는 경우 회원 정보 표시 안함
+                if connection_check != 2:
+                    user_member_info.sex = ''
+                    user_member_info.birthday_dt = ''
+                    if user_member_info.phone is None or user_member_info.phone == '':
+                        user_member_info.phone = ''
+                    else:
+                        user_member_info.phone = '*******' + user_member_info.phone[7:]
+                    user_member_info.user.email = ''
+                    user_member_info.profile_url = '/static/common/icon/icon_account.png'
+            if user_member_info.profile_url is None or user_member_info.profile_url == '':
+                user_member_info.profile_url = '/static/common/icon/icon_account.png'
+
+            trainer_data = {'trainer_id': request.user.id,
+                            'trainer_user_id': user_member_info.user.username,
+                            'trainer_name': user_member_info.name,
+                            'trainer_phone': str(user_member_info.phone),
+                            'trainer_email': str(user_member_info.user.email),
+                            'trainer_sex': str(user_member_info.sex),
+                            'trainer_birthday_dt': str(user_member_info.birthday_dt),
+                            'trainer_profile_url': user_member_info.profile_url,
+                            'trainer_phone_is_active': str(user_member_info.phone_is_active),
+                            'trainer_connection_check': connection_check,
+                            'trainer_is_active': str(user_member_info.user.is_active),
+                            'program': {'program_id': class_id,
+                                        'program_subject_type_name': class_info.class_tb.get_class_type_cd_name(),
+                                        'program_program_owner_id': class_info.member_id,
+                                        'program_program_owner_name': class_info.member.name,
+                                      }
+                           }
+
+        return JsonResponse(trainer_data, json_dumps_params={'ensure_ascii': True})
+
+
+class GetTrainerClosedDateListView(LoginRequiredMixin, AccessTestMixin, View):
+    def get(self, request):
+        class_id = request.session.get('class_id', '')
+        trainer_id = request.GET.get('trainer_id', '')
+        error = None
+        today = datetime.date.today()
+        trainer_closed_list = []
+
+        if trainer_id is None or trainer_id == '':
+            error = '회원 정보를 불러오지 못했습니다.'
+
+        if error is not None:
+            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+            messages.error(request, error)
+
+        return JsonResponse({'trainer_closed_list': trainer_closed_list}, json_dumps_params={'ensure_ascii': True})
+
+
+def add_trainer_closed_date_logic(request):
+    class_id = request.session.get('class_id', '')
+    member_id = request.POST.get('member_id', '')
+    start_date = request.POST.get('start_date', '')
+    end_date = request.POST.get('end_date', '')
+    repeat_week_type = request.POST.get('week_info', '')
+    title = request.POST.get('title', '')
+    contents = request.POST.get('contents', '')
+    is_member_view = request.POST.get('is_member_view', '1')
+
+    error = None
+    schedule_closed_id = ''
+    start_date_info = None
+    end_date_info = None
+    repeat_schedule_date_list = []
+
+    if member_id is None:
+        member_id = ''
+    if repeat_week_type == '':
+        error = '요일을 선택해주세요.'
+    if start_date == '':
+        error = '시작 날짜를 선택해 주세요.'
+    elif end_date == '':
+        error = '종료 날짜를 선택해 주세요.'
+
+    if error is None:
+        try:
+            start_date_info = datetime.datetime.strptime(start_date, '%Y-%m-%d')
+            end_date_info = datetime.datetime.strptime(end_date, '%Y-%m-%d')
+            if (start_date_info - end_date_info) > datetime.timedelta(days=365):
+                error = '1년까지만 불가 일정을 등록할수 있습니다.'
+        except ValueError:
+            error = '날짜 오류가 발생했습니다.[0]'
+        except IntegrityError:
+            error = '날짜 오류가 발생했습니다.[1]'
+        except TypeError:
+            error = '날짜 오류가 발생했습니다.[2]'
+
+    if error is None:
+        if member_id != '':
+            try:
+                MemberTb.objects.get(member_id=member_id)
+            except ObjectDoesNotExist:
+                error = '회원 정보를 불러오지 못했습니다.'
+
+    # 등록할 날짜 list 가져오기
+    if error is None:
+        week_order = ['SUN', 'MON', 'TUE', 'WED', 'THS', 'FRI', 'SAT']
+        week_order = {key: i for i, key in enumerate(week_order)}
+        week_data = repeat_week_type.split('/')
+        week_data = sorted(week_data, key=lambda week_info: week_order.get(week_info))
+        repeat_week_type = "/".join(week_data)
+        repeat_schedule_date_list = func_get_repeat_schedule_date_list(repeat_week_type,
+                                                                       start_date_info,
+                                                                       end_date_info)
+        if len(repeat_schedule_date_list) == 0:
+            error = '등록할 수 있는 일정이 없습니다.'
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                schedule_closed_info = ScheduleClosedTb(class_tb_id=class_id, member_id=member_id,
+                                                        start_date=start_date_info, end_date=end_date_info,
+                                                        title=title, contents=contents,
+                                                        week_info=repeat_week_type,
+                                                        is_member_view=is_member_view, use=USE)
+
+                schedule_closed_info.save()
+
+                schedule_closed_id = schedule_closed_info.schedule_closed_id
+
+                # 반복일정 데이터 등록
+                for repeat_schedule_date_info in repeat_schedule_date_list:
+                    repeat_schedule_info_date = str(repeat_schedule_date_info).split(' ')[0]
+
+                    closed_date = datetime.datetime.strptime(repeat_schedule_info_date, '%Y-%m-%d')
+
+                    schedule_closed_day = ScheduleClosedDayTb(schedule_closed_tb_id=schedule_closed_id,
+                                                              closed_date=closed_date, use=USE)
+                    schedule_closed_day.save()
+
+        except ValueError:
+            error = '오류가 발생했습니다. [1]'
+        except IntegrityError:
+            error = '오류가 발생했습니다. [2]'
+        except TypeError:
+            error = '오류가 발생했습니다. [3]'
+        except ValidationError:
+            error = '오류가 발생했습니다. [4]'
+        except InternalError:
+            error = '오류가 발생했습니다. [5]'
+
+    if error is not None:
+        messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info='불가 일정', log_how='추가', use=USE)
+        log_data.save()
+
+    return JsonResponse({'schedule_closed_id': str(schedule_closed_id)}, json_dumps_params={'ensure_ascii': True})
+
+
+def update_trainer_closed_date_logic(request):
+    class_id = request.session.get('class_id', '')
+    schedule_closed_id = request.POST.get('schedule_closed_id', '')
+    member_id = request.POST.get('member_id', '')
+    start_date = request.POST.get('start_date', '')
+    end_date = request.POST.get('end_date', '')
+    week_info = request.POST.get('week_info', '')
+    title = request.POST.get('title', '')
+    contents = request.POST.get('contents', '')
+    is_member_view = request.POST.get('is_member_view', '')
+
+    error = None
+    schedule_closed_info = None
+    start_date_info = None
+    end_date_info = None
+
+    if member_id is None:
+        member_id = ''
+
+    try:
+        schedule_closed_info = ScheduleClosedTb.objects.get(schedule_closed_id=schedule_closed_id)
+    except ObjectDoesNotExist:
+        error = '오류가 발생했습니다. [0]'
+
+    if error is None:
+        if week_info == '':
+            week_info = schedule_closed_info.week_info
+        if start_date == '':
+            start_date = str(schedule_closed_info.start_date)
+        if end_date == '':
+            end_date = str(schedule_closed_info.end_date)
+        if title == '':
+            title = schedule_closed_info.title
+        if contents == '':
+            contents = schedule_closed_info.contents
+        if is_member_view == '':
+            is_member_view = schedule_closed_info.is_member_view
+
+    if error is None:
+        try:
+            start_date_info = datetime.datetime.strptime(start_date, '%Y-%m-%d')
+            end_date_info = datetime.datetime.strptime(end_date, '%Y-%m-%d')
+            if (start_date_info - end_date_info) > datetime.timedelta(days=365):
+                error = '1년까지만 불가 일정을 등록할수 있습니다.'
+        except ValueError:
+            error = '날짜 오류가 발생했습니다.[0]'
+        except IntegrityError:
+            error = '날짜 오류가 발생했습니다.[1]'
+        except TypeError:
+            error = '날짜 오류가 발생했습니다.[2]'
+
+    if error is None:
+        if member_id != '':
+            try:
+                MemberTb.objects.get(member_id=member_id)
+            except ObjectDoesNotExist:
+                error = '회원 정보를 불러오지 못했습니다.'
+
+    try:
+        with transaction.atomic():
+            schedule_closed_info.week_info = week_info
+            schedule_closed_info.start_date = start_date_info
+            schedule_closed_info.end_date = end_date_info
+            schedule_closed_info.title = title
+            schedule_closed_info.contents = contents
+            schedule_closed_info.is_member_view = is_member_view
+
+            schedule_closed_info.save()
+            schedule_closed_id = schedule_closed_info.schedule_closed_id
+    except ValueError:
+        error = '오류가 발생했습니다. [1]'
+    except IntegrityError:
+        error = '오류가 발생했습니다. [2]'
+    except TypeError:
+        error = '오류가 발생했습니다. [3]'
+    except ValidationError:
+        error = '오류가 발생했습니다. [4]'
+    except InternalError:
+        error = '오류가 발생했습니다. [5]'
+
+    if error is not None:
+        messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info='불가 일정', log_how='수정', use=USE)
+        log_data.save()
+
+    return JsonResponse({'schedule_closed_id': str(schedule_closed_id)}, json_dumps_params={'ensure_ascii': True})
+
+
+def delete_trainer_closed_date_logic(request):
+    class_id = request.session.get('class_id', '')
+    schedule_closed_id = request.POST.get('schedule_closed_id', '')
+    error = None
+
+    if schedule_closed_id == '':
+        error = '삭제할 불가 일정을 선택해주세요.'
+
+    if error is None:
+        try:
+            schedule_close_info = ScheduleClosedTb.objects.get(schedule_closed_id=schedule_closed_id)
+            schedule_close_info.delete()
+        except ObjectDoesNotExist:
+            error = '오류가 발생했습니다. [0]'
+
+    if error is not None:
+        messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info='불가 일정', log_how='삭제', use=USE)
+        log_data.save()
+
+    return JsonResponse({'schedule_closed_id': str(schedule_closed_id)}, json_dumps_params={'ensure_ascii': True})
+
 
 
 class GetTrainerMemberTicketPriceBugListView(LoginRequiredMixin, AccessTestMixin, View):

@@ -240,8 +240,6 @@ class Member_add{
                                 + CComponent.dom_tag('지불 방법') + pay_method + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
                                 + CComponent.dom_tag('특이사항') + memo;
         }
-        
-
 
         let html =
             '<div class="obj_input_box_full">'

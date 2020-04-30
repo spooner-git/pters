@@ -1,13 +1,14 @@
 class Trainer_auth{
-    constructor(install_target, external_data){
+    constructor(install_target, external_data, callback){
         this.target = {install: install_target, toolbox:'section_trainer_auth_toolbox', content:'section_trainer_auth_content'};
         this.data_sending_now = false;
+        this.callback = callback;
         this.external_data = external_data;
-        this.trainer_name = this.external_data.trainer_name;
-        this.trainer_db_id = this.external_data.db_id;
-        this.shared_status = this.external_data.shared_status;
+        // this.trainer_name = this.external_data.trainer_name;
+        // this.trainer_db_id = this.external_data.db_id;
+        // this.shared_status = this.external_data.shared_status;
         this.current_shared_status = null;
-        this.program_id = this.external_data.program_id;
+        // this.program_id = this.external_data.program_id;
 
         this.data = {
                 schedule:{
@@ -69,54 +70,54 @@ class Trainer_auth{
     }
 
     set_initial_data (){
-        Trainer_auth_func.read({"class_id": this.program_id}, (data)=>{
-            let my_auth = data[this.trainer_db_id];
-            
-            if(my_auth != undefined){
-                this.data.schedule.create = my_auth.auth_plan_create != undefined ? my_auth.auth_plan_create : OFF;
-                this.data.schedule.read = my_auth.auth_plan_read != undefined ? my_auth.auth_plan_read : OFF;
-                this.data.schedule.update = my_auth.auth_plan_update != undefined ? my_auth.auth_plan_update : OFF;
-                this.data.schedule.delete = my_auth.auth_plan_delete != undefined ? my_auth.auth_plan_delete : OFF;
+        // Trainer_auth_func.read({"class_id": this.program_id}, (data)=>{
+            // let my_auth = data[this.trainer_db_id];
+            //
+            if(this.external_data.trainer_auth != {}){
+                this.data.schedule.create = this.external_data.trainer_auth.auth_plan_create != undefined ? this.external_data.trainer_auth.auth_plan_create : OFF;
+                this.data.schedule.read = this.external_data.trainer_auth.auth_plan_read != undefined ? this.external_data.trainer_auth.auth_plan_read : OFF;
+                this.data.schedule.update = this.external_data.trainer_auth.auth_plan_update != undefined ? this.external_data.trainer_auth.auth_plan_update : OFF;
+                this.data.schedule.delete = this.external_data.trainer_auth.auth_plan_delete != undefined ? this.external_data.trainer_auth.auth_plan_delete : OFF;
 
-                this.data.member.create = my_auth.auth_member_create != undefined ? my_auth.auth_member_create : OFF;
-                this.data.member.read = my_auth.auth_member_read != undefined ? my_auth.auth_member_read : OFF;
-                this.data.member.update = my_auth.auth_member_update != undefined ? my_auth.auth_member_update : OFF;
-                this.data.member.delete = my_auth.auth_member_delete != undefined ? my_auth.auth_member_delete : OFF;
+                this.data.member.create = this.external_data.trainer_auth.auth_member_create != undefined ? this.external_data.trainer_auth.auth_member_create : OFF;
+                this.data.member.read = this.external_data.trainer_auth.auth_member_read != undefined ? this.external_data.trainer_auth.auth_member_read : OFF;
+                this.data.member.update = this.external_data.trainer_auth.auth_member_update != undefined ? this.external_data.trainer_auth.auth_member_update : OFF;
+                this.data.member.delete = this.external_data.trainer_auth.auth_member_delete != undefined ? this.external_data.trainer_auth.auth_member_delete : OFF;
 
-                this.data.lecture.create = my_auth.auth_group_create != undefined ? my_auth.auth_group_create : OFF;
-                this.data.lecture.read = my_auth.auth_group_read != undefined ? my_auth.auth_group_read : OFF;
-                this.data.lecture.update = my_auth.auth_group_update != undefined ? my_auth.auth_group_update : OFF;
-                this.data.lecture.delete = my_auth.auth_group_delete != undefined ? my_auth.auth_group_delete : OFF;
+                this.data.lecture.create = this.external_data.trainer_auth.auth_group_create != undefined ? this.external_data.trainer_auth.auth_group_create : OFF;
+                this.data.lecture.read = this.external_data.trainer_auth.auth_group_read != undefined ? this.external_data.trainer_auth.auth_group_read : OFF;
+                this.data.lecture.update = this.external_data.trainer_auth.auth_group_update != undefined ? this.external_data.trainer_auth.auth_group_update : OFF;
+                this.data.lecture.delete = this.external_data.trainer_auth.auth_group_delete != undefined ? this.external_data.trainer_auth.auth_group_delete : OFF;
 
-                this.data.ticket.create = my_auth.auth_package_create != undefined ? my_auth.auth_package_create : OFF;
-                this.data.ticket.read = my_auth.auth_package_read != undefined ? my_auth.auth_package_read : OFF;
-                this.data.ticket.update = my_auth.auth_package_update != undefined ? my_auth.auth_package_update : OFF;
-                this.data.ticket.delete = my_auth.auth_package_delete != undefined ? my_auth.auth_package_delete : OFF;
+                this.data.ticket.create = this.external_data.trainer_auth.auth_package_create != undefined ? this.external_data.trainer_auth.auth_package_create : OFF;
+                this.data.ticket.read = this.external_data.trainer_auth.auth_package_read != undefined ? this.external_data.trainer_auth.auth_package_read : OFF;
+                this.data.ticket.update = this.external_data.trainer_auth.auth_package_update != undefined ? this.external_data.trainer_auth.auth_package_update : OFF;
+                this.data.ticket.delete = this.external_data.trainer_auth.auth_package_delete != undefined ? this.external_data.trainer_auth.auth_package_delete : OFF;
 
-                this.data.trainer.create = my_auth.auth_trainer_create != undefined ? my_auth.auth_trainer_create : OFF;
-                this.data.trainer.read = my_auth.auth_trainer_read != undefined ? my_auth.auth_trainer_read : OFF;
-                this.data.trainer.update = my_auth.auth_trainer_update != undefined ? my_auth.auth_trainer_update : OFF;
-                this.data.trainer.delete = my_auth.auth_trainer_delete != undefined ? my_auth.auth_trainer_delete : OFF;
+                this.data.trainer.create = this.external_data.trainer_auth.auth_trainer_create != undefined ? this.external_data.trainer_auth.auth_trainer_create : OFF;
+                this.data.trainer.read = this.external_data.trainer_auth.auth_trainer_read != undefined ? this.external_data.trainer_auth.auth_trainer_read : OFF;
+                this.data.trainer.update = this.external_data.trainer_auth.auth_trainer_update != undefined ? this.external_data.trainer_auth.auth_trainer_update : OFF;
+                this.data.trainer.delete = this.external_data.trainer_auth.auth_trainer_delete != undefined ? this.external_data.trainer_auth.auth_trainer_delete : OFF;
 
-                this.data.notice.create = my_auth.auth_notice_create != undefined ? my_auth.auth_notice_create : OFF;
-                this.data.notice.read = my_auth.auth_notice_read != undefined ? my_auth.auth_notice_read : OFF;
-                this.data.notice.update = my_auth.auth_notice_update != undefined ? my_auth.auth_notice_update : OFF;
-                this.data.notice.delete = my_auth.auth_notice_delete != undefined ? my_auth.auth_notice_delete : OFF;
+                this.data.notice.create = this.external_data.trainer_auth.auth_notice_create != undefined ? this.external_data.trainer_auth.auth_notice_create : OFF;
+                this.data.notice.read = this.external_data.trainer_auth.auth_notice_read != undefined ? this.external_data.trainer_auth.auth_notice_read : OFF;
+                this.data.notice.update = this.external_data.trainer_auth.auth_notice_update != undefined ? this.external_data.trainer_auth.auth_notice_update : OFF;
+                this.data.notice.delete = this.external_data.trainer_auth.auth_notice_delete != undefined ? this.external_data.trainer_auth.auth_notice_delete : OFF;
 
-                this.data.statistics.read = my_auth.auth_analytics_read != undefined ? my_auth.auth_analytics_read : OFF;
+                this.data.statistics.read = this.external_data.trainer_auth.auth_analytics_read != undefined ? this.external_data.trainer_auth.auth_analytics_read : OFF;
 
-                this.data.setting.create = my_auth.auth_setting_create != undefined ? my_auth.auth_setting_create : OFF;
-                this.data.setting.read = my_auth.auth_setting_read != undefined ? my_auth.auth_setting_read : OFF;
-                this.data.setting.update = my_auth.auth_setting_update != undefined ? my_auth.auth_setting_update : OFF;
-                this.data.setting.delete = my_auth.auth_setting_delete != undefined ? my_auth.auth_setting_delete : OFF;
+                this.data.setting.create = this.external_data.trainer_auth.auth_setting_create != undefined ? this.external_data.trainer_auth.auth_setting_create : OFF;
+                this.data.setting.read = this.external_data.trainer_auth.auth_setting_read != undefined ? this.external_data.trainer_auth.auth_setting_read : OFF;
+                this.data.setting.update = this.external_data.trainer_auth.auth_setting_update != undefined ? this.external_data.trainer_auth.auth_setting_update : OFF;
+                this.data.setting.delete = this.external_data.trainer_auth.auth_setting_delete != undefined ? this.external_data.trainer_auth.auth_setting_delete : OFF;
 
-                this.shared_status = my_auth.trainer_info.auth_cd;
-                this.current_shared_status = my_auth.trainer_info.auth_cd;
+                // this.shared_status = this.external_data.trainer_auth.trainer_info.auth_cd;
+                // this.current_shared_status = this.external_data.trainer_auth.trainer_info.auth_cd;
             }
-            this.render();
-            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
-        });
-        
+        // });
+
+        this.render();
+        func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`, ON);
     }
 
     clear(){
@@ -152,7 +153,7 @@ class Trainer_auth{
     }
     
     dom_assembly_content(){
-        let shared_status_button = this.current_shared_status == null ? "" : this.dom_button_shared_status();
+        // let shared_status_button = this.dom_button_shared_status();
         let schedule = this.dom_sub_assembly_schedule();
         let member = this.dom_sub_assembly_member();
         let lecture = this.dom_sub_assembly_lecture();
@@ -162,7 +163,7 @@ class Trainer_auth{
         let statistics = this.dom_sub_assembly_statistics();
         let settings = this.dom_sub_assembly_setting();
 
-        let html = schedule + member + lecture + ticket + trainer + notice + statistics + settings + `<article class="obj_input_box_full">${shared_status_button}</article>`;
+        let html = schedule + member + lecture + ticket + trainer + notice + statistics + settings;
 
         return html;
     }
@@ -287,7 +288,7 @@ class Trainer_auth{
 
 
     dom_row_toolbox(){
-        let title = `강사 권한 설정 - ${this.trainer_name}`;
+        let title = `강사 권한 설정`;
         let description = `<p style="font-size:13px;font-weight:500;margin-top:5px;color:var(--font-sub-dark)">강사의 각종 권한을 설정합니다.</p>`;
         let html = `
         <div class="trainer_auth_upper_box" style="">
@@ -300,17 +301,6 @@ class Trainer_auth{
             </div>
         </div>
         `;
-        return html;
-    }
-
-    dom_button_shared_status(){
-        let id = null;
-        let title = "권한 설정";
-        let style = {"font-size":"13px", "font-weight":"500", "background-color":"var(--bg-highlight)", "color":"var(--fundamental-white)", "line-height":"40px"};
-        let onclick = ()=>{
-            this.event_select_shared_status(`${this.trainer_name}님의 현재 지점 ${title}을 설정 하시겠습니까?`);
-        };
-        let html = CComponent.button (id, title, style, onclick);
         return html;
     }
 
@@ -426,14 +416,13 @@ class Trainer_auth{
         }else if(this.data_sending_now == false){
             this.data_sending_now = true;
         }
-        let auth_cd = this.shared_status;
-        
+        let auth_cd = AUTH_TYPE_WAIT;
         // if(this.current_shared_status==AUTH_TYPE_DELETE){
         //     auth_cd = AUTH_TYPE_WAIT;
         // }
         let data = {
-            "class_id":this.program_id,
-            "trainer_id": this.trainer_db_id,
+            // "class_id":this.program_id,
+            // "trainer_id": this.trainer_db_id,
             "auth_cd": auth_cd,
             "auth_plan_create":this.data.schedule.create,
             "auth_plan_read":this.data.schedule.read,
@@ -470,22 +459,22 @@ class Trainer_auth{
             "auth_setting_read":this.data.setting.read,
             "auth_setting_update":this.data.setting.update,
         };
-        Trainer_auth_func.update(data, ()=>{
-            this.data_sending_now = false;
-            // this.set_initial_data();
-            show_error_message({title:'변경 내용이 저장되었습니다.'});
-            // this.render_content();
-            layer_popup.close_layer_popup();
-            setting_sharing_popup.init();
-            program_list_popup.init();
-            this.current_shared_status = auth_cd;
-        }, ()=>{this.data_sending_now = false;});
+        this.callback(data);
+        // Trainer_auth_func.update(data, ()=>{
+        //     this.data_sending_now = false;
+        //     // this.set_initial_data();
+        //     show_error_message({title:'변경 내용이 저장되었습니다.'});
+        //     // this.render_content();
+        //     layer_popup.close_layer_popup();
+        //     setting_sharing_popup.init();
+        //     program_list_popup.init();
+        //     this.current_shared_status = auth_cd;
+        // }, ()=>{this.data_sending_now = false;});
+        this.data_sending_now = false;
+        layer_popup.close_layer_popup();
     }
 
     upper_right_menu(){
-        if(this.shared_status == AUTH_TYPE_DELETE){
-            this.shared_status = AUTH_TYPE_WAIT;
-        }
         this.send_data();
     }
 }
