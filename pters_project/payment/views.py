@@ -365,16 +365,19 @@ def billing_check_logic(request):
                                                                                 status='paid', use=USE).count()
                             if member_payment_count <= 1:
                                 recommended_member_id = pre_payment_info.member.recommended_member_id
-
                                 try:
                                     coupon_info = CouponTb.objects.get(coupon_cd=RECOMMENDED_PAYMENT_COUPON_CD,
                                                                        use=USE)
                                 except ObjectDoesNotExist:
                                     recommend_error_check = '쿠폰 없음'
-                                try:
-                                    recommended_member_info = MemberTb.objects.get(member_id=recommended_member_id,
-                                                                                   use=USE)
-                                except ObjectDoesNotExist:
+
+                                if recommended_member_id is not None and recommended_member_id != '':
+                                    try:
+                                        recommended_member_info = MemberTb.objects.get(member_id=recommended_member_id,
+                                                                                       use=USE)
+                                    except ObjectDoesNotExist:
+                                        recommend_error_check = '추천인 없음'
+                                else:
                                     recommend_error_check = '추천인 없음'
 
                                 if recommend_error_check is None:
