@@ -764,7 +764,7 @@
             $this.addClass('sidemenu_off');
             $sidemenu_text.hide();
             $toplogo.html(
-                `<img src="/static/common/icon/logo/PTERS_logo_short.png" alt="" style="width: 32px;vertical-align:middle" id="top_logo_image">`
+                `<img src="/static/common/icon/logo/{{request.session.domain_url}}_logo_short.png" alt="" style="width: 32px;vertical-align:middle" id="top_logo_image">`
             );
             $sidemenu_button.css('transform', 'rotate(-90deg)');
         }

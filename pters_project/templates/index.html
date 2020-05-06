@@ -426,14 +426,14 @@
     <nav id="root_nav">
         <div>
             <div id="login_wrapper">
-                <a href="/"><img src="/static/common/icon/logo/PTERS_logo_short.png" alt="PTERS 로고" id="logo"></a>
+                <a href="/"><img src="/static/common/icon/logo/{{ request.session.domain_url }}_logo_short.png" alt="PTERS 로고" id="logo"></a>
             </div>
             <div id="menu_wrapper">
                 <ul>
                     <!-- <li><a onclick="go_to('what');" style="cursor: pointer;" href="{% url 'login:check_registration' %}">피터스?</a></li>
                     <li><a onclick="go_to('feature');" style="cursor: pointer;">주요기능 소개</a></li>
                     <li><a onclick="go_to('price')" style="cursor: pointer;display:none;">요금 안내</a></li> -->
-                    <li><a style="cursor: pointer;" href="/introduce/">{{ request.session.domain_url }}??피터스?</a></li>
+                    <li><a style="cursor: pointer;" href="/introduce/">피터스?</a></li>
                     <li><a style="cursor: pointer;" href="/for_tutor/">강사 기능</a></li>
                     <li><a style="cursor: pointer;" href="/for_tutee/">수강회원 기능</a></li>
                     <!-- <li><a onclick="go_to('price')" style="cursor: pointer;display:none;">요금 안내</a></li> -->

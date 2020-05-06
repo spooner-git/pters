@@ -39,7 +39,7 @@
                 </div>
                 <!-- PTERS 로그인 버튼 노출 영역 -->
                 <div class="social_login_box" onclick="location.href = '{% url "login:registration_register" %}';" style="background-color: #ffffff; margin-top:8px; margin-bottom:20px; border:1px solid #ebe6e6;">
-                    <div class="social_login_img"><img src="/static/common/icon/logo/PTERS_logo_short.png" style="width: 24px; height: 24px; vertical-align:middle;"></div>
+                    <div class="social_login_img"><img src="/static/common/icon/logo/{{request.session.domain_url}}_logo_short.png" style="width: 24px; height: 24px; vertical-align:middle;"></div>
                     <span class="social_login_text" style="color:#3d3b3b;">일반 회원가입</span>
                     <div class="social_login_arrow">
                         <img src="/static/common/icon/icon_arrow_r_small_light_grey.png" style="width: 24px; height: 24px; vertical-align:middle;">

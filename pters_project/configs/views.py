@@ -43,7 +43,7 @@ def index(request):
     domain_url = current_site.domain.split('pters.co.kr')[0]
 
     if domain_url != '' and domain_url != 'www.':
-        request.session['domain_url'] = domain_url
+        request.session['domain_url'] = domain_url.split('.')[0]
     else:
         request.session['domain_url'] = 'pters'
 
