@@ -473,7 +473,6 @@
                                     <span style="font-weight:900;font-size:22px">피터스 PTERS</span>
                                 </div>
                             </div>
-                            {% endif %}
                             <!-- <div class="swiper-slide login_swiping_content" style="background-image:url('/static/common/img/front_page/swiper/PTERS_0_4_nobrand.png')">
                                 <div class="pters_description">
                                 </div>
@@ -488,7 +487,6 @@
                                 <div class="pters_description">
                                 </div>
                             </div> -->
-                            {% if request.session.domain_url == 'pters' %}
 
                             <div class="swiper-slide login_swiping_content" style="background-image:url('{% static_url 'common/img/front_page/swiper/PTERS100_1.png' %}')">
                                 <div class="pters_description">
@@ -570,6 +568,7 @@
         </section>
 
         <div id="description_wrapper">
+            {% if request.session.domain_url == 'pters' %}
             <section class="front_page_section" style="background-image: linear-gradient(to right, #fe4e65 25%, #ff869e);" id="what_page">
                 <div id="page_1" class="article_wrapper">
                     <article class="flex_2_divided_1">
@@ -589,7 +588,7 @@
                     </article>
                 </div>
             </section>
-
+            {% endif %}
             <section class="front_page_section" style="background-color:#fbfbfb;color:#5c5859">
                 <div id="page_8" class="article_wrapper" style="display:block;height:auto;padding:40px 20px 0 20px;">
                     <div>
