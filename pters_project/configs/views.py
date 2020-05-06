@@ -41,8 +41,8 @@ def index(request):
     # request.session['device_info'] = 'web'
     request.session['setting_theme'] = 'light'
     domain_url = current_site.domain.split('pters.co.kr')[0]
-
-    if domain_url != '' and domain_url != 'www.':
+    # print(str(domain_url))
+    if domain_url != '' and domain_url != 'www.' and domain_url != 'spooner-test.' and domain_url != 'www.spooner-test.':
         request.session['domain_url'] = domain_url.split('.')[0]
     else:
         request.session['domain_url'] = 'pters'
