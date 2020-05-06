@@ -40,12 +40,13 @@ def index(request):
     request.session['PTERS_NAVER_ID_LOGIN_CLIENT_SECRET'] = settings.PTERS_NAVER_ID_LOGIN_CLIENT_SECRET
     # request.session['device_info'] = 'web'
     request.session['setting_theme'] = 'light'
-    domain_url = request.get_full_path().split('pters.co.kr')[0]
+    domain_url = current_site.domain.split('pters.co.kr')[0]
 
-    if domain_url != '':
+    if domain_url != '' and domain_url != 'www.':
         request.session['domain_url'] = domain_url
     else:
         request.session['domain_url'] = 'pters'
+
     if request.user.is_authenticated():
         next_page = '/check/'
     else:
