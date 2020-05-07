@@ -68,8 +68,8 @@ def index(request):
         main_color_cd = '#fe4e65'
         sub_color_cd = ''
 
-    # if domain_url != 'spooner-test':
-    #     request.session['domain'] = 'pters.co.kr'
+    if request.session['domain'] != 'spooner-test.pters.co.kr':
+        request.session['domain'] = 'pters.co.kr'
     request.session['domain_url'] = domain_url
     request.session['app_name'] = app_name
     request.session['ios_url'] = ios_url
