@@ -21,11 +21,11 @@
     <meta name="description" content="PTERS 피터스 PT, 요가, 필라테스, 당구, 골프 등 레슨 회원관리와 일정을 관리하는 서비스 프로그램">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-    <title>{% block title %}PTERS{% endblock %}</title>
+    <title>{% block title %}{{request.session.app_name}}{% endblock %}</title>
 
-    <link rel="icon" href={% static_url "common/favicon.ico" %}>
-    <link rel="apple-touch-icon" href={% static_url "common/favicon-48.png" %}>
-    <link rel="shortcut icon" href={% static_url "common/favicon-48.png" %}>
+    <link rel="icon" href="/static/common/{{request.session.domain_url}}-favicon.ico">
+    <link rel="apple-touch-icon" href="/static/common/{{request.session.domain_url}}-favicon-48.png">
+    <link rel="shortcut icon" href="/static/common/{{request.session.domain_url}}-favicon-48.png">
 
     <!-- <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css"> -->
     <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.fundamental.css" %}>
@@ -80,7 +80,7 @@
 <div id="base">
     <section id="section_side">
         <div class="top_logo">
-            <span style='color:var(--font-base); width:64px; font-size:20px; font-weight:bold; padding-left:12px;' id="top_logo_image">{% filter upper %}{{ request.session.domain_url }}{% endfilter %}</span>
+            <span style='color:var(--font-base); width:64px; font-size:20px; font-weight:bold; padding-left:12px;' id="top_logo_image">{{ request.session.app_name }}</span>
             <!--<img src="/static/common/icon/logo/PTERS_logo_full.png" alt="" style="width: 64px;" id="top_logo_image">-->
         </div>
         <div class="side_menu" id="nav_side">
@@ -457,6 +457,7 @@
     const windowHeight = window.innerHeight;
     const windowWidth = window.innerWidth;
     const $root_content = $('#root_content');
+    var app_name = '{{ request.session.app_name }}';
     var current_page = "";
     var current_page_text = "home";
 

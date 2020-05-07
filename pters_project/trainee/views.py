@@ -172,6 +172,7 @@ class TraineeMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(TraineeMainView, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id')
+        app_name = self.request.session.get('app_name')
         context['error'] = None
         context = func_get_class_list_only_view(context, self.request.user.id)
 
@@ -193,24 +194,25 @@ class TraineeMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                 context['cancel_disable_time'] = cancel_disable_time
                 check_alarm_program_notice_qa_comment(context, class_id, self.request.user.id)
 
-                query_notice_type_list = Q(notice_type_cd='NOTICE') | Q(notice_type_cd='EVENT')
-                query_notice_group_cd = Q(to_member_type_cd='ALL') | Q(to_member_type_cd='trainee')
+                if app_name == 'pters':
+                    query_notice_type_list = Q(notice_type_cd='NOTICE') | Q(notice_type_cd='EVENT')
+                    query_notice_group_cd = Q(to_member_type_cd='ALL') | Q(to_member_type_cd='trainee')
 
-                notice_read_check_data = NoticeReadCheckTb.objects.filter(member_id=self.request.user.id,
-                                                                          unread_check=USE,
-                                                                          use=USE)
-                notice_data = NoticeTb.objects.filter(query_notice_type_list, query_notice_group_cd,
-                                                      popup_display=USE, use=USE).order_by('-reg_dt')
-                notice_list = []
-                for notice_info in notice_data:
-                    unread_check_test = False
-                    for notice_read_check_info in notice_read_check_data:
-                        if str(notice_read_check_info.notice_tb.notice_id) == str(notice_info.notice_id):
-                            unread_check_test = True
-                    if not unread_check_test:
-                        notice_list.append({'notice_id': notice_info.notice_id,
-                                            'notice_use': notice_info.use})
-                context['popup_notice_data'] = notice_list
+                    notice_read_check_data = NoticeReadCheckTb.objects.filter(member_id=self.request.user.id,
+                                                                              unread_check=USE,
+                                                                              use=USE)
+                    notice_data = NoticeTb.objects.filter(query_notice_type_list, query_notice_group_cd,
+                                                          popup_display=USE, use=USE).order_by('-reg_dt')
+                    notice_list = []
+                    for notice_info in notice_data:
+                        unread_check_test = False
+                        for notice_read_check_info in notice_read_check_data:
+                            if str(notice_read_check_info.notice_tb.notice_id) == str(notice_info.notice_id):
+                                unread_check_test = True
+                        if not unread_check_test:
+                            notice_list.append({'notice_id': notice_info.notice_id,
+                                                'notice_use': notice_info.use})
+                    context['popup_notice_data'] = notice_list
 
         return context
 
@@ -335,11 +337,15 @@ class TraineeSystemNoticeView(LoginRequiredMixin, AccessTestMixin, TemplateView)
 
     def get_context_data(self, **kwargs):
         context = super(TraineeSystemNoticeView, self).get_context_data(**kwargs)
-
+        app_name = self.request.session.get('app_name', 'pters')
         query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `NOTICE_TB`.`NOTICE_TYPE_CD`"
 
         query_notice_type_list = Q(notice_type_cd='NOTICE') | Q(notice_type_cd='EVENT') \
                                  | Q(notice_type_cd='SYS_USAGE') | Q(notice_type_cd='FAQ')
+        if app_name != 'pters':
+            query_notice_type_list = Q(notice_type_cd='NOTICE')\
+                                     | Q(notice_type_cd='SYS_USAGE') | Q(notice_type_cd='FAQ')
+
         query_notice_group_cd = Q(to_member_type_cd='ALL') | Q(to_member_type_cd='trainee')
         notice_data = NoticeTb.objects.filter(query_notice_type_list, query_notice_group_cd,
                                               use=USE).annotate(notice_type_cd_name=RawSQL(query_type_cd, []),

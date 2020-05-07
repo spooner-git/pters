@@ -19,7 +19,7 @@
 {#                                <div class="obj_font_size_12_weight_500">작성자 : </div>#}
 {#                            </div>#}
                             <div class="obj_table_cell_x2" style="width:auto;">
-                                - PTERS {{ qa_info.get_status_type_cd_name }}
+                                - {{ qa_info.get_status_type_cd_name }}
                             </div>
                             <div class="obj_table_cell_x2" style="width:auto;">
 {#                                <div class="obj_font_size_12_weight_500">{{ qa_info.member.name }}</div>#}
@@ -54,7 +54,7 @@
                         <div class="obj_table_raw obj_box_full" style="margin-top:20px;">
                             <div style="height:35px">
                                 <div>
-                                    PTERS 답변 :
+                                    답변 :
                                 </div>
                                 <div class="obj_font_color_grey obj_font_size_12_weight_normal">
                                     {{ qa_comment_info.reg_dt | date:'Y.m.d (l)'|cut:"요일" }} {{ qa_comment_info.reg_dt | time:'H:i' }}

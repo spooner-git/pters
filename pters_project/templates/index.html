@@ -424,6 +424,7 @@
 {% endblock %}
 {% block content %}
     <nav id="root_nav">
+        {% if request.session.domain_url == 'pters' %}
         <div>
             <div id="login_wrapper">
                 <a href="/"><img src="/static/common/icon/logo/{{request.session.domain_url}}_logo_short.png" alt="PTERS 로고" id="logo"></a>
@@ -433,16 +434,14 @@
                     <!-- <li><a onclick="go_to('what');" style="cursor: pointer;" href="{% url 'login:check_registration' %}">피터스?</a></li>
                     <li><a onclick="go_to('feature');" style="cursor: pointer;">주요기능 소개</a></li>
                     <li><a onclick="go_to('price')" style="cursor: pointer;display:none;">요금 안내</a></li> -->
-                    {% if request.session.domain_url == 'pters' %}
                     <li><a style="cursor: pointer;" href="/introduce/">피터스?</a></li>
                     <li><a style="cursor: pointer;" href="/for_tutor/">강사 기능</a></li>
-                    {% endif %}
                     <li><a style="cursor: pointer;" href="/for_tutee/">수강회원 기능</a></li>
                     <!-- <li><a onclick="go_to('price')" style="cursor: pointer;display:none;">요금 안내</a></li> -->
                 </ul>
             </div>
         </div>
-        
+        {% endif %}
     </nav>
 
     <div id="root_content">
@@ -465,7 +464,6 @@
                     <div class="swiper-container" style="position: absolute;;width:100%;height:100%;top:0;left:0">
                         <div class="swiper-wrapper">
                             {% if request.session.domain_url == 'pters' %}
-
                             <div class="swiper-slide login_swiping_content" style="background-image:url('/static/common/img/home_bg/bg_big.png')">
                                 <div class="pters_description">
                                     <span style="font-weight:normal;">프로 강사를 위한</span> <br/>
@@ -492,6 +490,10 @@
                                 <div class="pters_description">
                                     <!-- <span style="font-weight:900;font-size:22px">피터스 PTERS</span> -->
                                 </div>
+                            </div>
+                            {% else %}
+                            <div>
+                                <img src="/static/common/icon/logo/{{request.session.domain_url}}_logo_short.png" alt="PTERS 로고" style="height:100%;">
                             </div>
                             {% endif %}
                         </div>
@@ -593,7 +595,7 @@
                 <div id="page_8" class="article_wrapper" style="display:block;height:auto;padding:40px 20px 0 20px;">
                     <div>
                         <p style="margin-top: 0;">
-                            <span style="font-size:11px;font-weight:500">고객센터 / </span>
+                            <span style="font-size:11px;font-weight:500">서비스 고객센터 / </span>
                             <span style="font-size:8px;">운영시간: 10:00 ~ 18:00 (점심시간: 13:00 ~ 14:00)</span>
                         </p>
                     </div>
