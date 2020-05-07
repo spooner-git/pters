@@ -756,7 +756,7 @@
                 $sidemenu_text.show();
             }, 150);
             $toplogo.html(
-                `<span style='color:var(--font-base); width:64px; font-size:20px; font-weight:bold; padding-left:12px;'>PTERS</span>`
+                `<span style='color:var(--font-base); width:64px; font-size:20px; font-weight:bold; padding-left:12px;'>{{request.session.app_name}}</span>`
                 //`<img src="/static/common/icon/logo/PTERS_logo_full.png" alt="" style="width: 64px;" id="top_logo_image">`
             );
             $sidemenu_button.css('transform', 'rotate(90deg)');
