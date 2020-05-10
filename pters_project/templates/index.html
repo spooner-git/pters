@@ -417,6 +417,9 @@
                 box-sizing: border-box;
                 border-radius: 4px;
             }
+            .main_logo{
+                width:auto !important;
+            }
         }
 
 
@@ -493,7 +496,7 @@
                             </div>
                             {% else %}
                             <div>
-                                <img src="/static/common/icon/logo/{{request.session.domain_url}}_logo_short.png" alt="PTERS 로고" style="width:100%; height:100%;">
+                                <img src="/static/common/icon/logo/{{request.session.domain_url}}_logo_short.png" alt="PTERS 로고" class="main_logo" style="width:100%; height:100%;">
                             </div>
                             {% endif %}
                         </div>
