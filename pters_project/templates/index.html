@@ -418,6 +418,7 @@
                 border-radius: 4px;
             }
             .main_logo{
+                max-width: 100%;
                 width:auto !important;
             }
         }
@@ -532,7 +533,7 @@
 
                         </div>
 
-                        <div class="social_login_box_wrapper">
+                        <div class="social_login_box_wrapper" style="{% if request.session.domain_url != 'pters' %}display:none; {% endif %}">
                             <!-- 네이버 로그인 버튼 노출 영역 -->
                             <div class="social_login_box" onclick="location.href=naverLogin.generateAuthorizeUrl();" style="background-color: #0dd25a;">
                                 <div class="social_login_img">
