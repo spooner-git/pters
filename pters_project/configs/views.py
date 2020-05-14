@@ -14,6 +14,7 @@ from django.shortcuts import render, redirect
 from django.utils.datastructures import MultiValueDictKeyError
 from django.views.generic import TemplateView, RedirectView
 
+from admin_spooner.models import CustomizingAppTb
 from configs import settings
 from configs.const import USE, STATE_CD_NOT_PROGRESS, ON_SCHEDULE_TYPE, AUTO_FINISH_ON, STATE_CD_FINISH, \
     STATE_CD_ABSENCE, AUTO_ABSENCE_ON, AUTO_CANCEL_ON, UN_USE, AUTO_FINISH_OFF, AUTH_TYPE_VIEW, \
@@ -40,6 +41,42 @@ def index(request):
     request.session['PTERS_NAVER_ID_LOGIN_CLIENT_SECRET'] = settings.PTERS_NAVER_ID_LOGIN_CLIENT_SECRET
     # request.session['device_info'] = 'web'
     request.session['setting_theme'] = 'light'
+    domain_url = current_site.domain.split('pters.co.kr')[0]
+    if domain_url != '' and domain_url != 'www.' \
+            and domain_url != 'spooner-test.' and domain_url != 'www.spooner-test.':
+            # and domain_url != 'localhost:8000':
+        domain_url = domain_url.split('.')[0]
+        if domain_url != '172' and domain_url != '198':
+            domain_url = 'lucent'
+        else:
+            domain_url = 'pters'
+    else:
+        domain_url = 'pters'
+    try:
+        customizing_app_info = CustomizingAppTb.objects.get(app_domain=domain_url)
+        domain_url = customizing_app_info.app_domain
+        app_name = customizing_app_info.app_name
+        ios_url = customizing_app_info.ios_url
+        android_url = customizing_app_info.android_url
+        main_color_cd = customizing_app_info.main_color_cd
+        sub_color_cd = customizing_app_info.sub_color_cd
+    except:
+        domain_url = 'pters'
+        app_name = 'PTERS'
+        ios_url = ''
+        android_url = ''
+        main_color_cd = '#fe4e65'
+        sub_color_cd = ''
+
+    # if request.session['domain'] != 'spooner-test.pters.co.kr':
+    #     request.session['domain'] = 'pters.co.kr'
+    request.session['domain_url'] = domain_url
+    request.session['app_name'] = app_name
+    request.session['ios_url'] = ios_url
+    request.session['android_url'] = android_url
+    request.session['main_color_cd'] = main_color_cd
+    request.session['sub_color_cd'] = sub_color_cd
+
     if request.user.is_authenticated():
         next_page = '/check/'
     else:
@@ -131,6 +168,46 @@ class AccessTestMixin(UserPassesTestMixin):
         class_id = self.request.session.get('class_id', '')
         if session_app_version == '' or session_app_version is None:
             self.request.session['APP_VERSION'] = settings.APP_VERSION
+
+        current_site = get_current_site(self.request)
+        self.request.session['domain'] = current_site.domain
+
+        domain_url = self.request.session.get('domain_url', '')
+        if domain_url == '' or domain_url is None:
+            domain_url = current_site.domain.split('pters.co.kr')[0]
+            if domain_url != '' and domain_url != 'www.':
+                    # and domain_url != 'spooner-test.' and domain_url != 'www.spooner-test.'\
+                    # and domain_url != 'localhost:8000':
+                domain_url = domain_url.split('.')[0]
+                if domain_url != '172' and domain_url != '198':
+                    domain_url = 'lucent'
+                else:
+                    domain_url = 'pters'
+            else:
+                domain_url = 'pters'
+
+            try:
+                customizing_app_info = CustomizingAppTb.objects.get(app_domain=domain_url)
+                domain_url = customizing_app_info.app_domain
+                app_name = customizing_app_info.app_name
+                ios_url = customizing_app_info.ios_url
+                android_url = customizing_app_info.android_url
+                main_color_cd = customizing_app_info.main_color_cd
+                sub_color_cd = customizing_app_info.sub_color_cd
+            except:
+                domain_url = 'pters'
+                app_name = 'PTERS'
+                ios_url = ''
+                android_url = ''
+                main_color_cd = '#fe4e65'
+                sub_color_cd = ''
+
+            self.request.session['domain_url'] = domain_url
+            self.request.session['app_name'] = app_name
+            self.request.session['ios_url'] = ios_url
+            self.request.session['android_url'] = android_url
+            self.request.session['main_color_cd'] = main_color_cd
+            self.request.session['sub_color_cd'] = sub_color_cd
 
         if error is None:
             if group_name == '':

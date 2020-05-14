@@ -15,7 +15,7 @@
 
         <title>
             {% block title %}
-                PTERS
+                {{request.session.app_name}}
             {% endblock %}
         </title>
 
@@ -28,9 +28,9 @@
         <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
         <meta name="author" content="">
 
-        <link rel="icon" href={% static_url "common/favicon.ico" %}>
-        <link rel="apple-touch-icon" href={% static_url "common/favicon-48.png" %}>
-        <link rel="shortcut icon" href={% static_url "common/favicon-48.png" %}>
+        <link rel="icon" href="/static/common/{{request.session.domain_url}}-favicon.ico">
+        <link rel="apple-touch-icon" href="/static/common/{{request.session.domain_url}}-favicon-48.png">
+        <link rel="shortcut icon" href="/static/common/{{request.session.domain_url}}-favicon-48.png">
         <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
         <link rel="stylesheet" href={% static_url "user/css/pters.css.animation.css" %}>
         <link rel="stylesheet" href={% static_url "user/css/trainee/pters.trainee.fundamental.css" %}>

@@ -10,9 +10,9 @@
 
     <title>PTERS-출석체크모드</title>
     {% load static_url %}
-    <link rel="icon" href="/static/common/favicon.ico">
-    <link rel="apple-touch-icon" href="/static/common/favicon-48.png">
-    <link rel="shortcut icon" href="/static/common/favicon-48.png">
+    <link rel="icon" href="/static/common/{{request.session.domain_url}}-favicon.ico">
+    <link rel="apple-touch-icon" href="/static/common/{{request.session.domain_url}}-favicon-48.png">
+    <link rel="shortcut icon" href="/static/common/{{request.session.domain_url}}-favicon-48.png">
     <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.base.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainer/popup/pters.trainer.popup.base.css" %}>
     <style type="text/css">

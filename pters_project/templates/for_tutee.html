@@ -412,12 +412,14 @@
     <nav id="root_nav">
         <div>
             <div id="login_wrapper">
-                <a href="/"><img src="/static/common/icon/logo/PTERS_logo_short.png" alt="PTERS 로고" id="logo"></a>
+                <a href="/"><img src="/static/common/icon/logo/{{request.session.domain_url}}_logo_short.png" alt="PTERS 로고" id="logo"></a>
             </div>
             <div id="menu_wrapper">
                 <ul>
+                    {% if request.session.domain_url == 'pters' %}
                     <li><a style="cursor: pointer;" href="/introduce/">피터스?</a></li>
                     <li><a style="cursor: pointer;" href="/for_tutor/">강사 기능</a></li>
+                    {% endif %}
                     <li><a style="cursor: pointer;color:#fe4e65" href="/for_tutee/">수강회원 기능</a></li>
                 </ul>
             </div>
