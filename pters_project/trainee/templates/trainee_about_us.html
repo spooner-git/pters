@@ -38,6 +38,7 @@
 
     <div class="trainee_user_policy">
         <div class="wrapper_title obj_font_size_15_weight_bold">About us</div>
+        {% if request.session.domain_url == 'pters' %}
         <div class="obj_box_full">
             <div>
                 <span class="about_us_tag">대표</span><span class="about_us_name">김선겸</span>
@@ -50,17 +51,20 @@
                 <div><span class="about_us_tag">자문</span><span class="about_us_name">Bns발레 강현화 대표님</span></div>
             </div>
         </div>
+        {% endif %}
         <div class="obj_box_full">
-            <div class="about_us_tag">문의</div>
+            <div class="about_us_tag">시스템 문의</div>
             <div class="about_us_name">전화: 070-8816-1010 (응대 시간: 평일 10:00 ~ 18:00, 13:00 ~ 14:00 점심시간)</div>
             <div class="about_us_name">메일: Support@pters.co.kr</div>
             <div class="about_us_name">주소: 서울시 동작구 보라매로 5가길 7, 820</div>
         </div>
+        {% if request.session.domain_url == 'pters' %}
         <div class="obj_box_full">
             <div class="about_us_tag">사업자 정보</div>
             <div class="about_us_name">사업자 등록번호: 463-56-00284</div>
             <div class="about_us_name">통신판매업 신고: 2017-서울동작-0672</div>
         </div>
+        {% endif %}
     </div>
 
 

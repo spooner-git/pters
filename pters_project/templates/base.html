@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="pters_light_mode">
 <head>
-    <title>피터스 | 레슨 관리</title>
+    <title>{{ request.session.app_name }} | 레슨 관리</title>
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
         new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -22,9 +22,9 @@
     <meta property="og:type" content="website">
     <meta property="og:title" content="PTERS 피터스">
     <meta property="og:description" content="레슨 회원, 일정 관리 서비스"> -->
-    <link rel="icon" href={% static_url "common/favicon.ico" %}>
-    <link rel="apple-touch-icon" href={% static_url "common/favicon-48.png" %}>
-    <link rel="shortcut icon" href={% static_url "common/favicon-48.png" %}>
+    <link rel="icon" href="/static/common/{{ request.session.domain_url }}-favicon.ico">
+    <link rel="apple-touch-icon" href="/static/common/{{ request.session.domain_url }}-favicon-48.png">
+    <link rel="shortcut icon" href="/static/common/{{ request.session.domain_url }}-favicon-48.png">
     <!-- <meta property="og:image" content="http://www.mysite.com/myimage.jpg">
     <meta property="og:url" content="http://www.mysite.com"> -->
     <style type="text/css">
