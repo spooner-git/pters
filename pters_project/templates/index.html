@@ -417,6 +417,10 @@
                 box-sizing: border-box;
                 border-radius: 4px;
             }
+            .main_logo{
+                max-width: 100%;
+                width:auto !important;
+            }
         }
 
 
@@ -424,9 +428,10 @@
 {% endblock %}
 {% block content %}
     <nav id="root_nav">
+        {% if request.session.domain_url == 'pters' %}
         <div>
             <div id="login_wrapper">
-                <a href="/"><img src="/static/common/icon/logo/PTERS_logo_short.png" alt="PTERS 로고" id="logo"></a>
+                <a href="/"><img src="/static/common/icon/logo/{{request.session.domain_url}}_logo_short.png" alt="PTERS 로고" id="logo"></a>
             </div>
             <div id="menu_wrapper">
                 <ul>
@@ -440,7 +445,7 @@
                 </ul>
             </div>
         </div>
-        
+        {% endif %}
     </nav>
 
     <div id="root_content">
@@ -462,6 +467,7 @@
                     <div style="padding-top:100%;"></div>
                     <div class="swiper-container" style="position: absolute;;width:100%;height:100%;top:0;left:0">
                         <div class="swiper-wrapper">
+                            {% if request.session.domain_url == 'pters' %}
                             <div class="swiper-slide login_swiping_content" style="background-image:url('/static/common/img/home_bg/bg_big.png')">
                                 <div class="pters_description">
                                     <span style="font-weight:normal;">프로 강사를 위한</span> <br/>
@@ -473,6 +479,7 @@
                                 <div class="pters_description">
                                 </div>
                             </div> -->
+
                             <div class="swiper-slide login_swiping_content" style="background-image:url('{% static_url 'common/img/front_page/swiper/PTERS3.png' %}')">
                                 <div class="pters_description">
                                     <!-- <span style="font-weight:900;font-size:22px">피터스 PTERS</span> -->
@@ -482,17 +489,23 @@
                                 <div class="pters_description">
                                 </div>
                             </div> -->
+
                             <div class="swiper-slide login_swiping_content" style="background-image:url('{% static_url 'common/img/front_page/swiper/PTERS100_1.png' %}')">
                                 <div class="pters_description">
                                     <!-- <span style="font-weight:900;font-size:22px">피터스 PTERS</span> -->
                                 </div>
                             </div>
+                            {% else %}
+                            <div>
+                                <img src="/static/common/icon/logo/{{request.session.domain_url}}_logo_short.png" alt="PTERS 로고" class="main_logo" style="width:100%; height:100%;">
+                            </div>
+                            {% endif %}
                         </div>
                         <div class="swiper-pagination" style="right:0;width:75px;left:unset;"></div>
                     </div>
                     <div class="pters_download">
-                        <a href="https://itunes.apple.com/kr/app/apple-store/id1373054819"><img id="download_img_ios" src="/static/common/img/front_page/ios.svg" alt=""></a>
-                        <a href="https://play.google.com/store/apps/details?id=kr.co.spooner.pters"><img id="download_img_android" src="/static/common/img/front_page/android.svg" alt=""></a>
+                        <a href="{{request.session.ios_url}}"><img id="download_img_ios" src="/static/common/img/front_page/ios.svg" alt=""></a>
+                        <a href="{{request.session.android_url}}"><img id="download_img_android" src="/static/common/img/front_page/android.svg" alt=""></a>
                     </div>
                 </div>
 
@@ -520,7 +533,7 @@
 
                         </div>
 
-                        <div class="social_login_box_wrapper">
+                        <div class="social_login_box_wrapper" style="{% if request.session.domain_url != 'pters' %}display:none; {% endif %}">
                             <!-- 네이버 로그인 버튼 노출 영역 -->
                             <div class="social_login_box" onclick="location.href=naverLogin.generateAuthorizeUrl();" style="background-color: #0dd25a;">
                                 <div class="social_login_img">
@@ -561,6 +574,7 @@
         </section>
 
         <div id="description_wrapper">
+            {% if request.session.domain_url == 'pters' %}
             <section class="front_page_section" style="background-image: linear-gradient(to right, #fe4e65 25%, #ff869e);" id="what_page">
                 <div id="page_1" class="article_wrapper">
                     <article class="flex_2_divided_1">
@@ -580,12 +594,12 @@
                     </article>
                 </div>
             </section>
-
+            {% endif %}
             <section class="front_page_section" style="background-color:#fbfbfb;color:#5c5859">
                 <div id="page_8" class="article_wrapper" style="display:block;height:auto;padding:40px 20px 0 20px;">
                     <div>
                         <p style="margin-top: 0;">
-                            <span style="font-size:11px;font-weight:500">고객센터 / </span>
+                            <span style="font-size:11px;font-weight:500">서비스 고객센터 / </span>
                             <span style="font-size:8px;">운영시간: 10:00 ~ 18:00 (점심시간: 13:00 ~ 14:00)</span>
                         </p>
                     </div>

@@ -1378,6 +1378,8 @@ def activate_sms_logic(request):
     sms_count = request.session.get('sms_count', 0)
     phone = request.POST.get('phone', '')
 
+    app_name = request.session.get('app_name', 'pters')
+
     recaptcha_secret_key = settings.PTERS_reCAPTCHA_SECRET_KEY
     sms_activation_count = settings.PTERS_SMS_ACTIVATION_MAX_COUNT
     error = None
@@ -1408,7 +1410,7 @@ def activate_sms_logic(request):
         request.session['sms_activation_time'] = str(timezone.now())
         sms_activation_number = str(random.randrange(0, max_range)).zfill(len(str(max_range)))
         request.session['sms_activation_number'] = sms_activation_number
-        error = func_send_sms_auth(phone, sms_activation_number)
+        error = func_send_sms_auth(phone, sms_activation_number, app_name)
 
     if error is not None:
         logger.error('error:'+str(error)+':'+str(timezone.now()))
@@ -1491,7 +1493,7 @@ def func_recaptcha_test(recaptcha_secret_key, token):
     return error
 
 
-def func_send_sms_auth(phone, activation_number):
+def func_send_sms_auth(phone, activation_number, app_name):
     error = None
     h = httplib2.Http()
     acc_key_id = settings.PTERS_NAVER_ACCESS_KEY_ID
@@ -1504,17 +1506,16 @@ def func_send_sms_auth(phone, activation_number):
     hash_str = "POST {}\n{}\n{}".format(sms_uri, str(now), acc_key_id)
     digest = hmac.new(acc_sec_key, msg=hash_str.encode('utf-8'), digestmod=hashlib.sha256).digest()
     d_hash = base64.b64encode(digest).decode()
-
     data = {
         "type": "SMS",
         "contentType": "COMM",
         "countryCode": "82",
         "from": settings.PTERS_NAVER_SMS_PHONE_NUMBER,
-        "content": "[PTERS] 인증번호 ["+activation_number+"]를 입력해주세요.",
+        "content": "["+app_name+"] 인증번호 ["+activation_number+"]를 입력해주세요.",
         "messages": [
             {
                 "to": str(phone),
-                "content": "[PTERS] 인증번호 ["+activation_number+"]를 입력해주세요."
+                "content": "["+app_name+"] 인증번호 ["+activation_number+"]를 입력해주세요."
             }
         ]
     }
@@ -1854,6 +1855,7 @@ class ResetActivateView(View):
         email = request.POST.get('email', '')
         activation_type = request.POST.get('activation_type', 'phone')
 
+        app_name = request.session.get('app_name', 'pters')
         recaptcha_secret_key = settings.PTERS_reCAPTCHA_SECRET_KEY
         sms_activation_count = settings.PTERS_SMS_ACTIVATION_MAX_COUNT
         error = None
@@ -1885,7 +1887,7 @@ class ResetActivateView(View):
                     error = '일일 문자 인증 횟수가 '+str(sms_activation_count)+'회 초과했습니다.'
 
             if error is None:
-                error = func_send_sms_auth(phone, reset_activation_number)
+                error = func_send_sms_auth(phone, reset_activation_number, app_name)
 
         elif activation_type == 'email':
             if email == '':

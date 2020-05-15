@@ -23,9 +23,9 @@
 
     <title>{% block title %}PTERS{% endblock %}</title>
 
-    <link rel="icon" href={% static_url "common/favicon.ico" %}>
-    <link rel="apple-touch-icon" href={% static_url "common/favicon-48.png" %}>
-    <link rel="shortcut icon" href={% static_url "common/favicon-48.png" %}>
+    <link rel="icon" href="/static/common/{{request.session.domain_url}}-favicon.ico">
+    <link rel="apple-touch-icon" href="/static/common/{{request.session.domain_url}}-favicon-48.png">
+    <link rel="shortcut icon" href="/static/common/{{request.session.domain_url}}-favicon-48.png">
 
     <link rel="stylesheet" href={% static_url "user/css/admin/pters.admin.fundamental.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/admin/pters.admin.object.css" %}>
@@ -363,7 +363,7 @@
             $this.addClass('sidemenu_off');
             $sidemenu_text.hide();
             $toplogo.html(
-                `<img src="/static/common/icon/logo/PTERS_logo_short.png" alt="" style="width: 32px;vertical-align:middle" id="top_logo_image">`
+                `<img src="/static/common/icon/logo/{{request.session.domain_url}}_logo_short.png" alt="" style="width: 32px;vertical-align:middle" id="top_logo_image">`
             );
             $sidemenu_button.css('transform', 'rotate(-90deg)');
         }
