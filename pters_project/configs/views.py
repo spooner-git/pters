@@ -44,8 +44,8 @@ def index(request):
     request.session['group_name'] = 'trainer'
     domain_url = current_site.domain.split('pters.co.kr')[0]
     if domain_url != '' and domain_url != 'www.' \
-            and domain_url != 'spooner-test.' and domain_url != 'www.spooner-test.':
-            # and domain_url != 'localhost:8000':
+            and domain_url != 'spooner-test.' and domain_url != 'www.spooner-test.' \
+            and domain_url != 'localhost:8000':
         domain_url = domain_url.split('.')[0]
         if domain_url != '172' and domain_url != '198':
             domain_url = 'lucent'
