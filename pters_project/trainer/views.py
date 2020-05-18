@@ -3274,9 +3274,12 @@ def add_lecture_info_logic(request):
     end_font_color_cd = request.POST.get('end_font_color_cd', '#282828')
     lecture_minute = request.POST.get('lecture_minute', 60)
     start_time = request.POST.get('start_time', 'A-0')
+    main_trainer_id = request.POST.get('main_trainer_id', request.user.id)
     error = None
     lecture_id = None
     lecture_type_cd = LECTURE_TYPE_NORMAL
+    if main_trainer_id is None or main_trainer_id == '':
+        main_trainer_id = request.user.id
     if member_num == 1 or member_num == '1':
         lecture_type_cd = LECTURE_TYPE_ONE_TO_ONE
     try:
@@ -3286,6 +3289,7 @@ def add_lecture_info_logic(request):
                                      name=name, note=note, ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
                                      ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
                                      lecture_minute=lecture_minute, state_cd=STATE_CD_IN_PROGRESS,
+                                     main_trainer_id=main_trainer_id,
                                      start_time=start_time, use=USE)
 
             lecture_info.save()
@@ -3434,6 +3438,7 @@ def update_lecture_info_logic(request):
     lecture_minute = request.POST.get('lecture_minute', 60)
     start_time = request.POST.get('start_time', '')
     update_this_to_all_plans = request.POST.get('update_this_to_all_plans', UN_USE)
+    main_trainer_id = request.POST.get('main_trainer_id', '')
     lecture_info = None
     error = None
 
@@ -3469,8 +3474,12 @@ def update_lecture_info_logic(request):
 
         if lecture_minute == '' or lecture_minute is None:
             lecture_minute = lecture_info.lecture_minute
+
         if start_time == '' or start_time is None:
             start_time = lecture_info.start_time
+
+        if main_trainer_id == '' or main_trainer_id is None:
+            main_trainer_id = lecture_info.main_trainer_id
 
     if error is None:
         try:
@@ -3500,6 +3509,7 @@ def update_lecture_info_logic(request):
         lecture_info.end_font_color_cd = end_font_color_cd
         lecture_info.lecture_minute = lecture_minute
         lecture_info.start_time = start_time
+        lecture_info.main_trainer_id = main_trainer_id
         lecture_info.save()
 
     if error is None:
@@ -3520,13 +3530,11 @@ def update_lecture_info_logic(request):
         if str(update_this_to_all_plans) == str(USE):
             schedule_data_past.update(ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
                                       ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
-                                      max_mem_count=member_num)
+                                      max_mem_count=member_num, trainer_id=main_trainer_id)
 
-        schedule_data_future.update(ing_color_cd=ing_color_cd,
-                                    end_color_cd=end_color_cd,
-                                    ing_font_color_cd=ing_font_color_cd,
-                                    end_font_color_cd=end_font_color_cd,
-                                    max_mem_count=member_num)
+        schedule_data_future.update(ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
+                                    ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
+                                    max_mem_count=member_num, trainer_id=main_trainer_id)
 
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
@@ -3715,6 +3723,8 @@ class GetLectureInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                             'lecture_end_font_color_cd': '',
                             'lecture_type_cd': 'OFF',
                             'lecture_minute': off_minute,
+                            'lecture_main_trainer_id': '',
+                            'lecture_main_trainer_name': '',
                             'lecture_member_list': []}
         return JsonResponse(lecture_info, json_dumps_params={'ensure_ascii': True})
 
@@ -3729,15 +3739,15 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         sort_info = int(lecture_sort)
         error = None
 
-        lecture_data = LectureTb.objects.filter(class_tb_id=class_id, state_cd=STATE_CD_IN_PROGRESS,
-                                                name__contains=keyword,
-                                                use=USE).order_by('lecture_id')
+        lecture_data = LectureTb.objects.select_related(
+            'main_trainer').filter(class_tb_id=class_id, state_cd=STATE_CD_IN_PROGRESS,
+                                   name__contains=keyword, use=USE).order_by('lecture_id')
 
         lecture_ticket_data = TicketLectureTb.objects.select_related(
-            'lecture_tb', 'ticket_tb').filter(class_tb_id=class_id, lecture_tb__state_cd=STATE_CD_IN_PROGRESS,
-                                              lecture_tb__name__contains=keyword,
-                                              lecture_tb__use=USE,
-                                              use=USE).order_by('lecture_tb_id', 'ticket_tb_id')
+            'lecture_tb__main_trainer',
+            'ticket_tb').filter(class_tb_id=class_id, lecture_tb__state_cd=STATE_CD_IN_PROGRESS,
+                                lecture_tb__name__contains=keyword, lecture_tb__use=USE,
+                                use=USE).order_by('lecture_tb_id', 'ticket_tb_id')
 
         lecture_data_dict = {}
         # 수업과 연관되어있는 수강권 정보 셋팅
@@ -3745,6 +3755,14 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
             lecture_tb = lecture_ticket_info.lecture_tb
             ticket_tb = lecture_ticket_info.ticket_tb
             lecture_id = str(lecture_tb.lecture_id)
+            main_trainer_id = request.user.id
+            main_trainer_name = request.user.first_name
+            if lecture_tb.main_trainer is None or lecture_tb.main_trainer == '':
+                lecture_tb.main_trainer_id = request.user.id
+                lecture_tb.save()
+            else:
+                main_trainer_id = lecture_tb.main_trainer_id
+                main_trainer_name = lecture_tb.main_trainer.name
             try:
                 lecture_data_dict[lecture_id]
             except KeyError:
@@ -3760,6 +3778,8 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                  'lecture_minute': lecture_tb.lecture_minute,
                                                  'lecture_type_cd': lecture_tb.lecture_type_cd,
                                                  'lecture_reg_dt': lecture_tb.reg_dt,
+                                                 'lecture_main_trainer_id': main_trainer_id,
+                                                 'lecture_main_trainer_name': main_trainer_name,
                                                  'lecture_ticket_list': [],
                                                  'lecture_ticket_state_cd_list': [],
                                                  'lecture_ticket_id_list': []}
@@ -3772,6 +3792,15 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         if len(lecture_data) != len(lecture_data_dict):
             for lecture_info in lecture_data:
                 lecture_id = str(lecture_info.lecture_id)
+                main_trainer_id = request.user.id
+                main_trainer_name = request.user.first_name
+                if lecture_info.main_trainer is None or lecture_info.main_trainer == '':
+                    lecture_info.main_trainer_id = request.user.id
+                    lecture_info.save()
+                else:
+                    main_trainer_id = lecture_info.main_trainer_id
+                    main_trainer_name = lecture_info.main_trainer.name
+
                 try:
                     lecture_data_dict[lecture_id]
                 except KeyError:
@@ -3787,6 +3816,8 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                      'lecture_minute': lecture_info.lecture_minute,
                                                      'lecture_type_cd': lecture_info.lecture_type_cd,
                                                      'lecture_reg_dt': lecture_info.reg_dt,
+                                                     'lecture_main_trainer_id': main_trainer_id,
+                                                     'lecture_main_trainer_name': main_trainer_name,
                                                      'lecture_ticket_list': [],
                                                      'lecture_ticket_state_cd_list': [],
                                                      'lecture_ticket_id_list': []}
@@ -3856,15 +3887,15 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         sort_info = int(lecture_sort)
         error = None
 
-        lecture_data = LectureTb.objects.filter(class_tb_id=class_id, state_cd=STATE_CD_FINISH,
-                                                name__contains=keyword,
-                                                use=USE).order_by('lecture_id')
+        lecture_data = LectureTb.objects.select_related(
+            'main_trainer').filter(class_tb_id=class_id, state_cd=STATE_CD_FINISH, name__contains=keyword,
+                                   use=USE).order_by('lecture_id')
 
         lecture_ticket_data = TicketLectureTb.objects.select_related(
-            'ticket_tb', 'lecture_tb').filter(class_tb_id=class_id, lecture_tb__state_cd=STATE_CD_FINISH,
-                                              lecture_tb__name__contains=keyword,
-                                              lecture_tb__use=USE,
-                                              use=USE).order_by('lecture_tb_id', 'ticket_tb_id')
+            'ticket_tb',
+            'lecture_tb__main_trainer').filter(class_tb_id=class_id, lecture_tb__state_cd=STATE_CD_FINISH,
+                                               lecture_tb__name__contains=keyword, lecture_tb__use=USE,
+                                               use=USE).order_by('lecture_tb_id', 'ticket_tb_id')
 
         lecture_data_dict = {}
         # 수업과 연관되어있는 수강권 정보 셋팅
@@ -3872,6 +3903,14 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
             lecture_tb = lecture_ticket_info.lecture_tb
             ticket_tb = lecture_ticket_info.ticket_tb
             lecture_id = str(lecture_tb.lecture_id)
+            main_trainer_id = request.user.id
+            main_trainer_name = request.user.first_name
+            if lecture_tb.main_trainer is None or lecture_tb.main_trainer == '':
+                lecture_tb.main_trainer_id = request.user.id
+                lecture_tb.save()
+            else:
+                main_trainer_id = lecture_tb.main_trainer_id
+                main_trainer_name = lecture_tb.main_trainer.name
             try:
                 lecture_data_dict[lecture_id]
             except KeyError:
@@ -3887,6 +3926,8 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                  'lecture_minute': lecture_tb.lecture_minute,
                                                  'lecture_type_cd': lecture_tb.lecture_type_cd,
                                                  'lecture_reg_dt': lecture_tb.reg_dt,
+                                                 'lecture_main_trainer_id': main_trainer_id,
+                                                 'lecture_main_trainer_name': main_trainer_name,
                                                  'lecture_ticket_list': [],
                                                  'lecture_ticket_state_cd_list': [],
                                                  'lecture_ticket_id_list': []}
@@ -3899,6 +3940,14 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         if len(lecture_data) != len(lecture_data_dict):
             for lecture_info in lecture_data:
                 lecture_id = str(lecture_info.lecture_id)
+                main_trainer_id = request.user.id
+                main_trainer_name = request.user.first_name
+                if lecture_info.main_trainer is None or lecture_info.main_trainer == '':
+                    lecture_info.main_trainer_id = request.user.id
+                    lecture_info.save()
+                else:
+                    main_trainer_id = lecture_info.main_trainer_id
+                    main_trainer_name = lecture_info.main_trainer.name
                 try:
                     lecture_data_dict[lecture_id]
                 except KeyError:
@@ -3914,6 +3963,8 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                      'lecture_minute': lecture_info.lecture_minute,
                                                      'lecture_type_cd': lecture_info.lecture_type_cd,
                                                      'lecture_reg_dt': lecture_info.reg_dt,
+                                                     'lecture_main_trainer_id': main_trainer_id,
+                                                     'lecture_main_trainer_name': main_trainer_name,
                                                      'lecture_ticket_list': [],
                                                      'lecture_ticket_state_cd_list': [],
                                                      'lecture_ticket_id_list': []}

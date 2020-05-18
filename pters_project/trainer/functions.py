@@ -1353,6 +1353,14 @@ def func_get_lecture_info(class_id, lecture_id, user_id):
     member_list = func_get_member_from_member_ticket_list(all_member_ticket_list, lecture_id, user_id)
 
     if lecture_tb is not None:
+        main_trainer_id = lecture_tb.class_tb.member_id
+        main_trainer_name = lecture_tb.class_tb.member.name
+        if lecture_tb.main_trainer is None or lecture_tb.main_trainer == '':
+            lecture_tb.main_trainer_id = user_id
+            lecture_tb.save()
+        else:
+            main_trainer_id = lecture_tb.main_trainer_id
+            main_trainer_name = lecture_tb.main_trainer.name
         lecture_info = {'lecture_id': str(lecture_id), 'lecture_name': lecture_tb.name, 'lecture_note': lecture_tb.note,
                         'lecture_state_cd': lecture_tb.state_cd, 'lecture_max_num': lecture_tb.member_num,
                         # 'lecture_max_member_num_view_flag': lecture_tb.member_num_view_flag,
@@ -1368,6 +1376,8 @@ def func_get_lecture_info(class_id, lecture_id, user_id):
                         'lecture_type_cd': lecture_tb.lecture_type_cd,
                         'lecture_minute': lecture_tb.lecture_minute,
                         'lecture_start_time': lecture_tb.start_time,
+                        'lecture_main_trainer_id': main_trainer_id,
+                        'lecture_main_trainer_name': main_trainer_name,
                         'lecture_member_list': member_list}
     else:
         lecture_info = None

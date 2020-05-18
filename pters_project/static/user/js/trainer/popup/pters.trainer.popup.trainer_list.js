@@ -129,7 +129,7 @@ class Trainer_list {
 
 
             let onclick = `trainer.event_view_trainer(${trainer_id})`;
-            let html = `<article class="trainer_wrapper anim_fade_in_vibe_top" data-trainer_id="${trainer_id}" data-name="${trainer_name}" onclick="${onclick}" style="color:${list_type == "ing" ? "" : 'var(--font-inactive)'}">
+            let html = `<article class="trainer_wrapper anim_fade_in_vibe_top" data-trainer_id="${trainer_id}" data-name="${trainer_name}" onclick="${onclick}" style="color:${this.list_status_type == "ing" ? "" : 'var(--font-inactive)'}">
                             <div class="trainer_data_wrapper">
                                 <div class="trainer_data_l">
                                     ${trainer_profile_photo}
