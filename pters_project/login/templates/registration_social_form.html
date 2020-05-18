@@ -121,6 +121,7 @@
                     alert(id_recommend_username+'님을 추천인을 등록하려면 추천인 아이디 확인을 해주세요.');
                     $('#id_recommend_username').val('');
                 }else{
+                    adn_btn_ok('102076','types1');
                     document.getElementById('sns-form').submit();
                 }
 
@@ -171,4 +172,5 @@
             last_scroll_top = current_scroll_top;
         }
     </script>
+    <script type="text/javascript" async src="//fin.rainbownine.net/js/adn_tags_1.0.0.js"></script>
 {% endblock %}
