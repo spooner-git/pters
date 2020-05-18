@@ -143,6 +143,12 @@ urlpatterns = [
     # 강사 연결 내역 조회
     url(r'^get_trainer_program_data/$', views.GetTrainerProgramDataViewAjax.as_view(), name='get_trainer_program_data'),
     url(r'^get_trainer_info/$', views.GetTrainerInfoView.as_view(), name='get_trainer_info'),
+
+    # 강사 정보 수정 - refactoring
+    url(r'^update_trainer_info/$', views.update_trainer_info_logic, name='update_trainer_info'),
+    # 강사 정보 삭제 - refactoring
+    url(r'^delete_trainer_info/$', views.delete_trainer_info_logic, name='delete_trainer_info'),
+
     # 강사 휴무 내역
     url(r'^get_trainer_closed_date/$', views.GetTrainerClosedDateListView.as_view(),
         name='get_trainer_closed_date'),

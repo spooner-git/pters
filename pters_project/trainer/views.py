@@ -7422,6 +7422,174 @@ class GetTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):
         return JsonResponse(trainer_data, json_dumps_params={'ensure_ascii': True})
 
 
+# 회원수정
+def update_trainer_info_logic(request):
+    trainer_id = request.POST.get('trainer_id')
+    first_name = request.POST.get('first_name', '')
+    phone = request.POST.get('phone', '')
+    sex = request.POST.get('sex', '')
+    birthday_dt = request.POST.get('birthday', '')
+    class_id = request.session.get('class_id', '')
+    error = None
+    member = None
+
+    if trainer_id == '':
+        error = '강사 ID를 확인해 주세요.'
+
+    if error is None:
+        try:
+            member = MemberTb.objects.get(member_id=trainer_id)
+        except ObjectDoesNotExist:
+            error = '강사 ID를 확인해 주세요.'
+    if error is None:
+        if member.user.is_active:
+            error = '강사 정보를 수정할수 없습니다.'
+        if str(request.user.id) != str(member.reg_info):
+            error = '다른 강사가 등록한 강사는 수정할수 없습니다.'
+    if error is None:
+        try:
+            with transaction.atomic():
+                # 회원의 이름을 변경하는 경우 자동으로 ID 변경되도록 설정
+                if member.user.first_name != first_name:
+                    username = first_name
+                    i = 0
+                    count = MemberTb.objects.filter(name=username).count()
+                    max_range = (100 * (10 ** len(str(count)))) - 1
+                    for i in range(0, 100):
+                        username += str(random.randrange(0, max_range)).zfill(len(str(max_range)))
+                        try:
+                            User.objects.get(username=username)
+                        except ObjectDoesNotExist:
+                            break
+
+                    if i == 100:
+                        error = 'ID 변경에 실패했습니다. 다시 시도해주세요.'
+                        raise InternalError
+
+                    member.user.username = username
+                    member.user.first_name = first_name
+                    member.user.save()
+
+                member.name = first_name
+                member.phone = phone
+                member.sex = sex
+                if birthday_dt is not None and birthday_dt != '':
+                    member.birthday_dt = birthday_dt
+                member.save()
+
+        except ValueError:
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError:
+            error = '등록 값에 문제가 있습니다.'
+        except TypeError:
+            error = '등록 값에 문제가 있습니다.'
+        except ValidationError:
+            error = '등록 값에 문제가 있습니다.'
+        except InternalError:
+            error = error
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=member.name+' 강사 정보', log_how='변경', use=USE)
+        log_data.save()
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
+# 강사 삭제
+def delete_trainer_info_logic(request):
+    class_id = request.session.get('class_id', '')
+    trainer_id = request.POST.get('trainer_id')
+    error = None
+    class_member_ticket_data = None
+    member = None
+    if trainer_id == '':
+        error = '강사 ID를 확인해 주세요.'
+
+    if error is None:
+        try:
+            member = MemberTb.objects.get(member_id=trainer_id)
+        except ObjectDoesNotExist:
+            error = '강사 ID를 확인해 주세요.'
+
+    if error is None:
+        class_member_ticket_data = ClassMemberTicketTb.objects.select_related(
+            'member_ticket_tb__ticket_tb').filter(class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW,
+                                                  member_ticket_tb__member_id=trainer_id,
+                                                  use=USE)
+
+    if error is None:
+
+        schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
+                                                  member_ticket_tb__member_id=trainer_id,
+                                                  state_cd=STATE_CD_NOT_PROGRESS)
+
+        finish_schedule_data = ScheduleTb.objects.filter(Q(state_cd=STATE_CD_FINISH) | Q(state_cd=STATE_CD_ABSENCE),
+                                                         class_tb_id=class_id,
+                                                         member_ticket_tb__member_id=trainer_id)
+        repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
+                                                               member_ticket_tb__member_id=trainer_id)
+
+        try:
+            with transaction.atomic():
+                # 등록된 일정 정리
+                if len(schedule_data) > 0:
+                    # 예약된 일정 삭제
+                    schedule_data.delete()
+                # if len(finish_schedule_data) > 0:
+                    # 완료된 일정 비활성화
+                    # finish_schedule_data.update(use=UN_USE)
+                if len(repeat_schedule_data) > 0:
+                    # 반복일정 삭제
+                    repeat_schedule_data.delete()
+
+                class_member_ticket_data.update(auth_cd=AUTH_TYPE_DELETE, mod_member_id=request.user.id)
+
+                for class_member_ticket_info in class_member_ticket_data:
+                    member_ticket_info = class_member_ticket_info.member_ticket_tb
+                    if member_ticket_info.state_cd == STATE_CD_IN_PROGRESS:
+                        member_ticket_info.member_ticket_avail_count = 0
+                        member_ticket_info.state_cd = STATE_CD_FINISH
+                        member_ticket_info.save()
+
+                if len(class_member_ticket_data.filter(member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW)) == 0:
+                    if member.user.is_active == 0 and str(member.reg_info) == str(request.user.id):
+                        member.contents = member.user.username + ':' + str(trainer_id)
+                        member.use = UN_USE
+                        member.save()
+
+                lecture_member_fix_data = LectureMemberTb.objects.filter(class_tb_id=class_id,
+                                                                         member_id=trainer_id, use=USE)
+                lecture_member_fix_data.delete()
+        except ValueError:
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError:
+            error = '등록 값에 문제가 있습니다.'
+        except TypeError:
+            error = '등록 값의 형태가 문제 있습니다.'
+        except ValidationError:
+            error = '등록 값의 형태가 문제 있습니다'
+        except InternalError:
+            error = '등록 값에 문제가 있습니다.'
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=member.name+' 강사 정보', log_how='삭제', use=USE)
+        log_data.save()
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
 class GetTrainerClosedDateListView(LoginRequiredMixin, AccessTestMixin, View):
     def get(self, request):
         class_id = request.session.get('class_id', '')

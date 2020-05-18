@@ -47,9 +47,7 @@ def index(request):
             and domain_url != 'spooner-test.' and domain_url != 'www.spooner-test.' \
             and domain_url != 'localhost:8000':
         domain_url = domain_url.split('.')[0]
-        if domain_url != '172' and domain_url != '198':
-            domain_url = 'lucent'
-        else:
+        if domain_url == '172' or domain_url == '198' or domain_url == '0':
             domain_url = 'pters'
     else:
         domain_url = 'pters'
@@ -210,13 +208,11 @@ class AccessTestMixin(UserPassesTestMixin):
         domain_url = self.request.session.get('domain_url', '')
         if domain_url == '' or domain_url is None:
             domain_url = current_site.domain.split('pters.co.kr')[0]
-            if domain_url != '' and domain_url != 'www.':
-                    # and domain_url != 'spooner-test.' and domain_url != 'www.spooner-test.'\
-                    # and domain_url != 'localhost:8000':
+            if domain_url != '' and domain_url != 'www.' \
+                    and domain_url != 'spooner-test.' and domain_url != 'www.spooner-test.'\
+                    and domain_url != 'localhost:8000':
                 domain_url = domain_url.split('.')[0]
-                if domain_url != '172' and domain_url != '198':
-                    domain_url = 'lucent'
-                else:
+                if domain_url == '172' or domain_url == '198' or domain_url == '0':
                     domain_url = 'pters'
             else:
                 domain_url = 'pters'
