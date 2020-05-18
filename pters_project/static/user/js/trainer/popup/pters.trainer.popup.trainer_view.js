@@ -225,7 +225,7 @@ class Trainer_view{
     dom_row_toolbox(){
         let id = 'trainer_name_view';
         let title = this.data.name == null ? '' : this.data.name;
-        let placeholder = '회원명';
+        let placeholder = '강사명';
         let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text;
@@ -435,6 +435,7 @@ class Trainer_view{
             disabled = true;
         }
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
+
             let user_input_data = input_data;
             this.phone = user_input_data;
             // this.send_data();
@@ -1105,7 +1106,7 @@ class Trainer_simple_view{
 
     dom_row_trainer_name_input(){
         let id = 'trainer_name_view';
-        let title = this.data.name == null ? '회원명*' : this.data.name;
+        let title = this.data.name == null ? '강사명*' : this.data.name;
         let icon = CImg.members();
         let icon_r_text = "";
         let icon_r_visible = HIDE;
