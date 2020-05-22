@@ -193,6 +193,21 @@ def func_get_trainee_closed_schedule(context, class_id, user_id, start_date, end
                 select_closed_date_info.start_date = check_date
                 closed_date_list.append(select_closed_date_info)
                 check_date += datetime.timedelta(days=1)
+
+    member_holiday_date_data = ScheduleTb.objects.select_related(
+        'class_tb').filter(Q(start_dt__lte=end_date) & Q(end_dt__gte=start_date),
+                           class_tb_id=class_id, en_dis_type=CLOSED_SCHEDULE_TYPE,
+                           use=USE).order_by('start_dt', 'end_dt')
+
+    for member_holiday_date_info in member_holiday_date_data:
+        member_holiday_date_info.start_date = member_holiday_date_info.start_dt.date()
+        member_holiday_date_info.end_date = member_holiday_date_info.end_dt.date()
+        member_holiday_date_info.note = member_holiday_date_info.note
+        if member_holiday_date_info.note is None or member_holiday_date_info.note == '':
+            member_holiday_date_info.note = '휴무일'
+        member_holiday_date_info.reason_type_cd = 'PROGRAM_CLOSED'
+        if member_holiday_date_info not in closed_date_list:
+            closed_date_list.append(member_holiday_date_info)
     context['closed_date_data'] = closed_date_list
 
     return context
