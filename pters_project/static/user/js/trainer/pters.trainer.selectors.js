@@ -4220,6 +4220,277 @@ class MemberContactsSelector{
     }
 }
 
+
+class TrainerSelector{
+    constructor(install_target, target_instance, multiple_select, appendix, callback){
+        this.target = {install:install_target};
+        // this.target_instance = target_instance;
+        this.unique_instance = install_target.replace(/#./gi, "");
+        this.received_data;
+        this.received_data_lecture_trainer;
+        this.callback = callback;
+        this.appendix = appendix;
+        this.multiple_select = multiple_select;
+        this.data = {
+            id: [],
+            name: [],
+            id_other:[],
+            name_other:[],
+            ticket_id_other:[]
+        };
+        this.data.id = this.appendix.trainer_id.slice();
+        this.data.name = this.appendix.trainer_name.slice();
+
+        this.hide_entire_trianer_list = true;
+
+        this.init();
+    }
+
+    init(){
+        this.request_list(()=>{
+            this.render();
+            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
+        });
+    }
+
+    clear(){
+        setTimeout(()=>{
+            document.querySelector(this.target.install).innerHTML = "";
+        }, 300);
+    }
+
+    render(){
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();trainer_select.clear();">${CImg.arrow_left()}</span>`;
+        let top_center = `<span class="icon_center"><span id="">${this.appendix.title}</span></span>`;
+        let top_right = `<span class="icon_right"  onclick="trainer_select.upper_right_menu();"><span style="color:var(--font-highlight);font-weight: 500;">완료</span></span>`;
+        let content =   `<section>
+                            ${this.dom_assembly()}
+                        </section>`;
+
+        let html = PopupBase.base(top_left, top_center, top_right, content, "");
+
+        document.querySelector(this.target.install).innerHTML = html;
+    }
+
+    dom_assembly(){
+        // let lecture_member_list = `<div>${this.dom_list_lecture_trainer()}</div>`;
+        let all_trainer_list = `<div>${this.dom_list()}</div>`;
+
+        let html;
+        // if(this.appendix.lecture_id != null){ //특정 수업의 회원들을 조회할 때
+        //     if(this.appendix.entire_trainer == SHOW){ //전체 회원 리스트도 함께 표기
+        //         html = lecture_trainer_list + all_trainer_list;
+        //     }else{ //전체 회원리스트는 숨기기
+        //         html = lecture_trainer_list;
+        //     }
+        // }else{
+            html = all_trainer_list;
+        // }
+
+
+        return html;
+    }
+
+    dom_list (){
+        let html_to_join = [];
+        let length = this.received_data.length;
+        let select_trainer_num = 0;
+        if(length == 0){
+            html_to_join.push(CComponent.no_data_row('목록이 비어있습니다.', {"border-bottom":0}));
+        }
+        for(let i=0; i<length; i++){
+            let data = this.received_data[i];
+            let trainer_id = data.trainer_id;
+            let trainer_name = data.trainer_name;
+            // let trainer_rem_count = data.trainer_ticket_rem_count;
+            let trainer_reg_count = data.trainer_ticket_reg_count;
+            let trainer_avail_count = data.trainer_ticket_avail_count;
+            let trainer_expiry = data.end_date;
+            // let trainer_fix_state_cd = data.trainer_fix_state_cd;
+            let trainer_profile_url = data.trainer_profile_url;
+            let checked = this.appendix.trainer_id.indexOf(trainer_id) >= 0 ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
+
+            let lecture_trainer_list = this.received_data_lecture_trainer.map((el)=>{return el.trainer_id;});
+            if(lecture_trainer_list.indexOf(trainer_id) != -1){
+                continue;
+            }
+            // if(trainer_expiry == '9999-12-31'){
+            //     trainer_expiry = '소진시';
+            // }
+
+            // if(this.appendix.disable_zero_avail_count == ON && trainer_avail_count == 0){
+            //     checked = 0;
+            // }
+            let html = CComponent.select_trainer_row (
+                this.multiple_select, checked, this.unique_instance, trainer_id, trainer_name, trainer_profile_url, this.appendix.disable_zero_avail_count, (add_or_substract)=>{
+                    if(this.appendix.lecture_id != null){
+                        let trainer_id_list = this.received_data_lecture_trainer.map((el)=>{return el.trainer_id;});
+                        // if(trainer_id_list.indexOf(trainer_id) == -1){ // 선택한 회원이 수업 리스트의 회원이 아니라면 (전체회원에서 선택했다면)
+
+                        // }else{
+                            if(add_or_substract == "add"){
+                                this.data.id.push(trainer_id);
+                                this.data.name.push(trainer_name);
+                            }else if(add_or_substract == "substract"){
+                                this.data.name.splice(this.data.id.indexOf(trainer_id), 1);
+                                this.data.id.splice(this.data.id.indexOf(trainer_id), 1);
+                            }else if(add_or_substract == "add_single"){
+                                this.data.id = [];
+                                this.data.name = [];
+                                this.data.id.push(trainer_id);
+                                this.data.name.push(trainer_name);
+                            }
+                            if(this.multiple_select == 1){
+                                this.upper_right_menu();
+                            }
+                        // }
+                    }else{
+                        if(add_or_substract == "add"){
+                            this.data.id.push(trainer_id);
+                            this.data.name.push(trainer_name);
+                        }else if(add_or_substract == "substract"){
+                            this.data.name.splice(this.data.id.indexOf(trainer_id), 1);
+                            this.data.id.splice(this.data.id.indexOf(trainer_id), 1);
+                        }else if(add_or_substract == "add_single"){
+                            this.data.id = [];
+                            this.data.name = [];
+                            this.data.id.push(trainer_id);
+                            this.data.name.push(trainer_name);
+                        }
+                        if(this.multiple_select == 1){
+                            this.upper_right_menu();
+                        }
+                    }
+
+
+                }
+            );
+            if(checked!=0){
+                select_trainer_num++;
+            }
+            if(checked > 0){
+                html_to_join.unshift(html);
+            }else{
+                html_to_join.push(html);
+            }
+        }
+
+        if(this.hide_entire_trainer_list == true){
+            html_to_join = [];
+        }
+
+        // html_to_join.unshift(`<div class="select_trainer_max_num">
+        //                         <span>전체 회원</span><span style="float:right;">${CComponent.text_button("entire_trainer_toggle", this.hide_entire_trainer_list == true ? "펼치기" : "접기", null, ()=>{
+        //                             this.hide_entire_trainer_list = this.hide_entire_trainer_list == true ? false : true;
+        //                             this.render();
+        //                         })}</span>
+        //                     </div>`);
+        let img_expand = CImg.arrow_expand("", {"width":"18px", "height":"18px", "vertical-align":"middle"});
+        let img_fold = CImg.arrow_expand("", {"width":"18px", "height":"18px", "vertical-align":"middle", "transform":"rotate(180deg)"})
+
+        let button_title = `<span>전체 회원</span><span style="float:right;">${this.hide_entire_trainer_list == true ? "펼치기 "+img_expand : "접기" + img_fold}</span>`;
+        html_to_join.unshift(`<div class="select_trainer_max_num">
+                                ${CComponent.text_button("entire_trainer_toggle", button_title, {"display":"block"}, ()=>{
+                                    this.hide_entire_trainer_list = this.hide_entire_trainer_list == true ? false : true;
+                                    this.render();
+                                })}
+                                
+                            </div>`);
+
+        // document.querySelector(this.targetHTML).innerHTML = html_to_join.join('');
+        return html_to_join.join('');
+    }
+
+    dom_list_lecture_trainer (){
+        let html_to_join = [];
+        let length = this.received_data_lecture_trainer.length;
+        let select_trainer_num = 0;
+        if(length == 0){
+            html_to_join.push(CComponent.no_data_row('목록이 비어있습니다.', {"border-bottom":0}));
+        }
+        for(let i=0; i<length; i++){
+            let data = this.received_data_lecture_trainer[i];
+            let trainer_id = data.trainer_id;
+            let trainer_name = data.trainer_name;
+            // let trainer_rem_count = data.trainer_ticket_rem_count;
+            // let trainer_reg_count = data.trainer_ticket_reg_count;
+            // let trainer_avail_count = data.trainer_ticket_avail_count;
+            // let member_expiry = data.end_date;
+            // let member_fix_state_cd = data.trainer_fix_state_cd;
+            let trainer_profile_url = data.trainer_profile_url;
+            let checked = this.appendix.trainer_id.indexOf(trainer_id) >= 0 ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
+            if(trainer_expiry == '9999-12-31'){
+                trainer_expiry = '소진시';
+            }
+            // if(this.appendix.disable_zero_avail_count == ON && trainer_avail_count == 0){
+            //     checked = 0;
+            // }
+            let html = CComponent.select_trainer_row (
+                this.multiple_select, checked, this.unique_instance, trainer_id, trainer_name, trainer_profile_url, this.appendix.disable_zero_avail_count, (add_or_substract)=>{
+
+                    if(add_or_substract == "add"){
+                        this.data.id.push(trainer_id);
+                        this.data.name.push(trainer_name);
+                    }else if(add_or_substract == "substract"){
+                        this.data.name.splice(this.data.id.indexOf(trainer_id), 1);
+                        this.data.id.splice(this.data.id.indexOf(trainer_id), 1);
+                    }else if(add_or_substract == "add_single"){
+                        this.data.id = [];
+                        this.data.name = [];
+                        this.data.id.push(trainer_id);
+                        this.data.name.push(trainer_name);
+                    }
+                    if(this.multiple_select == 1){
+                        this.upper_right_menu();
+                    }
+                }
+            );
+            if(checked!=0){
+                select_trainer_num++;
+            }
+            if(checked > 0){
+                html_to_join.unshift(html);
+            }else{
+                html_to_join.push(html);
+            }
+        }
+
+        html_to_join.unshift(`<div class="select_trainer_max_num" >
+                                <span>담당 강사</span><span> (${this.received_data_lecture_trainer.length}명)</span>
+                            </div>`);
+
+        // document.querySelector(this.targetHTML).innerHTML = html_to_join.join('');
+        return html_to_join.join('');
+    }
+
+    request_list (callback){
+        //Lecture_id를 클래스가 전달받은 경우, 해당 lecture에 속한 회원 리스트를 받아온다.
+        //Lecture_id를 클래스가 받지 못한 경우, 모든 진행 회원 리스트를 받아온다.
+        if(this.appendix.lecture_id == null){
+            trainer.request_trainer_list("ing", (data)=>{
+                this.received_data = data.current_trainer_data;
+                callback();
+            });
+        }else{
+
+            trainer.request_trainer_list("ing", (data)=>{
+                this.received_data = data.current_trainer_data;
+                // let data_ = {"lecture_id": this.appendix.lecture_id};
+                // Lecture_func.read_lecture_trainers(data_, (data)=>{
+                //     this.received_data_lecture_trainer = data.lecture_ing_trainer_list;
+                //     callback();
+                // });
+            });
+        }
+    }
+
+    upper_right_menu(){
+        this.callback(this.data);
+        layer_popup.close_layer_popup();
+        this.clear();
+    }
+}
+
 class ColorSelector{
     constructor(install_target, target_instance, multiple_select, callback){
         this.target = {install:install_target};

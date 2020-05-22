@@ -30,6 +30,8 @@ class Plan_add{
             lecture_type_cd:[],
             member_id:[],
             member_name:[],
+            trainer_id:[],
+            trainer_name:[],
             date: null,
             date_text: null,
             start_time:"",
@@ -83,6 +85,16 @@ class Plan_add{
 
     get member(){
         return {id:this.data.member_id, name:this.data.member_name};
+    }
+
+    set trainer(data){
+        this.data.trainer_id = data.id;
+        this.data.trainer_name = data.name;
+        this.render_content();
+    }
+
+    get trainer(){
+        return {id:this.data.trainer_id, name:this.data.trainer_name};
     }
 
     set date(data){
@@ -258,6 +270,7 @@ class Plan_add{
     
     dom_assembly_content(){
         let lecture_select_row = this.dom_row_lecture_select();
+        let trainer_select_row = this.dom_row_trainer_select();
         let member_select_row = this.dom_row_member_select();
         let date_select_row = this.dom_row_date_select();
         let start_time_select_row = this.dom_row_start_time_select();
@@ -277,6 +290,7 @@ class Plan_add{
         if(this.time_selector == CLASSIC){
             html =  `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('수업', null, true) + lecture_select_row + '</div>' +
                     `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('회원', null, this.data.lecture_type_cd[0] === LECTURE_TYPE_ONE_TO_ONE ? true : false) + member_select_row+'</div>' +
+                    `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('담당 강사', null, true) + trainer_select_row+'</div>' +
                     '<div class="obj_input_box_full">' +  
                                                     CComponent.dom_tag('일자', null, true) + date_select_row + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>' +
                                                     CComponent.dom_tag('진행 시간', null, true) + classic_time_selector +'<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>' +
@@ -286,8 +300,9 @@ class Plan_add{
 
         }else if(this.time_selector == BASIC){
             html =  `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('수업', null, true) + lecture_select_row + '</div>' +
+                    `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('담당 강사', null, true) + trainer_select_row+'</div>' +
                     `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('회원', null, this.data.lecture_type_cd[0] === LECTURE_TYPE_ONE_TO_ONE ? true : false) + member_select_row+'</div>' +
-                    '<div class="obj_input_box_full">' +  
+                    '<div class="obj_input_box_full">' +
                                                     CComponent.dom_tag('일자', null, true) + date_select_row + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>' +
                                                     CComponent.dom_tag('진행 시간', null, true) + start_time_select_row + end_time_select_row  +'<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>' +
                                                     CComponent.dom_tag('반복') + repeat_select_row + '</div>' +
@@ -380,6 +395,31 @@ class Plan_add{
                     });
                 });
             });
+        });
+        return html;
+    }
+
+    dom_row_trainer_select(){
+        let id = 'select_trainer';
+        let title = this.data.trainer_name.length == 0 ? '담당 강사' : this.data.trainer_name.join(', ');
+        let icon = CImg.member();
+        let icon_r_visible = SHOW;
+        let icon_r_text = "";
+        let style = this.data.trainer_name.length == 0 ? {"color":"var(--font-inactive)", "height":"auto"} : {"height":"auto"};
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            if(this.data.lecture_id.length != 0){
+                let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SELECT, 100, popup_style, {'trainer_id':null}, ()=>{
+                    let appendix = {title:"강사", disable_zero_avail_count:ON, entire_member:NONE, member_id:this.data.trainer_id, member_name:this.data.trainer_name};
+                    member_select = new TrainerSelector('#wrapper_box_trainer_select', this, 1, appendix, (set_data)=>{
+
+                        this.trainer = set_data;
+                        this.render_content();
+                    });
+                });
+            }else{
+                show_error_message({title:'수업을 먼저 선택해주세요.'});
+            }
         });
         return html;
     }
