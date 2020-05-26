@@ -314,6 +314,70 @@ input:disabled{
 	color:var(--font-sub-normal);
 }
 
+.select_trainer_row{
+	list-style: none;
+	/*line-height: 56px;*/
+	height: 36px;
+	cursor: pointer;
+	font-size: 16px;
+	font-weight: 500;
+	letter-spacing: -0.5px;
+	color: var(--font-base);
+	/*border-bottom: 1px solid #cccccc;*/
+	padding: 10px 20px;
+}
+
+.select_trainer_row .cell_trainer_name{
+	width: 100%;
+	vertical-align: middle;
+	height: 16px;
+	line-height: 16px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.select_trainer_row .cell_trainer_info{
+	width: auto;
+	vertical-align: middle;
+	font-size: 11px;
+	color: var(--font-sub-dark);
+	height: 16px;
+	line-height: 16px;
+	margin-top: 4px;
+	/*text-align: right;*/
+}
+
+.select_trainer_row .cell_trainer_fix{
+	display: table-cell;
+	width: 44px;
+	text-align: right;
+	padding-right:16px;
+	font-size: 11px;
+	font-weight: bold;
+	font-style: normal;
+	font-stretch: normal;
+	letter-spacing: -0.5px;
+	color: var(--font-highlight);
+	opacity: 0.7;
+	vertical-align: middle;
+}
+
+.select_trainer_row .cell_trainer_selected{
+	display: table-cell;
+	width: 24px;
+	vertical-align: middle;
+}
+.select_trainer_row .cell_trainer_selected svg{
+	vertical-align: middle;
+}
+.select_trainer_row .cell_trainer_selected img{
+	display: none;
+}
+.select_trainer_row .cell_trainer_selected .trainer_selected{
+	display: block !important;
+	float: right;;
+}
+
 .select_member_row{
 	list-style: none;
 	/*line-height: 56px;*/

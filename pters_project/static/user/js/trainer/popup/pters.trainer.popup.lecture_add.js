@@ -153,10 +153,10 @@ class Lecture_add{
             lecture_lecture_start_time = '<div class="obj_input_box_full">' + CComponent.dom_tag('회원 예약 시작 시각') + lecture_start_time + '</div>';
         }
 
-        let html =  '<div class="obj_input_box_full">'+CComponent.dom_tag('수업명', null, true) + name+'</div>' +
-                    '<div class="obj_input_box_full">'+CComponent.dom_tag('정원', null, true) + capacity + '</div>' +
+        let html =  '<div class="obj_input_box_full">'+CComponent.dom_tag('수업명*', null, true) + name+'</div>' +
+                    '<div class="obj_input_box_full">'+CComponent.dom_tag('정원*', null, true) + capacity + '</div>' +
                     lecture_lecture_start_time+
-                    '<div class="obj_input_box_full">'+CComponent.dom_tag('기본 수업 시간', null, true) + time + '</div>' +
+                    '<div class="obj_input_box_full">'+CComponent.dom_tag('기본 수업 시간*', null, true) + time + '</div>' +
                     '<div class="obj_input_box_full">'+CComponent.dom_tag('색상 태그')+ color+ '</div>' +
                     '<div class="obj_input_box_full">'+CComponent.dom_tag('생성시 수강권에 추가')+ ticket+ '</div>' +
                     '<div class="obj_input_box_full">'+CComponent.dom_tag('생성시 같은 이름의 수강권을 함께 생성')+ ticket_make+ '</div>';

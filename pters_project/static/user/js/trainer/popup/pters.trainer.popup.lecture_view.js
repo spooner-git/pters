@@ -21,6 +21,8 @@ class Lecture_view{
                 name:null,
                 lecture_minute:null,
                 capacity:null,
+                main_trainer_id:null,
+                main_trainer_name:null,
                 member_number:null,
                 member:[],
                 fixed_member_id:[],
@@ -80,6 +82,15 @@ class Lecture_view{
         return this.data.capacity;
     }
 
+    set main_trainer(data){
+        this.data.main_trainer_id = data.id;
+        this.data.main_trainer_name = data.name;
+        this.render_content();
+    }
+
+    get main_trainer(){
+        return {id:this.data.main_trainer_id, name:this.data.main_trainer_name};
+    }
     set member(data){
         this.data.fixed_member_id = data.id;
         this.data.fixed_member_name = data.name;
@@ -120,6 +131,8 @@ class Lecture_view{
             this.data.name = data.lecture_name;
             this.data.lecture_minute = data.lecture_minute; // lecture_minute 여기
             this.data.capacity = data.lecture_max_num;
+            this.data.main_trainer_id = data.lecture_main_trainer_id;
+            this.data.main_trainer_name = data.lecture_main_trainer_name;
             this.data.member_number = data.lecture_ing_member_num;
             this.data.member = data.lecture_member_list;
             this.data.fixed_member_id = data.lecture_member_list.filter((el)=>{return el.member_fix_state_cd == FIX ? true : false;}).map((el)=>{return el.member_id;});
@@ -199,7 +212,7 @@ class Lecture_view{
     }
     
     dom_assembly_content(){
-        let main_trainer = this.dom_row_main_trainer_view();
+        let main_trainer = this.dom_row_main_trainer_select();
         let time = this.dom_row_lecture_minute_input(); //수업 진행시간
         // let name = this.dom_row_lecture_name_input();
         let capacity = this.dom_row_capacity_view();
@@ -209,9 +222,9 @@ class Lecture_view{
         let lecture_start_time = this.dom_row_lecture_start_time();
         let repeat = this.dom_row_repeat();
 
-        let main_trainer_assembly = '<div class="obj_input_box_full">' + CComponent.dom_tag('담당 강사') + main_trainer + '</div>';
-        let capacity_assembly = '<div class="obj_input_box_full">' + CComponent.dom_tag('정원') + capacity + '</div>';
-        let lecture_lecture_minute = '<div class="obj_input_box_full">' + CComponent.dom_tag('기본 수업 시간') + time + '</div>';
+        let main_trainer_assembly = '<div class="obj_input_box_full">' + CComponent.dom_tag('담당 강사*') + main_trainer + '</div>';
+        let capacity_assembly = '<div class="obj_input_box_full">' + CComponent.dom_tag('정원*') + capacity + '</div>';
+        let lecture_lecture_minute = '<div class="obj_input_box_full">' + CComponent.dom_tag('기본 수업 시간*') + time + '</div>';
         let lecture_lecture_start_time = '';
         if(this.data.lecture_type_cd == LECTURE_TYPE_ONE_TO_ONE){
             lecture_lecture_start_time = '<div class="obj_input_box_full">' + CComponent.dom_tag('회원 예약 시작 시각') + lecture_start_time + '</div>';
@@ -340,51 +353,71 @@ class Lecture_view{
         }
     }
 
-    dom_row_main_trainer_view(){
-        let unit = '님';
-        let id = 'lecture_capacity_view';
-        let title = this.data.capacity == null ? '' : this.data.capacity+unit;
-        let placeholder = '담당 강사*';
+    dom_row_main_trainer_select(){
+        let id = 'select_trainer';
+        let title = this.data.main_trainer_name == null ? '담당 강사' : this.data.main_trainer_name;
         let icon = CImg.member();
-        let icon_r_visible = HIDE;
+        let icon_r_visible = SHOW;
         let icon_r_text = "";
-        let style = null;
-        let disabled = true;
-        let pattern = "[0-9]{0,4}";
-        let pattern_message = "";
-        let required = "";
-
-        let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
-            let auth_inspect = pass_inspector.lecture_update();
-            if(auth_inspect.barrier == BLOCKED){
-                let message = `${auth_inspect.limit_type}`;
-                this.init();
-                show_error_message({title:message});
-                return false;
-            }
-
-            if(input_data != '' && input_data != null){
-                input_data = Number(input_data);
-            }
-            let user_input_data = input_data;
-            if(user_input_data == null){
-                user_input_data = this.data.capacity;
-            }
-            if(user_input_data < this.data.fixed_member_id.length){
-                show_error_message({title:"수정하려는 정원보다 고정회원 수가 더 많습니다."});
-                this.render_content();
-                return;
-            }
-            this.capacity = user_input_data;
-            setTimeout(()=>{
-                this.dom_row_option_select_capacity();
-            }, 300);
-            //안드로이드 키보드가 올라오면서 옵션셀렉터 위치가 상단으로 밀리리 때문에, 키보드가 사라질때 까지 기다렸다가 실행한다.
-
-            // this.send_data();
-        }, pattern, pattern_message, required);
+        let style = this.data.main_trainer_name == null ? {"color":"var(--font-inactive)", "height":"auto"} : {"height":"auto"};
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TRAINER_SELECT, 100, popup_style, {'trainer_id':null}, ()=>{
+                let appendix = {title:"담당 강사", disable_zero_avail_count:ON, entire_member:NONE, trainer_id:this.data.main_trainer_id, trainer_name:this.data.main_trainer_name};
+                trainer_select = new TrainerSelector('#wrapper_box_trainer_select', this, 1, appendix, (set_data)=>{
+                    this.main_trainer = set_data;
+                    this.render_content();
+                });
+            });
+        });
         return html;
     }
+
+    // dom_row_main_trainer_view(){
+    //     let unit = '님';
+    //     let id = 'lecture_main_trainer_view';
+    //     let title = this.data.lecture_main_trainer_name == null ? '' : this.data.lecture_main_trainer_name;
+    //     let placeholder = '담당 강사*';
+    //     let icon = CImg.member();
+    //     let icon_r_visible = HIDE;
+    //     let icon_r_text = "";
+    //     let style = null;
+    //     let disabled = true;
+    //     let pattern = "[0-9]{0,4}";
+    //     let pattern_message = "";
+    //     let required = "";
+    //
+    //     let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
+    //         let auth_inspect = pass_inspector.lecture_update();
+    //         if(auth_inspect.barrier == BLOCKED){
+    //             let message = `${auth_inspect.limit_type}`;
+    //             this.init();
+    //             show_error_message({title:message});
+    //             return false;
+    //         }
+    //
+    //         if(input_data != '' && input_data != null){
+    //             input_data = Number(input_data);
+    //         }
+    //         let user_input_data = input_data;
+    //         if(user_input_data == null){
+    //             user_input_data = this.data.capacity;
+    //         }
+    //         if(user_input_data < this.data.fixed_member_id.length){
+    //             show_error_message({title:"수정하려는 정원보다 고정회원 수가 더 많습니다."});
+    //             this.render_content();
+    //             return;
+    //         }
+    //         this.capacity = user_input_data;
+    //         setTimeout(()=>{
+    //             this.dom_row_option_select_capacity();
+    //         }, 300);
+    //         //안드로이드 키보드가 올라오면서 옵션셀렉터 위치가 상단으로 밀리리 때문에, 키보드가 사라질때 까지 기다렸다가 실행한다.
+    //
+    //         // this.send_data();
+    //     }, pattern, pattern_message, required);
+    //     return html;
+    // }
 
     dom_row_capacity_view(){
         let unit = '명';

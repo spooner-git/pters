@@ -532,9 +532,8 @@ class CComponent{
 
     //강사 선택 팝업에 사용되는 행
     static select_trainer_row (multiple_select, checked, location, trainer_id, trainer_name, trainer_profile_url, disable_zero_avail_count, onclick){
-
         let html = `
-                    <li class="select_trainer_row smr_${location}" id="select_trainer_row_${trainer_id}" ${disable_zero_avail_count == ON && checked == 0? "style='opacity:0.6;'": ""}>
+                    <li class="select_trainer_row smr_${location}" id="select_trainer_row_${trainer_id}" style=""}>
                         <div class="obj_table_raw">
                             <div style="display:table-cell; width:35px; height:35px; padding-right:10px;">
                                 <img src="${trainer_profile_url}" style="width:35px; height:35px; border-radius: 50%;">
@@ -579,9 +578,9 @@ class CComponent{
             });
         }else if(multiple_select == 1){
             $(document).off('click', `#select_trainer_row_${trainer_id}`).on('click', `#select_trainer_row_${trainer_id}`, function(e){
-                if(disable_zero_avail_count == ON && checked == 0){
-                    return false;
-                }
+                // if(disable_zero_avail_count == ON && checked == 0){
+                //     return false;
+                // }
                 onclick('add_single');
 
             });

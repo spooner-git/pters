@@ -30,8 +30,8 @@ class Plan_add{
             lecture_type_cd:[],
             member_id:[],
             member_name:[],
-            trainer_id:[],
-            trainer_name:[],
+            main_trainer_id:[],
+            main_trainer_name:[],
             date: null,
             date_text: null,
             start_time:"",
@@ -88,13 +88,13 @@ class Plan_add{
     }
 
     set trainer(data){
-        this.data.trainer_id = data.id;
-        this.data.trainer_name = data.name;
+        this.data.main_trainer_id = data.id;
+        this.data.main_trainer_name = data.name;
         this.render_content();
     }
 
     get trainer(){
-        return {id:this.data.trainer_id, name:this.data.trainer_name};
+        return {id:this.data.main_trainer_id, name:this.data.main_trainer_name};
     }
 
     set date(data){
@@ -401,17 +401,17 @@ class Plan_add{
 
     dom_row_trainer_select(){
         let id = 'select_trainer';
-        let title = this.data.trainer_name.length == 0 ? '담당 강사' : this.data.trainer_name.join(', ');
+        let title = this.data.main_trainer_name.length == 0 ? '담당 강사' : this.data.main_trainer_name.join(', ');
         let icon = CImg.member();
         let icon_r_visible = SHOW;
         let icon_r_text = "";
-        let style = this.data.trainer_name.length == 0 ? {"color":"var(--font-inactive)", "height":"auto"} : {"height":"auto"};
+        let style = this.data.main_trainer_name.length == 0 ? {"color":"var(--font-inactive)", "height":"auto"} : {"height":"auto"};
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             if(this.data.lecture_id.length != 0){
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
-                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SELECT, 100, popup_style, {'trainer_id':null}, ()=>{
-                    let appendix = {title:"강사", disable_zero_avail_count:ON, entire_member:NONE, member_id:this.data.trainer_id, member_name:this.data.trainer_name};
-                    member_select = new TrainerSelector('#wrapper_box_trainer_select', this, 1, appendix, (set_data)=>{
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TRAINER_SELECT, 100, popup_style, {'trainer_id':null}, ()=>{
+                    let appendix = {title:"담당 강사", disable_zero_avail_count:ON, entire_member:NONE, trainer_id:this.data.main_trainer_id, trainer_name:this.data.main_trainer_name};
+                    trainer_select = new TrainerSelector('#wrapper_box_trainer_select', this, 1, appendix, (set_data)=>{
 
                         this.trainer = set_data;
                         this.render_content();
