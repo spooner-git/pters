@@ -2766,7 +2766,9 @@ class LectureSelector{
             state_cd: [],
             max: [],
             type_cd: [],
-            color: []
+            color: [],
+            main_trainer_id: [],
+            main_trainer_name: []
         };
 
         this.data.id = this.appendix.lecture_id.slice();
@@ -2775,6 +2777,8 @@ class LectureSelector{
         this.data.max = this.appendix.max.slice();
         this.data.type_cd = this.appendix.type_cd.slice();
         this.data.color = this.appendix.color.slice();
+        this.data.main_trainer_id = this.appendix.main_trainer_id.slice();
+        this.data.main_trainer_name = this.appendix.main_trainer_name.slice();
 
         this.init();
     }
@@ -2819,15 +2823,20 @@ class LectureSelector{
             let lecture_type_cd = data.lecture_type_cd;
             let lecture_ing_member_num = data.lecture_ing_member_num;
             let lecture_time = data.lecture_minute;
+            let main_trainer_id = data.main_trainer_id;
+            let main_trainer_name = data.main_trainer_name;
             let checked = this.appendix.lecture_id.indexOf(lecture_id) >= 0 ? 1 : 0;
             let html = CComponent.select_lecture_row(
-                this.multiple_select, checked, this.unique_instance, lecture_id, lecture_name, lecture_color_code, lecture_max_num, lecture_ing_member_num, lecture_state_cd, lecture_time, (add_or_substract)=>{
+                this.multiple_select, checked, this.unique_instance, lecture_id, lecture_name, lecture_color_code, lecture_max_num,
+                lecture_ing_member_num, lecture_state_cd, lecture_time, main_trainer_id, main_trainer_name,(add_or_substract)=>{
                     if(add_or_substract == "add"){
                         this.data.name.push(lecture_name);
                         this.data.max.push(lecture_max_num);
                         // this.data.state_cd.push(lecture_state_cd);
                         this.data.type_cd.push(lecture_type_cd);
                         this.data.color.push(lecture_color_code);
+                        this.data.main_trainer_id.push(main_trainer_id);
+                        this.data.main_trainer_name.push(main_trainer_name);
                         this.data.id.push(lecture_id);
                     }else if(add_or_substract == "substract"){
                         this.data.name.splice(this.data.id.indexOf(lecture_id), 1); // 이름으로 찾기 x, 고유한 ID로
@@ -2835,6 +2844,8 @@ class LectureSelector{
                         this.data.state_cd.splice(this.data.id.indexOf(lecture_id), 1); // 이름으로 찾기 x, 고유한 ID로
                         this.data.type_cd.splice(this.data.id.indexOf(lecture_id), 1); // 이름으로 찾기 x, 고유한 ID로
                         this.data.color.splice(this.data.id.indexOf(lecture_id), 1);
+                        this.data.main_trainer_id.splice(this.data.id.indexOf(lecture_id), 1);
+                        this.data.main_trainer_name.splice(this.data.id.indexOf(lecture_id), 1);
                         this.data.id.splice(this.data.id.indexOf(lecture_id), 1);
                     }else if(add_or_substract == "add_single"){
                         this.data.id = [];
@@ -2843,12 +2854,16 @@ class LectureSelector{
                         this.data.state_cd = [];
                         this.data.type_cd = [];
                         this.data.color = [];
+                        this.data.main_trainer_id = [];
+                        this.data.main_trainer_name = [];
                         this.data.id.push(lecture_id);
                         this.data.name.push(lecture_name);
                         this.data.max.push(lecture_max_num);
                         // this.data.state_cd.push(lecture_state_cd);
                         this.data.type_cd.push(lecture_type_cd);
                         this.data.color.push(lecture_color_code);
+                        this.data.main_trainer_id.push(main_trainer_id);
+                        this.data.main_trainer_name.push(main_trainer_name);
                     }
 
                     // this.target_instance.lecture = this.data;
@@ -4295,8 +4310,39 @@ class TrainerSelector{
         let html_to_join = [];
         let length = this.received_data.length;
         let select_trainer_num = 0;
-        if(length == 0){
-            html_to_join.push(CComponent.no_data_row('목록이 비어있습니다.', {"border-bottom":0}));
+        // if(length == 0){
+        //     html_to_join.push(CComponent.no_data_row('목록이 비어있습니다.', {"border-bottom":0}));
+        // }
+        let trainer_id = user_id;
+        let trainer_name = user_name;
+        let trainer_profile_url = user_profile_url;
+        let checked = this.appendix.trainer_id.indexOf(trainer_id) >= 0 ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
+        let html = CComponent.select_trainer_row (
+            this.multiple_select, checked, this.unique_instance, trainer_id, trainer_name, trainer_profile_url, this.appendix.disable_zero_avail_count, (add_or_substract)=>{
+                if(add_or_substract == "add"){
+                    this.data.id.push(trainer_id);
+                    this.data.name.push(trainer_name);
+                }else if(add_or_substract == "substract"){
+                    this.data.name.splice(this.data.id.indexOf(trainer_id), 1);
+                    this.data.id.splice(this.data.id.indexOf(trainer_id), 1);
+                }else if(add_or_substract == "add_single"){
+                    this.data.id = [];
+                    this.data.name = [];
+                    this.data.id.push(trainer_id);
+                    this.data.name.push(trainer_name);
+                }
+                if(this.multiple_select == 1){
+                    this.upper_right_menu();
+                }
+            }
+        );
+        if(checked!=0){
+            select_trainer_num++;
+        }
+        if(checked > 0){
+            html_to_join.unshift(html);
+        }else{
+            html_to_join.push(html);
         }
 
         for(let i=0; i<length; i++){

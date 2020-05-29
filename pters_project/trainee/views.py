@@ -1618,7 +1618,7 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
                                                     lecture_info, lecture_schedule_id,
                                                     start_date, end_date, note, private_note,
                                                     ON_SCHEDULE_TYPE, request.user.id, permission_state_cd,
-                                                    STATE_CD_NOT_PROGRESS, UN_USE, schedule_duplication)
+                                                    STATE_CD_NOT_PROGRESS, UN_USE, schedule_duplication, '')
                 error = schedule_result['error']
 
                 if error is not None:

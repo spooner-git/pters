@@ -61,6 +61,8 @@ class Plan_view{
 
             duplicate_plan_when_add:[],
 
+            main_trainer_id:null,
+            main_trainer_name:null,
             reg_member_id:null,
             reg_member_name:null,
             reg_date:null,
@@ -77,6 +79,16 @@ class Plan_view{
         this.date_start = 0;
     
         this.init();
+    }
+
+    set trainer(data){
+        this.data.main_trainer_id = data.id[0];
+        this.data.main_trainer_name = data.name[0];
+        // this.init();
+    }
+
+    get trainer(){
+        return {id:this.data.main_trainer_id, name:this.data.main_trainer_name};
     }
 
     set member (data){
@@ -214,6 +226,8 @@ class Plan_view{
         this.data.extension_flag = data.schedule_info[0].extension_flag;
         this.data.schedule_type = data.schedule_info[0].schedule_type;
 
+        this.data.main_trainer_id = data.schedule_info[0].main_trainer_id;
+        this.data.main_trainer_name = data.schedule_info[0].main_trainer_name;
         this.data.reg_member_id = data.schedule_info[0].reg_member_id;
         this.data.reg_member_name = data.schedule_info[0].reg_member_name;
         this.data.reg_date = data.schedule_info[0].reg_dt;
@@ -287,7 +301,7 @@ class Plan_view{
     
     render_content(){
         // document.getElementById(this.target.toolbox).innerHTML = this.dom_assembly_toolbox();
-        document.querySelector(`${this.target.install} .wrapper_top`).innerHTML = PopupBase.wrapper_top(this.dom_wrapper_top().left, this.dom_wrapper_top().center, this.dom_wrapper_top().right);
+        // document.querySelector(`${this.target.install} .wrapper_top`).innerHTML = PopupBase.wrapper_top(this.dom_wrapper_top().left, this.dom_wrapper_top().center, this.dom_wrapper_top().right);
         document.getElementById(this.target.content).innerHTML = this.dom_assembly_content();
     }
 
@@ -308,6 +322,7 @@ class Plan_view{
     }
     
     dom_assembly_content (){
+        let trainer_select_row = this.dom_row_trainer_select();
         let member_select_plan_approve_row = this.dom_row_member_plan_approve_select();
         let member_list_plan_approve_row = this.dom_row_member_plan_approve_list();
         let member_select_plan_wait_row = this.dom_row_member_plan_wait_select();
@@ -332,7 +347,8 @@ class Plan_view{
         
         let html;
         if(this.time_selector == CLASSIC){
-            html =      '<div class="obj_input_box_full">' +  CComponent.dom_tag('일자') + date_select_row +
+            html =      `<div class="obj_input_box_full" style="">` + CComponent.dom_tag('담당 강사', null, true) + trainer_select_row+'</div>' +
+                        '<div class="obj_input_box_full">' +  CComponent.dom_tag('일자') + date_select_row +
                                                         CComponent.dom_tag('진행시간') + classic_time_selector + '</div>' +
                         '<div class="obj_input_box_full">'+ CComponent.dom_tag(`메모 <span style="color:var(--font-highlight);display:${hide_when_off}">(회원님께 공유되는 메모입니다.)</span>`) + memo_select_row + '</div>' +
                         `<div class="obj_input_box_full" style="display:${hide_when_off};">`+ CComponent.dom_tag(`내 메모`) + private_memo_select_row + '</div>' +
@@ -340,7 +356,8 @@ class Plan_view{
                         `<div class="obj_input_box_full" style="display:${display};">`+ CComponent.dom_tag('대기 회원') + member_select_plan_wait_row + member_list_plan_wait_row+'</div>' +
                         '<div class="obj_input_box_full" style="padding:18px;">' + reg_mod_info + '<div>';
         }else{
-            html =      '<div class="obj_input_box_full">' +  CComponent.dom_tag('일자') + date_select_row +
+            html =      `<div class="obj_input_box_full" style="">` + CComponent.dom_tag('담당 강사', null, true) + trainer_select_row+'</div>' +
+                        '<div class="obj_input_box_full">' +  CComponent.dom_tag('일자') + date_select_row +
                                                         CComponent.dom_tag('진행시간') + start_time_select_row + end_time_select_row + '</div>' +
                         '<div class="obj_input_box_full">'+ CComponent.dom_tag(`메모 <span style="color:var(--font-highlight);display:${hide_when_off}">(회원님께 공유되는 메모입니다.)</span>`) + memo_select_row + '</div>' +
                         `<div class="obj_input_box_full" style="display:${hide_when_off};">`+ CComponent.dom_tag(`내 메모`) + private_memo_select_row + '</div>' +
@@ -516,6 +533,31 @@ class Plan_view{
                         </div>
                     </div>
                     `;
+        return html;
+    }
+
+    dom_row_trainer_select(){
+        let id = 'select_trainer';
+        let title = this.data.main_trainer_name == null ? '담당 강사' : this.data.main_trainer_name;
+        let icon = CImg.member();
+        let icon_r_visible = SHOW;
+        let icon_r_text = "";
+        let style = this.data.main_trainer_name == null ? {"color":"var(--font-inactive)", "height":"auto"} : {"height":"auto"};
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            if(this.data.lecture_id.length != 0){
+                let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TRAINER_SELECT, 100, popup_style, {'trainer_id':null}, ()=>{
+                    let appendix = {title:"담당 강사", disable_zero_avail_count:ON, entire_member:NONE, trainer_id:this.data.main_trainer_id, trainer_name:this.data.main_trainer_name};
+                    trainer_select = new TrainerSelector('#wrapper_box_trainer_select', this, 1, appendix, (set_data)=>{
+
+                        this.trainer = set_data;
+                        this.render_content();
+                    });
+                });
+            }else{
+                show_error_message({title:'수업을 먼저 선택해주세요.'});
+            }
+        });
         return html;
     }
 
@@ -1405,7 +1447,7 @@ class Plan_view{
     check_whether_info_changed(){
         let ori_data = this.received_data.schedule_info[0];
         let new_data = this.data;
-        let need_to_check = ["start_dt", "start_time", "end_time", "note", "private_note", "extension_flag"];
+        let need_to_check = ["start_dt", "start_time", "end_time", "note", "private_note", "extension_flag", "main_trainer_id"];
         let length = need_to_check.length;
 
         var if_changed_item_exist = false;
@@ -1433,9 +1475,11 @@ class Plan_view{
                 this.received_data.schedule_info[0].lecture_schedule_data[i].schedule_id
             );
         }
-
+        console.log(this.data.main_trainer_id);
+        console.log(this.data.main_trainer_name);
         let data_to_send = {"schedule_ids[]":schedule_ids, "start_dt":start_dt, "end_dt":end_dt,
-            "extension_flag":this.data.extension_flag};
+                            "extension_flag":this.data.extension_flag,
+                            "main_trainer_id":this.data.main_trainer_id, 'main_trainer_name':this.data.main_trainer_name};
         let data_to_send_for_memo_update = {"schedule_id": this.schedule_id, "add_memo":this.note, "add_private_memo":this.private_note};
         let url = '/schedule/update_schedule/';
         let url_update_memo = '/schedule/update_memo_schedule/';

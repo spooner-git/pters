@@ -68,12 +68,16 @@ class Plan_add{
         this.data.lecture_state_cd = data.state_cd;
         this.data.lecture_type_cd = data.type_cd;
         this.data.lecture_color = data.color;
+        this.data.main_trainer_id = data.main_trainer_id;
+        this.data.main_trainer_name = data.main_trainer_name;
         this.member = {id:[], name: []}; //수업을 선택했기 때문에, 회원란을 모두 비워준다.
         this.render_content();
     }
 
     get lecture(){
-        return {id:this.data.lecture_id, name:this.data.lecture_name, max:this.data.lecture_max_num, state_cd:this.data.lecture_state_cd, type_cd:this.data.lecture_type_cd, color:this.data.lecture_color};
+        return {id:this.data.lecture_id, name:this.data.lecture_name, max:this.data.lecture_max_num,
+                state_cd:this.data.lecture_state_cd, type_cd:this.data.lecture_type_cd, color:this.data.lecture_color,
+                main_trainer_id:this.data.main_trainer_name, main_trainer_name:this.data.main_trainer_name};
     }
 
 
@@ -359,7 +363,8 @@ class Plan_add{
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SELECT, 100, popup_style, {'member_id':null}, ()=>{
                 let appendix = {'title':'수업', lecture_id:this.data.lecture_id, lecture_name:this.data.lecture_name, lecture_state_cd:this.data.lecture_state_cd,
-                                max:this.data.lecture_max_num, type_cd:this.data.lecture_type_cd, color:this.data.lecture_color};
+                                max:this.data.lecture_max_num, type_cd:this.data.lecture_type_cd, color:this.data.lecture_color,
+                                main_trainer_id:this.data.main_trainer_id, main_trainer_name:this.data.main_trainer_name};
                 lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 1, appendix, (set_data)=>{
                     //수업을 추가
                     this.lecture = set_data;
@@ -812,7 +817,7 @@ class Plan_add{
             en_dis_type = 1;
             member_ids = this.data.member_id;
             lecture_id = this.data.lecture_id[0];
-            trainer_id = this.data.main_trainer_id;
+            trainer_id = this.data.main_trainer_id[0];
         }
         let data = {"lecture_id":lecture_id,
                     "start_dt": start_dt,

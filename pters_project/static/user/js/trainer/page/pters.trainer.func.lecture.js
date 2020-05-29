@@ -145,7 +145,7 @@ class Lecture {
             let lecture_member_number = data.lecture_ing_member_num;
             let lecture_class_hour = data.lecture_minute;
             let lecture_ing_bg_color = data.lecture_ing_color_cd;
-            let main_trainer_name = data.lecture_main_trainer_name;
+            let main_trainer_name = data.main_trainer_name;
 
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             let onclick = `layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_LECTURE_VIEW}', 100, ${popup_style}, {'lecture_id':${lecture_id}}, ()=>{

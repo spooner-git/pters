@@ -918,7 +918,7 @@ class GetTrainerRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, View):
                     lecture_end_font_color_cd = ''
                     # lecture_max_member_num_view_flag = ''
 
-                week_data = member_repeat_schedule_info.week_info.split('/')
+                week_data = trainer_repeat_schedule_info.week_info.split('/')
                 week_data = sorted(week_data, key=lambda week_info: week_order.get(week_info))
 
                 mod_member_id = ''
@@ -3778,8 +3778,8 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                  'lecture_minute': lecture_tb.lecture_minute,
                                                  'lecture_type_cd': lecture_tb.lecture_type_cd,
                                                  'lecture_reg_dt': lecture_tb.reg_dt,
-                                                 'lecture_main_trainer_id': main_trainer_id,
-                                                 'lecture_main_trainer_name': main_trainer_name,
+                                                 'main_trainer_id': main_trainer_id,
+                                                 'main_trainer_name': main_trainer_name,
                                                  'lecture_ticket_list': [],
                                                  'lecture_ticket_state_cd_list': [],
                                                  'lecture_ticket_id_list': []}
@@ -3816,8 +3816,8 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                      'lecture_minute': lecture_info.lecture_minute,
                                                      'lecture_type_cd': lecture_info.lecture_type_cd,
                                                      'lecture_reg_dt': lecture_info.reg_dt,
-                                                     'lecture_main_trainer_id': main_trainer_id,
-                                                     'lecture_main_trainer_name': main_trainer_name,
+                                                     'main_trainer_id': main_trainer_id,
+                                                     'main_trainer_name': main_trainer_name,
                                                      'lecture_ticket_list': [],
                                                      'lecture_ticket_state_cd_list': [],
                                                      'lecture_ticket_id_list': []}

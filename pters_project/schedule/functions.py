@@ -324,7 +324,8 @@ def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
         end_color_cd = lecture_info.end_color_cd
         ing_font_color_cd = lecture_info.ing_font_color_cd
         end_font_color_cd = lecture_info.end_font_color_cd
-
+        if trainer_id is None or trainer_id == '':
+            trainer_id = lecture_info.main_trainer.member_id
         if lecture_info.lecture_type_cd == LECTURE_TYPE_ONE_TO_ONE:
             # lecture_info = None
             # lecture_id = None
@@ -353,6 +354,7 @@ def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
                                                ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
                                                ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
                                                extension_flag=extension_flag,
+                                               trainer_id=trainer_id,
                                                # Test 용
                                                # alarm_dt=start_datetime-datetime.timedelta(minutes=5),
                                                reg_member_id=user_id,
@@ -439,7 +441,7 @@ def func_add_schedule_update(class_id, member_ticket_id, repeat_schedule_id,
                              lecture_info, lecture_schedule_id,
                              start_datetime, end_datetime,
                              note, private_note, en_dis_type, user_id, permission_state_cd, state_cd, extension_flag,
-                             duplication_enable_flag):
+                             duplication_enable_flag, trainer_id):
     error = None
     context = {'error': None, 'schedule_id': ''}
     if member_ticket_id == '':
@@ -464,6 +466,8 @@ def func_add_schedule_update(class_id, member_ticket_id, repeat_schedule_id,
         end_color_cd = lecture_info.end_color_cd
         ing_font_color_cd = lecture_info.ing_font_color_cd
         end_font_color_cd = lecture_info.end_font_color_cd
+        if trainer_id is None or trainer_id == '':
+            trainer_id = lecture_info.main_trainer.member_id
 
         if lecture_info.lecture_type_cd == LECTURE_TYPE_ONE_TO_ONE:
             # lecture_info = None
@@ -494,6 +498,7 @@ def func_add_schedule_update(class_id, member_ticket_id, repeat_schedule_id,
                                                ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
                                                ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
                                                extension_flag=extension_flag,
+                                               trainer_id=trainer_id,
                                                # Test 용
                                                # alarm_dt=start_datetime-datetime.timedelta(minutes=5),
                                                reg_member_id=user_id,
@@ -564,12 +569,19 @@ def func_add_schedule_update(class_id, member_ticket_id, repeat_schedule_id,
 # 일정 등록
 def func_add_repeat_schedule(class_id, member_ticket_id, lecture_id, lecture_schedule_id, repeat_type,
                              week_type, start_date, end_date, start_time, end_time, en_dis_type,
-                             user_id):
+                             user_id, trainer_id):
     error = None
     context = {'error': None, 'schedule_info': None}
 
     if member_ticket_id == '':
         member_ticket_id = None
+    if trainer_id is None or trainer_id == '':
+        try:
+            lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
+            trainer_id = lecture_info.main_trainer.member_id
+        except ObjectDoesNotExist:
+            trainer_id = user_id
+
     try:
         with transaction.atomic():
             repeat_schedule_info = RepeatScheduleTb(class_tb_id=class_id, member_ticket_tb_id=member_ticket_id,
@@ -581,6 +593,7 @@ def func_add_repeat_schedule(class_id, member_ticket_id, lecture_id, lecture_sch
                                                     start_time=start_time,
                                                     end_time=end_time,
                                                     state_cd=STATE_CD_NOT_PROGRESS, en_dis_type=en_dis_type,
+                                                    repeat_trainer=trainer_id,
                                                     reg_member_id=user_id,
                                                     mod_member_id=user_id)
 
@@ -1255,9 +1268,14 @@ def func_get_trainer_schedule_all(class_id, start_date, end_date):
             lecture_wait_member_num = ''
         mod_member_id = ''
         mod_member_name = ''
+        trainer_id = ''
+        trainer_name = ''
         if schedule_info.mod_member is not None and schedule_info.mod_member != '':
             mod_member_id = schedule_info.mod_member_id
             mod_member_name = schedule_info.mod_member.name
+        if schedule_info.trainer is not None and schedule_info.trainer != '':
+            trainer_id = schedule_info.trainer_id
+            trainer_name = schedule_info.trainer.name
         # array 에 값을 추가후 dictionary 에 추가
         date_schedule_list.append({'schedule_id': str(schedule_info.schedule_id),
                                    'start_time': schedule_start_time,
@@ -1269,6 +1287,8 @@ def func_get_trainer_schedule_all(class_id, start_date, end_date):
                                    'private_note': schedule_info.private_note,
                                    'reg_member_id': str(schedule_info.reg_member_id),
                                    'reg_member_name': schedule_info.reg_member.name,
+                                   'main_trainer_id': str(trainer_id),
+                                   'main_trainer_name': trainer_name,
                                    'mod_member_id': str(mod_member_id),
                                    'mod_member_name': mod_member_name,
                                    'mod_dt': str(schedule_info.mod_dt),
@@ -1381,9 +1401,14 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
 
             mod_member_id = ''
             mod_member_name = ''
+            trainer_id = ''
+            trainer_name = ''
             if lecture_member_schedule_info.mod_member is not None and lecture_member_schedule_info.mod_member != '':
                 mod_member_id = lecture_member_schedule_info.mod_member_id
                 mod_member_name = lecture_member_schedule_info.mod_member.name
+            if lecture_member_schedule_info.trainer is not None and lecture_member_schedule_info.trainer != '':
+                trainer_id = lecture_member_schedule_info.trainer_id
+                trainer_name = lecture_member_schedule_info.trainer.name
             lecture_schedule_info = {'schedule_id': str(lecture_member_schedule_info.schedule_id),
                                      'member_id': str(lecture_member_schedule_info.member_ticket_tb.member.member_id),
                                      'member_name': lecture_member_schedule_info.member_ticket_tb.member.name,
@@ -1397,6 +1422,8 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
                                      'permission_state_cd': lecture_member_schedule_info.permission_state_cd,
                                      'note': lecture_member_schedule_info.note,
                                      'private_note': lecture_member_schedule_info.private_note,
+                                     'main_trainer_id': str(trainer_id),
+                                     'main_trainer_name': trainer_name,
                                      'reg_member_id': str(lecture_member_schedule_info.reg_member_id),
                                      'reg_member_name': lecture_member_schedule_info.reg_member.name,
                                      'mod_member_id': str(mod_member_id),
@@ -1409,9 +1436,14 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
 
         mod_member_id = ''
         mod_member_name = ''
+        trainer_id = ''
+        trainer_name = ''
         if schedule_info.mod_member is not None and schedule_info.mod_member != '':
             mod_member_id = schedule_info.mod_member_id
             mod_member_name = schedule_info.mod_member.name
+        if schedule_info.trainer is not None and schedule_info.trainer != '':
+            trainer_id = schedule_info.trainer_id
+            trainer_name = schedule_info.trainer.name
         # array 에 값을 추가후 dictionary 에 추가
         date_schedule_list.append({'schedule_id': str(schedule_info.schedule_id),
                                    'start_dt': str(schedule_info.start_dt).split(' ')[0],
@@ -1424,6 +1456,8 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
                                    'note': schedule_info.note,
                                    'private_note': schedule_info.private_note,
                                    'extension_flag': schedule_info.extension_flag,
+                                   'main_trainer_id': str(trainer_id),
+                                   'main_trainer_name': trainer_name,
                                    'reg_member_id': str(schedule_info.reg_member_id),
                                    'reg_member_name': schedule_info.reg_member.name,
                                    'mod_member_id': str(mod_member_id),

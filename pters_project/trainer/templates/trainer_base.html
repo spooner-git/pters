@@ -433,6 +433,8 @@
     var user_name = '{{ request.user.first_name }}';
     var session_app_version = `{{ APP_VERSION }}`;
     var user_username = '{{ request.user.username }}';
+    var user_id = '{{ request.user.id }}';
+    var user_profile_url = '';
     var setting_theme = '{{ request.session.setting_theme }}';
 
     // MY_PROGRAM = 0 / SHARED_PROGRAM = 1
@@ -1133,6 +1135,7 @@
             let user_id = data.trainer_info.member_id;
             let user_name = data.trainer_info.member_name;
             let user_photo = data.trainer_info.member_profile_url;
+            user_profile_url = user_photo;
             let target = document.getElementById('up_menu_user_info');
             let user_coupon_count = data.trainer_info.member_coupon_count;
             target.innerHTML = `<img src="${user_photo}" alt="" class="up_menu_img" style="border-radius:50%"><span>${user_name}</span><div class="new_alarm_indicator menu_new_dot" style="top:15px;left:0px;"></div>`;
