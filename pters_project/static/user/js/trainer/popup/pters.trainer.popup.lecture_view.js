@@ -83,8 +83,8 @@ class Lecture_view{
     }
 
     set main_trainer(data){
-        this.data.main_trainer_id = data.id;
-        this.data.main_trainer_name = data.name;
+        this.data.main_trainer_id = data.id[0];
+        this.data.main_trainer_name = data.name[0];
         this.render_content();
     }
 
@@ -366,7 +366,9 @@ class Lecture_view{
                 let appendix = {title:"담당 강사", disable_zero_avail_count:ON, entire_member:NONE, trainer_id:this.data.main_trainer_id, trainer_name:this.data.main_trainer_name};
                 trainer_select = new TrainerSelector('#wrapper_box_trainer_select', this, 1, appendix, (set_data)=>{
                     this.main_trainer = set_data;
-                    this.render_content();
+                    // this.if_user_changed_any_information = true;
+                    // this.render_content();
+                    this.dom_row_option_select_capacity();
                 });
             });
         });
@@ -953,7 +955,9 @@ class Lecture_view{
             "ing_font_color_cd":this.data.color_font[0],
             "end_font_color_cd":"",
             "start_time":this.data.lecture_start_time.value[0],
-            "update_this_to_all_plans":this.update_this_to_all_plans
+            "update_this_to_all_plans":this.update_this_to_all_plans,
+            "main_trainer_id":this.data.main_trainer_id,
+            "main_trainer_name":this.data.main_trainer_name
         };
 
         Lecture_func.update(data, ()=>{

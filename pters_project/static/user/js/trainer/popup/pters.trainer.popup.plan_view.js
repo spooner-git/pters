@@ -1475,8 +1475,6 @@ class Plan_view{
                 this.received_data.schedule_info[0].lecture_schedule_data[i].schedule_id
             );
         }
-        console.log(this.data.main_trainer_id);
-        console.log(this.data.main_trainer_name);
         let data_to_send = {"schedule_ids[]":schedule_ids, "start_dt":start_dt, "end_dt":end_dt,
                             "extension_flag":this.data.extension_flag,
                             "main_trainer_id":this.data.main_trainer_id, 'main_trainer_name':this.data.main_trainer_name};
