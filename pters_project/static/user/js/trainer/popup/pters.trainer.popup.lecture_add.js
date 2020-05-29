@@ -19,6 +19,8 @@ class Lecture_add{
 
         this.data = {
                 name:null,
+                main_trainer_id:[],
+                main_trainer_name:[],
                 time:null,
                 capacity:null,
                 lecture_minute:null,
@@ -34,6 +36,8 @@ class Lecture_add{
 
                 make_ticket:OFF
         };
+        this.data.main_trainer_id[0] = user_id;
+        this.data.main_trainer_name[0] = user_name;
 
         this.data_for_selector = {
             lecture_start_time:
@@ -67,6 +71,16 @@ class Lecture_add{
 
     get capacity(){
         return this.data.capacity;
+    }
+
+    set main_trainer(data){
+        this.data.main_trainer_id = data.id;
+        this.data.main_trainer_name = data.name;
+        this.render_content();
+    }
+
+    get main_trainer(){
+        return {id:this.data.main_trainer_id, name:this.data.main_trainer_name};
     }
 
     set member(data){
@@ -140,6 +154,7 @@ class Lecture_add{
     
     dom_assembly_content(){
         let name = this.dom_row_lecture_name_input();
+        let main_trainer = this.dom_row_main_trainer_select();
         let time = this.dom_row_lecture_minute_input(); //수업 진행시간
         let capacity = this.dom_row_capacity_input();
         let fixed_member = this.dom_row_fiexd_member_select();
@@ -153,10 +168,11 @@ class Lecture_add{
             lecture_lecture_start_time = '<div class="obj_input_box_full">' + CComponent.dom_tag('회원 예약 시작 시각') + lecture_start_time + '</div>';
         }
 
-        let html =  '<div class="obj_input_box_full">'+CComponent.dom_tag('수업명*', null, true) + name+'</div>' +
-                    '<div class="obj_input_box_full">'+CComponent.dom_tag('정원*', null, true) + capacity + '</div>' +
+        let html =  '<div class="obj_input_box_full">'+CComponent.dom_tag('수업명', null, true) + name+'</div>' +
+                    '<div class="obj_input_box_full">'+CComponent.dom_tag('담당 강사', null, true) + main_trainer + '</div>' +
+                    '<div class="obj_input_box_full">'+CComponent.dom_tag('정원', null, true) + capacity + '</div>' +
                     lecture_lecture_start_time+
-                    '<div class="obj_input_box_full">'+CComponent.dom_tag('기본 수업 시간*', null, true) + time + '</div>' +
+                    '<div class="obj_input_box_full">'+CComponent.dom_tag('기본 수업 시간', null, true) + time + '</div>' +
                     '<div class="obj_input_box_full">'+CComponent.dom_tag('색상 태그')+ color+ '</div>' +
                     '<div class="obj_input_box_full">'+CComponent.dom_tag('생성시 수강권에 추가')+ ticket+ '</div>' +
                     '<div class="obj_input_box_full">'+CComponent.dom_tag('생성시 같은 이름의 수강권을 함께 생성')+ ticket_make+ '</div>';
@@ -192,6 +208,27 @@ class Lecture_add{
         let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             this.name = input_data;
         }, pattern, pattern_message, required);
+        return html;
+    }
+
+    dom_row_main_trainer_select(){
+        let id = 'select_trainer';
+        let title = this.data.main_trainer_name.length == 0 ? '담당 강사' : this.data.main_trainer_name[0];
+        let icon = CImg.member();
+        let icon_r_visible = SHOW;
+        let icon_r_text = "";
+        let style = this.data.main_trainer_name.length == 0 ? {"color":"var(--font-inactive)", "height":"auto"} : {"height":"auto"};
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TRAINER_SELECT, 100, popup_style, {'trainer_id':null}, ()=>{
+                let appendix = {title:"담당 강사", disable_zero_avail_count:ON, entire_member:NONE, trainer_id:this.data.main_trainer_id, trainer_name:this.data.main_trainer_name};
+                trainer_select = new TrainerSelector('#wrapper_box_trainer_select', this, 1, appendix, (set_data)=>{
+                    this.main_trainer = set_data;
+                    // this.if_user_changed_any_information = true;
+                    this.render_content();
+                });
+            });
+        });
         return html;
     }
 
@@ -441,6 +478,8 @@ class Lecture_add{
 
         let data = {
             "name":this.data.name,
+            "main_trainer_id":this.data.main_trainer_id[0],
+            "main_trainer_name":this.data.main_trainer_name[0],
             "member_num":this.data.capacity,
             "ing_color_cd":this.data.color_bg[0],
             "end_color_cd":"",

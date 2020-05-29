@@ -91,6 +91,7 @@ class Lecture_view{
     get main_trainer(){
         return {id:this.data.main_trainer_id, name:this.data.main_trainer_name};
     }
+
     set member(data){
         this.data.fixed_member_id = data.id;
         this.data.fixed_member_name = data.name;
