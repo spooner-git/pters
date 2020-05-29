@@ -7232,7 +7232,6 @@ def update_trainer_profile_img_logic(request):
     img_url = None
     member_id = request.POST.get('trainer_id', '')
     class_id = request.session.get('class_id', '')
-    print(str(member_id))
     # group_name = request.session.get('group_name', 'trainer')
     group_name = 'trainer'
 
