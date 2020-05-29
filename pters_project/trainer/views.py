@@ -7225,6 +7225,100 @@ def delete_member_profile_img_logic(request):
     return render(request, 'ajax/trainer_error_ajax.html')
 
 
+# 프로필 사진 수정
+def update_trainer_profile_img_logic(request):
+    error = None
+    member_info = None
+    img_url = None
+    member_id = request.POST.get('trainer_id', '')
+    class_id = request.session.get('class_id', '')
+    print(str(member_id))
+    # group_name = request.session.get('group_name', 'trainer')
+    group_name = 'trainer'
+
+    try:
+        member_info = MemberTb.objects.get(member_id=member_id)
+    except ObjectDoesNotExist:
+        error = '강사 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        if member_info.user.is_active:
+            error = '회원가입이 완료된 강사의 프로필 이미지는 등록/수정이 불가능합니다.'
+        if str(member_info.reg_info) != str(request.user.id):
+            error = '직접 등록한 강사만 프로필 이미지만 등록/수정이 가능합니다.'
+
+    if error is None:
+        if member_info.profile_url is not None and member_info.profile_url != '':
+            error = func_delete_profile_image_logic(member_info.profile_url)
+
+    if error is None:
+        max_range = 9999999999
+        random_file_name = str(random.randrange(0, max_range)).zfill(len(str(max_range)))
+        if request.method == 'POST':
+            try:
+                img_url = func_upload_profile_image_logic(request.POST.get('profile_img_file'),
+                                                          str(member_id)+'/'+str(random_file_name), group_name)
+                if img_url is None:
+                    error = '프로필 이미지 변경에 실패했습니다.[1]'
+            except MultiValueDictKeyError:
+                error = '프로필 이미지 변경에 실패했습니다.[2]'
+
+    if error is None:
+        member_info.profile_url = img_url
+        member_info.save()
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=member_info.name+' 강사 프로필', log_how='변경', use=USE)
+        log_data.save()
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
+# 프로필 사진 삭제
+def delete_trainer_profile_img_logic(request):
+    error = None
+    member_info = None
+    member_id = request.POST.get('trainer_id', '')
+    class_id = request.session.get('class_id', '')
+
+    try:
+        member_info = MemberTb.objects.get(member_id=member_id)
+    except ObjectDoesNotExist:
+        error = '강사 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        if member_info.user.is_active:
+            error = '회원가입이 완료된 강사의 프로필 이미지는 삭제가 불가능합니다.'
+        if str(member_info.reg_info) != str(request.user.id):
+            error = '직접 등록한 강사만 프로필 이미지 삭제 가능합니다.'
+
+    if error is None:
+        if member_info.profile_url is not None and member_info.profile_url != '':
+            error = func_delete_profile_image_logic(member_info.profile_url)
+
+    if error is None:
+        member_info.profile_url = ''
+        member_info.save()
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=member_info.name+' 강사 프로필', log_how='삭제', use=USE)
+        log_data.save()
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
 class GetTrainerIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):

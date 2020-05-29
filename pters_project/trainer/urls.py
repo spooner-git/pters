@@ -132,6 +132,8 @@ urlpatterns = [
     url(r'^update_member_profile_img', views.update_member_profile_img_logic, name='update_member_profile_img'),
     url(r'^delete_member_profile_img', views.delete_member_profile_img_logic, name='delete_member_profile_img'),
 
+    url(r'^update_trainer_profile_img', views.update_trainer_profile_img_logic, name='update_trainer_profile_img'),
+    url(r'^delete_trainer_profile_img', views.delete_trainer_profile_img_logic, name='delete_trainer_profile_img'),
 
     # 강사 관리 기능 ###################################################################################################
     # 진행중 회원 목록 조회 - refactoring

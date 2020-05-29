@@ -870,7 +870,8 @@ class Plan_add{
                 Plan_func.create(url, data, (received)=>{
                     let repeat_schedule_id = received.repeat_schedule_id;
                     let repeat_confirm = 1;
-                    let confirm_data = {"repeat_schedule_id":repeat_schedule_id, "repeat_confirm":repeat_confirm, "member_ids":this.data.member_id};
+                    let confirm_data = {"repeat_schedule_id":repeat_schedule_id, "repeat_confirm":repeat_confirm,
+                                        "member_ids":this.data.member_id, "trainer_id":this.data.main_trainer_id};
                     Plan_func.create(confirm_url, confirm_data, ()=>{
                         Loading.hide();
                         this.data_sending_now = false;

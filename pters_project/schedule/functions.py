@@ -593,7 +593,7 @@ def func_add_repeat_schedule(class_id, member_ticket_id, lecture_id, lecture_sch
                                                     start_time=start_time,
                                                     end_time=end_time,
                                                     state_cd=STATE_CD_NOT_PROGRESS, en_dis_type=en_dis_type,
-                                                    repeat_trainer=trainer_id,
+                                                    repeat_trainer_id=trainer_id,
                                                     reg_member_id=user_id,
                                                     mod_member_id=user_id)
 
