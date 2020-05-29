@@ -6807,7 +6807,8 @@ def attend_mode_finish_logic(request):
                                                                 schedule_info.note, schedule_info.private_note,
                                                                 ON_SCHEDULE_TYPE,
                                                                 member_id, PERMISSION_STATE_CD_APPROVE,
-                                                                STATE_CD_FINISH, UN_USE, SCHEDULE_DUPLICATION_ENABLE)
+                                                                STATE_CD_FINISH, UN_USE, SCHEDULE_DUPLICATION_ENABLE,
+                                                                schedule_info.trainer.member_id)
                             error = schedule_result['error']
 
                 else:

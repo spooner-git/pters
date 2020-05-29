@@ -802,6 +802,7 @@ class Plan_add{
         let en_dis_type = 0;
         let member_ids = [];
         let lecture_id = '';
+        let trainer_id = '';
         if(this.list_type == "closed"){
             en_dis_type = 3;
             start_dt = DateRobot.to_yyyymmdd(this.data.date.year, this.data.date.month, this.data.date.date)+ ' 00:00';
@@ -811,12 +812,15 @@ class Plan_add{
             en_dis_type = 1;
             member_ids = this.data.member_id;
             lecture_id = this.data.lecture_id[0];
+            trainer_id = this.data.main_trainer_id;
         }
         let data = {"lecture_id":lecture_id,
                     "start_dt": start_dt,
                     "end_dt": end_dt,
                     "note":this.data.memo, "private_note":this.data.private_memo, "duplication_enable_flag": 1,
-                    "en_dis_type":en_dis_type, "member_ids":member_ids,
+                    "en_dis_type":en_dis_type,
+                    "trainer_id":trainer_id,
+                    "member_ids":member_ids,
                     "extension_flag":this.data.schedule_holding_extension_flag,
                     //repeat 관련
                     "repeat_freq":"WW", 

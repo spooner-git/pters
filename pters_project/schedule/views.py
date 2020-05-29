@@ -247,6 +247,7 @@ def add_schedule_logic(request):
         extension_flag = schedule_input_form.cleaned_data['extension_flag']
         duplication_enable_flag = schedule_input_form.cleaned_data['duplication_enable_flag']
         lecture_id = schedule_input_form.cleaned_data['lecture_id']
+        trainer_id = schedule_input_form.cleaned_data['trainer_id']
         lecture_info = schedule_input_form.get_lecture_info()
         member_list = schedule_input_form.get_member_list(class_id)
 
@@ -282,7 +283,7 @@ def add_schedule_logic(request):
                                                         schedule_end_datetime, note, private_note,
                                                         en_dis_type, request.user.id,
                                                         permission_state_cd, state_cd, extension_flag,
-                                                        duplication_enable_flag)
+                                                        duplication_enable_flag, trainer_id)
                     error = schedule_result['error']
 
                     if error is None:
@@ -325,7 +326,7 @@ def add_schedule_logic(request):
                                                                     schedule_start_datetime, schedule_end_datetime,
                                                                     note, private_note, en_dis_type, request.user.id,
                                                                     permission_state_cd,
-                                                                    state_cd, UN_USE, duplication_enable_flag)
+                                                                    state_cd, UN_USE, duplication_enable_flag, trainer_id)
                                 error_temp = schedule_result['error']
                                 if error_temp is not None:
                                     raise InternalError()
@@ -1254,7 +1255,7 @@ def add_repeat_schedule_logic(request):
                                                                 private_note,
                                                                 en_dis_type, request.user.id,
                                                                 permission_state_cd,
-                                                                state_cd, extension_flag, duplication_enable_flag)
+                                                                state_cd, extension_flag, duplication_enable_flag, trainer_id)
 
                             if schedule_result['error'] is not None:
                                 error_date = str(repeat_schedule_date_info).split(' ')[0]
@@ -1461,7 +1462,7 @@ def add_repeat_schedule_confirm(request):
                                                         schedule_info.start_dt, schedule_info.end_dt,
                                                         schedule_info.note, schedule_info.private_note,
                                                         ON_SCHEDULE_TYPE, request.user.id, permission_state_cd,
-                                                        state_cd, UN_USE, SCHEDULE_DUPLICATION_ENABLE)
+                                                        state_cd, UN_USE, SCHEDULE_DUPLICATION_ENABLE, trainer_id)
 
                                                     error_temp = schedule_result['error']
 
@@ -1700,7 +1701,7 @@ def add_member_repeat_schedule_to_lecture_schedule_logic(request):
                                                         schedule_info.start_dt, schedule_info.end_dt,
                                                         schedule_info.note, schedule_info.private_note,
                                                         ON_SCHEDULE_TYPE, request.user.id, permission_state_cd,
-                                                        schedule_info.state_cd, UN_USE, SCHEDULE_DUPLICATION_ENABLE)
+                                                        schedule_info.state_cd, UN_USE, SCHEDULE_DUPLICATION_ENABLE, trainer_id)
 
                                                     error_temp = schedule_result['error']
                                                     if error_temp is None:
@@ -2597,7 +2598,7 @@ def add_member_lecture_schedule_logic(request):
                                                                schedule_info.note, schedule_info.private_note,
                                                                ON_SCHEDULE_TYPE,
                                                                request.user.id, permission_state_cd, state_cd, UN_USE,
-                                                               SCHEDULE_DUPLICATION_ENABLE)
+                                                               SCHEDULE_DUPLICATION_ENABLE, trainer_id)
                     error = schedule_result['error']
 
                 if error is not None:
@@ -2735,7 +2736,7 @@ def add_other_member_lecture_schedule_logic(request):
                                                                schedule_info.note, schedule_info.private_note,
                                                                ON_SCHEDULE_TYPE,
                                                                request.user.id, permission_state_cd, state_cd, UN_USE,
-                                                               SCHEDULE_DUPLICATION_ENABLE)
+                                                               SCHEDULE_DUPLICATION_ENABLE, trainer_id)
                     error = schedule_result['error']
 
                 if error is not None:

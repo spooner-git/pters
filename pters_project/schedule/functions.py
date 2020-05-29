@@ -290,7 +290,7 @@ def func_refresh_lecture_status(lecture_id, lecture_schedule_id, lecture_repeat_
 def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
                       lecture_info, lecture_schedule_id, start_datetime, end_datetime,
                       note, private_note, en_dis_type, user_id, permission_state_cd, state_cd, extension_flag,
-                      duplication_enable_flag):
+                      duplication_enable_flag, trainer_id):
     error = None
     context = {'error': None, 'schedule_id': ''}
     if member_ticket_id == '':

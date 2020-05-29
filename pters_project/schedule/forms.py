@@ -39,6 +39,7 @@ class AddScheduleTbForm(forms.Form):
     member_ids = forms.MultipleChoiceField(label='회원 정보', required=False)
     en_dis_type = forms.CharField(label='일정 종류', required=False)
     lecture_id = forms.IntegerField(label='수업 정보', required=False)
+    trainer_id = forms.IntegerField(label='담당 강사', required=False)
     start_dt = forms.CharField(label='시작 일시', validators=[date_time_validator], required=True)
     end_dt = forms.CharField(label='종료 일시', validators=[date_time_validator], required=True)
     note = forms.CharField(label='메모', required=False)
