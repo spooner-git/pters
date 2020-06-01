@@ -114,7 +114,7 @@
 			border-radius: 0;
 		}
 		.wrapper_reserve_form .obj_table_raw{
-			margin-bottom: 20px;
+			margin-bottom: 10px;
 		}
 		/*.wrapper_reserve_form .obj_table_cell_x2{
 			vertical-align: top;
@@ -167,12 +167,11 @@
 			}
 
 		.wrapper_reserve_form .func_radio_wrap{
-
+			border: 1px solid #e6e6e6;
 		}
 			.wrapper_reserve_form .func_radio_element{
-				height: 50px;
-				line-height: 50px;
-				border: 1px solid #e6e6e6;
+				height: 40px;
+				line-height: 40px;
 				border-radius: 0;
 				background-color: transparent;
 				margin-bottom: 10px;

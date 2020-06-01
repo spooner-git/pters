@@ -156,10 +156,14 @@
                     <div class="obj_font_size_11_weight_normal obj_font_color_light_grey" style="flex-basis:70px;">
                         <div style="height:30px;line-height:30px;">수업 종류</div>
                         <div style="height:30px;line-height:30px;">수업명</div>
+                        <div style="height:30px;line-height:30px;">담당 강사</div>
                     </div>
                     <div class="obj_font_size_14_weight_500" style="flex: 1 1 0;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
                         <div style="height:30px;line-height:30px;">{% if ticket_lecture_info.lecture_tb.lecture_type_cd == 'ONE_TO_ONE' %}개인 수업{% else %}그룹 수업{% endif %}</div>
                         <div style="height:30px;line-height:30px;overflow: hidden;text-overflow: ellipsis;">{{ ticket_lecture_info.lecture_tb.name }}</div>
+                        <div style="height:30px;line-height:30px;overflow: hidden;text-overflow: ellipsis;">
+                            <img src="{{ ticket_lecture_info.lecture_tb.main_trainer.profile_url }}" class="obj_box_photo"> {{ ticket_lecture_info.lecture_tb.main_trainer.name }}
+                        </div>
                     </div>
                 </div>
             {% endfor %}

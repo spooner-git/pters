@@ -4255,7 +4255,8 @@ class TrainerSelector{
         };
         this.data.id = this.appendix.trainer_id.slice();
         this.data.name = this.appendix.trainer_name.slice();
-
+        console.log(this.data.id);
+        console.log(this.data.name);
         this.hide_entire_trianer_list = true;
 
         this.init();
@@ -4316,7 +4317,7 @@ class TrainerSelector{
         let trainer_id = user_id;
         let trainer_name = user_name;
         let trainer_profile_url = user_profile_url;
-        let checked = this.appendix.trainer_id.indexOf(trainer_id) >= 0 ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
+        let checked = this.appendix.trainer_id == trainer_id ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
         let html = CComponent.select_trainer_row (
             this.multiple_select, checked, this.unique_instance, trainer_id, trainer_name, trainer_profile_url, this.appendix.disable_zero_avail_count, (add_or_substract)=>{
                 if(add_or_substract == "add"){
@@ -4350,7 +4351,7 @@ class TrainerSelector{
             let trainer_id = data.trainer_id;
             let trainer_name = data.trainer_name;
             let trainer_profile_url = data.trainer_profile_url;
-            let checked = this.appendix.trainer_id.indexOf(trainer_id) >= 0 ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
+            let checked = this.appendix.trainer_id == trainer_id ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
             let html = CComponent.select_trainer_row (
                 this.multiple_select, checked, this.unique_instance, trainer_id, trainer_name, trainer_profile_url, this.appendix.disable_zero_avail_count, (add_or_substract)=>{
                     if(add_or_substract == "add"){

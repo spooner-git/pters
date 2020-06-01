@@ -1228,6 +1228,8 @@ def func_get_ticket_info(class_id, ticket_id, user_id):
     ticket_lecture_ing_font_color_cd_list = []
     ticket_lecture_end_color_cd_list = []
     ticket_lecture_end_font_color_cd_list = []
+    ticket_lecture_main_trainer_id_list = []
+    ticket_lecture_main_trainer_name_list = []
     ticket_tb = None
     all_member_ticket_list = None
     ticket_member_num_name = 'ticket_ing_member_num'
@@ -1242,6 +1244,8 @@ def func_get_ticket_info(class_id, ticket_id, user_id):
             ticket_lecture_ing_font_color_cd_list.append(lecture_tb.ing_font_color_cd)
             ticket_lecture_end_color_cd_list.append(lecture_tb.end_color_cd)
             ticket_lecture_end_font_color_cd_list.append(lecture_tb.end_font_color_cd)
+            ticket_lecture_main_trainer_id_list.append(lecture_tb.main_trainer_id)
+            ticket_lecture_main_trainer_name_list.append(lecture_tb.main_trainer.name)
 
     if ticket_tb is None:
         try:
@@ -1298,6 +1302,8 @@ def func_get_ticket_info(class_id, ticket_id, user_id):
                        'ticket_lecture_ing_font_color_cd_list': ticket_lecture_ing_font_color_cd_list,
                        'ticket_lecture_end_color_cd_list': ticket_lecture_end_color_cd_list,
                        'ticket_lecture_end_font_color_cd_list': ticket_lecture_end_font_color_cd_list,
+                       'ticket_lecture_main_trainer_id_list': ticket_lecture_main_trainer_id_list,
+                       'ticket_lecture_main_trainer_name_list': ticket_lecture_main_trainer_name_list,
                        ticket_member_num_name: len(member_list),
                        'ticket_member_list': member_list}
     else:
