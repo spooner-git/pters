@@ -136,6 +136,8 @@ class Statistics{
         let html;
         if(this.tab == "sales"){
             html = this.dom_row_sales_summary() + this.dom_row_sales_graph() + this.dom_row_sales_list();
+        }else if(this.tab == "trainer"){
+            html = this.dom_trainer_lesson_complete_status_graph();
         }else if(this.tab == "member"){
             html = this.dom_row_member_summary() + this.dom_reg_status_graph() + this.dom_refund_status_graph() + this.dom_contract_status_graph() + this.dom_lesson_complete_status_graph();
         }
@@ -145,7 +147,15 @@ class Statistics{
 
     dom_row_toolbox(){
         let title = "매출 통계";
-        let title2 = "회원 통계";
+        let title2 = "강사 통계";
+        let title3 = "회원 통계";
+        let select_title = title;
+        if(this.tab == "trainer"){
+            select_title = title2;
+        }
+        else if(this.tab == "member"){
+            select_title = title3;
+        }
         let html = `
                     <div class="lecture_view_upper_box">
                         <div style="display:inline-block;">
@@ -153,10 +163,14 @@ class Statistics{
                                 ${title}
                             </span>
                             <div style="display:inline-block;background-color:var(--bg-light);width:2px;height:16px;margin:0 10px;"></div>
-                            <span class="sales_type_select_text_button" style="color:${this.tab=="member" ? "var(--font-main)" :"var(--font-inactive)"}" onclick="statistics_popup.switch('member')">
+                            <span class="sales_type_select_text_button" style="color:${this.tab=="trainer" ? "var(--font-main)" :"var(--font-inactive)"}" onclick="statistics_popup.switch('trainer')">
                                 ${title2}
                             </span>
-                            <span style="display:none">${this.tab=="sales"? "매출 통계" : "회원 통계"}</span>
+                            <div style="display:inline-block;background-color:var(--bg-light);width:2px;height:16px;margin:0 10px;"></div>
+                            <span class="sales_type_select_text_button" style="color:${this.tab=="member" ? "var(--font-main)" :"var(--font-inactive)"}" onclick="statistics_popup.switch('member')">
+                                ${title3}
+                            </span>
+                            <span style="display:none">${select_title}</span>
                         </div>
                     </div>
                     `;
@@ -266,6 +280,15 @@ class Statistics{
     }
 
     dom_lesson_complete_status_graph(){
+        let html = `<section style="width:95%;text-align:center;margin:0 auto;box-sizing:border-box;border-bottom:var(--border-article);padding:30px 0">
+                        <div style="font-size:15px;font-weight:500;letter-spacing:-0.7px;color:var(--font-sub-dark);">월별 일정 완료 현황</div>
+                        <div style="font-size:11px;font-weight:500;letter-spacing:-0.5px;color:var(--font-sub-normal);">(단위 / 건)</div>
+                        <div id="lesson_complete_status_graph"></div>
+                    </section>`;
+        return html;
+    }
+
+    dom_trainer_lesson_complete_status_graph(){
         let html = `<section style="width:95%;text-align:center;margin:0 auto;box-sizing:border-box;border-bottom:var(--border-article);padding:30px 0">
                         <div style="font-size:15px;font-weight:500;letter-spacing:-0.7px;color:var(--font-sub-dark);">월별 일정 완료 현황</div>
                         <div style="font-size:11px;font-weight:500;letter-spacing:-0.5px;color:var(--font-sub-normal);">(단위 / 건)</div>

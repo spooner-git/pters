@@ -483,7 +483,7 @@ class Trainer_auth_func{
     static update(data, callback, error_callback){
         //업무 시간 설정
         $.ajax({
-            url:"/trainer/add_trainer_program_info/",
+            url:"/trainer/update_trainer_program_info/",
             type:'POST',
             data: data,
             dataType : 'JSON',

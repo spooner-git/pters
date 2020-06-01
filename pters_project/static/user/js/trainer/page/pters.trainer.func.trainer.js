@@ -356,11 +356,11 @@ class Trainer{
                                     </div>
                                     <div class="search_bar"></div>
                                     <div class="trainer_bottom_tools_wrap" style="padding: 6px 16px;">
-                                        <div class="list_type_tab_wrap">
-                                            <div onclick="${this.instance}.switch_type('ing');" class="list_tab_content ${this.list_type == "ing" ? "tab_selected": ""}">진행중</div>
-                                            <div class="list_tab_divider"></div>
-                                            <div onclick="${this.instance}.switch_type('end');" class="list_tab_content ${this.list_type == "end" ? "tab_selected" : ""}">종료</div>
-                                        </div>
+<!--                                        <div class="list_type_tab_wrap">-->
+<!--                                            <div onclick="${this.instance}.switch_type('ing');" class="list_tab_content ${this.list_type == "ing" ? "tab_selected": ""}">진행중</div>-->
+<!--                                            <div class="list_tab_divider"></div>-->
+<!--                                            <div onclick="${this.instance}.switch_type('end');" class="list_tab_content ${this.list_type == "end" ? "tab_selected" : ""}">종료</div>-->
+<!--                                        </div>-->
                                         <div class="list_sort_select_wrap" 
                                         onclick="layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_OPTION_SELECTOR}', 100*(${layer_popup_height})/${root_content_height}, ${POPUP_FROM_BOTTOM}, null, ()=>{
                                             option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, ${user_option}
@@ -1086,6 +1086,7 @@ class Trainer_func{
             }
         });
     }
+
     static lecture_list(data, callback, error_callback){
         //데이터 형태 {"trainer_id":""};
         $.ajax({
@@ -1130,6 +1131,7 @@ class Trainer_func{
             }
         });
     }
+
     static closed_date_list(data, callback, error_callback){
         //데이터 형태 {"trainer_id":""};
         $.ajax({

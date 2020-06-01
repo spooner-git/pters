@@ -1361,6 +1361,7 @@ def func_get_lecture_info(class_id, lecture_id, user_id):
         else:
             main_trainer_id = lecture_tb.main_trainer_id
             main_trainer_name = lecture_tb.main_trainer.name
+
         lecture_info = {'lecture_id': str(lecture_id), 'lecture_name': lecture_tb.name, 'lecture_note': lecture_tb.note,
                         'lecture_state_cd': lecture_tb.state_cd, 'lecture_max_num': lecture_tb.member_num,
                         # 'lecture_max_member_num_view_flag': lecture_tb.member_num_view_flag,

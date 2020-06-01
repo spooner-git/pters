@@ -1194,6 +1194,7 @@ class Lecture_simple_view{
 
         this.data = {
                 name:null,
+                main_trainer_name:null,
                 time:null,
                 capacity:null,
                 member_number:null,
@@ -1221,6 +1222,7 @@ class Lecture_simple_view{
     set_initial_data (){
         Lecture_func.read({"lecture_id": this.lecture_id}, (data)=>{
             this.data.name = data.lecture_name;
+            this.data.main_trainer_name = data.lecture_main_trainer_name;
             this.data.capacity = data.lecture_max_num;
             this.data.member_number = data.lecture_ing_member_num;
             this.data.member = data.lecture_member_list;
@@ -1259,11 +1261,12 @@ class Lecture_simple_view{
     dom_assembly_content(){
         // let time = this.dom_row_lecture_time_input(); //수업 진행시간
         // let name = this.dom_row_lecture_name_input();
+        let main_trainer_name = this.dom_row_main_trainer_view();
         let capacity = this.dom_row_capacity_view();
         let color = this.dom_row_color_view();
         let member = this.dom_row_member();
 
-        let html =  '<div class="obj_box_full">'+capacity+color+member+'</div>';
+        let html =  '<div class="obj_box_full">'+main_trainer_name+capacity+color+member+'</div>';
 
         return html;
     }
@@ -1308,6 +1311,23 @@ class Lecture_simple_view{
         return html;
     }
 
+    dom_row_main_trainer_view(){
+        let id = 'lecture_main_trainer_view';
+        let title = this.data.main_trainer_name == null ? '' : this.data.main_trainer_name;
+        let icon = DELETE;
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
+        let style = {"flex":"1 1 0"};
+        let html_data = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+        });
+
+        let html = `<div style="display:flex;">
+                        <div style="flex-basis:68px;font-size:11px;font-weight:500;letter-spacing:-0.5px;color:var(--font-inactive);line-height:24px;padding:12px 0;">담당 강사</div>
+                        ${html_data}
+                    </div>`;
+
+        return html;
+    }
     dom_row_capacity_view(){
         let id = 'lecture_capacity_view';
         let title = this.data.capacity == null ? '' : +this.data.capacity+' 명';

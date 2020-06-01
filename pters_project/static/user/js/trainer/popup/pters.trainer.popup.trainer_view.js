@@ -6,6 +6,7 @@ class Trainer_view{
         this.form_id = 'id_trainer_view_form';
 
         this.if_user_changed_any_information = false;
+        this.if_user_changed_auth_any_information = false;
 
         let d = new Date();
         this.dates = {
@@ -33,6 +34,54 @@ class Trainer_view{
             active: null,
             repeat: [],
             lecture: []
+            // auth: null
+        };
+        this.data.auth  = {
+                schedule:{
+                    create:OFF,
+                    read:OFF,
+                    update:OFF,
+                    delete:OFF
+                },
+                member:{
+                    create:OFF,
+                    read:OFF,
+                    update:OFF,
+                    delete:OFF
+                },
+                lecture:{
+                    create:OFF,
+                    read:OFF,
+                    update:OFF,
+                    delete:OFF
+                },
+                ticket:{
+                    create:OFF,
+                    read:OFF,
+                    update:OFF,
+                    delete:OFF
+                },
+                trainer:{
+                    create:OFF,
+                    read:OFF,
+                    update:OFF,
+                    delete:OFF
+                },
+                notice:{
+                    create:OFF,
+                    read:OFF,
+                    update:OFF,
+                    delete:OFF
+                },
+                statistics:{
+                    read : OFF
+                },
+                setting:{
+                    create:OFF,
+                    read:OFF,
+                    update:OFF,
+                    delete:OFF
+                },
         };
 
         //팝업의 날짜, 시간등의 입력란을 미리 외부에서 온 데이터로 채워서 보여준다.
@@ -111,20 +160,63 @@ class Trainer_view{
             this.data.active = data.trainer_is_active;
             this.data.email = data.trainer_email;
             this.data.profile_img = data.trainer_profile_url;
+            Trainer_auth_func.read({"trainer_id":this.trainer_id}, (data)=>{
+                let my_auth = data[this.trainer_id];
+                console.log(my_auth);
+                if(my_auth != undefined){
+                    this.data.auth.schedule.create = my_auth.auth_plan_create != undefined ? my_auth.auth_plan_create : OFF;
+                    this.data.auth.schedule.read = my_auth.auth_plan_read != undefined ? my_auth.auth_plan_read : OFF;
+                    this.data.auth.schedule.update = my_auth.auth_plan_update != undefined ? my_auth.auth_plan_update : OFF;
+                    this.data.auth.schedule.delete = my_auth.auth_plan_delete != undefined ? my_auth.auth_plan_delete : OFF;
 
-            Trainer_func.repeat_list(
-                {"trainer_id":this.trainer_id}, (data)=>{
-                    let repeat_list = data.trainer_repeat_schedule_data; //array
+                    this.data.auth.member.create = my_auth.auth_member_create != undefined ? my_auth.auth_member_create : OFF;
+                    this.data.auth.member.read = my_auth.auth_member_read != undefined ? my_auth.auth_member_read : OFF;
+                    this.data.auth.member.update = my_auth.auth_member_update != undefined ? my_auth.auth_member_update : OFF;
+                    this.data.auth.member.delete = my_auth.auth_member_delete != undefined ? my_auth.auth_member_delete : OFF;
 
-                    this.data.repeat = repeat_list;
+                    this.data.auth.lecture.create = my_auth.auth_group_create != undefined ? my_auth.auth_group_create : OFF;
+                    this.data.auth.lecture.read = my_auth.auth_group_read != undefined ? my_auth.auth_group_read : OFF;
+                    this.data.auth.lecture.update = my_auth.auth_group_update != undefined ? my_auth.auth_group_update : OFF;
+                    this.data.auth.lecture.delete = my_auth.auth_group_delete != undefined ? my_auth.auth_group_delete : OFF;
 
-                    Trainer_func.lecture_list(
-                        {"trainer_id":this.trainer_id}, (data)=> {
-                            this.data.lecture = data.trainer_lecture_data;
-                            this.render();
-                        });
+                    this.data.auth.ticket.create = my_auth.auth_package_create != undefined ? my_auth.auth_package_create : OFF;
+                    this.data.auth.ticket.read = my_auth.auth_package_read != undefined ? my_auth.auth_package_read : OFF;
+                    this.data.auth.ticket.update = my_auth.auth_package_update != undefined ? my_auth.auth_package_update : OFF;
+                    this.data.auth.ticket.delete = my_auth.auth_package_delete != undefined ? my_auth.auth_package_delete : OFF;
+
+                    this.data.auth.trainer.create = my_auth.auth_trainer_create != undefined ? my_auth.auth_trainer_create : OFF;
+                    this.data.auth.trainer.read = my_auth.auth_trainer_read != undefined ? my_auth.auth_trainer_read : OFF;
+                    this.data.auth.trainer.update = my_auth.auth_trainer_update != undefined ? my_auth.auth_trainer_update : OFF;
+                    this.data.auth.trainer.delete = my_auth.auth_trainer_delete != undefined ? my_auth.auth_trainer_delete : OFF;
+
+                    this.data.auth.notice.create = my_auth.auth_notice_create != undefined ? my_auth.auth_notice_create : OFF;
+                    this.data.auth.notice.read = my_auth.auth_notice_read != undefined ? my_auth.auth_notice_read : OFF;
+                    this.data.auth.notice.update = my_auth.auth_notice_update != undefined ? my_auth.auth_notice_update : OFF;
+                    this.data.auth.notice.delete = my_auth.auth_notice_delete != undefined ? my_auth.auth_notice_delete : OFF;
+
+                    this.data.auth.statistics.read = my_auth.auth_analytics_read != undefined ? my_auth.auth_analytics_read : OFF;
+
+                    this.data.auth.setting.create = my_auth.auth_setting_create != undefined ? my_auth.auth_setting_create : OFF;
+                    this.data.auth.setting.read = my_auth.auth_setting_read != undefined ? my_auth.auth_setting_read : OFF;
+                    this.data.auth.setting.update = my_auth.auth_setting_update != undefined ? my_auth.auth_setting_update : OFF;
+                    this.data.auth.setting.delete = my_auth.auth_setting_delete != undefined ? my_auth.auth_setting_delete : OFF;
+
                 }
-            );
+                Trainer_func.repeat_list(
+                    {"trainer_id":this.trainer_id}, (data)=>{
+                        let repeat_list = data.trainer_repeat_schedule_data; //array
+
+                        this.data.repeat = repeat_list;
+
+                        Trainer_func.lecture_list(
+                            {"trainer_id":this.trainer_id}, (data)=> {
+                                this.data.lecture = data.trainer_lecture_data;
+                                this.render();
+                            });
+                    }
+                );
+
+            });
         });
     }
 
@@ -179,6 +271,7 @@ class Trainer_view{
         let sex = this.dom_row_trainer_sex_input();
         let repeat = this.dom_row_repeat();
         let lecture = this.dom_row_lecture();
+        let auth = this.dom_row_auth();
         // let memo = this.dom_row_trainer_memo_input();
         let tag_id = this.data.active == 'True' || this.data.active == null ? '아이디' : '아이디 <span style="color:var(--font-highlight);margin-left:3px;">(임시아이디, 비밀번호 0000)</span>';
 
@@ -190,16 +283,22 @@ class Trainer_view{
                 + CComponent.dom_tag('성별') + sex +
             '</div>';
 
-        let tab_repeat_info = 
-            '<div class="obj_input_box_full" style="padding-right:18px">' +
-                // CComponent.dom_tag('반복 일정', {"padding-left":"0"}) + 
-                repeat +
-            '</div>';
-
         let tab_lecture_info =
             '<div class="obj_input_box_full" style="padding-right:18px">' +
                 // CComponent.dom_tag('반복 일정', {"padding-left":"0"}) +
                 lecture +
+            '</div>';
+
+        let tab_repeat_info =
+            '<div class="obj_input_box_full" style="padding-right:18px">' +
+                // CComponent.dom_tag('반복 일정', {"padding-left":"0"}) +
+                repeat +
+            '</div>';
+
+        let tab_auth_info =
+            '<div class="obj_input_box_full" style="padding-right:18px">' +
+                // CComponent.dom_tag('반복 일정', {"padding-left":"0"}) +
+                auth +
             '</div>';
 
         let selected_tab;
@@ -209,6 +308,8 @@ class Trainer_view{
             selected_tab = tab_repeat_info;
         }else if(this.list_type == "lecture_info"){
             selected_tab = tab_lecture_info;
+        }else if(this.list_type == "auth_info"){
+            selected_tab = tab_auth_info;
         }
 
         let html =
@@ -269,6 +370,7 @@ class Trainer_view{
             ${CComp.element("div", "기본 정보", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_basic_info", class:`list_tab_content ${this.list_type == "basic_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("basic_info");}})}
             ${CComp.element("div", "담당 수업", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_lecture_info", class:`list_tab_content ${this.list_type == "lecture_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("lecture_info");}})}
             ${CComp.element("div", "일정", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_repeat_info", class:`list_tab_content ${this.list_type == "repeat_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("repeat_info");}})}
+            ${CComp.element("div", "권한", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_auth_info", class:`list_tab_content ${this.list_type == "auth_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("auth_info");}})}
         </div>`;
         return html;
     }
@@ -290,6 +392,11 @@ class Trainer_view{
 
             case "repeat_info":
                 this.list_type = "repeat_info";
+                this.render();
+            break;
+
+            case "auth_info":
+                this.list_type = "auth_info";
                 this.render();
             break;
 
@@ -687,18 +794,208 @@ class Trainer_view{
         return html;
     }
 
+    dom_row_auth(){
+        return this.dom_row_auth_item();
+    }
+
+
+    dom_row_auth_item(){
+        let schedule = this.dom_sub_assembly_schedule();
+        let member = this.dom_sub_assembly_member();
+        let lecture = this.dom_sub_assembly_lecture();
+        let ticket = this.dom_sub_assembly_ticket();
+        let trainer = this.dom_sub_assembly_trainer();
+        let notice = this.dom_sub_assembly_notice();
+        let statistics = this.dom_sub_assembly_statistics();
+        let settings = this.dom_sub_assembly_setting();
+
+        let html = schedule + member + lecture + ticket + trainer + notice + statistics + settings;
+
+        return html;
+    }
+
+    dom_sub_assembly_schedule(){
+        let schedule = this.dom_row_share_menu_title("일정", "schedule");
+        let schedule_auth_create = this.dom_row_share_menu_auth_toggle("일정", "등록", "schedule", "create");
+        let schedule_auth_read = this.dom_row_share_menu_auth_toggle("일정", "조회", "schedule", "read");
+        let schedule_auth_update = this.dom_row_share_menu_auth_toggle("일정", "수정", "schedule", "update");
+        let schedule_auth_delete = this.dom_row_share_menu_auth_toggle("일정", "삭제", "schedule", "delete");
+
+        let child_assemble = this.data.auth.schedule.read == ON ? schedule_auth_read + schedule_auth_create + schedule_auth_update + schedule_auth_delete : "";
+
+        let html = `<article class="obj_input_box_full">` +
+                        schedule + child_assemble +
+                    `</article>`;
+        return html;
+    }
+
+    dom_sub_assembly_member(){
+        let member = this.dom_row_share_menu_title("회원", "member");
+        let member_auth_create = this.dom_row_share_menu_auth_toggle("회원", "등록", "member", "create");
+        let member_auth_read = this.dom_row_share_menu_auth_toggle("회원", "조회", "member", "read");
+        let member_auth_update = this.dom_row_share_menu_auth_toggle("회원", "수정", "member", "update");
+        let member_auth_delete = this.dom_row_share_menu_auth_toggle("회원", "삭제", "member", "delete");
+
+        let child_assemble = this.data.auth.member.read == ON ? member_auth_read + member_auth_create +  member_auth_update + member_auth_delete : "";
+
+        let html = `<article class="obj_input_box_full">` +
+                        member + child_assemble +
+                    `</article>`;
+        return html;
+    }
+
+    dom_sub_assembly_lecture(){
+        let lecture = this.dom_row_share_menu_title("수업", "lecture");
+        let lecture_auth_create = this.dom_row_share_menu_auth_toggle("수업", "등록", "lecture", "create");
+        let lecture_auth_read = this.dom_row_share_menu_auth_toggle("수업", "조회", "lecture", "read");
+        let lecture_auth_update = this.dom_row_share_menu_auth_toggle("수업", "수정", "lecture", "update");
+        let lecture_auth_delete = this.dom_row_share_menu_auth_toggle("수업", "삭제", "lecture", "delete");
+
+        let child_assemble = this.data.auth.lecture.read == ON ? lecture_auth_read + lecture_auth_create + lecture_auth_update + lecture_auth_delete : "";
+
+        let html = `<article class="obj_input_box_full">` +
+                        lecture + child_assemble +
+                    `</article>`;
+        return html;
+    }
+
+    dom_sub_assembly_ticket(){
+        let ticket = this.dom_row_share_menu_title("수강권", "ticket");
+        let ticket_auth_create = this.dom_row_share_menu_auth_toggle("수강권", "등록", "ticket", "create");
+        let ticket_auth_read = this.dom_row_share_menu_auth_toggle("수강권", "조회", "ticket", "read");
+        let ticket_auth_update = this.dom_row_share_menu_auth_toggle("수강권", "수정", "ticket", "update");
+        let ticket_auth_delete = this.dom_row_share_menu_auth_toggle("수강권", "삭제", "ticket", "delete");
+
+        let child_assemble = this.data.auth.ticket.read == ON ? ticket_auth_read + ticket_auth_create +  ticket_auth_update + ticket_auth_delete : "";
+
+        let html = `<article class="obj_input_box_full">` +
+                        ticket + child_assemble +
+                    `</article>`;
+        return html;
+    }
+
+    dom_sub_assembly_trainer(){
+        let trainer = this.dom_row_share_menu_title("강사", "trainer");
+        let trainer_auth_create = this.dom_row_share_menu_auth_toggle("강사", "등록", "ticket", "create");
+        let trainer_auth_read = this.dom_row_share_menu_auth_toggle("강사", "조회", "ticket", "read");
+        let trainer_auth_update = this.dom_row_share_menu_auth_toggle("강사", "수정", "ticket", "update");
+        let trainer_auth_delete = this.dom_row_share_menu_auth_toggle("강사", "삭제", "ticket", "delete");
+
+        let child_assemble = this.data.auth.trainer.read == ON ? trainer_auth_read + trainer_auth_create +  trainer_auth_update + trainer_auth_delete : "";
+
+        let html = `<article class="obj_input_box_full">` +
+                        trainer + child_assemble +
+                    `</article>`;
+        return html;
+    }
+
+    dom_sub_assembly_notice(){
+        let notice = this.dom_row_share_menu_title("공지사항", "notice");
+        let notice_auth_create = this.dom_row_share_menu_auth_toggle("공지사항", "등록", "notice", "create");
+        let notice_auth_read = this.dom_row_share_menu_auth_toggle("공지사항", "조회", "notice", "read");
+        let notice_auth_update = this.dom_row_share_menu_auth_toggle("공지사항", "수정", "notice", "update");
+        let notice_auth_delete = this.dom_row_share_menu_auth_toggle("공지사항", "삭제", "notice", "delete");
+
+        let child_assemble = this.data.auth.notice.read == ON ? notice_auth_read + notice_auth_create +  notice_auth_update + notice_auth_delete : "";
+
+        let html = `<article class="obj_input_box_full">` +
+                        notice + child_assemble +
+                    `</article>`;
+        return html;
+    }
+
+    dom_sub_assembly_statistics(){
+        let statistics = this.dom_row_share_menu_title("통계", "statistics");
+        let statistics_auth_read = this.dom_row_share_menu_auth_toggle("통계", "보기", "statistics", "read");
+
+        let child_assemble = this.data.auth.statistics.read == ON ? statistics_auth_read : "";
+
+        let html = `<article class="obj_input_box_full">` +
+                        statistics + child_assemble +
+                    `</article>`;
+        return html;
+    }
+
+    dom_sub_assembly_setting(){
+        let setting = this.dom_row_share_menu_title("설정", "setting");
+        // let setting_auth_create = this.dom_row_share_menu_auth_toggle("설정", "등록", "setting", "create");
+        let setting_auth_read = this.dom_row_share_menu_auth_toggle("설정", "조회", "setting", "read");
+        let setting_auth_update = this.dom_row_share_menu_auth_toggle("설정", "수정", "setting", "update");
+        // let setting_auth_delete = this.dom_row_share_menu_auth_toggle("설정", "삭제", "setting", "delete");
+
+        let child_assemble = this.data.auth.setting.read == ON ? setting_auth_read + setting_auth_update  : "";
+
+        let html = `<article class="obj_input_box_full">` +
+                        setting + child_assemble +
+                    `</article>`;
+        return html;
+    }
+
+    dom_row_share_menu_title(menu, menu_en){
+        let id_toggle = `menu_auth_parent_${menu_en}`;
+        let power = this.data.auth[menu_en]["read"];
+        let style_toggle = {"float":"right"};
+        let menu_lock_goggle = CComponent.toggle_button (id_toggle, power, style_toggle, (data)=>{
+                                for(let item in this.data.auth[menu_en]){
+                                    this.data.auth[menu_en][item] = data;
+                                }
+                                this.if_user_changed_auth_any_information = true;
+                                this.render_content();
+                            });
+
+
+        let id = `share_menu_name_${menu_en}`;
+        let title_description = `<p style="font-size:12px;font-weight:500;margin:0;color:var(--font-sub-normal)">${menu} 메뉴에 관련된 권한 설정입니다.</p>`;
+        // let title = `<div style="padding-right:5px;">${menu} ${menu_lock_goggle}</div> ${title_description}`;
+        let title = `<div style="padding-right:5px;">${menu} ${menu_lock_goggle}</div>`;
+        let icon = DELETE;
+        let icon_r_visible = NONE;
+        let icon_r_text = "";
+        let style = {"cursor":"unset", "height":"auto"};
+        let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+
+        });
+        let html = row;
+        return html;
+    }
+
+    dom_row_share_menu_auth_toggle(menu, auth, menu_en, auth_en){
+        let id = `menu_auth_${menu_en}_${auth_en}`;
+        let power = this.data.auth[menu_en][auth_en];
+        let style = {"transform":"scale(0.8)"};
+        let menu_lock_goggle = CComponent.toggle_button (id, power, style, (data)=>{
+                                this.data.auth[menu_en][auth_en] = data; // ON or OFF
+                                this.if_user_changed_auth_any_information = true;
+                                this.render_content();
+                            });
+        let icon = power == ON ? CImg.unlock("", {"vertical-align":"middle", "margin-bottom":"3px", "width":"20px"}) : CImg.lock("", {"vertical-align":"middle", "margin-bottom":"3px", "width":"20px"});
+        let title = `${icon} ${auth}`;
+        let title_row = CComponent.text_button (`${menu_en}_${auth_en}_toggle`, title, {"font-size":"14px", "font-weight":"500", "letter-spacing":"-0.8px"}, ()=>{});
+        let html = `<article class="setting_menu_auth_toggle_wrapper obj_input_box_full">
+                        <div style="display:table;width:100%;">
+                            <div style="display:table-cell;width:auto;vertical-align:middle">${title_row}</div>
+                            <div style="display:table-cell;width:50px;vertical-align:middle">${menu_lock_goggle}</div>
+                        </div>
+                    </article>`;
+        return html;
+    }
     event_view_lecture(lecture_id){
         let auth_inspect = pass_inspector.lecture_read();
         if(auth_inspect.barrier == BLOCKED){
             let message = `${auth_inspect.limit_type}`;
+            this.init();
             show_error_message({title:message});
             return false;
         }
-
-        let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
-        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_VIEW, 100, popup_style, {'lecture_id':lecture_id}, ()=>{
-            lecture_view_popup = new Lecture_view('.popup_lecture_view', lecture_id, 'lecture_view_popup');
+        let root_content_height = $root_content.height();
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SIMPLE_VIEW, 100*(300/root_content_height), POPUP_FROM_BOTTOM, {'lecture_id':lecture_id}, ()=>{
+            lecture_simple_view_popup = new Lecture_simple_view('.popup_lecture_simple_view', lecture_id, 'lecture_simple_view_popup');
+            //수업 간단 정보 팝업 열기
         });
+        // let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+        // layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_VIEW, 100, popup_style, {'lecture_id':lecture_id}, ()=>{
+        //     lecture_view_popup = new Lecture_view('.popup_lecture_view', lecture_id, 'lecture_view_popup');
+        // });
     }
 
     event_edit_photo(edit_enable){
@@ -813,19 +1110,84 @@ class Trainer_view{
                     "sex":this.data.sex == null ? "" : this.data.sex,
                     // "note":this.data.memo,
         };
-        Trainer_func.update(data, ()=>{
-            this.set_initial_data();
-            if(success_callback != undefined){
-                success_callback();
-            }
-            try{
-                current_page.reset();
-            }catch(e){}
-        });
+
+        let data_for_auth = {
+            "trainer_id":this.trainer_id,
+            "auth_plan_create":this.data.auth.schedule.create,
+            "auth_plan_read":this.data.auth.schedule.read,
+            "auth_plan_update":this.data.auth.schedule.update,
+            "auth_plan_delete":this.data.auth.schedule.delete,
+
+            "auth_member_create":this.data.auth.member.create,
+            "auth_member_read":this.data.auth.member.read,
+            "auth_member_update":this.data.auth.member.update,
+            "auth_member_delete":this.data.auth.member.delete,
+
+            "auth_group_create":this.data.auth.lecture.create,
+            "auth_group_read":this.data.auth.lecture.read,
+            "auth_group_update":this.data.auth.lecture.update,
+            "auth_group_delete":this.data.auth.lecture.delete,
+
+            "auth_package_create":this.data.auth.ticket.create,
+            "auth_package_read":this.data.auth.ticket.read,
+            "auth_package_update":this.data.auth.ticket.update,
+            "auth_package_delete":this.data.auth.ticket.delete,
+
+            "auth_trainer_create":this.data.auth.trainer.create,
+            "auth_trainer_read":this.data.auth.trainer.read,
+            "auth_trainer_update":this.data.auth.trainer.update,
+            "auth_trainer_delete":this.data.auth.trainer.delete,
+
+            "auth_notice_create":this.data.auth.notice.create,
+            "auth_notice_read":this.data.auth.notice.read,
+            "auth_notice_update":this.data.auth.notice.update,
+            "auth_notice_delete":this.data.auth.notice.delete,
+
+            "auth_analytics_read":this.data.auth.statistics.read,
+
+            "auth_setting_read":this.data.auth.setting.read,
+            "auth_setting_update":this.data.auth.setting.update,
+        };
+        if(this.if_user_changed_any_information==true && this.if_user_changed_auth_any_information==true){
+            Trainer_func.update(data, ()=>{
+                Trainer_auth_func.update(data_for_auth, ()=>{
+                    this.set_initial_data();
+                    if(success_callback != undefined){
+                        success_callback();
+                    }
+                    try{
+                        current_page.reset();
+                    }catch(e){}
+                });
+            });
+        }
+        else if(this.if_user_changed_any_information==true && this.if_user_changed_auth_any_information!=true){
+            Trainer_func.update(data, ()=>{
+                this.set_initial_data();
+                if(success_callback != undefined){
+                    success_callback();
+                }
+                try{
+                    current_page.reset();
+                }catch(e){}
+            });
+        }
+        else if(this.if_user_changed_any_information!=true && this.if_user_changed_auth_any_information==true){
+            Trainer_auth_func.update(data_for_auth, ()=>{
+                this.set_initial_data();
+                if(success_callback != undefined){
+                    success_callback();
+                }
+                try{
+                    current_page.reset();
+                }catch(e){}
+            });
+        }
+
     }
 
     upper_left_menu(){
-        if(this.if_user_changed_any_information == true){
+        if(this.if_user_changed_any_information == true || this.if_user_changed_auth_any_information == true){
             let inspect = pass_inspector.trainer_update();
             if(inspect.barrier == BLOCKED){
                 let message = `${inspect.limit_type}`;
