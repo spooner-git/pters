@@ -162,10 +162,10 @@ class Statistics{
                             <span class="sales_type_select_text_button" style="color:${this.tab=="sales" ? "var(--font-main)" :"var(--font-inactive)"}" onclick="statistics_popup.switch('sales')">
                                 ${title}
                             </span>
-                            <div style="display:inline-block;background-color:var(--bg-light);width:2px;height:16px;margin:0 10px;"></div>
-                            <span class="sales_type_select_text_button" style="color:${this.tab=="trainer" ? "var(--font-main)" :"var(--font-inactive)"}" onclick="statistics_popup.switch('trainer')">
-                                ${title2}
-                            </span>
+                            <!--<div style="display:inline-block;background-color:var(--bg-light);width:2px;height:16px;margin:0 10px;"></div>-->
+                            <!-- <span class="sales_type_select_text_button" style="color:${this.tab=="trainer" ? "var(--font-main)" :"var(--font-inactive)"}" onclick="statistics_popup.switch('trainer')">-->
+                            <!--     ${title2}-->
+                            <!-- </span>-->
                             <div style="display:inline-block;background-color:var(--bg-light);width:2px;height:16px;margin:0 10px;"></div>
                             <span class="sales_type_select_text_button" style="color:${this.tab=="member" ? "var(--font-main)" :"var(--font-inactive)"}" onclick="statistics_popup.switch('member')">
                                 ${title3}
