@@ -50,7 +50,8 @@ from schedule.functions import func_refresh_member_ticket_count, func_get_traine
     func_get_lecture_schedule_all, func_get_member_schedule_all_by_member_ticket, \
     func_get_member_schedule_all_by_schedule_dt, func_get_member_schedule_all_by_monthly, \
     func_get_permission_wait_schedule_all, func_add_schedule, func_send_push_notice, func_get_member_ticket_id_old, \
-    func_get_repeat_schedule_date_list
+    func_get_repeat_schedule_date_list, func_get_lecture_trainer_schedule_all_by_schedule_dt, \
+    func_get_lecture_trainer_schedule_all_by_monthly
 from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb, ScheduleAlarmTb
 from stats.functions import get_sales_data
 from trainee.models import MemberTicketTb, MemberClosedDateHistoryTb
@@ -262,6 +263,31 @@ class GetMemberScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
             elif str(sort) == str(SORT_MEMBER_TICKET):
                 ordered_schedule_dict = func_get_member_schedule_all_by_member_ticket(class_id, member_id, page)
                 # context['test'] = ordered_schedule_dict
+        else:
+            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+            messages.error(request, error)
+        # return render(request, self.template_name, context)
+        return JsonResponse(ordered_schedule_dict, json_dumps_params={'ensure_ascii': True})
+
+
+class GetLectureTrainerScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
+    # template_name = 'test.html'
+    def get(self, request):
+        class_id = self.request.session.get('class_id', '')
+        trainer_id = request.GET.get('trainer_id', '')
+        page = request.GET.get('page', 1)
+        sort = request.GET.get('sort_val', SORT_SCHEDULE_DT)
+        error = None
+        ordered_schedule_dict = collections.OrderedDict()
+
+        if trainer_id == '':
+            error = '강사 정보를 불러오지 못했습니다.'
+        # context = {}
+        if error is None:
+            if str(sort) == str(SORT_SCHEDULE_DT):
+                ordered_schedule_dict = func_get_lecture_trainer_schedule_all_by_schedule_dt(class_id, trainer_id, page)
+            elif str(sort) == str(SORT_SCHEDULE_MONTHLY):
+                ordered_schedule_dict = func_get_lecture_trainer_schedule_all_by_monthly(class_id, trainer_id, page)
         else:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
             messages.error(request, error)

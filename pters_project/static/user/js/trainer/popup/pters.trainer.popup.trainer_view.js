@@ -162,7 +162,6 @@ class Trainer_view{
             this.data.profile_img = data.trainer_profile_url;
             Trainer_auth_func.read({"trainer_id":this.trainer_id}, (data)=>{
                 let my_auth = data[this.trainer_id];
-                console.log(my_auth);
                 if(my_auth != undefined){
                     this.data.auth.schedule.create = my_auth.auth_plan_create != undefined ? my_auth.auth_plan_create : OFF;
                     this.data.auth.schedule.read = my_auth.auth_plan_read != undefined ? my_auth.auth_plan_read : OFF;
@@ -372,6 +371,14 @@ class Trainer_view{
             ${CComp.element("div", "일정", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_repeat_info", class:`list_tab_content ${this.list_type == "repeat_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("repeat_info");}})}
             ${CComp.element("div", "권한", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_auth_info", class:`list_tab_content ${this.list_type == "auth_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("auth_info");}})}
         </div>`;
+        if(this.trainer_id == user_id){
+            html =
+            `<div class="list_type_tab_wrap" style="width:100%;padding-left:45px;text-align:left;box-sizing:border-box;height:auto">
+                ${CComp.element("div", "기본 정보", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_basic_info", class:`list_tab_content ${this.list_type == "basic_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("basic_info");}})}
+                ${CComp.element("div", "담당 수업", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_lecture_info", class:`list_tab_content ${this.list_type == "lecture_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("lecture_info");}})}
+                ${CComp.element("div", "일정", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_repeat_info", class:`list_tab_content ${this.list_type == "repeat_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("repeat_info");}})}
+            </div>`;
+        }
         return html;
     }
 
@@ -684,7 +691,7 @@ class Trainer_view{
                 CComp.button("view_schedule_history", `${CImg.history([""], {"vertical-align":"middle", "margin-bottom":"3px", "margin-right":"2px", "width":"18px"})} 일정 이력`, {"font-size":"12px", "float":"left", "padding-left":"0"}, null, ()=>{
                     let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_TRAINER_SCHEDULE_HISTORY, 100, popup_style, null, ()=>{
-                        trainer_schedule_history = new Member_schedule_history('.popup_trainer_schedule_history', this.trainer_id, null);
+                        trainer_schedule_history = new Trainer_schedule_history('.popup_trainer_schedule_history', this.trainer_id, null);
                     });
                 }) +
             `</div>

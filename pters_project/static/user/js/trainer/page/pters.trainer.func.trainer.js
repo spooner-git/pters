@@ -153,6 +153,38 @@ class Trainer{
         this.trainer_length = length;
 
         let html_temp = [];
+        let trainer_id = user_id;
+        let trainer_name = user_name;
+        let trainer_profile_photo;
+        if(user_profile_url.match('icon_account.png')){
+            trainer_profile_photo = CImg.account("", {"width":"36px", "height":"36px"});
+        }else{
+            trainer_profile_photo = `<img src="${user_profile_url}">`;
+        }
+        let onclick = `trainer.event_view_trainer(${trainer_id})`;
+        let html = `<article class="trainer_wrapper anim_fade_in_vibe_top" data-trainer_id="${trainer_id}" data-name="${trainer_name}" onclick="${onclick}" style="color:${list_type == "ing" ? "" : 'var(--font-inactive)'}">
+                        <div class="trainer_data_wrapper">
+                            <div class="trainer_data_l">
+                                ${trainer_profile_photo}
+                            </div>                
+                            <div class="trainer_data_c">
+                                <div class="trainer_name">${trainer_name}</div>
+                                <div class="trainer_counts">
+                                    
+                                </div>
+                            </div>
+                            <div class="trainer_data_r">
+                                <div class="trainer_phone" onclick="event.stopPropagation();">
+                                    <img src="/static/common/icon/icon_gap_black.png" class="icon_contact">
+                                </div>
+                                <div class="trainer_sms" onclick="event.stopPropagation();">
+                                    <img src="/static/common/icon/icon_gap_black.png" class="icon_contact">
+                                </div>
+                            </div>
+                        </div>
+                    </article>`;
+        html_temp.push(html);
+
         for (let i=0; i<length; i++){
             let data = whole_data[i];
             let trainer_id = data.trainer_id;
@@ -595,10 +627,10 @@ class Trainer_func{
         });
     }
 
-    static read_schedule_list_by_ticket(data, callback, error_callback){
+    static read_schedule_list(data, callback, error_callback){
         //데이터 형태 {"trainer_id":""};
         $.ajax({
-            url:'/trainer/get_trainer_schedule_all/',
+            url:'/trainer/get_lecture_trainer_schedule_all/',
             type:'GET',
             data: data,
             dataType : 'JSON',
