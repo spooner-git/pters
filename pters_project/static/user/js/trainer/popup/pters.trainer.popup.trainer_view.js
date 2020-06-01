@@ -448,6 +448,7 @@ class Trainer_view{
                                 let data = {"trainer_id":this.trainer_id, "trainer_auth_cd":AUTH_TYPE_DELETE};
                                 Trainer_func.connection(data, ()=>{
                                     this.set_initial_data();
+                                    current_page.reset();
                                 });
                             });
                         }}
@@ -471,6 +472,7 @@ class Trainer_view{
                                 let data = {"trainer_id":this.trainer_id, "trainer_auth_cd":AUTH_TYPE_DELETE};
                                 Trainer_func.connection(data, ()=>{
                                     this.set_initial_data();
+                                    current_page.reset();
                                 });
                             });
                         }}
@@ -491,9 +493,10 @@ class Trainer_view{
                             show_user_confirm ({title:`연결 요청을 보내시겠습니까?`}, ()=>{
                                 layer_popup.close_layer_popup();
                                 layer_popup.close_layer_popup();
-                                let data = {"trainer_id":this.trainer_id, "trainer_auth_cd":AUTH_TYPE_VIEW};
+                                let data = {"trainer_id":this.trainer_id, "trainer_auth_cd":AUTH_TYPE_WAIT};
                                 Trainer_func.connection(data, ()=>{
                                     this.set_initial_data();
+                                    current_page.reset();
                                 });
                             });
                         }}

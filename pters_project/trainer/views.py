@@ -7784,6 +7784,55 @@ def update_trainer_info_logic(request):
     return render(request, 'ajax/trainer_error_ajax.html')
 
 
+def update_trainer_connection_info_logic(request):
+    trainer_id = request.POST.get('trainer_id', '')
+    auth_cd = request.POST.get('trainer_auth_cd', '')
+    class_id = request.session.get('class_id', '')
+
+    error = None
+    member_info = None
+    if trainer_id is None or trainer_id == '':
+        error = '강사 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        if str(request.user.id) == str(trainer_id):
+            error = '본인은 등록할수 없습니다.'
+
+    if error is None:
+        try:
+            member_info = MemberTb.objects.get(member_id=trainer_id)
+        except ObjectDoesNotExist:
+            error = '강사 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            class_member_info = MemberClassTb.objects.select_related(
+                'class_tb', 'member').get(class_tb_id=class_id, member_id=trainer_id, use=USE)
+            class_member_info.auth_cd = auth_cd
+            class_member_info.own_cd = OWN_TYPE_EMPLOYEE
+            class_member_info.mod_member_id = request.user.id
+            class_member_info.save()
+        except ObjectDoesNotExist:
+            class_member_info = MemberClassTb(class_tb_id=class_id, member_id=trainer_id, auth_cd=auth_cd,
+                                              mod_member_id=request.user.id, own_cd=OWN_TYPE_EMPLOYEE, use=USE)
+            class_member_info.save()
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+    else:
+        log_how = '강사 연결'
+        log_data = LogTb(log_type='LP02', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=member_info.name + '님 에게 \''
+                                  + request.session.get('class_type_name', '') + '\' 지점',
+                         log_how=log_how, log_detail='', use=USE)
+        log_data.save()
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
 # 강사 삭제
 def delete_trainer_info_logic(request):
     class_id = request.session.get('class_id', '')

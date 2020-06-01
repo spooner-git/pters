@@ -114,6 +114,45 @@ class Trainer_list {
         this.trainer_length = length;
 
         let html_temp = [];
+
+        let trainer_id = user_id;
+        let trainer_name = user_name;
+        // let trainer_phone;
+
+        let trainer_profile_photo;
+        if(user_profile_url.match('icon_account.png')){
+            trainer_profile_photo = CImg.account("", {"width":"36px", "height":"36px"});
+        }else{
+            trainer_profile_photo = `<img src="${user_profile_url}">`;
+        }
+
+
+        let onclick = `trainer.event_view_trainer(${trainer_id})`;
+        let html = `<article class="trainer_wrapper anim_fade_in_vibe_top" data-trainer_id="${trainer_id}" data-name="${trainer_name}" onclick="${onclick}" style="color:${this.list_status_type == "ing" ? "" : 'var(--font-inactive)'}">
+                        <div class="trainer_data_wrapper">
+                            <div class="trainer_data_l">
+                                ${trainer_profile_photo}
+                            </div>                
+                            <div class="trainer_data_c">
+                                <div class="trainer_name">${trainer_name}</div>
+                                <div class="trainer_counts">
+                                    
+                                </div>
+                            </div>
+                            <div class="trainer_data_r">
+                                <div class="trainer_phone" onclick="event.stopPropagation();">
+                                    <img src="/static/common/icon/icon_gap_black.png" class="icon_contact">
+                                </div>
+                                <div class="trainer_sms" onclick="event.stopPropagation();">
+
+                                    <img src="/static/common/icon/icon_gap_black.png" class="icon_contact">
+                                </div>
+                            </div>
+                        </div>
+                    </article>`;
+        if(this.list_status_type == "ing") {
+            html_temp.push(html);
+        }
         for (let i=0; i<length; i++){
             let data = whole_data[i];
             let trainer_id = data.trainer_id;
@@ -222,15 +261,15 @@ class Trainer_list {
                         <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:var(--font-main); letter-spacing: -1px; height:28px;">
                             <span style="display:inline-block;">${title}</span>
                             <span style="display:none;">${title}</span>
-                            <div style="display:inline-block; color:var(--font-highlight); font-weight:900;">${this.data_length}</div>
+                            <div style="display:inline-block; color:var(--font-highlight); font-weight:900;">${this.data_length + 1}</div>
                         </div>
                     </div>
                     <div class="trainer_bottom_tools_wrap">
-<!--                        <div class="list_type_tab_wrap">-->
-<!--                            <div onclick="${this.instance}.switch_type('ing');" class="list_tab_content ${this.list_status_type == "ing" ? "tab_selected": ""}">진행중</div>-->
-<!--                            <div class="list_tab_divider"></div>-->
-<!--                            <div onclick="${this.instance}.switch_type('end');" class="list_tab_content ${this.list_status_type == "end" ? "tab_selected" : ""}">종료 </div>-->
-<!--                        </div>-->
+                        <div class="list_type_tab_wrap">
+                            <div onclick="${this.instance}.switch_type('ing');" class="list_tab_content ${this.list_status_type == "ing" ? "tab_selected": ""}">진행중</div>
+                            <div class="list_tab_divider"></div>
+                            <div onclick="${this.instance}.switch_type('end');" class="list_tab_content ${this.list_status_type == "end" ? "tab_selected" : ""}">종료 </div>
+                        </div>
                         <div class="list_sort_select_wrap" 
                         onclick="layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_OPTION_SELECTOR}', 100*(${layer_popup_height})/${root_content_height}, ${POPUP_FROM_BOTTOM}, null, ()=>{
                             option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, ${user_option}

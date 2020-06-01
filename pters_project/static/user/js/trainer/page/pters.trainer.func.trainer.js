@@ -183,7 +183,9 @@ class Trainer{
                             </div>
                         </div>
                     </article>`;
-        html_temp.push(html);
+        if(list_type == "ing") {
+            html_temp.push(html);
+        }
 
         for (let i=0; i<length; i++){
             let data = whole_data[i];
@@ -375,7 +377,7 @@ class Trainer{
                 trainer_upper_box:`   <div class="trainer_upper_box">
                                         <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:var(--font-main); letter-spacing: -1px; height:28px;">
                                             <div style="display:inline-block;">강사 </div>
-                                            <div style="display:inline-block; color:var(--font-highlight); font-weight:900;">${this.list_type == "ing" ? this.trainer_ing_length : this.trainer_end_length}</div>
+                                            <div style="display:inline-block; color:var(--font-highlight); font-weight:900;">${this.list_type == "ing" ? this.trainer_ing_length + 1 : this.trainer_end_length}</div>
                                         </div>
                                         <div class="trainer_tools_wrap">
                                             <div class="search_trainer" onclick="${this.instance}.search_trainer_tool_visible(event, this);">
@@ -388,11 +390,11 @@ class Trainer{
                                     </div>
                                     <div class="search_bar"></div>
                                     <div class="trainer_bottom_tools_wrap" style="padding: 6px 16px;">
-<!--                                        <div class="list_type_tab_wrap">-->
-<!--                                            <div onclick="${this.instance}.switch_type('ing');" class="list_tab_content ${this.list_type == "ing" ? "tab_selected": ""}">진행중</div>-->
-<!--                                            <div class="list_tab_divider"></div>-->
-<!--                                            <div onclick="${this.instance}.switch_type('end');" class="list_tab_content ${this.list_type == "end" ? "tab_selected" : ""}">종료</div>-->
-<!--                                        </div>-->
+                                        <div class="list_type_tab_wrap">
+                                            <div onclick="${this.instance}.switch_type('ing');" class="list_tab_content ${this.list_type == "ing" ? "tab_selected": ""}">진행중</div>
+                                            <div class="list_tab_divider"></div>
+                                            <div onclick="${this.instance}.switch_type('end');" class="list_tab_content ${this.list_type == "end" ? "tab_selected" : ""}">종료</div>
+                                        </div>
                                         <div class="list_sort_select_wrap" 
                                         onclick="layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_OPTION_SELECTOR}', 100*(${layer_popup_height})/${root_content_height}, ${POPUP_FROM_BOTTOM}, null, ()=>{
                                             option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, ${user_option}

@@ -154,6 +154,8 @@ urlpatterns = [
 
     # 강사 정보 수정 - refactoring
     url(r'^update_trainer_info/$', views.update_trainer_info_logic, name='update_trainer_info'),
+    url(r'^update_trainer_connection_info/$', views.update_trainer_connection_info_logic,
+        name='update_trainer_connection_info'),
     # 강사 정보 삭제 - refactoring
     url(r'^delete_trainer_info/$', views.delete_trainer_info_logic, name='delete_trainer_info'),
 
