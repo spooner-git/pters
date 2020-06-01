@@ -7567,6 +7567,42 @@ class GetTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):
         return JsonResponse(trainer_data, json_dumps_params={'ensure_ascii': True})
 
 
+class GetTrainerLectureListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        class_id = self.request.session.get('class_id', '')
+        trainer_id = request.GET.get('trainer_id', '')
+        lecture_data = LectureTb.objects.select_related(
+            'main_trainer').filter(class_tb_id=class_id, state_cd=STATE_CD_IN_PROGRESS,
+                                   main_trainer_id=trainer_id, use=USE).order_by('lecture_id')
+
+        trainer_lecture_list = []
+        # 수업과 연관되어있는 수강권 정보 셋팅
+        for lecture_info in lecture_data:
+            lecture_id = str(lecture_info.lecture_id)
+            main_trainer_id = lecture_info.main_trainer_id
+            main_trainer_name = lecture_info.main_trainer.name
+            lecture_data_dict = {'lecture_id': lecture_id,
+                                 'lecture_name': lecture_info.name,
+                                 'lecture_note': lecture_info.note,
+                                 'lecture_max_num': lecture_info.member_num,
+                                 'lecture_ing_color_cd': lecture_info.ing_color_cd,
+                                 'lecture_ing_font_color_cd': lecture_info.ing_font_color_cd,
+                                 'lecture_end_color_cd': lecture_info.end_color_cd,
+                                 'lecture_end_font_color_cd': lecture_info.end_font_color_cd,
+                                 'lecture_minute': lecture_info.lecture_minute,
+                                 'lecture_type_cd': lecture_info.lecture_type_cd,
+                                 'lecture_mod_dt': str(lecture_info.mod_dt),
+                                 'lecture_reg_dt': str(lecture_info.reg_dt),
+                                 'lecture_state_cd': lecture_info.state_cd,
+                                 'main_trainer_id': main_trainer_id,
+                                 'main_trainer_name': main_trainer_name}
+            trainer_lecture_list.append(lecture_data_dict)
+
+        return JsonResponse({'trainer_lecture_data': trainer_lecture_list},
+                             json_dumps_params={'ensure_ascii': True})
+
+
 # 회원수정
 def update_trainer_info_logic(request):
     trainer_id = request.POST.get('trainer_id')

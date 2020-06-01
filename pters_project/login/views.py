@@ -300,8 +300,8 @@ def logout_trainer(request):
             group_name = group_list[0].name
 
     redirect_url = '/'
-    if group_name == 'trainee':
-        redirect_url = '/index_trainee/'
+    # if group_name == 'trainee':
+    #     redirect_url = '/index_trainee/'
 
     logout(request)
     if device_id == 'pc':

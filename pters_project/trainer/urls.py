@@ -145,6 +145,8 @@ urlpatterns = [
     # 강사 연결 내역 조회
     url(r'^get_trainer_program_data/$', views.GetTrainerProgramDataViewAjax.as_view(), name='get_trainer_program_data'),
     url(r'^get_trainer_info/$', views.GetTrainerInfoView.as_view(), name='get_trainer_info'),
+    # 강사 수업 정보 조회
+    url(r'^get_trainer_lecture_list/$', views.GetTrainerLectureListViewAjax.as_view(), name='get_trainer_lecture_list'),
 
     # 강사 정보 수정 - refactoring
     url(r'^update_trainer_info/$', views.update_trainer_info_logic, name='update_trainer_info'),

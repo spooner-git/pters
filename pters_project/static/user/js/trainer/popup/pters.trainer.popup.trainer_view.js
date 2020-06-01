@@ -118,9 +118,9 @@ class Trainer_view{
 
                     this.data.repeat = repeat_list;
 
-                    Trainer_func.closed_date_list(
+                    Trainer_func.lecture_list(
                         {"trainer_id":this.trainer_id}, (data)=> {
-                            this.data.closed_date = data.trainer_closed_list;
+                            this.data.lecture = data.trainer_lecture_data;
                             this.render();
                         });
                 }
@@ -588,11 +588,6 @@ class Trainer_view{
         return html_to_join.join("");
     }
 
-    dom_row_lecture(){
-        let html_to_join = [];
-        return html_to_join.join("");
-    }
-
     dom_row_repeat_item(repeat_id, color, repeat_name, repeat_day, repeat_period, repeat_time){
         if(repeat_name == '일월화수목금토'){
             repeat_name = '매일';
@@ -656,6 +651,54 @@ class Trainer_view{
         });
 
         return html;
+    }
+
+    dom_row_lecture(){
+        let html_to_join = [];
+        let length = this.data.lecture.length;
+        for(let i=0; i<length; i++){
+            let data = this.data.lecture[i];
+            html_to_join.push(
+                this.dom_row_lecture_item(
+                    data.lecture_id,
+                    data.lecture_ing_color_cd,
+                    data.lecture_name,
+                    data.lecture_max_num,
+                    data.lecture_minute
+                )
+            );
+        }
+        return html_to_join.join("");
+    }
+
+
+    dom_row_lecture_item(lecture_id, color, lecture_name, lecture_max_num, lecture_minute){
+        let onclick = `trainer_view_popup.event_view_lecture(${lecture_id})`;
+        let html = `<div id="lecture_item_${lecture_id}" onclick="${onclick}" style="display:flex;width:100%;height:60px;padding:8px 0px;box-sizing:border-box;cursor:pointer;">
+                        <div style="flex-basis:16px;">
+                            <div style="float:left;width:4px;height:100%;background-color:${color}"></div>
+                        </div>
+                        <div style="flex:1 1 0">
+                            <div style="font-size:16px;font-weight:500;letter-spacing:-0.7px;color:var(--font-base);">${lecture_name}</div>
+                            <div style="font-size:12px;font-weight:500;letter-spacing:-0.5px;color:var(--font-sub-normal);">정원: ${lecture_max_num} / 수업시간: ${lecture_minute}분</div>
+                        </div>
+                    </div>`;
+
+        return html;
+    }
+
+    event_view_lecture(lecture_id){
+        let auth_inspect = pass_inspector.lecture_read();
+        if(auth_inspect.barrier == BLOCKED){
+            let message = `${auth_inspect.limit_type}`;
+            show_error_message({title:message});
+            return false;
+        }
+
+        let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_VIEW, 100, popup_style, {'lecture_id':lecture_id}, ()=>{
+            lecture_view_popup = new Lecture_view('.popup_lecture_view', lecture_id, 'lecture_view_popup');
+        });
     }
 
     event_edit_photo(edit_enable){

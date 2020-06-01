@@ -139,7 +139,7 @@ class Lecture_list {
                                         ${lecture_name} 
                                     </div>
                                     <div class="lecture_note">
-                                        담당 - ${main_trainer_name} / 정원 - ${lecture_max_member_number}명 / 수업시간 - ${lecture_class_hour}분
+                                        담당: ${main_trainer_name} / 정원: ${lecture_max_member_number}명 / 수업시간: ${lecture_class_hour}분
                                     </div>
                                 </div>
                                 <div class="lecture_data_r">
