@@ -420,7 +420,7 @@
 
 
 
-#shade_for_popup_basic{
+.shade_for_popup_basic{
     position: absolute;
     top:0;
     left:0;

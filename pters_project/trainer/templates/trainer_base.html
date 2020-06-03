@@ -80,6 +80,7 @@
 
 <div id="base">
     <section id="section_side">
+        <div class="shade_for_popup_basic"></div>
         <div class="top_logo">
             <span style='color:var(--font-base); width:64px; font-size:20px; font-weight:bold; padding-left:12px;' id="top_logo_image">{{ request.session.app_name }}</span>
             <!--<img src="/static/common/icon/logo/PTERS_logo_full.png" alt="" style="width: 64px;" id="top_logo_image">-->
@@ -219,7 +220,7 @@
         </div>
         <div id="section_content">
             <!--<div id="shade_for_popup_basic" onclick="layer_popup.close_layer_popup();"></div>-->
-            <div id="shade_for_popup_basic"></div>
+            <div class="shade_for_popup_basic"></div>
             <div id="shade_for_popup_preventing_touch"></div>
             <div id="content_wrapper">
                 {% include 'popup/trainer_popup_basic.html' %}
