@@ -229,6 +229,9 @@ class Trainer_view{
         let top_left = `<span class="icon_left" onclick="trainer_view_popup.upper_left_menu();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
         let top_right = `<span class="icon_right" onclick="trainer_view_popup.upper_right_menu();">${CImg.more()}</span>`;
+        if(this.trainer_id == user_id){
+            top_right = '';
+        }
         let content =   `<form id="${this.form_id}">
                             <section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
                             <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>
@@ -256,6 +259,9 @@ class Trainer_view{
         let top_left = `<span class="icon_left" onclick="trainer_view_popup.upper_left_menu();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
         let top_right = `<span class="icon_right" onclick="trainer_view_popup.upper_right_menu();">${CImg.more()}</span>`;
+        if(this.trainer_id == user_id){
+            top_right = '';
+        }
         return {left: top_left, center:top_center, right:top_right};
     }
 
