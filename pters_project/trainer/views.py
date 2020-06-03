@@ -4850,7 +4850,8 @@ class GetProgramListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                     shared_program_flag = SHARED_PROGRAM
                 else:
                     share_member_num = MemberClassTb.objects.filter(class_tb_id=program_info.class_tb.class_id,
-                                                                    auth_cd__contains=AUTH_TYPE_VIEW).count() - 1
+                                                                    auth_cd__contains=AUTH_TYPE_VIEW,
+                                                                    own_cd=OWN_TYPE_SHARE).count()
 
                 program_dict = {'program_id': program_info.class_tb.class_id,
                                 'program_total_member_num': total_member_num,
@@ -7837,8 +7838,10 @@ def update_trainer_connection_info_logic(request):
 def delete_trainer_info_logic(request):
     class_id = request.session.get('class_id', '')
     trainer_id = request.POST.get('trainer_id')
+    user_id = request.user.id
     error = None
-    class_member_ticket_data = None
+    member_class_data = None
+    lecture_data = None
     member = None
     if trainer_id == '':
         error = '강사 ID를 확인해 주세요.'
@@ -7850,54 +7853,36 @@ def delete_trainer_info_logic(request):
             error = '강사 ID를 확인해 주세요.'
 
     if error is None:
-        class_member_ticket_data = ClassMemberTicketTb.objects.select_related(
-            'member_ticket_tb__ticket_tb').filter(class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW,
-                                                  member_ticket_tb__member_id=trainer_id,
-                                                  use=USE)
+        member_class_data = MemberClassTb.objects.filter(class_tb_id=class_id, member_id=trainer_id,
+                                                         own_cd=OWN_TYPE_EMPLOYEE)
+
+        lecture_data = LectureTb.objects.filter(class_tb_id=class_id, main_trainer_id=trainer_id, use=USE)
 
     if error is None:
 
-        schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                  member_ticket_tb__member_id=trainer_id,
+        schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, trainer_id=trainer_id,
                                                   state_cd=STATE_CD_NOT_PROGRESS)
 
-        finish_schedule_data = ScheduleTb.objects.filter(Q(state_cd=STATE_CD_FINISH) | Q(state_cd=STATE_CD_ABSENCE),
-                                                         class_tb_id=class_id,
-                                                         member_ticket_tb__member_id=trainer_id)
-        repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
-                                                               member_ticket_tb__member_id=trainer_id)
+        repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id, repeat_trainer_id=trainer_id)
 
         try:
             with transaction.atomic():
                 # 등록된 일정 정리
                 if len(schedule_data) > 0:
                     # 예약된 일정 삭제
-                    schedule_data.delete()
-                # if len(finish_schedule_data) > 0:
-                    # 완료된 일정 비활성화
-                    # finish_schedule_data.update(use=UN_USE)
+                    schedule_data.update(trainer_id=user_id)
                 if len(repeat_schedule_data) > 0:
                     # 반복일정 삭제
-                    repeat_schedule_data.delete()
+                    repeat_schedule_data.update(repeat_trainer_id=user_id)
 
-                class_member_ticket_data.update(auth_cd=AUTH_TYPE_DELETE, mod_member_id=request.user.id)
+                member_class_data.update(auth_cd=AUTH_TYPE_DELETE)
+                lecture_data.update(main_trainer_id=user_id)
 
-                for class_member_ticket_info in class_member_ticket_data:
-                    member_ticket_info = class_member_ticket_info.member_ticket_tb
-                    if member_ticket_info.state_cd == STATE_CD_IN_PROGRESS:
-                        member_ticket_info.member_ticket_avail_count = 0
-                        member_ticket_info.state_cd = STATE_CD_FINISH
-                        member_ticket_info.save()
+                if member.user.is_active == 0 and str(member.reg_info) == str(request.user.id):
+                    member.contents = member.user.username + ':' + str(trainer_id)
+                    member.use = UN_USE
+                    member.save()
 
-                if len(class_member_ticket_data.filter(member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW)) == 0:
-                    if member.user.is_active == 0 and str(member.reg_info) == str(request.user.id):
-                        member.contents = member.user.username + ':' + str(trainer_id)
-                        member.use = UN_USE
-                        member.save()
-
-                lecture_member_fix_data = LectureMemberTb.objects.filter(class_tb_id=class_id,
-                                                                         member_id=trainer_id, use=USE)
-                lecture_member_fix_data.delete()
         except ValueError:
             error = '등록 값에 문제가 있습니다.'
         except IntegrityError:
