@@ -547,7 +547,7 @@ html, body{
 }
 #base{
     display: flex;
-    height: 100%;
+    height: 92%;
 }
     #section_side{
         /* flex:0 0 200px; */
