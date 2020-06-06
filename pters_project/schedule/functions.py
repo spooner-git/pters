@@ -1698,10 +1698,9 @@ def func_get_lecture_trainer_schedule_all_by_schedule_dt(class_id, trainer_id, p
     trainer_schedule_data = ScheduleTb.objects.select_related(
         'member_ticket_tb__member', 'reg_member', 'member_ticket_tb__ticket_tb',
         'lecture_tb').filter(
-        class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, use=USE,
-        trainer_id=trainer_id).annotate(auth_cd=RawSQL(query_auth,
-                                                       [])).filter(auth_cd=AUTH_TYPE_VIEW).order_by('-start_dt',
-                                                                                                    '-reg_dt')
+        class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, use=USE, lecture_schedule_id__isnull=True,
+        trainer_id=trainer_id).order_by('-start_dt', '-reg_dt')
+
     paginator = Paginator(trainer_schedule_data, SCHEDULE_PAGINATION_COUNTER)
     try:
         trainer_schedule_data = paginator.page(page)
@@ -1713,16 +1712,16 @@ def func_get_lecture_trainer_schedule_all_by_schedule_dt(class_id, trainer_id, p
     ordered_schedule_dict['this_page'] = page
 
     schedule_list = []
-    temp_member_ticket_id = None
+    # temp_member_ticket_id = None
     for trainer_schedule_info in trainer_schedule_data:
-        member_ticket_tb = trainer_schedule_info.member_ticket_tb
-        member_ticket_id = str(member_ticket_tb.member_ticket_id)
+        # member_ticket_tb = trainer_schedule_info.member_ticket_tb
+        # member_ticket_id = str(member_ticket_tb.member_ticket_id)
         lecture_info = trainer_schedule_info.lecture_tb
         schedule_type = trainer_schedule_info.en_dis_type
 
         # 수강권에 따른 일정 정보 전달을 위해 초기화
-        if temp_member_ticket_id != member_ticket_id:
-            temp_member_ticket_id = member_ticket_id
+        # if temp_member_ticket_id != member_ticket_id:
+        #     temp_member_ticket_id = member_ticket_id
 
         # 그룹 수업인 경우 그룹 정보 할당
         try:
@@ -1998,10 +1997,8 @@ def func_get_lecture_trainer_schedule_all_by_monthly(class_id, trainer_id, page)
     trainer_schedule_data = ScheduleTb.objects.select_related(
         'member_ticket_tb__member', 'reg_member', 'member_ticket_tb__ticket_tb',
         'lecture_tb').filter(
-        class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, use=USE,
-        trainer_id=trainer_id).annotate(auth_cd=RawSQL(query_auth,
-                                                       [])).filter(auth_cd=AUTH_TYPE_VIEW).order_by('start_dt',
-                                                                                                    'reg_dt')
+        class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, use=USE, lecture_schedule_id__isnull=True,
+        trainer_id=trainer_id).order_by('start_dt', 'reg_dt')
     # paginator = Paginator(member_schedule_data, MEMBER_SCHEDULE_PAGINATION_COUNTER)
     # try:
     #     member_schedule_data = paginator.page(page)
@@ -2009,16 +2006,16 @@ def func_get_lecture_trainer_schedule_all_by_monthly(class_id, trainer_id, page)
     #     member_schedule_data = []
     # schedule_idx = paginator.count
     # schedule_list = []
-    temp_member_ticket_id = None
+    # temp_member_ticket_id = None
     for trainer_schedule_info in trainer_schedule_data:
-        member_ticket_tb = trainer_schedule_info.member_ticket_tb
-        member_ticket_id = str(member_ticket_tb.member_ticket_id)
+        # member_ticket_tb = trainer_schedule_info.member_ticket_tb
+        # member_ticket_id = str(member_ticket_tb.member_ticket_id)
         lecture_info = trainer_schedule_info.lecture_tb
         schedule_type = trainer_schedule_info.en_dis_type
 
         # 수강권에 따른 일정 정보 전달을 위해 초기화
-        if temp_member_ticket_id != member_ticket_id:
-            temp_member_ticket_id = member_ticket_id
+        # if temp_member_ticket_id != member_ticket_id:
+        #     temp_member_ticket_id = member_ticket_id
 
         # 그룹 수업인 경우 그룹 정보 할당
         try:
