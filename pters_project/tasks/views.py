@@ -4,6 +4,7 @@ import json
 import logging
 
 import httplib2
+from django.db.models import Model
 from django.db.models import Q
 from django.db.models.expressions import RawSQL
 from django.http import JsonResponse
@@ -396,8 +397,11 @@ class SendAllSchedulePushAlarmDataView(View):
 
                 not_finish_wait_schedule_info_class_id = not_finish_wait_schedule_info.class_tb_id
                 not_finish_wait_schedule_info_member_ticket_tb_id = None
-                if not_finish_wait_schedule_info.member_ticket_tb is not None and not_finish_wait_schedule_info.member_ticket_tb != '':
-                    not_finish_wait_schedule_info_member_ticket_tb_id = not_finish_wait_schedule_info.member_ticket_tb_id
+                try:
+                    if not_finish_wait_schedule_info.member_ticket_tb is not None and not_finish_wait_schedule_info.member_ticket_tb != '':
+                        not_finish_wait_schedule_info_member_ticket_tb_id = not_finish_wait_schedule_info.member_ticket_tb_id
+                except Model.DoesNotExist:
+                    not_finish_wait_schedule_info_member_ticket_tb_id = None
 
                 not_finish_wait_schedule_info.delete()
                 if not_finish_wait_schedule_info_member_ticket_tb_id is not None:
@@ -440,10 +444,12 @@ class TestView(View):
 
             class_id_test = member_ticket_info.class_tb_id
             member_ticket_id_test = None
-
-            member_ticket_tb = member_ticket_info.member_ticket_tb
-            if member_ticket_tb is not None and member_ticket_tb != '':
-                member_ticket_id_test = member_ticket_info.member_ticket_tb_id
+            try:
+                member_ticket_tb = member_ticket_info.member_ticket_tb
+                if member_ticket_tb is not None and member_ticket_tb != '':
+                    member_ticket_id_test = member_ticket_info.member_ticket_tb_id
+            except Model.DoesNotExist:
+                member_ticket_id_test = None
 
             if member_ticket_id_test is not None:
                 func_refresh_member_ticket_count(class_id_test, member_ticket_id_test)
