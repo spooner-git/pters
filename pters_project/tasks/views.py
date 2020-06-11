@@ -435,7 +435,7 @@ class TestView(View):
         # start_time = timezone.now()
         error = None
         now = timezone.now()
-        member_ticket_list = ClassMemberTicketTb.objects.filter(use=USE)
+        member_ticket_list = ClassMemberTicketTb.objects.select_related('class_tb', 'member_ticket_tb').filter(use=USE)
         for member_ticket_info in member_ticket_list:
 
             class_id_test = member_ticket_info.class_tb_id
