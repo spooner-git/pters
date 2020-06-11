@@ -6017,6 +6017,7 @@ def update_setting_auto_complete_logic(request):
 def update_setting_reserve_logic(request):
     # 0(UN_USE) 회원이 정원 보기 불가 /  1(USE) 회원이 정원 보기 허용
     setting_member_lecture_max_num_view_available = request.POST.get('setting_member_lecture_max_num_view_available', USE)
+    setting_member_disable_schedule_visible = request.POST.get('setting_member_disable_schedule_visible', UN_USE)
     setting_member_reserve_time_available = request.POST.get('setting_member_reserve_time_available', '00:00-24:00')
     setting_member_reserve_enable_time = request.POST.get('setting_member_reserve_enable_time', '60')
     setting_member_reserve_cancel_time = request.POST.get('setting_member_reserve_cancel_time', '60')
@@ -6033,6 +6034,8 @@ def update_setting_reserve_logic(request):
 
     if setting_member_lecture_max_num_view_available is None or setting_member_lecture_max_num_view_available == '':
         setting_member_lecture_max_num_view_available = USE
+    if setting_member_disable_schedule_visible is None or setting_member_disable_schedule_visible == '':
+        setting_member_disable_schedule_visible = UN_USE
     if setting_member_reserve_time_available is None or setting_member_reserve_time_available == '':
         setting_member_reserve_time_available = '00:00-24:00'
     if setting_member_reserve_enable_time is None or setting_member_reserve_enable_time == '':
@@ -6056,12 +6059,13 @@ def update_setting_reserve_logic(request):
     if setting_member_wait_schedule_auto_cancel_time is None or setting_member_wait_schedule_auto_cancel_time == '':
         setting_member_wait_schedule_auto_cancel_time = 0
 
-    setting_type_cd_data = ['LT_RES_MEMBER_LECTURE_MAX_NUM_VIEW', 'LT_RES_01', 'LT_RES_03', 'LT_RES_05',
+    setting_type_cd_data = ['LT_RES_MEMBER_LECTURE_MAX_NUM_VIEW', 'LT_RES_MEMBER_DISABLE_SCHEDULE_VISIBLE',
+                            'LT_RES_01', 'LT_RES_03', 'LT_RES_05',
                             'LT_RES_CANCEL_TIME', 'LT_RES_ENABLE_TIME',
                             'LT_RES_PRIVATE_CLASS_AUTO_PERMISSION', 'LT_RES_PUBLIC_CLASS_AUTO_PERMISSION',
                             'LT_RES_PUBLIC_CLASS_WAIT_MEMBER_NUM', 'LT_RES_WAIT_SCHEDULE_AUTO_CANCEL_TIME']
-    setting_info_data = [setting_member_lecture_max_num_view_available, setting_member_reserve_time_available,
-                         setting_member_reserve_prohibition,
+    setting_info_data = [setting_member_lecture_max_num_view_available, setting_member_disable_schedule_visible,
+                         setting_member_reserve_time_available, setting_member_reserve_prohibition,
                          setting_member_reserve_date_available, setting_member_reserve_cancel_time,
                          setting_member_reserve_enable_time,
                          setting_member_private_class_auto_permission, setting_member_public_class_auto_permission,
@@ -6070,6 +6074,7 @@ def update_setting_reserve_logic(request):
 
     if error is None:
         request.session['setting_member_lecture_max_num_view_available'] = setting_member_lecture_max_num_view_available
+        request.session['setting_member_disable_schedule_visible'] = setting_member_disable_schedule_visible
         request.session['setting_member_reserve_time_available'] = setting_member_reserve_time_available
         request.session['setting_member_reserve_prohibition'] = setting_member_reserve_prohibition
         request.session['setting_member_reserve_enable_time'] = setting_member_reserve_enable_time

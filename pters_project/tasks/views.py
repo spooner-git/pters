@@ -440,7 +440,9 @@ class TestView(View):
 
             class_id_test = member_ticket_info.class_tb_id
             member_ticket_id_test = None
-            if member_ticket_info.member_ticket_tb is not None and member_ticket_info.member_ticket_tb != '':
+
+            member_ticket_tb = member_ticket_info.member_ticket_tb
+            if member_ticket_tb is not None and member_ticket_tb != '':
                 member_ticket_id_test = member_ticket_info.member_ticket_tb_id
 
             if member_ticket_id_test is not None:
