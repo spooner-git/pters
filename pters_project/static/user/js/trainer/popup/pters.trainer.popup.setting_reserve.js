@@ -11,6 +11,7 @@ class Setting_reserve{
                 available_reserve_time:{value:[], text:[]},
                 available_cancel_time:{value:[], text:[]},
                 capacity_visible:ON,
+                disable_schedule_visible:OFF,
                 setting_member_private_class_auto_permission:ON,
                 setting_member_public_class_auto_permission:ON,
                 setting_member_public_class_wait_member_num:0,
@@ -58,7 +59,8 @@ class Setting_reserve{
             this.data.available_cancel_time.text[0] = this.data_for_selector.available_cancel_time.text[ this.data_for_selector.available_cancel_time.value.indexOf(Number(data.setting_member_reserve_cancel_time) ) ];
 
             this.data.capacity_visible = data.setting_member_lecture_max_num_view_available;
-
+            this.data.disable_schedule_visible = data.setting_member_disable_schedule_visible;
+            
             this.data.setting_member_private_class_auto_permission = data.setting_member_private_class_auto_permission;
             this.data.setting_member_public_class_auto_permission = data.setting_member_public_class_auto_permission;
             this.data.setting_member_public_class_wait_member_num = data.setting_member_public_class_wait_member_num;
@@ -127,17 +129,19 @@ class Setting_reserve{
                     '</article>' +
                     '<article class="obj_input_box_full">' +
                         this.dom_row_capacity_visible() +
-                        "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>이용 회원님께서 예약시 일정의 현재 참석자와 정원 숫자를 볼 수 있습니다.</span>" +
+                        "<div style=\"margin-bottom:15px;\"><span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>이용 회원님께서 예약시 일정의 현재 참석자와 정원 숫자를 볼 수 있습니다.</span></div>" +
+                        // this.dom_row_disable_schedule_visible() +
+                        // "<div><span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>이용 회원님께서 예약시 예약 가능한 일정만 볼 수 있습니다.</span></div>" +
                     '</article>' +
-                    '<article class="obj_input_box_full"><div style="margin-bottom:15px;">' +
+                    '<article class="obj_input_box_full">' +
                         this.dom_row_member_private_class_auto_permission() +
-                       "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>기능을 꺼두면 이용 회원님께서 예약시 대기 예약으로만 등록됩니다.</span></div><div>" +
+                       "<div style=\"margin-bottom:15px;\"><span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>기능을 꺼두면 이용 회원님께서 예약시 대기 예약으로만 등록됩니다.</span></div>" +
                         this.dom_row_member_public_class_auto_permission() +
-                       "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>기능을 꺼두면 이용 회원님께서 예약시 대기 예약으로만 등록됩니다.</span></div><div>" +
+                       "<div><span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>기능을 꺼두면 이용 회원님께서 예약시 대기 예약으로만 등록됩니다.</span></div>" +
                         this.dom_row_member_public_class_wait_member_num() +
-                       "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>수업 정원 초과시 대기 예약으로 등록됩니다.</span></div>" +
+                       "<div><span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>수업 정원 초과시 대기 예약으로 등록됩니다.</span></div>" +
                         this.dom_row_wait_schedule_auto_cancel_time() +
-                       "<span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>수업 시작전 대기 예약이 자동 취소되는 시간을 선택할수 있습니다.</span></div>" +
+                       "<div><span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>수업 시작전 대기 예약이 자동 취소되는 시간을 선택할수 있습니다.</span></div>" +
                     '</article>';
         if(this.data.stop_reserve == ON){
             html = this.dom_row_stop_reserve() + 
@@ -310,6 +314,23 @@ class Setting_reserve{
         return html;
     }
 
+    dom_row_disable_schedule_visible(){
+        let id = `disable_schedule_visible`;
+        let power = this.data.disable_schedule_visible;
+        let style = null;
+        let disable_schedule_visible_toggle = CComponent.toggle_button (id, power, style, (data)=>{
+                                this.data.disable_schedule_visible = data; // ON or OFF
+                                this.render_content();
+                            });
+        let title_row = CComponent.text_button ("disable_schedule_visible_text", '예약 가능 일정만 표기', {"font-size":"15px", "font-weight":"500", "letter-spacing":"-0.8px"}, ()=>{});
+        let html = `
+                    <div style="display:table;width:100%;">
+                        <div style="display:table-cell;width:auto;vertical-align:middle">${title_row}</div>
+                        <div style="display:table-cell;width:50px;vertical-align:middle">${disable_schedule_visible_toggle}</div>
+                    </div>
+                   `;
+        return html;
+    }
     dom_row_member_private_class_auto_permission(){
         let id = `member_private_class_auto_permission`;
         let power = this.data.setting_member_private_class_auto_permission;
@@ -455,6 +476,7 @@ class Setting_reserve{
             "setting_member_reserve_enable_time":this.data.available_reserve_time.value[0], //예약 가능 시간
             "setting_member_reserve_cancel_time":this.data.available_cancel_time.value[0], //예약 취소 가능 시간
             "setting_member_lecture_max_num_view_available":this.data.capacity_visible, // 현재 참석자/정원 보이기
+            "setting_member_disable_schedule_visible":this.data.disable_schedule_visible, // 예약 가능 일정만 보이기
 
             "setting_member_private_class_auto_permission":this.data.setting_member_private_class_auto_permission, // 개인 수업 예약 자동 수락 기능
             "setting_member_public_class_auto_permission":this.data.setting_member_public_class_auto_permission, // 그룹 수업 예약 자동 수락 기능
