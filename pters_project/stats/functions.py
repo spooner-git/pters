@@ -6,7 +6,7 @@ from django.db.models.expressions import RawSQL
 
 from configs.const import USE, ON_SCHEDULE_TYPE, STATS_RE_REG, STATS_NEW_REG, STATS_PART_REFUND, STATS_ALL_REFUND, \
     STATE_CD_FINISH, AUTH_TYPE_VIEW, STATE_CD_REFUND, SORT_ALL_STATISTICS, SORT_CASH_STATISTICS, SORT_CARD_STATISTICS, \
-    SORT_NONE_STATISTICS, SORT_TRANS_STATISTICS
+    SORT_NONE_STATISTICS, SORT_TRANS_STATISTICS, LECTURE_TYPE_ONE_TO_ONE
 from schedule.models import ScheduleTb
 from trainer.models import ClassMemberTicketTb
 
@@ -292,13 +292,16 @@ def get_stats_member_data(class_id, month_first_day, finish_date):
             finish_schedule_num = 0
             # for class_member_ticket_info in class_member_ticket_list:
             finish_schedule_num += ScheduleTb.objects.filter(
-                Q(state_cd=STATE_CD_FINISH), class_tb_id=class_id, lecture_tb__isnull=True,
+                Q(state_cd=STATE_CD_FINISH), class_tb_id=class_id,
+                # lecture_tb__isnull=True,
                 # member_ticket_tb_id=class_member_ticket_info.member_ticket_tb_id,
+                lecture_tb__lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE,
                 start_dt__gte=month_first_day, start_dt__lt=month_last_day + datetime.timedelta(days=1),
                 en_dis_type=ON_SCHEDULE_TYPE, use=USE).count()
 
             finish_schedule_num += ScheduleTb.objects.filter(
-                Q(state_cd=STATE_CD_FINISH), class_tb_id=class_id, lecture_tb__isnull=False,
+                Q(state_cd=STATE_CD_FINISH), class_tb_id=class_id,
+                # lecture_tb__isnull=False,
                 member_ticket_tb__isnull=True, start_dt__gte=month_first_day,
                 start_dt__lt=month_last_day + datetime.timedelta(days=1),
                 en_dis_type=ON_SCHEDULE_TYPE, use=USE).count()
