@@ -150,9 +150,9 @@ class Pters_pass_shop_agreement{
 
         let text = `<span style="font-size:14px;font-weight:bold;line-height:30px;">신용카드</span>`;
         // if(device == MOBILE && device_info != 'web' && user_username =='guest'){
-        if(user_username =='guest'){
-            text = `<span style="font-size:14px;font-weight:bold;line-height:30px;">인앱결제</span>`;
-        }
+        // if(user_username =='guest'){ 200621
+        //    text = `<span style="font-size:14px;font-weight:bold;line-height:30px;">인앱결제</span>`;
+        //}
         let id2 = "pters_pass_pay_method_card";
         let title2 = html_checkbox + text;
         let style2 = null;
@@ -204,7 +204,7 @@ class Pters_pass_shop_agreement{
         let pay_method = CARD;
         let payment_type_cd = PERIOD;
         // if(device == MOBILE && device_info != 'web' && user_username =='guest'){
-        if(user_username =='guest'){
+        if(user_username =='guest' || user_username == 'danal_test'){
             payment_type_cd = SINGLE;
             product_name = PASS_PRODUCT[this.data.product_name].text + ' - 30일';
         }

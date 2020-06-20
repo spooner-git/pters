@@ -84,7 +84,7 @@ class Pters_pass_shop{
         let top_right = `<span class="icon_right"></span>`;
         let content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>`+
                         `<section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
-        if(user_username == 'guest'){
+        if(user_username == 'guest' || user_username == 'danal_test'){
             content =   `<section id="${this.target.toolbox}" class="obj_box_full popup_toolbox">${this.dom_assembly_toolbox()}</section>`+
                         `<section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>`;
         }
@@ -126,6 +126,10 @@ class Pters_pass_shop{
                             this.dom_row_pters_pass_premium() +
                             this.dom_row_pters_pass_premium_explain() +
                         '</div>' +
+                        `<div class="pters_pass_product_wrapper" style="${premium_color}" onclick="pters_pass_shop_popup.event_buy('premium')">` +
+                            this.dom_row_pters_pass_premium_temp() +
+                            this.dom_row_pters_pass_premium_explain_temp() +
+                        '</div>' +
                         `<div class="pters_pass_product_wrapper" style="${custom_color}" onclick="pters_pass_shop_popup.event_custom_app_launch()">` +
                             this.dom_row_pters_pass_custom() +
                             this.dom_row_pters_pass_custom_explain() +
@@ -136,7 +140,8 @@ class Pters_pass_shop{
                         `${this.coupon_html}`+
                     '</article>';
         }
-        if(os == IOS && user_username =='guest'){
+        //if(os == IOS && user_username =='guest'){200621
+        if(user_username == 'guest' || user_username == 'danal_test'){ //200621
             html =  '<article class="obj_input_box_full">' +
                         `<div class="pters_pass_product_wrapper" style="${premium_color}" onclick="pters_pass_shop_popup.event_buy('premium')">` +
                             this.dom_row_pters_pass_premium() +
@@ -189,7 +194,7 @@ class Pters_pass_shop{
 
     dom_row_pters_pass_premium(){
         let unit = ' / 매월';
-        if(user_username =='guest'){
+        if(user_username =='guest' || user_username == 'danal_test'){ //200621
             unit = "/ 30일";
         }
         let id = "pters_pass_premium_ticket";
@@ -251,6 +256,70 @@ class Pters_pass_shop{
                     </article>`;
         return html;
     }
+
+
+    dom_row_pters_pass_premium_temp(){
+        let unit = "/ 30일";
+        let id = "pters_pass_premium_ticket";
+        let title = `<div style='font-size:12px;font-weight:500;margin-bottom:10px'>프리미엄</div>
+                    <span style="font-size:32px;font-weight:900">&#8361; 9,900</span><span style="font-size:13px">${unit}</span>
+                    `;
+        let icon = DELETE;
+        let icon_r_visible = NONE;
+        let icon_r_text = "";
+        if(this.data.pass_purchase_change == PASS_CHANGE) {
+            if (this.data.next.name[0] != "") {
+                title = `<div style='font-size:12px;font-weight:500;margin-bottom:10px'>프리미엄</div>
+                    <div>
+                    <span style="font-size:32px;font-weight:900">&#8361; 9,900</span><span style="font-size:13px"> ${unit}</span>
+                    </div>
+                    <div>
+                        <span style="font-size:15px;font-weight:900">${this.check_pass_next_paid_date(9900)} 일부터 결제가 진행됩니다.</span>
+                    </div>
+                    `;
+            }
+        }
+        // if(device == MOBILE && device_info != 'web' && user_username =='guest'){
+
+        let style = {"color":"var(--fundamental-white)", "font-weight":"bold", "height":"auto", "cursor":"unset"};
+        let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            // this.event_buy("premium");
+        });
+
+        let html = row;
+        return html;
+    }
+
+    dom_row_pters_pass_premium_explain_temp(){
+        let html = `<article class="pters_pass_explain_wrapper">
+                        <div class="product_explain_row">
+                            <div class="product_explain_row_title">${CImg.confirm(["var(--fundamental-white)"], {"vertical-align":"middle", "width":"17px", "margin-right":"5px"})} 일정</div>
+                            <div class="product_explain_row_detail">매일 오늘 기준 전후 1년 등록, 취소</div>
+                        </div>
+                        <div class="product_explain_row">
+                            <div class="product_explain_row_title">${CImg.confirm(["var(--fundamental-white)"], {"vertical-align":"middle", "width":"17px", "margin-right":"5px"})} 회원</div>
+                            <div class="product_explain_row_detail">500명</div>
+                        </div>
+                        <div class="product_explain_row">
+                            <div class="product_explain_row_title">${CImg.confirm(["var(--fundamental-white)"], {"vertical-align":"middle", "width":"17px", "margin-right":"5px"})} 통계</div>
+                            <div class="product_explain_row_detail">1년 단위 조회 가능</div>
+                        </div>
+                        <div class="product_explain_row">
+                            <div class="product_explain_row_title">${CImg.confirm(["var(--fundamental-white)"], {"vertical-align":"middle", "width":"17px", "margin-right":"5px"})} 지점</div>
+                            <div class="product_explain_row_detail">10개</div>
+                        </div>
+                        <div class="product_explain_row">
+                            <div class="product_explain_row_title">${CImg.confirm(["var(--fundamental-white)"], {"vertical-align":"middle", "width":"17px", "margin-right":"5px"})} 공지사항</div>
+                            <div class="product_explain_row_detail">이용 가능</div>
+                        </div>
+                        <div class="product_explain_row">
+                            <div class="product_explain_row_title">${CImg.confirm(["var(--fundamental-white)"], {"vertical-align":"middle", "width":"17px", "margin-right":"5px"})} 설정</div>
+                            <div class="product_explain_row_detail">제한 없음</div>
+                        </div>
+                    </article>`;
+        return html;
+    }
+
 
     dom_row_pters_pass_standard(){
         let unit = ' / 매월';
@@ -473,6 +542,7 @@ class Pters_pass_shop{
         }
         this.render_content();
     }
+
     event_buy(product){
         let pass_purchase_change = this.data.pass_purchase_change;
 
@@ -514,6 +584,49 @@ class Pters_pass_shop{
             }
         }
     }
+
+   event_buy_temp(product){
+        let pass_purchase_change = this.data.pass_purchase_change;
+
+        if(pass_purchase_change == PASS_CHANGE){
+            if(this.data.current.merchant_uid[0] == ""){
+                show_error_message({title:'다음 결제일까지 변경이 불가능합니다.'});
+                return false;
+            }
+            let message = {
+                title:`PTERS 패스 상품을 즉시 변경하시겠습니까?`,
+                comment:`변경 시 다음 결제일까지 변경이 불가능합니다.`
+            };
+            show_user_confirm (message, ()=>{
+                // 정기 결제 + 미래 예약 대기인 경우
+                let date = new Date();
+                let user_id = home.data.user_id;
+                let product_name = PASS_PRODUCT[product].text + ' - 결제 - 30일';
+                let merchant_uid = `m_${user_id}_${PASS_PRODUCT[product].id}_${date.getTime()}`;
+                this.request_payment_change(product, product_name, merchant_uid);
+            });
+        }
+        if(pass_purchase_change == PASS_PURCHASE){
+            switch(product){
+                case "basic":
+                        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP_AGREEMENT, 100, POPUP_FROM_BOTTOM, null, ()=>{
+                            pters_pass_shop_agreement_popup = new Pters_pass_shop_agreement('.popup_pters_pass_shop_agreement', "basic", pass_purchase_change);
+                        });
+                    break;
+                case "standard":
+                        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP_AGREEMENT, 100, POPUP_FROM_BOTTOM, null, ()=>{
+                            pters_pass_shop_agreement_popup = new Pters_pass_shop_agreement('.popup_pters_pass_shop_agreement', "standard", pass_purchase_change);
+                        });
+                    break;
+                case "premium":
+                        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP_AGREEMENT, 100, POPUP_FROM_BOTTOM, null, ()=>{
+                            pters_pass_shop_agreement_popup = new Pters_pass_shop_agreement('.popup_pters_pass_shop_agreement', "premium", pass_purchase_change);
+                        });
+                    break;
+            }
+        }
+    }
+
 
     event_coupon(product_id){
         let message = {title:`쿠폰 등록`, comment:'최초 1회만 사용 가능 합니다.<br>지금 <span style="color:red;">사용</span> 하시겠습니까?'};
