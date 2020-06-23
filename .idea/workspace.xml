@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="7968a635-241f-45e2-8e47-1985a2632de1" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/pters_project/configs/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/pters_project/configs/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pters_project/trainer/templates/trainer_base.html" beforeDir="false" afterPath="$PROJECT_DIR$/pters_project/trainer/templates/trainer_base.html" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DjangoConsoleOptions" custom-start-script="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)" module-name="pters" is-module-sdk="true">
+    <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)" />
+    <option name="myUseModuleSdk" value="true" />
+    <option name="myModuleName" value="pters" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1Zc6NI5ajtZpIwRztGRBNMe2LgC" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/pters_project" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.django.DjangoModulesConfigurable" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\savek\Documents\spooner\project\pters\pters_project\static\user\css\trainer\popup" />
+      <recent name="C:\Users\savek\Documents\spooner\project\pters\pters_project\static\user\js\trainer\popup" />
+      <recent name="C:\Users\savek\Documents\spooner\project\pters\pters_project\trainee\templates" />
+      <recent name="C:\Users\savek\Documents\spooner\project\pters\pters_project\static\user\css\trainee\popup" />
+      <recent name="C:\Users\savek\Documents\spooner\project\pters\pters_project\trainee\templates\popup" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="PythonConfigurationType" factoryName="Python">
+      <module name="pters_develop" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="C:\Users\savek\Documents\spooner\project\python36_env\Scripts\python.exe" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/pters_project" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/pters_project/manage.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="runserver" type="Python.DjangoServer" factoryName="Django server">
+      <module name="pters" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="C:\Users\savek\Documents\spooner\project\python36_env\Scripts\python.exe" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/pters_project" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="launchJavascriptDebuger" value="false" />
+      <option name="port" value="8000" />
+      <option name="host" value="0.0.0.0" />
+      <option name="additionalOptions" value="" />
+      <option name="browserUrl" value="http://localhost:8000/" />
+      <option name="runTestServer" value="false" />
+      <option name="runNoReload" value="false" />
+      <option name="useCustomRunCommand" value="false" />
+      <option name="customRunCommand" value="" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="7968a635-241f-45e2-8e47-1985a2632de1" name="Default Changelist" comment="" />
+      <created>1585125994085</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1585125994085</updated>
+      <workItem from="1585125996537" duration="54000" />
+      <workItem from="1585128581829" duration="136000" />
+      <workItem from="1585129526350" duration="255000" />
+      <workItem from="1585129799053" duration="205000" />
+      <workItem from="1585186651769" duration="613000" />
+      <workItem from="1586829720522" duration="20030000" />
+      <workItem from="1587361661456" duration="14317000" />
+      <workItem from="1587627900538" duration="603000" />
+      <workItem from="1587957758309" duration="5690000" />
+      <workItem from="1588126236792" duration="5503000" />
+      <workItem from="1588132468435" duration="49000" />
+      <workItem from="1588149381842" duration="8298000" />
+      <workItem from="1588307673089" duration="2510000" />
+      <workItem from="1588344883853" duration="19000" />
+      <workItem from="1588828712722" duration="9994000" />
+      <workItem from="1588847655131" duration="1657000" />
+      <workItem from="1588850095367" duration="63000" />
+      <workItem from="1589757651889" duration="1120000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="521" y="198" key="#Inspections" timestamp="1585129971182">
+      <screen x="0" y="0" width="1858" height="1080" />
+    </state>
+    <state x="521" y="198" key="#Inspections/0.0.1858.1080@0.0.1858.1080" timestamp="1585129971182" />
+    <state x="-1244" y="15" key="#Unnamed" timestamp="1586830518561">
+      <screen x="-1920" y="-104" width="1920" height="1040" />
+    </state>
+    <state x="-1244" y="15" key="#Unnamed/0.0.1858.1080/-1920.-104.1920.1040@-1920.-104.1920.1040" timestamp="1586830518561" />
+    <state x="383" y="195" width="1092" height="712" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1587371258750">
+      <screen x="0" y="0" width="1858" height="1080" />
+    </state>
+    <state x="383" y="195" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1858.1080/-1858.-104.1858.1080@0.0.1858.1080" timestamp="1587371258750" />
+    <state x="-1524" y="84" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1858.1080/-1920.-104.1920.1040@-1920.-104.1920.1040" timestamp="1586830603774" />
+    <state x="383" y="195" width="1092" height="712" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1858.1080@0.0.1858.1080" timestamp="1585186781619" />
+    <state x="645" y="139" key="#runserver" timestamp="1589757980117">
+      <screen x="0" y="0" width="1858" height="1080" />
+    </state>
+    <state x="645" y="139" key="#runserver/0.0.1858.1080/-1858.-104.1858.1080@0.0.1858.1080" timestamp="1589757980117" />
+    <state x="-1175" y="284" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1588127735331">
+      <screen x="-1858" y="-104" width="1858" height="1080" />
+    </state>
+    <state x="-1175" y="284" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1858.1080/-1858.-104.1858.1080@-1858.-104.1858.1080" timestamp="1588127735331" />
+    <state x="-1214" y="270" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1858.1080/-1920.-104.1920.1040@-1920.-104.1920.1040" timestamp="1586842657879" />
+    <state x="663" y="312" key="EnvironmentVariablesDialog" timestamp="1589757975197">
+      <screen x="0" y="0" width="1858" height="1080" />
+    </state>
+    <state x="663" y="312" key="EnvironmentVariablesDialog/0.0.1858.1080/-1858.-104.1858.1080@0.0.1858.1080" timestamp="1589757975197" />
+    <state x="-1235" y="196" key="EnvironmentVariablesDialog/0.0.1858.1080/-1920.-104.1920.1040@-1920.-104.1920.1040" timestamp="1586830593532" />
+    <state x="663" y="312" key="EnvironmentVariablesDialog/0.0.1858.1080@0.0.1858.1080" timestamp="1585186726530" />
+    <state x="234" y="263" width="776" height="490" key="FileChooserDialogImpl" timestamp="1589758769605">
+      <screen x="0" y="0" width="1858" height="1080" />
+    </state>
+    <state x="234" y="263" key="FileChooserDialogImpl/0.0.1858.1080/-1858.-104.1858.1080@0.0.1858.1080" timestamp="1589758769605" />
+    <state x="-1678" y="149" width="776" height="490" key="FileChooserDialogImpl/0.0.1858.1080/-1920.-104.1920.1040@-1920.-104.1920.1040" timestamp="1586834696799" />
+    <state x="234" y="263" key="FileChooserDialogImpl/0.0.1858.1080@0.0.1858.1080" timestamp="1585186711922" />
+    <state width="1815" height="300" key="GridCell.Tab.0.bottom" timestamp="1589758773174">
+      <screen x="0" y="0" width="1858" height="1080" />
+    </state>
+    <state width="1815" height="300" key="GridCell.Tab.0.bottom/0.0.1858.1080/-1858.-104.1858.1080@-1858.-104.1858.1080" timestamp="1588843646017" />
+    <state width="1815" height="300" key="GridCell.Tab.0.bottom/0.0.1858.1080/-1858.-104.1858.1080@0.0.1858.1080" timestamp="1589758773174" />
+    <state width="1877" height="281" key="GridCell.Tab.0.bottom/0.0.1858.1080/-1920.-104.1920.1040@-1920.-104.1920.1040" timestamp="1586849632462" />
+    <state width="1815" height="295" key="GridCell.Tab.0.bottom/0.0.1858.1080@0.0.1858.1080" timestamp="1585186812112" />
+    <state width="1815" height="300" key="GridCell.Tab.0.center" timestamp="1589758773174">
+      <screen x="0" y="0" width="1858" height="1080" />
+    </state>
+    <state width="1815" height="300" key="GridCell.Tab.0.center/0.0.1858.1080/-1858.-104.1858.1080@-1858.-104.1858.1080" timestamp="1588843646017" />
+    <state width="1815" height="300" key="GridCell.Tab.0.center/0.0.1858.1080/-1858.-104.1858.1080@0.0.1858.1080" timestamp="1589758773174" />
+    <state width="1877" height="281" key="GridCell.Tab.0.center/0.0.1858.1080/-1920.-104.1920.1040@-1920.-104.1920.1040" timestamp="1586849632462" />
+    <state width="1815" height="295" key="GridCell.Tab.0.center/0.0.1858.1080@0.0.1858.1080" timestamp="1585186812112" />
+    <state width="1815" height="300" key="GridCell.Tab.0.left" timestamp="1589758773174">
+      <screen x="0" y="0" width="1858" height="1080" />
+    </state>
+    <state width="1815" height="300" key="GridCell.Tab.0.left/0.0.1858.1080/-1858.-104.1858.1080@-1858.-104.1858.1080" timestamp="1588843646017" />
+    <state width="1815" height="300" key="GridCell.Tab.0.left/0.0.1858.1080/-1858.-104.1858.1080@0.0.1858.1080" timestamp="1589758773174" />
+    <state width="1877" height="281" key="GridCell.Tab.0.left/0.0.1858.1080/-1920.-104.1920.1040@-1920.-104.1920.1040" timestamp="1586849632462" />
+    <state width="1815" height="295" key="GridCell.Tab.0.left/0.0.1858.1080@0.0.1858.1080" timestamp="1585186812112" />
+    <state width="1815" height="300" key="GridCell.Tab.0.right" timestamp="1589758773174">
+      <screen x="0" y="0" width="1858" height="1080" />
+    </state>
+    <state width="1815" height="300" key="GridCell.Tab.0.right/0.0.1858.1080/-1858.-104.1858.1080@-1858.-104.1858.1080" timestamp="1588843646017" />
+    <state width="1815" height="300" key="GridCell.Tab.0.right/0.0.1858.1080/-1858.-104.1858.1080@0.0.1858.1080" timestamp="1589758773174" />
+    <state width="1877" height="281" key="GridCell.Tab.0.right/0.0.1858.1080/-1920.-104.1920.1040@-1920.-104.1920.1040" timestamp="1586849632462" />
+    <state width="1815" height="295" key="GridCell.Tab.0.right/0.0.1858.1080@0.0.1858.1080" timestamp="1585186812112" />
+    <state x="430" y="182" key="SettingsEditor" timestamp="1589758689373">
+      <screen x="0" y="0" width="1858" height="1080" />
+    </state>
+    <state x="430" y="182" key="SettingsEditor/0.0.1858.1080/-1858.-104.1858.1080@0.0.1858.1080" timestamp="1589758689373" />
+    <state x="-1476" y="71" key="SettingsEditor/0.0.1858.1080/-1920.-104.1920.1040@-1920.-104.1920.1040" timestamp="1586839150759" />
+    <state x="430" y="182" key="SettingsEditor/0.0.1858.1080@0.0.1858.1080" timestamp="1585129979405" />
+    <state x="657" y="344" key="com.intellij.ide.util.TipDialog" timestamp="1585126001474">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="657" y="344" key="com.intellij.ide.util.TipDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1585126001474" />
+    <state x="514" y="131" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1587367367205">
+      <screen x="0" y="0" width="1858" height="1080" />
+    </state>
+    <state x="514" y="131" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1858.1080/-1858.-104.1858.1080@0.0.1858.1080" timestamp="1587367367205" />
+    <state x="-1389" y="22" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1858.1080/-1920.-104.1920.1040@-1920.-104.1920.1040" timestamp="1586840851818" />
+    <state x="-789" y="86" width="613" height="839" key="find.popup" timestamp="1588848958375">
+      <screen x="-1858" y="-104" width="1858" height="1080" />
+    </state>
+    <state x="-789" y="86" width="613" height="839" key="find.popup/0.0.1858.1080/-1858.-104.1858.1080@-1858.-104.1858.1080" timestamp="1588848958375" />
+    <state x="283" y="124" width="745" height="839" key="find.popup/0.0.1858.1080/-1858.-104.1858.1080@0.0.1858.1080" timestamp="1588833896003" />
+    <state x="-1267" y="12" width="613" height="807" key="find.popup/0.0.1858.1080/-1920.-104.1920.1040@-1920.-104.1920.1040" timestamp="1586851889443" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/pters$views.coverage" NAME="views Coverage Results" MODIFIED="1585186666990" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pters_project/trainer" />
+  </component>
+</project>

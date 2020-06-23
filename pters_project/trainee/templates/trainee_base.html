@@ -15,7 +15,7 @@
 
         <title>
             {% block title %}
-                {{request.session.app_name}}
+                {{request.session.app_name}} {% if request.session.app_name == 'PTERS' %}| 피터스{% endif %}
             {% endblock %}
         </title>
 
