@@ -114,21 +114,17 @@ class Pters_pass_shop{
         let custom_color = `background-color:var(--bg-invisible);`;
         let html =  '<article class="obj_input_box_full">' +
 
-                        `<div class="pters_pass_product_wrapper" style="${basic_color}" onclick="pters_pass_shop_popup.event_buy('basic')">` +
+                        `<div class="pters_pass_product_wrapper" style="${basic_color}" onclick="pters_pass_shop_popup.event_buy('basic', PERIOD)">` +
                             this.dom_row_pters_pass_basic() +
                             this.dom_row_pters_pass_basic_explain() +
                         '</div>' +
-                        `<div class="pters_pass_product_wrapper" style="${standard_color}" onclick="pters_pass_shop_popup.event_buy('standard')">` +
+                        `<div class="pters_pass_product_wrapper" style="${standard_color}" onclick="pters_pass_shop_popup.event_buy('standard', PERIOD)">` +
                             this.dom_row_pters_pass_standard() +
                             this.dom_row_pters_pass_standard_explain() +
                         '</div>' +
-                        `<div class="pters_pass_product_wrapper" style="${premium_color}" onclick="pters_pass_shop_popup.event_buy('premium')">` +
+                        `<div class="pters_pass_product_wrapper" style="${premium_color}" onclick="pters_pass_shop_popup.event_buy('premium', PERIOD)">` +
                             this.dom_row_pters_pass_premium() +
                             this.dom_row_pters_pass_premium_explain() +
-                        '</div>' +
-                        `<div class="pters_pass_product_wrapper" style="${premium_color}" onclick="pters_pass_shop_popup.event_buy('premium')">` +
-                            this.dom_row_pters_pass_premium_temp() +
-                            this.dom_row_pters_pass_premium_explain_temp() +
                         '</div>' +
                         `<div class="pters_pass_product_wrapper" style="${custom_color}" onclick="pters_pass_shop_popup.event_custom_app_launch()">` +
                             this.dom_row_pters_pass_custom() +
@@ -142,16 +138,39 @@ class Pters_pass_shop{
         }
         //if(os == IOS && user_username =='guest'){200621
         if(user_username == 'guest' || user_username == 'danal_test'){ //200621
-            html =  '<article class="obj_input_box_full">' +
-                        `<div class="pters_pass_product_wrapper" style="${premium_color}" onclick="pters_pass_shop_popup.event_buy('premium')">` +
+            // html =  '<article class="obj_input_box_full">' +
+            //             `<div class="pters_pass_product_wrapper" style="${premium_color}" onclick="pters_pass_shop_popup.event_buy('premium')">` +
+            //                 this.dom_row_pters_pass_premium() +
+            //                 this.dom_row_pters_pass_premium_explain() +
+            //             '</div>' +
+            //         '</article>';
+            html = '<article class="obj_input_box_full">' +
+
+                        `<div class="pters_pass_product_wrapper" style="${basic_color}" onclick="pters_pass_shop_popup.event_buy('basic', PERIOD)">` +
+                            this.dom_row_pters_pass_basic() +
+                            this.dom_row_pters_pass_basic_explain() +
+                        '</div>' +
+                        `<div class="pters_pass_product_wrapper" style="${standard_color}" onclick="pters_pass_shop_popup.event_buy('standard', PERIOD)">` +
+                            this.dom_row_pters_pass_standard() +
+                            this.dom_row_pters_pass_standard_explain() +
+                        '</div>' +
+                        `<div class="pters_pass_product_wrapper" style="${premium_color}" onclick="pters_pass_shop_popup.event_buy('premium', PERIOD)">` +
                             this.dom_row_pters_pass_premium() +
                             this.dom_row_pters_pass_premium_explain() +
+                        '</div>' +
+                        `<div class="pters_pass_product_wrapper" style="${premium_color}" onclick="pters_pass_shop_popup.event_buy('premium', SINGLE)">` +
+                            this.dom_row_pters_pass_premium_temp() +
+                            this.dom_row_pters_pass_premium_explain_temp() +
+                        '</div>' +
+                        `<div class="pters_pass_product_wrapper" style="${custom_color}" onclick="pters_pass_shop_popup.event_custom_app_launch()">` +
+                            this.dom_row_pters_pass_custom() +
+                            this.dom_row_pters_pass_custom_explain() +
                         '</div>' +
                     '</article>';
         }
         else if(os == ANDROID && user_username =='guest') {
             html =  '<article class="obj_input_box_full">' +
-                        `<div class="pters_pass_product_wrapper" style="${premium_color}" onclick="pters_pass_shop_popup.event_buy('premium')">` +
+                        `<div class="pters_pass_product_wrapper" style="${premium_color}" onclick="pters_pass_shop_popup.event_buy('premium', SINGLE)">` +
                             this.dom_row_pters_pass_premium() +
                             this.dom_row_pters_pass_premium_explain() +
                         '</div>' +
@@ -162,21 +181,21 @@ class Pters_pass_shop{
                 html =  '<article class="obj_input_box_full">';
                 if(this.data.next.product_id[0] != PASS_PRODUCT.basic.id){
                     html +=
-                        `<div class="pters_pass_product_wrapper" style="${basic_color}" onclick="pters_pass_shop_popup.event_buy('basic')">` +
+                        `<div class="pters_pass_product_wrapper" style="${basic_color}" onclick="pters_pass_shop_popup.event_buy('basic', PERIOD)">` +
                             this.dom_row_pters_pass_basic() +
                             this.dom_row_pters_pass_basic_explain() +
                         '</div>';
                 }
                 if(this.data.next.product_id[0] != PASS_PRODUCT.standard.id){
                     html +=
-                        `<div class="pters_pass_product_wrapper" style="${standard_color}" onclick="pters_pass_shop_popup.event_buy('standard')">` +
+                        `<div class="pters_pass_product_wrapper" style="${standard_color}" onclick="pters_pass_shop_popup.event_buy('standard', PERIOD)">` +
                             this.dom_row_pters_pass_standard() +
                             this.dom_row_pters_pass_standard_explain() +
                         '</div>';
                 }
                 if(this.data.next.product_id[0] != PASS_PRODUCT.premium.id){
                     html +=
-                        `<div class="pters_pass_product_wrapper" style="${premium_color}" onclick="pters_pass_shop_popup.event_buy('premium')">` +
+                        `<div class="pters_pass_product_wrapper" style="${premium_color}" onclick="pters_pass_shop_popup.event_buy('premium', PERIOD)">` +
                             this.dom_row_pters_pass_premium() +
                             this.dom_row_pters_pass_premium_explain() +
                         '</div>';
@@ -194,9 +213,9 @@ class Pters_pass_shop{
 
     dom_row_pters_pass_premium(){
         let unit = ' / 매월';
-        if(user_username =='guest' || user_username == 'danal_test'){ //200621
-            unit = "/ 30일";
-        }
+        // if(user_username =='guest' || user_username == 'danal_test'){ //200621
+        //     unit = "/ 30일";
+        // }
         let id = "pters_pass_premium_ticket";
         let title = `<div style='font-size:12px;font-weight:500;margin-bottom:10px'>프리미엄</div>
                     <span style="font-size:32px;font-weight:900">&#8361; 9,900</span><span style="font-size:13px">${unit}</span>
@@ -543,7 +562,7 @@ class Pters_pass_shop{
         this.render_content();
     }
 
-    event_buy(product){
+    event_buy(product, payment_type_cd){
         let pass_purchase_change = this.data.pass_purchase_change;
 
         if(pass_purchase_change == PASS_CHANGE){
@@ -568,17 +587,17 @@ class Pters_pass_shop{
             switch(product){
                 case "basic":
                         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP_AGREEMENT, 100, POPUP_FROM_BOTTOM, null, ()=>{
-                            pters_pass_shop_agreement_popup = new Pters_pass_shop_agreement('.popup_pters_pass_shop_agreement', "basic", pass_purchase_change);
+                            pters_pass_shop_agreement_popup = new Pters_pass_shop_agreement('.popup_pters_pass_shop_agreement', "basic", pass_purchase_change, payment_type_cd);
                         });
                     break;
                 case "standard":
                         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP_AGREEMENT, 100, POPUP_FROM_BOTTOM, null, ()=>{
-                            pters_pass_shop_agreement_popup = new Pters_pass_shop_agreement('.popup_pters_pass_shop_agreement', "standard", pass_purchase_change);
+                            pters_pass_shop_agreement_popup = new Pters_pass_shop_agreement('.popup_pters_pass_shop_agreement', "standard", pass_purchase_change, payment_type_cd);
                         });
                     break;
                 case "premium":
                         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP_AGREEMENT, 100, POPUP_FROM_BOTTOM, null, ()=>{
-                            pters_pass_shop_agreement_popup = new Pters_pass_shop_agreement('.popup_pters_pass_shop_agreement', "premium", pass_purchase_change);
+                            pters_pass_shop_agreement_popup = new Pters_pass_shop_agreement('.popup_pters_pass_shop_agreement', "premium", pass_purchase_change, payment_type_cd);
                         });
                     break;
             }
