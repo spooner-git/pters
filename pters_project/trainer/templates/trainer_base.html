@@ -1107,16 +1107,27 @@
 
 <!-- Enliple Common Tracker v3.6 [공용] start -->
 <script type="text/javascript">
-<!--
+//<!--
 function mobRf() {
     var rf = new EN();
     rf.setData("userid", "pters1010");
     rf.setSSL(true);
     rf.sendRf();
 }
+function mobConv(price) {
+    var cn = new EN();
+    cn.setData("uid", "pters1010");
+    cn.setData("ordcode", "");
+    cn.setData("qty", "1");
+    cn.setData("price", price);
+    cn.setData("pnm", encodeURIComponent(encodeURIComponent("counsel")));
+    cn.setSSL(true);
+    cn.sendConv();
+}
 //-->
 </script>
 <script src="https://cdn.megadata.co.kr/js/en_script/3.6/enliple_min3.6.js" defer="defer" onload="mobRf()"></script>
+
 <!-- Enliple Common Tracker v3.6 [공용] end -->
 
 </body>
