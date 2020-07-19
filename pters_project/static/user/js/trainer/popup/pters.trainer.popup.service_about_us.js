@@ -121,8 +121,8 @@ class Service_about_us {
     dom_row_business_info(){
         let html = `<div>
                         <div class="about_us_tag">사업자 정보</div>
-                        <div class="about_us_name">사업자 등록번호: 463-56-00284</div>
-                        <div class="about_us_name">통신판매업 신고: 2017-서울동작-0672</div>
+                        <div class="about_us_name">사업자 등록번호: 558-86-01803</div>
+                        <div class="about_us_name">통신판매업 신고: 2020-서울동작-0665</div>
                     </div>`;
         return html;
     }
