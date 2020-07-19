@@ -545,6 +545,7 @@ class Pters_pass_func{
                                 show_error_message({title:msg});
                                 return false;
                             }
+                            mobConv(price);
                             show_error_message({title:msg});
 
                             location.href = url_move;
