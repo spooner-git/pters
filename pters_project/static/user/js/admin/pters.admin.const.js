@@ -190,7 +190,7 @@ const TICKET_STATUS = {"IP": "진행중", "PE": "종료", "RF": "환불", "HD":"
 const PAY_TYPE_NAME = {"SINGLE": "1회 결제", "PERIOD": "정기 결제 / 1 개월", "":"없음"};
 const PAY_STATUS = {"paid":"결제 완료", "failed":"결제 실패", "cancelled":"결제 취소"};
 const PAY_METHOD = {"card":"카드 결제", "iap": "인앱 결제", "":"-"};
-const PAYMENT_ID = "imp74691731";
+const PAYMENT_ID = "imp53133818";
 const PASS_PRODUCT = {"standard":{id:7, text:"스탠다드", price:9900}, "premium":{id:8, text:"프리미엄", price:15000}};
 
 //  수업 종류 - 개인 레슨 자유형
