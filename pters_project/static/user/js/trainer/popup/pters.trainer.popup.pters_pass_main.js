@@ -432,9 +432,9 @@ class Pters_pass_func{
 
     static ready_payment(){
         let payment_id = PAYMENT_ID;
-        if(user_username == 'danal_test'){
-            payment_id = "imp74691731";
-        }
+        // if(user_username == 'danal_test'){
+        //     payment_id = "imp74691731";
+        // }
         var IMP = window.IMP; // 생략가능
         IMP.init(payment_id); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
     }

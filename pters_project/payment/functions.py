@@ -18,8 +18,8 @@ def func_set_billing_schedule(customer_uid, pre_payment_info, paid_date):
     product_price_info = None
     access_token = func_get_imp_token()
 
-    if pre_payment_info.member.user.username == 'danal_test':
-        access_token = func_get_imp_token_danal_test()
+    # if pre_payment_info.member.user.username == 'danal_test':
+    #     access_token = func_get_imp_token_danal_test()
     error = access_token['error']
 
     if error is None:
