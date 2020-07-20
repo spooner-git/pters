@@ -340,7 +340,7 @@ const PAY_TYPE_NAME = {"SINGLE": "1회 결제", "PERIOD": "정기 결제 / 1 개
 const PAY_STATUS = {"paid":"결제 완료", "failed":"결제 실패", "cancelled":"결제 취소", "reserve":"결제 예정"};
 const PAY_METHOD = {"card":"카드 결제", "iap": "인앱 결제", "":"-", "event":"이벤트", "ios": "ios", "android": "android", "인앱 결제": "인앱 결제", "coupon":"쿠폰"};
 const PAYMENT_ID = "imp53133818";
-const PASS_PRODUCT = {"basic":{id:14, text:"베이직", price:3900}, "premium":{id:7, text:"프리미엄", price:9900}, "standard":{id:8, text:"스탠다드", price:6900}};
+const PASS_PRODUCT = {"basic":{id:14, text:"베이직", price:3900}, "premium":{id:7, text:"프리미엄", price:9900}, "premium20":{id:22, text:"프리미엄20", price:19800}, "standard":{id:8, text:"스탠다드", price:6900}};
 const PASS_PURCHASE = 0;
 const PASS_CHANGE = 1;
 //  수업 종류 - 개인 레슨 자유형
@@ -569,6 +569,7 @@ const payment_agreement = {
                         1) 베이직 : 무료 이용자에게 적용되는 기능제한이 제거된 상태로 이용이 가능하며, 상세한 제한 해제 내역은 해당 유료서비스 구매페이지에 명시 <br/>
                         2) 스탠다드 : 무료 이용자에게 적용되는 기능제한이 제거된 상태로 이용이 가능하며, 상세한 제한 해제 내역은 해당 유료서비스 구매페이지에 명시 <br/>
                         3) 프리미엄 : 무료 이용자에게 적용되는 기능제한이 제거된 상태로 이용이 가능하며, 상세한 제한 해제 내역은 해당 유료서비스 구매페이지에 명시 <br/>
+                        3) 프리미엄20 : 무료 이용자에게 적용되는 기능제한이 제거된 상태로 이용이 가능하며, 상세한 제한 해제 내역은 해당 유료서비스 구매페이지에 명시 <br/>
                         4) 비즈니스 : 사업자 전용 기능을 이용 가능<br/>
                     2.이용권/서비스의 이용기간/정기결제 여부에 따른 분류 <br/>
                         <!-- 1) 기간만료형 이용권 : 이용 가능 기간이 만료되는 경우, 유료서비스의 이용이 종료되는 서비스 <br/> -->

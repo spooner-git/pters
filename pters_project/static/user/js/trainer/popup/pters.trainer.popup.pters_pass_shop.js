@@ -108,6 +108,7 @@ class Pters_pass_shop{
     }
     
     dom_assembly_content(){
+        let premium20_color = `background-color:#362e2e;`;
         let premium_color = `background-color:#362e2e;`;
         let standard_color = `background-color:#d6424e;`;
         let basic_color = `background-color:#fe4e65;`;
@@ -125,6 +126,10 @@ class Pters_pass_shop{
                         `<div class="pters_pass_product_wrapper" style="${premium_color}" onclick="pters_pass_shop_popup.event_buy('premium', PERIOD)">` +
                             this.dom_row_pters_pass_premium() +
                             this.dom_row_pters_pass_premium_explain() +
+                        '</div>' +
+                        `<div class="pters_pass_product_wrapper" style="${premium20_color}" onclick="pters_pass_shop_popup.event_buy('premium20', PERIOD)">` +
+                            this.dom_row_pters_pass_premium20() +
+                            this.dom_row_pters_pass_premium20_explain() +
                         '</div>' +
                         `<div class="pters_pass_product_wrapper" style="${custom_color}" onclick="pters_pass_shop_popup.event_custom_app_launch()">` +
                             this.dom_row_pters_pass_custom() +
@@ -157,6 +162,10 @@ class Pters_pass_shop{
                         `<div class="pters_pass_product_wrapper" style="${premium_color}" onclick="pters_pass_shop_popup.event_buy('premium', PERIOD)">` +
                             this.dom_row_pters_pass_premium() +
                             this.dom_row_pters_pass_premium_explain() +
+                        '</div>' +
+                        `<div class="pters_pass_product_wrapper" style="${premium20_color}" onclick="pters_pass_shop_popup.event_buy('premium20', PERIOD)">` +
+                            this.dom_row_pters_pass_premium20() +
+                            this.dom_row_pters_pass_premium20_explain() +
                         '</div>' +
                         `<div class="pters_pass_product_wrapper" style="${premium_color}" onclick="pters_pass_shop_popup.event_buy('premium', SINGLE)">` +
                             this.dom_row_pters_pass_premium_temp() +
@@ -200,6 +209,13 @@ class Pters_pass_shop{
                             this.dom_row_pters_pass_premium_explain() +
                         '</div>';
                 }
+                if(this.data.next.product_id[0] != PASS_PRODUCT.premium20.id){
+                    html +=
+                        `<div class="pters_pass_product_wrapper" style="${premium20_color}" onclick="pters_pass_shop_popup.event_buy('premium20', PERIOD)">` +
+                            this.dom_row_pters_pass_premium20() +
+                            this.dom_row_pters_pass_premium20_explain() +
+                        '</div>';
+                }
                 html += `<div class="pters_pass_product_wrapper" style="${custom_color}" onclick="pters_pass_shop_popup.event_custom_app_launch()">` +
                             this.dom_row_pters_pass_custom() +
                             this.dom_row_pters_pass_custom_explain() +
@@ -237,6 +253,71 @@ class Pters_pass_shop{
         }
         // if(device == MOBILE && device_info != 'web' && user_username =='guest'){
         
+        let style = {"color":"var(--fundamental-white)", "font-weight":"bold", "height":"auto", "cursor":"unset"};
+        let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            // this.event_buy("premium");
+        });
+
+        let html = row;
+        return html;
+    }
+
+    dom_row_pters_pass_premium20_explain(){
+        let html = `<article class="pters_pass_explain_wrapper">
+                        <div class="product_explain_row">
+                            <div class="product_explain_row_title">${CImg.confirm(["var(--fundamental-white)"], {"vertical-align":"middle", "width":"17px", "margin-right":"5px"})} 일정</div>
+                            <div class="product_explain_row_detail">매일 오늘 기준 전후 1년 등록, 취소</div>
+                        </div>
+                        <div class="product_explain_row">
+                            <div class="product_explain_row_title">${CImg.confirm(["var(--fundamental-white)"], {"vertical-align":"middle", "width":"17px", "margin-right":"5px"})} 회원</div>
+                            <div class="product_explain_row_detail">500명</div>
+                        </div>
+                        <div class="product_explain_row">
+                            <div class="product_explain_row_title">${CImg.confirm(["var(--fundamental-white)"], {"vertical-align":"middle", "width":"17px", "margin-right":"5px"})} 통계</div>
+                            <div class="product_explain_row_detail">1년 단위 조회 가능</div>
+                        </div>
+                        <div class="product_explain_row">
+                            <div class="product_explain_row_title">${CImg.confirm(["var(--fundamental-white)"], {"vertical-align":"middle", "width":"17px", "margin-right":"5px"})} 지점</div>
+                            <div class="product_explain_row_detail">20개</div>
+                        </div>
+                        <div class="product_explain_row">
+                            <div class="product_explain_row_title">${CImg.confirm(["var(--fundamental-white)"], {"vertical-align":"middle", "width":"17px", "margin-right":"5px"})} 공지사항</div>
+                            <div class="product_explain_row_detail">이용 가능</div>
+                        </div>
+                        <div class="product_explain_row">
+                            <div class="product_explain_row_title">${CImg.confirm(["var(--fundamental-white)"], {"vertical-align":"middle", "width":"17px", "margin-right":"5px"})} 설정</div>
+                            <div class="product_explain_row_detail">제한 없음</div>
+                        </div>
+                    </article>`;
+        return html;
+    }
+
+    dom_row_pters_pass_premium20(){
+        let unit = ' / 매월';
+        // if(user_username =='guest' || user_username == 'danal_test'){ //200621
+        //     unit = "/ 30일";
+        // }
+        let id = "pters_pass_premium20_ticket";
+        let title = `<div style='font-size:12px;font-weight:500;margin-bottom:10px'>프리미엄20</div>
+                    <span style="font-size:32px;font-weight:900">&#8361; 19,800</span><span style="font-size:13px">${unit}</span>
+                    `;
+        let icon = DELETE;
+        let icon_r_visible = NONE;
+        let icon_r_text = "";
+        if(this.data.pass_purchase_change == PASS_CHANGE) {
+            if (this.data.next.name[0] != "") {
+                title = `<div style='font-size:12px;font-weight:500;margin-bottom:10px'>프리미엄20</div>
+                    <div>
+                    <span style="font-size:32px;font-weight:900">&#8361; 19,800</span><span style="font-size:13px"> ${unit}</span>
+                    </div>
+                    <div>
+                        <span style="font-size:15px;font-weight:900">${this.check_pass_next_paid_date(19800)} 일부터 결제가 진행됩니다.</span>
+                    </div>
+                    `;
+            }
+        }
+        // if(device == MOBILE && device_info != 'web' && user_username =='guest'){
+
         let style = {"color":"var(--fundamental-white)", "font-weight":"bold", "height":"auto", "cursor":"unset"};
         let row = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             // this.event_buy("premium");
@@ -559,6 +640,12 @@ class Pters_pass_shop{
                 this.dom_row_pters_pass_premium_explain() +
             '</div>';
         }
+        else if(upper_product_id == PASS_PRODUCT.premium20.id){
+            this.coupon_html = `<div class="pters_pass_product_wrapper" style="${premium_color}" onclick="pters_pass_shop_popup.event_coupon(${data.product_id})">` +
+                this.dom_row_pters_pass_coupon(data.product_price_name, data.product_name, data.product_price_price) +
+                this.dom_row_pters_pass_premium20_explain() +
+            '</div>';
+        }
         this.render_content();
     }
 
@@ -598,6 +685,11 @@ class Pters_pass_shop{
                 case "premium":
                         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP_AGREEMENT, 100, POPUP_FROM_BOTTOM, null, ()=>{
                             pters_pass_shop_agreement_popup = new Pters_pass_shop_agreement('.popup_pters_pass_shop_agreement', "premium", pass_purchase_change, payment_type_cd);
+                        });
+                    break;
+                case "premium20":
+                        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP_AGREEMENT, 100, POPUP_FROM_BOTTOM, null, ()=>{
+                            pters_pass_shop_agreement_popup = new Pters_pass_shop_agreement('.popup_pters_pass_shop_agreement', "premium20", pass_purchase_change, payment_type_cd);
                         });
                     break;
             }
@@ -640,6 +732,11 @@ class Pters_pass_shop{
                 case "premium":
                         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP_AGREEMENT, 100, POPUP_FROM_BOTTOM, null, ()=>{
                             pters_pass_shop_agreement_popup = new Pters_pass_shop_agreement('.popup_pters_pass_shop_agreement', "premium", pass_purchase_change);
+                        });
+                    break;
+                case "premium20":
+                        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_PTERS_PASS_SHOP_AGREEMENT, 100, POPUP_FROM_BOTTOM, null, ()=>{
+                            pters_pass_shop_agreement_popup = new Pters_pass_shop_agreement('.popup_pters_pass_shop_agreement', "premium20", pass_purchase_change);
                         });
                     break;
             }
@@ -824,6 +921,9 @@ class Pters_pass_shop{
         }
         if(PASS_PRODUCT.premium.id==this.data.current.product_id[0]){
             product_price = PASS_PRODUCT.premium.price;
+        }
+        if(PASS_PRODUCT.premium20.id==this.data.current.product_id[0]){
+            product_price = PASS_PRODUCT.premium20.price;
         }
         let one_day_current_price = parseInt(product_price/31);
         let one_day_next_price = parseInt(next_price/31);
