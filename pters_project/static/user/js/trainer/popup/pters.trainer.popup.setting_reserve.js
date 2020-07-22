@@ -130,8 +130,8 @@ class Setting_reserve{
                     '<article class="obj_input_box_full">' +
                         this.dom_row_capacity_visible() +
                         "<div style=\"margin-bottom:15px;\"><span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>이용 회원님께서 예약시 일정의 현재 참석자와 정원 숫자를 볼 수 있습니다.</span></div>" +
-                        this.dom_row_disable_schedule_visible() +
-                        "<div><span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>이용 회원님께서 예약시 예약 가능한 일정만 볼 수 있습니다.</span></div>" +
+                        // this.dom_row_disable_schedule_visible() +
+                        // "<div><span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>이용 회원님께서 예약시 예약 가능한 일정만 볼 수 있습니다.</span></div>" +
                     '</article>' +
                     '<article class="obj_input_box_full">' +
                         this.dom_row_member_private_class_auto_permission() +

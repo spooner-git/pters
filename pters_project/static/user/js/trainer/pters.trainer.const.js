@@ -356,8 +356,9 @@ const TICKET_STATUS_COLOR = {"IP": "green", "PE": "var(--font-main)", "RF": "ora
 const PAY_TYPE_NAME = {"SINGLE": "1회 결제", "PERIOD": "정기 결제 / 1 개월", "":"없음", "FREE_EVENT":"무료 이벤트", "CHANGE":"상품 변경"};
 const PAY_STATUS = {"paid":"결제 완료", "failed":"결제 실패", "cancelled":"결제 취소", "reserve":"결제 예정"};
 const PAY_METHOD = {"card":"카드 결제", "iap": "인앱 결제", "":"-", "event":"이벤트", "ios": "ios", "android": "android", "인앱 결제": "인앱 결제", "coupon":"쿠폰"};
-const PAYMENT_ID = "imp74691731";
-const PASS_PRODUCT = {"basic":{id:14, text:"베이직", price:3900}, "premium":{id:7, text:"프리미엄", price:9900}, "standard":{id:8, text:"스탠다드", price:6900}};
+
+const PAYMENT_ID = "imp53133818";
+const PASS_PRODUCT = {"basic":{id:14, text:"베이직", price:3900}, "premium":{id:7, text:"프리미엄", price:9900}, "premium20":{id:22, text:"프리미엄20", price:19800}, "standard":{id:8, text:"스탠다드", price:6900}};
 const PASS_PURCHASE = 0;
 const PASS_CHANGE = 1;
 //  수업 종류 - 개인 레슨 자유형
@@ -496,7 +497,7 @@ const payment_agreement = {
                 <p style="font-size:14px;">1. 총칙</p>
 
                 <b> 제1조 (목적) </b><br/>
-            &nbsp; 이 약관은 SPOONER(이하 ‘회사’라 합니다)이 제공하는 PTERS(피터스) 서비스(이하 “서비스”라 합니다.)와 관련하여 제반 서비스의 유료서비스를 이용함에 있어 회사와 회원간 제반 법률관계 및 기타 관련 사항을 규정함을 목적으로 합니다.<br/>
+            &nbsp; 이 약관은 피터스컴퍼니 주식회사(이하 ‘회사’라 합니다)이 제공하는 PTERS(피터스) 서비스(이하 “서비스”라 합니다.)와 관련하여 제반 서비스의 유료서비스를 이용함에 있어 회사와 회원간 제반 법률관계 및 기타 관련 사항을 규정함을 목적으로 합니다.<br/>
             <br/>
             </div>
             <div>
@@ -586,6 +587,7 @@ const payment_agreement = {
                         1) 베이직 : 무료 이용자에게 적용되는 기능제한이 제거된 상태로 이용이 가능하며, 상세한 제한 해제 내역은 해당 유료서비스 구매페이지에 명시 <br/>
                         2) 스탠다드 : 무료 이용자에게 적용되는 기능제한이 제거된 상태로 이용이 가능하며, 상세한 제한 해제 내역은 해당 유료서비스 구매페이지에 명시 <br/>
                         3) 프리미엄 : 무료 이용자에게 적용되는 기능제한이 제거된 상태로 이용이 가능하며, 상세한 제한 해제 내역은 해당 유료서비스 구매페이지에 명시 <br/>
+                        3) 프리미엄20 : 무료 이용자에게 적용되는 기능제한이 제거된 상태로 이용이 가능하며, 상세한 제한 해제 내역은 해당 유료서비스 구매페이지에 명시 <br/>
                         4) 비즈니스 : 사업자 전용 기능을 이용 가능<br/>
                     2.이용권/서비스의 이용기간/정기결제 여부에 따른 분류 <br/>
                         <!-- 1) 기간만료형 이용권 : 이용 가능 기간이 만료되는 경우, 유료서비스의 이용이 종료되는 서비스 <br/> -->

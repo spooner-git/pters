@@ -123,7 +123,8 @@
                     alert(id_recommend_username+'님을 추천인을 등록하려면 추천인 아이디 확인을 해주세요.');
                     $('#id_recommend_username').val('');
                 }else{
-                    adn_btn_ok('102076','types1');
+                    //adn_btn_ok('102076','types1');
+                    mobConv();
                     document.getElementById('sns-form').submit();
                 }
 
@@ -174,5 +175,21 @@
             last_scroll_top = current_scroll_top;
         }
     </script>
-    <script type="text/javascript" async src="//fin.rainbownine.net/js/adn_tags_1.0.0.js"></script>
+{#    <script type="text/javascript" async src="//fin.rainbownine.net/js/adn_tags_1.0.0.js"></script>#}
+    <script type="text/javascript">
+    //<!--
+    function mobConv() {
+        var group_type = $('#id_group_type').val();
+        var cn = new EN();
+        cn.setData("uid", "pters1010");
+        cn.setData("ordcode", group_type);
+        cn.setData("qty", "1");
+        cn.setData("price", "1");
+        cn.setData("pnm", encodeURIComponent(encodeURIComponent("counsel")));
+        cn.setSSL(true);
+        cn.sendConv();
+    }
+    //-->
+    </script>
+    <script src="https://cdn.megadata.co.kr/js/en_script/3.6/enliple_min3.6.js" defer="defer"></script>
 {% endblock %}

@@ -17,6 +17,9 @@ logger = logging.getLogger(__name__)
 def func_set_billing_schedule(customer_uid, pre_payment_info, paid_date):
     product_price_info = None
     access_token = func_get_imp_token()
+
+    # if pre_payment_info.member.user.username == 'danal_test':
+    #     access_token = func_get_imp_token_danal_test()
     error = access_token['error']
 
     if error is None:
@@ -128,6 +131,37 @@ def func_get_imp_token():
     data_token = {
         'imp_key': getattr(settings, "PTERS_IMP_REST_API_KEY", ''),  # REST API 키
         'imp_secret': getattr(settings, "PTERS_IMP_REST_API_SECRET", '')  # REST API Secret
+    }
+    body = json.dumps(data_token)
+    h = httplib2.Http()
+
+    resp, content = h.request("https://api.iamport.kr/users/getToken", method="POST", body=body,
+                              headers={'Content-Type': 'application/json;'})
+
+    json_data = content.decode('utf-8')
+    json_loading_data = None
+    try:
+        json_loading_data = json.loads(json_data)
+    except ValueError:
+        error = '오류가 발생했습니다.'
+    except TypeError:
+        error = '오류가 발생했습니다.'
+
+    if error is None:
+        if resp['status'] == '200':
+            access_token = json_loading_data['response']['access_token']
+
+    return {'access_token': access_token, 'error': error}
+
+
+def func_get_imp_token_danal_test():
+
+    access_token = None
+    error = None
+
+    data_token = {
+        'imp_key': '3824063244025856',  # REST API 키
+        'imp_secret': 'MClmMPi6FwzGaTVEiXSSLrtwWav3SO9Frv1dkkk0RTG1MCG5AzXm1rSXBo0tda8EGaS0vc0m6GoTj4ZT'  # REST API Secret
     }
     body = json.dumps(data_token)
     h = httplib2.Http()

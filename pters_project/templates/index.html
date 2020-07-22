@@ -504,8 +504,8 @@
                         <div class="swiper-pagination" style="right:0;width:75px;left:unset;"></div>
                     </div>
                     <div class="pters_download">
-                        <a href="{{request.session.ios_url}}"><img id="download_img_ios" src="/static/common/img/front_page/ios.svg" alt=""></a>
-                        <a href="{{request.session.android_url}}"><img id="download_img_android" src="/static/common/img/front_page/android.svg" alt=""></a>
+                        <img id="download_img_ios" src="/static/common/img/front_page/ios.svg" alt="" style="cursor:pointer;">
+                        <img id="download_img_android" src="/static/common/img/front_page/android.svg" alt="" style="cursor:pointer;">
                     </div>
                 </div>
 
@@ -608,7 +608,7 @@
                         <p style="text-decoration: underline;margin:5px 0">support@pters.co.kr</p>
                     </div>
                     <div style="font-size:11px;font-weight:bold;margin-top:25px">
-                        ⓒ SPOONER
+                        ⓒ 피터스컴퍼니 주식회사
                     </div>
                 </div>
             </section>
@@ -635,6 +635,15 @@
         $('#download_img_ios, #download_img_android').show();
     }
   */
+    $("#download_img_ios").click(function(){
+        {#adn_btn_ok('102076','types2');#}
+        window.open("{{request.session.ios_url}}");
+    });
+
+    $("#download_img_android").click(function(){
+        {#adn_btn_ok('102076','types3');#}
+        window.open("{{request.session.android_url}}");
+    });
 
     if(varUA.match('MSIE') != null || varUA.match('msie') != null || varUA.match('rv:11.0')){
         $('#root_nav, .login_foot, #description_wrapper').css('display','none');
@@ -820,4 +829,7 @@ function show_description(){
     go_to("what");
 }
 </script>
+{#<script type="text/javascript" async src="//fin.rainbownine.net/js/adn_tags_1.0.0.js"></script>#}
+
+
 {% endblock %}

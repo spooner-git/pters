@@ -120,6 +120,7 @@ input:disabled{
 }
 .create_row .cell_content{
 	/* flex: 2 1 0; */
+	/* flex: 6 1 0;*/
 	flex: 1 1 0;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -274,6 +275,9 @@ input:disabled{
 	color: var(--font-base);
 	height:16px;
 	line-height:16px;
+	overflow:hidden;
+	text-overflow:ellipsis;
+	white-space: nowrap;
 }
 
 .select_lecture_row .cell_lecture_info > .lecture_additional_info{
