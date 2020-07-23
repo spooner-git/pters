@@ -41,14 +41,13 @@ def index(request):
     request.session['PTERS_NAVER_ID_LOGIN_CLIENT_SECRET'] = settings.PTERS_NAVER_ID_LOGIN_CLIENT_SECRET
     # request.session['device_info'] = 'web'
     request.session['setting_theme'] = 'light'
+    request.session['group_name'] = 'trainer'
     domain_url = current_site.domain.split('pters.co.kr')[0]
     if domain_url != '' and domain_url != 'www.' \
-            and domain_url != 'spooner-test.' and domain_url != 'www.spooner-test.':
-            # and domain_url != 'localhost:8000':
+            and domain_url != 'spooner-test.' and domain_url != 'www.spooner-test.' \
+            and domain_url != 'localhost:8000':
         domain_url = domain_url.split('.')[0]
-        if domain_url != '172' and domain_url != '198':
-            domain_url = 'lucent'
-        else:
+        if domain_url == '172' or domain_url == '198' or domain_url == '0':
             domain_url = 'pters'
     else:
         domain_url = 'pters'
@@ -88,6 +87,36 @@ def index(request):
         return redirect(next_page)
 
 
+def index_trainee(request):
+    # login 완료시 main page 이동
+    template_name = 'index_trainee.html'
+    request.session['APP_VERSION'] = settings.APP_VERSION
+    current_site = get_current_site(request)
+    request.session['domain'] = current_site.domain
+    request.session['PTERS_NAVER_ID_LOGIN_CLIENT_ID'] = settings.PTERS_NAVER_ID_LOGIN_CLIENT_ID
+    request.session['PTERS_NAVER_ID_LOGIN_CLIENT_SECRET'] = settings.PTERS_NAVER_ID_LOGIN_CLIENT_SECRET
+    # request.session['device_info'] = 'web'
+    request.session['setting_theme'] = 'light'
+    request.session['group_name'] = 'trainee'
+    if request.user.is_authenticated():
+        next_page = '/check/'
+    else:
+        next_page = ''
+
+    if next_page == '':
+        return render(request, template_name)
+    else:
+        return redirect(next_page)
+
+
+class TraineeFunctionIntroduceView(TemplateView):
+    template_name = 'for_trainee.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(TraineeFunctionIntroduceView, self).get_context_data(**kwargs)
+        return context
+
+
 class CheckView(LoginRequiredMixin, RedirectView):
 
     def get(self, request, **kwargs):
@@ -109,12 +138,14 @@ class CheckView(LoginRequiredMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         return super(CheckView, self).get_redirect_url(*args, **kwargs)
 
+
 class ServiceIntroduceView(TemplateView):
     template_name = 'introduce.html'
 
     def get_context_data(self, **kwargs):
         context = super(ServiceIntroduceView, self).get_context_data(**kwargs)
         return context
+
 
 class TutorFunctionIntroduceView(TemplateView):
     template_name = 'for_tutor.html'
@@ -123,12 +154,14 @@ class TutorFunctionIntroduceView(TemplateView):
         context = super(TutorFunctionIntroduceView, self).get_context_data(**kwargs)
         return context
 
+
 class TuteeFunctionIntroduceView(TemplateView):
     template_name = 'for_tutee.html'
 
     def get_context_data(self, **kwargs):
         context = super(TuteeFunctionIntroduceView, self).get_context_data(**kwargs)
         return context
+
 
 class SiteUsePolicyView(TemplateView):
     template_name = 'policy.html'
@@ -175,13 +208,11 @@ class AccessTestMixin(UserPassesTestMixin):
         domain_url = self.request.session.get('domain_url', '')
         if domain_url == '' or domain_url is None:
             domain_url = current_site.domain.split('pters.co.kr')[0]
-            if domain_url != '' and domain_url != 'www.':
-                    # and domain_url != 'spooner-test.' and domain_url != 'www.spooner-test.'\
-                    # and domain_url != 'localhost:8000':
+            if domain_url != '' and domain_url != 'www.' \
+                    and domain_url != 'spooner-test.' and domain_url != 'www.spooner-test.'\
+                    and domain_url != 'localhost:8000':
                 domain_url = domain_url.split('.')[0]
-                if domain_url != '172' and domain_url != '198':
-                    domain_url = 'lucent'
-                else:
+                if domain_url == '172' or domain_url == '198' or domain_url == '0':
                     domain_url = 'pters'
             else:
                 domain_url = 'pters'
