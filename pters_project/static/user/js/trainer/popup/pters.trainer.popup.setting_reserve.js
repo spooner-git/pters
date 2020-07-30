@@ -499,6 +499,7 @@ class Setting_reserve{
             "setting_member_reserve_cancel_time":this.data.available_cancel_time.value[0], //예약 취소 가능 시간
             "setting_member_lecture_max_num_view_available":this.data.capacity_visible, // 현재 참석자/정원 보이기
             "setting_member_disable_schedule_visible":this.data.disable_schedule_visible, // 예약 가능 일정만 보이기
+            "setting_single_lecture_duplicate":this.data.setting_single_lecture_duplicate,
 
             "setting_member_private_class_auto_permission":this.data.setting_member_private_class_auto_permission, // 개인 수업 예약 자동 수락 기능
             "setting_member_public_class_auto_permission":this.data.setting_member_public_class_auto_permission, // 그룹 수업 예약 자동 수락 기능

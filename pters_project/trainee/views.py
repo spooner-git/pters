@@ -470,6 +470,7 @@ def add_trainee_schedule_logic(request):
     # time_duration = request.POST.get('time_duration', '')
     training_time = request.POST.get('training_time', '')
     # class_type_name = request.session.get('class_type_name', '')
+    func_setting_data_update(request, 'trainee')
     setting_week_start_date = request.session.get('setting_week_start_date', 'SUN')
     setting_single_lecture_duplicate = request.session.get('setting_single_lecture_duplicate', UN_USE)
     error = None
@@ -668,7 +669,8 @@ def add_trainee_schedule_logic(request):
 
     if error is None:
         schedule_result = pt_add_logic_func(training_date, start_date, end_date, request.user.id, member_ticket_id,
-                                            class_id, request, lecture_info, lecture_schedule_id)
+                                            class_id, request, lecture_info, lecture_schedule_id,
+                                            setting_single_lecture_duplicate)
         error = schedule_result['error']
         context['schedule_id'] = schedule_result['schedule_id']
     # if error is None:
@@ -899,6 +901,8 @@ class GetTraineeScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         class_id = self.request.session.get('class_id', '')
         trainer_id = self.request.session.get('trainer_id', '')
         class_hour = self.request.session.get('class_hour', '')
+        func_setting_data_update(self.request, 'trainee')
+        setting_single_lecture_duplicate = self.request.session.get('setting_single_lecture_duplicate', UN_USE)
         today = datetime.date.today()
         error = None
         if date != '':
@@ -907,6 +911,10 @@ class GetTraineeScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             day = 46
         start_date = today - datetime.timedelta(days=int(day))
         end_date = today + datetime.timedelta(days=int(day))
+
+        if setting_single_lecture_duplicate == UN_USE:
+            one_to_one_lecture_id = None
+
         if class_id is not None and class_id != '':
             if trainer_id == '' or trainer_id is None:
                 try:
@@ -1515,8 +1523,8 @@ class AlarmViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         return render(request, self.template_name, context)
 
 
-def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
-                      member_ticket_id, class_id, request, lecture_info, lecture_schedule_id):
+def pt_add_logic_func(schedule_date, start_date, end_date, user_id, member_ticket_id, class_id, request, lecture_info,
+                      lecture_schedule_id, setting_single_lecture_duplicate):
 
     class_type_name = request.session.get('class_type_name', '')
     error = None
@@ -1564,7 +1572,10 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id,
                 note = lecture_schedule_info.note
             except ObjectDoesNotExist:
                 error = '회원 정보를 불러오지 못했습니다.[0]'
-        # else:
+        else:
+            if setting_single_lecture_duplicate == USE:
+                print('duplicate_check2')
+                schedule_duplication = SCHEDULE_DUPLICATION_ENABLE
         #     lecture_info = func_get_member_ticket_one_to_one_lecture_info(class_id, member_ticket_id)
         #     lecture_schedule_id = None
 

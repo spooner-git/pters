@@ -18,6 +18,7 @@ from .models import MemberTicketTb, MemberClosedDateHistoryTb
 
 def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_date):
     schedule_list = []
+    schedule_data = None
     all_schedule_check = 0
     now = timezone.now()
     next_schedule = ''
@@ -29,13 +30,13 @@ def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_dat
     if all_schedule_check == 0:
         schedule_data = ScheduleTb.objects.select_related(
             'member_ticket_tb__member', 'lecture_tb'
-        ).filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,
-                 start_dt__gte=start_date, start_dt__lt=end_date,
-                 member_ticket_tb__member_id=user_id,
-                 member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
-                 member_ticket_tb__use=USE, use=USE
-                 ).annotate(lecture_current_member_num=RawSQL('IFNULL(('+query_lecture_current_member_num+' ), 1)', [])
-                            ).order_by('start_dt')
+        ).filter(
+            class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, start_dt__gte=start_date, start_dt__lt=end_date,
+            member_ticket_tb__member_id=user_id, member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
+            member_ticket_tb__use=USE, use=USE
+        ).annotate(lecture_current_member_num=RawSQL('IFNULL(('+query_lecture_current_member_num+' ), 1)', [])
+                   ).order_by('start_dt')
+
         idx1 = 0
         idx2 = 1
         member_ticket_id = None
@@ -74,7 +75,8 @@ def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_dat
             ).filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,
                      member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
                      member_ticket_tb__member_id=user_id,
-                     member_ticket_tb_id=class_member_ticket_info.member_ticket_tb_id, use=USE).order_by('start_dt')
+                     member_ticket_tb_id=class_member_ticket_info.member_ticket_tb_id,
+                     use=USE).order_by('start_dt')
 
             for schedule_info in schedule_data:
                 schedule_info.idx = str(idx1) + '-' + str(idx2)
