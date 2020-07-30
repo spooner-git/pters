@@ -1574,8 +1574,14 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id, member_ticke
                 error = '회원 정보를 불러오지 못했습니다.[0]'
         else:
             if setting_single_lecture_duplicate == USE:
-                print('duplicate_check2')
-                schedule_duplication = SCHEDULE_DUPLICATION_ENABLE
+                single_lecture_schedule_num = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
+                                                                        start_dt=start_date, end_dt=end_date,
+                                                                        use=USE).count()
+                if single_lecture_schedule_num == 0:
+                    schedule_duplication = SCHEDULE_DUPLICATION_ENABLE
+                else:
+                    error = '일정이 중복되었습니다.'
+
         #     lecture_info = func_get_member_ticket_one_to_one_lecture_info(class_id, member_ticket_id)
         #     lecture_schedule_id = None
 
