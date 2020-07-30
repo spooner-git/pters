@@ -471,6 +471,7 @@ def add_trainee_schedule_logic(request):
     training_time = request.POST.get('training_time', '')
     # class_type_name = request.session.get('class_type_name', '')
     setting_week_start_date = request.session.get('setting_week_start_date', 'SUN')
+    setting_single_lecture_duplicate = request.session.get('setting_single_lecture_duplicate', UN_USE)
     error = None
     class_info = None
     start_date = None
@@ -2518,39 +2519,42 @@ def update_trainee_setting_push_logic(request):
     error = update_alarm_setting_data(class_id, request.user.id, setting_type_cd_data, setting_info_data)
 
     now = timezone.now()
+    if class_id is None or class_id == '':
+        error = '지점 정보를 불러오지 못했습니다.'
 
-    schedule_alarm_data = ScheduleAlarmTb.objects.select_related(
-        'schedule_tb').filter(class_tb_id=class_id, alarm_dt__gte=now, member_id=request.user.id, use=USE)
+    if error is None:
+        schedule_alarm_data = ScheduleAlarmTb.objects.select_related(
+            'schedule_tb').filter(class_tb_id=class_id, alarm_dt__gte=now, member_id=request.user.id, use=USE)
 
-    if setting_schedule_alarm_minute == '-1':
-        schedule_alarm_data.delete()
-    else:
-        alarm_time = now + datetime.timedelta(minutes=int(setting_schedule_alarm_minute))
-        alarm_time = alarm_time.strftime('%Y-%m-%d %H:%M:00')
+        if setting_schedule_alarm_minute == '-1':
+            schedule_alarm_data.delete()
+        else:
+            alarm_time = now + datetime.timedelta(minutes=int(setting_schedule_alarm_minute))
+            alarm_time = alarm_time.strftime('%Y-%m-%d %H:%M:00')
 
-        schedule_data = ScheduleTb.objects.select_related(
-            'member_ticket_tb').filter(class_tb_id=class_id, start_dt__gte=alarm_time,
-                                       member_ticket_tb__member_id=request.user.id,
-                                       permission_state_cd=PERMISSION_STATE_CD_APPROVE,
-                                       use=USE)
-        for schedule_info in schedule_data:
-            alarm_dt = schedule_info.start_dt - datetime.timedelta(minutes=int(setting_schedule_alarm_minute))
+            schedule_data = ScheduleTb.objects.select_related(
+                'member_ticket_tb').filter(class_tb_id=class_id, start_dt__gte=alarm_time,
+                                           member_ticket_tb__member_id=request.user.id,
+                                           permission_state_cd=PERMISSION_STATE_CD_APPROVE,
+                                           use=USE)
+            for schedule_info in schedule_data:
+                alarm_dt = schedule_info.start_dt - datetime.timedelta(minutes=int(setting_schedule_alarm_minute))
 
-            new_reg_test = True
-            for schedule_alarm_info in schedule_alarm_data:
-                if str(schedule_alarm_info.schedule_tb_id) == str(schedule_info.schedule_id):
-                    schedule_alarm_info.alarm_dt = alarm_dt
-                    schedule_alarm_info.alarm_minute = setting_schedule_alarm_minute
+                new_reg_test = True
+                for schedule_alarm_info in schedule_alarm_data:
+                    if str(schedule_alarm_info.schedule_tb_id) == str(schedule_info.schedule_id):
+                        schedule_alarm_info.alarm_dt = alarm_dt
+                        schedule_alarm_info.alarm_minute = setting_schedule_alarm_minute
+                        schedule_alarm_info.save()
+                        new_reg_test = False
+                        break
+
+                if new_reg_test:
+                    schedule_alarm_info = ScheduleAlarmTb(class_tb_id=class_id, schedule_tb_id=schedule_info.schedule_id,
+                                                          alarm_dt=alarm_dt, member_id=request.user.id,
+                                                          alarm_minute=setting_schedule_alarm_minute,
+                                                          use=USE)
                     schedule_alarm_info.save()
-                    new_reg_test = False
-                    break
-
-            if new_reg_test:
-                schedule_alarm_info = ScheduleAlarmTb(class_tb_id=class_id, schedule_tb_id=schedule_info.schedule_id,
-                                                      alarm_dt=alarm_dt, member_id=request.user.id,
-                                                      alarm_minute=setting_schedule_alarm_minute,
-                                                      use=USE)
-                schedule_alarm_info.save()
 
     if error is None:
         request.session['setting_push_from_trainer_lesson_alarm'] = int(setting_push_from_trainer_lesson_alarm)

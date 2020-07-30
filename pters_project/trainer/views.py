@@ -5857,6 +5857,7 @@ def update_setting_reserve_logic(request):
     setting_member_public_class_auto_permission = request.POST.get('setting_member_public_class_auto_permission', USE)
     setting_member_public_class_wait_member_num = request.POST.get('setting_member_public_class_wait_member_num', 0)
     setting_member_wait_schedule_auto_cancel_time = request.POST.get('setting_member_wait_schedule_auto_cancel_time', 0)
+    setting_single_lecture_duplicate = request.POST.get('setting_single_lecture_duplicate', UN_USE)
     class_id = request.session.get('class_id', '')
 
     if setting_member_lecture_max_num_view_available is None or setting_member_lecture_max_num_view_available == '':
@@ -5885,18 +5886,22 @@ def update_setting_reserve_logic(request):
         setting_member_public_class_wait_member_num = 0
     if setting_member_wait_schedule_auto_cancel_time is None or setting_member_wait_schedule_auto_cancel_time == '':
         setting_member_wait_schedule_auto_cancel_time = 0
+    if setting_single_lecture_duplicate is None or setting_single_lecture_duplicate == '':
+        setting_single_lecture_duplicate = UN_USE
 
     setting_type_cd_data = ['LT_RES_MEMBER_LECTURE_MAX_NUM_VIEW', 'LT_RES_MEMBER_DISABLE_SCHEDULE_VISIBLE',
                             'LT_RES_01', 'LT_RES_03', 'LT_RES_05',
                             'LT_RES_CANCEL_TIME', 'LT_RES_ENABLE_TIME',
                             'LT_RES_PRIVATE_CLASS_AUTO_PERMISSION', 'LT_RES_PUBLIC_CLASS_AUTO_PERMISSION',
-                            'LT_RES_PUBLIC_CLASS_WAIT_MEMBER_NUM', 'LT_RES_WAIT_SCHEDULE_AUTO_CANCEL_TIME']
+                            'LT_RES_PUBLIC_CLASS_WAIT_MEMBER_NUM', 'LT_RES_WAIT_SCHEDULE_AUTO_CANCEL_TIME',
+                            'LT_RES_SINGLE_LECTURE_DUPLICATE']
     setting_info_data = [setting_member_lecture_max_num_view_available, setting_member_disable_schedule_visible,
                          setting_member_reserve_time_available, setting_member_reserve_prohibition,
                          setting_member_reserve_date_available, setting_member_reserve_cancel_time,
                          setting_member_reserve_enable_time,
                          setting_member_private_class_auto_permission, setting_member_public_class_auto_permission,
-                         setting_member_public_class_wait_member_num, setting_member_wait_schedule_auto_cancel_time]
+                         setting_member_public_class_wait_member_num, setting_member_wait_schedule_auto_cancel_time,
+                         setting_single_lecture_duplicate]
     error = update_program_setting_data(class_id, setting_type_cd_data, setting_info_data)
 
     if error is None:
@@ -5913,6 +5918,7 @@ def update_setting_reserve_logic(request):
         request.session['setting_member_public_class_auto_permission'] = setting_member_public_class_auto_permission
         request.session['setting_member_public_class_wait_member_num'] = setting_member_public_class_wait_member_num
         request.session['setting_member_wait_schedule_auto_cancel_time'] = setting_member_wait_schedule_auto_cancel_time
+        request.session['setting_single_lecture_duplicate'] = setting_single_lecture_duplicate
     else:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
