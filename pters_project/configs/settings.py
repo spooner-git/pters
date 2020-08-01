@@ -27,7 +27,7 @@ SECRET_KEY = os.environ.get("PTERS_DJANGO_SECRET", '')
 
 DEBUG = False
 
-APP_VERSION = '2.11'
+APP_VERSION = '2.26'
 
 # ALLOWED_HOSTS = ['pters.co.kr','www.pters.co.kr','kr.pters.co.kr','jp.pters.co.kr','us.pters.co.kr','13.125.37.117']
 ALLOWED_HOSTS = ['*']

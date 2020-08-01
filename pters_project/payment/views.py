@@ -55,6 +55,9 @@ class PaymentView(LoginRequiredMixin, View):
         payment_count = PaymentInfoTb.objects.filter(member_id=request.user.id).count()
         context['payment_count'] = payment_count
         context['payment_id'] = getattr(settings, "PAYMENT_ID", '')
+        # if request.user.username == "danal_test":
+        #     context['payment_id'] = "imp74691731"
+
         context['product_data'] = product_list
 
         return render(request, self.template_name, context)
@@ -200,6 +203,8 @@ def check_finish_billing_logic(request):
     context = {}
     error = None
     access_token = func_get_imp_token()
+    # if request.user.username == 'danal_test':
+    #     access_token = func_get_imp_token_danal_test()
     today = datetime.date.today()
 
     if access_token['error'] is None:
@@ -290,18 +295,21 @@ def billing_check_logic(request):
     today = datetime.date.today()
     info_message = ''
 
+    if error is None:
+        try:
+            pre_payment_info = PaymentInfoTb.objects.get(merchant_uid=merchant_uid)
+        except ObjectDoesNotExist:
+            error = '결제에 실패했습니다.[1]'
+
+    # if pre_payment_info.member.user.username == 'danal_test':
+    #     access_token = func_get_imp_token_danal_test()
+
     if access_token['error'] is None:
         payment_info = func_get_payment_info_from_imp(imp_uid, access_token['access_token'])
         if payment_info is None:
             error = '결제에 실패했습니다.[0]'
     else:
         error = access_token['error']
-
-    if error is None:
-        try:
-            pre_payment_info = PaymentInfoTb.objects.get(merchant_uid=merchant_uid)
-        except ObjectDoesNotExist:
-            error = '결제에 실패했습니다.[1]'
 
     if error is None:
         try:
@@ -1448,7 +1456,7 @@ def resend_period_billing_logic(request):
 
     if error is None:
         error = func_resend_payment_info(payment_user_info.customer_uid, payment_user_info.merchant_uid,
-                                         payment_user_info.price)
+                                         payment_user_info.price, request.user.username)
 
     context['error'] = error
     if error is not None:
@@ -1723,6 +1731,8 @@ class PaymentHistoryView(LoginRequiredMixin, View):
                 payment_info.pay_method = ''
 
         context['payment_id'] = getattr(settings, "PAYMENT_ID", '')
+        # if request.user.username == "danal_test":
+        #     context['payment_id'] = "imp74691731"
         context['payment_data_history'] = payment_data_history
         context['current_payment_data'] = current_payment_data
         context['change_period_payment_data'] = change_period_payment_data

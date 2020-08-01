@@ -6,13 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="google-site-verification" content="EPm2stOoq7M_LaK0htEQNqbitGznovZCakPO78TPtsk" />
     <meta name="naver-site-verification" content="919ceda7d377b0d22cf390ca79de5dc21dc3d0fa"/>
-    <meta name="description" content="PTERS 피터스 PT, 요가, 필라테스, 당구, 골프 등 레슨 회원관리와 일정을 관리하는 서비스 프로그램">
+    <meta name="description" content="PTERS 피터스 PT, 요가, 필라테스, 당구, 골프 등 레슨 회원관리와 일정을 관리하는 서비스">
 
-    <title>PTERS-출석체크모드</title>
+    <title>PTERS | 피터스 | 레슨 관리</title>
 
-    <link rel="icon" href="/static/common/favicon.ico">
-    <link rel="apple-touch-icon" href="/static/common/favicon-48.png">
-    <link rel="shortcut icon" href="/static/common/favicon-48.png">
+    <link rel="icon" href="/static/common/{{request.session.domain_url}}-favicon.ico">
+    <link rel="apple-touch-icon" href="/static/common/{{request.session.domain_url}}-favicon-48.png">
+    <link rel="shortcut icon" href="/static/common/{{request.session.domain_url}}-favicon-48.png">
     {% load static_url %}
     <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.base.css" %}>
     <style type="text/css">

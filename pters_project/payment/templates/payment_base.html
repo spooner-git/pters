@@ -25,11 +25,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-    <title>{% block title %}PTERS{% endblock %}</title>
+    <title>{% block title %}PTERS | 피터스 | 레슨 관리{% endblock %}</title>
 
-    <link rel="icon" href="/static/common/favicon.ico">
-    <link rel="apple-touch-icon" href="/static/common/favicon-48.png">
-    <link rel="shortcut icon" href="/static/common/favicon-48.png">
+    <link rel="icon" href="/static/common/{{request.session.domain_url}}-favicon.ico">
+    <link rel="apple-touch-icon" href="/static/common/{{request.session.domain_url}}-favicon-48.png">
+    <link rel="shortcut icon" href="/static/common/{{request.session.domain_url}}-favicon-48.png">
 
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
     <!-- Bootstrap core CSS -->

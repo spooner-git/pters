@@ -295,7 +295,7 @@ class CComponent{
                                 </div>
                             </div>
                             <div class="cell_lecture_info">
-                                <div>${lecture_state_cd == "end" ? "(비활성)": ""} ${lecture_name}</div>
+                                <div class="lecture_name_info" style="max-width:${windowWidth-100}px;">${lecture_state_cd == "end" ? "(비활성)": ""} ${lecture_name}</div>
                                 <div class="lecture_additional_info" ${lecture_state_cd == "end" ? "style='display:none'": ""}>정원: ${max_member_num} 명 / 진행중  ${ing_member_num} 명 / 수업시간 ${lecture_time} 분</div>
                                 <div class="lecture_additional_info" ${lecture_state_cd == "ing" ? "style='display:none'": ""}>정원: ${max_member_num} 명 / 수업시간 ${lecture_time} 분</div>
                             </div>

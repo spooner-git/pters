@@ -146,7 +146,6 @@ function func_start_time_calc(selected_date, schedule_json, setting_info, one_to
     if(workEndTime_ == "23:59"){
         workEndTime_ = "24:00";
     }
-
     // 사용 x
     // let all_start_date_time;
     // let all_end_date_time;
@@ -156,7 +155,6 @@ function func_start_time_calc(selected_date, schedule_json, setting_info, one_to
     // all_end_date_time = all_end_date_time.concat(schedule_json.offTimeArray_end_date);
 
     let clear_result = clear_duplicated_date_time(schedule_json, selected_date);
-
     //중복일정시 Test
     let disable_time_array_start_date = clear_result.clear_start_array;
     let disable_time_array_end_date = clear_result.clear_end_array;
@@ -284,6 +282,7 @@ function func_start_time_calc(selected_date, schedule_json, setting_info, one_to
 
 function func_start_time_dom_draw(target_html, selected_date, schedule_json, setting_info, one_to_one_lecture_time_duration, lecture_start_time){
     // offAddOkArray의 값을 가져와서 시작시간에 리스트 ex) let offAddOkArray = [5,6,8,11,15,19,21]
+    console.log(schedule_json);
     let sArraySet =  func_start_time_calc(selected_date, schedule_json, setting_info, one_to_one_lecture_time_duration, lecture_start_time); //DB로 부터 데이터 받아서 선택된 날짜의 offAddOkArray 채우기
     let addOkArray = sArraySet.addOkArray;
     let $target_html = $(target_html);

@@ -40,7 +40,7 @@ messaging.setBackgroundMessageHandler(function(payload) {
   var notificationTitle = 'Background Message Title';
   var notificationOptions = {
     body: 'Background Message body.',
-    icon: '/static/common/favicon-48.png'
+    icon: '/static/common/{{request.session.domain_url}}-favicon-48.png'
   };
   return self.registration.showNotification(notificationTitle,
     notificationOptions);
@@ -53,7 +53,7 @@ self.addEventListener('push', function(event) {
     const title = payload.notification.title;
     const options = {
         body: payload.notification.body,
-        icon: '/static/common/favicon.ico',
+        icon: '/static/common/{{request.session.domain_url}}-favicon.ico',
         sound: 'default'
         //data: payload.notification.data
     };

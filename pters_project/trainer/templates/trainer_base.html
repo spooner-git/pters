@@ -18,14 +18,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="google-site-verification" content="EPm2stOoq7M_LaK0htEQNqbitGznovZCakPO78TPtsk" />
     <meta name="naver-site-verification" content="919ceda7d377b0d22cf390ca79de5dc21dc3d0fa"/>
-    <meta name="description" content="PTERS 피터스 PT, 요가, 필라테스, 당구, 골프 등 레슨 회원관리와 일정을 관리하는 서비스 프로그램">
+    <meta name="description" content="PTERS 피터스 PT, 요가, 필라테스, 당구, 골프 등 레슨 회원관리와 일정을 관리하는 서비스">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-    <title>{% block title %}PTERS{% endblock %}</title>
+    <title>{% block title %}{{request.session.app_name}} {% if request.session.app_name == 'PTERS' %}| 피터스 | 레슨 관리{% endif %}{% endblock %}</title>
 
-    <link rel="icon" href={% static_url "common/favicon.ico" %}>
-    <link rel="apple-touch-icon" href={% static_url "common/favicon-48.png" %}>
-    <link rel="shortcut icon" href={% static_url "common/favicon-48.png" %}>
+    <link rel="icon" href="/static/common/{{request.session.domain_url}}-favicon.ico">
+    <link rel="apple-touch-icon" href="/static/common/{{request.session.domain_url}}-favicon-48.png">
+    <link rel="shortcut icon" href="/static/common/{{request.session.domain_url}}-favicon-48.png">
 
     <!-- <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css"> -->
     <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.fundamental.css" %}>
@@ -61,6 +61,13 @@
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.const.js" %}></script>
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.text.js" %}></script>
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.fundamental.js" %}></script>
+    {% if request.user.username == "danal_test" %}
+    <style type="text/css">
+        #base{
+            height: 88% !important;
+        }
+    </style>
+    {% endif %}
     {% block local_css %}
     {% endblock %}
 </head>
@@ -80,7 +87,7 @@
 <div id="base">
     <section id="section_side">
         <div class="top_logo">
-            <span style='color:var(--font-base); width:64px; font-size:20px; font-weight:bold; padding-left:12px;' id="top_logo_image">PTERS</span>
+            <span style='color:var(--font-base); width:64px; font-size:20px; font-weight:bold; padding-left:12px;' id="top_logo_image">{{ request.session.app_name }}</span>
             <!--<img src="/static/common/icon/logo/PTERS_logo_full.png" alt="" style="width: 64px;" id="top_logo_image">-->
         </div>
         <div class="side_menu" id="nav_side">
@@ -289,12 +296,6 @@
         </div>
     </section>
 </div>
-
-<footer>
-
-</footer>
-
-
 {% block footer %}
 
 {% endblock %}
@@ -457,6 +458,7 @@
     const windowHeight = window.innerHeight;
     const windowWidth = window.innerWidth;
     const $root_content = $('#root_content');
+    var app_name = '{{ request.session.app_name }}';
     var current_page = "";
     var current_page_text = "home";
 
@@ -755,7 +757,7 @@
                 $sidemenu_text.show();
             }, 150);
             $toplogo.html(
-                `<span style='color:var(--font-base); width:64px; font-size:20px; font-weight:bold; padding-left:12px;'>PTERS</span>`
+                `<span style='color:var(--font-base); width:64px; font-size:20px; font-weight:bold; padding-left:12px;'>{{request.session.app_name}}</span>`
                 //`<img src="/static/common/icon/logo/PTERS_logo_full.png" alt="" style="width: 64px;" id="top_logo_image">`
             );
             $sidemenu_button.css('transform', 'rotate(90deg)');
@@ -764,7 +766,7 @@
             $this.addClass('sidemenu_off');
             $sidemenu_text.hide();
             $toplogo.html(
-                `<img src="/static/common/icon/logo/PTERS_logo_short.png" alt="" style="width: 32px;vertical-align:middle" id="top_logo_image">`
+                `<img src="/static/common/icon/logo/{{request.session.domain_url}}_logo_short.png" alt="" style="width: 32px;vertical-align:middle" id="top_logo_image">`
             );
             $sidemenu_button.css('transform', 'rotate(-90deg)');
         }
@@ -1103,39 +1105,18 @@
     
 </script>
 
-<!-- ADN Tracker[공통] start -->
+<!-- Enliple Common Tracker v3.6 [공용] start -->
 <script type="text/javascript">
-var adn_param = adn_param || [];
-adn_param.push([{
- ui:'102076',
- ut:'Home'
-}]);
-<!-- ADN Tracker[공통] end -->
-<!-- ADN 크로징 설치  start -->
-var adn_panel_param = adn_panel_param || [];
-adn_panel_param.push([{
- ui:'102076',
- ci:'1020760002',
- gi:'24461'
-}]);
-<!-- ADN 크로징 설치 end -->
-<!-- ADN 크로징 설치(반응)  start -->
-var adn_mobile_panel_param = adn_mobile_panel_param || [];
-adn_mobile_panel_param.push([{
- ui:'102076',
- ci:'1020760001',
- gi:'24460'
-}]);
-<!-- ADN 크로징 설치 end -->
+//<!--
+function mobRf() {
+    var rf = new EN();
+    rf.setData("userid", "pters1010");
+    rf.setSSL(true);
+    rf.sendRf();
+}
 </script>
-<!-- ADN Tracker[공통] start -->
-<script type="text/javascript" async src="//fin.rainbownine.net/js/adn_tags_1.0.0.js"></script>
-<!-- ADN Tracker[공통] end -->
-<!-- ADN 크로징 설치  start -->
-<script type="text/javascript" async src="//fin.rainbownine.net/js/adn_closingad_1.1.1.js"></script>
-<!-- ADN 크로징 설치 end -->
-<!-- ADN 크로징 설치(반응)  start -->
-<script type="text/javascript" async src="//fin.rainbownine.net/js/adn_mobile_closingad_1.1.2.js"></script>
-<!-- ADN 크로징 설치 end -->
+<script src="https://cdn.megadata.co.kr/js/en_script/3.6/enliple_min3.6.js" defer="defer" onload="mobRf()"></script>
+<!-- Enliple Common Tracker v3.6 [공용] end -->
+
 </body>
 </html>

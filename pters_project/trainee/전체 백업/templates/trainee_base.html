@@ -30,11 +30,11 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>{% block title %}PTERS{% endblock %}</title>
+    <title>{% block title %}PTERS | 피터스 | 레슨 관리{% endblock %}</title>
 
     <!-- Bootstrap core CSS -->
     <link href={% static_url "common/css/bootstrap.min.css" %} rel="stylesheet">
-    <link rel="icon" href="/static/common/favicon.ico">
+    <link rel="icon" href="/static/common/{{request.session.domain_url}}-favicon.ico">
     <link rel="apple-touch-icon" href="/static/common/favicon-152.png">
     <link rel="shortcut icon" href="/static/common/favicon-152.png">
     <link rel="stylesheet" href={% static_url "user/css/pters.base.set.css" %}>

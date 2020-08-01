@@ -22,7 +22,7 @@
             </div>
             <div class="registration_foot" style="margin-top:100px;">
                 <!-- 네이버 로그인 버튼 노출 영역 -->
-                <div class="social_login_box" onclick="location.href = '/?social_type=naver'" style="background-color: #0dd25a;">
+                <div class="social_login_box" onclick="location.href = '/?social_type=naver'" style="background-color: #0dd25a;{% if request.session.domain_url != 'pters' %}display:none; {% endif %}">
                     <div class="social_login_img"><img src="/static/common/icon/icon_naver_logo.png" style="width: 24px; height: 24px; vertical-align:middle;"></div>
                     <span class="social_login_text">네이버로 회원가입</span>
                     <div  class="social_login_arrow">
@@ -30,7 +30,7 @@
                     </div>
                 </div>
                 <!-- 카카오톡 로그인 버튼 노출 영역 -->
-                <div class="social_login_box" id="custom-login-btn" onclick="loginWithKakao();" style="background-color: #ffeb00; margin-top:8px;">
+                <div class="social_login_box" id="custom-login-btn" onclick="loginWithKakao();" style="background-color: #ffeb00; margin-top:8px;{% if request.session.domain_url != 'pters' %}display:none; {% endif %}">
                     <div class="social_login_img"><img src="/static/common/icon/icon_kakao_logo.png" style="width: 24px; height: 24px; vertical-align:middle;"></div>
                     <span class="social_login_text" style="color:#3a1c1d;">카카오톡으로 회원가입</span>
                     <div class="social_login_arrow">
@@ -39,7 +39,7 @@
                 </div>
                 <!-- PTERS 로그인 버튼 노출 영역 -->
                 <div class="social_login_box" onclick="location.href = '{% url "login:registration_register" %}';" style="background-color: #ffffff; margin-top:8px; margin-bottom:20px; border:1px solid #ebe6e6;">
-                    <div class="social_login_img"><img src="/static/common/icon/logo/PTERS_logo_short.png" style="width: 24px; height: 24px; vertical-align:middle;"></div>
+                    <div class="social_login_img"><img src="/static/common/icon/logo/{{request.session.domain_url}}_logo_short.png" style="width: 24px; height: 24px; vertical-align:middle;"></div>
                     <span class="social_login_text" style="color:#3d3b3b;">일반 회원가입</span>
                     <div class="social_login_arrow">
                         <img src="/static/common/icon/icon_arrow_r_small_light_grey.png" style="width: 24px; height: 24px; vertical-align:middle;">

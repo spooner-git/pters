@@ -22,7 +22,7 @@ from login.models import PushInfoTb
 from payment.models import BillingInfoTb, PaymentInfoTb
 from schedule.functions import func_send_push_trainer, func_send_push_trainee, func_refresh_member_ticket_count
 from schedule.models import RepeatScheduleTb, ScheduleTb, DeleteScheduleTb, ScheduleAlarmTb
-from trainee.models import MemberClosedDateHistoryTb
+from trainee.models import MemberClosedDateHistoryTb, MemberTicketTb
 from trainer.functions import func_update_lecture_member_fix_status_cd
 from trainer.models import ClassMemberTicketTb, SettingTb
 
@@ -393,7 +393,16 @@ class SendAllSchedulePushAlarmDataView(View):
                     }
                 push_alarm_list['cancel_'+str(not_finish_wait_schedule_info.class_tb_id)]['registration_ids']\
                     += not_finish_registration_ids
+
+                not_finish_wait_schedule_info_class_id = not_finish_wait_schedule_info.class_tb_id
+                not_finish_wait_schedule_info_member_ticket_tb_id = None
+                if not_finish_wait_schedule_info.member_ticket_tb is not None and not_finish_wait_schedule_info.member_ticket_tb != '':
+                    not_finish_wait_schedule_info_member_ticket_tb_id = not_finish_wait_schedule_info.member_ticket_tb_id
+
                 not_finish_wait_schedule_info.delete()
+                if not_finish_wait_schedule_info_member_ticket_tb_id is not None:
+                    func_refresh_member_ticket_count(not_finish_wait_schedule_info_class_id,
+                                                     not_finish_wait_schedule_info_member_ticket_tb_id)
 
         for push_alarm_info in push_alarm_list:
             if len(push_alarm_list[push_alarm_info]['registration_ids']) > 0:
@@ -418,6 +427,29 @@ class SendAllSchedulePushAlarmDataView(View):
         if error is not None:
             logger.error('[push task 에러]'+str(error))
         return JsonResponse({'alarm_schedule': list(schedule_list)})
+
+
+class TestView(View):
+
+    def get(self, request):
+        # start_time = timezone.now()
+        error = None
+        now = timezone.now()
+        member_ticket_list = ClassMemberTicketTb.objects.filter(use=USE)
+        for member_ticket_info in member_ticket_list:
+
+            class_id_test = member_ticket_info.class_tb_id
+            member_ticket_id_test = None
+            member_ticket_tb = member_ticket_info.member_ticket_tb
+            if member_ticket_tb is not None and member_ticket_tb != '':
+                member_ticket_id_test = member_ticket_info.member_ticket_tb_id
+
+            if member_ticket_id_test is not None:
+                func_refresh_member_ticket_count(class_id_test, member_ticket_id_test)
+
+        # print(str(timezone.now()-start_time))
+        # print(str(schedule_data))
+        return JsonResponse({'alarm_schedule': ''})
 
 
 def send_aws_lambda_for_push_alarm(data):

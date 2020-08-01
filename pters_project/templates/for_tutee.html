@@ -2,9 +2,9 @@
 {% load static_url %}
 
 {% block local_css %}
-    <meta name="description" content="PTERS 피터스로 개인 레슨과 그룹레슨, 수업을 더욱 쉽게 관리해보세요.">
+    <meta name="description" content="회원 모드 소개 | PTERS 피터스로 개인 레슨과 그룹레슨, 수업을 더욱 쉽게 예약할 수 있습니다.">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="PTERS 피터스 | 레슨관리 앱">
+    <meta property="og:title" content="PTERS | 피터스 | 레슨 관리">
     <meta property="og:description" content="회원 모드 소개 | PTERS 피터스로 개인 레슨과 그룹레슨, 수업을 더욱 쉽게 예약할 수 있습니다.">
     <!-- <meta property="og:image" content="http://www.mysite.com/myimage.jpg"> -->
     <link rel="stylesheet" href={% static_url "user/css/login/login.registration.css" %}>
@@ -412,12 +412,14 @@
     <nav id="root_nav">
         <div>
             <div id="login_wrapper">
-                <a href="/"><img src="/static/common/icon/logo/PTERS_logo_short.png" alt="PTERS 로고" id="logo"></a>
+                <a href="/"><img src="/static/common/icon/logo/{{request.session.domain_url}}_logo_short.png" alt="PTERS 로고" id="logo"></a>
             </div>
             <div id="menu_wrapper">
                 <ul>
+                    {% if request.session.domain_url == 'pters' %}
                     <li><a style="cursor: pointer;" href="/introduce/">피터스?</a></li>
                     <li><a style="cursor: pointer;" href="/for_tutor/">강사 기능</a></li>
+                    {% endif %}
                     <li><a style="cursor: pointer;color:#fe4e65" href="/for_tutee/">수강회원 기능</a></li>
                 </ul>
             </div>

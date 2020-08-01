@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>피터스 - 레슨 일정 및 회원 관리 서비스</title>
+    <title>PTERS | 피터스 | 레슨 관리</title>
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
         new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -25,7 +25,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta name="google-site-verification" content="EPm2stOoq7M_LaK0htEQNqbitGznovZCakPO78TPtsk" />
     <meta name="naver-site-verification" content="919ceda7d377b0d22cf390ca79de5dc21dc3d0fa"/>
-    <meta name="description" content="PTERS 피터스 PT, 요가, 필라테스, 당구, 골프 등 레슨 회원관리와 일정을 관리하는 서비스 프로그램">
+    <meta name="description" content="PTERS 피터스는 퍼스널 트레이닝, 요가, 필라테스, 당구, 골프, 과외 등 레슨 강사를 위한 올인원 서비스입니다. 실시간 예약부터 회원 관리, 횟수 차감을 보다 쉽게 관리해보세요!">
 
     {% block local_css %}
 
@@ -33,11 +33,11 @@
         <link rel="stylesheet" href={% static_url "common/css/swiper.min.css"%}>
         <link rel="stylesheet" href={% static_url "user/css/login/pters.trainer.promote.new.css" %}><!-- 
         <link rel="stylesheet" href={% static_url "user/css/login/pters.trainer.login.css" %}> -->
-        <link rel="icon" href="/static/common/favicon.ico">
+        <link rel="icon" href="/static/common/{{request.session.domain_url}}-favicon.ico">
         <link rel="apple-touch-icon" href="/static/common/favicon-152.png">
         <link rel="shortcut icon" href="/static/common/favicon-152.png">
 
-        <link rel="icon" href="/static/common/favicon.ico">
+        <link rel="icon" href="/static/common/{{request.session.domain_url}}-favicon.ico">
         <link rel="apple-touch-icon" href="/static/common/favicon-152.png">
         <link rel="shortcut icon" href="/static/common/favicon-152.png">
 

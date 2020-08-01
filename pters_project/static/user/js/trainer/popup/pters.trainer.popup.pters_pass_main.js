@@ -432,6 +432,9 @@ class Pters_pass_func{
 
     static ready_payment(){
         let payment_id = PAYMENT_ID;
+        // if(user_username == 'danal_test'){
+        //     payment_id = "imp74691731";
+        // }
         var IMP = window.IMP; // 생략가능
         IMP.init(payment_id); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
     }
@@ -493,16 +496,16 @@ class Pters_pass_func{
         }
 
         // if(os == IOS && device == MOBILE && device_info != 'web' && user_username =='guest'){
-        if(os == IOS && user_username =='guest'){
-            // ios 인앱 결제 호출
-            window.webkit.messageHandlers.payment_method.postMessage(mobile_product_id);
-        }
-        // else if(os == ANDROID && device == MOBILE && device_info != 'web' && user_username =='guest') {
-        else if(os == ANDROID && user_username =='guest') {
-            // 안드로이드 인앱 결제 호출
-            window.android_payment_function.callMethodName(mobile_product_id);
-        }
-        else {
+        // if(os == IOS && user_username =='guest'){ 200621
+        //     // ios 인앱 결제 호출
+        //     window.webkit.messageHandlers.payment_method.postMessage(mobile_product_id);
+        // }
+        // // else if(os == ANDROID && device == MOBILE && device_info != 'web' && user_username =='guest') {
+        // else if(os == ANDROID && user_username =='guest') {
+        //     // 안드로이드 인앱 결제 호출
+        //     window.android_payment_function.callMethodName(mobile_product_id);
+        // }
+        // else {
             var request_pay_data = {
                 pg: 'danal', // version 1.1.0부터 지원.
                 pay_method: pay_method,
@@ -542,6 +545,7 @@ class Pters_pass_func{
                                 show_error_message({title:msg});
                                 return false;
                             }
+                            // mobConv(price);
                             show_error_message({title:msg});
 
                             location.href = url_move;
@@ -565,7 +569,7 @@ class Pters_pass_func{
                     // location.href = "/payment/";
                 }
             });
-        }
+        //}
     }
 
     // static check_payment_for_update(name, current_customer_uid, product_id, period_month, merchant_uid, customer_uid, callback){

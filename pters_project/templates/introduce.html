@@ -2,9 +2,9 @@
 {% load static_url %}
 
 {% block local_css %}
-    <meta name="description" content="PTERS 피터스로 관리업무 시간은 줄이고 레슨과 수업에 집중해보세요.">
+    <meta name="description" content="강사님들을 위한 레슨 관리 앱 PTERS 피터스로 관리업무 시간은 줄이고 레슨과 수업에 집중해보세요.">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="PTERS 피터스 | 레슨관리 앱">
+    <meta property="og:title" content="PTERS | 피터스 | 레슨관리">
     <meta property="og:description" content="강사님들을 위한 레슨 관리 앱 PTERS 피터스로 관리업무 시간은 줄이고 레슨과 수업에 집중해보세요.">
     <meta property="og:image" content="/static/common/img/front_page/pters_service_summary.png">
     <link rel="stylesheet" href={% static_url "user/css/login/login.registration.css" %}>
@@ -428,7 +428,7 @@
     <nav id="root_nav">
         <div>
             <div id="login_wrapper">
-                <a href="/"><img src="/static/common/icon/logo/PTERS_logo_short.png" alt="PTERS 로고" id="logo"></a>
+                <a href="/"><img src="/static/common/icon/logo/{{request.session.domain_url}}_logo_short.png" alt="PTERS 로고" id="logo"></a>
             </div>
             <div id="menu_wrapper">
                 <ul>

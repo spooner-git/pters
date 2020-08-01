@@ -15,7 +15,7 @@
 
         <title>
             {% block title %}
-                PTERS
+                {{request.session.app_name}} {% if request.session.app_name == 'PTERS' %}| 피터스 | 레슨 관리{% endif %}
             {% endblock %}
         </title>
 
@@ -24,13 +24,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0">
         <meta name="google-site-verification" content="EPm2stOoq7M_LaK0htEQNqbitGznovZCakPO78TPtsk" />
         <meta name="naver-site-verification" content="919ceda7d377b0d22cf390ca79de5dc21dc3d0fa"/>
-        <meta name="description" content="PTERS 피터스 레슨 회원과 일정 관리툴">
+        <meta name="description" content="PTERS 피터스 레슨 회원과 일정 관리 서비스">
         <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
         <meta name="author" content="">
 
-        <link rel="icon" href={% static_url "common/favicon.ico" %}>
-        <link rel="apple-touch-icon" href={% static_url "common/favicon-48.png" %}>
-        <link rel="shortcut icon" href={% static_url "common/favicon-48.png" %}>
+        <link rel="icon" href="/static/common/{{request.session.domain_url}}-favicon.ico">
+        <link rel="apple-touch-icon" href="/static/common/{{request.session.domain_url}}-favicon-48.png">
+        <link rel="shortcut icon" href="/static/common/{{request.session.domain_url}}-favicon-48.png">
         <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
         <link rel="stylesheet" href={% static_url "user/css/pters.css.animation.css" %}>
         <link rel="stylesheet" href={% static_url "user/css/trainee/pters.trainee.fundamental.css" %}>
@@ -64,7 +64,8 @@
                                                                        '{{ request.session.setting_trainer_work_sat_time_avail }}'],
                                 'setting_member_reserve_date_available':'{{ request.session.setting_member_reserve_date_available }}',
                                 'setting_member_reserve_enable_time':'{{ request.session.setting_member_reserve_enable_time }}',
-                                'setting_member_reserve_cancel_time':'{{ request.session.setting_member_reserve_cancel_time }}'
+                                'setting_member_reserve_cancel_time':'{{ request.session.setting_member_reserve_cancel_time }}',
+                                'setting_single_lecture_duplicate':{{ request.session.setting_single_lecture_duplicate }}
 {#                                'setting_member_time_duration':'{{ request.session.one_to_one_lecture_time_duration }}',#}
 {#                                'setting_member_start_time':'{{ request.session.setting_member_start_time }}'#}
                                 };
@@ -270,39 +271,5 @@
         {% block popup_js_footer %}
         {% endblock %}
 
-        <!-- ADN Tracker[공통] start -->
-        <script type="text/javascript">
-        var adn_param = adn_param || [];
-        adn_param.push([{
-         ui:'102076',
-         ut:'Home'
-        }]);
-        <!-- ADN Tracker[공통] end -->
-        <!-- ADN 크로징 설치  start -->
-        var adn_panel_param = adn_panel_param || [];
-        adn_panel_param.push([{
-         ui:'102076',
-         ci:'1020760002',
-         gi:'24461'
-        }]);
-        <!-- ADN 크로징 설치 end -->
-        <!-- ADN 크로징 설치(반응)  start -->
-        var adn_mobile_panel_param = adn_mobile_panel_param || [];
-        adn_mobile_panel_param.push([{
-         ui:'102076',
-         ci:'1020760001',
-         gi:'24460'
-        }]);
-        <!-- ADN 크로징 설치 end -->
-        </script>
-        <!-- ADN Tracker[공통] start -->
-        <script type="text/javascript" async src="//fin.rainbownine.net/js/adn_tags_1.0.0.js"></script>
-        <!-- ADN Tracker[공통] end -->
-        <!-- ADN 크로징 설치  start -->
-        <script type="text/javascript" async src="//fin.rainbownine.net/js/adn_closingad_1.1.1.js"></script>
-        <!-- ADN 크로징 설치 end -->
-        <!-- ADN 크로징 설치(반응)  start -->
-        <script type="text/javascript" async src="//fin.rainbownine.net/js/adn_mobile_closingad_1.1.2.js"></script>
-        <!-- ADN 크로징 설치 end -->
     </body>
 </html>
