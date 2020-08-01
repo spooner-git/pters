@@ -184,6 +184,8 @@ def func_get_trainee_closed_schedule(context, class_id, user_id, start_date, end
                                                         use=USE).order_by('start_date', 'end_date')
 
     for member_closed_date_info in member_closed_date_data:
+        if member_closed_date_info.note is not None and member_closed_date_info.note != '':
+            member_closed_date_info.note = member_closed_date_info.note.replace('\n', '<br/>')
         if member_closed_date_info.start_date == member_closed_date_info.end_date:
             closed_date_list.append(member_closed_date_info)
         else:
@@ -195,6 +197,8 @@ def func_get_trainee_closed_schedule(context, class_id, user_id, start_date, end
                 select_closed_date_info.start_date = check_date
                 closed_date_list.append(select_closed_date_info)
                 check_date += datetime.timedelta(days=1)
+                # if select_closed_date_info.note is not None and select_closed_date_info.note != '':
+                #     select_closed_date_info.note = select_closed_date_info.note.replace('\n', '<br/>')
 
     member_holiday_date_data = ScheduleTb.objects.select_related(
         'class_tb').filter(Q(start_dt__lte=end_date) & Q(end_dt__gte=start_date),
@@ -207,6 +211,9 @@ def func_get_trainee_closed_schedule(context, class_id, user_id, start_date, end
         member_holiday_date_info.note = member_holiday_date_info.note
         if member_holiday_date_info.note is None or member_holiday_date_info.note == '':
             member_holiday_date_info.note = '휴무일'
+        else:
+            member_holiday_date_info.note = member_holiday_date_info.note.replace('\n', '<br/>')
+
         member_holiday_date_info.reason_type_cd = 'PROGRAM_CLOSED'
         if member_holiday_date_info not in closed_date_list:
             closed_date_list.append(member_holiday_date_info)
