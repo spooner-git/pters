@@ -411,6 +411,7 @@ def func_setting_data_update(request, group):
         request.session['setting_member_public_class_auto_permission'] = context['setting_member_public_class_auto_permission']
         request.session['setting_member_public_class_wait_member_num'] = context['setting_member_public_class_wait_member_num']
         request.session['setting_member_wait_schedule_auto_cancel_time'] = context['setting_member_wait_schedule_auto_cancel_time']
+        request.session['setting_single_lecture_duplicate'] = context['setting_single_lecture_duplicate']
 
         request.session['setting_schedule_alarm_minute'] = context['setting_schedule_alarm_minute']
 
