@@ -45,6 +45,7 @@ from configs.const import USE, UN_USE, AUTH_TYPE_VIEW, ACTIVATE, STATE_CD_FINISH
     STATE_CD_ABSENCE, AUTH_TYPE_DELETE, RECOMMENDED_REGISTER_COUPON_CD
 from configs import settings
 from configs.functions import func_delete_profile_image_logic
+from admin_spooner.models import CustomizingAppTb
 from payment.functions import func_cancel_period_billing_schedule, func_check_coupon_use
 from payment.models import PaymentInfoTb, BillingInfoTb, BillingCancelInfoTb, CouponTb, CouponMemberTb
 from schedule.models import ScheduleTb, RepeatScheduleTb
