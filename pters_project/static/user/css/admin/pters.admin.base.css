@@ -255,7 +255,7 @@ html, body{
         color: var(--font-main);
     }
     .side_menu_item:hover{
-        background-color: #fe4e6510
+        background-color: #fe4e65;
     }
     .side_menu_item > img{
         width: 24px;
