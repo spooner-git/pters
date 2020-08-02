@@ -23,7 +23,7 @@
                 <article>
                     <div class="wrapper_sub_title obj_font_size_11_weight_500 obj_font_color_dark_grey">아이디</div>
                     <input type="text" name="username" class="wrapper_password_change_input obj_font_size_14_weight_500" placeholder="{{ member_info.user.username }}" disabled>
-                    <div class="wrapper_password_change_button obj_button_gen obj_font_bg_coral_white" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_my_password_change', 90, POPUP_FROM_BOTTOM, {} )">비밀번호 재설정</div>
+                    <div class="wrapper_password_change_button obj_button_gen obj_font_bg_main_color_white" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_my_password_change', 90, POPUP_FROM_BOTTOM, {} )">비밀번호 재설정</div>
                 </article>
                 <article>
                     <div class="wrapper_sub_title obj_font_size_11_weight_500 obj_font_color_dark_grey">이름</div>
@@ -63,9 +63,9 @@
                     <input type="email" name="email" id="id_email" class="wrapper_auth_input obj_font_size_14_weight_500"
                            value="{{ member_info.user.email }}">
 {#                    {% if member_info.user.email == '' and not request.user.is_active %}#}
-{#                    <div class="wrapper_auth_button obj_button_gen obj_font_bg_coral_white" onclick="func_send_activation_email()">인증하기</div>#}
+{#                    <div class="wrapper_auth_button obj_button_gen obj_font_bg_main_color_white" onclick="func_send_activation_email()">인증하기</div>#}
 {#                    {% elif member_info.user.email != '' and not request.user.is_active %}#}
-{#                    <div class="wrapper_auth_button obj_button_gen obj_font_bg_coral_white" onclick="func_send_activation_email()">재인증 하기</div>#}
+{#                    <div class="wrapper_auth_button obj_button_gen obj_font_bg_main_color_white" onclick="func_send_activation_email()">재인증 하기</div>#}
 {#                    {% else %}#}
 {#                    <div class="wrapper_auth_button obj_button_gen obj_font_bg_white_coral">인증완료</div>#}
 {#                    {% endif %}#}
@@ -86,7 +86,7 @@
 {% endblock %}
 
 {% block popoup_base_wrapper_bottom_inside %}
-    <div class="obj_button_big obj_font_bg_white_coral" onclick="func_send_my_info_change()">저장하기</div>
+    <div class="obj_button_big obj_font_bg_white_main_color" onclick="func_send_my_info_change()">저장하기</div>
 {% endblock %}
 
 {% block popup_base_js %}

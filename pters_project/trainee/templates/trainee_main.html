@@ -48,7 +48,7 @@
                                 {% if next_schedule_info.permission_state_cd == 'WP' %}
                                     <div class="obj_tag obj_font_bg_orange_white obj_font_size_16_weight_bold" style="font-size:11px; line-height:20px; height:20px;">대기 예약</div>
                                 {% else %}
-                                    <div class="obj_tag obj_font_bg_white_coral obj_font_size_16_weight_bold" style="font-size:11px; line-height:20px; height:20px;">예약 확정</div>
+                                    <div class="obj_tag obj_font_bg_white_main_color obj_font_size_16_weight_bold" style="font-size:11px; line-height:20px; height:20px;">예약 확정</div>
                                 {% endif %}
                             </div>
                             <div  class="wrapper_img_lesson_type">
@@ -114,7 +114,7 @@
                                 </div>
                                 <div style="display:flex;float:right">
                                     {% if next_schedule_info.state_cd != 'PE' and next_schedule_info.state_cd != 'PC' %}
-                                        <div class="obj_table_cell_x2 obj_button_gen obj_font_bg_coral_trans"
+                                        <div class="obj_table_cell_x2 obj_button_gen obj_font_bg_main_color_trans"
                                             onclick="show_user_confirm({title:`정말 취소하시겠습니까?`}, ()=>{
                                                 func_schedule({'schedule_id':'{{ next_schedule_info.schedule_id }}'}, `${CALL_AJAX}`, `${DELETE}`);
                                                 });" style="margin-right:5px;flex:1 1 0;max-width:67px">취소하기</div>
