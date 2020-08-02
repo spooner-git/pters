@@ -266,6 +266,39 @@ class CheckRegistration(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(CheckRegistration, self).get_context_data(**kwargs)
+        current_site = get_current_site(self.request)
+        self.request.session['domain'] = current_site.domain
+        domain_url = current_site.domain.split('pters.co.kr')[0]
+        if domain_url != '' and domain_url != 'www.' \
+                and domain_url != 'spooner-test.' and domain_url != 'www.spooner-test.' \
+                and domain_url != 'localhost:8000':
+            domain_url = domain_url.split('.')[0]
+            if domain_url == '172' or domain_url == '198' or domain_url == '0':
+                domain_url = 'pters'
+        else:
+            domain_url = 'pters'
+        try:
+            customizing_app_info = CustomizingAppTb.objects.get(app_domain=domain_url)
+            domain_url = customizing_app_info.app_domain
+            app_name = customizing_app_info.app_name
+            ios_url = customizing_app_info.ios_url
+            android_url = customizing_app_info.android_url
+            main_color_cd = customizing_app_info.main_color_cd
+            sub_color_cd = customizing_app_info.sub_color_cd
+        except:
+            domain_url = 'pters'
+            app_name = 'PTERS'
+            ios_url = ''
+            android_url = ''
+            main_color_cd = '#fe4e65'
+            sub_color_cd = ''
+
+        self.request.session['domain_url'] = domain_url
+        self.request.session['app_name'] = app_name
+        self.request.session['ios_url'] = ios_url
+        self.request.session['android_url'] = android_url
+        self.request.session['main_color_cd'] = main_color_cd
+        self.request.session['sub_color_cd'] = sub_color_cd
 
         return context
 
