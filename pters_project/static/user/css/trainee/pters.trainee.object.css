@@ -296,16 +296,6 @@
         background-color: transparent;
         border: 1px solid #fe4e65;
     }
-    .obj_font_bg_white_coral{
-        color: #ffffff;
-        background-color: #ff3b44;
-        border: 1px solid transparent;
-    }
-    .obj_font_bg_coral_white{
-        color: #ff3b44;
-        background-color: #ffffff;
-        border: 1px solid #ff3b44;
-    }
     .obj_font_bg_orange_white{
         color: orange;
         background-color: #ffffff;
