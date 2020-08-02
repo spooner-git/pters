@@ -507,7 +507,7 @@ function pters_month_calendar(calendar_name, calendar_options){
                     }
                     else{
                         schedule_finish = '예약 확정';
-                        schedule_finish_tag = "obj_font_bg_white_coral";
+                        schedule_finish_tag = "obj_font_bg_white_main_color";
                     }
                 }
                 else if(schedule_finish==SCHEDULE_FINISH){
