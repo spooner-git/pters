@@ -1,3 +1,4 @@
+
 .nav_img:active{
     animation-name: pulse-strong;
     animation-duration: 0.4s;
@@ -432,33 +433,6 @@ html, body{
         height: 60px;
         line-height: 60px;
         cursor: pointer;
-    }
-    .side_menu{
-        list-style: none;
-    }
-    .side_menu_item{
-        width: 90%;
-        margin: 0 auto;
-        border-radius: 4px;
-        font-size: 12px;
-        font-weight: 500;
-        letter-spacing: -0.5px;
-        padding: 10px 0 10px 22px;
-        box-sizing: border-box;
-        cursor: pointer;
-        color: var(--font-main);
-    }
-    .side_menu_item:hover{
-        background-color: #fe4e6510
-    }
-    .side_menu_item > img{
-        width: 24px;
-        vertical-align: middle;
-        margin-right: 18px;
-    }
-    .side_menu_selected{
-        background-color: var(--bg-highlight) !important;
-        color: var(--fundamental-white);
     }
     
 @media(max-width:650px){

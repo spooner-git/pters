@@ -179,7 +179,7 @@
             --bg-inactive: #5c5859;
             --bg-domtag: #f5f2f3;
             --bg-light: #282828;
-            --bg-highlight: #fe4e65;
+            --bg-highlight: {{ request.session.main_color_cd }};
 
             /* Element */
             --border-article: 1px solid #282828;
@@ -188,6 +188,33 @@
 
             /* fundamental color */
             --fundamental-white: #ffffff;
+        }
+        .side_menu{
+            list-style: none;
+        }
+        .side_menu_item{
+            width: 90%;
+            margin: 0 auto;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: -0.5px;
+            padding: 10px 0 10px 22px;
+            box-sizing: border-box;
+            cursor: pointer;
+            color: var(--font-main);
+        }
+        .side_menu_item:hover{
+            background-color: {{request.session.main_color_cd}}10
+        }
+        .side_menu_item > img{
+            width: 24px;
+            vertical-align: middle;
+            margin-right: 18px;
+        }
+        .side_menu_selected{
+            background-color: var(--bg-highlight) !important;
+            color: var(--fundamental-white);
         }
     </style>
     <!-- <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css"> -->
