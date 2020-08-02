@@ -520,7 +520,7 @@ function pters_month_calendar(calendar_name, calendar_options){
                 }
                 if(schedule_repeat_id != 'None'){
                     schedule_type = '반복일정';
-                    schedule_type_tag = "obj_font_bg_coral_trans";
+                    schedule_type_tag = "obj_font_bg_main_color_trans";
                 }
 
                 temp_array.push(`<div class="obj_table_raw" data-scheduleid=${schedule_id}>

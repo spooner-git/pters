@@ -237,7 +237,7 @@
     }
 
     .func_tab_selected{
-        border-bottom: 3px solid #ff3b44;
+        border-bottom: 3px solid var(--bg-highlight);
         color: #000000;
         font-weight: bold;
     }
@@ -265,7 +265,7 @@
         vertical-align: middle;
         width: 16px;
         height: 16px;
-        border: 1px solid #ff3b44;
+        border: 1px solid var(--bg-highlight);
         border-radius: 50%;
     }
     .func_radio_element_button > div > div.func_radio_element_button_inner{
@@ -275,7 +275,7 @@
         transform: translate(-50%, -50%);
         width: 10px;
         height: 10px;
-        background-color: #ff3b44;
+        background-color: var(--bg-highlight);
         border-radius: 50%;
     }
 
