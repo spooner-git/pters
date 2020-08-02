@@ -231,23 +231,6 @@ body{
 }
 
 
-.group_select_box_on{
-    display:inline-block;
-    width: 48%;
-    height: 46px;
-    line-height: 46px;
-    border-radius: 2px;
-    background-color: #fe4e65;
-    border: 1px solid #fe4e65;
-    cursor: pointer;
-    text-align: center;
-    font-size: 15px;
-    font-weight: bold;
-    font-style: normal;
-    font-stretch: normal;
-    letter-spacing: -0.5px;
-    color: #ffffff;
-}
 .group_select_box_off{
     display:inline-block;
     width: 48%;
