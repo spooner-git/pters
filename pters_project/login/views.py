@@ -1692,7 +1692,7 @@ class ResetPasswordView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ResetPasswordView, self).get_context_data(**kwargs)
         self.request.session.set_expiry(1)
-        current_site = get_current_site(request)
+        current_site = get_current_site(self.request)
         self.request.session['domain'] = current_site.domain
         domain_url = current_site.domain.split('pters.co.kr')[0]
         if domain_url != '' and domain_url != 'www.' \
@@ -2149,7 +2149,7 @@ class RegistrationView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(RegistrationView, self).get_context_data(**kwargs)
         self.request.session['sms_activation_check'] = False
-        current_site = get_current_site(request)
+        current_site = get_current_site(self.request)
         self.request.session['domain'] = current_site.domain
         domain_url = current_site.domain.split('pters.co.kr')[0]
         if domain_url != '' and domain_url != 'www.' \
