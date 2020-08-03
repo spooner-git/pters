@@ -164,8 +164,8 @@ class Calendar {
             if(call_current_date<10){
                 call_current_date = '0'+call_current_date;
             }
-            this.request_schedule_data(`${call_current_year}-${call_current_month}-${call_current_date}`, 14, (jsondata, date) => {
-                Plan_func.read_holiday(`${call_current_year}-${call_current_month}-${call_current_date}`, 14, (holiday_data)=>{
+            this.request_schedule_data(`${call_current_year}-${call_current_month}-${call_current_date}`, 10, (jsondata, date) => {
+                Plan_func.read_holiday(`${call_current_year}-${call_current_month}-${call_current_date}`, 10, (holiday_data)=>{
                     this.holiday = holiday_data;
                     this.latest_received_data = jsondata;
                     if(this.cal_type == cal_type){
@@ -415,16 +415,17 @@ class Calendar {
         this.current_date = date;
         let first_day_of_the_date = new Date(year, month-1, 1).getDay();
         let target_row_for_date_zoomed = new Date(year, month-1, date).getDay() + 1;
+
         if(this.date_start == 1){
+
             if(first_day_of_the_date == 0){
                 first_day_of_the_date = 6;
             }else{
                 first_day_of_the_date--;
             }
+            target_row_for_date_zoomed--;
             if(target_row_for_date_zoomed == 0){
-                target_row_for_date_zoomed = 6;
-            }else{
-                target_row_for_date_zoomed--;
+                target_row_for_date_zoomed = 7;
             }
         }
         this.week_zoomed.target_row = target_row_for_date_zoomed;
@@ -446,20 +447,20 @@ class Calendar {
             this.zoom_week_cal_vertical();
         }
         let display_week = $('.display_week');
-        let call_current_year = display_week.attr('data-week-year');
-        let call_current_month = display_week.attr('data-week-month');
-        let call_current_date = display_week.attr('data-week-date');
-        if(call_current_month<10){
-            call_current_month = '0'+call_current_month;
-        }
-        if(call_current_date<10){
-            call_current_date = '0'+call_current_date;
-        }
-        this.request_schedule_data(`${call_current_year}-${call_current_month}-${call_current_date}`, 14, (jsondata, date) => {
-            Plan_func.read_holiday(`${call_current_year}-${call_current_month}-${call_current_date}`, 14, (holiday_data)=>{
+        // let call_current_year = display_week.attr('data-week-year');
+        // let call_current_month = display_week.attr('data-week-month');
+        // let call_current_date = display_week.attr('data-week-date');
+        // if(call_current_month<10){
+        //     call_current_month = '0'+call_current_month;
+        // }
+        // if(call_current_date<10){
+        //     call_current_date = '0'+call_current_date;
+        // }
+        this.request_schedule_data(`${this.current_year}-${this.current_month}-${this.current_date}`, 10, (jsondata, date) => {
+            Plan_func.read_holiday(`${this.current_year}-${this.current_month}-${this.current_date}`, 10, (holiday_data)=>{
                 this.holiday = holiday_data;
                 this.latest_received_data = jsondata;
-                if(date == `${call_current_year}-${call_current_month}-${call_current_date}`){
+                if(date == `${this.current_year}-${this.current_month}-${this.current_date}`){
                     this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
 
                     //일일 일정표에서 일정을 등록했을때, 다시 렌더링시에도 일일 일정으로 표시해주도록
@@ -576,8 +577,8 @@ class Calendar {
             if(call_current_date<10){
                 call_current_date = '0'+call_current_date;
             }
-            this.request_schedule_data(`${call_current_year}-${call_current_month}-${call_current_date}`, 14, (jsondata, date) => {
-                Plan_func.read_holiday(`${call_current_year}-${call_current_month}-${call_current_date}`, 14, (holiday_data)=>{
+            this.request_schedule_data(`${call_current_year}-${call_current_month}-${call_current_date}`, 10, (jsondata, date) => {
+                Plan_func.read_holiday(`${call_current_year}-${call_current_month}-${call_current_date}`, 10, (holiday_data)=>{
                     this.holiday = holiday_data;
                     this.latest_received_data = jsondata;
                     if(date == `${call_current_year}-${call_current_month}-${call_current_date}`){
@@ -625,8 +626,8 @@ class Calendar {
             if(call_current_date<10){
                 call_current_date = '0'+call_current_date;
             }
-            this.request_schedule_data(`${call_current_year}-${call_current_month}-${call_current_date}`, 14, (jsondata, date) => {
-                Plan_func.read_holiday(`${call_current_year}-${call_current_month}-${call_current_date}`, 14, (holiday_data)=>{
+            this.request_schedule_data(`${call_current_year}-${call_current_month}-${call_current_date}`, 10, (jsondata, date) => {
+                Plan_func.read_holiday(`${call_current_year}-${call_current_month}-${call_current_date}`, 10, (holiday_data)=>{
                     this.holiday = holiday_data;
                     this.latest_received_data = jsondata;
                     if(date == `${call_current_year}-${call_current_month}-${call_current_date}`){
