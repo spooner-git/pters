@@ -141,7 +141,7 @@ class Calendar {
         case "week":
             this.render_upper_box(cal_type);
             // this.render_week_cal(this.current_page_num, this.current_year, this.current_month, this.current_week);
-            
+
             //일일 일정표에서 일정을 등록했을때, 다시 렌더링시에도 일일 일정으로 표시해주도록
             if(this.week_zoomed.target_row != null && this.week_zoomed.activate == true){
                 this.week_zoomed.activate = false;
@@ -153,12 +153,23 @@ class Calendar {
                 this.zoom_week_cal_vertical();
             }
 
-            this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
-                Plan_func.read_holiday(`${this.current_year}-${this.current_month}-01`, 36, (holiday_data)=>{
+            let display_week = $('.display_week');
+            let call_current_year = display_week.attr('data-week-year');
+            let call_current_month = display_week.attr('data-week-month');
+            let call_current_date = display_week.attr('data-week-date');
+
+            if(call_current_month<10){
+                call_current_month = '0'+call_current_month;
+            }
+            if(call_current_date<10){
+                call_current_date = '0'+call_current_date;
+            }
+            this.request_schedule_data(`${call_current_year}-${call_current_month}-${call_current_date}`, 14, (jsondata, date) => {
+                Plan_func.read_holiday(`${call_current_year}-${call_current_month}-${call_current_date}`, 14, (holiday_data)=>{
                     this.holiday = holiday_data;
                     this.latest_received_data = jsondata;
                     if(this.cal_type == cal_type){
-                        if(date == `${this.current_year}-${this.current_month}-01`){
+                        if(date == `${call_current_year}-${call_current_month}-${call_current_date}`){
                             this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
                             // this.week_schedule_draw(this.current_year, this.current_month, this.current_week, jsondata);
                             //일일 일정표에서 일정을 등록했을때, 다시 렌더링시에도 일일 일정으로 표시해주도록
@@ -321,7 +332,7 @@ class Calendar {
         }else if(week == -1 && first_day !=0){
             week = this.get_week_number(prev_year, prev_month) - 1;
             month = month - 1 < 1 ? 12  : month - 1;
-            year = month == 12 ? year - 1 : year;      
+            year = month == 12 ? year - 1 : year;
 
         }
 
@@ -434,12 +445,21 @@ class Calendar {
             this.week_zoomed.vertical.activate = false;
             this.zoom_week_cal_vertical();
         }
-
-        this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
-            Plan_func.read_holiday(`${this.current_year}-${this.current_month}-01`, 36, (holiday_data)=>{
+        let display_week = $('.display_week');
+        let call_current_year = display_week.attr('data-week-year');
+        let call_current_month = display_week.attr('data-week-month');
+        let call_current_date = display_week.attr('data-week-date');
+        if(call_current_month<10){
+            call_current_month = '0'+call_current_month;
+        }
+        if(call_current_date<10){
+            call_current_date = '0'+call_current_date;
+        }
+        this.request_schedule_data(`${call_current_year}-${call_current_month}-${call_current_date}`, 14, (jsondata, date) => {
+            Plan_func.read_holiday(`${call_current_year}-${call_current_month}-${call_current_date}`, 14, (holiday_data)=>{
                 this.holiday = holiday_data;
                 this.latest_received_data = jsondata;
-                if(date == `${this.current_year}-${this.current_month}-01`){
+                if(date == `${call_current_year}-${call_current_month}-${call_current_date}`){
                     this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
 
                     //일일 일정표에서 일정을 등록했을때, 다시 렌더링시에도 일일 일정으로 표시해주도록
@@ -518,13 +538,19 @@ class Calendar {
     }
 
     move_week (direction){
+
+        let display_week;
+        let call_current_year;
+        let call_current_month;
+        let call_current_date;
+
         switch(direction){
         case "next":
             let next = this.get_next_week();
             this.current_year = next.year;
             this.current_month = next.month;
             this.current_week = next.week;
-            
+            console.log('next::'+this.current_year);
 
             /*스와이프 애니메이션*/
             if(os == IOS){
@@ -539,11 +565,22 @@ class Calendar {
                 this.week_zoomed.vertical.activate = false;
                 this.zoom_week_cal_vertical();
             }
-            this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
-                Plan_func.read_holiday(`${this.current_year}-${this.current_month}-01`, 36, (holiday_data)=>{
+            display_week = $('.display_week');
+            call_current_year = display_week.attr('data-week-year');
+            call_current_month = display_week.attr('data-week-month');
+            call_current_date = display_week.attr('data-week-date');
+
+            if(call_current_month<10){
+                call_current_month = '0'+call_current_month;
+            }
+            if(call_current_date<10){
+                call_current_date = '0'+call_current_date;
+            }
+            this.request_schedule_data(`${call_current_year}-${call_current_month}-${call_current_date}`, 14, (jsondata, date) => {
+                Plan_func.read_holiday(`${call_current_year}-${call_current_month}-${call_current_date}`, 14, (holiday_data)=>{
                     this.holiday = holiday_data;
                     this.latest_received_data = jsondata;
-                    if(date == `${this.current_year}-${this.current_month}-01`){
+                    if(date == `${call_current_year}-${call_current_month}-${call_current_date}`){
                         this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
                         if(this.week_zoomed.vertical.activate == true){
                             this.week_zoomed.vertical.activate = false;
@@ -560,7 +597,6 @@ class Calendar {
             this.current_year = prev.year;
             this.current_month = prev.month;
             this.current_week = prev.week;
-            
 
             /*스와이프 애니메이션*/
             if(os == IOS){
@@ -575,11 +611,25 @@ class Calendar {
                 this.week_zoomed.vertical.activate = false;
                 this.zoom_week_cal_vertical();
             }
-            this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
-                Plan_func.read_holiday(`${this.current_year}-${this.current_month}-01`, 36, (holiday_data)=>{
+
+            display_week = $('.display_week');
+            call_current_year = display_week.attr('data-week-year');
+            call_current_month = display_week.attr('data-week-month');
+            call_current_date = display_week.attr('data-week-date');
+            if(call_current_month == 12 && this.current_month==1){
+                call_current_year -= 1;
+            }
+            if(call_current_month<10){
+                call_current_month = '0'+call_current_month;
+            }
+            if(call_current_date<10){
+                call_current_date = '0'+call_current_date;
+            }
+            this.request_schedule_data(`${call_current_year}-${call_current_month}-${call_current_date}`, 14, (jsondata, date) => {
+                Plan_func.read_holiday(`${call_current_year}-${call_current_month}-${call_current_date}`, 14, (holiday_data)=>{
                     this.holiday = holiday_data;
                     this.latest_received_data = jsondata;
-                    if(date == `${this.current_year}-${this.current_month}-01`){
+                    if(date == `${call_current_year}-${call_current_month}-${call_current_date}`){
                         this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
                         if(this.week_zoomed.vertical.activate == true){
                             this.week_zoomed.vertical.activate = false;
@@ -1538,7 +1588,10 @@ class Calendar {
                                         <div class="cal_upper_box">
                                             <div class="cal_date_display page_title">
                                                 <div onclick="${this.instance}.switch_cal_type()" style="display:inline-block;">
-                                                    <span class="display_week">${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).month[0] :null}월 
+                                                    <span class="display_week" data-week-year="${this.current_year}" 
+                                                    data-week-month="${this.get_week_dates(this.current_year, this.current_month, this.current_week).month[0]}" 
+                                                    data-week-date="${this.get_week_dates(this.current_year, this.current_month, this.current_week).date[0]}"
+                                                    >${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).month[0] :null}월 
                                                                             ${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).date[0] :null}일 - 
                                                                             ${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).month[6]: null}월 
                                                                             ${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).date[6]: null}일
@@ -1981,7 +2034,6 @@ class Plan_func{
 
     static delete(data, callback, error_callback){
         //데이터 형태 {"schedule_id":""};
-        console.log('delete_function1');
         let async = true;
         if(data.async != undefined){
             async = data.async;
@@ -1994,7 +2046,6 @@ class Plan_func{
             async: async,
     
             beforeSend:function(xhr, settings) {
-                console.log('delete_function2');
                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
                     xhr.setRequestHeader("X-CSRFToken", csrftoken);
                 }
@@ -2007,7 +2058,6 @@ class Plan_func{
     
             //통신성공시 처리
             success:function(data){
-                console.log('delete_function3');
                 check_app_version(data.app_version);
                 if(data.messageArray != undefined){
                     if(data.messageArray.length > 0){
@@ -2018,8 +2068,7 @@ class Plan_func{
                 if(callback != undefined){
                     callback();
                 }
-                console.log('delete_function4');
-                
+
             },
     
             //통신 실패시 처리
