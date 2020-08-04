@@ -336,7 +336,7 @@
             width: 5px;
             height:5px;
             border-radius: 50%;
-            background-color: var(--img-highlight);
+            background-color: #fe4e65;
         }
     .nav_text{
         /* display: none; */
