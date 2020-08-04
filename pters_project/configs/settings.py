@@ -111,7 +111,7 @@ WSGI_APPLICATION = 'configs.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'pters-test',
+        'NAME': 'pters',
         'USER': os.environ.get("PTERS_DB_USER", ''),
         'PASSWORD': os.environ.get("PTERS_DB_PASSWORD", ''),
         'HOST': os.environ.get("PTERS_DB_HOST", ''),
