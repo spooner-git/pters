@@ -447,8 +447,8 @@ class TestView(View):
 
                 if member_ticket_id_test is not None:
                     func_refresh_member_ticket_count(class_id_test, member_ticket_id_test)
-            except ClassMemberTicketTb.DoesNotExist:
-                print('member_ticket_id::'+str(member_ticket_info.membrer_ticket_info.class_member_ticket_id))
+            except MemberTicketTb.DoesNotExist:
+                print('member_ticket_id::'+str(member_ticket_info.class_member_ticket_id))
         # print(str(timezone.now()-start_time))
         # print(str(schedule_data))
         return JsonResponse({'alarm_schedule': ''})
