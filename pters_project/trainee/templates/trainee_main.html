@@ -17,14 +17,14 @@
                         <select class="obj_font_size_13_weight_500 obj_font_color_light_grey" title="program_select">
                             <option selected="" disabled="">지점 변경</option>
                             {% for class_info in class_data %}
-                            <option data-class_id="{{ class_info.class_tb_id }}">{{ class_info.class_type_name }} - {{ class_info.class_tb.member.name }} 강사</option>
+                            <option data-class_id="{{ class_info.class_tb_id }}">{{ class_info.class_type_name }} - {{ class_info.class_tb.member.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
                 </div>
                 <div class="obj_table_raw">
                     <div class="wrapper_program_title obj_table_cell_x2 obj_font_size_18_weight_bold">
-                            {{ request.session.program_title }} - {{ request.session.trainer_name }} 강사
+                            {{ request.session.program_title }} - {{ request.session.trainer_name }}
                     </div>
                     
                 </div>
@@ -228,7 +228,7 @@
                     <select class="obj_font_size_13_weight_500 obj_font_color_light_grey" title="program_select">
                         <option selected="" disabled="">지점 선택</option>
                         {% for class_info in class_data %}
-                        <option data-class_id="{{ class_info.class_tb_id }}">{{ class_info.class_type_name }} - {{ class_info.class_tb.member.name }} 강사</option>
+                        <option data-class_id="{{ class_info.class_tb_id }}">{{ class_info.class_type_name }} - {{ class_info.class_tb.member.name }}</option>
                         {% endfor %}
                     </select>
                 </div>
