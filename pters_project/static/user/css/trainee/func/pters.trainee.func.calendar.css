@@ -88,7 +88,7 @@
 		cursor: pointer;
 	}
 	.pters_calendar .pters_timeline_cal_upper_tool_box .selected{
-		border-bottom: 2px solid #ff3b44;
+		border-bottom: 2px solid var(--bg-highlight);
 		color: #000000;
 		font-weight: bold;
 	}

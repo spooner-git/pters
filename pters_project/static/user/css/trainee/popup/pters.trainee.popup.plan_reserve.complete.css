@@ -4,7 +4,8 @@
 
 	.popup_calendar_plan_reserve_complete{
 		/*min-height: 100%;*/
-		background-image: linear-gradient(1deg, #fb767d, #ff3b44);
+		/*background-image: linear-gradient(1deg, #fb767d, #ff3b44);*/
+		background-color: var(--bg-highlight);
 		border-radius: 8px 8px 0px 0px;
 	}	
 		.popup_calendar_plan_reserve_complete .obj_box_popup_topper{
