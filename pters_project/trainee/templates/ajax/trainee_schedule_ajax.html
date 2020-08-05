@@ -5,6 +5,12 @@
       [{% for schedule_info in schedule_data %}"{{ schedule_info.start_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "classTimeArray_end_date" : 
       [{% for schedule_info in schedule_data %}"{{ schedule_info.end_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
+      "classTimeArray_lecture_id" :
+      [{% for schedule_info in schedule_data %}"{{ schedule_info.lecture_tb_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "classTimeArray_lecture_type_cd" :
+      [{% for schedule_info in schedule_data %}"{{ schedule_info.lecture_tb.lecture_type_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
       "scheduleIdArray" :
       [{% for schedule_info in schedule_data %}"{{ schedule_info.schedule_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "scheduleFinishArray":
@@ -33,6 +39,10 @@
       "class_repeat_schedule_id":
       [{% for schedule_info in schedule_data %}"{{ schedule_info.repeat_schedule_tb_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
+      "offTimeArray_lecture_id" :
+      [{% for off_schedule_info in off_schedule_data %}"{{ off_schedule_info.lecture_tb_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "offTimeArray_lecture_type_cd" :
+      [{% for off_schedule_info in off_schedule_data %}"{{ off_schedule_info.lecture_tb.lecture_type_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "offTimeArray_start_date" :
       [{% for off_schedule_info in off_schedule_data %}"{{ off_schedule_info.start_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "offTimeArray_end_date" :
@@ -85,7 +95,8 @@
       [{{ member_ticket_reg_count }}],
       "member_ticket_finish_count" :
       [{{ member_ticket_finish_count }}],
-
+      "setting_single_lecture_duplicate":
+      [{{ request.session.setting_single_lecture_duplicate }}],
       "messageArray" :
       [{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}]
     }

@@ -1052,6 +1052,7 @@ def func_get_trainer_setting_list(context, class_id, user_id):
     setting_member_public_class_auto_permission = USE
     setting_member_public_class_wait_member_num = 0
     setting_member_wait_schedule_auto_cancel_time = 0
+    setting_single_lecture_duplicate = UN_USE
     setting_schedule_alarm_minute = '-1'
     setting_attend_mode_max_num_view_available = USE
     setting_data = SettingTb.objects.filter(class_tb_id=class_id, use=USE)
@@ -1137,6 +1138,8 @@ def func_get_trainer_setting_list(context, class_id, user_id):
             setting_member_wait_schedule_auto_cancel_time = int(setting_info.setting_info)
         if setting_info.setting_type_cd == 'LT_ATTEND_CLASS_MAX_NUM_VIEW':
             setting_attend_mode_max_num_view_available = int(setting_info.setting_info)
+        if setting_info.setting_type_cd == 'LT_RES_SINGLE_LECTURE_DUPLICATE':
+            setting_single_lecture_duplicate = int(setting_info.setting_info)
     # try:
     #     lecture_info = LectureTb.objects.filter(class_tb_id=class_id,
     # lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, use=USE).earliest('reg_dt')
@@ -1215,6 +1218,7 @@ def func_get_trainer_setting_list(context, class_id, user_id):
     context['setting_member_wait_schedule_auto_cancel_time'] = setting_member_wait_schedule_auto_cancel_time
     context['setting_schedule_alarm_minute'] = setting_schedule_alarm_minute
     context['setting_attend_mode_max_num_view_available'] = setting_attend_mode_max_num_view_available
+    context['setting_single_lecture_duplicate'] = setting_single_lecture_duplicate
 
     return context
 

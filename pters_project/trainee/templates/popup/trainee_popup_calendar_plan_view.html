@@ -30,7 +30,7 @@
                         {% if schedule_info.permission_state_cd == 'WP' %}
                             <div class="obj_tag obj_font_bg_orange_white obj_font_size_16_weight_bold" style="font-size:11px; line-height:20px; height:20px;">대기 예약</div>
                         {% else %}
-                            <div class="obj_tag obj_font_bg_white_coral obj_font_size_16_weight_bold" style="font-size:11px; line-height:20px; height:20px;">예약 확정</div>
+                            <div class="obj_tag obj_font_bg_white_main_color obj_font_size_16_weight_bold" style="font-size:11px; line-height:20px; height:20px;">예약 확정</div>
                         {% endif %}
                     </div>
                     <div  class="wrapper_img_lesson_type">
@@ -109,7 +109,7 @@
                         </div>
 
                         {% if schedule_info.state_cd != 'PE' and schedule_info.state_cd != 'PC' %}
-                            <div class="obj_table_cell_x2 obj_button_gen obj_font_bg_coral_trans"
+                            <div class="obj_table_cell_x2 obj_button_gen obj_font_bg_main_color_trans"
                                  onclick="show_user_confirm({title:`정말 취소하시겠습니까?`}, ()=>{
                                             func_schedule({'schedule_id':'{{ schedule_info.schedule_id }}'}, `${CALL_AJAX}`, `${DELETE}`);
                                             });">취소하기</div>
@@ -168,7 +168,7 @@
         {% if request.session.setting_member_reserve_prohibition == '1' %}
             <div class="obj_button_big obj_font_bg_pink_white" onclick="layer_popup.all_close_layer_popup()">확인</div>
         {% else %}
-            <div class="obj_button_big obj_font_bg_white_coral" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_reserve', 90, POPUP_FROM_BOTTOM, {'select_date':'{{ date_format| date:'Y-m-d' }}'})">예약 추가하기</div>
+            <div class="obj_button_big obj_font_bg_white_main_color" onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_calendar_plan_reserve', 90, POPUP_FROM_BOTTOM, {'select_date':'{{ date_format| date:'Y-m-d' }}'})">예약 추가하기</div>
         {% endif %}
     {% else %}
         <div class="obj_button_big obj_font_bg_pink_white" onclick="layer_popup.all_close_layer_popup()">확인</div>

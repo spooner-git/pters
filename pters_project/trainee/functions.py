@@ -18,6 +18,7 @@ from .models import MemberTicketTb, MemberClosedDateHistoryTb
 
 def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_date):
     schedule_list = []
+    schedule_data = None
     all_schedule_check = 0
     now = timezone.now()
     next_schedule = ''
@@ -29,13 +30,13 @@ def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_dat
     if all_schedule_check == 0:
         schedule_data = ScheduleTb.objects.select_related(
             'member_ticket_tb__member', 'lecture_tb'
-        ).filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,
-                 start_dt__gte=start_date, start_dt__lt=end_date,
-                 member_ticket_tb__member_id=user_id,
-                 member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
-                 member_ticket_tb__use=USE, use=USE
-                 ).annotate(lecture_current_member_num=RawSQL('IFNULL(('+query_lecture_current_member_num+' ), 1)', [])
-                            ).order_by('start_dt')
+        ).filter(
+            class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, start_dt__gte=start_date, start_dt__lt=end_date,
+            member_ticket_tb__member_id=user_id, member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
+            member_ticket_tb__use=USE, use=USE
+        ).annotate(lecture_current_member_num=RawSQL('IFNULL(('+query_lecture_current_member_num+' ), 1)', [])
+                   ).order_by('start_dt')
+
         idx1 = 0
         idx2 = 1
         member_ticket_id = None
@@ -74,7 +75,8 @@ def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_dat
             ).filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,
                      member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
                      member_ticket_tb__member_id=user_id,
-                     member_ticket_tb_id=class_member_ticket_info.member_ticket_tb_id, use=USE).order_by('start_dt')
+                     member_ticket_tb_id=class_member_ticket_info.member_ticket_tb_id,
+                     use=USE).order_by('start_dt')
 
             for schedule_info in schedule_data:
                 schedule_info.idx = str(idx1) + '-' + str(idx2)
@@ -182,6 +184,8 @@ def func_get_trainee_closed_schedule(context, class_id, user_id, start_date, end
                                                         use=USE).order_by('start_date', 'end_date')
 
     for member_closed_date_info in member_closed_date_data:
+        if member_closed_date_info.note is not None and member_closed_date_info.note != '':
+            member_closed_date_info.note = member_closed_date_info.note.replace('\n', '<br/>')
         if member_closed_date_info.start_date == member_closed_date_info.end_date:
             closed_date_list.append(member_closed_date_info)
         else:
@@ -193,6 +197,8 @@ def func_get_trainee_closed_schedule(context, class_id, user_id, start_date, end
                 select_closed_date_info.start_date = check_date
                 closed_date_list.append(select_closed_date_info)
                 check_date += datetime.timedelta(days=1)
+                # if select_closed_date_info.note is not None and select_closed_date_info.note != '':
+                #     select_closed_date_info.note = select_closed_date_info.note.replace('\n', '<br/>')
 
     member_holiday_date_data = ScheduleTb.objects.select_related(
         'class_tb').filter(Q(start_dt__lte=end_date) & Q(end_dt__gte=start_date),
@@ -205,6 +211,9 @@ def func_get_trainee_closed_schedule(context, class_id, user_id, start_date, end
         member_holiday_date_info.note = member_holiday_date_info.note
         if member_holiday_date_info.note is None or member_holiday_date_info.note == '':
             member_holiday_date_info.note = '휴무일'
+        else:
+            member_holiday_date_info.note = member_holiday_date_info.note.replace('\n', '<br/>')
+
         member_holiday_date_info.reason_type_cd = 'PROGRAM_CLOSED'
         if member_holiday_date_info not in closed_date_list:
             closed_date_list.append(member_holiday_date_info)

@@ -39,6 +39,23 @@
          a{
              text-decoration: none;
          }
+        .group_select_box_on{
+            display:inline-block;
+            width: 48%;
+            height: 46px;
+            line-height: 46px;
+            border-radius: 2px;
+            background-color: {{ request.session.main_color_cd }};
+            border: 1px solid {{ request.session.main_color_cd }};
+            cursor: pointer;
+            text-align: center;
+            font-size: 15px;
+            font-weight: bold;
+            font-style: normal;
+            font-stretch: normal;
+            letter-spacing: -0.5px;
+            color: #ffffff;
+        }
     </style>
     <!-- <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.fundamental.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.object.css" %}>

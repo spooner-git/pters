@@ -160,7 +160,7 @@
     </div>
 {% endblock %}
 {% block popoup_base_wrapper_bottom_inside %}
-    <div class="obj_button_big obj_font_bg_white_coral" onclick="cancel_enable_check_func();">예약하기</div>
+    <div class="obj_button_big obj_font_bg_white_main_color" onclick="cancel_enable_check_func();">예약하기</div>
 {% endblock %}
 
 {% block popup_base_js %}
@@ -177,6 +177,28 @@
             $('#form_plan_add').find('input').val('');
             $('#form_content_lecture_id').val(one_to_one_lecture_id);
             func_get_ajax_schedule_data_temp(selected_date.replace(/\./gi, '-'), function(schedule_json){
+
+                if(schedule_json.setting_single_lecture_duplicate == 1){
+                    let class_time_len = schedule_json.classTimeArray_lecture_id.length;
+                    for(let i=0; i<class_time_len; i++){
+                        if(schedule_json.classTimeArray_lecture_type_cd[i] == "ONE_TO_ONE"){
+                            if (schedule_json.classTimeArray_lecture_id[i] != "None" && schedule_json.classTimeArray_lecture_id[i] != one_to_one_lecture_id) {
+                                schedule_json.classTimeArray_start_date.splice(i, 1);
+                                schedule_json.classTimeArray_end_date.splice(i, 1);
+                            }
+                        }
+                    }
+
+                    let off_time_len = schedule_json.offTimeArray_lecture_id.length;
+                    for(let i=0; i<off_time_len; i++){
+                        if(schedule_json.offTimeArray_lecture_type_cd[i] == "ONE_TO_ONE"){
+                            if (schedule_json.offTimeArray_lecture_id[i] != "None" && schedule_json.offTimeArray_lecture_id[i] != one_to_one_lecture_id) {
+                                schedule_json.offTimeArray_start_date.splice(i, 1);
+                                schedule_json.offTimeArray_end_date.splice(i, 1);
+                            }
+                        }
+                    }
+                }
                 func_start_time_dom_draw('select[title="time_select"]', selected_date, schedule_json, setting_info,
                     one_to_one_lecture_time_duration, one_to_one_lecture_start_time);
                 {#                func_lecture_time_dom_draw('#reserve_form_lecture', selected_date, schedule_json, setting_info);#}
@@ -194,10 +216,36 @@
             let lecture_start_time = selected_option.getAttribute('data-lecture_start_time');
             let lecture_main_trainer_name = selected_option.getAttribute('data-lecture_main_trainer_name');
             let lecture_main_trainer_profile_url = selected_option.getAttribute('data-lecture_main_trainer_profile_url');
+            let one_to_one_lecture_id_select = selected_option.getAttribute('data-lecture_id');
+
             $('#form_plan_add').find('input').val('');
-            $('#form_content_lecture_id').val(selected_option.getAttribute('data-lecture_id'));
+            $('#form_content_lecture_id').val(one_to_one_lecture_id_select);
+
             func_get_ajax_schedule_data_temp(selected_date.replace(/\./gi, '-'), function(schedule_json){
-                func_start_time_dom_draw('select[title="time_select"]', selected_date, schedule_json, setting_info, lecture_minute, lecture_start_time);
+                if(schedule_json.setting_single_lecture_duplicate == 1) {
+
+                    let class_time_len = schedule_json.classTimeArray_lecture_id.length;
+                    for(let i=0; i<class_time_len; i++){
+                        if(schedule_json.classTimeArray_lecture_type_cd[i] == "ONE_TO_ONE"){
+                            if (schedule_json.classTimeArray_lecture_id[i] != "None" && schedule_json.classTimeArray_lecture_id[i] != one_to_one_lecture_id_select) {
+                                schedule_json.classTimeArray_start_date.splice(i, 1);
+                                schedule_json.classTimeArray_end_date.splice(i, 1);
+                            }
+                        }
+                    }
+
+                    let off_time_len = schedule_json.offTimeArray_lecture_id.length;
+                    for (let i = 0; i < off_time_len; i++) {
+                        if(schedule_json.offTimeArray_lecture_type_cd[i] == "ONE_TO_ONE"){
+                            if (schedule_json.offTimeArray_lecture_id[i] != "None" && schedule_json.offTimeArray_lecture_id[i] != one_to_one_lecture_id_select) {
+                                schedule_json.offTimeArray_start_date.splice(i, 1);
+                                schedule_json.offTimeArray_end_date.splice(i, 1);
+                            }
+                        }
+                    }
+                }
+                func_start_time_dom_draw('select[title="time_select"]', selected_date, schedule_json, setting_info,
+                    lecture_minute, lecture_start_time);
                 {#                func_lecture_time_dom_draw('#reserve_form_lecture', selected_date, schedule_json, setting_info);#}
             });
             let main_trainer_html = `담당 강사 : <img src="${lecture_main_trainer_profile_url}" class="obj_box_photo"> ${lecture_main_trainer_name}`;

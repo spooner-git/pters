@@ -10,6 +10,7 @@
         <div style="padding:20px;text-align: left;">
             <img src="/static/common/icon/logo/{{request.session.domain_url}}_logo_short.png" class="logo_pters" style="width:36px;"
             onclick="location.href='{% url 'trainee:trainee_main' %}'">
+            <span style="line-height: 36px;margin-left: 6px;font-size: 15px;font-weight: bold;">{{ request.session.app_name }}</span>
             <img src="/static/common/icon/icon_x_black.png" onclick="layer_popup.close_layer_popup()" class="obj_icon_x" style="float:right;">
         </div>
     </div>

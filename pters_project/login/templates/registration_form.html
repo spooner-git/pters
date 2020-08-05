@@ -169,7 +169,7 @@
 
             <!-- 가입 완료 버튼 영역 -->
             <div class="registration_foot" style="margin-top:40px; transform: initial; padding-bottom:0px;">
-                <div class="social_login_box" onclick="mobConv();registration_member_info(document.getElementById('id_add_member_form'));" style="width:100%; background-color: #fe4e65; margin-top:12px; margin-bottom:20px;">
+                <div class="social_login_box" onclick="mobConv();registration_member_info(document.getElementById('id_add_member_form'));" style="width:100%; background-color: {{ request.session.main_color_cd }}; margin-top:12px; margin-bottom:20px;">
                     <div class="social_login_img" style="display:none;"></div>
                     <span class="social_login_text" style="color:#ffffff; text-align: center;">가입 완료</span>
                     <div style="display:none; width:60px;"></div>
@@ -244,10 +244,9 @@
 <script type="text/javascript">
 //<!--
 function mobConv() {
-    var group_type = $('#id_group_type').val();
     var cn = new EN();
     cn.setData("uid", "pters1010");
-    cn.setData("ordcode", group_type);
+    cn.setData("ordcode", "");
     cn.setData("qty", "1");
     cn.setData("price", "1");
     cn.setData("pnm", encodeURIComponent(encodeURIComponent("counsel")));
