@@ -1583,6 +1583,21 @@ class Calendar {
                                                 <div class="add_plan" onclick="${this.instance}.add_plan_button()">${CImg.plus("", {"width":"28px", "vertical-align":"middle", "margin-bottom":"4px"})}</div>
                                             </div>
                                         </div>
+                                        <div class="cal_search_upper_box">
+                                            <div class="cal_search_date_display page_title">
+                                                <div onclick="${this.instance}.switch_cal_type()" style="display:inline-block;">
+                                                    <span class="display_year">${this.current_year}년</span>
+                                                    <span class="display_month">${this.current_month}월</span>
+                                                    <div class="swap_cal">${CImg.arrow_expand()}</div>
+                                                </div>
+                                            </div>
+                                            <div class="cal_search_tools_wrap_parent">
+                                                <div class="cal_search_pc_tools_wrap" onclick="${this.instance}.move_month('prev')">${CImg.arrow_expand("", {"width":"28px", "vertical-align":"middle", "margin-bottom":"4px", "transform":"rotate(90deg)"})}</div>
+                                                <div class="cal_search_pc_tools_wrap" onclick="${this.instance}.move_month('next')">${CImg.arrow_expand("", {"width":"28px", "vertical-align":"middle", "margin-bottom":"4px", "transform":"rotate(270deg)"})}</div>
+                                                <div class="go_today" onclick="${this.instance}.go_month()">${CImg.today("", {"width":"28px", "vertical-align":"middle", "margin-bottom":"4px"})}</div>
+                                                <div class="add_plan" onclick="${this.instance}.add_plan_button()">${CImg.plus("", {"width":"28px", "vertical-align":"middle", "margin-bottom":"4px"})}</div>
+                                            </div>
+                                        </div>
                                         `
                 ,
                 "week_cal_upper_box":`
@@ -1603,6 +1618,27 @@ class Calendar {
                                             <div class="cal_tools_wrap_parent">
                                                 <div class="cal_pc_tools_wrap" onclick="${this.instance}.move_week('prev')">${CImg.arrow_expand("", {"width":"28px", "vertical-align":"middle", "margin-bottom":"4px", "transform":"rotate(90deg)"})}</div>
                                                 <div class="cal_pc_tools_wrap" onclick="${this.instance}.move_week('next')">${CImg.arrow_expand("", {"width":"28px", "vertical-align":"middle", "margin-bottom":"4px", "transform":"rotate(270deg)"})}</div>
+                                                <div class="go_today" onclick="${this.instance}.go_week()">${CImg.today("", {"width":"28px", "vertical-align":"middle", "margin-bottom":"4px"})}</div>
+                                                <div class="add_plan" onclick="${this.instance}.add_plan_button()">${CImg.plus("", {"width":"28px", "vertical-align":"middle", "margin-bottom":"4px"})}</div>
+                                            </div>
+                                        </div>
+                                        <div class="cal_search_upper_box">
+                                            <div class="cal_search_date_display page_title">
+                                                <div onclick="${this.instance}.switch_cal_type()" style="display:inline-block;">
+                                                    <span class="display_week" data-week-year="${this.current_year}" 
+                                                    data-week-month="${this.get_week_dates(this.current_year, this.current_month, this.current_week).month[0]}" 
+                                                    data-week-date="${this.get_week_dates(this.current_year, this.current_month, this.current_week).date[0]}"
+                                                    >${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).month[0] :null}월 
+                                                                            ${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).date[0] :null}일 - 
+                                                                            ${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).month[6]: null}월 
+                                                                            ${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).date[6]: null}일
+                                                    </span>
+                                                    <div class="swap_cal">${CImg.arrow_expand()}</div>
+                                                </div>
+                                            </div>
+                                            <div class="cal_search_tools_wrap_parent">
+                                                <div class="cal_search_pc_tools_wrap" onclick="${this.instance}.move_week('prev')">${CImg.arrow_expand("", {"width":"28px", "vertical-align":"middle", "margin-bottom":"4px", "transform":"rotate(90deg)"})}</div>
+                                                <div class="cal_search_pc_tools_wrap" onclick="${this.instance}.move_week('next')">${CImg.arrow_expand("", {"width":"28px", "vertical-align":"middle", "margin-bottom":"4px", "transform":"rotate(270deg)"})}</div>
                                                 <div class="go_today" onclick="${this.instance}.go_week()">${CImg.today("", {"width":"28px", "vertical-align":"middle", "margin-bottom":"4px"})}</div>
                                                 <div class="add_plan" onclick="${this.instance}.add_plan_button()">${CImg.plus("", {"width":"28px", "vertical-align":"middle", "margin-bottom":"4px"})}</div>
                                             </div>
