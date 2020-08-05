@@ -47,7 +47,7 @@
             <div class="wrapper_reserve_form _target_link_to_tab" id="reserve_form_personal">
                 <div class="obj_box_full">
                     <div class="obj_table_raw wrapper_ticket_info">
-                        <div class="wrapper_ticket_icon_personal obj_table_cell_x3"><img src="/static/common/icon/member_icon_person_black.png"></div>
+                        <div class="wrapper_ticket_icon_personal obj_table_cell_x3"><img src="/static/common/icon/member_icon_person_black.png" alt="사진"></div>
                         <div class="wrapper_ticket_name obj_table_cell_x3 obj_font_size_13_weight_normal ">
                             {% if one_to_one_lecture_data|length == 1 %}
                                 {% for one_to_one_lecture_info in one_to_one_lecture_data %}
@@ -138,7 +138,9 @@
                                             <div class="func_radio_element_button"><div class="func_radio_element_button_outer"><div class="func_radio_element_button_inner"></div></div></div>
                                         </div>
                                         {% if lecture_schedule_info.trainer %}
-                                            <div class="obj_font_size_12_weight_500" style="padding-left:10px; margin-bottom:10px;">담당 강사 : <img src="{{ lecture_schedule_info.trainer.profile_url }}" class="obj_box_photo"> {{ lecture_schedule_info.trainer.name }}</div>
+                                            <div class="obj_font_size_12_weight_500" style="padding-left:10px; margin-bottom:10px;">담당 강사 : <img src="{{ lecture_schedule_info.trainer.profile_url }}" class="obj_box_photo" alt="사진"> {{ lecture_schedule_info.trainer.name }}</div>
+                                        {% elif lecture_schedule_info.lecture_tb.main_trainer %}
+                                            <div class="obj_font_size_12_weight_500" style="padding-left:10px; margin-bottom:10px;">담당 강사 : <img src="{{ lecture_schedule_info.lecture_tb.main_trainer.profile_url }}" class="obj_box_photo" alt="사진"> {{ lecture_schedule_info.lecture_tb.main_trainer.name }}</div>
                                         {% endif %}
                                     {% endif %}
                                 {% endfor %}

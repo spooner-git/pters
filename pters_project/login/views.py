@@ -963,7 +963,7 @@ class AddTempMemberInfoView(RegistrationView, View):
 
                         if member_info.profile_url is not None and member_info.profile_url != '':
                             func_delete_profile_image_logic(member_info.profile_url)
-                        member_info.profile_url = ''
+                        member_info.profile_url = '/static/common/icon/icon_account.png'
                         member_info.save()
                         login_user = authenticate(username=form.cleaned_data['username'],
                                                   password=form.cleaned_data['password1'])

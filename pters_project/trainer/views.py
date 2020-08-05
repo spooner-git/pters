@@ -7247,7 +7247,7 @@ def delete_member_profile_img_logic(request):
             error = func_delete_profile_image_logic(member_info.profile_url)
 
     if error is None:
-        member_info.profile_url = ''
+        member_info.profile_url = '/static/common/icon/icon_account.png'
         member_info.save()
 
     if error is not None:
@@ -7340,7 +7340,7 @@ def delete_trainer_profile_img_logic(request):
             error = func_delete_profile_image_logic(member_info.profile_url)
 
     if error is None:
-        member_info.profile_url = ''
+        member_info.profile_url = '/static/common/icon/icon_account.png'
         member_info.save()
 
     if error is not None:
