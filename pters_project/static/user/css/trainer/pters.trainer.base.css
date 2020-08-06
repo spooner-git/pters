@@ -429,10 +429,11 @@ html, body{
     }
     .top_logo{
         /* padding: 16px 22px; */
-        padding: 0 22px;
+        padding: 0 5px;
         height: 60px;
         line-height: 60px;
         cursor: pointer;
+        text-align: center;
     }
     
 @media(max-width:650px){
