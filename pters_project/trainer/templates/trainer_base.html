@@ -232,7 +232,6 @@
     <link rel="stylesheet" href={% static_url "user/css/trainer/page/pters.trainer.func.home.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainer/page/pters.trainer.func.calendar.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainer/page/pters.trainer.func.member.css" %}>
-    <link rel="stylesheet" href={% static_url "user/css/trainer/page/pters.trainer.func.trainer.css" %}>
     <!-- <link rel="stylesheet" href={% static_url "user/css/trainer/page/pters.trainer.func.ticket.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainer/page/pters.trainer.func.lecture.css" %}> -->
     <link rel="stylesheet" href={% static_url "user/css/trainer/page/pters.trainer.func.alarm.css" %}>
@@ -271,7 +270,6 @@
 
 <div id="base">
     <section id="section_side">
-        <div class="shade_for_popup_basic"></div>
         <div class="top_logo">
             <span style='color:var(--font-base); width:64px; font-size:20px; font-weight:bold;' id="top_logo_image">{{ request.session.app_name }}</span>
             <!--<img src="/static/common/icon/logo/PTERS_logo_full.png" alt="" style="width: 64px;" id="top_logo_image">-->
@@ -321,14 +319,6 @@
                     </g>
                 </svg>
                 <span class="sidemenu_text">수강권</span>
-            </div>
-            <div class="side_menu_item" onclick="sideGoPage('trainer_page_type')" id="side_trainer_page_type">
-                <svg style="vertical-align:middle;margin-right:15px;" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <g id="데스크탑/아이콘/강사/5C5859" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                        <path class="nav_svg" id="Combined-Shape" fill="var(--img-main)" d="M10.0184713,18.0003512 C10.2797037,18.0079012 13.2355556,18.1777778 14,22 L14,22 L12,22 C11.6,20 10,20 10,20 L10,20 L6,20 C6,20 4.4,20 4,22 L4,22 L2,22 C2.76444444,18.1777778 5.7202963,18.0079012 5.98152867,18.0003512 Z M8,8 C10.4852814,8 12.5,10.0147186 12.5,12.5 C12.5,14.9852814 10.4852814,17 8,17 C5.51471863,17 3.5,14.9852814 3.5,12.5 C3.5,10.0147186 5.51471863,8 8,8 Z M18.0135393,12.0003015 C18.2322184,12.0076894 21.0392157,12.1960784 22,17 L22,17 L20,17 C19.4,14 18,14 18,14 L18,14 L13.5,14 C13.5,12.137931 15.2336504,12.0095125 15.4727746,12.000656 Z M8,10 C6.61928813,10 5.5,11.1192881 5.5,12.5 C5.5,13.8807119 6.61928813,15 8,15 C9.38071187,15 10.5,13.8807119 10.5,12.5 C10.5,11.1192881 9.38071187,10 8,10 Z M16,2 C18.4852814,2 20.5,4.01471863 20.5,6.5 C20.5,8.98528137 18.4852814,11 16,11 C13.5147186,11 11.5,8.98528137 11.5,6.5 C11.5,4.01471863 13.5147186,2 16,2 Z M16,4 C14.6192881,4 13.5,5.11928813 13.5,6.5 C13.5,7.88071187 14.6192881,9 16,9 C17.3807119,9 18.5,7.88071187 18.5,6.5 C18.5,5.11928813 17.3807119,4 16,4 Z" ></path>
-                    </g>
-                </svg>
-                <span class="sidemenu_text">강사</span>
             </div>
             <div class="side_menu_item" onclick="sideGoPopup('statistics')" id="side_statistics">
                 <!-- <img src={% static_url "common/icon/icon_statistics_grey.png" %} alt=""> -->
@@ -410,8 +400,7 @@
             </div>
         </div>
         <div id="section_content">
-            <!--<div id="shade_for_popup_basic" onclick="layer_popup.close_layer_popup();"></div>-->
-            <div class="shade_for_popup_basic"></div>
+            <div id="shade_for_popup_basic" onclick="layer_popup.close_layer_popup();"></div>
             <div id="shade_for_popup_preventing_touch"></div>
             <div id="content_wrapper">
                 {% include 'popup/trainer_popup_basic.html' %}
@@ -504,7 +493,6 @@
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.calendar.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.ticket.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.lecture.js" %}></script>
-<script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.trainer.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.member.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.program_board.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.program_notice.js" %}></script>
@@ -536,13 +524,6 @@
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.program_list.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.program_add.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.program_view.js" %}></script>
-<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.trainer_add.js" %}></script>
-<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.trainer_list.js" %}></script>
-<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.trainer_view.js" %}></script>
-<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.trainer_view_photo_update.js" %}></script>
-<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.trainer_search.js" %}></script>
-<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.trainer_auth.js" %}></script>
-<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.trainer_schedule_history.js" %}></script>
 
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.member_closed_date_history.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.member_schedule_history.js" %}></script>
@@ -622,8 +603,6 @@
     var user_name = '{{ request.user.first_name }}';
     var session_app_version = `{{ APP_VERSION }}`;
     var user_username = '{{ request.user.username }}';
-    var user_id = '{{ request.user.id }}';
-    var user_profile_url = '';
     var setting_theme = '{{ request.session.setting_theme }}';
 
     // MY_PROGRAM = 0 / SHARED_PROGRAM = 1
@@ -703,7 +682,6 @@
     var calendar = new Calendar('#root_content', 'calendar');
     var ticket = new Ticket('#root_content', 'ticket');
     var lecture = new Lecture('#root_content', 'lecture');
-    var trainer = new Trainer('#root_content', 'trainer');
     var program_notice = new ProgramNotice('#root_content', 'program_notice');
     var member = new Member('#root_content', 'member');
     var menu = new Menu('#root_content', 'menu');
@@ -728,19 +706,6 @@
     var ticket_simple_view_popup;
     var ticket_edit_popup;
     var ticket_list_popup;
-
-    var trainer_add_popup;
-    var trainer_view_popup;
-    var trainer_simple_view_popup;
-    var trainer_edit_popup;
-    var trainer_list_popup;
-    var trainer_add_repeat;
-    var trainer_view_photo_update_popup;
-    var trainer_closed_date_history
-    var trainer_schedule_history;
-    var trainer_search_popup;
-    var trainer_auth_popup;
-
     var lecture_add_popup;
     var lecture_view_popup;
     var lecture_simple_view_popup;
@@ -812,13 +777,11 @@
     var date_selector;
     var spinner_selector;
     var lecture_select;
-    var trainer_select;
     var ticket_select;
     var member_select;
     var member_select_plan_approve;
     var member_select_plan_wait;
     var member_contacts_select;
-    var trainer_contacts_select;
     var color_select;
     var board_type_select;
     var custom_selector;
@@ -896,17 +859,6 @@
                 current_page = lecture;
                 lecture.init();
             break;
-            case 'trainer_page_type':
-                auth_inspect = pass_inspector.trainer_read();
-                if(auth_inspect.barrier == BLOCKED){
-                    let message = `${auth_inspect.limit_type}`;
-                    show_error_message({title:message});
-                    return false;
-                }
-
-                current_page = trainer;
-                trainer.init();
-            break;
             case 'program_notice_page_type':
                 auth_inspect = pass_inspector.program_notice_read();
                 if(auth_inspect.barrier == BLOCKED){
@@ -976,7 +928,6 @@
     function toggle_sidemenu(context){
         $this = $(context);
         $sidemenu = $('#section_side');
-        $center_section = $('#section_center');
         $sidemenu_button = $this.find('svg');
         $sidemenu_text = $('.sidemenu_text');
         $toplogo = $('.top_logo');
@@ -986,7 +937,6 @@
         if(status){
             $this.removeClass('sidemenu_off');
             $sidemenu.css('flex-basis', '200px');
-            $center_section.css('width', 'calc(100% - 200px)');
             setTimeout(()=>{
                 $sidemenu_text.show();
             }, 150);
@@ -997,7 +947,6 @@
             $sidemenu_button.css('transform', 'rotate(90deg)');
         }else{
             $sidemenu.css('flex-basis', '70px');
-            $center_section.css('width', 'calc(100% - 70px)');
             $this.addClass('sidemenu_off');
             $sidemenu_text.hide();
             $toplogo.html(
@@ -1040,19 +989,6 @@
 
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_LIST, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     lecture_list_popup = new Lecture_list('.popup_lecture_list', 'lecture_list_popup')});
-                    };
-            break;
-            case 'trainer':
-                open = ()=>{
-                    auth_inspect = pass_inspector.trainer_read();
-                    if(auth_inspect.barrier == BLOCKED){
-                        let message = `${auth_inspect.limit_type}`;
-                        show_error_message({title:message});
-                        return false;
-                    }
-
-                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TRAINER_LIST, 100, POPUP_FROM_RIGHT, null, ()=>{
-                                                    trainer_list_popup = new Trainer_list('.popup_trainer_list', 'trainer_list_popup')});
                     };
             break;
             case 'program':
@@ -1327,7 +1263,6 @@
             let user_id = data.trainer_info.member_id;
             let user_name = data.trainer_info.member_name;
             let user_photo = data.trainer_info.member_profile_url;
-            user_profile_url = user_photo;
             let target = document.getElementById('up_menu_user_info');
             let user_coupon_count = data.trainer_info.member_coupon_count;
             target.innerHTML = `<img src="${user_photo}" alt="" class="up_menu_img" style="border-radius:50%"><span>${user_name}</span><div class="new_alarm_indicator menu_new_dot" style="top:15px;left:0px;"></div>`;
