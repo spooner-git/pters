@@ -928,6 +928,7 @@
     function toggle_sidemenu(context){
         $this = $(context);
         $sidemenu = $('#section_side');
+        $center_section = $('#section_center');
         $sidemenu_button = $this.find('svg');
         $sidemenu_text = $('.sidemenu_text');
         $toplogo = $('.top_logo');
@@ -937,6 +938,7 @@
         if(status){
             $this.removeClass('sidemenu_off');
             $sidemenu.css('flex-basis', '200px');
+            $center_section.css('width', 'calc(100% - 200px)');
             setTimeout(()=>{
                 $sidemenu_text.show();
             }, 150);
@@ -948,6 +950,7 @@
         }else{
             $sidemenu.css('flex-basis', '70px');
             $this.addClass('sidemenu_off');
+            $center_section.css('width', 'calc(100% - 70px)');
             $sidemenu_text.hide();
             $toplogo.html(
                 `<img src="/static/common/icon/logo/{{request.session.domain_url}}_logo_short.png" alt="" style="width: 32px;vertical-align:middle" id="top_logo_image">`
