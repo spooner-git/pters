@@ -788,7 +788,7 @@
     var setting_sharing_member_search_popup;
     var setting_sharing_member_auth_popup;
     var setting_shared_popup;
-    
+
     var service_notice_popup;
     var service_inquiry_menu_popup;
     var service_inquiry_popup;
@@ -846,7 +846,7 @@
         // current_page = page;
         current_page_text = page;
         $('#debug_toolbar').hide();
-        
+
         try{
             //메뉴 이동시 팝업이 열려있으면 모두 닫고 이동
             $('#root_content').scrollTop(0);
@@ -949,7 +949,7 @@
                 service.init();
             break;
         }
-        
+
         try{
             $(`.nav_img .nav_svg`).each(function(e){
                $(this).css('fill', 'var(--img-main)');
@@ -987,7 +987,7 @@
             $this.removeClass('sidemenu_off');
             $sidemenu.css('flex-basis', '200px');
             $center_section.css('width', 'calc(100% - 200px)');
-            setTimeout(()=>{ 
+            setTimeout(()=>{
                 $sidemenu_text.show();
             }, 150);
             $toplogo.html(
@@ -1211,7 +1211,7 @@
                                                 statistics_popup = new Statistics('.popup_statistics');
                     });
                 };
-                
+
             break;
             case 'program_notice':
                 open = ()=>{
@@ -1275,7 +1275,7 @@
                     };
             break;
         }
-    
+
         // Setting_menu_access_func.read((data)=>{
         //     let menu_lock_status = data[`setting_trainer_${page}_lock`];
         //     if(menu_lock_status == 1){
@@ -1301,7 +1301,7 @@
             open();
         }
     }
-    
+
 
     //튜토리얼을 본적이 없으면 튜토리얼을 띄우기
     let tutorial_view = localStorage.getItem("tutorial_view");
@@ -1319,7 +1319,7 @@
             }
         });
     }
-    
+
 
     //PC버전 상단 툴바에 사용자 정보 채우기
     function pc_top_toolbar_user_info_update(){
