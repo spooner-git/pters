@@ -400,7 +400,7 @@ html, body{
         position: relative;
         /* flex: 1 0 0; */
         display: inline-block;
-        width: 100%;
+        width: calc(100% - 200px);
     }
     #section_content{
         position: relative;
