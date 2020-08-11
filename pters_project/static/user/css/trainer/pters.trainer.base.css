@@ -389,7 +389,7 @@ html, body{
     height: 100%;
 }
     #section_side{
-        /* flex:0 0 200px; */
+        flex:0 0 200px;
         display: inline-block;
         width: 200px;
         background-color: var(--bg-light);
@@ -400,7 +400,7 @@ html, body{
         position: relative;
         /* flex: 1 0 0; */
         display: inline-block;
-        width: 100%;
+        width: calc(100% - 200px);
     }
     #section_content{
         position: relative;
