@@ -976,6 +976,7 @@
     function toggle_sidemenu(context){
         $this = $(context);
         $sidemenu = $('#section_side');
+        $center_section = $('#section_center');
         $sidemenu_button = $this.find('svg');
         $sidemenu_text = $('.sidemenu_text');
         $toplogo = $('.top_logo');
@@ -985,6 +986,7 @@
         if(status){
             $this.removeClass('sidemenu_off');
             $sidemenu.css('flex-basis', '200px');
+            $center_section.css('width', 'calc(100% - 200px)');
             setTimeout(()=>{ 
                 $sidemenu_text.show();
             }, 150);
@@ -995,6 +997,7 @@
             $sidemenu_button.css('transform', 'rotate(90deg)');
         }else{
             $sidemenu.css('flex-basis', '70px');
+            $center_section.css('width', 'calc(100% - 70px)');
             $this.addClass('sidemenu_off');
             $sidemenu_text.hide();
             $toplogo.html(
