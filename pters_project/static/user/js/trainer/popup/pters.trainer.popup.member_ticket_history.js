@@ -77,6 +77,7 @@ class Member_ticket_history{
             let ticket_end_date = data.member_ticket_end_date;
             let reg_count = data.member_ticket_reg_count;
             let ticket_price = data.member_ticket_price;
+            let ticket_payment_price = data.member_ticket_payment_price;
             let ticket_pay_method = data.member_ticket_pay_method;
             let ticket_refund_price = data.member_ticket_refund_price;
             let remain_count = data.member_ticket_rem_count;
@@ -97,7 +98,7 @@ class Member_ticket_history{
                     let data = {"member_id":this.member_id, "member_name":this.member_name, "member_ticket_id":member_ticket_id, "member_ticket_name":ticket_name, 
                                 "start_date": DateRobot.to_split(ticket_start_date), "start_date_text": DateRobot.to_text(ticket_start_date, "", "", SHORT),
                                 "end_date": DateRobot.to_split(ticket_end_date), "end_date_text": ticket_end_date == "9999-12-31" ? "소진 시까지" : DateRobot.to_text(ticket_end_date, "", "", SHORT),
-                                "reg_count":reg_count, "price":ticket_price, "status":status_code,
+                                "reg_count":reg_count, "price":ticket_price, "payment_price":ticket_payment_price, "status":status_code,
                                 "refund_date":refund_date == null ? null : DateRobot.to_split(refund_date), 
                                 "refund_date_text": refund_date == null? null : DateRobot.to_text(refund_date, "", "", SHORT),
                                 "refund_price":refund_price, "note":note, "pay_method":ticket_pay_method};
@@ -105,7 +106,7 @@ class Member_ticket_history{
                 });
             };
 
-            html = CComponent.ticket_history_row (numbering, member_ticket_id, date, ticket_name, TICKET_PAY_METHOD[ticket_pay_method], UnitRobot.numberWithCommas(ticket_price), UnitRobot.numberWithCommas(ticket_refund_price), reg_count, remain_count, avail_count, status_code, note, onclick);
+            html = CComponent.ticket_history_row (numbering, member_ticket_id, date, ticket_name, TICKET_PAY_METHOD[ticket_pay_method], UnitRobot.numberWithCommas(ticket_price), UnitRobot.numberWithCommas(ticket_payment_price), UnitRobot.numberWithCommas(ticket_refund_price), reg_count, remain_count, avail_count, status_code, note, onclick);
 
             html_to_join.push(html);
         }
