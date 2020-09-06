@@ -264,6 +264,7 @@ def func_get_member_from_member_ticket_list(all_member_ticket_list, lecture_id, 
     member_ticket_reg_count = 0
     member_ticket_rem_count = 0
     member_ticket_avail_count = 0
+    member_ticket_payment_check = 0
     start_date = None
     end_date = None
     lecture_member_data = None
@@ -283,11 +284,15 @@ def func_get_member_from_member_ticket_list(all_member_ticket_list, lecture_id, 
                 member_ticket_reg_count = 0
                 member_ticket_rem_count = 0
                 member_ticket_avail_count = 0
+                member_ticket_payment_check = 0
                 start_date = None
                 end_date = None
             member_ticket_reg_count += member_ticket_info.member_ticket_reg_count
             member_ticket_rem_count += member_ticket_info.member_ticket_rem_count
             member_ticket_avail_count += member_ticket_info.member_ticket_avail_count
+            if member_ticket_info.price > member_ticket_info.payment_price:
+                member_ticket_payment_check += 1
+
             if member_info.reg_info is None or str(member_info.reg_info) != str(user_id):
                 if member_ticket_info.member_auth_cd != AUTH_TYPE_VIEW:
                     member_info.sex = ''
@@ -327,6 +332,7 @@ def func_get_member_from_member_ticket_list(all_member_ticket_list, lecture_id, 
                            'member_ticket_reg_count': member_ticket_reg_count,
                            'member_ticket_rem_count': member_ticket_rem_count,
                            'member_ticket_avail_count': member_ticket_avail_count,
+                           'member_ticket_payment_check': member_ticket_payment_check,
                            'member_fix_state_cd': fix_state_cd,
                            'start_date': str(start_date),
                            'end_date': str(end_date)}
@@ -578,6 +584,7 @@ def func_get_member_ticket_info(class_id, member_ticket_id):
                               'member_ticket_start_date': str(member_ticket_tb.start_date),
                               'member_ticket_end_date': str(member_ticket_tb.end_date),
                               'member_ticket_price': member_ticket_tb.price,
+                              'member_ticket_payment_price': member_ticket_tb.payment_price,
                               'member_ticket_pay_method': member_ticket_tb.pay_method,
                               'member_ticket_refund_date': str(member_ticket_tb.refund_date),
                               'member_ticket_refund_price': member_ticket_tb.refund_price,
@@ -676,6 +683,7 @@ def func_get_member_ticket_list(class_id, member_id):
                               'member_ticket_start_date': str(member_ticket_tb.start_date),
                               'member_ticket_end_date': str(member_ticket_tb.end_date),
                               'member_ticket_price': member_ticket_tb.price,
+                              'member_ticket_payment_price': member_ticket_tb.payment_price,
                               'member_ticket_pay_method': member_ticket_tb.pay_method,
                               'member_ticket_refund_date': str(member_ticket_tb.refund_date),
                               'member_ticket_refund_price': member_ticket_tb.refund_price,
@@ -707,7 +715,7 @@ def func_get_member_ticket_list(class_id, member_id):
 
 
 # 회원의 수강권 추가하기
-def func_add_member_ticket_info(user_id, class_id, ticket_id, counts, price, pay_method,
+def func_add_member_ticket_info(user_id, class_id, ticket_id, counts, price, payment_price, pay_method,
                                 start_date, end_date, contents, member_id):
     error = None
     member = None
@@ -732,7 +740,8 @@ def func_add_member_ticket_info(user_id, class_id, ticket_id, counts, price, pay
 
             member_ticket_info = MemberTicketTb(member_id=member_id, ticket_tb_id=ticket_id, pay_method=pay_method,
                                                 member_ticket_reg_count=counts, member_ticket_rem_count=counts,
-                                                member_ticket_avail_count=counts, price=price, option_cd='DC',
+                                                member_ticket_avail_count=counts, price=price,
+                                                payment_price=payment_price, option_cd='DC',
                                                 state_cd=STATE_CD_IN_PROGRESS, start_date=start_date, end_date=end_date,
                                                 note=contents, member_auth_cd=auth_cd, use=USE)
             member_ticket_info.save()

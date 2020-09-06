@@ -62,17 +62,17 @@ def get_sales_data(class_id, month_first_day, finish_date):
                         member_ticket_tb__use=USE, auth_cd=AUTH_TYPE_VIEW, use=USE).latest('reg_dt')
 
                     if price_member_ticket_info.member_ticket_tb.start_date < price_info.member_ticket_tb.start_date:
-                        re_reg_price += price_info.member_ticket_tb.price
+                        re_reg_price += price_info.member_ticket_tb.payment_price
                     else:
                         if price_member_ticket_info.member_ticket_tb.reg_dt > price_info.member_ticket_tb.reg_dt:
-                            re_reg_price += price_info.member_ticket_tb.price
+                            re_reg_price += price_info.member_ticket_tb.payment_price
                         else:
-                            new_reg_price += price_info.member_ticket_tb.price
+                            new_reg_price += price_info.member_ticket_tb.payment_price
 
                 except ObjectDoesNotExist:
-                    new_reg_price += price_info.member_ticket_tb.price
+                    new_reg_price += price_info.member_ticket_tb.payment_price
 
-                price += price_info.member_ticket_tb.price
+                price += price_info.member_ticket_tb.payment_price
             # 환불 정보 가져오기
             refund_price_data = ClassMemberTicketTb.objects.select_related('member_ticket_tb').filter(
                 Q(member_ticket_tb__refund_date__gte=month_first_day)
@@ -162,7 +162,7 @@ def get_sales_info(class_id, month_first_day, sort_val):
             price_info = {'date': str(price_info.member_ticket_tb.start_date),
                           'trade_type': trade_type,
                           'trade_info': trade_info,
-                          'price': price_info.member_ticket_tb.price,
+                          'price': price_info.member_ticket_tb.payment_price,
                           'pay_method': price_info.member_ticket_tb.pay_method,
                           'member_db_id': price_info.member_ticket_tb.member_id,
                           'member_name': price_info.member_ticket_tb.member.name,
@@ -281,7 +281,7 @@ def get_stats_member_data(class_id, month_first_day, finish_date):
                                      use=USE).order_by('member_ticket_tb__refund_date', 'member_ticket_tb__reg_dt')
 
             for refund_price_info in refund_price_data:
-                if refund_price_info.member_ticket_tb.price != refund_price_info.member_ticket_tb.refund_price:
+                if refund_price_info.member_ticket_tb.payment_price != refund_price_info.member_ticket_tb.refund_price:
                     month_part_refund_member += 1
                 else:
                     month_all_refund_member += 1

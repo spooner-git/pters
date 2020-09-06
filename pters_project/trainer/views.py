@@ -2698,6 +2698,7 @@ def add_member_ticket_info_logic(request):
     contents = request.POST.get('contents', '')
     counts = request.POST.get('counts')
     price = request.POST.get('price', '')
+    payment_price = request.POST.get('payment_price', '')
     start_date = request.POST.get('start_date')
     end_date = request.POST.get('end_date')
     ticket_id = request.POST.get('ticket_id', '')
@@ -2716,6 +2717,12 @@ def add_member_ticket_info_logic(request):
 
     if price == '':
         price = 0
+
+    if payment_price == '':
+        payment_price = 0
+
+    if payment_price > price:
+        error = '수강권 가격보다 납부 금액이 많습니다.'
 
     if end_date == '':
         end_date = '9999-12-31'
@@ -2743,8 +2750,8 @@ def add_member_ticket_info_logic(request):
         except ObjectDoesNotExist:
             error = '수강권 정보를 확인해주세요.'
     if error is None:
-        error = func_add_member_ticket_info(request.user.id, class_id, ticket_id, counts, price, pay_method,
-                                            start_date, end_date, contents, member_id)
+        error = func_add_member_ticket_info(request.user.id, class_id, ticket_id, counts, price, payment_price,
+                                            pay_method, start_date, end_date, contents, member_id)
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
@@ -2765,6 +2772,7 @@ def update_member_ticket_info_logic(request):
     start_date = request.POST.get('start_date', '')
     end_date = request.POST.get('end_date', '')
     price = request.POST.get('price', '')
+    payment_price = request.POST.get('payment_price', '')
     refund_price = request.POST.get('refund_price', '')
     refund_date = request.POST.get('refund_date', '')
     member_ticket_reg_count = request.POST.get('member_ticket_reg_count', '')
@@ -2793,6 +2801,8 @@ def update_member_ticket_info_logic(request):
             end_date = member_ticket_info.end_date
         if price is None or price == '':
             price = member_ticket_info.price
+        if payment_price is None or payment_price == '':
+            payment_price = member_ticket_info.payment_price
         if pay_method is None or pay_method == '':
             pay_method = member_ticket_info.pay_method
         if refund_price is None or refund_price == '':
@@ -2809,6 +2819,15 @@ def update_member_ticket_info_logic(request):
             price = int(price)
         except ValueError:
             error = '수강권 금액은 숫자만 입력 가능합니다.'
+
+        try:
+            payment_price = int(payment_price)
+        except ValueError:
+            error = '수강권 금액은 숫자만 입력 가능합니다.'
+
+        if error is None:
+            if payment_price > price:
+                error = '수강권 가격보다 납부 금액이 많습니다.'
 
         try:
             member_ticket_reg_count = int(member_ticket_reg_count)
@@ -2846,6 +2865,7 @@ def update_member_ticket_info_logic(request):
         member_ticket_info.start_date = start_date
         member_ticket_info.end_date = end_date
         member_ticket_info.price = price
+        member_ticket_info.payment_price = payment_price
         member_ticket_info.pay_method = pay_method
         member_ticket_info.refund_price = refund_price
         member_ticket_info.refund_date = refund_date

@@ -161,6 +161,7 @@ class Member {
             let member_phone = data.member_phone;
             let member_reg = data.member_ticket_reg_count;
             let member_rem = data.member_ticket_rem_count;
+            let member_ticket_payment_check = data.member_ticket_payment_check;
             let end_date = data.end_date;
             let end_date_text = DateRobot.to_text(end_date, '', '', SHORT);
             let remain_date = Math.round((new Date(end_date).getTime() - new Date().getTime()) / (1000*60*60*24));
@@ -196,6 +197,9 @@ class Member {
                 }
             }else{
                 member_counts_text = '종료됨';
+            }
+            if(member_ticket_payment_check > 0){
+                member_counts_text += ` / <span style='color:#ff0022;'>미납</span>`
             }
 
             

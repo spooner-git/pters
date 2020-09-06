@@ -31,6 +31,7 @@ class Member_add{
                 ticket_effective_days:[],
                 ticket_reg_count:[null],
                 ticket_price:[null],
+                ticket_payment_price:0,
                 pay_method:{value:["NONE"], text:["선택 안함"]},
                 start_date:null,
                 start_date_text:null,
@@ -164,6 +165,14 @@ class Member_add{
     get reg_price(){
         return this.data.ticket_price;
     }
+    set payment_price(number){
+        this.data.ticket_payment_price = number;
+        this.render_content();
+    }
+
+    get payment_price(){
+        return this.data.ticket_payment_price;
+    }
 
 
     init(){
@@ -229,6 +238,7 @@ class Member_add{
         let end_date = this.dom_row_end_date_select();
         let reg_count = this.dom_row_member_reg_count_input();
         let reg_price = this.dom_row_member_reg_price_input();
+        let payment_price = this.dom_row_member_payment_price_input();
         let pay_method = this.dom_row_ticket_pay_method_select();
 
         let ticket_sub_assembly = "";
@@ -237,6 +247,7 @@ class Member_add{
                                 + CComponent.dom_tag('시작일') + start_date + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
                                 + CComponent.dom_tag('종료일') + end_date + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
                                 + CComponent.dom_tag('가격') + reg_price + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
+                                + CComponent.dom_tag('납부 금액') + payment_price + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
                                 + CComponent.dom_tag('지불 방법') + pay_method + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
                                 + CComponent.dom_tag('특이사항') + memo;
         }
@@ -751,6 +762,30 @@ class Member_add{
         return html + price_simple_input;
     }
 
+    dom_row_member_payment_price_input(){
+        let unit = '원';
+        let id = 'input_payment_price';
+        let title = this.data.ticket_payment_price == null ? 0 : UnitRobot.numberWithCommas(this.data.ticket_payment_price);
+        let placeholder = '납부 금액';
+        let icon = NONE;
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
+        let style = null;
+        let input_disabled = false;
+        let pattern = "[0-9]{0,8}";
+        let pattern_message = "";
+        let required = "";
+        let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, input_disabled, (input_data)=>{
+            if(input_data != '' && input_data != null){
+                input_data = Number(input_data);
+            }
+            this.payment_price = input_data;
+        }, pattern, pattern_message, required);
+
+        let price_simple_input = this.dom_row_payment_price_simple_input_machine();
+        return html + price_simple_input;
+    }
+
     dom_row_price_simple_input_machine(){
         // let button_style = {"flex":"1 1 0", "padding":"10px 8px", "color":"var(--font-sub-normal)"};
         let button_style = {"flex":"1 1 0", "padding":"6px 0px", "color":"var(--font-sub-normal)", "background-color":"var(--bg-light)", "border-radius":"3px"};
@@ -766,6 +801,32 @@ class Member_add{
         let wrapper_style = "display:flex;padding:0px 0 0px 40px;font-size:12px;";
         let divider_style = "flex-basis:8px;height:20px;margin-top:10px;background-color:var(--bg-invisible);";
         let html = `<div style="${wrapper_style}">
+                        ${button_100} <div style="${divider_style}"></div>
+                        ${button_50} <div style="${divider_style}"></div>
+                        ${button_10} <div style="${divider_style}"></div>
+                        ${button_1} <div style="${divider_style}"></div>
+                        ${button_delete}
+                    </div>`;
+
+        return html;
+    }
+
+    dom_row_payment_price_simple_input_machine(){
+        // let button_style = {"flex":"1 1 0", "padding":"10px 8px", "color":"var(--font-sub-normal)"};
+        let button_style = {"flex":"1 1 0", "padding":"6px 0px", "color":"var(--font-sub-normal)", "background-color":"var(--bg-light)", "border-radius":"3px"};
+        let button_perfect = CComponent.button ("payment_button_perfect", "완납", button_style, ()=>{ this.data.ticket_payment_price = Number(this.data.ticket_price);this.render_content(); });
+        let button_100 = CComponent.button ("payment_button_100", "+ 100만", button_style, ()=>{ this.data.ticket_payment_price = Number(this.data.ticket_payment_price) + 1000000;this.render_content(); });
+        let button_50 = CComponent.button ("payment_button_50", "+ 50만", button_style, ()=>{ this.data.ticket_payment_price = Number(this.data.ticket_payment_price) + 500000;this.render_content(); });
+        let button_10 = CComponent.button ("payment_button_10", "+ 10만", button_style, ()=>{ this.data.ticket_payment_price = Number(this.data.ticket_payment_price) + 100000;this.render_content(); });
+        let button_1 = CComponent.button ("payment_button_1", "+ 1만", button_style, ()=>{ this.data.ticket_payment_price = Number(this.data.ticket_payment_price) + 10000;this.render_content(); });
+        let button_delete = CComponent.button ("payment_button_delete", "지우기", button_style, ()=>{ this.data.ticket_payment_price = null;this.render_content(); });
+
+        // let wrapper_style = "display:flex;padding:0px 0 0px 20px;font-size:12px;";
+        // let divider_style = "flex-basis:1px;height:20px;margin-top:10px;background-color:var(--bg-light);display:none;";
+        let wrapper_style = "display:flex;padding:0px 0 0px 40px;font-size:12px;";
+        let divider_style = "flex-basis:8px;height:20px;margin-top:10px;background-color:var(--bg-invisible);";
+        let html = `<div style="${wrapper_style}">
+                        ${button_perfect} <div style="${divider_style}"></div>
                         ${button_100} <div style="${divider_style}"></div>
                         ${button_50} <div style="${divider_style}"></div>
                         ${button_10} <div style="${divider_style}"></div>
@@ -865,6 +926,7 @@ class Member_add{
                     "end_date":DateRobot.to_yyyymmdd(this.data.end_date.year, this.data.end_date.month, this.data.end_date.date),
                     "counts":this.data.ticket_reg_count[0],
                     "price":this.data.ticket_price[0],
+                    "payment_price":this.data.ticket_payment_price,
                     "pay_method":this.data.pay_method.value[0]
         };
 
@@ -876,6 +938,7 @@ class Member_add{
             "end_date":DateRobot.to_yyyymmdd(this.data.end_date.year, this.data.end_date.month, this.data.end_date.date),
             "counts":this.data.ticket_reg_count[0],
             "price":this.data.ticket_price[0],
+            "payment_price":this.data.ticket_payment_price,
             "pay_method":this.data.pay_method.value[0]
         };
 
@@ -930,6 +993,10 @@ class Member_add{
             }
             if(this.data.end_date == null){
                 show_error_message({title:'종료일을 입력 해주세요.'});
+                return false;
+            }
+            if(this.data.ticket_payment_price > this.data.ticket_price[0]){
+                show_error_message({title:'수강권 가격보다 납부금액이 많습니다.'});
                 return false;
             }
             

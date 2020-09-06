@@ -20,13 +20,13 @@ class MemberTicketTb(TimeStampedModel):
     start_date = models.DateField('시작일', db_column='START_DATE', blank=True, null=True)  # Field name made lowercase.
     end_date = models.DateField('종료일', db_column='END_DATE', blank=True, null=True)  # Field name made lowercase.
     price = models.IntegerField('결제 금액', db_column='PRICE', default=0)  # Field name made lowercase.
+    payment_price = models.IntegerField('납부 금액', db_column='PAYMENT_PRICE', default=0)
     pay_method = models.CharField('결제 방법', db_column='PAY_METHOD', max_length=45, blank=True, default='')
     refund_price = models.IntegerField('환불 금액', db_column='REFUND_PRICE', default=0)
     refund_date = models.DateTimeField('환불 일자', db_column='REFUND_DATE', blank=True, null=True)  # Field name made lowercase.
     state_cd = models.CharField('상태', db_column='STATE_CD', max_length=10, blank=True, default='')
     note = models.CharField('메모', db_column='NOTE', max_length=3000, blank=True, default='')
     member_auth_cd = models.CharField('연결 정보', db_column='MEMBER_AUTH_CD', max_length=20, blank=True, default='')
-
     day_count = models.IntegerField(db_column='DAY_COUNT', default=0)  # Field name made lowercase.
     option_cd = models.CharField(db_column='OPTION_CD', max_length=10, blank=True, default='')
     schedule_check = models.IntegerField(db_column='SCHEDULE_CHECK', default=1)

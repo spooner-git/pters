@@ -43,6 +43,7 @@ class Member_view{
                     ticket_rem_count: null,
                     ticket_avail_count: null,
                     ticket_price: null,
+                    ticket_payment_price: null,
                     ticket_state: null,
                     start_date: null,
                     start_date_text: null,
@@ -169,6 +170,14 @@ class Member_view{
         return this.data.ticket_price;
     }
 
+    set payment_price(number){
+        this.data.ticket_payment_price = number;
+        this.render_content();
+    }
+
+    get payment_price(){
+        return this.data.ticket_payment_price;
+    }
 
     init(){
         this.render();
@@ -235,6 +244,7 @@ class Member_view{
                             let ticket_reg_count_of_this_member = member_ticket_list[i].member_ticket_reg_count;
                             let ticket_avail_count_of_this_member = member_ticket_list[i].member_ticket_avail_count;
                             let ticket_reg_price_of_this_member = member_ticket_list[i].member_ticket_price;
+                            let ticket_payment_price_of_this_member = member_ticket_list[i].member_ticket_payment_price;
                             let ticket_reg_date_of_this_member = member_ticket_list[i].member_ticket_start_date;
                             let ticket_end_date_of_this_member = member_ticket_list[i].member_ticket_end_date;
                             let ticket_refund_date_of_this_member = member_ticket_list[i].member_ticket_refund_date;
@@ -257,6 +267,7 @@ class Member_view{
                                                     ticket_rem_count:ticket_rem_count_of_this_member,
                                                     ticket_avail_count:ticket_avail_count_of_this_member,
                                                     ticket_price:ticket_reg_price_of_this_member,
+                                                    ticket_payment_price:ticket_payment_price_of_this_member,
                                                     ticket_state:member_ticket_list[i].ticket_state_cd,
                                                     ticket_note:member_ticket_list[i].member_ticket_note,
                                                     ticket_refund_date: ticket_refund_date_of_this_member,
@@ -734,6 +745,7 @@ class Member_view{
             let ticket_reg_count =  this.data.ticket[i].ticket_reg_count;
             let ticket_avail_count =  this.data.ticket[i].ticket_avail_count;
             let ticket_price =  this.data.ticket[i].ticket_price;
+            let ticket_payment_price = this.data.ticket[i].ticket_payment_price;
             let ticket_pay_method = this.data.ticket[i].ticket_pay_method;
             let ticket_note = this.data.ticket[i].ticket_note;
             let ticket_status = this.data.ticket[i].ticket_state;
@@ -755,7 +767,7 @@ class Member_view{
                     let data = {"member_id":this.member_id, "member_name":this.name, "member_ticket_id":member_ticket_id, "member_ticket_name":ticket_name, 
                                 "start_date": DateRobot.to_split(ticket_start_date), "start_date_text": DateRobot.to_text(ticket_start_date, "", "", SHORT),
                                 "end_date": DateRobot.to_split(ticket_end_date), "end_date_text": ticket_end_date == "9999-12-31" ? "소진 시까지" : DateRobot.to_text(ticket_end_date, "", "", SHORT),
-                                "reg_count":ticket_reg_count, "price":ticket_price, "status":member_ticket_status,
+                                "reg_count":ticket_reg_count, "price":ticket_price, "payment_price":ticket_payment_price, "status":member_ticket_status,
                                 "refund_date": ticket_refund_date == null ? null : DateRobot.to_split(ticket_refund_date), 
                                 "refund_date_text": ticket_refund_date == null ? null : DateRobot.to_text(ticket_refund_date, "", "", SHORT),
                                 "refund_price":ticket_refund_price, "note":ticket_note, "pay_method":ticket_pay_method};
@@ -792,8 +804,17 @@ class Member_view{
             let icon_button_style_remain_data_info = {"display":"block", "padding":"6px 0 0 38px", "font-size":"13px", "font-weight":"500", "color":"var(--font-sub-normal)", "height":"16px"};
             let icon_button_style_note_info = {"display":"block", "padding":"6px 0 12px 38px", "font-size":"13px", "font-weight":"500", "color":"var(--font-sub-normal)", "height":"auto"};
 
+            let payment_status_info = '(완납)';
+            if(ticket_price == ticket_payment_price){
+                payment_status_info = '(완납)';
+            }else if(ticket_payment_price == '0' || ticket_payment_price == null || ticket_payment_price == 0){
+                payment_status_info = '(미납)';
+            }else if(ticket_price > ticket_payment_price){
+                payment_status_info = '(분납)';
+            }
+
             let html_remain_info =
-                CComp.element("div", `상태 <span style="font-size:13px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${TICKET_STATUS[this.data.ticket[i].member_ticket_state_cd]}</span>`, icon_button_style_remain_count_info)+
+                CComp.element("div", `상태 <span style="font-size:13px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${TICKET_STATUS[this.data.ticket[i].member_ticket_state_cd]}${payment_status_info}</span>`, icon_button_style_remain_count_info)+
                 CComp.element("div", `등록 <span style="font-size:13px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${this.data.ticket[i].ticket_reg_count >= 99999 ? "무제한" : this.data.ticket[i].ticket_reg_count + '회'}</span>`, icon_button_style_remain_count_info) +
                 CComp.element("div", `잔여 <span style="font-size:13px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${this.data.ticket[i].ticket_reg_count >= 99999 ? "무제한" : this.data.ticket[i].ticket_rem_count + '회'}</span>`, icon_button_style_remain_count_info) +
                 CComp.element("div", `예약가능 <span style="font-size:13px; font-weight:bold; color:var(--font-highlight); margin-left:8px;">${this.data.ticket[i].ticket_reg_count >= 99999 ? "무제한" : this.data.ticket[i].ticket_avail_count + '회'}</span>`, icon_button_style_remain_count_info) +
@@ -1327,6 +1348,7 @@ class Member_simple_view{
                         ticket_rem_count:null,
                         ticket_avail_count:null,
                         ticket_price:null,
+                        ticket_payment_price:null,
                         ticket_state:null,
                         member_ticket_id:null,
                         member_ticket_state_cd:null,
@@ -1404,6 +1426,7 @@ class Member_simple_view{
                     let ticket_reg_count_of_this_member = member_ticket_list[i].member_ticket_reg_count;
                     let ticket_avail_count_of_this_member = member_ticket_list[i].member_ticket_avail_count;
                     let ticket_reg_price_of_this_member = member_ticket_list[i].member_ticket_price;
+                    let ticket_payment_price_of_this_member = member_ticket_list[i].member_ticket_payment_price;
                     let ticket_reg_date_of_this_member = member_ticket_list[i].member_ticket_start_date;
                     let ticket_end_date_of_this_member = member_ticket_list[i].member_ticket_end_date;
                     // let ticket_remain_date = Math.round((new Date(ticket_end_date_of_this_member).getTime() - new Date().getTime()) / (1000*60*60*24));
@@ -1423,6 +1446,7 @@ class Member_simple_view{
                                             ticket_rem_count:ticket_rem_count_of_this_member,
                                             ticket_avail_count:ticket_avail_count_of_this_member,
                                             ticket_price:ticket_reg_price_of_this_member,
+                                            ticket_payment_price: ticket_payment_price_of_this_member,
                                             ticket_state:member_ticket_list[i].member_ticket_state_cd,
                                             start_date:ticket_reg_date_of_this_member,
                                             start_date_text:DateRobot.to_text(ticket_reg_date_of_this_member, '', '', SHORT),
