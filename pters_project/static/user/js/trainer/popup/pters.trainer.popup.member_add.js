@@ -765,7 +765,7 @@ class Member_add{
     dom_row_member_payment_price_input(){
         let unit = '원';
         let id = 'input_payment_price';
-        let title = this.data.ticket_payment_price == null ? 0 : UnitRobot.numberWithCommas(this.data.ticket_payment_price);
+        let title = this.data.ticket_price.length == 0 || this.data.ticket_price[0] == null ? '' : UnitRobot.numberWithCommas(this.data.ticket_price[0]);
         let placeholder = '납부 금액';
         let icon = NONE;
         let icon_r_visible = HIDE;
