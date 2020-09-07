@@ -3801,10 +3801,10 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
             lecture_tb = lecture_ticket_info.lecture_tb
             ticket_tb = lecture_ticket_info.ticket_tb
             lecture_id = str(lecture_tb.lecture_id)
-            main_trainer_id = request.user.id
-            main_trainer_name = request.user.first_name
+            main_trainer_id = lecture_tb.class_tb.member_id
+            main_trainer_name = lecture_tb.class_tb.member.name
             if lecture_tb.main_trainer is None or lecture_tb.main_trainer == '':
-                lecture_tb.main_trainer_id = request.user.id
+                lecture_tb.main_trainer_id = lecture_tb.class_tb.member_id
                 lecture_tb.save()
             else:
                 main_trainer_id = lecture_tb.main_trainer_id
@@ -3838,10 +3838,10 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         if len(lecture_data) != len(lecture_data_dict):
             for lecture_info in lecture_data:
                 lecture_id = str(lecture_info.lecture_id)
-                main_trainer_id = request.user.id
-                main_trainer_name = request.user.first_name
+                main_trainer_id = lecture_info.class_tb.member_id
+                main_trainer_name = lecture_info.class_tb.member.name
                 if lecture_info.main_trainer is None or lecture_info.main_trainer == '':
-                    lecture_info.main_trainer_id = request.user.id
+                    lecture_info.main_trainer_id = lecture_info.class_tb.member_id
                     lecture_info.save()
                 else:
                     main_trainer_id = lecture_info.main_trainer_id

@@ -1696,11 +1696,18 @@ def func_get_lecture_trainer_schedule_all_by_schedule_dt(class_id, trainer_id, p
                  "` and B.CLASS_TB_ID = " + str(class_id) + \
                  " and B." + ClassMemberTicketTb._meta.get_field('use').column + "=" + str(USE)
 
+    query = "select count(B."+ScheduleTb._meta.get_field('schedule_id').column+") from "+ScheduleTb._meta.db_table +\
+            " as B where B."+ScheduleTb._meta.get_field('lecture_schedule_id').column+" =`"+ScheduleTb._meta.db_table +\
+            "`.`"+ScheduleTb._meta.get_field('schedule_id').column+"` " \
+            " AND B."+ScheduleTb._meta.get_field('state_cd').column+" != \'PC\'" \
+            " AND B."+ScheduleTb._meta.get_field('permission_state_cd').column+" = \'AP\'" \
+            " AND B."+ScheduleTb._meta.get_field('use').column+"="+str(USE)
+
     trainer_schedule_data = ScheduleTb.objects.select_related(
         'member_ticket_tb__member', 'reg_member', 'member_ticket_tb__ticket_tb',
         'lecture_tb').filter(
         class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, use=USE, lecture_schedule_id__isnull=True,
-        trainer_id=trainer_id).order_by('-start_dt', '-reg_dt')
+        trainer_id=trainer_id).annotate(lecture_current_member_num=RawSQL(query, [])).order_by('-start_dt', '-reg_dt')
 
     paginator = Paginator(trainer_schedule_data, SCHEDULE_PAGINATION_COUNTER)
     try:
@@ -1719,6 +1726,7 @@ def func_get_lecture_trainer_schedule_all_by_schedule_dt(class_id, trainer_id, p
         # member_ticket_id = str(member_ticket_tb.member_ticket_id)
         lecture_info = trainer_schedule_info.lecture_tb
         schedule_type = trainer_schedule_info.en_dis_type
+        member_name = ''
 
         # 수강권에 따른 일정 정보 전달을 위해 초기화
         # if temp_member_ticket_id != member_ticket_id:
@@ -1731,6 +1739,8 @@ def func_get_lecture_trainer_schedule_all_by_schedule_dt(class_id, trainer_id, p
             lecture_max_member_num = lecture_info.member_num
             if lecture_info.lecture_type_cd != LECTURE_TYPE_ONE_TO_ONE:
                 schedule_type = GROUP_SCHEDULE
+            else:
+                member_name = trainer_schedule_info.member_ticket_tb.member.name
         except AttributeError:
             lecture_id = ''
             lecture_name = '개인수업'
@@ -1753,7 +1763,9 @@ def func_get_lecture_trainer_schedule_all_by_schedule_dt(class_id, trainer_id, p
                          'lecture_id': str(lecture_id),
                          'lecture_name': lecture_name,
                          'lecture_max_member_num': lecture_max_member_num,
+                         'lecture_current_member_num': trainer_schedule_info.lecture_current_member_num,
                          'schedule_type': schedule_type,
+                         'member_name': member_name,
                          'start_dt': str(trainer_schedule_info.start_dt),
                          'end_dt': str(end_dt),
                          'state_cd': trainer_schedule_info.state_cd,
