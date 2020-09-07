@@ -149,6 +149,8 @@ const SORT_TRAINER_MEMBER_COUNT = 1;
 const SORT_TRAINER_CAPACITY_COUNT = 2;
 const SORT_TRAINER_CREATE_DATE = 3;
 
+const SORT_SHOP_NAME = 0;
+
 const SORT_TICKET_TYPE = 0;
 const SORT_TICKET_NAME = 1;
 const SORT_TICKET_MEMBER_COUNT = 2;
@@ -217,6 +219,12 @@ const POPUP_ADDRESS_TRAINER_LIST = 'popup_trainer_list';
 const POPUP_ADDRESS_TRAINER_SEARCH = 'popup_trainer_search';
 const POPUP_ADDRESS_TRAINER_AUTH = 'popup_trainer_auth';
 const POPUP_ADDRESS_TRAINER_SELECT = 'popup_trainer_select';
+
+const POPUP_ADDRESS_SHOP_LIST = 'popup_shop_list';
+const POPUP_ADDRESS_SHOP_VIEW = 'popup_shop_view';
+const POPUP_ADDRESS_SHOP_ADD = 'popup_shop_add';
+const POPUP_ADDRESS_SHOP_SELECT = 'popup_shop_select';
+const POPUP_ADDRESS_SHOP_SEARCH = 'popup_shop_search';
 
 const POPUP_ADDRESS_LECTURE_VIEW = 'popup_lecture_view';
 const POPUP_ADDRESS_LECTURE_SIMPLE_VIEW = 'popup_lecture_simple_view';

@@ -505,6 +505,7 @@
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.ticket.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.lecture.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.trainer.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.shop.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.member.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.program_board.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/page/pters.trainer.func.program_notice.js" %}></script>
@@ -543,6 +544,11 @@
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.trainer_search.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.trainer_auth.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.trainer_schedule_history.js" %}></script>
+
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.shop_add.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.shop_list.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.shop_search.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.shop_view.js" %}></script>
 
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.member_closed_date_history.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.member_schedule_history.js" %}></script>
@@ -704,6 +710,7 @@
     var ticket = new Ticket('#root_content', 'ticket');
     var lecture = new Lecture('#root_content', 'lecture');
     var trainer = new Trainer('#root_content', 'trainer');
+    var shop = new Shop('#root_content', 'shop');
     var program_notice = new ProgramNotice('#root_content', 'program_notice');
     var member = new Member('#root_content', 'member');
     var menu = new Menu('#root_content', 'menu');
@@ -740,6 +747,11 @@
     var trainer_schedule_history;
     var trainer_search_popup;
     var trainer_auth_popup;
+
+    var shop_add_popup;
+    var shop_view_popup;
+    var shop_list_popup;
+    var shop_search_popup;
 
     var lecture_add_popup;
     var lecture_view_popup;
@@ -1053,6 +1065,19 @@
 
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TRAINER_LIST, 100, POPUP_FROM_RIGHT, null, ()=>{
                                                     trainer_list_popup = new Trainer_list('.popup_trainer_list', 'trainer_list_popup')});
+                    };
+            break;
+            case 'shop':
+                open = ()=>{
+                    auth_inspect = pass_inspector.shop_read();
+                    if(auth_inspect.barrier == BLOCKED){
+                        let message = `${auth_inspect.limit_type}`;
+                        show_error_message({title:message});
+                        return false;
+                    }
+
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SHOP_LIST, 100, POPUP_FROM_RIGHT, null, ()=>{
+                        shop_list_popup = new Shop_list('.popup_shop_list', 'shop_list_popup')});
                     };
             break;
             case 'program':
