@@ -1401,14 +1401,15 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
 
             mod_member_id = ''
             mod_member_name = ''
-            trainer_id = ''
-            trainer_name = ''
+            trainer_id = lecture_member_schedule_info.class_tb.member_id
+            trainer_name = lecture_member_schedule_info.class_tb.member.name
             if lecture_member_schedule_info.mod_member is not None and lecture_member_schedule_info.mod_member != '':
                 mod_member_id = lecture_member_schedule_info.mod_member_id
                 mod_member_name = lecture_member_schedule_info.mod_member.name
             if lecture_member_schedule_info.trainer is not None and lecture_member_schedule_info.trainer != '':
                 trainer_id = lecture_member_schedule_info.trainer_id
                 trainer_name = lecture_member_schedule_info.trainer.name
+
             lecture_schedule_info = {'schedule_id': str(lecture_member_schedule_info.schedule_id),
                                      'member_id': str(lecture_member_schedule_info.member_ticket_tb.member.member_id),
                                      'member_name': lecture_member_schedule_info.member_ticket_tb.member.name,
@@ -1436,8 +1437,8 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
 
         mod_member_id = ''
         mod_member_name = ''
-        trainer_id = ''
-        trainer_name = ''
+        trainer_id = schedule_info.class_tb.member_id
+        trainer_name = schedule_info.class_tb.member.name
         if schedule_info.mod_member is not None and schedule_info.mod_member != '':
             mod_member_id = schedule_info.mod_member_id
             mod_member_name = schedule_info.mod_member.name
