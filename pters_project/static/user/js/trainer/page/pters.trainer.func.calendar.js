@@ -64,6 +64,9 @@ class Calendar {
         this.long_touch_target_height;
 
         this.latest_received_data;
+
+        this.trainer_data = [];
+        this.selected_trainer_id = 'all';
     }
 
     get selected_plan(){
@@ -80,6 +83,11 @@ class Calendar {
         if(this.long_touch == ON){
             this.mode_to_plan_change(OFF);
         }
+
+        this.request_trainer_data((jsondata)=>{
+            this.trainer_data = jsondata.current_trainer_data;
+            console.log(this.trainer_data);
+        });
         Setting_reserve_func.read((data)=>{
 
             this.work_time_info.full = data;
@@ -672,6 +680,44 @@ class Calendar {
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
             option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
         });
+    }
+
+    select_trainer_calendar(selected){
+        let selected_option = selected.selectedOptions[0];
+        let trainer_id = selected_option.getAttribute('data-select-trainer-id');
+        this.selected_trainer_id = trainer_id;
+        switch(this.cal_type){
+            case 'month':
+                this.request_schedule_data(`${this.current_year}-${this.current_month}-01`, 36, (jsondata, date) => {
+                    Plan_func.read_holiday(`${this.current_year}-${this.current_month}-01`, 36, (holiday_data)=>{
+                        this.holiday = holiday_data;
+                        this.latest_received_data = jsondata;
+                        // if(this.cal_type == cal_type){
+                            if(date == `${this.current_year}-${this.current_month}-01`){
+                                this.render_month_cal( this.current_page_num, this.current_year, this.current_month, jsondata);
+                            }
+                        // }
+                    });
+                });
+                break;
+            case 'week':
+                this.request_schedule_data(`${this.current_year}-${this.current_month}-${this.current_date}`, 10, (jsondata, date) => {
+                    Plan_func.read_holiday(`${this.current_year}-${this.current_month}-${this.current_date}`, 10, (holiday_data)=>{
+                        this.holiday = holiday_data;
+                        this.latest_received_data = jsondata;
+                        if(date == `${this.current_year}-${this.current_month}-${this.current_date}`){
+                            this.render_week_cal( this.current_page_num, this.current_year, this.current_month, this.current_week, jsondata);
+                            if(this.week_zoomed.vertical.activate == true){
+                                this.week_zoomed.vertical.activate = false;
+                                this.zoom_week_cal_vertical();
+                            }
+                        }
+                    });
+
+                });
+                break;
+        }
+
     }
 
     render_upper_box (type){
@@ -1527,7 +1573,7 @@ class Calendar {
         $.ajax({
             url: '/trainer/get_trainer_schedule_all/',
             type : 'GET',
-            data : {"date":date_, "day":days_},
+            data : {"date":date_, "day":days_, "trainer_id":this.selected_trainer_id},
             dataType: "JSON",
             async: async,
 
@@ -1564,8 +1610,66 @@ class Calendar {
         });
     }
 
+    request_trainer_data (callback, load_image, async){
+
+        $.ajax({
+            url: '/trainer/get_trainer_ing_list/',
+            type : 'GET',
+            dataType: "JSON",
+            async: async,
+
+            beforeSend:function (){
+                if(load_image == OFF){
+                    return;
+                }
+                // ajax_load_image(SHOW);
+            },
+            success:function (data){
+                check_app_version(data.app_version);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message({title:data.messageArray});
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(data);
+                }
+                return data;
+            },
+
+            complete:function (){
+                if(load_image == OFF){
+                    return;
+                }
+                // ajax_load_image(HIDE);
+            },
+
+            error:function (){
+                console.log('server error');
+            }
+        });
+    }
 
     static_component (){
+        let trainer_option = `<option data-select-trainer-id="${user_id}">${user_name}</option>`;
+        let all_checked = '';
+        if(this.selected_trainer_id == 'all'){
+            all_checked = 'selected';
+        }
+        if(this.selected_trainer_id == user_id){
+            trainer_option = `<option data-select-trainer-id="${user_id}" selected>${user_name}</option>`;
+        }
+
+        for(let i=0; i<this.trainer_data.length; i++){
+            let check_selected = '';
+            if(this.selected_trainer_id == this.trainer_data[i].trainer_id){
+                check_selected = 'selected';
+            }
+            trainer_option += `<option data-select-trainer-id="${this.trainer_data[i].trainer_id}" ${check_selected}>
+                                    ${this.trainer_data[i].trainer_name}
+                               </option>`;
+        }
         return(
             {
                 "month_cal_upper_box":` <div class="cal_upper_box">
@@ -1585,18 +1689,18 @@ class Calendar {
                                         </div>
                                         <div class="cal_search_upper_box">
                                             <div class="cal_search_date_display page_title">
-                                                <div onclick="${this.instance}.switch_cal_type()" style="display:inline-block;">
-                                                    <span class="display_year">${this.current_year}년</span>
-                                                    <span class="display_month">${this.current_month}월</span>
-                                                    <div class="swap_cal">${CImg.arrow_expand()}</div>
-                                                </div>
+                                                <select style="width:170px; height:30px; padding-left:10px;"
+                                                 onchange="${this.instance}.select_trainer_calendar(this)">
+                                                    <option data-select-trainer-id="all" ${all_checked}>전체</option>
+                                                    ${trainer_option}
+                                                </select>
                                             </div>
+                                            <!--
                                             <div class="cal_search_tools_wrap_parent">
-                                                <div class="cal_search_pc_tools_wrap" onclick="${this.instance}.move_month('prev')">${CImg.arrow_expand("", {"width":"28px", "vertical-align":"middle", "margin-bottom":"4px", "transform":"rotate(90deg)"})}</div>
-                                                <div class="cal_search_pc_tools_wrap" onclick="${this.instance}.move_month('next')">${CImg.arrow_expand("", {"width":"28px", "vertical-align":"middle", "margin-bottom":"4px", "transform":"rotate(270deg)"})}</div>
                                                 <div class="go_today" onclick="${this.instance}.go_month()">${CImg.today("", {"width":"28px", "vertical-align":"middle", "margin-bottom":"4px"})}</div>
                                                 <div class="add_plan" onclick="${this.instance}.add_plan_button()">${CImg.plus("", {"width":"28px", "vertical-align":"middle", "margin-bottom":"4px"})}</div>
                                             </div>
+                                            -->
                                         </div>
                                         `
                 ,
@@ -1624,24 +1728,18 @@ class Calendar {
                                         </div>
                                         <div class="cal_search_upper_box">
                                             <div class="cal_search_date_display page_title">
-                                                <div onclick="${this.instance}.switch_cal_type()" style="display:inline-block;">
-                                                    <span class="display_week" data-week-year="${this.current_year}" 
-                                                    data-week-month="${this.get_week_dates(this.current_year, this.current_month, this.current_week).month[0]}" 
-                                                    data-week-date="${this.get_week_dates(this.current_year, this.current_month, this.current_week).date[0]}"
-                                                    >${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).month[0] :null}월 
-                                                                            ${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).date[0] :null}일 - 
-                                                                            ${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).month[6]: null}월 
-                                                                            ${this.get_week_dates(this.current_year, this.current_month, this.current_week) ? this.get_week_dates(this.current_year, this.current_month, this.current_week).date[6]: null}일
-                                                    </span>
-                                                    <div class="swap_cal">${CImg.arrow_expand()}</div>
-                                                </div>
+                                                <select style="width:170px; height:30px; padding-left:10px;"
+                                                 onchange="${this.instance}.select_trainer_calendar(this)">
+                                                    <option data-select-trainer-id="all" ${all_checked}>전체</option>
+                                                    ${trainer_option}
+                                                </select>
                                             </div>
+                                            <!--
                                             <div class="cal_search_tools_wrap_parent">
-                                                <div class="cal_search_pc_tools_wrap" onclick="${this.instance}.move_week('prev')">${CImg.arrow_expand("", {"width":"28px", "vertical-align":"middle", "margin-bottom":"4px", "transform":"rotate(90deg)"})}</div>
-                                                <div class="cal_search_pc_tools_wrap" onclick="${this.instance}.move_week('next')">${CImg.arrow_expand("", {"width":"28px", "vertical-align":"middle", "margin-bottom":"4px", "transform":"rotate(270deg)"})}</div>
                                                 <div class="go_today" onclick="${this.instance}.go_week()">${CImg.today("", {"width":"28px", "vertical-align":"middle", "margin-bottom":"4px"})}</div>
                                                 <div class="add_plan" onclick="${this.instance}.add_plan_button()">${CImg.plus("", {"width":"28px", "vertical-align":"middle", "margin-bottom":"4px"})}</div>
                                             </div>
+                                            -->
                                         </div>
                                          
                                         `             

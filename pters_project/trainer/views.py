@@ -164,6 +164,7 @@ class GetTrainerScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
         class_id = self.request.session.get('class_id', '')
         date = request.GET.get('date', '')
         day = request.GET.get('day', '')
+        trainer_id = request.GET.get('trainer_id', 'all')
         today = datetime.date.today()
 
         if date != '':
@@ -172,7 +173,7 @@ class GetTrainerScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
             day = 31
         start_date = today - datetime.timedelta(days=int(day))
         end_date = today + datetime.timedelta(days=int(day))
-        all_schedule_data = func_get_trainer_schedule_all(class_id, start_date, end_date)
+        all_schedule_data = func_get_trainer_schedule_all(class_id, start_date, end_date, trainer_id)
 
         return JsonResponse(all_schedule_data, json_dumps_params={'ensure_ascii': True})
 
