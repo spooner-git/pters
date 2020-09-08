@@ -225,6 +225,7 @@ const POPUP_ADDRESS_SHOP_VIEW = 'popup_shop_view';
 const POPUP_ADDRESS_SHOP_ADD = 'popup_shop_add';
 const POPUP_ADDRESS_SHOP_SELECT = 'popup_shop_select';
 const POPUP_ADDRESS_SHOP_SEARCH = 'popup_shop_search';
+const POPUP_MEMBER_SHOP_HISTORY = 'popup_member_shop_history';
 
 const POPUP_ADDRESS_LECTURE_VIEW = 'popup_lecture_view';
 const POPUP_ADDRESS_LECTURE_SIMPLE_VIEW = 'popup_lecture_simple_view';

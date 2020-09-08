@@ -153,7 +153,7 @@ class Shop_search {
 
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_BOTTOM;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SHOP_ADD, 100, popup_style, null, ()=>{
-                shop_add_popup = new Shop_add('.popup_shop_add', external_data, 'shop_add_popup');});
+                shop_add_popup = new Shop_add('.popup_shop_add', 'shop_add_popup');});
         };
         let html = CComponent.button (id, title, style, onclick);
         return html;

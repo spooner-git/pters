@@ -330,6 +330,14 @@
                 </svg>
                 <span class="sidemenu_text">강사</span>
             </div>
+            <div class="side_menu_item" onclick="sideGoPage('shop_page_type')" id="side_shop_page_type">
+                <svg style="vertical-align:middle;margin-right:15px;" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <g id="데스크탑/아이콘/상품/5C5859" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                        <path class="nav_svg" id="Combined-Shape" fill="var(--img-main)" d="M16 6V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H2v13c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6h-6zm-6-2h4v2h-4V4zM9 18V9l7.5 4L9 18z" ></path>
+                    </g>
+                </svg>
+                <span class="sidemenu_text">상품</span>
+            </div>
             <div class="side_menu_item" onclick="sideGoPopup('statistics')" id="side_statistics">
                 <!-- <img src={% static_url "common/icon/icon_statistics_grey.png" %} alt=""> -->
                 <svg style="vertical-align:middle;margin-right:15px;" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -549,6 +557,7 @@
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.shop_list.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.shop_search.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.shop_view.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.member_shop_history.js" %}></script>
 
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.member_closed_date_history.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/trainer/popup/pters.trainer.popup.member_schedule_history.js" %}></script>
@@ -752,6 +761,7 @@
     var shop_view_popup;
     var shop_list_popup;
     var shop_search_popup;
+    var member_shop_history;
 
     var lecture_add_popup;
     var lecture_view_popup;
@@ -918,6 +928,17 @@
 
                 current_page = trainer;
                 trainer.init();
+            break;
+            case 'shop_page_type':
+                auth_inspect = pass_inspector.shop_read();
+                if(auth_inspect.barrier == BLOCKED){
+                    let message = `${auth_inspect.limit_type}`;
+                    show_error_message({title:message});
+                    return false;
+                }
+
+                current_page = shop;
+                shop.init();
             break;
             case 'program_notice_page_type':
                 auth_inspect = pass_inspector.program_notice_read();

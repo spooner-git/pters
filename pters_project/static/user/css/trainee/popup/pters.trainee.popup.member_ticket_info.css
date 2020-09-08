@@ -206,3 +206,39 @@
 	.popup_member_ticket_info .wrapper_my_ticket_closed_history_detail_memo{
 		width: 85%;
 	}
+
+
+
+	.popup_member_ticket_info #wrapper_my_ticket_shop_history_detail{
+		background-color: #ffffff;
+	}
+	.popup_member_ticket_info .wrapper_my_ticket_shop_history_detail_title{
+		height: 20px;
+		padding: 10px 0;
+		margin-top: 10px;
+		text-align: left;
+		position: sticky;
+		position: -webkit-sticky;
+		top: 0;
+		z-index: 1;
+		background-color: #ffffff;
+	}
+
+	.popup_member_ticket_info .wrapper_my_ticket_shop_history_detail_count{
+		width: 15%;
+	}
+	.popup_member_ticket_info .wrapper_my_ticket_shop_history_detail_date{
+		width: 70%;
+	}
+	.popup_member_ticket_info .wrapper_my_ticket_shop_history_detail_reason{
+		width: 15%;
+	}
+	/*.popup_member_ticket_info .wrapper_my_history_detail_member_ticket_week{*/
+		/*width: 40px;*/
+	/*}*/
+	/*.popup_member_ticket_info .wrapper_my_history_detail_member_ticket_time{*/
+		/*width: 75px;*/
+	/*}*/
+	.popup_member_ticket_info .wrapper_my_ticket_shop_history_detail_memo{
+		width: 85%;
+	}

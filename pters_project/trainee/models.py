@@ -7,6 +7,7 @@ from django.db import models
 
 from configs.models import TimeStampedModel
 from login.models import MemberTb, CommonCdTb
+from trainer.models import ClassTb
 
 
 class MemberTicketTb(TimeStampedModel):
@@ -23,7 +24,7 @@ class MemberTicketTb(TimeStampedModel):
     payment_price = models.IntegerField('납부 금액', db_column='PAYMENT_PRICE', default=0)
     pay_method = models.CharField('결제 방법', db_column='PAY_METHOD', max_length=45, blank=True, default='')
     refund_price = models.IntegerField('환불 금액', db_column='REFUND_PRICE', default=0)
-    refund_date = models.DateTimeField('환불 일자', db_column='REFUND_DATE', blank=True, null=True)  # Field name made lowercase.
+    refund_date = models.DateTimeField('환불 일자', db_column='REFUND_DATE', blank=True, null=True)
     state_cd = models.CharField('상태', db_column='STATE_CD', max_length=10, blank=True, default='')
     note = models.CharField('메모', db_column='NOTE', max_length=3000, blank=True, default='')
     member_auth_cd = models.CharField('연결 정보', db_column='MEMBER_AUTH_CD', max_length=20, blank=True, default='')
@@ -80,6 +81,38 @@ class ProgramNoticeHistoryTb(TimeStampedModel):
         db_table = 'PROGRAM_NOTICE_MEMBER_READ_HISTORY_TB'
         verbose_name = '회원 지점 공지 조회 history'
         verbose_name_plural = '회원 지점 공지 조회 history'
+
+
+class MemberShopTb(TimeStampedModel):
+    member_shop_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    class_tb = models.ForeignKey(ClassTb, verbose_name='지점', on_delete=models.CASCADE, null=True)
+    member = models.ForeignKey(ClassTb, verbose_name='회원', on_delete=models.CASCADE, null=True)
+    shop_tb = models.ForeignKey(ClassTb, verbose_name='상품', on_delete=models.CASCADE, null=True)
+    price = models.IntegerField('가격', db_column='PRICE', default=0)
+    payment_price = models.IntegerField('납부 금액', db_column='PAYMENT_PRICE', default=0)
+    refund_price = models.IntegerField('환불 금액', db_column='REFUND_PRICE', default=0)
+    pay_date = models.DateField('최종 거래일', db_column='PAY_DATE', blank=True, null=True)
+    note = models.CharField('설명', db_column='NOTE', max_length=200, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'MEMBER_SHOP_TB'
+
+
+class MemberPaymentHistoryTb(TimeStampedModel):
+    member_payment_history_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    class_tb = models.ForeignKey(ClassTb, verbose_name='지점', on_delete=models.CASCADE, null=True)
+    member = models.ForeignKey(ClassTb, verbose_name='회원', on_delete=models.CASCADE, null=True)
+    member_ticket_tb = models.ForeignKey(ClassTb, verbose_name='수강권', on_delete=models.CASCADE, null=True)
+    shop_tb = models.ForeignKey(ClassTb, verbose_name='상품', on_delete=models.CASCADE, null=True)
+    payment_price = models.IntegerField('납부 금액', db_column='PAYMENT_PRICE', default=0)
+    refund_price = models.IntegerField('환불 금액', db_column='REFUND_PRICE', default=0)
+    pay_date = models.DateField('거래일', db_column='PAY_DATE', blank=True, null=True)
+    note = models.CharField('설명', db_column='NOTE', max_length=200, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'MEMBER_PAYMENT_HISTORY_TB'
 
 
 # 수강권 연결 정보 (이제 사용 안함)

@@ -46,25 +46,25 @@
 		width: 100px;
 		height: 100%;
 	}
-	.shop_tools_wrap > .search_trainer{
+	.shop_tools_wrap > .search_shop{
 		display: table-cell;
 		height: 100%;
 		cursor: pointer;
 		vertical-align: middle;
 		text-align: center;
 	}
-	.shop_tools_wrap > .search_trainer > svg{
+	.shop_tools_wrap > .search_shop > svg{
 		vertical-align: middle;
 		margin-bottom: 4px;
 	}
-	.shop_tools_wrap > .add_trainer{
+	.shop_tools_wrap > .add_shop{
 		display: table-cell;
 		height: 100%;
 		cursor: pointer;
 		vertical-align: middle;
 		text-align: center;
 	}
-	.shop_tools_wrap > .add_trainer > svg{
+	.shop_tools_wrap > .add_shop > svg{
 		vertical-align: middle;
 		margin-bottom: 4px;
 	}
@@ -88,10 +88,13 @@
 	width: 100%;
 	height: 60px;
 	padding: 8px 20px 8px 24px;
-	background-color: var(--bg-main);
-	margin: 0 auto;
+	background-color: var(--bg-article);
+	border-radius: 8px;
+	box-shadow: var(--box-shadow-article);
+	margin: 8px auto;
 	box-sizing: border-box;
 	cursor: pointer;
+	line-height: 44px;
 }
 .shop_wrapper > div{
 	/* display: table; */
@@ -143,7 +146,7 @@
 	/* display: table-cell;
 	width: auto;
 	vertical-align: middle; */
-	flex-basis: 50px;
+	/*flex-basis: 70px;*/
 }
 
 .shop_name{

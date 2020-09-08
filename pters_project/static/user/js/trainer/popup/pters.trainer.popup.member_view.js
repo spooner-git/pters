@@ -57,7 +57,8 @@ class Member_view{
             ],
 
             repeat: [],
-            closed_date: []
+            closed_date: [],
+            shop_data: []
         };
 
         //팝업의 날짜, 시간등의 입력란을 미리 외부에서 온 데이터로 채워서 보여준다.
@@ -294,8 +295,15 @@ class Member_view{
                         {"member_id":this.member_id}, (data)=> {
                             this.data.closed_date = data.member_closed_list;
                             console.log(this.data.closed_date);
-                            this.render();
+
+                            Member_func.shop_list_history(
+                                {"member_id":this.member_id, "month":1}, (data)=> {
+                                    this.data.shop_data = data.member_shop_list;
+                                    console.log(this.data.shop_data);
+                                    this.render();
+                            });
                         });
+
                     });
                 }
             );
@@ -354,6 +362,7 @@ class Member_view{
         let ticket = this.dom_row_ticket();
         let repeat = this.dom_row_repeat();
         let member_closed = this.dom_row_member_closed();
+        let member_shop = this.dom_row_member_shop();
         // let memo = this.dom_row_member_memo_input();
         let tag_id = this.data.active == 'True' || this.data.active == null ? '아이디' : '아이디 <span style="color:var(--font-highlight);margin-left:3px;">(임시아이디, 비밀번호 0000)</span>';
 
@@ -383,6 +392,11 @@ class Member_view{
                 // CComponent.dom_tag('반복 일정', {"padding-left":"0"}) +
                 member_closed +
             '</div>';
+        let tab_member_shop_info =
+            '<div class="obj_input_box_full" style="padding-right:18px">' +
+                // CComponent.dom_tag('반복 일정', {"padding-left":"0"}) +
+                member_shop +
+            '</div>';
 
         let selected_tab;
         if(this.list_type == "basic_info"){
@@ -393,6 +407,8 @@ class Member_view{
             selected_tab = tab_repeat_info;
         }else if(this.list_type == "member_closed_info"){
             selected_tab = tab_member_closed_info;
+        }else if(this.list_type == "member_shop_info"){
+            selected_tab = tab_member_shop_info;
         }
 
         let html =
@@ -453,7 +469,8 @@ class Member_view{
             ${CComp.element("div", "기본 정보", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_basic_info", class:`list_tab_content ${this.list_type == "basic_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("basic_info");}})}
             ${CComp.element("div", "수강권", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_ticket_info", class:`list_tab_content ${this.list_type == "ticket_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("ticket_info");}})}
             ${CComp.element("div", "일정", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_repeat_info", class:`list_tab_content ${this.list_type == "repeat_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("repeat_info");}})}
-            ${CComp.element("div", "일시정지 내역", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_member_closed_info", class:`list_tab_content ${this.list_type == "member_closed_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("member_closed_info");}})}
+            ${CComp.element("div", "일시정지", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_member_closed_info", class:`list_tab_content ${this.list_type == "member_closed_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("member_closed_info");}})}
+            ${CComp.element("div", "상품", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_member_shop_info", class:`list_tab_content ${this.list_type == "member_shop_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("member_shop_info");}})}
         </div>`;
         return html;
     }
@@ -480,6 +497,11 @@ class Member_view{
 
             case "member_closed_info":
                 this.list_type = "member_closed_info";
+                this.render();
+            break;
+
+            case "member_shop_info":
+                this.list_type = "member_shop_info";
                 this.render();
             break;
 
@@ -937,6 +959,43 @@ class Member_view{
             //     }) +
             // `</div>
             `${html_to_join.length == 0 ? `<div style="width:100%; font-size:12px;color:var(--font-sub-dark);padding:5px; display:inline-block;">설정된 일시정지 내역이 없습니다.</div>` : ""}
+            `
+        );
+        return html_to_join.join("");
+    }
+
+    dom_row_member_shop(){
+        let html_to_join = [];
+        let length = this.data.closed_date.length;
+        for(let i=0; i<length; i++){
+            let data = this.data.closed_date[i];
+            html_to_join.push(
+                this.dom_row_closed_date_item(
+                    data.member_closed_date_history_id,
+                    '#d2d1cf',
+                    data.member_closed_reason_type_cd_name,
+                    data.member_closed_note,
+                    data.member_closed_start_date+' ~ '+data.member_closed_end_date,
+                    data.member_closed_extension_flag
+                )
+            );
+        }
+        html_to_join.unshift(
+            `<div style="margin-top:10px;margin-bottom:10px;height:33px;">`+
+                CComp.button("view_shop_date_history", `${CImg.history([""], {"vertical-align":"middle", "margin-bottom":"3px", "margin-right":"2px", "width":"18px"})} 상품 이력`, {"font-size":"12px", "float":"left", "padding-left":"0"}, null, ()=>{
+                    let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_SHOP_DATE_HISTORY, 100, popup_style, null, ()=>{
+                        member_shop_date_history = new Member_shop_date_history('.popup_member_shop_date_history', this.member_id, null);
+                    });
+                }) +
+            //     CComp.button("add_new_ticket", `${CImg.plus([""], {"vertical-align":"middle", "margin-bottom":"3px", "margin-right":"2px", "width":"18px"})}`, {"font-size":"12px", "float":"right", "padding-right":"0"}, null, ()=>{
+            //         let member_add_initial_data = {member_id: this.member_id};
+            //         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_ADD, 100, POPUP_FROM_BOTTOM, null, ()=>{
+            //             member_add_popup = new Member_add('.popup_member_add', member_add_initial_data, 'member_add_popup');}
+            //         );
+            //     }) +
+            // `</div>
+            `${html_to_join.length == 0 ? `<div style="width:100%; font-size:12px;color:var(--font-sub-dark);padding:5px; display:inline-block;">구매한 상품 내역이 없습니다.</div>` : ""}
             `
         );
         return html_to_join.join("");

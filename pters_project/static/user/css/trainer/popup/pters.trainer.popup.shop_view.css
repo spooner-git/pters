@@ -1,6 +1,5 @@
 .popup_shop_view{
 	/* -webkit-overflow-scrolling: touch; */
-	overflow: hidden;
 }
 
 .popup_shop_view .obj_box_full{
@@ -8,7 +7,7 @@
 }
 
 .popup_shop_view .obj_input_box_full{
-	padding: 4px 0px 4px 18px;
+	padding: 4px 4px 4px 18px;
 }
 
 .popup_shop_view .popup_toolbox{
@@ -16,26 +15,14 @@
 	position: -webkit-sticky; */
 	position: relative;
 	top: 0;
-	/* padding: 0 16px 20px 60px; */
-	padding: 0 16px 20px 16px;
+	padding: 0px 16px 10px 50px;
 }
 
 .popup_shop_view .popup_content{
 	padding-top: 1px;
-	padding-bottom: 20px;
 }
 
-.popup_shop_view .shop_current_ticket_article{
-	/* margin-left: 38px; */
-	margin-top: 10px;
-	padding: 5px 10px;
-	border: var(--border-article);
-	box-shadow: var(--box-shadow-article);
-	border-radius: 8px;
-}
-
-
-/* 간단 보기 */
+/* 간단보기 */
 .popup_shop_simple_view{
 }
 .popup_shop_simple_view .obj_box_full{

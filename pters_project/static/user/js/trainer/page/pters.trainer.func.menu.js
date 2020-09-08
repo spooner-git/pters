@@ -224,7 +224,7 @@ class Menu {
     dom_menu_shop(){
         let id = 'menu_shop';
         let title = '상품';
-        let icon = CImg.trainer();
+        let icon = CImg.shop();
         let icon_r_visible = NONE;
         let icon_r_text = "";
         let style = {"font-size":"17px", "padding":"13px 0"};
