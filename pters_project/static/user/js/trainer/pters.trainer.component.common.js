@@ -285,6 +285,50 @@ class CComponent{
         return html;
     }
 
+    //수강권 선택 팝업에 사용되는 행
+    static select_shop_row (multiple_select, checked, location, shop_id, shop_name, shop_price, shop_note, onclick){
+        let html = `
+                    <li class="select_shop_row str_${location}" id="select_shop_row_${shop_id}">
+                        <div class="obj_table_raw">
+                            <div class="cell_shop_color">
+                                
+                            </div>
+                            <div class="cell_shop_info">
+                                <div>${shop_name}</div>
+                                <div style="font-size:12px;color:var(--font-sub-normal);line-height:20px">${UnitRobot.numberWithCommas(shop_price)} 원 / ${shop_note}</div>                            </div>
+                            <div class="cell_shop_selected ${checked == 0 ? '' : 'shop_selected'}">
+                                ${CImg.confirm("", checked == 0 ? {"display":"none"} : {"display":"block"})}
+                            </div>
+                        </div>
+                    </li>
+                    `;
+
+        if(multiple_select > 1){
+            $(document).off('click', `#select_shop_row_${shop_id}`).on('click', `#select_shop_row_${shop_id}`, function(e){
+                if(!$(this).find('.cell_shop_selected').hasClass('shop_selected')){
+                    if($(`.str_${location} .shop_selected`).length >= multiple_select){
+                        show_error_message({title:`${multiple_select} 개까지 선택할 수 있습니다.`});
+                        return false;
+                    }
+                    $(this).find('.cell_shop_selected').addClass('shop_selected');
+                    $(this).find('svg').css('display', 'block');
+                    onclick('add');
+                }else{
+                    $(this).find('.cell_shop_selected').removeClass('shop_selected');
+                    $(this).find('svg').css('display', 'none');
+                    onclick('substract');
+                }
+            });
+        }else if(multiple_select == 1){
+            $(document).off('click', `#select_shop_row_${shop_id}`).on('click', `#select_shop_row_${shop_id}`, function(e){
+
+                onclick('add_single');
+
+            });
+        }
+        return html;
+    }
+
     //수업 선택 팝업에 사용되는 행
     static select_lecture_row (multiple_select, checked, location, lecture_id, lecture_name, color_code,
                                max_member_num, ing_member_num, lecture_state_cd, lecture_time, main_trainer_id, main_trainer_name, onclick){

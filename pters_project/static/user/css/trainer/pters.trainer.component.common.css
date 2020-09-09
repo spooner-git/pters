@@ -230,6 +230,55 @@ input:disabled{
 
 
 
+.select_shop_row{
+	list-style: none;
+	line-height: 50px;
+	height: 50px;
+	cursor: pointer;
+	font-size: 16px;
+	font-weight: 500;
+	letter-spacing: -0.5px;
+	padding: 10px 5px 10px 15px;
+	box-shadow: var(--box-shadow-article);
+	border: var(--border-article);
+	margin: 10px 10px;
+	border-radius: 5px;
+}
+.select_shop_row > div{
+	height: 50px;
+}
+
+.select_shop_row .cell_shop_color{
+	/* display: table-cell; */
+	/* width: 30px; */
+	/* vertical-align: middle; */
+	display: none;
+}
+
+.select_shop_row .cell_shop_color .shop_color_bar{
+	width: 3px;
+	height: 30px;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.select_shop_row .cell_shop_info{
+	display: table-cell;
+	width: auto;
+	vertical-align: middle;
+}
+
+.select_shop_row .cell_shop_info > div{
+	height: 25px;
+	line-height: 25px;
+}
+
+.select_shop_row .cell_shop_selected{
+	display: table-cell;
+	width: 30px;
+	vertical-align: middle;
+}
+
 
 .select_lecture_row{
 	list-style: none;

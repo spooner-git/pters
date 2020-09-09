@@ -5,6 +5,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 
+from configs.const import STATE_CD_IN_PROGRESS, STATE_CD_NOT_PROGRESS
 from configs.models import TimeStampedModel
 from login.models import MemberTb, CommonCdTb
 # from trainer.models import ClassTb
@@ -91,8 +92,11 @@ class MemberShopTb(TimeStampedModel):
     price = models.IntegerField('가격', db_column='PRICE', default=0)
     payment_price = models.IntegerField('납부 금액', db_column='PAYMENT_PRICE', default=0)
     refund_price = models.IntegerField('환불 금액', db_column='REFUND_PRICE', default=0)
-    pay_date = models.DateField('최종 거래일', db_column='PAY_DATE', blank=True, null=True)
+    pay_method = models.CharField('결제 방법', db_column='PAY_METHOD', max_length=45, blank=True, default='')
+    start_date = models.DateField('최초 거래일', db_column='START_DATE', blank=True, null=True)
+    end_date = models.DateField('최종 거래일', db_column='END_DATE', blank=True, null=True)
     note = models.CharField('설명', db_column='NOTE', max_length=200, blank=True, null=True)
+    state_cd = models.CharField('상태', db_column='STATE_CD', max_length=10, blank=True, default=STATE_CD_NOT_PROGRESS)
 
     class Meta:
         managed = False
@@ -104,7 +108,8 @@ class MemberPaymentHistoryTb(TimeStampedModel):
     class_tb = models.ForeignKey("trainer.ClassTb", verbose_name='지점', on_delete=models.CASCADE, null=True)
     member = models.ForeignKey(MemberTb, verbose_name='회원', on_delete=models.CASCADE, null=True)
     member_ticket_tb = models.ForeignKey(MemberTicketTb, verbose_name='수강권', on_delete=models.CASCADE, null=True)
-    shop_tb = models.ForeignKey('trainer.ShopTb', verbose_name='상품', on_delete=models.CASCADE, null=True)
+    member_shop_tb = models.ForeignKey(MemberShopTb, verbose_name='상품', on_delete=models.CASCADE, null=True)
+    pay_method = models.CharField('결제 방법', db_column='PAY_METHOD', max_length=45, blank=True, default='')
     payment_price = models.IntegerField('납부 금액', db_column='PAYMENT_PRICE', default=0)
     refund_price = models.IntegerField('환불 금액', db_column='REFUND_PRICE', default=0)
     pay_date = models.DateField('거래일', db_column='PAY_DATE', blank=True, null=True)

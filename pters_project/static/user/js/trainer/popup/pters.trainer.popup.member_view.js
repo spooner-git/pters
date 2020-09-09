@@ -58,7 +58,7 @@ class Member_view{
 
             repeat: [],
             closed_date: [],
-            shop_data: []
+            member_shop_data: []
         };
 
         //팝업의 날짜, 시간등의 입력란을 미리 외부에서 온 데이터로 채워서 보여준다.
@@ -297,9 +297,9 @@ class Member_view{
                             console.log(this.data.closed_date);
 
                             Member_func.shop_list_history(
-                                {"member_id":this.member_id, "month":1}, (data)=> {
-                                    this.data.shop_data = data.member_shop_list;
-                                    console.log(this.data.shop_data);
+                                {"member_id":this.member_id, "day":31}, (data)=> {
+                                    this.data.member_shop_data = data.member_shop_list;
+                                    console.log(this.data.member_shop_data);
                                     this.render();
                             });
                         });
@@ -966,35 +966,37 @@ class Member_view{
 
     dom_row_member_shop(){
         let html_to_join = [];
-        let length = this.data.closed_date.length;
+        let length = this.data.member_shop_data.length;
         for(let i=0; i<length; i++){
-            let data = this.data.closed_date[i];
+            let data = this.data.member_shop_data[i];
+            let price = data.shop_price;
+            let payment_price = data.payment_price;
+            let refund_price = data.refund_price;
             html_to_join.push(
-                this.dom_row_closed_date_item(
-                    data.member_closed_date_history_id,
-                    '#d2d1cf',
-                    data.member_closed_reason_type_cd_name,
-                    data.member_closed_note,
-                    data.member_closed_start_date+' ~ '+data.member_closed_end_date,
-                    data.member_closed_extension_flag
+                this.dom_row_member_shop_item(
+                    data.member_shop_id,
+                    data.shop_name,
+                    data.shop_price,
+                    data.start_date,
+                    data.end_date,
+                    data.state_cd
                 )
             );
         }
         html_to_join.unshift(
             `<div style="margin-top:10px;margin-bottom:10px;height:33px;">`+
-                CComp.button("view_shop_date_history", `${CImg.history([""], {"vertical-align":"middle", "margin-bottom":"3px", "margin-right":"2px", "width":"18px"})} 상품 이력`, {"font-size":"12px", "float":"left", "padding-left":"0"}, null, ()=>{
+                CComp.button("view_shop_date_history", `${CImg.history([""], {"vertical-align":"middle", "margin-bottom":"3px", "margin-right":"2px", "width":"18px"})} 상품 구매 이력`, {"font-size":"12px", "float":"left", "padding-left":"0"}, null, ()=>{
                     let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
-                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_SHOP_DATE_HISTORY, 100, popup_style, null, ()=>{
-                        member_shop_date_history = new Member_shop_date_history('.popup_member_shop_date_history', this.member_id, null);
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_SHOP_HISTORY, 100, popup_style, null, ()=>{
+                        member_shop_history = new Member_shop_history('.popup_member_shop_history', this.member_id, null);
                     });
                 }) +
-            //     CComp.button("add_new_ticket", `${CImg.plus([""], {"vertical-align":"middle", "margin-bottom":"3px", "margin-right":"2px", "width":"18px"})}`, {"font-size":"12px", "float":"right", "padding-right":"0"}, null, ()=>{
-            //         let member_add_initial_data = {member_id: this.member_id};
-            //         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_ADD, 100, POPUP_FROM_BOTTOM, null, ()=>{
-            //             member_add_popup = new Member_add('.popup_member_add', member_add_initial_data, 'member_add_popup');}
-            //         );
-            //     }) +
-            // `</div>
+                CComp.button("add_member_shop_info", `${CImg.plus([""], {"vertical-align":"middle", "margin-bottom":"3px", "margin-right":"2px", "width":"18px"})} 상품 구매`, {"font-size":"12px", "float":"right", "padding-right":"0"}, null, ()=>{
+                    let member_add_initial_data = {member_id: this.member_id};
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SHOP_ADD, 100, POPUP_FROM_BOTTOM, null, ()=>{
+                        member_shop_add_popup = new Member_Shop_add('.popup_member_shop_add', member_add_initial_data, 'member_shop_add_popup');}
+                    );
+                }) +
             `${html_to_join.length == 0 ? `<div style="width:100%; font-size:12px;color:var(--font-sub-dark);padding:5px; display:inline-block;">구매한 상품 내역이 없습니다.</div>` : ""}
             `
         );
@@ -1068,7 +1070,7 @@ class Member_view{
 
     dom_row_closed_date_item(member_closed_date_history_id, color, member_closed_date_name, member_closed_note, member_closed_period, member_closed_extension_flag){
         let member_extension_tag = '';
-        if(member_closed_extension_flag == 1){
+        if(member_closed_extension_flag == ON){
             member_extension_tag = '<span style="color:var(--font-highlight);">(수강권 연장)</span>'
         }
         let html = `<div id="closed_item_${member_closed_date_history_id}" style="display:flex;width:100%;height:75px;padding:5px 0px;box-sizing:border-box;cursor:pointer; margin-top:15px;">
@@ -1113,6 +1115,64 @@ class Member_view{
                         layer_popup.close_layer_popup();
                         Loading.show(`${member_closed_date_name} 일시정지 내역을 삭제 중입니다.<br>최대 2~4분까지 소요될 수 있습니다.`);
                         Plan_func.delete_closed_date({"member_closed_date_history_id":member_closed_date_history_id}, ()=>{
+                            Loading.hide();
+                            try{
+                                current_page.init();
+                            }catch(e){}
+                            try{
+                                this.init();
+                            }catch(e){}
+                            layer_popup.close_layer_popup();
+                        }, ()=>{Loading.hide();});
+                    });
+                }}
+            };
+            let options_padding_top_bottom = 16;
+            // let button_height = 8 + 8 + 52;
+            let button_height = 52;
+            let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
+            let root_content_height = $root_content.height();
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
+                option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+            });
+        });
+
+        return html;
+    }
+
+    dom_row_member_shop_item(member_shop_id, shop_name, shop_price, shop_note, start_date, end_date, state_cd){
+        let member_status_tag = `<span style="color:var(--font-highlight);">(${MEMBER_PAYMENT_STATUS[state_cd]})</span>`;
+
+        let html = `<div id="member_shop_item_${member_shop_id}" style="display:flex;width:100%;height:75px;padding:5px 0px;box-sizing:border-box;cursor:pointer; margin-top:15px;">
+                        <!--<div style="flex-basis:16px;">
+                            <div style="float:left;width:4px;height:100%;background-color:"></div>
+                        </div>-->
+                        <div style="flex:1 1 0">
+                            <div style="font-size:14px;font-weight:500;letter-spacing:-0.7px;color:var(--font-base);">${shop_name} </div>
+                            <div style="font-size:14px;font-weight:500;letter-spacing:-0.5px;color:var(--font-base); margin-top:3px;">${UnitRobot.numberWithCommas(shop_price)}원 / ${start_date} ${member_status_tag}</div>
+                            <div style="font-size:12px;font-weight:500;letter-spacing:-0.5px;color:var(--font-sub-normal); margin-top:3px;">${shop_note}</div>
+                        </div>
+                        <div style="flex-basis:30px;">
+                            ${CImg.more("", {"vertical-align":"top"})}
+                        </div>
+                    </div>`;
+        $(document).off('click', `#member_shop_item_${member_shop_id}`).on('click', `#member_shop_item_${member_shop_id}`, function(e){
+            let user_option = {
+                delete:{text:"상품 구매 내역 삭제", callback:()=>{
+                    layer_popup.close_layer_popup();
+
+                    let message = {
+                        title:`정말 ${shop_name} 상품 구매 내역을 취소하시겠습니까?`,
+                        comment:`${CImg.warning(["#fe4e65"], {"vertical-align":"middle", "margin-bottom":"4px"})}
+                                <br>
+                                <div style="text-align:center;margin-top:5px; color:var(--font-highlight);">
+                                    회원님의 구매 내역이 일괄 삭제 됩니다.(매출 내역에서 제외됩니다.)
+                                </div>`
+                    };
+                    show_user_confirm(message, ()=>{
+                        layer_popup.close_layer_popup();
+                        Loading.show(`${shop_name} 상품 구매 내역을 삭제 중입니다.<br>최대 2~4분까지 소요될 수 있습니다.`);
+                        Shop_func.delete_member_shop({"member_shop_id":member_shop_id}, ()=>{
                             Loading.hide();
                             try{
                                 current_page.init();

@@ -2751,6 +2751,135 @@ class TicketSelector{
     }
 }
 
+class ShopSelector{
+    constructor(install_target, target_instance, multiple_select, appendix, callback){
+        // this.targetHTML = install_target;
+        this.target = {install : install_target};
+        this.target_instance = target_instance;
+        this.unique_instance = install_target.replace(/#./gi, "");
+        this.callback = callback;
+        this.appendix = appendix;
+        this.received_data;
+        this.multiple_select = multiple_select;
+        this.data = {
+            id: this.target_instance.shop.id,
+            name: this.target_instance.shop.name,
+            price: this.target_instance.shop.price,
+            note: this.target_instance.shop.note,
+        };
+        this.init();
+    }
+
+    init(){
+        this.request_list(()=>{
+            this.render();
+            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
+        });
+    }
+
+    clear(){
+        setTimeout(()=>{
+            document.querySelector(this.target.install).innerHTML = "";
+        }, 300);
+    }
+
+    render(){
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();ticket_select.clear();">${CImg.arrow_left()}</span>`;
+        let top_center = `<span class="icon_center"><span id="">${this.appendix.title == null ? '$nbsp;' :this.appendix.title}</span></span>`;
+        let top_right = `<span class="icon_right" onclick="shop_select.upper_right_menu();"><span style="color:var(--font-highlight);font-weight: 500;">완료</span></span>`;
+        let content =   `<section>${this.dom_list()}</section>`;
+
+        let html = PopupBase.base(top_left, top_center, top_right, content, "");
+
+        document.querySelector(this.target.install).innerHTML = html;
+    }
+
+    dom_list(){
+        let html_to_join = [];
+        let length = this.received_data.length;
+        if(length == 0){
+            html_to_join.push(CComponent.no_data_row('수업 목록이 비어있습니다.'));
+        }
+        for(let i=0; i<length; i++){
+            let data = this.received_data[i];
+            let shop_id = data.shop_id;
+            let shop_name = data.shop_name;
+            let shop_price = data.shop_price;
+            let shop_note = data.shop_note;
+            let checked = this.target_instance.shop.id.indexOf(shop_id) >= 0 ? 1 : 0;
+            let html = CComponent.select_shop_row(
+                this.multiple_select, checked, this.unique_instance, shop_id, shop_name, shop_price, shop_note,(add_or_substract)=>{
+                    if(add_or_substract == "add"){
+                        this.data.id.push(shop_id);
+                        this.data.name.push(shop_name);
+                        this.data.price.push(shop_price);
+                    }else if(add_or_substract == "substract"){
+                        this.data.id.splice(this.data.id.indexOf(shop_id), 1);
+                        this.data.name.splice(this.data.id.indexOf(shop_id), 1);
+                        this.data.price.splice(this.data.id.indexOf(shop_id), 1);
+                    }else if(add_or_substract == "add_single"){
+                        this.data.id = [];
+                        this.data.name = [];
+                        this.data.price = [];
+                        this.data.id.push(shop_id);
+                        this.data.name.push(shop_name);
+                        this.data.price.push(shop_price);
+                    }
+
+                    // this.target_instance.ticket = this.data; //타겟에 선택된 데이터를 set
+
+                    if(this.multiple_select == 1){
+                        this.upper_right_menu();
+                    }
+                }
+            );
+            if(checked > 0){
+                html_to_join.unshift(html);
+            }else{
+                html_to_join.push(html);
+            }
+        }
+        if(this.appendix.new_add == SHOW){
+            let dom_add_new_shop = this.dom_add_new_shop();
+            html_to_join.unshift(dom_add_new_shop);
+        }
+        // document.querySelector(this.targetHTML).innerHTML = html_to_join.join('');
+        return html_to_join.join('');
+    }
+
+    dom_add_new_shop(){
+        let id = "add_new_shop";
+        let title = "새로운 상품 생성";
+        let icon = CImg.plus();
+        let icon_r_visible = SHOW;
+        let icon_r_text = "";
+        let style = {"padding":"15px 16px", "border-bottom":"var(--border-article-dark)"};
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SHOP_ADD, 100, POPUP_FROM_BOTTOM, null, ()=>{
+                shop_add_popup = new Shop_add('.popup_shop_add', ()=>{
+                    this.init();
+                    return false;
+                });
+            });
+        });
+
+        return html;
+    }
+
+    request_list (callback){
+        shop.request_shop_list((data)=>{
+            this.received_data = data.current_shop_data;
+            callback();
+        });
+    }
+
+    upper_right_menu(){
+        this.callback(this.data);
+        layer_popup.close_layer_popup();
+        this.clear();
+    }
+}
+
 class LectureSelector{
     constructor(install_target, target_instance, multiple_select, appendix, callback){
         this.target = {install : install_target};
