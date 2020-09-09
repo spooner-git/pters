@@ -149,6 +149,8 @@ const SORT_TRAINER_MEMBER_COUNT = 1;
 const SORT_TRAINER_CAPACITY_COUNT = 2;
 const SORT_TRAINER_CREATE_DATE = 3;
 
+const SORT_SHOP_NAME = 0;
+
 const SORT_TICKET_TYPE = 0;
 const SORT_TICKET_NAME = 1;
 const SORT_TICKET_MEMBER_COUNT = 2;
@@ -217,6 +219,14 @@ const POPUP_ADDRESS_TRAINER_LIST = 'popup_trainer_list';
 const POPUP_ADDRESS_TRAINER_SEARCH = 'popup_trainer_search';
 const POPUP_ADDRESS_TRAINER_AUTH = 'popup_trainer_auth';
 const POPUP_ADDRESS_TRAINER_SELECT = 'popup_trainer_select';
+
+const POPUP_ADDRESS_SHOP_LIST = 'popup_shop_list';
+const POPUP_ADDRESS_SHOP_VIEW = 'popup_shop_view';
+const POPUP_ADDRESS_SHOP_ADD = 'popup_shop_add';
+const POPUP_ADDRESS_SHOP_SELECT = 'popup_shop_select';
+const POPUP_ADDRESS_SHOP_SEARCH = 'popup_shop_search';
+const POPUP_MEMBER_SHOP_HISTORY = 'popup_member_shop_history';
+const POPUP_ADDRESS_MEMBER_SHOP_ADD = 'popup_member_shop_add';
 
 const POPUP_ADDRESS_LECTURE_VIEW = 'popup_lecture_view';
 const POPUP_ADDRESS_LECTURE_SIMPLE_VIEW = 'popup_lecture_simple_view';
@@ -356,6 +366,8 @@ const TICKET_STATUS_COLOR = {"IP": "green", "PE": "var(--font-main)", "RF": "ora
 const PAY_TYPE_NAME = {"SINGLE": "1회 결제", "PERIOD": "정기 결제 / 1 개월", "":"없음", "FREE_EVENT":"무료 이벤트", "CHANGE":"상품 변경"};
 const PAY_STATUS = {"paid":"결제 완료", "failed":"결제 실패", "cancelled":"결제 취소", "reserve":"결제 예정"};
 const PAY_METHOD = {"card":"카드 결제", "iap": "인앱 결제", "":"-", "event":"이벤트", "ios": "ios", "android": "android", "인앱 결제": "인앱 결제", "coupon":"쿠폰"};
+
+const MEMBER_PAYMENT_STATUS = {"IP": "납부중", "PE":"완납", "RF":"환불", "NP":"미납"};
 
 const PAYMENT_ID = "imp53133818";
 const PASS_PRODUCT = {"basic":{id:14, text:"베이직", price:3900}, "premium":{id:7, text:"프리미엄", price:9900}, "premium20":{id:22, text:"프리미엄20", price:19800}, "standard":{id:8, text:"스탠다드", price:6900}};

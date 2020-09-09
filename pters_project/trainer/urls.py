@@ -355,6 +355,31 @@ urlpatterns = [
     url(r'^delete_program_notice_info/$', views.DeleteProgramNoticeInfoView.as_view(),
         name='delete_program_notice_info'),
 
+    # 상품 관리 기능 ###############################################################################################
+    # 상푸 추가
+    url(r'^add_shop_info/$', views.add_shop_info_logic, name='add_shop_info'),
+    # 상품 삭제
+    url(r'^delete_shop_info/$', views.delete_shop_info_logic, name='delete_shop_info'),
+    # 상품 수정
+    url(r'^update_shop_info/$', views.update_shop_info_logic, name='update_shop_info'),
+    # 상품 정보 조회
+    url(r'^get_shop_info/$', views.GetShopInfoViewAjax.as_view(), name='get_shop_info'),
+    # 상품 목록 조회
+    url(r'^get_shop_ing_list/$', views.GetShopIngListViewAjax.as_view(), name='get_shop_ing_list'),
+
+    # 상품 구매 내역 조회
+    url(r'^get_member_shop_history/$', views.GetMemberShopHistoryViewAjax.as_view(), name='get_member_shop_history'),
+    # 상품 구매 내역 및 결제 내역 일괄 삭제
+    url(r'^delete_member_shop_data/$', views.delete_member_shop_data_logic, name='delete_member_shop_data'),
+
+    # 상품 결제 내역 추가
+    url(r'^add_member_shop_payment_history_info/$', views.add_member_payment_history_info_logic,
+        name='add_member_shop_payment_history_info'),
+    # 상품 결제 내역 삭제
+    url(r'^delete_member_shop_payment_history_info/$', views.delete_member_payment_history_info_logic,
+        name='delete_member_shop_payment_history_info'),
+
+
     # Attend Mode 기능 ###############################################################################################
     # 일정선택후 휴대폰 번호 입력시 확인 기능
     url(r'^attend_mode_check/$', views.attend_mode_check_logic, name='attend_mode_check'),

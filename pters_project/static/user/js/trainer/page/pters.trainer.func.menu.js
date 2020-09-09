@@ -74,6 +74,7 @@ class Menu {
                                 this.dom_menu_lecture() +
                                 this.dom_menu_ticket() +
                                 this.dom_menu_trainer() +
+                                this.dom_menu_shop() +
                                 this.dom_menu_statistics() +
                                 this.dom_menu_attendmode() +
                                 this.dom_menu_program_notice();
@@ -216,6 +217,19 @@ class Menu {
         let style = {"font-size":"17px", "padding":"13px 0"};
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             sideGoPopup("trainer");
+        });
+        return html;
+    }
+
+    dom_menu_shop(){
+        let id = 'menu_shop';
+        let title = '상품';
+        let icon = CImg.shop();
+        let icon_r_visible = NONE;
+        let icon_r_text = "";
+        let style = {"font-size":"17px", "padding":"13px 0"};
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            sideGoPopup("shop");
         });
         return html;
     }

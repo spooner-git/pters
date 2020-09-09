@@ -54,7 +54,7 @@ from schedule.functions import func_refresh_member_ticket_count, func_get_traine
     func_get_lecture_trainer_schedule_all_by_monthly
 from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb, ScheduleAlarmTb
 from stats.functions import get_sales_data
-from trainee.models import MemberTicketTb, MemberClosedDateHistoryTb
+from trainee.models import MemberTicketTb, MemberClosedDateHistoryTb, MemberShopTb, MemberPaymentHistoryTb
 from payment.models import PaymentInfoTb, ProductFunctionAuthTb, CouponMemberTb
 from .functions import func_get_trainer_setting_list, \
     func_get_member_ing_list, func_get_member_end_list, func_get_class_member_ing_list, func_get_class_member_end_list, \
@@ -67,7 +67,7 @@ from .functions import func_get_trainer_setting_list, \
     func_get_class_trainer_ing_list
 from .models import ClassMemberTicketTb, LectureTb, ClassTb, MemberClassTb, BackgroundImgTb, \
     SettingTb, TicketTb, TicketLectureTb, CenterTrainerTb, LectureMemberTb, ProgramAuthTb, ProgramBoardTb, \
-    ProgramNoticeTb, BugMemberTicketPriceTb, ScheduleClosedTb, ScheduleClosedDayTb
+    ProgramNoticeTb, BugMemberTicketPriceTb, ScheduleClosedTb, ScheduleClosedDayTb, ShopTb
 
 logger = logging.getLogger(__name__)
 
@@ -164,6 +164,7 @@ class GetTrainerScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
         class_id = self.request.session.get('class_id', '')
         date = request.GET.get('date', '')
         day = request.GET.get('day', '')
+        trainer_id = request.GET.get('trainer_id', 'all')
         today = datetime.date.today()
 
         if date != '':
@@ -172,7 +173,7 @@ class GetTrainerScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
             day = 31
         start_date = today - datetime.timedelta(days=int(day))
         end_date = today + datetime.timedelta(days=int(day))
-        all_schedule_data = func_get_trainer_schedule_all(class_id, start_date, end_date)
+        all_schedule_data = func_get_trainer_schedule_all(class_id, start_date, end_date, trainer_id)
 
         return JsonResponse(all_schedule_data, json_dumps_params={'ensure_ascii': True})
 
@@ -2698,6 +2699,7 @@ def add_member_ticket_info_logic(request):
     contents = request.POST.get('contents', '')
     counts = request.POST.get('counts')
     price = request.POST.get('price', '')
+    payment_price = request.POST.get('payment_price', '')
     start_date = request.POST.get('start_date')
     end_date = request.POST.get('end_date')
     ticket_id = request.POST.get('ticket_id', '')
@@ -2716,6 +2718,12 @@ def add_member_ticket_info_logic(request):
 
     if price == '':
         price = 0
+
+    if payment_price == '':
+        payment_price = 0
+
+    if payment_price > price:
+        error = '수강권 가격보다 납부 금액이 많습니다.'
 
     if end_date == '':
         end_date = '9999-12-31'
@@ -2743,8 +2751,8 @@ def add_member_ticket_info_logic(request):
         except ObjectDoesNotExist:
             error = '수강권 정보를 확인해주세요.'
     if error is None:
-        error = func_add_member_ticket_info(request.user.id, class_id, ticket_id, counts, price, pay_method,
-                                            start_date, end_date, contents, member_id)
+        error = func_add_member_ticket_info(request.user.id, class_id, ticket_id, counts, price, payment_price,
+                                            pay_method, start_date, end_date, contents, member_id)
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
@@ -2765,6 +2773,7 @@ def update_member_ticket_info_logic(request):
     start_date = request.POST.get('start_date', '')
     end_date = request.POST.get('end_date', '')
     price = request.POST.get('price', '')
+    payment_price = request.POST.get('payment_price', '')
     refund_price = request.POST.get('refund_price', '')
     refund_date = request.POST.get('refund_date', '')
     member_ticket_reg_count = request.POST.get('member_ticket_reg_count', '')
@@ -2793,6 +2802,8 @@ def update_member_ticket_info_logic(request):
             end_date = member_ticket_info.end_date
         if price is None or price == '':
             price = member_ticket_info.price
+        if payment_price is None or payment_price == '':
+            payment_price = member_ticket_info.payment_price
         if pay_method is None or pay_method == '':
             pay_method = member_ticket_info.pay_method
         if refund_price is None or refund_price == '':
@@ -2809,6 +2820,15 @@ def update_member_ticket_info_logic(request):
             price = int(price)
         except ValueError:
             error = '수강권 금액은 숫자만 입력 가능합니다.'
+
+        try:
+            payment_price = int(payment_price)
+        except ValueError:
+            error = '수강권 금액은 숫자만 입력 가능합니다.'
+
+        if error is None:
+            if payment_price > price:
+                error = '수강권 가격보다 납부 금액이 많습니다.'
 
         try:
             member_ticket_reg_count = int(member_ticket_reg_count)
@@ -2846,6 +2866,7 @@ def update_member_ticket_info_logic(request):
         member_ticket_info.start_date = start_date
         member_ticket_info.end_date = end_date
         member_ticket_info.price = price
+        member_ticket_info.payment_price = payment_price
         member_ticket_info.pay_method = pay_method
         member_ticket_info.refund_price = refund_price
         member_ticket_info.refund_date = refund_date
@@ -3781,10 +3802,10 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
             lecture_tb = lecture_ticket_info.lecture_tb
             ticket_tb = lecture_ticket_info.ticket_tb
             lecture_id = str(lecture_tb.lecture_id)
-            main_trainer_id = request.user.id
-            main_trainer_name = request.user.first_name
+            main_trainer_id = lecture_tb.class_tb.member_id
+            main_trainer_name = lecture_tb.class_tb.member.name
             if lecture_tb.main_trainer is None or lecture_tb.main_trainer == '':
-                lecture_tb.main_trainer_id = request.user.id
+                lecture_tb.main_trainer_id = lecture_tb.class_tb.member_id
                 lecture_tb.save()
             else:
                 main_trainer_id = lecture_tb.main_trainer_id
@@ -3818,10 +3839,10 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         if len(lecture_data) != len(lecture_data_dict):
             for lecture_info in lecture_data:
                 lecture_id = str(lecture_info.lecture_id)
-                main_trainer_id = request.user.id
-                main_trainer_name = request.user.first_name
+                main_trainer_id = lecture_info.class_tb.member_id
+                main_trainer_name = lecture_info.class_tb.member.name
                 if lecture_info.main_trainer is None or lecture_info.main_trainer == '':
-                    lecture_info.main_trainer_id = request.user.id
+                    lecture_info.main_trainer_id = lecture_info.class_tb.member_id
                     lecture_info.save()
                 else:
                     main_trainer_id = lecture_info.main_trainer_id
@@ -6714,6 +6735,358 @@ class DeleteProgramNoticeInfoView(LoginRequiredMixin, AccessTestMixin, View):
             context['messageArray'] = error
 
         return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+
+
+# 상품 추가
+def add_shop_info_logic(request):
+    class_id = request.session.get('class_id', '')
+    name = request.POST.get('name', '')
+    note = request.POST.get('note', '')
+    price = request.POST.get('price', 0)
+    error = None
+
+    try:
+        price = int(price)
+    except ValueError:
+        error = '상품 금액은 숫자만 입력 가능합니다.'
+
+    if name == '' or name is None:
+        error = '상품명을 입력해주세요. '
+
+    if error is None:
+        try:
+            with transaction.atomic():
+
+                shop_info = ShopTb(class_tb_id=class_id, name=name, price=price, note=note, use=USE)
+                shop_info.save()
+
+        except InternalError:
+            error = error
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id, from_member_name=request.user.first_name,
+                         class_tb_id=class_id, log_info=name+' 상품', log_how='추가', use=USE)
+        log_data.save()
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
+# 상품 삭제
+def delete_shop_info_logic(request):
+    class_id = request.session.get('class_id', '')
+    shop_id = request.POST.get('shop_id', '')
+    error = None
+    shop_info = None
+    now = timezone.now()
+
+    try:
+        shop_info = ShopTb.objects.get(class_tb_id=class_id, shop_id=shop_id)
+    except ObjectDoesNotExist:
+        error = '오류가 발생했습니다. [0]'
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                shop_info.state_cd = STATE_CD_FINISH
+                shop_info.use = UN_USE
+                shop_info.save()
+
+        except ValueError:
+            error = '오류가 발생했습니다. [1]'
+        except IntegrityError:
+            error = '오류가 발생했습니다. [2]'
+        except TypeError:
+            error = '오류가 발생했습니다. [3]'
+        except ValidationError:
+            error = '오류가 발생했습니다. [4]'
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id, from_member_name=request.user.first_name,
+                         class_tb_id=class_id, log_info=shop_info.name+' 상품', log_how='삭제', use=USE)
+        log_data.save()
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
+# 상품 수정
+def update_shop_info_logic(request):
+    class_id = request.session.get('class_id', '')
+    shop_id = request.POST.get('shop_id', '')
+    name = request.POST.get('name', '')
+    note = request.POST.get('note', '')
+    price = request.POST.get('price', '')
+    error = None
+    shop_info = None
+
+    try:
+        shop_info = ShopTb.objects.get(class_tb_id=class_id, shop_id=shop_id)
+    except ObjectDoesNotExist:
+        error = '오류가 발생했습니다. [0]'
+
+    if error is None:
+        if name != '' and name is not None:
+            shop_info.name = name
+        if note != '' and note is not None:
+            shop_info.note = note
+        if price != '' and price is not None:
+            shop_info.price = price
+        shop_info.save()
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id, from_member_name=request.user.first_name,
+                         class_tb_id=class_id, log_info=shop_info.name+' 상품', log_how='변경', use=USE)
+        log_data.save()
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
+class GetShopInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        class_id = self.request.session.get('class_id')
+        shop_id = request.GET.get('shop_id')
+        error = None
+        shop_dict = {}
+        try:
+            shop_info = ShopTb.objects.get(shop_id=shop_id, use=USE)
+        except ObjectDoesNotExist:
+            error = '상품 정보를 가져오지 못했습니다.'
+
+        if error is None:
+            shop_dict = {'shop_id': str(shop_info.shop_id),
+                         'shop_name': shop_info.name,
+                         'shop_price': shop_info.price,
+                         'shop_note': shop_info.note,
+                         'shop_mod_dt': str(shop_info.mod_dt),
+                         'shop_reg_dt': str(shop_info.reg_dt)
+                         }
+
+        return JsonResponse(shop_dict, json_dumps_params={'ensure_ascii': True})
+
+
+class GetShopIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        class_id = self.request.session.get('class_id', '')
+        member_sort = request.GET.get('sort_val', SORT_MEMBER_NAME)
+        sort_order_by = request.GET.get('sort_order_by', SORT_ASC)
+        keyword = request.GET.get('keyword', '')
+
+        shop_data = ShopTb.objects.filter(class_tb_id=class_id, state_cd=STATE_CD_IN_PROGRESS, use=USE).order_by('name')
+        shop_list = []
+        for shop_info in shop_data:
+            shop_dict = {'shop_id':shop_info.shop_id,
+                         'shop_name': shop_info.name,
+                         'shop_price': shop_info.price,
+                         'shop_note': shop_info.note}
+            shop_list.append(shop_dict)
+
+        return JsonResponse({'current_shop_data': shop_list}, json_dumps_params={'ensure_ascii': True})
+
+
+class GetMemberShopHistoryViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        class_id = self.request.session.get('class_id', '')
+        member_id = request.GET.get('member_id')
+        day = request.GET.get('day')
+        today = datetime.date.today()
+        # member_shop_data = None
+
+        try:
+            check_date = today - datetime.timedelta(days=int(day))
+            member_shop_data = MemberShopTb.objects.filter(class_tb_id=class_id, member_id=member_id,
+                                                           start_date__gte=check_date, use=USE).order_by('start_date')
+        except ValueError:
+            member_shop_data = MemberShopTb.objects.filter(class_tb_id=class_id, member_id=member_id,
+                                                           use=USE).order_by('start_date')
+
+        member_shop_list = []
+        for member_shop_info in member_shop_data:
+            member_shop_dict = {'member_shop_id': member_shop_info.member_shop_id,
+                                'payment_price': member_shop_info.payment_price,
+                                'refund_price': member_shop_info.refund_price,
+                                'start_date': str(member_shop_info.start_date),
+                                'end_date': str(member_shop_info.end_date),
+                                'note': member_shop_info.note,
+                                'state_cd': member_shop_info.state_cd,
+                                'shop_id': member_shop_info.shop_id,
+                                'shop_name': member_shop_info.shop_tb.name,
+                                'shop_price': member_shop_info.shop_tb.price,
+                                'shop_note': member_shop_info.shop_tb.note
+                                }
+            member_shop_list.append(member_shop_dict)
+
+        return JsonResponse({'member_shop_list': member_shop_list}, json_dumps_params={'ensure_ascii': True})
+
+
+# 상품 구매 내역 일괄 삭제
+def delete_member_shop_data_logic(request):
+    class_id = request.session.get('class_id', '')
+    member_shop_id = request.POST.get('member_shop_id', '')
+    error = None
+    member_shop_info = None
+    member_name = ''
+    shop_name = ''
+    try:
+        member_shop_info = MemberShopTb.objects.get(member_shop_id=member_shop_id)
+    except ObjectDoesNotExist:
+        error = '오류가 발생했습니다. [0]'
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                member_name = member_shop_info.member.name
+                shop_name = member_shop_info.name
+                member_shop_info.delete()
+
+        except ValueError:
+            error = '오류가 발생했습니다. [1]'
+        except IntegrityError:
+            error = '오류가 발생했습니다. [2]'
+        except TypeError:
+            error = '오류가 발생했습니다. [3]'
+        except ValidationError:
+            error = '오류가 발생했습니다. [4]'
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id, from_member_name=request.user.first_name,
+                         class_tb_id=class_id, log_info=member_name + '님의 '
+                                                        + shop_name+' 상품 구매 내역', log_how='삭제', use=USE)
+        log_data.save()
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
+# 수강권/상품 결제 내역 추가
+def add_member_payment_history_info_logic(request):
+    class_id = request.session.get('class_id', '')
+
+    member_shop_id = request.POST.get('member_shop_id', None)
+    member_ticket_id = request.POST.get('member_ticket_id', None)
+    member_id = request.POST.get('member_id', None)
+    payment_price = request.POST.get('payment_price', 0)
+    refund_price = request.POST.get('refund_price', 0)
+    pay_date = request.POST.get('pay_date')
+    note = request.POST.get('note')
+    log_message = ''
+    error = None
+
+    if member_shop_id == '':
+        member_shop_id = None
+    if member_ticket_id == '':
+        member_ticket_id = None
+
+    if payment_price == '':
+        payment_price = 0
+    else:
+        try:
+            payment_price = int(payment_price)
+        except ValueError:
+            error = '납부 금액은 숫자만 입력 가능합니다.'
+
+    if refund_price == '':
+        refund_price = 0
+    else:
+        try:
+            refund_price = int(refund_price)
+        except ValueError:
+            error = '환불 금액은 숫자만 입력 가능합니다.'
+
+    if member_shop_id is None and member_ticket_id is None:
+        error = '오류가 발생했습니다.[0]'
+
+    if member_ticket_id is not None:
+        try:
+            member_ticket_info = MemberTicketTb.objects.get(member_ticket_id=member_ticket_id)
+            log_message = member_ticket_info.member.name + '님 ' + member_ticket_info.ticket_tb.name + ' 수강권'
+        except ObjectDoesNotExist:
+            error = '수강권 정보를 불러오지 못했습니다.'
+
+    if member_ticket_id is not None:
+        try:
+            member_shop_info = MemberShopTb.objects.get(member_shop_id=member_shop_id)
+            log_message = member_shop_info.member.name + '님 ' + member_shop_info.member_shop_tb.shop_tb.name + '상품'
+        except ObjectDoesNotExist:
+            error = '상품 구매 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                member_payment_history_info = MemberPaymentHistoryTb(class_tb_id=class_id,
+                                                                     member_id=member_id,
+                                                                     member_ticket_tb_id=member_ticket_id,
+                                                                     member_shop_tb_id=member_shop_id,
+                                                                     payment_price=payment_price,
+                                                                     refund_price=refund_price,
+                                                                     pay_date=pay_date, note=note, use=USE)
+                member_payment_history_info.save()
+
+        except InternalError:
+            error = error
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id, from_member_name=request.user.first_name,
+                         class_tb_id=class_id, log_info=log_message + ' 결제 내역', log_how='추가', use=USE)
+        log_data.save()
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
+# 상품 결제 내역 삭제
+def delete_member_payment_history_info_logic(request):
+    class_id = request.session.get('class_id', '')
+    member_payment_history_id = request.POST.get('member_payment_history_id', '')
+    error = None
+    member_payment_history_info = None
+    member_name = ''
+    shop_name = ''
+    try:
+        member_payment_history_info = MemberPaymentHistoryTb.objects.get(member_payment_history_id=member_payment_history_id)
+    except ObjectDoesNotExist:
+        error = '오류가 발생했습니다. [0]'
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                member_name = member_payment_history_info.member.name
+                shop_name = member_payment_history_info.member_shop_tb.shop_tb.name
+                member_payment_history_info.delete()
+
+        except ValueError:
+            error = '오류가 발생했습니다. [1]'
+        except IntegrityError:
+            error = '오류가 발생했습니다. [2]'
+        except TypeError:
+            error = '오류가 발생했습니다. [3]'
+        except ValidationError:
+            error = '오류가 발생했습니다. [4]'
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id, from_member_name=request.user.first_name,
+                         class_tb_id=class_id, log_info=member_name + '님의 '
+                                                        + shop_name+' 상품 결제 내역', log_how='삭제', use=USE)
+        log_data.save()
+
+    return render(request, 'ajax/trainer_error_ajax.html')
 
 
 # 출석 체크 완료 기능

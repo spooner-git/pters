@@ -23,6 +23,7 @@ class Member_ticket_refund{
             member_ticket_id: null,
             member_ticket_name: null,
             member_ticket_price: null,
+            member_ticket_payment_price: null,
             member_ticket_start_date: null,
             refund_price: null,
             refund_date: null
@@ -51,6 +52,7 @@ class Member_ticket_refund{
         this.data.refund_date = DateRobot.to_yyyymmdd(this.dates.current_year, this.dates.current_month, this.dates.current_date);
         this.data.member_ticket_name = this.external_data.member_ticket_name;
         this.data.member_ticket_price = this.external_data.member_ticket_price;
+        this.data.member_ticket_payment_price = this.external_data.member_ticket_payment_price;
         this.data.member_ticket_start_date = this.external_data.member_ticket_start_date;
         this.render();
     }
@@ -174,8 +176,12 @@ class Member_ticket_refund{
                         <div style="display:table-cell;color:var(--font-highlight);width:auto;">${this.data.member_ticket_name}</div>
                     </div>
                     <div style="display:table;width:100%;font-size:11px;font-weight:500;padding-left:60px;box-sizing:border-box;">
-                        <div style="display:table-cell;color:var(--font-sub-normal);width:56px;">등록금</div>
+                        <div style="display:table-cell;color:var(--font-sub-normal);width:56px;">수강권 가격</div>
                         <div style="display:table-cell;color:var(--font-highlight);width:auto;">${UnitRobot.numberWithCommas(this.data.member_ticket_price)}원</div>
+                    </div>
+                    <div style="display:table;width:100%;font-size:11px;font-weight:500;padding-left:60px;box-sizing:border-box;">
+                        <div style="display:table-cell;color:var(--font-sub-normal);width:56px;">납부 금액</div>
+                        <div style="display:table-cell;color:var(--font-highlight);width:auto;">${UnitRobot.numberWithCommas(this.data.member_ticket_payment_price)}원</div>
                     </div>`;
         return html;
     }
@@ -185,7 +191,7 @@ class Member_ticket_refund{
             return false;
         }
         let data = {"member_ticket_id":this.data.member_ticket_id, "state_cd":"RF", "note":"", "start_date":"", "end_date":"",
-                    "price":"", "refund_price":this.data.refund_price, "refund_date":this.data.refund_date, "member_ticket_reg_count":""};
+                    "price":"", "payment_price":"", "refund_price":this.data.refund_price, "refund_date":this.data.refund_date, "member_ticket_reg_count":""};
 
         Member_func.ticket_status(data, ()=>{
             this.set_initial_data();

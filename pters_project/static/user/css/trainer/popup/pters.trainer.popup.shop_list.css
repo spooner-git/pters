@@ -1,0 +1,234 @@
+/* 페이지 타입일때 (PC버전) */
+#shop_display_panel{
+	position: sticky;
+	position: -webkit-sticky;
+	height: auto;
+	z-index: 10;
+	width: 100%;
+	top: 0;
+	/* text-align: center; */
+}
+#shop_content_wrap{
+	top:unset;
+	left:unset;
+	background-color:unset;
+	position:relative;
+	min-height:calc(100% - 68px);
+	padding-top:6px; 
+	padding-bottom:20px;
+	box-sizing: border-box;
+}
+/* 페이지 타입일때 (PC버전) */
+
+	.shop_upper_box{
+		position: relative;
+		height: 28px;
+		line-height: 28px;
+		background-color: var(--bg-main);
+		/* border-bottom: 1px solid #cccccc; */
+		/*padding: 14px 20px;*/
+		box-sizing: border-box;
+	}
+	@media(max-width:650px){
+		.shop_upper_box {
+			padding: 0;
+		}
+	}
+	#shop_display_panel .shop_upper_box{
+		padding: 20px 16px 12px;
+		height: 60px;
+	}
+	.shop_tools_wrap{
+		display: table;
+		position: absolute;
+		right: 0;
+		top: 0;
+		width: 100px;
+		height: 100%;
+	}
+	.shop_tools_wrap > .search_shop{
+		display: table-cell;
+		height: 100%;
+		cursor: pointer;
+		vertical-align: middle;
+		text-align: center;
+	}
+	.shop_tools_wrap > .search_shop > svg{
+		vertical-align: middle;
+		margin-bottom: 4px;
+	}
+	.shop_tools_wrap > .add_shop{
+		display: table-cell;
+		height: 100%;
+		cursor: pointer;
+		vertical-align: middle;
+		text-align: center;
+	}
+	.shop_tools_wrap > .add_shop > svg{
+		vertical-align: middle;
+		margin-bottom: 4px;
+	}
+	.shop_tools_wrap > .swap_list{
+		display: none;
+	}
+
+	.shop_bottom_tools_wrap{
+		background-color: var(--bg-main);
+		font-size: 14px;
+		height: 24px;
+		line-height: 24px;
+		/* padding: 6px 16px; */
+		padding: 14px 0 0;
+	}
+
+
+
+.shop_wrapper{
+	display: block;
+	width: 100%;
+	height: 60px;
+	padding: 8px 20px 8px 24px;
+	background-color: var(--bg-article);
+	border-radius: 8px;
+	box-shadow: var(--box-shadow-article);
+	margin: 8px auto;
+	box-sizing: border-box;
+	cursor: pointer;
+	line-height: 44px;
+}
+.shop_wrapper > div{
+	/* display: table; */
+	display: flex;
+	width: 100%;
+}
+@media(min-width:651px){
+    .shop_wrapper{
+		display: inline-block;
+		vertical-align: top;
+		width: 48%;
+		margin: 1%;
+		padding: 10px;
+		box-shadow:var(--box-shadow-article);
+		background-color: var(--bg-article);
+	}
+	.shop_wrapper:hover{
+		box-shadow:0 0 16px 0 #28282850;
+		transition:0.1s;
+		transform: scale(1.03);
+	}
+}
+@media(min-width:1024px){
+    .shop_wrapper{
+		width: 31%;
+	}
+}
+
+
+.shop_data_l{
+	/* display: table-cell;
+	vertical-align: middle;
+	width: 12px;
+	text-align: left;
+	position: relative; */
+	flex-basis: 12px;
+}
+.shop_data_c{
+	/* display: table-cell;
+	width: auto;
+	vertical-align: middle; */
+	flex: 1 1 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.shop_data_r{
+	/* display: table-cell;
+	width: auto;
+	vertical-align: middle; */
+	/*flex-basis: 70px;*/
+}
+
+.shop_name{
+	font-size: 16px;
+	font-weight: 500;
+	letter-spacing: -0.8px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.shop_member_number{
+	float: right;
+	font-size: 18px;
+	font-weight: 500;
+	letter-spacing: -0.8px;
+}
+.shop_note{
+	/* margin-bottom: 5px; */
+	height: 20px;
+	color: var(--font-sub-normal);
+	font-size: 12px;
+	font-weight: 500;
+	letter-spacing: -0.6px;
+	box-sizing: border-box;
+}
+
+.shop_tag{
+	width: 5px;
+	/* height: 32px; */
+	height: 40px;
+	border-radius: 10px;
+	display: inline-block;
+	vertical-align: middle;
+	/*margin-bottom: 2px;*/
+	margin-right: 12px;
+}
+
+.popup_shop_list .popup_toolbox{
+	/* position: sticky;
+	position: -webkit-sticky; */
+	position: relative;
+	top: 0;
+	padding: 8px 16px 16px 20px;
+	z-index: 1;
+}
+
+.popup_shop_list .search_bar{
+	position: sticky;
+	position: -webkit-sticky;
+	width: 100%;
+	top: 0;
+	background-color: var(--bg-main);
+	text-align: center;
+	padding-bottom: 5px;
+	z-index: 10;
+}
+.popup_shop_list .search_bar > input{
+	width: 95%;
+	height: 35px;
+	-webkit-appearance: none;
+	border: var(--border-article-dark);
+	border-radius: 2px;
+	padding: 0 10px;
+	box-sizing: border-box;
+}
+
+#shop_display_panel .search_bar{
+	position: sticky;
+	position: -webkit-sticky;
+	width: 100%;
+	top: 0;
+	background-color: var(--bg-main);
+	text-align: center;
+	padding-bottom: 5px;
+	z-index: 10;
+}
+#shop_display_panel .search_bar > input{
+	width: 95%;
+	height: 35px;
+	-webkit-appearance: none;
+	border: var(--border-article-dark);
+	border-radius: 2px;
+	padding: 0 10px;
+	box-sizing: border-box;
+}

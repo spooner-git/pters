@@ -4,7 +4,8 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 
-from configs.const import LECTURE_TYPE_ONE_TO_ONE, BOARD_TYPE_CD_NOTICE, TO_MEMBER_BOARD_TYPE_CD_TRAINEE, OWN_TYPE_OWNER
+from configs.const import LECTURE_TYPE_ONE_TO_ONE, BOARD_TYPE_CD_NOTICE, TO_MEMBER_BOARD_TYPE_CD_TRAINEE, \
+    OWN_TYPE_OWNER, STATE_CD_IN_PROGRESS
 from configs.models import TimeStampedModel
 from login.models import MemberTb, CommonCdTb
 from payment.models import FunctionAuthTb
@@ -445,6 +446,19 @@ class ProgramBoardCommentTb(TimeStampedModel):
     class Meta:
         managed = False
         db_table = 'PROGRAM_BOARD_COMMENT_TB'
+
+
+class ShopTb(TimeStampedModel):
+    shop_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    class_tb = models.ForeignKey(ClassTb, verbose_name='회원', on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    name = models.CharField('상품명', db_column='NAME', max_length=45, blank=True, null=True)
+    price = models.IntegerField('가격', db_column='PRICE', default=0)
+    note = models.CharField('설명', db_column='NOTE', max_length=200, blank=True, null=True)
+    state_cd = models.CharField('상태', db_column='STATE_CD', max_length=10, blank=True, default=STATE_CD_IN_PROGRESS)
+
+    class Meta:
+        managed = False
+        db_table = 'SHOP_TB'
 
 
 # #######################################  이제 사용 안함  ##################################################

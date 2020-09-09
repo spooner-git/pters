@@ -133,6 +133,7 @@ class Trainer_schedule_history{
             let permission_status = data.permission_state_cd;
             let memo = data.note;
             let daily_record_id = data.daily_record_id;
+            let member_name = data.member_name;
             let onclick = ()=>{
                 let user_option = {
                     daily_record:{text:"일지", callback:()=>{
@@ -328,7 +329,7 @@ class Trainer_schedule_history{
                     option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
                 });
             };
-            let row = CComponent.schedule_history_row (numbering, schedule_id, date, schedule_name, attend_status, permission_status, memo, daily_record_id, this.settings.sign_use, onclick);
+            let row = CComponent.trainer_schedule_history_row (numbering, schedule_id, date, schedule_name, member_name, data.lecture_current_member_num, data.lecture_max_member_num, attend_status, permission_status, memo, daily_record_id, this.settings.sign_use, onclick);
             html_to_join.push(row);
         }
         if(html_to_join.length == 0){
@@ -385,7 +386,8 @@ class Trainer_schedule_history{
                 let permission_status = data.permission_state_cd;
                 let memo = data.note;
                 let daily_record_id = data.daily_record_id;
-                html = CComponent.schedule_history_row (numbering, schedule_id, date, schedule_name, attend_status, permission_status, memo, daily_record_id, this.settings.sign_use, ()=>{
+                let member_name = data.member_name;
+                html = CComponent.trainer_schedule_history_row (numbering, schedule_id, date, schedule_name, member_name, data.lecture_current_member_num, data.lecture_max_member_num, attend_status, permission_status, memo, daily_record_id, this.settings.sign_use, ()=>{
                     let user_option = {
                         daily_record:{text:"일지", callback:()=>{
                                 let inspect = pass_inspector.schedule_update();
