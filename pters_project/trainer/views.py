@@ -6893,6 +6893,78 @@ class GetShopIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         return JsonResponse({'current_shop_data': shop_list}, json_dumps_params={'ensure_ascii': True})
 
 
+# 수강권/상품 결제 내역 추가
+def add_member_shop_info_logic(request):
+    class_id = request.session.get('class_id', '')
+    member_id = request.POST.get('member_id', None)
+    shop_id = request.POST.get('shop_id', None)
+    name = request.POST.get('name', '')
+    price = request.POST.get('price', 0)
+    payment_price = request.POST.get('payment_price', 0)
+    pay_method = request.POST.get('pay_method')
+    note = request.POST.get('note', '')
+    state_cd = request.POST.get('state_cd')
+
+    today = datetime.date.today()
+    start_date = today
+    end_date = None
+    error = None
+
+    if state_cd == STATE_CD_FINISH:
+        end_date = today
+
+    if member_id == '' or member_id is None:
+        error = '회원 정보를 불러오지 못했습니다.'
+    if shop_id == '' or shop_id is None:
+        error = '상품 정보를 불러오지 못했습니다.'
+
+    if price == '':
+        price = 0
+    else:
+        try:
+            price = int(price)
+        except ValueError:
+            error = '상품 가격은 숫자만 입력 가능합니다.'
+
+    if payment_price == '':
+        payment_price = 0
+    else:
+        try:
+            payment_price = int(payment_price)
+        except ValueError:
+            error = '납부 금액은 숫자만 입력 가능합니다.'
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                member_shop_info = MemberShopTb(class_tb_id=class_id, member_id=member_id, shop_tb_id=shop_id,
+                                                price=price, payment_price=payment_price, pay_method=pay_method,
+                                                start_date=start_date, end_date=end_date, note=note, state_cd=state_cd,
+                                                use=USE)
+                member_shop_info.save()
+
+                member_payment_history_info = MemberPaymentHistoryTb(class_tb_id=class_id,
+                                                                     member_id=member_id,
+                                                                     member_shop_tb_id=member_shop_info.member_shop_id,
+                                                                     payment_price=payment_price,
+                                                                     refund_price=0,
+                                                                     pay_date=start_date, note=note, use=USE)
+                member_payment_history_info.save()
+
+        except InternalError:
+            error = error
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id, from_member_name=request.user.first_name,
+                         class_tb_id=class_id, log_info=name + ' 상품 결제 내역', log_how='추가', use=USE)
+        log_data.save()
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
 class GetMemberShopHistoryViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
@@ -6919,7 +6991,7 @@ class GetMemberShopHistoryViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                 'end_date': str(member_shop_info.end_date),
                                 'note': member_shop_info.note,
                                 'state_cd': member_shop_info.state_cd,
-                                'shop_id': member_shop_info.shop_id,
+                                'shop_id': member_shop_info.shop_tb.shop_id,
                                 'shop_name': member_shop_info.shop_tb.name,
                                 'shop_price': member_shop_info.shop_tb.price,
                                 'shop_note': member_shop_info.shop_tb.note
@@ -7015,7 +7087,7 @@ def add_member_payment_history_info_logic(request):
         except ObjectDoesNotExist:
             error = '수강권 정보를 불러오지 못했습니다.'
 
-    if member_ticket_id is not None:
+    if member_shop_id is not None:
         try:
             member_shop_info = MemberShopTb.objects.get(member_shop_id=member_shop_id)
             log_message = member_shop_info.member.name + '님 ' + member_shop_info.member_shop_tb.shop_tb.name + '상품'

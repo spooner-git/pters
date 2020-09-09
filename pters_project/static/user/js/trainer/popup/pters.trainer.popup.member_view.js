@@ -977,8 +977,8 @@ class Member_view{
                     data.member_shop_id,
                     data.shop_name,
                     data.shop_price,
+                    data.note,
                     data.start_date,
-                    data.end_date,
                     data.state_cd
                 )
             );
@@ -1140,7 +1140,7 @@ class Member_view{
         return html;
     }
 
-    dom_row_member_shop_item(member_shop_id, shop_name, shop_price, shop_note, start_date, end_date, state_cd){
+    dom_row_member_shop_item(member_shop_id, shop_name, price, note, start_date, state_cd){
         let member_status_tag = `<span style="color:var(--font-highlight);">(${MEMBER_PAYMENT_STATUS[state_cd]})</span>`;
 
         let html = `<div id="member_shop_item_${member_shop_id}" style="display:flex;width:100%;height:75px;padding:5px 0px;box-sizing:border-box;cursor:pointer; margin-top:15px;">
@@ -1149,8 +1149,8 @@ class Member_view{
                         </div>-->
                         <div style="flex:1 1 0">
                             <div style="font-size:14px;font-weight:500;letter-spacing:-0.7px;color:var(--font-base);">${shop_name} </div>
-                            <div style="font-size:14px;font-weight:500;letter-spacing:-0.5px;color:var(--font-base); margin-top:3px;">${UnitRobot.numberWithCommas(shop_price)}원 / ${start_date} ${member_status_tag}</div>
-                            <div style="font-size:12px;font-weight:500;letter-spacing:-0.5px;color:var(--font-sub-normal); margin-top:3px;">${shop_note}</div>
+                            <div style="font-size:14px;font-weight:500;letter-spacing:-0.5px;color:var(--font-base); margin-top:3px;">가격 : ${UnitRobot.numberWithCommas(price)}원 / 구매일 : ${start_date} ${member_status_tag}</div>
+                            <div style="font-size:12px;font-weight:500;letter-spacing:-0.5px;color:var(--font-sub-normal); margin-top:3px;">${note}</div>
                         </div>
                         <div style="flex-basis:30px;">
                             ${CImg.more("", {"vertical-align":"top"})}
@@ -1158,7 +1158,12 @@ class Member_view{
                     </div>`;
         $(document).off('click', `#member_shop_item_${member_shop_id}`).on('click', `#member_shop_item_${member_shop_id}`, function(e){
             let user_option = {
-                delete:{text:"상품 구매 내역 삭제", callback:()=>{
+
+                detail:{text:"결제 내역 상세 보기", callback:()=>{
+                    layer_popup.close_layer_popup();
+                    // 상세 결제 내역 띄우기
+                }},
+                delete:{text:"구매 내역 삭제", callback:()=>{
                     layer_popup.close_layer_popup();
 
                     let message = {

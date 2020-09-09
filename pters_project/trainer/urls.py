@@ -367,6 +367,8 @@ urlpatterns = [
     # 상품 목록 조회
     url(r'^get_shop_ing_list/$', views.GetShopIngListViewAjax.as_view(), name='get_shop_ing_list'),
 
+    # 상품 구매 추가
+    url(r'^add_member_shop_info/$', views.add_member_shop_info_logic, name='add_member_shop_info'),
     # 상품 구매 내역 조회
     url(r'^get_member_shop_history/$', views.GetMemberShopHistoryViewAjax.as_view(), name='get_member_shop_history'),
     # 상품 구매 내역 및 결제 내역 일괄 삭제

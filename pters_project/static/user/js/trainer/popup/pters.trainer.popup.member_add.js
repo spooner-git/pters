@@ -120,7 +120,7 @@ class Member_add{
         this.data.ticket_effective_days = data.effective_days;
         this.data.ticket_reg_count = data.reg_count;
         this.data.ticket_price = data.reg_price;
-
+        this.data.ticket_payment_price = data.reg_price;
         //시작일자가 없는 경우 오늘로 셋팅
         if(this.data.start_date == null){
             this.data.start_date = {year: this.dates.current_year, month:this.dates.current_month, date:this.dates.current_date};
@@ -765,7 +765,7 @@ class Member_add{
     dom_row_member_payment_price_input(){
         let unit = '원';
         let id = 'input_payment_price';
-        let title = this.data.ticket_price.length == 0 || this.data.ticket_price[0] == null ? '' : UnitRobot.numberWithCommas(this.data.ticket_price[0]);
+        let title = UnitRobot.numberWithCommas(this.data.ticket_payment_price);
         let placeholder = '납부 금액';
         let icon = NONE;
         let icon_r_visible = HIDE;
@@ -814,12 +814,12 @@ class Member_add{
     dom_row_payment_price_simple_input_machine(){
         // let button_style = {"flex":"1 1 0", "padding":"10px 8px", "color":"var(--font-sub-normal)"};
         let button_style = {"flex":"1 1 0", "padding":"6px 0px", "color":"var(--font-sub-normal)", "background-color":"var(--bg-light)", "border-radius":"3px"};
-        let button_perfect = CComponent.button ("payment_button_perfect", "완납", button_style, ()=>{ this.data.ticket_payment_price = Number(this.data.ticket_price);this.render_content(); });
+        let button_perfect = CComponent.button ("payment_button_perfect", "완납", button_style, ()=>{ this.data.ticket_payment_price = Number(this.data.ticket_price[0]);this.render_content(); });
         let button_100 = CComponent.button ("payment_button_100", "+ 100만", button_style, ()=>{ this.data.ticket_payment_price = Number(this.data.ticket_payment_price) + 1000000;this.render_content(); });
         let button_50 = CComponent.button ("payment_button_50", "+ 50만", button_style, ()=>{ this.data.ticket_payment_price = Number(this.data.ticket_payment_price) + 500000;this.render_content(); });
         let button_10 = CComponent.button ("payment_button_10", "+ 10만", button_style, ()=>{ this.data.ticket_payment_price = Number(this.data.ticket_payment_price) + 100000;this.render_content(); });
         let button_1 = CComponent.button ("payment_button_1", "+ 1만", button_style, ()=>{ this.data.ticket_payment_price = Number(this.data.ticket_payment_price) + 10000;this.render_content(); });
-        let button_delete = CComponent.button ("payment_button_delete", "지우기", button_style, ()=>{ this.data.ticket_payment_price = null;this.render_content(); });
+        let button_delete = CComponent.button ("payment_button_delete", "지우기", button_style, ()=>{ this.data.ticket_payment_price = 0;this.render_content(); });
 
         // let wrapper_style = "display:flex;padding:0px 0 0px 20px;font-size:12px;";
         // let divider_style = "flex-basis:1px;height:20px;margin-top:10px;background-color:var(--bg-light);display:none;";

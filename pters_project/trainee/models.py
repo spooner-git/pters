@@ -93,9 +93,9 @@ class MemberShopTb(TimeStampedModel):
     payment_price = models.IntegerField('납부 금액', db_column='PAYMENT_PRICE', default=0)
     refund_price = models.IntegerField('환불 금액', db_column='REFUND_PRICE', default=0)
     pay_method = models.CharField('결제 방법', db_column='PAY_METHOD', max_length=45, blank=True, default='')
-    start_date = models.DateField('최초 거래일', db_column='START_DATE', blank=True, null=True)
-    end_date = models.DateField('최종 거래일', db_column='END_DATE', blank=True, null=True)
-    note = models.CharField('설명', db_column='NOTE', max_length=200, blank=True, null=True)
+    start_date = models.DateField('최초 거래일', db_column='START_DATE', blank=True)
+    end_date = models.DateField('최종 거래일', db_column='END_DATE', blank=True)
+    note = models.CharField('설명', db_column='NOTE', max_length=200, blank=True)
     state_cd = models.CharField('상태', db_column='STATE_CD', max_length=10, blank=True, default=STATE_CD_NOT_PROGRESS)
 
     class Meta:

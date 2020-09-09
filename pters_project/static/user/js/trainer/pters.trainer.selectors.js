@@ -2765,7 +2765,6 @@ class ShopSelector{
             id: this.target_instance.shop.id,
             name: this.target_instance.shop.name,
             price: this.target_instance.shop.price,
-            note: this.target_instance.shop.note,
         };
         this.init();
     }
@@ -2806,7 +2805,7 @@ class ShopSelector{
             let shop_name = data.shop_name;
             let shop_price = data.shop_price;
             let shop_note = data.shop_note;
-            let checked = this.target_instance.shop.id.indexOf(shop_id) >= 0 ? 1 : 0;
+            let checked = this.target_instance.shop.id == shop_id ? 1 : 0;
             let html = CComponent.select_shop_row(
                 this.multiple_select, checked, this.unique_instance, shop_id, shop_name, shop_price, shop_note,(add_or_substract)=>{
                     if(add_or_substract == "add"){
