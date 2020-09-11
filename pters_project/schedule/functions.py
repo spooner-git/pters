@@ -325,7 +325,10 @@ def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
         ing_font_color_cd = lecture_info.ing_font_color_cd
         end_font_color_cd = lecture_info.end_font_color_cd
         if trainer_id is None or trainer_id == '':
-            trainer_id = lecture_info.main_trainer.member_id
+            if lecture_info.main_trainer is None:
+                trainer_id = lecture_info.class_tb.member_id
+            else:
+                trainer_id = lecture_info.main_trainer.member_id
         if lecture_info.lecture_type_cd == LECTURE_TYPE_ONE_TO_ONE:
             # lecture_info = None
             # lecture_id = None

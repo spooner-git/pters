@@ -34,7 +34,7 @@ class RepeatScheduleTb(TimeStampedModel):
     extension_flag = models.IntegerField('자동 연장', db_column='EXTENSION_FLAG', default=0)
     reg_member = models.ForeignKey(MemberTb, verbose_name='최초등록 회원', on_delete=models.SET_NULL, null=True)
     mod_member = models.ForeignKey(MemberTb, verbose_name='최종수정 회원', on_delete=models.SET_NULL, related_name='MOD_MEMBER_ID', null=True)
-    repeat_trainer = models.ForeignKey(MemberTb, verbose_name='담당 강사', on_delete=models.SET_NULL, related_name='REPEAT_TRAINER_ID', null=True)
+    repeat_trainer = models.ForeignKey(MemberTb, verbose_name='담당', on_delete=models.SET_NULL, related_name='REPEAT_TRAINER_ID', null=True)
 
     time_duration = models.CharField(db_column='TIME_DURATION', max_length=20, blank=True, default='')
 
@@ -92,7 +92,7 @@ class ScheduleTb(TimeStampedModel):
     extension_flag = models.IntegerField('자동 연장', db_column='EXTENSION_FLAG', default=0)
     reg_member = models.ForeignKey(MemberTb, verbose_name='최초등록 회원', on_delete=models.SET_NULL, null=True)
     mod_member = models.ForeignKey(MemberTb, verbose_name='최종수정 회원', on_delete=models.SET_NULL, related_name='LAST_MOD_MEMBER_ID', null=True)
-    trainer = models.ForeignKey(MemberTb, verbose_name='담당 강사', on_delete=models.SET_NULL, related_name='TRAINER_ID', null=True)
+    trainer = models.ForeignKey(MemberTb, verbose_name='담당', on_delete=models.SET_NULL, related_name='TRAINER_ID', null=True)
 
     sign_data_url = models.CharField(db_column='SIGN_DATA_URL', max_length=255, blank=True, default='')
     alarm_dt = models.DateTimeField(db_column='ALARM_DT', blank=True, null=True)  # Field name made lowercase.

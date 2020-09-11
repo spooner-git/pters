@@ -238,7 +238,7 @@ class LectureTb(TimeStampedModel):
     lecture_minute = models.IntegerField(db_column='GROUP_MINUTE', default=60)  # Field name made lowercase.
     start_time = models.CharField('수업 시작 시각', db_column='START_TIME', max_length=20, blank=True,
                                   default='A-0')
-    main_trainer = models.ForeignKey(MemberTb, verbose_name='담당 강사', on_delete=models.SET_NULL, related_name='MAIN_TRAINER_ID', blank=True, null=True)
+    main_trainer = models.ForeignKey(MemberTb, verbose_name='담당', on_delete=models.SET_NULL, related_name='MAIN_TRAINER_ID', blank=True, null=True)
 
     class Meta:
         managed = False

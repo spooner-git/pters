@@ -169,7 +169,7 @@ class Lecture_add{
         }
 
         let html =  '<div class="obj_input_box_full">'+CComponent.dom_tag('수업명', null, true) + name+'</div>' +
-                    '<div class="obj_input_box_full">'+CComponent.dom_tag('담당 강사', null, true) + main_trainer + '</div>' +
+                    '<div class="obj_input_box_full">'+CComponent.dom_tag('담당', null, true) + main_trainer + '</div>' +
                     '<div class="obj_input_box_full">'+CComponent.dom_tag('정원', null, true) + capacity + '</div>' +
                     lecture_lecture_start_time+
                     '<div class="obj_input_box_full">'+CComponent.dom_tag('기본 수업 시간', null, true) + time + '</div>' +
@@ -213,7 +213,7 @@ class Lecture_add{
 
     dom_row_main_trainer_select(){
         let id = 'select_trainer';
-        let title = this.data.main_trainer_name.length == 0 ? '담당 강사' : this.data.main_trainer_name[0];
+        let title = this.data.main_trainer_name.length == 0 ? '담당' : this.data.main_trainer_name[0];
         let icon = CImg.member();
         let icon_r_visible = SHOW;
         let icon_r_text = "";
@@ -221,7 +221,7 @@ class Lecture_add{
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TRAINER_SELECT, 100, popup_style, {'trainer_id':null}, ()=>{
-                let appendix = {title:"담당 강사", disable_zero_avail_count:ON, entire_member:NONE, trainer_id:this.data.main_trainer_id, trainer_name:this.data.main_trainer_name};
+                let appendix = {title:"담당", disable_zero_avail_count:ON, entire_member:NONE, trainer_id:this.data.main_trainer_id, trainer_name:this.data.main_trainer_name};
                 trainer_select = new TrainerSelector('#wrapper_box_trainer_select', this, 1, appendix, (set_data)=>{
                     this.main_trainer = set_data;
                     // this.if_user_changed_any_information = true;

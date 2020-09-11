@@ -223,7 +223,7 @@ class Lecture_view{
         let lecture_start_time = this.dom_row_lecture_start_time();
         let repeat = this.dom_row_repeat();
 
-        let main_trainer_assembly = '<div class="obj_input_box_full">' + CComponent.dom_tag('담당 강사*') + main_trainer + '</div>';
+        let main_trainer_assembly = '<div class="obj_input_box_full">' + CComponent.dom_tag('담당*') + main_trainer + '</div>';
         let capacity_assembly = '<div class="obj_input_box_full">' + CComponent.dom_tag('정원*') + capacity + '</div>';
         let lecture_lecture_minute = '<div class="obj_input_box_full">' + CComponent.dom_tag('기본 수업 시간*') + time + '</div>';
         let lecture_lecture_start_time = '';
@@ -356,7 +356,7 @@ class Lecture_view{
 
     dom_row_main_trainer_select(){
         let id = 'select_trainer';
-        let title = this.data.main_trainer_name == null ? '담당 강사' : this.data.main_trainer_name;
+        let title = this.data.main_trainer_name == null ? '담당' : this.data.main_trainer_name;
         let icon = CImg.member();
         let icon_r_visible = SHOW;
         let icon_r_text = "";
@@ -364,7 +364,7 @@ class Lecture_view{
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TRAINER_SELECT, 100, popup_style, {'trainer_id':null}, ()=>{
-                let appendix = {title:"담당 강사", disable_zero_avail_count:ON, entire_member:NONE, trainer_id:this.data.main_trainer_id, trainer_name:this.data.main_trainer_name};
+                let appendix = {title:"담당", disable_zero_avail_count:ON, entire_member:NONE, trainer_id:this.data.main_trainer_id, trainer_name:this.data.main_trainer_name};
                 trainer_select = new TrainerSelector('#wrapper_box_trainer_select', this, 1, appendix, (set_data)=>{
                     this.main_trainer = set_data;
                     // this.if_user_changed_any_information = true;
@@ -380,7 +380,7 @@ class Lecture_view{
     //     let unit = '님';
     //     let id = 'lecture_main_trainer_view';
     //     let title = this.data.lecture_main_trainer_name == null ? '' : this.data.lecture_main_trainer_name;
-    //     let placeholder = '담당 강사*';
+    //     let placeholder = '담당*';
     //     let icon = CImg.member();
     //     let icon_r_visible = HIDE;
     //     let icon_r_text = "";
@@ -1322,7 +1322,7 @@ class Lecture_simple_view{
         });
 
         let html = `<div style="display:flex;">
-                        <div style="flex-basis:68px;font-size:11px;font-weight:500;letter-spacing:-0.5px;color:var(--font-inactive);line-height:24px;padding:12px 0;">담당 강사</div>
+                        <div style="flex-basis:68px;font-size:11px;font-weight:500;letter-spacing:-0.5px;color:var(--font-inactive);line-height:24px;padding:12px 0;">담당</div>
                         ${html_data}
                     </div>`;
 

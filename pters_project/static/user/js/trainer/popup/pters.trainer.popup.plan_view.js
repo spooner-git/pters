@@ -347,7 +347,7 @@ class Plan_view{
         
         let html;
         if(this.time_selector == CLASSIC){
-            html =      `<div class="obj_input_box_full" style="">` + CComponent.dom_tag('담당 강사', null, true) + trainer_select_row+'</div>' +
+            html =      `<div class="obj_input_box_full" style="">` + CComponent.dom_tag('담당', null, true) + trainer_select_row+'</div>' +
                         '<div class="obj_input_box_full">' +  CComponent.dom_tag('일자') + date_select_row +
                                                         CComponent.dom_tag('진행시간') + classic_time_selector + '</div>' +
                         '<div class="obj_input_box_full">'+ CComponent.dom_tag(`메모 <span style="color:var(--font-highlight);display:${hide_when_off}">(회원님께 공유되는 메모입니다.)</span>`) + memo_select_row + '</div>' +
@@ -356,7 +356,7 @@ class Plan_view{
                         `<div class="obj_input_box_full" style="display:${display};">`+ CComponent.dom_tag('대기 회원') + member_select_plan_wait_row + member_list_plan_wait_row+'</div>' +
                         '<div class="obj_input_box_full" style="padding:18px;">' + reg_mod_info + '<div>';
         }else{
-            html =      `<div class="obj_input_box_full" style="">` + CComponent.dom_tag('담당 강사', null, true) + trainer_select_row+'</div>' +
+            html =      `<div class="obj_input_box_full" style="">` + CComponent.dom_tag('담당', null, true) + trainer_select_row+'</div>' +
                         '<div class="obj_input_box_full">' +  CComponent.dom_tag('일자') + date_select_row +
                                                         CComponent.dom_tag('진행시간') + start_time_select_row + end_time_select_row + '</div>' +
                         '<div class="obj_input_box_full">'+ CComponent.dom_tag(`메모 <span style="color:var(--font-highlight);display:${hide_when_off}">(회원님께 공유되는 메모입니다.)</span>`) + memo_select_row + '</div>' +
@@ -538,7 +538,7 @@ class Plan_view{
 
     dom_row_trainer_select(){
         let id = 'select_trainer';
-        let title = this.data.main_trainer_name == null ? '담당 강사' : this.data.main_trainer_name;
+        let title = this.data.main_trainer_name == null ? '담당' : this.data.main_trainer_name;
         let icon = CImg.member();
         let icon_r_visible = SHOW;
         let icon_r_text = "";
@@ -547,7 +547,7 @@ class Plan_view{
             if(this.data.lecture_id.length != 0){
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TRAINER_SELECT, 100, popup_style, {'trainer_id':null}, ()=>{
-                    let appendix = {title:"담당 강사", disable_zero_avail_count:ON, entire_member:NONE, trainer_id:this.data.main_trainer_id, trainer_name:this.data.main_trainer_name};
+                    let appendix = {title:"담당", disable_zero_avail_count:ON, entire_member:NONE, trainer_id:this.data.main_trainer_id, trainer_name:this.data.main_trainer_name};
                     trainer_select = new TrainerSelector('#wrapper_box_trainer_select', this, 1, appendix, (set_data)=>{
 
                         this.trainer = set_data;

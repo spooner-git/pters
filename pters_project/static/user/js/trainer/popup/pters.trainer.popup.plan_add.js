@@ -293,7 +293,7 @@ class Plan_add{
         if(this.time_selector == CLASSIC){
             html =  `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('수업', null, true) + lecture_select_row + '</div>' +
                     `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('회원', null, this.data.lecture_type_cd[0] === LECTURE_TYPE_ONE_TO_ONE ? true : false) + member_select_row+'</div>' +
-                    `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('담당 강사', null, true) + trainer_select_row+'</div>' +
+                    `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('담당', null, true) + trainer_select_row+'</div>' +
                     '<div class="obj_input_box_full">' +  
                                                     CComponent.dom_tag('일자', null, true) + date_select_row + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>' +
                                                     CComponent.dom_tag('진행 시간', null, true) + classic_time_selector +'<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>' +
@@ -303,7 +303,7 @@ class Plan_add{
 
         }else if(this.time_selector == BASIC){
             html =  `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('수업', null, true) + lecture_select_row + '</div>' +
-                    `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('담당 강사', null, true) + trainer_select_row+'</div>' +
+                    `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('담당', null, true) + trainer_select_row+'</div>' +
                     `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('회원', null, this.data.lecture_type_cd[0] === LECTURE_TYPE_ONE_TO_ONE ? true : false) + member_select_row+'</div>' +
                     '<div class="obj_input_box_full">' +
                                                     CComponent.dom_tag('일자', null, true) + date_select_row + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>' +
@@ -405,7 +405,7 @@ class Plan_add{
 
     dom_row_trainer_select(){
         let id = 'select_trainer';
-        let title = this.data.main_trainer_name.length == 0 ? '담당 강사' : this.data.main_trainer_name.join(', ');
+        let title = this.data.main_trainer_name.length == 0 ? '담당' : this.data.main_trainer_name.join(', ');
         let icon = CImg.member();
         let icon_r_visible = SHOW;
         let icon_r_text = "";
@@ -414,7 +414,7 @@ class Plan_add{
             if(this.data.lecture_id.length != 0){
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TRAINER_SELECT, 100, popup_style, {'trainer_id':null}, ()=>{
-                    let appendix = {title:"담당 강사", disable_zero_avail_count:ON, entire_member:NONE, trainer_id:this.data.main_trainer_id, trainer_name:this.data.main_trainer_name};
+                    let appendix = {title:"담당", disable_zero_avail_count:ON, entire_member:NONE, trainer_id:this.data.main_trainer_id, trainer_name:this.data.main_trainer_name};
                     trainer_select = new TrainerSelector('#wrapper_box_trainer_select', this, 1, appendix, (set_data)=>{
 
                         this.trainer = set_data;

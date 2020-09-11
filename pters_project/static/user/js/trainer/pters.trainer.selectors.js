@@ -4567,7 +4567,7 @@ class TrainerSelector{
         }
 
         html_to_join.unshift(`<div class="select_trainer_max_num" >
-                                 <span>담당 강사</span><span> (0명)</span>
+                                 <span>담당</span><span> (0명)</span>
                             </div>`);
         // ${this.received_data_main_trainer.length}
 

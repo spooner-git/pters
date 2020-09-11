@@ -2722,7 +2722,7 @@ def add_member_ticket_info_logic(request):
     if payment_price == '':
         payment_price = 0
 
-    if payment_price > price:
+    if int(payment_price) > int(price):
         error = '수강권 가격보다 납부 금액이 많습니다.'
 
     if end_date == '':
@@ -6984,6 +6984,16 @@ class GetMemberShopHistoryViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
         member_shop_list = []
         for member_shop_info in member_shop_data:
+            shop_tb = member_shop_info.shop_tb
+            shop_id = ''
+            shop_name = ''
+            shop_price = 0
+            shop_note = ''
+            if shop_tb is not None :
+                shop_id = member_shop_info.shop_tb.shop_id
+                shop_name = member_shop_info.shop_tb.name
+                shop_price = member_shop_info.shop_tb.price
+                shop_note = member_shop_info.shop_tb.note
             member_shop_dict = {'member_shop_id': member_shop_info.member_shop_id,
                                 'payment_price': member_shop_info.payment_price,
                                 'refund_price': member_shop_info.refund_price,
@@ -6991,10 +7001,10 @@ class GetMemberShopHistoryViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                 'end_date': str(member_shop_info.end_date),
                                 'note': member_shop_info.note,
                                 'state_cd': member_shop_info.state_cd,
-                                'shop_id': member_shop_info.shop_tb.shop_id,
-                                'shop_name': member_shop_info.shop_tb.name,
-                                'shop_price': member_shop_info.shop_tb.price,
-                                'shop_note': member_shop_info.shop_tb.note
+                                'shop_id': shop_id,
+                                'shop_name': shop_name,
+                                'shop_price': shop_price,
+                                'shop_note': shop_note
                                 }
             member_shop_list.append(member_shop_dict)
 

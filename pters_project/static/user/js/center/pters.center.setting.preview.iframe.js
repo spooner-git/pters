@@ -707,9 +707,9 @@ $(document).ready(function(){
             var clicked = date_format_yyyy_m_d_to_yyyymmdd($('#cal_popup').attr('data-date'))
             var today = date_format_yyyy_m_d_to_yyyymmdd(currentYear+'_'+(currentMonth+1)+'_'+currentDate)
             if(clicked < today){
-                alert("지난 일정은 취소가 불가합니다.\n담당 강사에게 직접 문의해주세요")
+                alert("지난 일정은 취소가 불가합니다.\n 직접 문의해주세요")
             }else{
-                alert("선택한 일정은 취소가 불가합니다.\n \n시작 "+Preview_Options.cancellimit+'시간 이내에는 온라인 취소가 불가합니다.\n \n담당 강사에게 직접 문의해주세요')
+                alert("선택한 일정은 취소가 불가합니다.\n \n시작 "+Preview_Options.cancellimit+'시간 이내에는 온라인 취소가 불가합니다.\n \n 직접 문의해주세요')
             }
         }else{
             $("#cal_popup").hide()
