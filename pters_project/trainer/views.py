@@ -3787,11 +3787,11 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         error = None
 
         lecture_data = LectureTb.objects.select_related(
-            'main_trainer').filter(class_tb_id=class_id, state_cd=STATE_CD_IN_PROGRESS,
-                                   name__contains=keyword, use=USE).order_by('lecture_id')
+            'main_trainer', 'class_tb__member').filter(class_tb_id=class_id, state_cd=STATE_CD_IN_PROGRESS,
+                                                       name__contains=keyword, use=USE).order_by('lecture_id')
 
         lecture_ticket_data = TicketLectureTb.objects.select_related(
-            'lecture_tb__main_trainer',
+            'lecture_tb__main_trainer', 'class_tb__member',
             'ticket_tb').filter(class_tb_id=class_id, lecture_tb__state_cd=STATE_CD_IN_PROGRESS,
                                 lecture_tb__name__contains=keyword, lecture_tb__use=USE,
                                 use=USE).order_by('lecture_tb_id', 'ticket_tb_id')
@@ -3802,10 +3802,10 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
             lecture_tb = lecture_ticket_info.lecture_tb
             ticket_tb = lecture_ticket_info.ticket_tb
             lecture_id = str(lecture_tb.lecture_id)
-            main_trainer_id = lecture_tb.class_tb.member_id
-            main_trainer_name = lecture_tb.class_tb.member.name
+            main_trainer_id = lecture_ticket_info.class_tb.member_id
+            main_trainer_name = lecture_ticket_info.class_tb.member.name
             if lecture_tb.main_trainer is None or lecture_tb.main_trainer == '':
-                lecture_tb.main_trainer_id = lecture_tb.class_tb.member_id
+                lecture_tb.main_trainer_id = lecture_ticket_info.class_tb.member_id
                 lecture_tb.save()
             else:
                 main_trainer_id = lecture_tb.main_trainer_id
@@ -3935,11 +3935,11 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         error = None
 
         lecture_data = LectureTb.objects.select_related(
-            'main_trainer').filter(class_tb_id=class_id, state_cd=STATE_CD_FINISH, name__contains=keyword,
-                                   use=USE).order_by('lecture_id')
+            'main_trainer',  'class_tb__member').filter(class_tb_id=class_id, state_cd=STATE_CD_FINISH,
+                                                        name__contains=keyword, use=USE).order_by('lecture_id')
 
         lecture_ticket_data = TicketLectureTb.objects.select_related(
-            'ticket_tb',
+            'ticket_tb', 'class_tb__member',
             'lecture_tb__main_trainer').filter(class_tb_id=class_id, lecture_tb__state_cd=STATE_CD_FINISH,
                                                lecture_tb__name__contains=keyword, lecture_tb__use=USE,
                                                use=USE).order_by('lecture_tb_id', 'ticket_tb_id')
@@ -3950,14 +3950,15 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
             lecture_tb = lecture_ticket_info.lecture_tb
             ticket_tb = lecture_ticket_info.ticket_tb
             lecture_id = str(lecture_tb.lecture_id)
-            main_trainer_id = request.user.id
-            main_trainer_name = request.user.first_name
+            main_trainer_id = lecture_ticket_info.class_tb.member_id
+            main_trainer_name = lecture_ticket_info.class_tb.member.name
             if lecture_tb.main_trainer is None or lecture_tb.main_trainer == '':
-                lecture_tb.main_trainer_id = request.user.id
+                lecture_tb.main_trainer_id = lecture_ticket_info.class_tb.member_id
                 lecture_tb.save()
             else:
                 main_trainer_id = lecture_tb.main_trainer_id
                 main_trainer_name = lecture_tb.main_trainer.name
+
             try:
                 lecture_data_dict[lecture_id]
             except KeyError:
@@ -3987,10 +3988,10 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         if len(lecture_data) != len(lecture_data_dict):
             for lecture_info in lecture_data:
                 lecture_id = str(lecture_info.lecture_id)
-                main_trainer_id = request.user.id
-                main_trainer_name = request.user.first_name
+                main_trainer_id = lecture_info.class_tb.member_id
+                main_trainer_name = lecture_info.class_tb.member.name
                 if lecture_info.main_trainer is None or lecture_info.main_trainer == '':
-                    lecture_info.main_trainer_id = request.user.id
+                    lecture_info.main_trainer_id = lecture_info.class_tb.member_id
                     lecture_info.save()
                 else:
                     main_trainer_id = lecture_info.main_trainer_id
