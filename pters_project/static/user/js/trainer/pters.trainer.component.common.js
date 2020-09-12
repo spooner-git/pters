@@ -964,6 +964,38 @@ class CComponent{
         });
         return html;
     }
+
+    static member_shop_history_row (numbering, member_shop_id, start_date, shop_name, shop_price, state_cd_name, memo, callback){
+
+        let html = `<li class="member_shop_history_row" id="member_shop_history_row_${member_shop_id}">`;
+        let raw_1 = `<div class="obj_table_raw">
+                        <div class="cell_member_shop_num" style="width:15px;">${numbering}</div>
+                        <div class="cell_member_shop_info">${shop_name}</div>
+                        <div class="cell_member_shop_price">가격:${shop_price}</div>
+                    </div>`;
+        let raw_2 = `<div class="obj_table_raw table_date_info">
+                        <div class="cell_member_shop_info">구매일:${start_date}</div>
+                        <div class="cell_member_shop_price">납부:${shop_price}</div>
+                    </div>`;
+        let raw_3 = `<div class="obj_table_raw table_memo_info">
+                        <div class="cell_member_shop_info">${memo}</div>
+                    </div>`;
+
+        let sub_assemble = `<div style="display:flex;">
+                                <div style="flex:1 1 0;">${raw_1} ${raw_2}</div>
+                                <div style="flex-basis:80px;text-align:right;"><span style="color:var(--font-highlight);">${state_cd_name}</span></div>
+                            </div>`;
+
+        html += sub_assemble;
+        if(memo != ''){
+            html += raw_3;
+        }
+        html += '</li>';
+        $(document).off('click', `#member_shop_history_row_${member_shop_id}`).on('click', `#member_shop_history_row_${member_shop_id}`, function(){
+            callback();
+        });
+        return html;
+    }
     //회원의 수강권 이력에 사용되는 행
     static ticket_history_row (numbering, ticket_id, date, ticket_name, ticket_pay_method, ticket_price, ticket_payment_price, ticket_refund_price, reg_count, remain_count, avail_count, status_code, note, onclick){
         let status_color = "";

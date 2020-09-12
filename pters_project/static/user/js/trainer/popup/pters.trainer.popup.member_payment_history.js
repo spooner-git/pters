@@ -1,4 +1,4 @@
-class Member_shop_history{
+class Member_payment_history{
     constructor(install_target, member_id, callback){
         this.target = {install : install_target};
         this.member_id = member_id;
@@ -31,7 +31,7 @@ class Member_shop_history{
     }
 
     render(data){
-        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();member_shop_history.clear();">${CImg.arrow_left()}</span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();member_payment_history.clear();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span id="">상품 이력</span></span>`;
         let top_right = `<span class="icon_right"></span>`;
         let content;
@@ -86,7 +86,7 @@ class Member_shop_history{
                 this.append_loading_image(ON);
                 this.this_page++;
                 let send_data = {"member_id": this.member_id, "sort_val": this.sort_val, "page": this.this_page};
-                Member_func.member_shop_list_history(send_data, (data)=>{
+                Member_func.member_payment_list_history(send_data, (data)=>{
                     this.append_loading_image(OFF);
                     this.append_list(data);
                     this.page_loading_ing = false;
@@ -103,16 +103,16 @@ class Member_shop_history{
 
     dom_list_by_time(received_data){
         let length = 0;
-        if(received_data.member_shop_list != undefined){
-            length = received_data.member_shop_list.length;
+        if(received_data.member_payment_list != undefined){
+            length = received_data.member_payment_list.length;
         }
         let html_to_join = [];
         for(let i=0; i<length; i++){
         // for(let i=0; i<length; i++){
-            let data = received_data.member_shop_list[i];
-            let numbering = data.member_shop_idx + '.';
+            let data = received_data.member_payment_list[i];
+            let numbering = data.member_payment_idx + '.';
             // let numbering = Number(i+1) + ' 회차';
-            let member_shop_id = data.member_shop_id;
+            let member_payment_id = data.member_payment_id;
             let start_date =  DateRobot.to_text(data.start_date, '', '', SHORT);
             let payment_status = MEMBER_PAYMENT_STATUS[data.state_cd];
             let memo = data.note;
@@ -139,7 +139,7 @@ class Member_shop_history{
                         show_user_confirm(message, ()=>{
                             layer_popup.close_layer_popup();
                             Loading.show(`${shop_name} 상품 구매 내역을 삭제 중입니다.<br>최대 2~4분까지 소요될 수 있습니다.`);
-                            Shop_func.delete_member_shop({"member_shop_id":member_shop_id}, ()=>{
+                            Shop_func.delete_member_payment({"member_payment_id":member_payment_id}, ()=>{
                                 Loading.hide();
                                 try{
                                     current_page.init();
@@ -161,7 +161,7 @@ class Member_shop_history{
                     option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
                 });
             };
-            let row = CComponent.member_shop_history_row (numbering, member_shop_id, start_date, shop_name, shop_price, payment_status, memo, onclick);
+            let row = CComponent.member_payment_history_row (numbering, member_payment_id, start_date, shop_name, shop_price, payment_status, memo, onclick);
             html_to_join.push(row);
         }
         if(html_to_join.length == 0){
@@ -215,10 +215,10 @@ class Member_shop_history{
         //     callback(data);
         // });
 
-        Member_func.member_shop_list_history(
+        Member_func.member_payment_list_history(
             send_data, (data)=> {
-                console.log(data.member_shop_list);
-                // this.data.member_shop_data = data.member_shop_list;
+                console.log(data.member_payment_list);
+                // this.data.member_payment_data = data.member_payment_list;
                 this.this_page = data.this_page;
                 this.max_page = data.max_page;
                 this.received_data = data;

@@ -296,7 +296,7 @@ class Member_view{
                             this.data.closed_date = data.member_closed_list;
                             console.log(this.data.closed_date);
 
-                            Member_func.shop_list_history(
+                            Member_func.member_shop_list_history(
                                 {"member_id":this.member_id, "day":31}, (data)=> {
                                     this.data.member_shop_data = data.member_shop_list;
                                     console.log(this.data.member_shop_data);
@@ -1167,7 +1167,7 @@ class Member_view{
                     layer_popup.close_layer_popup();
 
                     let message = {
-                        title:`정말 ${shop_name} 상품 구매 내역을 취소하시겠습니까?`,
+                        title:`정말 ${shop_name} 상품 구매 내역을 삭제하시겠습니까?`,
                         comment:`${CImg.warning(["#fe4e65"], {"vertical-align":"middle", "margin-bottom":"4px"})}
                                 <br>
                                 <div style="text-align:center;margin-top:5px; color:var(--font-highlight);">

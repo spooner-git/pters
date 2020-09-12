@@ -42,7 +42,7 @@ from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO
     SORT_SCHEDULE_MONTHLY, SHARED_PROGRAM, MY_PROGRAM, PROGRAM_SELECT, PROGRAM_LECTURE_CONNECT_DELETE, \
     PROGRAM_LECTURE_CONNECT_ACCEPT, BOARD_TYPE_CD_NOTICE, ON_SCHEDULE, ALARM_PAGINATION_COUNTER, STATE_CD_HOLDING, \
     CLOSED_SCHEDULE_TYPE, SCHEDULE_PAGINATION_COUNTER, OWN_TYPE_OWNER, OWN_TYPE_SHARE, SORT_TRAINER_NAME, \
-    OWN_TYPE_EMPLOYEE
+    OWN_TYPE_EMPLOYEE, SORT_SHOP_START_DATE
 from board.models import BoardTb, QATb, NoticeTb
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 from schedule.functions import func_refresh_member_ticket_count, func_get_trainer_attend_schedule, \
@@ -6972,44 +6972,66 @@ class GetMemberShopHistoryViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         class_id = self.request.session.get('class_id', '')
         member_id = request.GET.get('member_id')
         day = request.GET.get('day')
+        page = request.GET.get('page', 1)
+        sort = request.GET.get('sort_val', SORT_SHOP_START_DATE)
         today = datetime.date.today()
-        # member_shop_data = None
-
-        try:
-            check_date = today - datetime.timedelta(days=int(day))
-            member_shop_data = MemberShopTb.objects.filter(class_tb_id=class_id, member_id=member_id,
-                                                           start_date__gte=check_date, use=USE).order_by('start_date')
-        except ValueError:
-            member_shop_data = MemberShopTb.objects.filter(class_tb_id=class_id, member_id=member_id,
-                                                           use=USE).order_by('start_date')
-
         member_shop_list = []
-        for member_shop_info in member_shop_data:
-            shop_tb = member_shop_info.shop_tb
-            shop_id = ''
-            shop_name = ''
-            shop_price = 0
-            shop_note = ''
-            if shop_tb is not None :
-                shop_id = member_shop_info.shop_tb.shop_id
-                shop_name = member_shop_info.shop_tb.name
-                shop_price = member_shop_info.shop_tb.price
-                shop_note = member_shop_info.shop_tb.note
-            member_shop_dict = {'member_shop_id': member_shop_info.member_shop_id,
-                                'payment_price': member_shop_info.payment_price,
-                                'refund_price': member_shop_info.refund_price,
-                                'start_date': str(member_shop_info.start_date),
-                                'end_date': str(member_shop_info.end_date),
-                                'note': member_shop_info.note,
-                                'state_cd': member_shop_info.state_cd,
-                                'shop_id': shop_id,
-                                'shop_name': shop_name,
-                                'shop_price': shop_price,
-                                'shop_note': shop_note
-                                }
-            member_shop_list.append(member_shop_dict)
+        ordered_member_shop_dict = collections.OrderedDict()
+        error = None
 
-        return JsonResponse({'member_shop_list': member_shop_list}, json_dumps_params={'ensure_ascii': True})
+        if member_id == '':
+            error = '회원 정보를 불러오지 못했습니다.'
+        # context = {}
+        if error is None:
+            try:
+                check_date = today - datetime.timedelta(days=int(day))
+                member_shop_data = MemberShopTb.objects.select_related(
+                    'shop_tb').filter(class_tb_id=class_id, member_id=member_id,
+                                      start_date__gte=check_date, use=USE).order_by('start_date')
+            except ValueError:
+                member_shop_data = MemberShopTb.objects.select_related(
+                    'shop_tb').filter(class_tb_id=class_id, member_id=member_id, use=USE).order_by('start_date')
+
+            paginator = Paginator(member_shop_data, SCHEDULE_PAGINATION_COUNTER)
+            try:
+                member_shop_data = paginator.page(page)
+            except EmptyPage:
+                member_shop_data = []
+            member_shop_idx = paginator.count - SCHEDULE_PAGINATION_COUNTER * (int(page) - 1)
+
+            ordered_member_shop_dict['max_page'] = paginator.num_pages
+            ordered_member_shop_dict['this_page'] = page
+
+        if error is None:
+            for member_shop_info in member_shop_data:
+                shop_tb = member_shop_info.shop_tb
+                shop_id = ''
+                shop_name = ''
+                shop_price = 0
+                shop_note = ''
+                if shop_tb is not None :
+                    shop_id = member_shop_info.shop_tb.shop_id
+                    shop_name = member_shop_info.shop_tb.name
+                    shop_price = member_shop_info.shop_tb.price
+                    shop_note = member_shop_info.shop_tb.note
+                member_shop_dict = {'member_shop_idx': str(member_shop_idx),
+                                    'member_shop_id': member_shop_info.member_shop_id,
+                                    'payment_price': member_shop_info.payment_price,
+                                    'refund_price': member_shop_info.refund_price,
+                                    'start_date': str(member_shop_info.start_date),
+                                    'end_date': str(member_shop_info.end_date),
+                                    'note': member_shop_info.note,
+                                    'state_cd': member_shop_info.state_cd,
+                                    'shop_id': shop_id,
+                                    'shop_name': shop_name,
+                                    'shop_price': shop_price,
+                                    'shop_note': shop_note
+                                    }
+                member_shop_list.append(member_shop_dict)
+                member_shop_idx -= 1
+            ordered_member_shop_dict['member_shop_list'] = member_shop_list
+
+        return JsonResponse(ordered_member_shop_dict, json_dumps_params={'ensure_ascii': True})
 
 
 # 상품 구매 내역 일괄 삭제
@@ -7029,7 +7051,7 @@ def delete_member_shop_data_logic(request):
         try:
             with transaction.atomic():
                 member_name = member_shop_info.member.name
-                shop_name = member_shop_info.name
+                shop_name = member_shop_info.shop_tb.name
                 member_shop_info.delete()
 
         except ValueError:

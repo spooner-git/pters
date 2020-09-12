@@ -1224,7 +1224,7 @@ class Member_func{
         });
     }
 
-    static shop_list_history(data, callback, error_callback){
+    static member_shop_list_history(data, callback, error_callback){
         //데이터 형태 {"member_id":""};
         $.ajax({
             url:'/trainer/get_member_shop_history/',
