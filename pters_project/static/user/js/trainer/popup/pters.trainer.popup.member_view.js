@@ -1161,7 +1161,10 @@ class Member_view{
 
                 detail:{text:"결제 내역 상세 보기", callback:()=>{
                     layer_popup.close_layer_popup();
-                    // 상세 결제 내역 띄우기
+                    let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_PAYMENT_HISTORY, 100, popup_style, null, ()=>{
+                        member_payment_history = new Member_payment_history('.popup_member_payment_history', null, member_shop_id);
+                    });
                 }},
                 delete:{text:"구매 내역 삭제", callback:()=>{
                     layer_popup.close_layer_popup();

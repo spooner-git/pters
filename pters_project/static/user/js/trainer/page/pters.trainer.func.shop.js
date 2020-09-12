@@ -590,11 +590,11 @@ class Shop_func{
         });
     }
 
-    static lecture_list(data, callback, error_callback){
+    static delete_member_payment_history(data, callback, error_callback){
         //데이터 형태 {"shop_id":""};
         $.ajax({
-            url:'/shop/get_shop_lecture_list/',
-            type:'GET',
+            url:'/trainer/delete_member_shop_payment_history_info/',
+            type:'POST',
             data: data,
             dataType : 'html',
 
@@ -625,12 +625,12 @@ class Shop_func{
             },
 
             //통신 실패시 처리
-            error:function(data){
+            error:function(){
                 if(error_callback != undefined){
-                    error_callback(data);
+                    error_callback();
                 }
                 show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
-                // location.reload();
+                location.reload();
             }
         });
     }

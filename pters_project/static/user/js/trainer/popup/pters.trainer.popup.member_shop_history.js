@@ -118,18 +118,29 @@ class Member_shop_history{
             let memo = data.note;
             let shop_name = data.shop_name;
             let shop_price = data.shop_price;
+            let payment_price = data.payment_price;
+            let refund_price = data.refund_price;
             let onclick = ()=>{
                 let user_option = {
-
+                    add_payment:{text:"결제 내역 추가", callback:()=>{
+                        layer_popup.close_layer_popup();
+                        let member_add_initial_data = {member_id: this.member_id, member_shop_id: member_shop_id};
+                        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_PAYMENT_ADD, 100, POPUP_FROM_BOTTOM, null, ()=>{
+                            member_payment_add_popup = new Member_Payment_add('.popup_member_payment_add', member_add_initial_data, 'member_payment_add_popup');}
+                        );
+                        // 상세 결제 내역 띄우기
+                    }},
                     detail:{text:"결제 내역 상세 보기", callback:()=>{
                         layer_popup.close_layer_popup();
-                        // 상세 결제 내역 띄우기
+                        let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_PAYMENT_HISTORY, 100, popup_style, null, ()=>{
+                            member_payment_history = new Member_payment_history('.popup_member_payment_history', null, member_shop_id);
+                        });
                     }},
                     delete:{text:"상품 구매 내역 삭제", callback:()=>{
                         layer_popup.close_layer_popup();
-
                         let message = {
-                            title:`정말 선택하신 상품 구매 내역을 취소하시겠습니까?`,
+                            title:`정말 선택하신 상품 구매 내역을 삭제하시겠습니까?`,
                             comment:`${CImg.warning(["#fe4e65"], {"vertical-align":"middle", "margin-bottom":"4px"})}
                                     <br>
                                     <div style="text-align:center;margin-top:5px; color:var(--font-highlight);">
@@ -161,7 +172,7 @@ class Member_shop_history{
                     option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
                 });
             };
-            let row = CComponent.member_shop_history_row (numbering, member_shop_id, start_date, shop_name, shop_price, payment_status, memo, onclick);
+            let row = CComponent.member_shop_history_row (numbering, member_shop_id, start_date, shop_name, shop_price, payment_price, refund_price, payment_status, memo, onclick);
             html_to_join.push(row);
         }
         if(html_to_join.length == 0){

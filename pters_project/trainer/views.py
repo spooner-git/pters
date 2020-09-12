@@ -6987,10 +6987,10 @@ class GetMemberShopHistoryViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                 check_date = today - datetime.timedelta(days=int(day))
                 member_shop_data = MemberShopTb.objects.select_related(
                     'shop_tb').filter(class_tb_id=class_id, member_id=member_id,
-                                      start_date__gte=check_date, use=USE).order_by('start_date')
+                                      start_date__gte=check_date, use=USE).order_by('-start_date')
             except ValueError:
                 member_shop_data = MemberShopTb.objects.select_related(
-                    'shop_tb').filter(class_tb_id=class_id, member_id=member_id, use=USE).order_by('start_date')
+                    'shop_tb').filter(class_tb_id=class_id, member_id=member_id, use=USE).order_by('-start_date')
 
             paginator = Paginator(member_shop_data, SCHEDULE_PAGINATION_COUNTER)
             try:
@@ -7116,6 +7116,17 @@ def add_member_payment_history_info_logic(request):
     if member_ticket_id is not None:
         try:
             member_ticket_info = MemberTicketTb.objects.get(member_ticket_id=member_ticket_id)
+            if member_ticket_info.state_cd == STATE_CD_REFUND:
+                error = '이미 환불된 구매 내역입니다.'
+            else:
+                if payment_price > 0:
+                    member_ticket_info.payment_price += payment_price
+                    member_ticket_info.save()
+                if refund_price > 0:
+                    member_ticket_info.refund_price = refund_price
+                    member_ticket_info.refund_date = pay_date
+                    member_ticket_info.state_cd = STATE_CD_REFUND
+                    member_ticket_info.save()
             log_message = member_ticket_info.member.name + '님 ' + member_ticket_info.ticket_tb.name + ' 수강권'
         except ObjectDoesNotExist:
             error = '수강권 정보를 불러오지 못했습니다.'
@@ -7123,6 +7134,20 @@ def add_member_payment_history_info_logic(request):
     if member_shop_id is not None:
         try:
             member_shop_info = MemberShopTb.objects.get(member_shop_id=member_shop_id)
+            if member_shop_info.state_cd == STATE_CD_REFUND:
+                error = '이미 환불된 구매 내역입니다.'
+            else:
+                if payment_price > 0:
+                    member_shop_info.payment_price += payment_price
+                    if member_shop_info.payment_price > member_shop_info.payment_price:
+                        member_shop_info.state_cd = STATE_CD_FINISH
+                        member_shop_info.end_date = pay_date
+                    member_shop_info.save()
+                if refund_price > 0:
+                    member_shop_info.refund_price = refund_price
+                    member_shop_info.state_cd = STATE_CD_REFUND
+                    member_shop_info.end_date = pay_date
+                    member_shop_info.save()
             log_message = member_shop_info.member.name + '님 ' + member_shop_info.member_shop_tb.shop_tb.name + '상품'
         except ObjectDoesNotExist:
             error = '상품 구매 정보를 불러오지 못했습니다.'
@@ -7151,6 +7176,52 @@ def add_member_payment_history_info_logic(request):
         log_data.save()
 
     return render(request, 'ajax/trainer_error_ajax.html')
+
+
+class GetMemberPaymentHistoryViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        class_id = self.request.session.get('class_id', '')
+        member_shop_id = request.GET.get('member_shop_id', None)
+        member_ticket_id = request.GET.get('member_ticket_id', None)
+        member_payment_list = []
+        member_payment_data = []
+        ordered_member_payment_dict = collections.OrderedDict()
+        error = None
+        print(str(member_shop_id))
+        print(str(member_ticket_id))
+
+        if member_shop_id == '':
+            member_shop_id = None
+        if member_ticket_id == '':
+            member_ticket_id = None
+
+        if member_ticket_id is not None:
+            member_payment_data = MemberPaymentHistoryTb.objects.select_related(
+                'member_ticket_tb').filter(class_tb_id=class_id, member_ticket_tb_id=member_ticket_id,
+                                           use=USE).order_by('pay_date')
+
+        if member_shop_id is not None:
+            member_payment_data = MemberPaymentHistoryTb.objects.select_related(
+                'member_shop_tb').filter(class_tb_id=class_id, member_shop_tb_id=member_shop_id,
+                                         use=USE).order_by('pay_date')
+
+        if error is None:
+            member_payment_history_idx = len(member_payment_data)
+            for member_payment_info in member_payment_data:
+                member_payment_dict = {'member_payment_history_idx': member_payment_history_idx,
+                                       'member_payment_history_id': member_payment_info.member_payment_history_id,
+                                       'payment_price': member_payment_info.payment_price,
+                                       'refund_price': member_payment_info.refund_price,
+                                       'pay_date': str(member_payment_info.pay_date),
+                                       'pay_method': member_payment_info.pay_method,
+                                       'note': str(member_payment_info.note)
+                                       }
+                member_payment_list.append(member_payment_dict)
+                member_payment_history_idx -= 1
+            ordered_member_payment_dict['member_payment_list'] = member_payment_list
+            print(str(ordered_member_payment_dict))
+        return JsonResponse(ordered_member_payment_dict, json_dumps_params={'ensure_ascii': True})
 
 
 # 상품 결제 내역 삭제

@@ -228,6 +228,8 @@ const POPUP_ADDRESS_SHOP_SELECT = 'popup_shop_select';
 const POPUP_ADDRESS_SHOP_SEARCH = 'popup_shop_search';
 const POPUP_MEMBER_SHOP_HISTORY = 'popup_member_shop_history';
 const POPUP_ADDRESS_MEMBER_SHOP_ADD = 'popup_member_shop_add';
+const POPUP_MEMBER_PAYMENT_HISTORY = 'popup_member_payment_history';
+const POPUP_ADDRESS_MEMBER_PAYMENT_ADD = 'popup_member_payment_add';
 
 const POPUP_ADDRESS_LECTURE_VIEW = 'popup_lecture_view';
 const POPUP_ADDRESS_LECTURE_SIMPLE_VIEW = 'popup_lecture_simple_view';

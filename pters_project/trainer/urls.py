@@ -377,6 +377,9 @@ urlpatterns = [
     # 상품 결제 내역 추가
     url(r'^add_member_shop_payment_history_info/$', views.add_member_payment_history_info_logic,
         name='add_member_shop_payment_history_info'),
+    # 상품 결제 내역 조회
+    url(r'^get_member_payment_history/$', views.GetMemberPaymentHistoryViewAjax.as_view(),
+        name='get_member_payment_history'),
     # 상품 결제 내역 삭제
     url(r'^delete_member_shop_payment_history_info/$', views.delete_member_payment_history_info_logic,
         name='delete_member_shop_payment_history_info'),
