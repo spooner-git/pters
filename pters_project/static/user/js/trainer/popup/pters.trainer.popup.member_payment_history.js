@@ -55,6 +55,7 @@ class Member_payment_history{
             let pay_date =  DateRobot.to_text(data.pay_date, '', '', SHORT);
             let memo = data.note;
             let pay_price = data.payment_price;
+            let pay_method = TICKET_PAY_METHOD[data.pay_method];
             let payment_status = '납부';
             if(data.refund_price > 0){
                 pay_price = data.refund_price;
@@ -81,6 +82,9 @@ class Member_payment_history{
                                     current_page.init();
                                 }catch(e){}
                                 try{
+                                    member_view_popup.init();
+                                }catch(e){}
+                                try{
                                     this.init();
                                 }catch(e){}
                                 layer_popup.close_layer_popup();
@@ -97,7 +101,7 @@ class Member_payment_history{
                     option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
                 });
             };
-            let row = CComponent.member_payment_history_row (numbering, member_payment_id, payment_status, pay_date, pay_price , memo, onclick);
+            let row = CComponent.member_payment_history_row (numbering, member_payment_id, payment_status, pay_date, pay_price, pay_method, memo, onclick);
             html_to_join.push(row);
         }
         if(html_to_join.length == 0){

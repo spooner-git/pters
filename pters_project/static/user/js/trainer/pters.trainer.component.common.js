@@ -1010,13 +1010,13 @@ class CComponent{
         return html;
     }
 
-    static member_payment_history_row (numbering, member_payment_id, state_cd_name, pay_date, pay_price, memo, callback){
+    static member_payment_history_row (numbering, member_payment_id, state_cd_name, pay_date, pay_price, pay_method, memo, callback){
 
         let html = `<li class="member_payment_history_row" id="member_payment_history_row_${member_payment_id}">`;
         let raw_1 = `<div class="obj_table_raw">
                         <div class="cell_member_payment_num" style="width:15px;">${numbering}</div>
                         <div class="cell_member_payment_info">거래일:${pay_date}</div>
-                        <div class="cell_member_payment_price">금액:${pay_price}</div>
+                        <div class="cell_member_payment_price">금액:${UnitRobot.numberWithCommas(pay_price)}원 / ${pay_method}</div>
                     </div>`;
         let raw_3 = `<div class="obj_table_raw table_memo_info">
                         <div class="cell_member_payment_info">${memo}</div>

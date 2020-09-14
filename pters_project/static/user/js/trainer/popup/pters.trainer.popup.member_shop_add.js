@@ -6,6 +6,13 @@ class Member_Shop_add{
         this.data_from_external = data_from_external;
         this.form_id = 'id_member_shop_add_form';
 
+        let d = new Date();
+        this.dates = {
+            current_year: d.getFullYear(),
+            current_month: d.getMonth()+1,
+            current_date: d.getDate()
+        };
+
         this.data = {
                 member_id: null,
                 pay_method:{value:["NONE"], text:["선택 안함"]},
@@ -353,11 +360,14 @@ class Member_Shop_add{
         }
 
         let state_cd = 'NP';
-        if(this.data.shop_price == this.data.shop_payment_price){
+        if(this.data.shop_price <= this.data.shop_payment_price){
             state_cd = 'PE';
         }
-        else if(this.data.shop_price < this.data.shop_payment_price){
+        else if(this.data.shop_price > this.data.shop_payment_price){
             state_cd = 'IP';
+        }
+        if(this.data.shop_payment_price == 0){
+            state_cd = 'NP';
         }
         let data_for_new = {
             "member_id": this.data.member_id,

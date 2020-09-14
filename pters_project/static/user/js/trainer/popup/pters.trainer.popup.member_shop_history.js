@@ -32,7 +32,7 @@ class Member_shop_history{
 
     render(data){
         let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();member_shop_history.clear();">${CImg.arrow_left()}</span>`;
-        let top_center = `<span class="icon_center"><span id="">상품 이력</span></span>`;
+        let top_center = `<span class="icon_center"><span id="">상품 구매 이력</span></span>`;
         let top_right = `<span class="icon_right"></span>`;
         let content;
         content = `<section style="margin-top:8px;" id="list_wrap">
@@ -124,7 +124,12 @@ class Member_shop_history{
                 let user_option = {
                     add_payment:{text:"결제 내역 추가", callback:()=>{
                         layer_popup.close_layer_popup();
-                        let member_add_initial_data = {member_id: this.member_id, member_shop_id: member_shop_id};
+                        if(refund_price > 0){
+                            show_error_message({title:'이미 환불 처리된 상품입니다.'});
+                            return false;
+                        }
+                        let member_add_initial_data = {member_id: data.member_id, member_shop_id: member_shop_id,
+                                                       shop_price:shop_price, current_price:payment_price};
                         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_PAYMENT_ADD, 100, POPUP_FROM_BOTTOM, null, ()=>{
                             member_payment_add_popup = new Member_Payment_add('.popup_member_payment_add', member_add_initial_data, 'member_payment_add_popup');}
                         );

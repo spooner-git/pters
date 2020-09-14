@@ -975,8 +975,11 @@ class Member_view{
             html_to_join.push(
                 this.dom_row_member_shop_item(
                     data.member_shop_id,
+                    data.member_id,
                     data.shop_name,
                     data.shop_price,
+                    data.payment_price,
+                    data.refund_price,
                     data.note,
                     data.start_date,
                     data.state_cd
@@ -1140,7 +1143,7 @@ class Member_view{
         return html;
     }
 
-    dom_row_member_shop_item(member_shop_id, shop_name, price, note, start_date, state_cd){
+    dom_row_member_shop_item(member_shop_id, member_id,  shop_name, price, payment_price, refund_price, note, start_date, state_cd){
         let member_status_tag = `<span style="color:var(--font-highlight);">(${MEMBER_PAYMENT_STATUS[state_cd]})</span>`;
 
         let html = `<div id="member_shop_item_${member_shop_id}" style="display:flex;width:100%;height:75px;padding:5px 0px;box-sizing:border-box;cursor:pointer; margin-top:15px;">
@@ -1149,16 +1152,44 @@ class Member_view{
                         </div>-->
                         <div style="flex:1 1 0">
                             <div style="font-size:14px;font-weight:500;letter-spacing:-0.7px;color:var(--font-base);">${shop_name} </div>
-                            <div style="font-size:14px;font-weight:500;letter-spacing:-0.5px;color:var(--font-base); margin-top:3px;">가격 : ${UnitRobot.numberWithCommas(price)}원 / 구매일 : ${start_date} ${member_status_tag}</div>
+                            <div style="font-size:14px;font-weight:500;letter-spacing:-0.5px;color:var(--font-base); margin-top:3px;">가격 : ${UnitRobot.numberWithCommas(price)}원 / 납부 금액 : ${UnitRobot.numberWithCommas(payment_price)}원 / 구매일 : ${start_date} ${member_status_tag}</div>
                             <div style="font-size:12px;font-weight:500;letter-spacing:-0.5px;color:var(--font-sub-normal); margin-top:3px;">${note}</div>
                         </div>
                         <div style="flex-basis:30px;">
                             ${CImg.more("", {"vertical-align":"top"})}
                         </div>
                     </div>`;
+        if(refund_price > 0){
+            html = `<div id="member_shop_item_${member_shop_id}" style="display:flex;width:100%;height:75px;padding:5px 0px;box-sizing:border-box;cursor:pointer; margin-top:15px;">
+                        <!--<div style="flex-basis:16px;">
+                            <div style="float:left;width:4px;height:100%;background-color:"></div>
+                        </div>-->
+                        <div style="flex:1 1 0">
+                            <div style="font-size:14px;font-weight:500;letter-spacing:-0.7px;color:var(--font-base);">${shop_name} </div>
+                            <div style="font-size:14px;font-weight:500;letter-spacing:-0.5px;color:var(--font-base); margin-top:3px;">가격 : ${UnitRobot.numberWithCommas(price)}원 / 환불 금액 : ${UnitRobot.numberWithCommas(refund_price)}원 / 구매일 : ${start_date} ${member_status_tag}</div>
+                            <div style="font-size:12px;font-weight:500;letter-spacing:-0.5px;color:var(--font-sub-normal); margin-top:3px;">${note}</div>
+                        </div>
+                        <div style="flex-basis:30px;">
+                            ${CImg.more("", {"vertical-align":"top"})}
+                        </div>
+                    </div>`;
+        }
         $(document).off('click', `#member_shop_item_${member_shop_id}`).on('click', `#member_shop_item_${member_shop_id}`, function(e){
             let user_option = {
 
+                add_payment:{text:"결제 내역 추가", callback:()=>{
+                    layer_popup.close_layer_popup();
+                    if(refund_price > 0){
+                        show_error_message({title:'이미 환불 처리된 상품입니다.'});
+                        return false;
+                    }
+                    let member_add_initial_data = {member_id: member_id, member_shop_id: member_shop_id,
+                                                   shop_price:price, current_price:payment_price};
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_PAYMENT_ADD, 100, POPUP_FROM_BOTTOM, null, ()=>{
+                        member_payment_add_popup = new Member_Payment_add('.popup_member_payment_add', member_add_initial_data, 'member_payment_add_popup');}
+                    );
+                    // 상세 결제 내역 띄우기
+                }},
                 detail:{text:"결제 내역 상세 보기", callback:()=>{
                     layer_popup.close_layer_popup();
                     let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
