@@ -822,6 +822,11 @@ def func_delete_member_ticket_info(user_id, class_id, member_ticket_id):
                     member_ticket_info.state_cd = STATE_CD_FINISH
                     member_ticket_info.save()
 
+                member_payment_history = MemberPaymentHistoryTb.objects.filter(class_tb_id=class_id,
+                                                                               member_ticket_tb_id=member_ticket_id,
+                                                                               use=USE)
+                member_payment_history.update(use=UN_USE)
+
         except ValueError:
             error = '등록 값에 문제가 있습니다.'
         except IntegrityError:

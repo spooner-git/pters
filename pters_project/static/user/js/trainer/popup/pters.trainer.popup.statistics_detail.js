@@ -164,10 +164,10 @@ class Statistics_detail{
             html_to_join.unshift(
                 `<div style="padding:10px 20px;font-size:14px;box-shadow:var(--box-shadow-article);margin-bottom:10px;">
                     <div style="display:flex">
-                        <div style=${title_style}>신규</div><div style="${number_style}">${_new_num} 건</div><div style="${price_style}">${UnitRobot.numberWithCommas(_new)} 원</div>
+                        <div style=${title_style}>수강권</div><div style="${number_style}">${_new_num} 건</div><div style="${price_style}">${UnitRobot.numberWithCommas(_new)} 원</div>
                     </div>
                     <div style="display:flex">
-                        <div style=${title_style}>재등록</div><div style="${number_style}">${_re_num} 건</div><div style="${price_style}">${UnitRobot.numberWithCommas(_re)} 원</div>
+                        <div style=${title_style}>상품</div><div style="${number_style}">${_re_num} 건</div><div style="${price_style}">${UnitRobot.numberWithCommas(_re)} 원</div>
                     </div>
                     <div style="display:flex">
                         <div style=${title_style}>환불</div><div style="${number_style}">${_refund_num} 건</div><div style="${price_style};color:#fe4e65">-${UnitRobot.numberWithCommas(_refund)} 원</div>

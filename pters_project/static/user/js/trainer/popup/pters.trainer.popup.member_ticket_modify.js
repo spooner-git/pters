@@ -651,7 +651,7 @@ class Member_ticket_modify{
             status = '환불';
             title = UnitRobot.numberWithCommas(this.data.refund_price);
         }
-        let icon_r_text = `(<span style="color:orange">${status}</span>)`;
+        let icon_r_text = `<span style="color:orange">${status}</span>`;
         let style = null;
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             let user_option = {

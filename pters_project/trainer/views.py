@@ -4247,6 +4247,10 @@ def delete_ticket_info_logic(request):
                             member_ticket_info.state_cd = STATE_CD_FINISH
                             member_ticket_info.save()
 
+                        member_payment_history = MemberPaymentHistoryTb.objects.filter(
+                            class_tb_id=class_id, member_ticket_tb_id=member_ticket_info.member_ticket_id, use=USE)
+                        member_payment_history.update(use=UN_USE)
+
         except ValueError:
             error = '오류가 발생했습니다. [1]'
         except IntegrityError:
