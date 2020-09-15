@@ -2753,6 +2753,7 @@ def add_member_ticket_info_logic(request):
     if error is None:
         error = func_add_member_ticket_info(request.user.id, class_id, ticket_id, counts, price, payment_price,
                                             pay_method, start_date, end_date, contents, member_id)
+
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
@@ -3243,7 +3244,21 @@ def update_member_ticket_status_info_logic(request):
         member_ticket_info.refund_price = refund_price
         member_ticket_info.refund_date = refund_date
         member_ticket_info.save()
-
+        if state_cd == STATE_CD_REFUND:
+            member_payment_history_info = MemberPaymentHistoryTb(class_tb_id=class_id,
+                                                                 member_id=member_ticket_info.member_id,
+                                                                 member_ticket_tb_id=member_ticket_id,
+                                                                 member_shop_tb_id=None,
+                                                                 payment_price=0,
+                                                                 refund_price=refund_price,
+                                                                 pay_method='NONE',
+                                                                 pay_date=refund_date, note='', use=USE)
+            member_payment_history_info.save()
+        if state_cd == STATE_CD_IN_PROGRESS:
+            member_payment_history_data = MemberPaymentHistoryTb.objects.filter(refund_price__gt=0,
+                                                                                member_ticket_tb_id=member_ticket_id,
+                                                                                use=USE)
+            member_payment_history_data.delete()
         if state_cd != STATE_CD_IN_PROGRESS:
             func_update_lecture_member_fix_status_cd(class_id, member_ticket_info.member_id)
 
@@ -7014,7 +7029,7 @@ class GetMemberShopHistoryViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                 if shop_tb is not None :
                     shop_id = member_shop_info.shop_tb.shop_id
                     shop_name = member_shop_info.shop_tb.name
-                    shop_price = member_shop_info.shop_tb.price
+                    shop_price = member_shop_info.price
                     shop_note = member_shop_info.shop_tb.note
                 member_shop_dict = {'member_shop_idx': str(member_shop_idx),
                                     'member_shop_id': member_shop_info.member_shop_id,
@@ -7242,49 +7257,84 @@ def delete_member_payment_history_info_logic(request):
     except ObjectDoesNotExist:
         error = '오류가 발생했습니다. [0]'
 
-    # if error is None:
-    #     try:
-    #         with transaction.atomic():
-    member_name = member_payment_history_info.member.name
-    shop_name = member_payment_history_info.member_shop_tb.shop_tb.name
-    sum_payment_price = MemberPaymentHistoryTb.objects.filter(member_shop_tb_id=member_payment_history_info.member_shop_tb_id,
-                                                              use=USE).aggregate(sum_payment_price=Sum('payment_price'))
-    sum_refund_price = MemberPaymentHistoryTb.objects.filter(member_shop_tb_id=member_payment_history_info.member_shop_tb_id,
-                                                             use=USE).aggregate(sum_refund_price=Sum('refund_price'))
+    if error is None:
+        try:
+            with transaction.atomic():
+                member_name = member_payment_history_info.member.name
+                member_shop_tb = member_payment_history_info.member_shop_tb
+                member_ticket_tb = member_payment_history_info.member_ticket_tb
+                if member_shop_tb is not None and member_shop_tb != '':
+                    shop_name = member_shop_tb.shop_tb.name
+                    sum_payment_price = MemberPaymentHistoryTb.objects.filter(member_shop_tb_id=member_shop_tb.member_shop_id,
+                                                                              use=USE).aggregate(sum_payment_price=Sum('payment_price'))
+                    sum_refund_price = MemberPaymentHistoryTb.objects.filter(member_shop_tb_id=member_shop_tb.member_shop_id,
+                                                                             use=USE).aggregate(sum_refund_price=Sum('refund_price'))
 
-    member_payment_history_info.member_shop_tb.payment_price = sum_payment_price['sum_payment_price'] \
-                                                               - member_payment_history_info.payment_price
-    member_payment_history_info.member_shop_tb.refund_price = sum_refund_price['sum_refund_price'] \
-                                                              - member_payment_history_info.refund_price
-    if member_payment_history_info.member_shop_tb.payment_price >= member_payment_history_info.member_shop_tb.price:
-        member_payment_history_info.member_shop_tb.state_cd = STATE_CD_FINISH
-    if member_payment_history_info.member_shop_tb.payment_price == 0:
-        member_payment_history_info.member_shop_tb.state_cd = STATE_CD_NOT_PROGRESS
-    else:
-        member_payment_history_info.member_shop_tb.state_cd = STATE_CD_IN_PROGRESS
+                    member_shop_tb.payment_price = sum_payment_price['sum_payment_price']\
+                                                   - member_payment_history_info.payment_price
+                    member_shop_tb.refund_price = sum_refund_price['sum_refund_price']\
+                                                  - member_payment_history_info.refund_price
+                    if member_shop_tb.payment_price >= member_shop_tb.price:
+                        member_shop_tb.state_cd = STATE_CD_FINISH
+                    if member_shop_tb.payment_price == 0:
+                        member_shop_tb.state_cd = STATE_CD_NOT_PROGRESS
+                    else:
+                        member_shop_tb.state_cd = STATE_CD_IN_PROGRESS
 
-    if member_payment_history_info.member_shop_tb.refund_price > 0:
-        member_payment_history_info.member_shop_tb.state_cd = STATE_CD_REFUND
+                    if member_shop_tb.refund_price > 0:
+                        member_shop_tb.state_cd = STATE_CD_REFUND
 
-    member_payment_history_info.member_shop_tb.save()
-    member_payment_history_info.delete()
+                    member_shop_tb.save()
+                if member_ticket_tb is not None and member_ticket_tb != '':
+                    shop_name = member_ticket_tb.ticket_tb.name
+                    sum_payment_price = MemberPaymentHistoryTb.objects.filter(member_ticket_tb_id=member_ticket_tb.member_ticket_id,
+                                                                              use=USE).aggregate(sum_payment_price=Sum('payment_price'))
+                    sum_refund_price = MemberPaymentHistoryTb.objects.filter(member_ticket_tb_id=member_ticket_tb.member_ticket_id,
+                                                                             use=USE).aggregate(sum_refund_price=Sum('refund_price'))
 
-        # except ValueError:
-        #     error = '오류가 발생했습니다. [1]'
-        # except IntegrityError:
-        #     error = '오류가 발생했습니다. [2]'
-        # except TypeError:
-        #     error = '오류가 발생했습니다. [3]'
-        # except ValidationError:
-        #     error = '오류가 발생했습니다. [4]'
+                    member_ticket_tb.payment_price = sum_payment_price['sum_payment_price']\
+                                                     - member_payment_history_info.payment_price
+                    member_ticket_tb.refund_price = sum_refund_price['sum_refund_price']\
+                                                    - member_payment_history_info.refund_price
+
+                    if member_payment_history_info.refund_price > 0:
+                        schedule_data_count = ScheduleTb.objects.filter(member_ticket_tb_id=member_ticket_tb.member_ticket_id).count()
+                        schedule_data_finish_count = ScheduleTb.objects.filter(Q(state_cd=STATE_CD_FINISH)
+                                                                               | Q(state_cd=STATE_CD_ABSENCE),
+                                                                               member_ticket_tb_id=member_ticket_tb.member_ticket_id).count()
+
+                        member_ticket_avail_count = 0
+                        member_ticket_rem_count = 0
+                        if member_ticket_tb.member_ticket_reg_count >= schedule_data_count:
+                            member_ticket_avail_count = member_ticket_tb.member_ticket_reg_count - schedule_data_count
+
+                        if member_ticket_tb.member_ticket_reg_count >= schedule_data_finish_count:
+                            member_ticket_rem_count = member_ticket_tb.member_ticket_reg_count - schedule_data_finish_count
+                        member_ticket_tb.member_ticket_avail_count = member_ticket_avail_count
+                        member_ticket_tb.member_ticket_rem_count = member_ticket_rem_count
+                        member_ticket_tb.refund_price = 0
+                        member_ticket_tb.refund_date = None
+                        member_ticket_tb.state_cd = STATE_CD_IN_PROGRESS
+                    member_ticket_tb.save()
+
+                member_payment_history_info.delete()
+
+        except ValueError:
+            error = '오류가 발생했습니다. [1]'
+        except IntegrityError:
+            error = '오류가 발생했습니다. [2]'
+        except TypeError:
+            error = '오류가 발생했습니다. [3]'
+        except ValidationError:
+            error = '오류가 발생했습니다. [4]'
 
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
     else:
         log_data = LogTb(log_type='LC01', auth_member_id=request.user.id, from_member_name=request.user.first_name,
-                         class_tb_id=class_id, log_info=member_name + '님의 '
-                                                        + shop_name+' 상품 결제 내역', log_how='삭제', use=USE)
+                         class_tb_id=class_id, log_info=member_name + '님의 ' + shop_name+' 결제 내역',
+                         log_how='삭제', use=USE)
         log_data.save()
 
     return render(request, 'ajax/trainer_error_ajax.html')

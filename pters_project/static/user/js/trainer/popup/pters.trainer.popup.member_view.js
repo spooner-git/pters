@@ -832,7 +832,7 @@ class Member_view{
             }else if(ticket_payment_price == '0' || ticket_payment_price == null || ticket_payment_price == 0){
                 payment_status_info = '(미납)';
             }else if(ticket_price > ticket_payment_price){
-                payment_status_info = '(분납)';
+                payment_status_info = '(납부중)';
             }
 
             let html_remain_info =
@@ -1152,8 +1152,8 @@ class Member_view{
                         </div>-->
                         <div style="flex:1 1 0">
                             <div style="font-size:14px;font-weight:500;letter-spacing:-0.7px;color:var(--font-base);">${shop_name} </div>
-                            <div style="font-size:14px;font-weight:500;letter-spacing:-0.5px;color:var(--font-base); margin-top:3px;">가격 : ${UnitRobot.numberWithCommas(price)}원 / 납부 금액 : ${UnitRobot.numberWithCommas(payment_price)}원 / 구매일 : ${start_date} ${member_status_tag}</div>
-                            <div style="font-size:12px;font-weight:500;letter-spacing:-0.5px;color:var(--font-sub-normal); margin-top:3px;">${note}</div>
+                            <div style="font-size:12px;font-weight:500;letter-spacing:-0.5px;color:var(--font-base); margin-top:3px;">가격 : ${UnitRobot.numberWithCommas(price)}원 / 납부 금액 : ${UnitRobot.numberWithCommas(payment_price)}원 <br/> 구매일 : ${start_date} ${member_status_tag}</div>
+                            <div style="font-size:10px;font-weight:500;letter-spacing:-0.5px;color:var(--font-sub-normal); margin-top:3px;">${note}</div>
                         </div>
                         <div style="flex-basis:30px;">
                             ${CImg.more("", {"vertical-align":"top"})}
@@ -1166,8 +1166,8 @@ class Member_view{
                         </div>-->
                         <div style="flex:1 1 0">
                             <div style="font-size:14px;font-weight:500;letter-spacing:-0.7px;color:var(--font-base);">${shop_name} </div>
-                            <div style="font-size:14px;font-weight:500;letter-spacing:-0.5px;color:var(--font-base); margin-top:3px;">가격 : ${UnitRobot.numberWithCommas(price)}원 / 환불 금액 : ${UnitRobot.numberWithCommas(refund_price)}원 / 구매일 : ${start_date} ${member_status_tag}</div>
-                            <div style="font-size:12px;font-weight:500;letter-spacing:-0.5px;color:var(--font-sub-normal); margin-top:3px;">${note}</div>
+                            <div style="font-size:12px;font-weight:500;letter-spacing:-0.5px;color:var(--font-base); margin-top:3px;">가격 : ${UnitRobot.numberWithCommas(price)}원 / 환불 금액 : ${UnitRobot.numberWithCommas(refund_price)}원 <br/> 구매일 : ${start_date} ${member_status_tag}</div>
+                            <div style="font-size:10px;font-weight:500;letter-spacing:-0.5px;color:var(--font-sub-normal); margin-top:3px;">${note}</div>
                         </div>
                         <div style="flex-basis:30px;">
                             ${CImg.more("", {"vertical-align":"top"})}
@@ -1187,6 +1187,19 @@ class Member_view{
                                                    shop_price:price, current_price:payment_price};
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_PAYMENT_ADD, 100, POPUP_FROM_BOTTOM, null, ()=>{
                         member_payment_add_popup = new Member_Payment_add('.popup_member_payment_add', member_add_initial_data, 'member_payment_add_popup');}
+                    );
+                    // 상세 결제 내역 띄우기
+                }},
+                add_refund:{text:"환불 내역 추가", callback:()=>{
+                    layer_popup.close_layer_popup();
+                    if(refund_price > 0){
+                        show_error_message({title:'이미 환불 처리된 상품입니다.'});
+                        return false;
+                    }
+                    let member_refund_initial_data = {member_id: member_id, member_shop_id: member_shop_id,
+                                                      shop_price:price, current_price:payment_price};
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_PAYMENT_REFUND, 100, POPUP_FROM_BOTTOM, null, ()=>{
+                        member_payment_refund_popup = new Member_Payment_refund('.popup_member_payment_refund', member_refund_initial_data, 'member_payment_refund_popup');}
                     );
                     // 상세 결제 내역 띄우기
                 }},

@@ -60,6 +60,7 @@ class Member_payment_history{
             if(data.refund_price > 0){
                 pay_price = data.refund_price;
                 payment_status = '환불';
+                pay_method = '';
             }
             let onclick = ()=>{
                 let user_option = {
@@ -83,6 +84,9 @@ class Member_payment_history{
                                 }catch(e){}
                                 try{
                                     member_view_popup.init();
+                                }catch(e){}
+                                try{
+                                    layer_popup.close_layer_popup();
                                 }catch(e){}
                                 try{
                                     this.init();

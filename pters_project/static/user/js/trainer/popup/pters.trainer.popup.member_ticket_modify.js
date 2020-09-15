@@ -122,6 +122,10 @@ class Member_ticket_modify{
                     `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>`;
         let payment_price  = CComponent.dom_tag('납부 금액') + this.dom_row_payment_price_input() +
                     `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>`;
+        if(this.data.status == "RF"){
+            payment_price  = CComponent.dom_tag('환불 금액') + this.dom_row_payment_price_input() +
+                    `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>`;
+        }
         let pay_method = CComponent.dom_tag("지불 방법") + this.dom_row_ticket_pay_method_select() +
                     `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>`;
         let note = CComponent.dom_tag('특이사항') + this.dom_row_note_input();
@@ -629,62 +633,68 @@ class Member_ticket_modify{
     }
 
     dom_row_payment_price_input(){
-        let unit = '';
         let id = 'member_ticket_payment_price_modify';
         let title = this.data.payment_price == null || this.data.payment_price == 'None' ? '' : UnitRobot.numberWithCommas(this.data.payment_price);
-        let placeholder = '납부 금액';
         let icon = NONE;
-        let icon_r_visible = HIDE;
-        let icon_r_text;
-        let style = null;
-        let disabled = false;
-        let pattern = "[0-9]{0,15}";
-        let pattern_message = "";
-        let required = "";
-        let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
-            let user_input_data = input_data;
-            this.data.payment_price = user_input_data;
-            this.render_content();
-        }, pattern, pattern_message, required);
-
-        $(document).off('click', `#c_i_n_r_${id}`).on('click', `#c_i_n_r_${id}`, (e)=>{
-            if(this.simple_input.payment_price == OFF){
-                this.simple_input.payment_price = ON;
-                this.render_content();
-            }
-        });
-
-        if(this.simple_input.payment_price == ON){
-            html = html + this.dom_row_payment_price_simple_input_machine();
+        let icon_r_visible = SHOW;
+        let status = '미납';
+        if(this.data.payment_price >= this.data.price){
+            status = '완납';
         }
+        else{
+            status = '납부중';
+        }
+        if(this.data.payment_price == 0){
+            status = '미납';
+        }
+        if(this.data.status == "RF"){
+            status = '환불';
+            title = UnitRobot.numberWithCommas(this.data.refund_price);
+        }
+        let icon_r_text = `(<span style="color:orange">${status}</span>)`;
+        let style = null;
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            let user_option = {
+                add_payment:{text:"결제 내역 추가", callback:()=>{
+                    layer_popup.close_layer_popup();
+                    if(this.data.status == "RF"){
+                        show_error_message({title:'이미 환불 처리된 상품입니다.'});
+                        return false;
+                    }
+                    let member_add_initial_data = {member_id: this.data.member_id, member_ticket_id: this.data.member_ticket_id,
+                                                   shop_price:this.data.price, current_price:this.data.payment_price};
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_PAYMENT_ADD, 100, POPUP_FROM_BOTTOM, null, ()=>{
+                        member_payment_add_popup = new Member_Payment_add('.popup_member_payment_add', member_add_initial_data, 'member_payment_add_popup');}
+                    );
+                    // 상세 결제 내역 띄우기
+                }},
+                detail:{text:"결제 내역 상세 보기", callback:()=>{
+                    layer_popup.close_layer_popup();
+                    let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_PAYMENT_HISTORY, 100, popup_style, null, ()=>{
+                        member_payment_history = new Member_payment_history('.popup_member_payment_history', this.data.member_ticket_id, null);
+                    });
+                }}
+            };
 
-        return html;
-    }
+            if(this.data.status == "IP"){
+                delete user_option.resume;
+                delete user_option.delete;
+            }else{
+                // delete user_option.holding;
+                delete user_option.refund;
+                delete user_option.finish;
+            }
 
-    dom_row_payment_price_simple_input_machine(){
-        // let button_style = {"flex":"1 1 0", "padding":"10px 8px", "color":"var(--font-sub-normal)"};
-        let button_style = {"flex":"1 1 0", "padding":"6px 0px", "color":"var(--font-sub-normal)", "background-color":"var(--bg-light)", "border-radius":"3px"};
-
-        let button_perfect = CComponent.button ("payment_button_perfect", "완납", button_style, ()=>{ this.data.payment_price = Number(this.data.price);this.render_content(); });
-        let button_100 = CComponent.button ("payment_button_100", "+ 100만", button_style, ()=>{ this.data.payment_price = Number(this.data.payment_price) + 1000000;this.render_content(); });
-        let button_50 = CComponent.button ("payment_button_50", "+ 50만", button_style, ()=>{ this.data.payment_price = Number(this.data.payment_price) + 500000;this.render_content(); });
-        let button_10 = CComponent.button ("payment_button_10", "+ 10만", button_style, ()=>{ this.data.payment_price = Number(this.data.payment_price) + 100000;this.render_content(); });
-        let button_1 = CComponent.button ("payment_button_1", "+ 1만", button_style, ()=>{ this.data.payment_price = Number(this.data.payment_price) + 10000;this.render_content(); });
-        let button_delete = CComponent.button ("payment_button_delete", "지우기", button_style, ()=>{ this.data.payment_price = null;this.render_content(); });
-
-        // let wrapper_style = "display:flex;padding:0px 0 0px 20px;font-size:12px;";
-        // let divider_style = "flex-basis:1px;height:20px;margin-top:10px;background-color:var(--bg-light);display:none;";
-        let wrapper_style = "display:flex;padding:0px 0 0px 40px;font-size:12px;";
-        let divider_style = "flex-basis:8px;height:20px;margin-top:10px;background-color:var(--bg-invisible);";
-        let html = `<div style="${wrapper_style}">
-                        ${button_perfect} <div style="${divider_style}"></div>
-                        ${button_100} <div style="${divider_style}"></div>
-                        ${button_50} <div style="${divider_style}"></div>
-                        ${button_10} <div style="${divider_style}"></div>
-                        ${button_1} <div style="${divider_style}"></div>
-                        ${button_delete}
-                    </div>`;
-
+            let options_padding_top_bottom = 16;
+            // let button_height = 8 + 8 + 52;
+            let button_height = 52;
+            let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
+            let root_content_height = $root_content.height();
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
+                option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+            });
+        });
         return html;
     }
 

@@ -17,7 +17,7 @@ from configs.const import USE, UN_USE, AUTO_FINISH_OFF, FROM_TRAINEE_LESSON_ALAR
 
 from login.models import MemberTb
 from schedule.models import ScheduleTb, RepeatScheduleTb
-from trainee.models import MemberTicketTb, MemberClosedDateHistoryTb
+from trainee.models import MemberTicketTb, MemberClosedDateHistoryTb, MemberPaymentHistoryTb
 from .models import ClassMemberTicketTb, LectureTb, SettingTb, TicketLectureTb, TicketTb, LectureMemberTb, MemberClassTb
 
 
@@ -745,6 +745,16 @@ def func_add_member_ticket_info(user_id, class_id, ticket_id, counts, price, pay
                                                 state_cd=STATE_CD_IN_PROGRESS, start_date=start_date, end_date=end_date,
                                                 note=contents, member_auth_cd=auth_cd, use=USE)
             member_ticket_info.save()
+
+            member_payment_history_info = MemberPaymentHistoryTb(class_tb_id=class_id,
+                                                                 member_id=member_id,
+                                                                 member_ticket_tb_id=member_ticket_info.member_ticket_id,
+                                                                 member_shop_tb_id=None,
+                                                                 payment_price=payment_price,
+                                                                 refund_price=0,
+                                                                 pay_method='NONE',
+                                                                 pay_date=start_date, note='', use=USE)
+            member_payment_history_info.save()
 
             class_member_ticket_info = ClassMemberTicketTb(class_tb_id=class_id,
                                                            member_ticket_tb_id=member_ticket_info.member_ticket_id,

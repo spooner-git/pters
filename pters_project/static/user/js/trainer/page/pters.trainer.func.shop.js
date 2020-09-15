@@ -592,7 +592,7 @@ class Shop_func{
 
     static create_member_shop_payment_history(data, callback, error_callback){
         $.ajax({
-            url:'/trainer/add_member_shop_payment_history_info/',
+            url:'/trainer/add_member_payment_history_info/',
             type:'POST',
             data: data,
             dataType : 'html',

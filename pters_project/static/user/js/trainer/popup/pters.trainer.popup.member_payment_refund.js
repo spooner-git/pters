@@ -1,10 +1,10 @@
-class Member_Payment_add{
+class Member_Payment_refund{
     constructor(install_target, data_from_external, instance){
-        this.target = {install: install_target, toolbox:'section_member_payment_add_toolbox', content:'section_member_payment_add_content'};
+        this.target = {install: install_target, toolbox:'section_member_payment_refund_toolbox', content:'section_member_payment_refund_content'};
         this.data_sending_now = false;
         this.instance = instance;
         this.data_from_external = data_from_external;
-        this.form_id = 'id_member_payment_add_form';
+        this.form_id = 'id_member_payment_refund_form';
 
         let d = new Date();
         this.dates = {
@@ -42,7 +42,7 @@ class Member_Payment_add{
             payment_price : OFF,
             refund_price : OFF
         };
-        console.log(this.data_from_external.member_id);
+
         this.data.member_id = this.data_from_external.member_id;
         this.data.member_ticket_id = this.data_from_external.member_ticket_id;
         this.data.member_shop_id = this.data_from_external.member_shop_id;
@@ -114,16 +114,16 @@ class Member_Payment_add{
     }
 
     render(){
-        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();member_payment_add_popup.clear();">${CImg.x()}</span>`;
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();member_payment_refund_popup.clear();">${CImg.x()}</span>`;
         let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
-        let top_right = `<span class="icon_right" onclick="member_payment_add_popup.send_data()"><span style="color:var(--font-highlight);font-weight: 500;">등록</span></span>`;
+        let top_right = `<span class="icon_right" onclick="member_payment_refund_popup.send_data()"><span style="color:var(--font-highlight);font-weight: 500;">등록</span></span>`;
         let content =   `<form id="${this.form_id}"><section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
                         <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section></form>`;
         
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
 
         document.querySelector(this.target.install).innerHTML = html;
-        document.querySelector('.popup_member_payment_add .wrapper_top').style.border = 0;
+        document.querySelector('.popup_member_payment_refund .wrapper_top').style.border = 0;
         PopupBase.top_menu_effect(this.target.install);
     }
 
@@ -143,14 +143,13 @@ class Member_Payment_add{
         let pay_date = this.dom_row_pay_date_select();
         let current_price = this.dom_row_member_current_price_input();
         let memo = this.dom_row_member_payment_memo_input();
-        let payment_price = this.dom_row_member_payment_price_input();
-        let pay_method = this.dom_row_shop_pay_method_select();
+        let refund_price = this.dom_row_member_refund_price_input();
 
         let shop_sub_assembly = CComponent.dom_tag('가격 / 기 납부 금액') + current_price + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
-                              + CComponent.dom_tag('날짜') + pay_date + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
-                              + CComponent.dom_tag('납부 금액') + payment_price + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
-                              + CComponent.dom_tag('지불 방법') + pay_method + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
-                              + CComponent.dom_tag('특이사항') + memo;
+                                + CComponent.dom_tag('날짜') + pay_date + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
+                                + CComponent.dom_tag('환불 금액') + refund_price + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
+                                + CComponent.dom_tag('특이사항') + memo;
+
         let html =
             '<div class="obj_input_box_full">'
                 + shop_sub_assembly +
@@ -160,8 +159,8 @@ class Member_Payment_add{
     }
 
     dom_row_toolbox(){
-        let title = '결제 내역 추가';
-        let html = `<div class="member_payment_add_upper_box" style="display:table;">
+        let title = '환불 내역 추가';
+        let html = `<div class="member_payment_refund_upper_box" style="display:table;">
                         <div style="display:table-cell;width:200px;">
                             <span style="font-size:20px;font-weight:bold; letter-spacing: -0.9px; color: var(--font-main);">
                                 ${title}
@@ -188,11 +187,11 @@ class Member_Payment_add{
         return html;
     }
 
-    dom_row_member_payment_price_input(){
+    dom_row_member_refund_price_input(){
         let unit = '원';
-        let id = 'input_payment_price';
-        let title = UnitRobot.numberWithCommas(this.data.payment_price);
-        let placeholder = '납부 금액';
+        let id = 'input_refund_price';
+        let title = UnitRobot.numberWithCommas(this.data.refund_price);
+        let placeholder = '환불 금액';
         let icon = NONE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
@@ -205,22 +204,22 @@ class Member_Payment_add{
             if(input_data != '' && input_data != null){
                 input_data = Number(input_data);
             }
-            this.payment_price = input_data;
+            this.refund_price = input_data;
         }, pattern, pattern_message, required);
 
-        let price_simple_input = this.dom_row_payment_price_simple_input_machine();
+        let price_simple_input = this.dom_row_refund_price_simple_input_machine();
         return html + price_simple_input;
     }
 
-    dom_row_payment_price_simple_input_machine(){
+    dom_row_refund_price_simple_input_machine(){
         // let button_style = {"flex":"1 1 0", "padding":"10px 8px", "color":"var(--font-sub-normal)"};
         let button_style = {"flex":"1 1 0", "padding":"6px 0px", "color":"var(--font-sub-normal)", "background-color":"var(--bg-light)", "border-radius":"3px"};
-        let button_perfect = CComponent.button ("payment_button_perfect", "완납", button_style, ()=>{ this.data.payment_price = Number(this.data.shop_price) - Number(this.data.current_price);this.render_content(); });
-        let button_100 = CComponent.button ("payment_button_100", "+ 100만", button_style, ()=>{ this.data.payment_price = Number(this.data.payment_price) + 1000000;this.render_content(); });
-        let button_50 = CComponent.button ("payment_button_50", "+ 50만", button_style, ()=>{ this.data.payment_price = Number(this.data.payment_price) + 500000;this.render_content(); });
-        let button_10 = CComponent.button ("payment_button_10", "+ 10만", button_style, ()=>{ this.data.payment_price = Number(this.data.payment_price) + 100000;this.render_content(); });
-        let button_1 = CComponent.button ("payment_button_1", "+ 1만", button_style, ()=>{ this.data.payment_price = Number(this.data.payment_price) + 10000;this.render_content(); });
-        let button_delete = CComponent.button ("payment_button_delete", "지우기", button_style, ()=>{ this.data.payment_price = 0;this.render_content(); });
+        let button_perfect = CComponent.button ("refund_button_perfect", "전액 환불", button_style, ()=>{ this.data.refund_price = Number(this.data.current_price);this.render_content(); });
+        let button_100 = CComponent.button ("refund_button_100", "+ 100만", button_style, ()=>{ this.data.refund_price = Number(this.data.refund_price) + 1000000;this.render_content(); });
+        let button_50 = CComponent.button ("refund_button_50", "+ 50만", button_style, ()=>{ this.data.refund_price = Number(this.data.refund_price) + 500000;this.render_content(); });
+        let button_10 = CComponent.button ("refund_button_10", "+ 10만", button_style, ()=>{ this.data.refund_price = Number(this.data.refund_price) + 100000;this.render_content(); });
+        let button_1 = CComponent.button ("refund_button_1", "+ 1만", button_style, ()=>{ this.data.refund_price = Number(this.data.refund_price) + 10000;this.render_content(); });
+        let button_delete = CComponent.button ("refund_button_delete", "지우기", button_style, ()=>{ this.data.refund_price = 0;this.render_content(); });
 
         // let wrapper_style = "display:flex;padding:0px 0 0px 20px;font-size:12px;";
         // let divider_style = "flex-basis:1px;height:20px;margin-top:10px;background-color:var(--bg-light);display:none;";
@@ -333,7 +332,7 @@ class Member_Payment_add{
         if(inspect.barrier == BLOCKED){
             this.data_sending_now = false;
             let message = {
-                title:'결제 내역 등록을 완료하지 못했습니다.',
+                title:'환불 내역 등록을 완료하지 못했습니다.',
                 comment:`[${inspect.limit_type}] 이용자께서는 상품을 최대 ${inspect.limit_num}개 까지 등록하실 수 있습니다.
                         <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까?</p>`
             };
@@ -386,7 +385,7 @@ class Member_Payment_add{
         Shop_func.create_member_shop_payment_history(data_for_new, ()=>{
             this.data_sending_now = false;
             layer_popup.close_layer_popup();
-            member_payment_add_popup.clear();
+            member_payment_refund_popup.clear();
             try{
                 current_page.init();
             }catch(e){}
@@ -394,7 +393,7 @@ class Member_Payment_add{
                 member_view_popup.init();
             }catch(e){}
             try{
-                layer_popup.close_layer_popup();
+                member_ticket_history.init();
             }catch(e){}
         }, ()=>{this.data_sending_now = false;});
 
