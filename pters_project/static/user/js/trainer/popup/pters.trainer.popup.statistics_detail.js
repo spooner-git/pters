@@ -144,9 +144,9 @@ class Statistics_detail{
                     <div class="sales_detail_row">
                         <div class="sales_detail_date">${date}</div>
                         <div class="sales_detail_content">
-                            ${type}
+                            ${type} - ${ticket}
                             <div>${member}</div>
-                            <div>${ticket}</div>
+                            <div></div>
                         </div>
                         <div class="sales_detail_price" ${type_cd == 2 || type_cd == 3 ? "style='color:var(--font-highlight)'" : ""}>
                             ${type_cd == 2 || type_cd == 3 ? "-" : ""} ${price} 원

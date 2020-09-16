@@ -156,6 +156,7 @@ def get_sales_info(class_id, month_first_day, sort_val):
             if payment_info.member_ticket_tb is not None and payment_info.member_ticket_tb != '':
                 trade_info = '수강권 구매'
                 trade_type = STATS_NEW_REG
+                package_name = payment_info.member_ticket_tb.ticket_tb.name
                 if payment_info.refund_price > 0:
                     trade_info = '수강권 환불'
                     trade_type = STATS_ALL_REFUND
