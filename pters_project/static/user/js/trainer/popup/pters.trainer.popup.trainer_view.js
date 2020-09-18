@@ -791,6 +791,10 @@ class Trainer_view{
                 )
             );
         }
+        console.log(length);
+        if(length == 0){
+            html_to_join.push(`<div style="font-size:12px;color:var(--font-sub-dark);padding:5px;">담당 수업이 없습니다.</div>`);
+        }
         return html_to_join.join("");
     }
 
