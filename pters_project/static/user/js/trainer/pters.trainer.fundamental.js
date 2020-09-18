@@ -743,7 +743,7 @@ class PassInspector{
     member_create(){
         let limit_number = Number(this.data.auth_member_create.active);
         // let limit_type = "회원 읽기 권한이 없습니다.";
-        let limit_type = `${this.data.auth_member_create.limit_type}의 회원 작성 권한이 없습니다.`;
+        let limit_type = `${this.data.auth_member_create.limit_type}의 회원 추가 권한이 없습니다.`;
 
         if(limit_number == 0){
             return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
@@ -941,7 +941,7 @@ class PassInspector{
     lecture_create(){
         let limit_number = Number(this.data.auth_group_create.active);
         // let limit_type = "수업 작성 권한이 없습니다.";
-        let limit_type = `${this.data.auth_group_create.limit_type}의 수업 작성 권한이 없습니다.`;
+        let limit_type = `${this.data.auth_group_create.limit_type}의 수업 등록 권한이 없습니다.`;
 
         if(limit_number == 0){
             return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};

@@ -892,6 +892,14 @@ class Member_add{
         }
 
         let recontract = this.data_from_external == null ? OFF : ON;
+
+        let auth_inspect = pass_inspector.member_create();
+        if(auth_inspect.barrier == BLOCKED){
+            let message = `${auth_inspect.limit_type}`;
+            this.init();
+            show_error_message({title:message});
+            return false;
+        }
         let inspect = pass_inspector.member(recontract, this.data.member_id);
         if(inspect.barrier == BLOCKED){
             this.data_sending_now = false;

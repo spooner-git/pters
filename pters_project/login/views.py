@@ -138,7 +138,8 @@ def login_trainer(request):
                         if group_name == 'trainee':
                             next_page = '/login/registration_temp/'
                         else:
-                            next_page = '/login/authenticated_member/'
+                            next_page = '/login/registration_temp/'
+                            # next_page = '/login/authenticated_member/'
                 else:
                     error = '이미 탈퇴한 회원입니다.'
         else:
