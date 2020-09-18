@@ -17,7 +17,7 @@
                 <div class="wrapper_popup_title_text obj_font_size_18_weight_900 obj_font_color_white">
                     {% if schedule_info.permission_state_cd == 'WP' %}대기 예약 신청{% else %}예약 확정{% endif %} 완료</div>
                 <div class="wrapper_popup_title_date obj_font_size_13_weight_500 obj_font_color_white">
-                    {{ schedule_info.class_tb.member.name }} 강사님의 수업에 {% if schedule_info.permission_state_cd == 'WP' %}대기 예약 신청{% else %}예약 확정{% endif %} 되었습니다.</div>
+                    {{ schedule_info.trainer.name }} 강사님의 수업에 {% if schedule_info.permission_state_cd == 'WP' %}대기 예약 신청{% else %}예약 확정{% endif %} 되었습니다.</div>
             </div>
         </div>
         
@@ -42,14 +42,24 @@
                     </div>
                     <div class="wrapper_plan_info">
                         <div class="obj_table_raw obj_font_size_10_weight_500 obj_font_color_light_grey">
-                            <div class="obj_table_cell_x3">일자</div>
-                            <div class="obj_table_cell_x3">요일</div>
-                            <div class="obj_table_cell_x3">진행시간</div>
+{#                            <div class="obj_table_cell_x3">일자</div>#}
+{#                            <div class="obj_table_cell_x3">요일</div>#}
+{#                            <div class="obj_table_cell_x3">진행시간</div>#}
+                            <div class="obj_table_cell_x2" style="width:50%">일시</div>
+                            <div class="obj_table_cell_x2" style="width:50%">담당</div>
                         </div>
                         <div class="obj_table_raw obj_font_size_14_weight_500">
-                            <div class="obj_table_cell_x3">{{ schedule_info.start_dt | date:'Y.m.d' }}</div>
-                            <div class="obj_table_cell_x3">{{ schedule_info.start_dt | date:"l" }}</div>
-                            <div class="obj_table_cell_x3">{{ schedule_info.start_dt | time:'H:i' }} ~ {{ schedule_info.end_dt | time:'H:i' }}</div>
+                            <div class="obj_table_cell_x2" style="width:50%">{{ schedule_info.start_dt | date:'Y.m.d' }} ({{ schedule_info.start_dt | date:"l" | cut:"요일" }})
+                                <br/>{{ schedule_info.start_dt | time:'H:i' }} ~ {{ schedule_info.end_dt | time:'H:i' }}</div>
+                            <div class="obj_table_cell_x2" style="width:50%">
+                                {% if schedule_info.trainer %}
+                                    <img src="{{ schedule_info.trainer.profile_url }}" class="obj_box_photo"> {{ schedule_info.trainer.name }}
+                                {% elif schedule_info.lecture_tb.main_trainer %}
+                                    <img src="{{ schedule_info.lecture_tb.main_trainer.profile_url }}" class="obj_box_photo"> {{ schedule_info.lecture_tb.main_trainer.name }}
+                                {% endif %}</div>
+{#                            <div class="obj_table_cell_x3">{{ schedule_info.start_dt | date:'Y.m.d' }}</div>#}
+{#                            <div class="obj_table_cell_x3">{{ schedule_info.start_dt | date:"l" }}</div>#}
+{#                            <div class="obj_table_cell_x3">{{ schedule_info.start_dt | time:'H:i' }} ~ {{ schedule_info.end_dt | time:'H:i' }}</div>#}
                         </div>
                     </div>
                     {% if next_schedule_info.note %}
