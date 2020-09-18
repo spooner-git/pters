@@ -126,31 +126,34 @@
                                 {% for lecture_schedule_info in lecture_schedule_data %}
                                     {% if lecture_info.lecture_id == lecture_schedule_info.lecture_tb.lecture_id %}
                                         <div class="func_radio_element obj_font_size_14_weight_500" data-lecture-schedule-id="{{ lecture_schedule_info.schedule_id }}" data-date="{{ select_date | date:'Y-m-d' }}" data-start-time="{{ lecture_schedule_info.start_dt | date:'H:i'}}" data-end-time="{{ lecture_schedule_info.end_dt | date:'H:i'}}">
-                                            <div class="func_radio_element_title">{{ lecture_schedule_info.start_dt | date:'H:i'}} ~ {{ lecture_schedule_info.end_dt | date:'H:i'}}
-                                                {% if request.session.setting_member_lecture_max_num_view_available == 1 %}
-                                                    ({{ lecture_schedule_info.lecture_current_member_num }}/{{ lecture_schedule_info.lecture_tb.member_num }}명)
-                                                    {% if lecture_schedule_info.lecture_current_member_num == lecture_schedule_info.lecture_tb.member_num %}
-                                                        {% if lecture_schedule_info.lecture_wait_member_num < request.session.setting_member_public_class_wait_member_num and request.session.setting_member_public_class_wait_member_num > 0%}
-                                                            [대기 예약]
+                                            <div>
+                                                <div class="func_radio_element_title">{{ lecture_schedule_info.start_dt | date:'H:i'}} ~ {{ lecture_schedule_info.end_dt | date:'H:i'}}
+                                                    {% if request.session.setting_member_lecture_max_num_view_available == 1 %}
+                                                        ({{ lecture_schedule_info.lecture_current_member_num }}/{{ lecture_schedule_info.lecture_tb.member_num }}명)
+                                                        {% if lecture_schedule_info.lecture_current_member_num == lecture_schedule_info.lecture_tb.member_num %}
+                                                            {% if lecture_schedule_info.lecture_wait_member_num < request.session.setting_member_public_class_wait_member_num and request.session.setting_member_public_class_wait_member_num > 0%}
+                                                                [대기 예약]
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    {% else %}
+                                                        {% if lecture_schedule_info.lecture_current_member_num == lecture_schedule_info.lecture_tb.member_num %}
+                                                            {% if lecture_schedule_info.lecture_wait_member_num < request.session.setting_member_public_class_wait_member_num and request.session.setting_member_public_class_wait_member_num > 0%}
+                                                                [대기 예약]
+                                                            {% endif %}
                                                         {% endif %}
                                                     {% endif %}
+                                                </div>
+
+                                                {% if lecture_schedule_info.trainer %}
+                                                    <div class="obj_font_size_12_weight_500" style="padding-left:10px; margin-bottom:10px;">담당 : <img src="{{ lecture_schedule_info.trainer.profile_url }}" class="obj_box_photo" alt="사진"> {{ lecture_schedule_info.trainer.name }}</div>
+                                                {% elif lecture_schedule_info.lecture_tb.main_trainer %}
+                                                    <div class="obj_font_size_12_weight_500" style="padding-left:10px; margin-bottom:10px;">담당 : <img src="{{ lecture_schedule_info.lecture_tb.main_trainer.profile_url }}" class="obj_box_photo" alt="사진"> {{ lecture_schedule_info.lecture_tb.main_trainer.name }}</div>
                                                 {% else %}
-                                                    {% if lecture_schedule_info.lecture_current_member_num == lecture_schedule_info.lecture_tb.member_num %}
-                                                        {% if lecture_schedule_info.lecture_wait_member_num < request.session.setting_member_public_class_wait_member_num and request.session.setting_member_public_class_wait_member_num > 0%}
-                                                            [대기 예약]
-                                                        {% endif %}
-                                                    {% endif %}
+                                                    <div class="obj_font_size_12_weight_500" style="padding-left:10px; margin-bottom:10px;">담당 : <img src="{{ lecture_schedule_info.lecture_tb.class_tb.member.profile_url }}" class="obj_box_photo" alt="사진"> {{ lecture_schedule_info.lecture_tb.class_tb.member.name }}</div>
                                                 {% endif %}
                                             </div>
                                             <div class="func_radio_element_button"><div class="func_radio_element_button_outer"><div class="func_radio_element_button_inner"></div></div></div>
                                         </div>
-                                        {% if lecture_schedule_info.trainer %}
-                                            <div class="obj_font_size_12_weight_500" style="padding-left:10px; margin-bottom:10px;">담당 : <img src="{{ lecture_schedule_info.trainer.profile_url }}" class="obj_box_photo" alt="사진"> {{ lecture_schedule_info.trainer.name }}</div>
-                                        {% elif lecture_schedule_info.lecture_tb.main_trainer %}
-                                            <div class="obj_font_size_12_weight_500" style="padding-left:10px; margin-bottom:10px;">담당 : <img src="{{ lecture_schedule_info.lecture_tb.main_trainer.profile_url }}" class="obj_box_photo" alt="사진"> {{ lecture_schedule_info.lecture_tb.main_trainer.name }}</div>
-                                        {% else %}
-                                            <div class="obj_font_size_12_weight_500" style="padding-left:10px; margin-bottom:10px;">담당 : <img src="{{ lecture_schedule_info.lecture_tb.class_tb.member.profile_url }}" class="obj_box_photo" alt="사진"> {{ lecture_schedule_info.lecture_tb.class_tb.member.name }}</div>
-                                        {% endif %}
                                     {% endif %}
                                 {% endfor %}
                             </div>

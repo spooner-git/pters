@@ -258,6 +258,7 @@
         display: table-cell;
         text-align: center;
         width: 40px;
+        vertical-align: middle;
     }
     .func_radio_element_button > div.func_radio_element_button_outer{
         position: relative;

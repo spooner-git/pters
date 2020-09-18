@@ -1625,6 +1625,16 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id, member_ticke
                     if str(setting_member_private_class_auto_permission) == str(USE):
                         permission_state_cd = PERMISSION_STATE_CD_APPROVE
                         log_how = '예약 확정'
+
+                if lecture_info.main_trainer is not None and lecture_info.main_trainer != '':
+                    trainer_id = lecture_info.main_trainer_id
+                else:
+                    trainer_id = lecture_info.class_tb.member_id
+
+                if lecture_schedule_info is not None and lecture_schedule_info != '':
+                    if lecture_schedule_info.trainer is not None and lecture_schedule_info.trainer != '':
+                        trainer_id = lecture_schedule_info.trainer_id
+
                 if lecture_schedule_info is not None and lecture_schedule_info != '':
                     lecture_schedule_num = ScheduleTb.objects.filter(lecture_schedule_id=lecture_schedule_id,
                                                                      permission_state_cd=PERMISSION_STATE_CD_APPROVE,
@@ -1636,7 +1646,7 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id, member_ticke
                                                     lecture_info, lecture_schedule_id,
                                                     start_date, end_date, note, private_note,
                                                     ON_SCHEDULE_TYPE, request.user.id, permission_state_cd,
-                                                    STATE_CD_NOT_PROGRESS, UN_USE, schedule_duplication, '')
+                                                    STATE_CD_NOT_PROGRESS, UN_USE, schedule_duplication, trainer_id)
                 error = schedule_result['error']
 
                 if error is not None:

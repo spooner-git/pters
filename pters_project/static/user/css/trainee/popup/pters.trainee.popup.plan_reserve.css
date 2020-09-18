@@ -168,13 +168,15 @@
 
 		.wrapper_reserve_form .func_radio_wrap{
 			border: 1px solid #e6e6e6;
+			border-top: 0;
 		}
 			.wrapper_reserve_form .func_radio_element{
 				height: 40px;
 				line-height: 40px;
 				border-radius: 0;
 				background-color: transparent;
-				margin-bottom: 10px;
+				/*margin-bottom: 10px;*/
+				border-top: 1px solid #e6e6e6;
 			}
 			.wrapper_reserve_form .func_radio_element_title{
 				padding-left: 10px;
