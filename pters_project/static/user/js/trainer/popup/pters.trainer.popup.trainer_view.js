@@ -67,6 +67,12 @@ class Trainer_view{
                     update:OFF,
                     delete:OFF
                 },
+                shop:{
+                    create:OFF,
+                    read:OFF,
+                    update:OFF,
+                    delete:OFF
+                },
                 notice:{
                     create:OFF,
                     read:OFF,
@@ -187,6 +193,11 @@ class Trainer_view{
                     this.data.auth.trainer.read = my_auth.auth_trainer_read != undefined ? my_auth.auth_trainer_read : OFF;
                     this.data.auth.trainer.update = my_auth.auth_trainer_update != undefined ? my_auth.auth_trainer_update : OFF;
                     this.data.auth.trainer.delete = my_auth.auth_trainer_delete != undefined ? my_auth.auth_trainer_delete : OFF;
+
+                    this.data.auth.shop.create = my_auth.auth_shop_create != undefined ? my_auth.auth_shop_create : OFF;
+                    this.data.auth.shop.read = my_auth.auth_shop_read != undefined ? my_auth.auth_shop_read : OFF;
+                    this.data.auth.shop.update = my_auth.auth_shop_update != undefined ? my_auth.auth_shop_update : OFF;
+                    this.data.auth.shop.delete = my_auth.auth_shop_delete != undefined ? my_auth.auth_shop_delete : OFF;
 
                     this.data.auth.notice.create = my_auth.auth_notice_create != undefined ? my_auth.auth_notice_create : OFF;
                     this.data.auth.notice.read = my_auth.auth_notice_read != undefined ? my_auth.auth_notice_read : OFF;
@@ -791,7 +802,6 @@ class Trainer_view{
                 )
             );
         }
-        console.log(length);
         if(length == 0){
             html_to_join.push(`<div style="font-size:12px;color:var(--font-sub-dark);padding:5px;">담당 수업이 없습니다.</div>`);
         }
@@ -825,11 +835,12 @@ class Trainer_view{
         let lecture = this.dom_sub_assembly_lecture();
         let ticket = this.dom_sub_assembly_ticket();
         let trainer = this.dom_sub_assembly_trainer();
+        let shop = this.dom_sub_assembly_shop();
         let notice = this.dom_sub_assembly_notice();
         let statistics = this.dom_sub_assembly_statistics();
         let settings = this.dom_sub_assembly_setting();
 
-        let html = schedule + member + lecture + ticket + trainer + notice + statistics + settings;
+        let html = schedule + member + lecture + ticket + trainer + shop + notice + statistics + settings;
 
         return html;
     }
@@ -896,15 +907,30 @@ class Trainer_view{
 
     dom_sub_assembly_trainer(){
         let trainer = this.dom_row_share_menu_title("강사", "trainer");
-        let trainer_auth_create = this.dom_row_share_menu_auth_toggle("강사", "등록", "ticket", "create");
-        let trainer_auth_read = this.dom_row_share_menu_auth_toggle("강사", "조회", "ticket", "read");
-        let trainer_auth_update = this.dom_row_share_menu_auth_toggle("강사", "수정", "ticket", "update");
-        let trainer_auth_delete = this.dom_row_share_menu_auth_toggle("강사", "삭제", "ticket", "delete");
+        let trainer_auth_create = this.dom_row_share_menu_auth_toggle("강사", "등록", "trainer", "create");
+        let trainer_auth_read = this.dom_row_share_menu_auth_toggle("강사", "조회", "trainer", "read");
+        let trainer_auth_update = this.dom_row_share_menu_auth_toggle("강사", "수정", "trainer", "update");
+        let trainer_auth_delete = this.dom_row_share_menu_auth_toggle("강사", "삭제", "trainer", "delete");
 
         let child_assemble = this.data.auth.trainer.read == ON ? trainer_auth_read + trainer_auth_create +  trainer_auth_update + trainer_auth_delete : "";
 
         let html = `<article class="obj_input_box_full">` +
                         trainer + child_assemble +
+                    `</article>`;
+        return html;
+    }
+
+    dom_sub_assembly_shop(){
+        let shop = this.dom_row_share_menu_title("상품", "shop");
+        let shop_auth_create = this.dom_row_share_menu_auth_toggle("상품", "등록", "shop", "create");
+        let shop_auth_read = this.dom_row_share_menu_auth_toggle("상품", "조회", "shop", "read");
+        let shop_auth_update = this.dom_row_share_menu_auth_toggle("상품", "수정", "shop", "update");
+        let shop_auth_delete = this.dom_row_share_menu_auth_toggle("상품", "삭제", "shop", "delete");
+
+        let child_assemble = this.data.auth.shop.read == ON ? shop_auth_read + shop_auth_create +  shop_auth_update + shop_auth_delete : "";
+
+        let html = `<article class="obj_input_box_full">` +
+                        shop + child_assemble +
                     `</article>`;
         return html;
     }

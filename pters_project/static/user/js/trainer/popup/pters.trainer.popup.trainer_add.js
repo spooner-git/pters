@@ -511,6 +511,11 @@ class Trainer_add{
                     "auth_trainer_update":this.data.trainer_auth.auth_trainer_update,
                     "auth_trainer_delete":this.data.trainer_auth.auth_trainer_delete,
 
+                    "auth_shop_create":this.data.trainer_auth.auth_shop_create,
+                    "auth_shop_read":this.data.trainer_auth.auth_shop_read,
+                    "auth_shop_update":this.data.trainer_auth.auth_shop_update,
+                    "auth_shop_delete":this.data.trainer_auth.auth_shop_delete,
+
                     "auth_notice_create":this.data.trainer_auth.auth_notice_create,
                     "auth_notice_read":this.data.trainer_auth.auth_notice_read,
                     "auth_notice_update":this.data.trainer_auth.auth_notice_update,
