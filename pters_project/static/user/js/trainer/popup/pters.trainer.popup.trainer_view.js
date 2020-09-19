@@ -1184,6 +1184,11 @@ class Trainer_view{
             "auth_trainer_update":this.data.auth.trainer.update,
             "auth_trainer_delete":this.data.auth.trainer.delete,
 
+            "auth_shop_create":this.data.auth.shop.create,
+            "auth_shop_read":this.data.auth.shop.read,
+            "auth_shop_update":this.data.auth.shop.update,
+            "auth_shop_delete":this.data.auth.shop.delete,
+
             "auth_notice_create":this.data.auth.notice.create,
             "auth_notice_read":this.data.auth.notice.read,
             "auth_notice_update":this.data.auth.notice.update,

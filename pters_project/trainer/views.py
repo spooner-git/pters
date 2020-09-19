@@ -8492,6 +8492,13 @@ def delete_trainer_info_logic(request):
             error = '강사 ID를 확인해 주세요.'
 
     if error is None:
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+            user_id = class_info.member.member_id
+        except ObjectDoesNotExist:
+            user_id = request.user.id
+
+    if error is None:
         member_class_data = MemberClassTb.objects.filter(class_tb_id=class_id, member_id=trainer_id,
                                                          own_cd=OWN_TYPE_EMPLOYEE)
 

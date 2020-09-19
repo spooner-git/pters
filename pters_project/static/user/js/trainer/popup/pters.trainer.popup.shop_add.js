@@ -146,13 +146,6 @@ class Shop_add{
         let pattern_message = "";
         let required = "";
         let html = CComponent.create_input_number_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
-            let auth_inspect = pass_inspector.shop_update();
-            if(auth_inspect.barrier == BLOCKED){
-                let message = `${auth_inspect.limit_type}`;
-                this.init();
-                show_error_message({title:message});
-                return false;
-            }
 
             if(input_data != '' && input_data != null){
                 input_data = Number(input_data);

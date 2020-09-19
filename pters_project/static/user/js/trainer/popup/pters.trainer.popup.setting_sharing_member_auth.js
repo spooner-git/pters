@@ -40,6 +40,12 @@ class Setting_sharing_member_auth{
                     update:OFF,
                     delete:OFF
                 },
+                shop:{
+                    create:OFF,
+                    read:OFF,
+                    update:OFF,
+                    delete:OFF
+                },
                 notice:{
                     create:OFF,
                     read:OFF,
@@ -97,6 +103,11 @@ class Setting_sharing_member_auth{
                 this.data.trainer.read = my_auth.auth_trainer_read != undefined ? my_auth.auth_trainer_read : OFF;
                 this.data.trainer.update = my_auth.auth_trainer_update != undefined ? my_auth.auth_trainer_update : OFF;
                 this.data.trainer.delete = my_auth.auth_trainer_delete != undefined ? my_auth.auth_trainer_delete : OFF;
+
+                this.data.shop.create = my_auth.auth_shop_create != undefined ? my_auth.auth_shop_create : OFF;
+                this.data.shop.read = my_auth.auth_shop_read != undefined ? my_auth.auth_shop_read : OFF;
+                this.data.shop.update = my_auth.auth_shop_update != undefined ? my_auth.auth_shop_update : OFF;
+                this.data.shop.delete = my_auth.auth_shop_delete != undefined ? my_auth.auth_shop_delete : OFF;
 
                 this.data.notice.create = my_auth.auth_notice_create != undefined ? my_auth.auth_notice_create : OFF;
                 this.data.notice.read = my_auth.auth_notice_read != undefined ? my_auth.auth_notice_read : OFF;
@@ -158,11 +169,12 @@ class Setting_sharing_member_auth{
         let lecture = this.dom_sub_assembly_lecture();
         let ticket = this.dom_sub_assembly_ticket();
         let trainer = this.dom_sub_assembly_trainer();
+        let shop = this.dom_sub_assembly_shop();
         let notice = this.dom_sub_assembly_notice();
         let statistics = this.dom_sub_assembly_statistics();
         let settings = this.dom_sub_assembly_setting();
 
-        let html = schedule + member + lecture + ticket + trainer + notice + statistics + settings + `<article class="obj_input_box_full">${shared_status_button}</article>`;
+        let html = schedule + member + lecture + ticket + trainer + shop + notice + statistics + settings + `<article class="obj_input_box_full">${shared_status_button}</article>`;
 
         return html;
     }
@@ -229,15 +241,30 @@ class Setting_sharing_member_auth{
 
     dom_sub_assembly_trainer(){
         let trainer = this.dom_row_share_menu_title("강사", "trainer");
-        let trainer_auth_create = this.dom_row_share_menu_auth_toggle("강사", "등록", "ticket", "create");
-        let trainer_auth_read = this.dom_row_share_menu_auth_toggle("강사", "조회", "ticket", "read");
-        let trainer_auth_update = this.dom_row_share_menu_auth_toggle("강사", "수정", "ticket", "update");
-        let trainer_auth_delete = this.dom_row_share_menu_auth_toggle("강사", "삭제", "ticket", "delete");
+        let trainer_auth_create = this.dom_row_share_menu_auth_toggle("강사", "등록", "trainer", "create");
+        let trainer_auth_read = this.dom_row_share_menu_auth_toggle("강사", "조회", "trainer", "read");
+        let trainer_auth_update = this.dom_row_share_menu_auth_toggle("강사", "수정", "trainer", "update");
+        let trainer_auth_delete = this.dom_row_share_menu_auth_toggle("강사", "삭제", "trainer", "delete");
 
         let child_assemble = this.data.trainer.read == ON ? trainer_auth_read + trainer_auth_create +  trainer_auth_update + trainer_auth_delete : "";
 
         let html = `<article class="obj_input_box_full">` +
                         trainer + child_assemble +
+                    `</article>`;
+        return html;
+    }
+
+    dom_sub_assembly_shop(){
+        let shop = this.dom_row_share_menu_title("상품", "shop");
+        let shop_auth_create = this.dom_row_share_menu_auth_toggle("상품", "등록", "shop", "create");
+        let shop_auth_read = this.dom_row_share_menu_auth_toggle("상품", "조회", "shop", "read");
+        let shop_auth_update = this.dom_row_share_menu_auth_toggle("상품", "수정", "shop", "update");
+        let shop_auth_delete = this.dom_row_share_menu_auth_toggle("상품", "삭제", "shop", "delete");
+
+        let child_assemble = this.data.shop.read == ON ? shop_auth_read + shop_auth_create +  shop_auth_update + shop_auth_delete : "";
+
+        let html = `<article class="obj_input_box_full">` +
+                        shop + child_assemble +
                     `</article>`;
         return html;
     }
@@ -464,6 +491,11 @@ class Setting_sharing_member_auth{
             "auth_trainer_read":this.data.trainer.read,
             "auth_trainer_update":this.data.trainer.update,
             "auth_trainer_delete":this.data.trainer.delete,
+
+            "auth_shop_create":this.data.shop.create,
+            "auth_shop_read":this.data.shop.read,
+            "auth_shop_update":this.data.shop.update,
+            "auth_shop_delete":this.data.shop.delete,
 
             "auth_notice_create":this.data.notice.create,
             "auth_notice_read":this.data.notice.read,
