@@ -86,7 +86,6 @@ class Calendar {
 
         this.request_trainer_data((jsondata)=>{
             this.trainer_data = jsondata.current_trainer_data;
-            console.log(this.trainer_data);
         });
         Setting_reserve_func.read((data)=>{
 
@@ -1652,14 +1651,14 @@ class Calendar {
     }
 
     static_component (){
-        let trainer_option = `<option data-select-trainer-id="${user_id}">${user_name}</option>`;
+        let trainer_option = ``;
         let all_checked = '';
         if(this.selected_trainer_id == 'all'){
             all_checked = 'selected';
         }
-        if(this.selected_trainer_id == user_id){
-            trainer_option = `<option data-select-trainer-id="${user_id}" selected>${user_name}</option>`;
-        }
+        // if(this.selected_trainer_id == user_id){
+        //     trainer_option = `<option data-select-trainer-id="${user_id}" selected>${user_name}</option>`;
+        // }
 
         for(let i=0; i<this.trainer_data.length; i++){
             let check_selected = '';

@@ -7991,13 +7991,31 @@ class GetTrainerIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         trainer_sort = request.GET.get('sort_val', SORT_TRAINER_NAME)
         sort_order_by = request.GET.get('sort_order_by', SORT_ASC)
         keyword = request.GET.get('keyword', '')
-        current_trainer_data = func_get_trainer_ing_list(class_id, request.user.id, keyword)
-        finish_trainer_num = len(func_get_class_trainer_end_list(class_id, keyword))
-        sort_info = int(trainer_sort)
+        current_trainer_data = []
+        error = None
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+            class_trainer_info = class_info.member
+        except ObjectDoesNotExist:
+            error = '지점 정보를 불러오지 못했습니다.'
 
-        if sort_info == SORT_TRAINER_NAME:
-            current_trainer_data = sorted(current_trainer_data, key=lambda elem: elem['trainer_name'],
-                                          reverse=int(sort_order_by))
+        if error is None:
+            current_trainer_data = func_get_trainer_ing_list(class_id, request.user.id, keyword)
+            finish_trainer_num = len(func_get_class_trainer_end_list(class_id, keyword))
+            sort_info = int(trainer_sort)
+            trainer_data = {'trainer_id': class_trainer_info.member_id,
+                            'trainer_user_id': class_trainer_info.user.username,
+                            'trainer_name': class_trainer_info.name,
+                            'trainer_phone': str(class_trainer_info.phone),
+                            'trainer_email': str(class_trainer_info.user.email),
+                            'trainer_sex': str(class_trainer_info.sex),
+                            'trainer_profile_url': class_trainer_info.profile_url,
+                            'trainer_birthday_dt': str(class_trainer_info.birthday_dt)}
+            if sort_info == SORT_TRAINER_NAME:
+                current_trainer_data = sorted(current_trainer_data, key=lambda elem: elem['trainer_name'],
+                                              reverse=int(sort_order_by))
+                current_trainer_data.insert(0, trainer_data)
+
         # context['total_member_num'] = len(member_data)
         # if page != 0:
         #     paginator = Paginator(member_data, 20)  # Show 20 contacts per page
@@ -8009,7 +8027,8 @@ class GetTrainerIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         # context['member_data'] = member_data
         # end_dt = timezone.now()
 
-        return JsonResponse({'current_trainer_data': current_trainer_data, 'finish_trainer_num': finish_trainer_num},
+        return JsonResponse({'current_trainer_data': current_trainer_data, 'finish_trainer_num': finish_trainer_num,
+                             'error': error},
                             json_dumps_params={'ensure_ascii': True})
 
 

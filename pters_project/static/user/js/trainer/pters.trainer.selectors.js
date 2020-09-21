@@ -4442,37 +4442,37 @@ class TrainerSelector{
         // if(length == 0){
         //     html_to_join.push(CComponent.no_data_row('목록이 비어있습니다.', {"border-bottom":0}));
         // }
-        let trainer_id = user_id;
-        let trainer_name = user_name;
-        let trainer_profile_url = user_profile_url;
-        let checked = this.appendix.trainer_id == trainer_id ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
-        let html = CComponent.select_trainer_row (
-            this.multiple_select, checked, this.unique_instance, trainer_id, trainer_name, trainer_profile_url, this.appendix.disable_zero_avail_count, (add_or_substract)=>{
-                if(add_or_substract == "add"){
-                    this.data.id.push(trainer_id);
-                    this.data.name.push(trainer_name);
-                }else if(add_or_substract == "substract"){
-                    this.data.name.splice(this.data.id.indexOf(trainer_id), 1);
-                    this.data.id.splice(this.data.id.indexOf(trainer_id), 1);
-                }else if(add_or_substract == "add_single"){
-                    this.data.id = [];
-                    this.data.name = [];
-                    this.data.id.push(trainer_id);
-                    this.data.name.push(trainer_name);
-                }
-                if(this.multiple_select == 1){
-                    this.upper_right_menu();
-                }
-            }
-        );
-        if(checked!=0){
-            select_trainer_num++;
-        }
-        if(checked > 0){
-            html_to_join.unshift(html);
-        }else{
-            html_to_join.push(html);
-        }
+        // let trainer_id = user_id;
+        // let trainer_name = user_name;
+        // let trainer_profile_url = user_profile_url;
+        // let checked = this.appendix.trainer_id == trainer_id ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
+        // let html = CComponent.select_trainer_row (
+        //     this.multiple_select, checked, this.unique_instance, trainer_id, trainer_name, trainer_profile_url, this.appendix.disable_zero_avail_count, (add_or_substract)=>{
+        //         if(add_or_substract == "add"){
+        //             this.data.id.push(trainer_id);
+        //             this.data.name.push(trainer_name);
+        //         }else if(add_or_substract == "substract"){
+        //             this.data.name.splice(this.data.id.indexOf(trainer_id), 1);
+        //             this.data.id.splice(this.data.id.indexOf(trainer_id), 1);
+        //         }else if(add_or_substract == "add_single"){
+        //             this.data.id = [];
+        //             this.data.name = [];
+        //             this.data.id.push(trainer_id);
+        //             this.data.name.push(trainer_name);
+        //         }
+        //         if(this.multiple_select == 1){
+        //             this.upper_right_menu();
+        //         }
+        //     }
+        // );
+        // if(checked!=0){
+        //     select_trainer_num++;
+        // }
+        // if(checked > 0){
+        //     html_to_join.unshift(html);
+        // }else{
+        //     html_to_join.push(html);
+        // }
 
         for(let i=0; i<length; i++){
             let data = this.received_data[i];
