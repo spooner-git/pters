@@ -853,7 +853,7 @@ class PassInspector{
     shop(){
         let async = false;
         let data1;
-        shop.request_shop_list("ing", (d1)=>{
+        shop.request_shop_list((d1)=>{
             data1 = d1;
         }, OFF, async);
         let current_shop_number = data1.current_shop_data.length;
