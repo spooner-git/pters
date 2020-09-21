@@ -28,14 +28,6 @@
 		box-sizing: border-box;
 		display: flex;
 	}
-	.cal_tools_wrap_parent{
-		display: table;
-		position: absolute;
-		right: 0;
-		top: 0;
-		width: 200px;
-		height: 100%;
-	}
 	@media(max-width:700px) and (min-width:651px){
 		.cal_tools_wrap_parent{
 			width: 150px;
@@ -96,7 +88,105 @@
 		vertical-align: middle;
 		margin-bottom: 4px;
 	}
-	
+	.cal_tools_wrap_parent{
+		display: table;
+		position: absolute;
+		right: 0;
+		top: 0;
+		width: 200px;
+		height: 100%;
+	}
+	@media(max-width:700px) and (min-width:651px){
+		.cal_tools_wrap_parent{
+			width: 150px;
+		}
+	}
+	.cal_tools_wrap_parent > div{
+		display: table-cell;
+		vertical-align: middle;
+		text-align: center;
+	}
+
+
+	.cal_search_upper_box{
+		position: relative;
+		height: 35px;
+		line-height: 20px;
+		/* background-color: var(--bg-main); */
+		background-color: var(--root-content-bg-color);
+		padding: 0 16px 0;
+		box-sizing: border-box;
+		display: flex;
+	}
+	.cal_search_tools_wrap{
+		height: 100%;
+		flex-basis: 100px;
+		display: flex;
+	}
+	.cal_search_tools_wrap > .add_plan{
+		flex: 1 1 0;
+		height: 28px;
+		text-align: center;
+		cursor: pointer;
+	}
+	.cal_search_tools_wrap > .add_plan > svg{
+		vertical-align: middle;
+		margin-bottom: 4px;
+	}
+	.cal_search_tools_wrap > .go_today{
+		flex: 1 1 0;
+		height: 28px;
+		text-align: center;
+		cursor: pointer;
+	}
+	.cal_search_tools_wrap > .go_today > svg{
+		vertical-align: middle;
+		margin-bottom: 4px;
+	}
+	.cal_search_pc_tools_wrap{
+		/* float: right;
+		margin-right:20px; */
+		flex-basis: 90px;
+	}
+	@media(max-width:650px){
+		.cal_search_pc_tools_wrap{
+			/* display: none; */
+			visibility: hidden;
+		}
+	}
+	.cal_search_upper_box > .cal_search_date_display{
+		flex: 1 1 0;
+		font-weight:bold;
+		color:var(--font-main);
+		cursor: pointer;
+	}
+
+	.cal_search_upper_box .swap_cal{
+		display: inline-block;
+		/* height: 24px;
+		width: 24px; */
+		vertical-align: middle;
+		margin-bottom: 4px;
+	}
+	.cal_search_tools_wrap_parent{
+		display: table;
+		position: absolute;
+		right: 0;
+		top: 0;
+		width: 100px;
+		height: 100%;
+	}
+	@media(max-width:700px) and (min-width:651px){
+		.cal_search_tools_wrap_parent{
+			width: 150px;
+		}
+	}
+	.cal_search_tools_wrap_parent > div{
+		display: table-cell;
+		vertical-align: middle;
+		text-align: center;
+	}
+
 	.display_year{
 		/* font-size: 18px; */
 	}
@@ -109,7 +199,7 @@
 	
 #calendar_wrap .pages{
 	position: absolute;
-	top: 60px;
+	top: 100px;
 	width: 100%;
 	transition: 0.2s ease-in-out;
 	background-color: var(--bg-main);
@@ -118,6 +208,7 @@
 	height: calc(100% - 116px); /*상단 툴바 60px, 하단 탭바:56px*/
 	overflow-y: auto;
 	overflow-x: hidden;
+	border-top: 1px solid var(--bg-light);
 }
 
 @media(min-width:600px){

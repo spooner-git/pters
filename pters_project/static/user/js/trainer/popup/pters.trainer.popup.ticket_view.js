@@ -30,6 +30,8 @@ class Ticket_view{
             lecture_color:[],
             lecture_state_cd:[],
             lecture_type_cd:[],
+            main_trainer_id:[],
+            main_trainer_name:[],
             ticket_effective_days:null,
             count:null,
             price:null,
@@ -75,6 +77,8 @@ class Ticket_view{
         this.data.lecture_state_cd = data.state_cd;
         this.data.lecture_type_cd = data.type_cd;
         this.data.lecture_color = data.color;
+        this.data.main_trainer_id = data.main_trainer_id;
+        this.data.main_trainer_name = data.main_trainer_name;
         this.render_content();
     }
 
@@ -132,6 +136,8 @@ class Ticket_view{
             this.data.lecture_max = [];
             this.data.lecture_color = data.ticket_info.ticket_lecture_ing_color_cd_list;
             this.data.lecture_state_cd = data.ticket_info.ticket_lecture_state_cd_list;
+            this.data.main_trainer_id = data.ticket_info.ticket_lecture_main_trainer_id_list;
+            this.data.main_trainer_name = data.ticket_info.ticket_lecture_main_trainer_name_list;
             this.data.ticket_effective_days = data.ticket_info.ticket_effective_days;
             this.data.count = data.ticket_info.ticket_reg_count;
             this.data.price = data.ticket_info.ticket_price;
@@ -359,7 +365,8 @@ class Ticket_view{
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SELECT, 100, popup_style, null, ()=>{
                 let appendix = {'title':'수업', lecture_id:this.data.lecture_id, lecture_name:this.data.lecture_name, lecture_state_cd:this.data.lecture_state_cd,
-                                max:this.data.lecture_max, type_cd:this.data.lecture_type_cd, color:this.data.lecture_color};
+                                max:this.data.lecture_max, type_cd:this.data.lecture_type_cd, color:this.data.lecture_color,
+                                main_trainer_id:this.data.main_trainer_id, main_trainer_name:this.data.main_trainer_name};
                 lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 999, appendix, (set_data)=>{
                     this.lecture = set_data; //타겟에 선택된 데이터를 set
                     // this.send_data(); wait_here_testing
@@ -395,7 +402,7 @@ class Ticket_view{
                         return false;
                     }
                     let root_content_height = $root_content.height();
-                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SIMPLE_VIEW, 100*(247/root_content_height), POPUP_FROM_BOTTOM, {'lecture_id':lecture_id}, ()=>{
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SIMPLE_VIEW, 100*(300/root_content_height), POPUP_FROM_BOTTOM, {'lecture_id':lecture_id}, ()=>{
                         lecture_simple_view_popup = new Lecture_simple_view('.popup_lecture_simple_view', lecture_id, 'lecture_simple_view_popup');
                         //수업 간단 정보 팝업 열기
                     });

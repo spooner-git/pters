@@ -11,14 +11,146 @@ from django.utils import timezone
 
 from configs import DEBUG
 from configs.const import USE, UN_USE, AUTO_FINISH_OFF, FROM_TRAINEE_LESSON_ALARM_ON, \
-    TO_TRAINEE_LESSON_ALARM_OFF, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, STATE_CD_IN_PROGRESS, STATE_CD_FINISH,\
+    TO_TRAINEE_LESSON_ALARM_OFF, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, STATE_CD_IN_PROGRESS, STATE_CD_FINISH, \
     AUTH_TYPE_DELETE, STATE_CD_NOT_PROGRESS, SHOW, CALENDAR_TIME_SELECTOR_BASIC, ING_MEMBER_TRUE, ING_MEMBER_FALSE, \
-    TO_SHARED_TRAINER_LESSON_ALARM_OFF, STATE_CD_HOLDING
+    TO_SHARED_TRAINER_LESSON_ALARM_OFF, STATE_CD_HOLDING, OWN_TYPE_EMPLOYEE
 
 from login.models import MemberTb
 from schedule.models import ScheduleTb, RepeatScheduleTb
-from trainee.models import MemberTicketTb, MemberClosedDateHistoryTb
+from trainee.models import MemberTicketTb, MemberClosedDateHistoryTb, MemberPaymentHistoryTb
 from .models import ClassMemberTicketTb, LectureTb, SettingTb, TicketLectureTb, TicketTb, LectureMemberTb, MemberClassTb
+
+
+# 전체 회원 id 정보 가져오기
+def func_get_class_trainer_id_list(class_id):
+    class_trainer_data = MemberClassTb.objects.select_related(
+        'member__user'
+    ).filter(class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, own_cd=OWN_TYPE_EMPLOYEE, member__use=USE,
+             use=USE).values('member_id').order_by('member_id').distinct()
+
+    return class_trainer_data
+
+
+# 진행중 회원 id 정보 가져오기
+def func_get_class_trainer_ing_list(class_id, keyword):
+    # all_member = []
+    class_trainer_data = MemberClassTb.objects.select_related(
+        'member__user'
+    ).filter(Q(member__name__contains=keyword) |
+             Q(member__user__username__contains=keyword),
+             Q(auth_cd=AUTH_TYPE_VIEW) | Q(auth_cd=AUTH_TYPE_WAIT),
+             class_tb_id=class_id, own_cd=OWN_TYPE_EMPLOYEE, member__use=USE,
+             use=USE).values('member_id').order_by('member_id').distinct()
+
+    return class_trainer_data
+
+
+# 종료된 회원 id 정보 가져오기
+def func_get_class_trainer_end_list(class_id, keyword):
+    class_trainer_data = MemberClassTb.objects.select_related(
+        'member__user'
+    ).filter(Q(member__name__contains=keyword) |
+             Q(member__user__username__contains=keyword),
+             class_tb_id=class_id, auth_cd=AUTH_TYPE_DELETE, own_cd=OWN_TYPE_EMPLOYEE, member__use=USE,
+             use=USE
+             ).values('member_id').order_by('member_id').distinct()
+
+    return class_trainer_data
+
+
+# 진행중 회원 리스트 가져오기
+def func_get_trainer_ing_list(class_id, user_id, keyword):
+
+    all_trainer_list = MemberClassTb.objects.select_related(
+        'member__user'
+    ).filter(Q(member__name__contains=keyword) |
+             Q(member__user__username__contains=keyword),
+             Q(auth_cd=AUTH_TYPE_VIEW) | Q(auth_cd=AUTH_TYPE_WAIT),
+             class_tb_id=class_id, own_cd=OWN_TYPE_EMPLOYEE,
+             member__use=USE, use=USE).order_by('member_id')
+
+    ordered_trainer_dict = collections.OrderedDict()
+
+    for all_trainer_info in all_trainer_list:
+        trainer_info = all_trainer_info.member
+        trainer_id = str(trainer_info.member_id)
+
+        if trainer_info.reg_info is None or str(trainer_info.reg_info) != str(user_id):
+            if all_trainer_info.auth_cd != AUTH_TYPE_VIEW:
+                trainer_info.sex = ''
+                trainer_info.birthday_dt = ''
+                if trainer_info.phone is None or trainer_info.phone == '':
+                    trainer_info.phone = ''
+                else:
+                    trainer_info.phone = '***-****-' + trainer_info.phone[7:]
+                trainer_info.user.email = ''
+                trainer_info.profile_url = '/static/common/icon/icon_account.png'
+        if trainer_info.profile_url is None or trainer_info.profile_url == '':
+            trainer_info.profile_url = '/static/common/icon/icon_account.png'
+
+        trainer_data = {'trainer_id': trainer_id,
+                        'trainer_user_id': trainer_info.user.username,
+                        'trainer_name': trainer_info.name,
+                        'trainer_phone': str(trainer_info.phone),
+                        'trainer_email': str(trainer_info.user.email),
+                        'trainer_sex': str(trainer_info.sex),
+                        'trainer_profile_url': trainer_info.profile_url,
+                        'trainer_birthday_dt': str(trainer_info.birthday_dt)}
+
+        ordered_trainer_dict[trainer_id] = trainer_data
+
+    trainer_list = []
+    for trainer_id in ordered_trainer_dict:
+        trainer_list.append(ordered_trainer_dict[trainer_id])
+
+    return trainer_list
+
+
+# 종료된 회원 리스트 가져오기
+def func_get_trainer_end_list(class_id, user_id, keyword):
+    class_trainer_data = MemberClassTb.objects.select_related(
+        'member__user'
+    ).filter(Q(member__name__contains=keyword) |
+             Q(member__user__username__contains=keyword),
+             class_tb_id=class_id, auth_cd=AUTH_TYPE_DELETE, own_cd=OWN_TYPE_EMPLOYEE, member__use=USE,
+             use=USE
+             ).order_by('member_id')
+
+    ordered_trainer_dict = collections.OrderedDict()
+
+    for class_trainer_info in class_trainer_data:
+        trainer_info = class_trainer_info.member
+        trainer_id = str(trainer_info.member_id)
+
+        if trainer_info.reg_info is None or str(trainer_info.reg_info) != str(user_id):
+            if class_trainer_info.auth_cd != AUTH_TYPE_VIEW:
+                trainer_info.sex = ''
+                trainer_info.birthday_dt = ''
+                if trainer_info.phone is None or trainer_info.phone == '':
+                    trainer_info.phone = ''
+                else:
+                    trainer_info.phone = '***-****-' + trainer_info.phone[7:]
+                trainer_info.user.email = ''
+                trainer_info.profile_url = '/static/common/icon/icon_account.png'
+        if trainer_info.profile_url is None or trainer_info.profile_url == '':
+            trainer_info.profile_url = '/static/common/icon/icon_account.png'
+
+        trainer_data = {'trainer_id': trainer_id,
+                        'trainer_user_id': trainer_info.user.username,
+                        'trainer_name': trainer_info.name,
+                        'trainer_phone': str(trainer_info.phone),
+                        'trainer_email': str(trainer_info.user.email),
+                        'trainer_sex': str(trainer_info.sex),
+                        'trainer_profile_url': trainer_info.profile_url,
+                        'trainer_birthday_dt': str(trainer_info.birthday_dt)}
+
+        ordered_trainer_dict[trainer_id] = trainer_data
+
+    trainer_list = []
+    for trainer_id in ordered_trainer_dict:
+        trainer_list.append(ordered_trainer_dict[trainer_id])
+
+    return trainer_list
 
 
 # 전체 회원 id 정보 가져오기
@@ -132,6 +264,7 @@ def func_get_member_from_member_ticket_list(all_member_ticket_list, lecture_id, 
     member_ticket_reg_count = 0
     member_ticket_rem_count = 0
     member_ticket_avail_count = 0
+    member_ticket_payment_check = 0
     start_date = None
     end_date = None
     lecture_member_data = None
@@ -151,11 +284,15 @@ def func_get_member_from_member_ticket_list(all_member_ticket_list, lecture_id, 
                 member_ticket_reg_count = 0
                 member_ticket_rem_count = 0
                 member_ticket_avail_count = 0
+                member_ticket_payment_check = 0
                 start_date = None
                 end_date = None
             member_ticket_reg_count += member_ticket_info.member_ticket_reg_count
             member_ticket_rem_count += member_ticket_info.member_ticket_rem_count
             member_ticket_avail_count += member_ticket_info.member_ticket_avail_count
+            if member_ticket_info.price > member_ticket_info.payment_price:
+                member_ticket_payment_check += 1
+
             if member_info.reg_info is None or str(member_info.reg_info) != str(user_id):
                 if member_ticket_info.member_auth_cd != AUTH_TYPE_VIEW:
                     member_info.sex = ''
@@ -195,6 +332,7 @@ def func_get_member_from_member_ticket_list(all_member_ticket_list, lecture_id, 
                            'member_ticket_reg_count': member_ticket_reg_count,
                            'member_ticket_rem_count': member_ticket_rem_count,
                            'member_ticket_avail_count': member_ticket_avail_count,
+                           'member_ticket_payment_check': member_ticket_payment_check,
                            'member_fix_state_cd': fix_state_cd,
                            'start_date': str(start_date),
                            'end_date': str(end_date)}
@@ -446,6 +584,7 @@ def func_get_member_ticket_info(class_id, member_ticket_id):
                               'member_ticket_start_date': str(member_ticket_tb.start_date),
                               'member_ticket_end_date': str(member_ticket_tb.end_date),
                               'member_ticket_price': member_ticket_tb.price,
+                              'member_ticket_payment_price': member_ticket_tb.payment_price,
                               'member_ticket_pay_method': member_ticket_tb.pay_method,
                               'member_ticket_refund_date': str(member_ticket_tb.refund_date),
                               'member_ticket_refund_price': member_ticket_tb.refund_price,
@@ -544,6 +683,7 @@ def func_get_member_ticket_list(class_id, member_id):
                               'member_ticket_start_date': str(member_ticket_tb.start_date),
                               'member_ticket_end_date': str(member_ticket_tb.end_date),
                               'member_ticket_price': member_ticket_tb.price,
+                              'member_ticket_payment_price': member_ticket_tb.payment_price,
                               'member_ticket_pay_method': member_ticket_tb.pay_method,
                               'member_ticket_refund_date': str(member_ticket_tb.refund_date),
                               'member_ticket_refund_price': member_ticket_tb.refund_price,
@@ -575,7 +715,7 @@ def func_get_member_ticket_list(class_id, member_id):
 
 
 # 회원의 수강권 추가하기
-def func_add_member_ticket_info(user_id, class_id, ticket_id, counts, price, pay_method,
+def func_add_member_ticket_info(user_id, class_id, ticket_id, counts, price, payment_price, pay_method,
                                 start_date, end_date, contents, member_id):
     error = None
     member = None
@@ -600,7 +740,8 @@ def func_add_member_ticket_info(user_id, class_id, ticket_id, counts, price, pay
 
             member_ticket_info = MemberTicketTb(member_id=member_id, ticket_tb_id=ticket_id, pay_method=pay_method,
                                                 member_ticket_reg_count=counts, member_ticket_rem_count=counts,
-                                                member_ticket_avail_count=counts, price=price, option_cd='DC',
+                                                member_ticket_avail_count=counts, price=price,
+                                                payment_price=payment_price, option_cd='DC',
                                                 state_cd=STATE_CD_IN_PROGRESS, start_date=start_date, end_date=end_date,
                                                 note=contents, member_auth_cd=auth_cd, use=USE)
             member_ticket_info.save()
@@ -609,6 +750,17 @@ def func_add_member_ticket_info(user_id, class_id, ticket_id, counts, price, pay
                                                            member_ticket_tb_id=member_ticket_info.member_ticket_id,
                                                            auth_cd=AUTH_TYPE_VIEW, mod_member_id=user_id, use=USE)
             class_member_ticket_info.save()
+
+            if int(payment_price) > 0:
+                member_payment_history_info = MemberPaymentHistoryTb(class_tb_id=class_id,
+                                                                     member_id=member_id,
+                                                                     member_ticket_tb_id=member_ticket_info.member_ticket_id,
+                                                                     member_shop_tb_id=None,
+                                                                     payment_price=payment_price,
+                                                                     refund_price=0,
+                                                                     pay_method=pay_method,
+                                                                     pay_date=start_date, note='', use=USE)
+                member_payment_history_info.save()
 
             if error is not None:
                 raise InternalError
@@ -669,6 +821,11 @@ def func_delete_member_ticket_info(user_id, class_id, member_ticket_id):
                     member_ticket_info.member_ticket_avail_count = 0
                     member_ticket_info.state_cd = STATE_CD_FINISH
                     member_ticket_info.save()
+
+                member_payment_history = MemberPaymentHistoryTb.objects.filter(class_tb_id=class_id,
+                                                                               member_ticket_tb_id=member_ticket_id,
+                                                                               use=USE)
+                member_payment_history.update(use=UN_USE)
 
         except ValueError:
             error = '등록 값에 문제가 있습니다.'
@@ -1104,6 +1261,8 @@ def func_get_ticket_info(class_id, ticket_id, user_id):
     ticket_lecture_ing_font_color_cd_list = []
     ticket_lecture_end_color_cd_list = []
     ticket_lecture_end_font_color_cd_list = []
+    ticket_lecture_main_trainer_id_list = []
+    ticket_lecture_main_trainer_name_list = []
     ticket_tb = None
     all_member_ticket_list = None
     ticket_member_num_name = 'ticket_ing_member_num'
@@ -1118,6 +1277,8 @@ def func_get_ticket_info(class_id, ticket_id, user_id):
             ticket_lecture_ing_font_color_cd_list.append(lecture_tb.ing_font_color_cd)
             ticket_lecture_end_color_cd_list.append(lecture_tb.end_color_cd)
             ticket_lecture_end_font_color_cd_list.append(lecture_tb.end_font_color_cd)
+            ticket_lecture_main_trainer_id_list.append(lecture_tb.main_trainer_id)
+            ticket_lecture_main_trainer_name_list.append(lecture_tb.main_trainer.name)
 
     if ticket_tb is None:
         try:
@@ -1174,6 +1335,8 @@ def func_get_ticket_info(class_id, ticket_id, user_id):
                        'ticket_lecture_ing_font_color_cd_list': ticket_lecture_ing_font_color_cd_list,
                        'ticket_lecture_end_color_cd_list': ticket_lecture_end_color_cd_list,
                        'ticket_lecture_end_font_color_cd_list': ticket_lecture_end_font_color_cd_list,
+                       'ticket_lecture_main_trainer_id_list': ticket_lecture_main_trainer_id_list,
+                       'ticket_lecture_main_trainer_name_list': ticket_lecture_main_trainer_name_list,
                        ticket_member_num_name: len(member_list),
                        'ticket_member_list': member_list}
     else:
@@ -1229,6 +1392,15 @@ def func_get_lecture_info(class_id, lecture_id, user_id):
     member_list = func_get_member_from_member_ticket_list(all_member_ticket_list, lecture_id, user_id)
 
     if lecture_tb is not None:
+        main_trainer_id = lecture_tb.class_tb.member_id
+        main_trainer_name = lecture_tb.class_tb.member.name
+        if lecture_tb.main_trainer is None or lecture_tb.main_trainer == '':
+            lecture_tb.main_trainer_id = user_id
+            lecture_tb.save()
+        else:
+            main_trainer_id = lecture_tb.main_trainer_id
+            main_trainer_name = lecture_tb.main_trainer.name
+
         lecture_info = {'lecture_id': str(lecture_id), 'lecture_name': lecture_tb.name, 'lecture_note': lecture_tb.note,
                         'lecture_state_cd': lecture_tb.state_cd, 'lecture_max_num': lecture_tb.member_num,
                         # 'lecture_max_member_num_view_flag': lecture_tb.member_num_view_flag,
@@ -1244,6 +1416,8 @@ def func_get_lecture_info(class_id, lecture_id, user_id):
                         'lecture_type_cd': lecture_tb.lecture_type_cd,
                         'lecture_minute': lecture_tb.lecture_minute,
                         'lecture_start_time': lecture_tb.start_time,
+                        'lecture_main_trainer_id': main_trainer_id,
+                        'lecture_main_trainer_name': main_trainer_name,
                         'lecture_member_list': member_list}
     else:
         lecture_info = None

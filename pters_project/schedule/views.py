@@ -247,6 +247,7 @@ def add_schedule_logic(request):
         extension_flag = schedule_input_form.cleaned_data['extension_flag']
         duplication_enable_flag = schedule_input_form.cleaned_data['duplication_enable_flag']
         lecture_id = schedule_input_form.cleaned_data['lecture_id']
+        trainer_id = schedule_input_form.cleaned_data['trainer_id']
         lecture_info = schedule_input_form.get_lecture_info()
         member_list = schedule_input_form.get_member_list(class_id)
 
@@ -282,7 +283,7 @@ def add_schedule_logic(request):
                                                         schedule_end_datetime, note, private_note,
                                                         en_dis_type, request.user.id,
                                                         permission_state_cd, state_cd, extension_flag,
-                                                        duplication_enable_flag)
+                                                        duplication_enable_flag, trainer_id)
                     error = schedule_result['error']
 
                     if error is None:
@@ -325,7 +326,8 @@ def add_schedule_logic(request):
                                                                     schedule_start_datetime, schedule_end_datetime,
                                                                     note, private_note, en_dis_type, request.user.id,
                                                                     permission_state_cd,
-                                                                    state_cd, UN_USE, duplication_enable_flag)
+                                                                    state_cd, UN_USE, duplication_enable_flag,
+                                                                    trainer_id)
                                 error_temp = schedule_result['error']
                                 if error_temp is not None:
                                     raise InternalError()
@@ -575,6 +577,8 @@ def update_schedule_logic(request):
     schedule_start_datetime = request.POST.get('start_dt', '')
     schedule_end_datetime = request.POST.get('end_dt', '')
     extension_flag = request.POST.get('extension_flag', '')
+    main_trainer_id = request.POST.get('main_trainer_id', '')
+    main_trainer_name = request.POST.get('main_trainer_name', '')
     class_id = request.session.get('class_id', '')
     class_type_name = request.session.get('class_type_name', '')
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
@@ -625,15 +629,32 @@ def update_schedule_logic(request):
                 before_log_info_schedule_end_dt = str(schedule_info.end_dt).split(' ')[1].split(':')
                 before_log_info_schedule_start_dt = before_log_info_schedule_start_dt[0] + ':' + before_log_info_schedule_start_dt[1]
                 before_log_info_schedule_end_dt = before_log_info_schedule_end_dt[0] + ':' + before_log_info_schedule_end_dt[1]
+                before_log_info_schedule_main_trainer_name = ''
+                if schedule_info.trainer is not None and schedule_info.trainer != '':
+                    before_log_info_schedule_main_trainer_name = schedule_info.trainer.name
 
                 after_log_info_schedule_start_dt = str(start_dt).split(':')
                 after_log_info_schedule_end_dt = str(end_dt).split(' ')[1].split(':')
                 after_log_info_schedule_start_dt = after_log_info_schedule_start_dt[0] + ':' + after_log_info_schedule_start_dt[1]
                 after_log_info_schedule_end_dt = after_log_info_schedule_end_dt[0] + ':' + after_log_info_schedule_end_dt[1]
+                after_log_info_schedule_main_trainer_name = main_trainer_name
 
                 log_detail_info = before_log_info_schedule_start_dt\
                                   + '/' + before_log_info_schedule_end_dt\
                                   + '->' + after_log_info_schedule_start_dt + '/' + after_log_info_schedule_end_dt
+
+                if before_log_info_schedule_start_dt == after_log_info_schedule_start_dt and before_log_info_schedule_end_dt == after_log_info_schedule_end_dt:
+                    log_detail_info = before_log_info_schedule_start_dt\
+                                      + '/' + before_log_info_schedule_end_dt\
+                                      + '(담당강사:' + before_log_info_schedule_main_trainer_name \
+                                      + ')->' + before_log_info_schedule_start_dt + '/' + before_log_info_schedule_end_dt\
+                                      + '(담당강사:' + after_log_info_schedule_main_trainer_name + ')'
+                elif before_log_info_schedule_main_trainer_name != after_log_info_schedule_main_trainer_name:
+                    log_detail_info = before_log_info_schedule_start_dt\
+                                      + '/' + before_log_info_schedule_end_dt\
+                                      + '(담당강사:' + before_log_info_schedule_main_trainer_name\
+                                      + ')->' + after_log_info_schedule_start_dt + '/' + after_log_info_schedule_end_dt\
+                                      + '(담당강사:' + after_log_info_schedule_main_trainer_name + ')'
 
                 if str(schedule_info.en_dis_type) == str(ON_SCHEDULE_TYPE):
                     if schedule_info.lecture_tb is not None and schedule_info.lecture_tb != '':
@@ -692,6 +713,7 @@ def update_schedule_logic(request):
 
                 schedule_info.start_dt = start_dt
                 schedule_info.end_dt = end_dt
+                schedule_info.trainer_id = main_trainer_id
                 schedule_info.mod_member_id = request.user.id
                 schedule_info.save()
 
@@ -715,6 +737,7 @@ def update_schedule_logic(request):
                 else:
                     if str(schedule_info.en_dis_type) == str(ON_SCHEDULE_TYPE) \
                             and str(setting_to_shared_trainer_lesson_alarm) == str(TO_SHARED_TRAINER_LESSON_ALARM_ON):
+
                         log_detail_info = log_detail_info.replace('/', '~')
                         func_send_push_trainer_trainer(class_id,
                                                        class_type_name + ' - 일정 알림',
@@ -1074,6 +1097,7 @@ def add_repeat_schedule_logic(request):
     repeat_end_time = request.POST.get('repeat_end_time')
     lecture_id = request.POST.get('lecture_id', None)
     member_ids = request.POST.getlist('member_ids[]', '')
+    trainer_id = request.POST.get('trainer_id')
     en_dis_type = request.POST.get('en_dis_type', ON_SCHEDULE_TYPE)
     note = request.POST.get('note', '')
     private_note = request.POST.get('private_note', '')
@@ -1183,7 +1207,7 @@ def add_repeat_schedule_logic(request):
                                                           repeat_week_type,
                                                           repeat_schedule_start_date, repeat_schedule_end_date,
                                                           repeat_start_time, repeat_end_time, en_dis_type,
-                                                          request.user.id)
+                                                          request.user.id, trainer_id)
         if repeat_schedule_result['error'] is None:
             if repeat_schedule_result['schedule_info'] is None:
                 context['repeat_schedule_id'] = ''
@@ -1254,7 +1278,8 @@ def add_repeat_schedule_logic(request):
                                                                 private_note,
                                                                 en_dis_type, request.user.id,
                                                                 permission_state_cd,
-                                                                state_cd, extension_flag, duplication_enable_flag)
+                                                                state_cd, extension_flag, duplication_enable_flag,
+                                                                trainer_id)
 
                             if schedule_result['error'] is not None:
                                 error_date = str(repeat_schedule_date_info).split(' ')[0]
@@ -1321,6 +1346,7 @@ def add_repeat_schedule_confirm(request):
     repeat_schedule_id = request.POST.get('repeat_schedule_id')
     repeat_confirm = request.POST.get('repeat_confirm')
     member_ids = request.POST.getlist('member_ids[]', '')
+    trainer_id = request.POST.get('trainer', '')
     class_id = request.session.get('class_id', '')
     class_type_name = request.session.get('class_type_name', '')
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
@@ -1436,7 +1462,7 @@ def add_repeat_schedule_confirm(request):
                                                                                   repeat_schedule_info.start_time,
                                                                                   repeat_schedule_info.end_time,
                                                                                   repeat_schedule_info.en_dis_type,
-                                                                                  request.user.id)
+                                                                                  request.user.id, trainer_id)
                                 member_repeat_schedule_info = repeat_schedule_result['schedule_info']
                                 end_date_check = repeat_schedule_info.end_date
                                 for schedule_info in schedule_data:
@@ -1461,7 +1487,7 @@ def add_repeat_schedule_confirm(request):
                                                         schedule_info.start_dt, schedule_info.end_dt,
                                                         schedule_info.note, schedule_info.private_note,
                                                         ON_SCHEDULE_TYPE, request.user.id, permission_state_cd,
-                                                        state_cd, UN_USE, SCHEDULE_DUPLICATION_ENABLE)
+                                                        state_cd, UN_USE, SCHEDULE_DUPLICATION_ENABLE, trainer_id)
 
                                                     error_temp = schedule_result['error']
 
@@ -1550,6 +1576,7 @@ def add_member_repeat_schedule_to_lecture_schedule_logic(request):
 
     repeat_schedule_id = request.POST.get('repeat_schedule_id')
     member_ids = request.POST.getlist('member_ids[]', '')
+    trainer_id = request.POST.get('trainer_id', '')
     repeat_schedule_start_date = request.POST.get('repeat_start_date', '')
     repeat_schedule_end_date = request.POST.get('repeat_end_date', '')
     class_id = request.session.get('class_id', '')
@@ -1680,7 +1707,7 @@ def add_member_repeat_schedule_to_lecture_schedule_logic(request):
                                                                                       repeat_schedule_info.start_time,
                                                                                       repeat_schedule_info.end_time,
                                                                                       repeat_schedule_info.en_dis_type,
-                                                                                      request.user.id)
+                                                                                      request.user.id, trainer_id)
                                     member_repeat_schedule_info = repeat_schedule_result['schedule_info']
                                     end_date_check = repeat_schedule_end_date_info
                                     for schedule_info in schedule_data:
@@ -1700,7 +1727,7 @@ def add_member_repeat_schedule_to_lecture_schedule_logic(request):
                                                         schedule_info.start_dt, schedule_info.end_dt,
                                                         schedule_info.note, schedule_info.private_note,
                                                         ON_SCHEDULE_TYPE, request.user.id, permission_state_cd,
-                                                        schedule_info.state_cd, UN_USE, SCHEDULE_DUPLICATION_ENABLE)
+                                                        schedule_info.state_cd, UN_USE, SCHEDULE_DUPLICATION_ENABLE, trainer_id)
 
                                                     error_temp = schedule_result['error']
                                                     if error_temp is None:
@@ -2506,6 +2533,7 @@ def add_member_lecture_schedule_logic(request):
     member_id = request.POST.get('member_id')
     lecture_schedule_id = request.POST.get('schedule_id')
     permission_state_cd = request.POST.get('permission_state_cd', PERMISSION_STATE_CD_APPROVE)
+    trainer_id = request.POST.get('trainer_id', '')
     class_id = request.session.get('class_id', '')
     class_type_name = request.session.get('class_type_name', '')
     setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
@@ -2597,7 +2625,7 @@ def add_member_lecture_schedule_logic(request):
                                                                schedule_info.note, schedule_info.private_note,
                                                                ON_SCHEDULE_TYPE,
                                                                request.user.id, permission_state_cd, state_cd, UN_USE,
-                                                               SCHEDULE_DUPLICATION_ENABLE)
+                                                               SCHEDULE_DUPLICATION_ENABLE, trainer_id)
                     error = schedule_result['error']
 
                 if error is not None:
@@ -2735,7 +2763,8 @@ def add_other_member_lecture_schedule_logic(request):
                                                                schedule_info.note, schedule_info.private_note,
                                                                ON_SCHEDULE_TYPE,
                                                                request.user.id, permission_state_cd, state_cd, UN_USE,
-                                                               SCHEDULE_DUPLICATION_ENABLE)
+                                                               SCHEDULE_DUPLICATION_ENABLE,
+                                                               lecture_info.main_trainer.member_id)
                     error = schedule_result['error']
 
                 if error is not None:

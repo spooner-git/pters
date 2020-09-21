@@ -4,7 +4,8 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 
-from configs.const import LECTURE_TYPE_ONE_TO_ONE, BOARD_TYPE_CD_NOTICE, TO_MEMBER_BOARD_TYPE_CD_TRAINEE
+from configs.const import LECTURE_TYPE_ONE_TO_ONE, BOARD_TYPE_CD_NOTICE, TO_MEMBER_BOARD_TYPE_CD_TRAINEE, \
+    OWN_TYPE_OWNER, STATE_CD_IN_PROGRESS
 from configs.models import TimeStampedModel
 from login.models import MemberTb, CommonCdTb
 from payment.models import FunctionAuthTb
@@ -143,6 +144,8 @@ class MemberClassTb(TimeStampedModel):
     class_tb = models.ForeignKey(ClassTb, verbose_name='지점', on_delete=models.CASCADE, null=True)
     auth_cd = models.CharField('권한 코드', db_column='AUTH_CD', max_length=20, blank=True,
                                default='')  # Field name made lowercase.
+    own_cd = models.CharField('권한 코드', db_column='OWN_CD', max_length=20, blank=True,
+                              default=OWN_TYPE_OWNER)  # Field name made lowercase.
     mod_member_id = models.CharField('최종수정 회원 ID', db_column='MOD_MEMBER_ID', max_length=20, blank=True, default='')
 
     class Meta:
@@ -235,6 +238,7 @@ class LectureTb(TimeStampedModel):
     lecture_minute = models.IntegerField(db_column='GROUP_MINUTE', default=60)  # Field name made lowercase.
     start_time = models.CharField('수업 시작 시각', db_column='START_TIME', max_length=20, blank=True,
                                   default='A-0')
+    main_trainer = models.ForeignKey(MemberTb, verbose_name='담당', on_delete=models.SET_NULL, related_name='MAIN_TRAINER_ID', blank=True, null=True)
 
     class Meta:
         managed = False
@@ -442,6 +446,19 @@ class ProgramBoardCommentTb(TimeStampedModel):
     class Meta:
         managed = False
         db_table = 'PROGRAM_BOARD_COMMENT_TB'
+
+
+class ShopTb(TimeStampedModel):
+    shop_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    class_tb = models.ForeignKey(ClassTb, verbose_name='회원', on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    name = models.CharField('상품명', db_column='NAME', max_length=45, blank=True, null=True)
+    price = models.IntegerField('가격', db_column='PRICE', default=0)
+    note = models.CharField('설명', db_column='NOTE', max_length=200, blank=True, null=True)
+    state_cd = models.CharField('상태', db_column='STATE_CD', max_length=10, blank=True, default=STATE_CD_IN_PROGRESS)
+
+    class Meta:
+        managed = False
+        db_table = 'SHOP_TB'
 
 
 # #######################################  이제 사용 안함  ##################################################

@@ -16,7 +16,7 @@ from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.core.paginator import EmptyPage
 from django.core.paginator import Paginator
 from django.db import IntegrityError, InternalError, transaction
-from django.db.models import Q
+from django.db.models import Q, Sum
 from django.db.models.expressions import RawSQL
 from django.http import HttpResponse, JsonResponse, request
 from django.shortcuts import redirect, render
@@ -41,7 +41,8 @@ from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO
     CALENDAR_TIME_SELECTOR_BASIC, SORT_END_DATE, SORT_MEMBER_TICKET, SORT_SCHEDULE_DT, STATE_CD_REFUND, \
     SORT_SCHEDULE_MONTHLY, SHARED_PROGRAM, MY_PROGRAM, PROGRAM_SELECT, PROGRAM_LECTURE_CONNECT_DELETE, \
     PROGRAM_LECTURE_CONNECT_ACCEPT, BOARD_TYPE_CD_NOTICE, ON_SCHEDULE, ALARM_PAGINATION_COUNTER, STATE_CD_HOLDING, \
-    CLOSED_SCHEDULE_TYPE, SCHEDULE_PAGINATION_COUNTER
+    CLOSED_SCHEDULE_TYPE, SCHEDULE_PAGINATION_COUNTER, OWN_TYPE_OWNER, OWN_TYPE_SHARE, SORT_TRAINER_NAME, \
+    OWN_TYPE_EMPLOYEE, SORT_SHOP_START_DATE
 from board.models import BoardTb, QATb, NoticeTb
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 from schedule.functions import func_refresh_member_ticket_count, func_get_trainer_attend_schedule, \
@@ -49,21 +50,24 @@ from schedule.functions import func_refresh_member_ticket_count, func_get_traine
     func_get_lecture_schedule_all, func_get_member_schedule_all_by_member_ticket, \
     func_get_member_schedule_all_by_schedule_dt, func_get_member_schedule_all_by_monthly, \
     func_get_permission_wait_schedule_all, func_add_schedule, func_send_push_notice, func_get_member_ticket_id_old, \
-    func_get_repeat_schedule_date_list
+    func_get_repeat_schedule_date_list, func_get_lecture_trainer_schedule_all_by_schedule_dt, \
+    func_get_lecture_trainer_schedule_all_by_monthly
 from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb, ScheduleAlarmTb
 from stats.functions import get_sales_data
-from trainee.models import MemberTicketTb, MemberClosedDateHistoryTb
+from trainee.models import MemberTicketTb, MemberClosedDateHistoryTb, MemberShopTb, MemberPaymentHistoryTb
 from payment.models import PaymentInfoTb, ProductFunctionAuthTb, CouponMemberTb
 from .functions import func_get_trainer_setting_list, \
-    func_get_member_ing_list, func_get_member_end_list, func_get_class_member_ing_list, func_get_class_member_end_list,\
-    func_get_member_info, func_get_member_from_member_ticket_list, func_check_member_connection_info,\
-    func_get_member_lecture_list, func_get_member_ticket_list, func_get_lecture_info, func_add_member_ticket_info,\
-    func_get_ticket_info, func_delete_member_ticket_info, func_update_lecture_member_fix_status_cd,\
-    update_user_setting_data, update_program_setting_data, func_get_member_ticket_info, func_get_trainer_info,\
-    update_alarm_setting_data, func_add_hold_member_ticket_info, func_delete_hold_member_ticket_info
+    func_get_member_ing_list, func_get_member_end_list, func_get_class_member_ing_list, func_get_class_member_end_list, \
+    func_get_member_info, func_get_member_from_member_ticket_list, func_check_member_connection_info, \
+    func_get_member_lecture_list, func_get_member_ticket_list, func_get_lecture_info, func_add_member_ticket_info, \
+    func_get_ticket_info, func_delete_member_ticket_info, func_update_lecture_member_fix_status_cd, \
+    update_user_setting_data, update_program_setting_data, func_get_member_ticket_info, func_get_trainer_info, \
+    update_alarm_setting_data, func_add_hold_member_ticket_info, func_delete_hold_member_ticket_info, \
+    func_get_trainer_ing_list, func_get_class_trainer_end_list, func_get_trainer_end_list, \
+    func_get_class_trainer_ing_list
 from .models import ClassMemberTicketTb, LectureTb, ClassTb, MemberClassTb, BackgroundImgTb, \
     SettingTb, TicketTb, TicketLectureTb, CenterTrainerTb, LectureMemberTb, ProgramAuthTb, ProgramBoardTb, \
-    ProgramNoticeTb, BugMemberTicketPriceTb, ScheduleClosedTb, ScheduleClosedDayTb
+    ProgramNoticeTb, BugMemberTicketPriceTb, ScheduleClosedTb, ScheduleClosedDayTb, ShopTb
 
 logger = logging.getLogger(__name__)
 
@@ -160,6 +164,7 @@ class GetTrainerScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
         class_id = self.request.session.get('class_id', '')
         date = request.GET.get('date', '')
         day = request.GET.get('day', '')
+        trainer_id = request.GET.get('trainer_id', 'all')
         today = datetime.date.today()
 
         if date != '':
@@ -168,7 +173,7 @@ class GetTrainerScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
             day = 31
         start_date = today - datetime.timedelta(days=int(day))
         end_date = today + datetime.timedelta(days=int(day))
-        all_schedule_data = func_get_trainer_schedule_all(class_id, start_date, end_date)
+        all_schedule_data = func_get_trainer_schedule_all(class_id, start_date, end_date, trainer_id)
 
         return JsonResponse(all_schedule_data, json_dumps_params={'ensure_ascii': True})
 
@@ -259,6 +264,31 @@ class GetMemberScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
             elif str(sort) == str(SORT_MEMBER_TICKET):
                 ordered_schedule_dict = func_get_member_schedule_all_by_member_ticket(class_id, member_id, page)
                 # context['test'] = ordered_schedule_dict
+        else:
+            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+            messages.error(request, error)
+        # return render(request, self.template_name, context)
+        return JsonResponse(ordered_schedule_dict, json_dumps_params={'ensure_ascii': True})
+
+
+class GetLectureTrainerScheduleAllView(LoginRequiredMixin, AccessTestMixin, View):
+    # template_name = 'test.html'
+    def get(self, request):
+        class_id = self.request.session.get('class_id', '')
+        trainer_id = request.GET.get('trainer_id', '')
+        page = request.GET.get('page', 1)
+        sort = request.GET.get('sort_val', SORT_SCHEDULE_DT)
+        error = None
+        ordered_schedule_dict = collections.OrderedDict()
+
+        if trainer_id == '':
+            error = '강사 정보를 불러오지 못했습니다.'
+        # context = {}
+        if error is None:
+            if str(sort) == str(SORT_SCHEDULE_DT):
+                ordered_schedule_dict = func_get_lecture_trainer_schedule_all_by_schedule_dt(class_id, trainer_id, page)
+            elif str(sort) == str(SORT_SCHEDULE_MONTHLY):
+                ordered_schedule_dict = func_get_lecture_trainer_schedule_all_by_monthly(class_id, trainer_id, page)
         else:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
             messages.error(request, error)
@@ -862,7 +892,105 @@ class GetMemberRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, View):
                             json_dumps_params={'ensure_ascii': True})
 
 
-def add_closed_date_logic(request):
+class GetTrainerRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        class_id = request.session.get('class_id', '')
+        trainer_id = self.request.GET.get('trainer_id', '')
+        error = None
+        trainer_repeat_schedule_list = []
+        today = datetime.date.today()
+
+        if trainer_id == '':
+            error = '강사 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            # 회원의 반복 일정중 강사가 볼수 있는 수강정보의 일정을 불러오기 위한 query
+            query_auth = "select "+ClassMemberTicketTb._meta.get_field('auth_cd').column + \
+                         " from "+ClassMemberTicketTb._meta.db_table + \
+                         " as B where B."+ClassMemberTicketTb._meta.get_field('member_ticket_tb').column+" = " \
+                         "`"+RepeatScheduleTb._meta.db_table+"`.`" + \
+                         RepeatScheduleTb._meta.get_field('member_ticket_tb').column + \
+                         "` and B.CLASS_TB_ID = " + str(class_id) + \
+                         " and B."+ClassMemberTicketTb._meta.get_field('use').column+"="+str(USE)
+            trainer_repeat_schedule_data = RepeatScheduleTb.objects.select_related(
+                'member_ticket_tb__member',
+                'lecture_tb').filter(
+                class_tb_id=class_id, repeat_trainer_id=trainer_id
+            ).annotate(auth_cd=RawSQL(query_auth, [])).filter(auth_cd=AUTH_TYPE_VIEW).exclude(end_date__lt=today).order_by('start_date')
+
+            # 반복일정 정보 셋팅
+            week_order = ['SUN', 'MON', 'TUE', 'WED', 'THS', 'FRI', 'SAT']
+            week_order = {key: i for i, key in enumerate(week_order)}
+            for trainer_repeat_schedule_info in trainer_repeat_schedule_data:
+                schedule_type = ON_SCHEDULE
+                try:
+                    lecture_id = trainer_repeat_schedule_info.lecture_tb.lecture_id
+                    lecture_name = trainer_repeat_schedule_info.lecture_tb.name
+                    lecture_max_member_num = trainer_repeat_schedule_info.lecture_tb.member_num
+                    lecture_ing_color_cd = trainer_repeat_schedule_info.lecture_tb.ing_color_cd
+                    lecture_end_color_cd = trainer_repeat_schedule_info.lecture_tb.end_color_cd
+                    lecture_ing_font_color_cd = trainer_repeat_schedule_info.lecture_tb.ing_font_color_cd
+                    lecture_end_font_color_cd = trainer_repeat_schedule_info.lecture_tb.end_font_color_cd
+                    # lecture_max_member_num_view_flag = member_repeat_schedule_info.lecture_tb.member_num_view_flag
+                    if trainer_repeat_schedule_info.lecture_tb.lecture_type_cd != LECTURE_TYPE_ONE_TO_ONE:
+                        schedule_type = GROUP_SCHEDULE
+                except AttributeError:
+                    lecture_id = ''
+                    lecture_name = ''
+                    lecture_max_member_num = ''
+                    lecture_ing_color_cd = ''
+                    lecture_end_color_cd = ''
+                    lecture_ing_font_color_cd = ''
+                    lecture_end_font_color_cd = ''
+                    # lecture_max_member_num_view_flag = ''
+
+                week_data = trainer_repeat_schedule_info.week_info.split('/')
+                week_data = sorted(week_data, key=lambda week_info: week_order.get(week_info))
+
+                mod_member_id = ''
+                mod_member_name = ''
+                if trainer_repeat_schedule_info.mod_member is not None and trainer_repeat_schedule_info.mod_member != '':
+                    mod_member_id = trainer_repeat_schedule_info.mod_member_id
+                    mod_member_name = trainer_repeat_schedule_info.mod_member.name
+                trainer_repeat_schedule = {'repeat_schedule_id': trainer_repeat_schedule_info.repeat_schedule_id,
+                                           'repeat_type_cd': trainer_repeat_schedule_info.repeat_type_cd,
+                                           'week_info': "/".join(week_data),
+                                           'start_date': trainer_repeat_schedule_info.start_date,
+                                           'end_date': trainer_repeat_schedule_info.end_date,
+                                           'start_time': trainer_repeat_schedule_info.start_time,
+                                           'end_time': trainer_repeat_schedule_info.end_time,
+                                           'time_duration': trainer_repeat_schedule_info.time_duration,
+                                           'state_cd': trainer_repeat_schedule_info.state_cd,
+                                           'reg_member_id': trainer_repeat_schedule_info.reg_member_id,
+                                           'reg_member_name': trainer_repeat_schedule_info.reg_member.name,
+                                           'mod_member_id': mod_member_id,
+                                           'mod_member_name': mod_member_name,
+                                           'mod_dt': str(trainer_repeat_schedule_info.mod_dt),
+                                           'reg_dt': str(trainer_repeat_schedule_info.reg_dt),
+                                           'lecture_repeat_schedule_id':
+                                               trainer_repeat_schedule_info.lecture_schedule_id,
+                                           'member_id': trainer_repeat_schedule_info.member_ticket_tb.member.member_id,
+                                           'member_name': trainer_repeat_schedule_info.member_ticket_tb.member.name,
+                                           'lecture_id': lecture_id,
+                                           'lecture_name': lecture_name,
+                                           'lecture_max_member_num': lecture_max_member_num,
+                                           'lecture_ing_color_cd': lecture_ing_color_cd,
+                                           'lecture_end_color_cd': lecture_end_color_cd,
+                                           'lecture_ing_font_color_cd': lecture_ing_font_color_cd,
+                                           'lecture_end_font_color_cd': lecture_end_font_color_cd,
+                                           # 'lecture_max_member_num_view_flag': lecture_max_member_num_view_flag,
+                                           'schedule_type': schedule_type}
+                trainer_repeat_schedule_list.append(trainer_repeat_schedule)
+        else:
+            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+            messages.error(request, error)
+
+        return JsonResponse({'trainer_repeat_schedule_data': trainer_repeat_schedule_list},
+                            json_dumps_params={'ensure_ascii': True})
+
+
+def add_program_closed_date_logic(request):
     class_id = request.session.get('class_id', '')
     member_id = request.POST.get('member_id', '')
     start_date = request.POST.get('start_date', '')
@@ -966,7 +1094,7 @@ def add_closed_date_logic(request):
     return JsonResponse({'schedule_closed_id': str(schedule_closed_id)}, json_dumps_params={'ensure_ascii': True})
 
 
-def update_closed_date_logic(request):
+def update_program_closed_date_logic(request):
     class_id = request.session.get('class_id', '')
     schedule_closed_id = request.POST.get('schedule_closed_id', '')
     member_id = request.POST.get('member_id', '')
@@ -1058,7 +1186,7 @@ def update_closed_date_logic(request):
     return JsonResponse({'schedule_closed_id': str(schedule_closed_id)}, json_dumps_params={'ensure_ascii': True})
 
 
-def delete_closed_date_logic(request):
+def delete_program_closed_date_logic(request):
     class_id = request.session.get('class_id', '')
     schedule_closed_id = request.POST.get('schedule_closed_id', '')
     error = None
@@ -1083,20 +1211,6 @@ def delete_closed_date_logic(request):
         log_data.save()
 
     return JsonResponse({'schedule_closed_id': str(schedule_closed_id)}, json_dumps_params={'ensure_ascii': True})
-
-
-class GetTrainerClosedDateView(LoginRequiredMixin, AccessTestMixin, View):
-
-    def get(self, request):
-        class_id = self.request.session.get('class_id', '')
-        error = None
-        member_result = {}
-
-        if error is not None:
-            logger.error(request.user.first_name + ' ' + '[' + str(request.user.id) + ']' + error)
-            messages.error(request, error)
-
-        return JsonResponse(member_result['member_info'], json_dumps_params={'ensure_ascii': True})
 
 
 class GetMemberClosedDateListView(LoginRequiredMixin, AccessTestMixin, View):
@@ -2585,6 +2699,7 @@ def add_member_ticket_info_logic(request):
     contents = request.POST.get('contents', '')
     counts = request.POST.get('counts')
     price = request.POST.get('price', '')
+    payment_price = request.POST.get('payment_price', '')
     start_date = request.POST.get('start_date')
     end_date = request.POST.get('end_date')
     ticket_id = request.POST.get('ticket_id', '')
@@ -2603,6 +2718,12 @@ def add_member_ticket_info_logic(request):
 
     if price == '':
         price = 0
+
+    if payment_price == '':
+        payment_price = 0
+
+    if int(payment_price) > int(price):
+        error = '수강권 가격보다 납부 금액이 많습니다.'
 
     if end_date == '':
         end_date = '9999-12-31'
@@ -2630,8 +2751,9 @@ def add_member_ticket_info_logic(request):
         except ObjectDoesNotExist:
             error = '수강권 정보를 확인해주세요.'
     if error is None:
-        error = func_add_member_ticket_info(request.user.id, class_id, ticket_id, counts, price, pay_method,
-                                            start_date, end_date, contents, member_id)
+        error = func_add_member_ticket_info(request.user.id, class_id, ticket_id, counts, price, payment_price,
+                                            pay_method, start_date, end_date, contents, member_id)
+
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
@@ -2652,6 +2774,7 @@ def update_member_ticket_info_logic(request):
     start_date = request.POST.get('start_date', '')
     end_date = request.POST.get('end_date', '')
     price = request.POST.get('price', '')
+    payment_price = request.POST.get('payment_price', '')
     refund_price = request.POST.get('refund_price', '')
     refund_date = request.POST.get('refund_date', '')
     member_ticket_reg_count = request.POST.get('member_ticket_reg_count', '')
@@ -2680,6 +2803,8 @@ def update_member_ticket_info_logic(request):
             end_date = member_ticket_info.end_date
         if price is None or price == '':
             price = member_ticket_info.price
+        if payment_price is None or payment_price == '':
+            payment_price = member_ticket_info.payment_price
         if pay_method is None or pay_method == '':
             pay_method = member_ticket_info.pay_method
         if refund_price is None or refund_price == '':
@@ -2696,6 +2821,15 @@ def update_member_ticket_info_logic(request):
             price = int(price)
         except ValueError:
             error = '수강권 금액은 숫자만 입력 가능합니다.'
+
+        try:
+            payment_price = int(payment_price)
+        except ValueError:
+            error = '수강권 금액은 숫자만 입력 가능합니다.'
+
+        if error is None:
+            if payment_price > price:
+                error = '수강권 가격보다 납부 금액이 많습니다.'
 
         try:
             member_ticket_reg_count = int(member_ticket_reg_count)
@@ -2733,6 +2867,7 @@ def update_member_ticket_info_logic(request):
         member_ticket_info.start_date = start_date
         member_ticket_info.end_date = end_date
         member_ticket_info.price = price
+        member_ticket_info.payment_price = payment_price
         member_ticket_info.pay_method = pay_method
         member_ticket_info.refund_price = refund_price
         member_ticket_info.refund_date = refund_date
@@ -3109,7 +3244,21 @@ def update_member_ticket_status_info_logic(request):
         member_ticket_info.refund_price = refund_price
         member_ticket_info.refund_date = refund_date
         member_ticket_info.save()
-
+        if state_cd == STATE_CD_REFUND:
+            member_payment_history_info = MemberPaymentHistoryTb(class_tb_id=class_id,
+                                                                 member_id=member_ticket_info.member_id,
+                                                                 member_ticket_tb_id=member_ticket_id,
+                                                                 member_shop_tb_id=None,
+                                                                 payment_price=0,
+                                                                 refund_price=refund_price,
+                                                                 pay_method='NONE',
+                                                                 pay_date=refund_date, note='', use=USE)
+            member_payment_history_info.save()
+        if state_cd == STATE_CD_IN_PROGRESS:
+            member_payment_history_data = MemberPaymentHistoryTb.objects.filter(refund_price__gt=0,
+                                                                                member_ticket_tb_id=member_ticket_id,
+                                                                                use=USE)
+            member_payment_history_data.delete()
         if state_cd != STATE_CD_IN_PROGRESS:
             func_update_lecture_member_fix_status_cd(class_id, member_ticket_info.member_id)
 
@@ -3187,9 +3336,12 @@ def add_lecture_info_logic(request):
     end_font_color_cd = request.POST.get('end_font_color_cd', '#282828')
     lecture_minute = request.POST.get('lecture_minute', 60)
     start_time = request.POST.get('start_time', 'A-0')
+    main_trainer_id = request.POST.get('main_trainer_id', request.user.id)
     error = None
     lecture_id = None
     lecture_type_cd = LECTURE_TYPE_NORMAL
+    if main_trainer_id is None or main_trainer_id == '':
+        main_trainer_id = request.user.id
     if member_num == 1 or member_num == '1':
         lecture_type_cd = LECTURE_TYPE_ONE_TO_ONE
     try:
@@ -3199,6 +3351,7 @@ def add_lecture_info_logic(request):
                                      name=name, note=note, ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
                                      ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
                                      lecture_minute=lecture_minute, state_cd=STATE_CD_IN_PROGRESS,
+                                     main_trainer_id=main_trainer_id,
                                      start_time=start_time, use=USE)
 
             lecture_info.save()
@@ -3347,6 +3500,7 @@ def update_lecture_info_logic(request):
     lecture_minute = request.POST.get('lecture_minute', 60)
     start_time = request.POST.get('start_time', '')
     update_this_to_all_plans = request.POST.get('update_this_to_all_plans', UN_USE)
+    main_trainer_id = request.POST.get('main_trainer_id', '')
     lecture_info = None
     error = None
 
@@ -3382,8 +3536,12 @@ def update_lecture_info_logic(request):
 
         if lecture_minute == '' or lecture_minute is None:
             lecture_minute = lecture_info.lecture_minute
+
         if start_time == '' or start_time is None:
             start_time = lecture_info.start_time
+
+        if main_trainer_id == '' or main_trainer_id is None:
+            main_trainer_id = lecture_info.main_trainer_id
 
     if error is None:
         try:
@@ -3413,6 +3571,7 @@ def update_lecture_info_logic(request):
         lecture_info.end_font_color_cd = end_font_color_cd
         lecture_info.lecture_minute = lecture_minute
         lecture_info.start_time = start_time
+        lecture_info.main_trainer_id = main_trainer_id
         lecture_info.save()
 
     if error is None:
@@ -3433,13 +3592,11 @@ def update_lecture_info_logic(request):
         if str(update_this_to_all_plans) == str(USE):
             schedule_data_past.update(ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
                                       ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
-                                      max_mem_count=member_num)
+                                      max_mem_count=member_num, trainer_id=main_trainer_id)
 
-        schedule_data_future.update(ing_color_cd=ing_color_cd,
-                                    end_color_cd=end_color_cd,
-                                    ing_font_color_cd=ing_font_color_cd,
-                                    end_font_color_cd=end_font_color_cd,
-                                    max_mem_count=member_num)
+        schedule_data_future.update(ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
+                                    ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
+                                    max_mem_count=member_num, trainer_id=main_trainer_id)
 
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
@@ -3628,6 +3785,8 @@ class GetLectureInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                             'lecture_end_font_color_cd': '',
                             'lecture_type_cd': 'OFF',
                             'lecture_minute': off_minute,
+                            'lecture_main_trainer_id': '',
+                            'lecture_main_trainer_name': '',
                             'lecture_member_list': []}
         return JsonResponse(lecture_info, json_dumps_params={'ensure_ascii': True})
 
@@ -3642,15 +3801,15 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         sort_info = int(lecture_sort)
         error = None
 
-        lecture_data = LectureTb.objects.filter(class_tb_id=class_id, state_cd=STATE_CD_IN_PROGRESS,
-                                                name__contains=keyword,
-                                                use=USE).order_by('lecture_id')
+        lecture_data = LectureTb.objects.select_related(
+            'main_trainer', 'class_tb__member').filter(class_tb_id=class_id, state_cd=STATE_CD_IN_PROGRESS,
+                                                       name__contains=keyword, use=USE).order_by('lecture_id')
 
         lecture_ticket_data = TicketLectureTb.objects.select_related(
-            'lecture_tb', 'ticket_tb').filter(class_tb_id=class_id, lecture_tb__state_cd=STATE_CD_IN_PROGRESS,
-                                              lecture_tb__name__contains=keyword,
-                                              lecture_tb__use=USE,
-                                              use=USE).order_by('lecture_tb_id', 'ticket_tb_id')
+            'lecture_tb__main_trainer', 'class_tb__member',
+            'ticket_tb').filter(class_tb_id=class_id, lecture_tb__state_cd=STATE_CD_IN_PROGRESS,
+                                lecture_tb__name__contains=keyword, lecture_tb__use=USE,
+                                use=USE).order_by('lecture_tb_id', 'ticket_tb_id')
 
         lecture_data_dict = {}
         # 수업과 연관되어있는 수강권 정보 셋팅
@@ -3658,6 +3817,14 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
             lecture_tb = lecture_ticket_info.lecture_tb
             ticket_tb = lecture_ticket_info.ticket_tb
             lecture_id = str(lecture_tb.lecture_id)
+            main_trainer_id = lecture_ticket_info.class_tb.member_id
+            main_trainer_name = lecture_ticket_info.class_tb.member.name
+            if lecture_tb.main_trainer is None or lecture_tb.main_trainer == '':
+                lecture_tb.main_trainer_id = lecture_ticket_info.class_tb.member_id
+                lecture_tb.save()
+            else:
+                main_trainer_id = lecture_tb.main_trainer_id
+                main_trainer_name = lecture_tb.main_trainer.name
             try:
                 lecture_data_dict[lecture_id]
             except KeyError:
@@ -3673,6 +3840,8 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                  'lecture_minute': lecture_tb.lecture_minute,
                                                  'lecture_type_cd': lecture_tb.lecture_type_cd,
                                                  'lecture_reg_dt': lecture_tb.reg_dt,
+                                                 'main_trainer_id': main_trainer_id,
+                                                 'main_trainer_name': main_trainer_name,
                                                  'lecture_ticket_list': [],
                                                  'lecture_ticket_state_cd_list': [],
                                                  'lecture_ticket_id_list': []}
@@ -3685,6 +3854,15 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         if len(lecture_data) != len(lecture_data_dict):
             for lecture_info in lecture_data:
                 lecture_id = str(lecture_info.lecture_id)
+                main_trainer_id = lecture_info.class_tb.member_id
+                main_trainer_name = lecture_info.class_tb.member.name
+                if lecture_info.main_trainer is None or lecture_info.main_trainer == '':
+                    lecture_info.main_trainer_id = lecture_info.class_tb.member_id
+                    lecture_info.save()
+                else:
+                    main_trainer_id = lecture_info.main_trainer_id
+                    main_trainer_name = lecture_info.main_trainer.name
+
                 try:
                     lecture_data_dict[lecture_id]
                 except KeyError:
@@ -3700,6 +3878,8 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                      'lecture_minute': lecture_info.lecture_minute,
                                                      'lecture_type_cd': lecture_info.lecture_type_cd,
                                                      'lecture_reg_dt': lecture_info.reg_dt,
+                                                     'main_trainer_id': main_trainer_id,
+                                                     'main_trainer_name': main_trainer_name,
                                                      'lecture_ticket_list': [],
                                                      'lecture_ticket_state_cd_list': [],
                                                      'lecture_ticket_id_list': []}
@@ -3769,15 +3949,15 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         sort_info = int(lecture_sort)
         error = None
 
-        lecture_data = LectureTb.objects.filter(class_tb_id=class_id, state_cd=STATE_CD_FINISH,
-                                                name__contains=keyword,
-                                                use=USE).order_by('lecture_id')
+        lecture_data = LectureTb.objects.select_related(
+            'main_trainer',  'class_tb__member').filter(class_tb_id=class_id, state_cd=STATE_CD_FINISH,
+                                                        name__contains=keyword, use=USE).order_by('lecture_id')
 
         lecture_ticket_data = TicketLectureTb.objects.select_related(
-            'ticket_tb', 'lecture_tb').filter(class_tb_id=class_id, lecture_tb__state_cd=STATE_CD_FINISH,
-                                              lecture_tb__name__contains=keyword,
-                                              lecture_tb__use=USE,
-                                              use=USE).order_by('lecture_tb_id', 'ticket_tb_id')
+            'ticket_tb', 'class_tb__member',
+            'lecture_tb__main_trainer').filter(class_tb_id=class_id, lecture_tb__state_cd=STATE_CD_FINISH,
+                                               lecture_tb__name__contains=keyword, lecture_tb__use=USE,
+                                               use=USE).order_by('lecture_tb_id', 'ticket_tb_id')
 
         lecture_data_dict = {}
         # 수업과 연관되어있는 수강권 정보 셋팅
@@ -3785,6 +3965,15 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
             lecture_tb = lecture_ticket_info.lecture_tb
             ticket_tb = lecture_ticket_info.ticket_tb
             lecture_id = str(lecture_tb.lecture_id)
+            main_trainer_id = lecture_ticket_info.class_tb.member_id
+            main_trainer_name = lecture_ticket_info.class_tb.member.name
+            if lecture_tb.main_trainer is None or lecture_tb.main_trainer == '':
+                lecture_tb.main_trainer_id = lecture_ticket_info.class_tb.member_id
+                lecture_tb.save()
+            else:
+                main_trainer_id = lecture_tb.main_trainer_id
+                main_trainer_name = lecture_tb.main_trainer.name
+
             try:
                 lecture_data_dict[lecture_id]
             except KeyError:
@@ -3800,6 +3989,8 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                  'lecture_minute': lecture_tb.lecture_minute,
                                                  'lecture_type_cd': lecture_tb.lecture_type_cd,
                                                  'lecture_reg_dt': lecture_tb.reg_dt,
+                                                 'lecture_main_trainer_id': main_trainer_id,
+                                                 'lecture_main_trainer_name': main_trainer_name,
                                                  'lecture_ticket_list': [],
                                                  'lecture_ticket_state_cd_list': [],
                                                  'lecture_ticket_id_list': []}
@@ -3812,6 +4003,14 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         if len(lecture_data) != len(lecture_data_dict):
             for lecture_info in lecture_data:
                 lecture_id = str(lecture_info.lecture_id)
+                main_trainer_id = lecture_info.class_tb.member_id
+                main_trainer_name = lecture_info.class_tb.member.name
+                if lecture_info.main_trainer is None or lecture_info.main_trainer == '':
+                    lecture_info.main_trainer_id = lecture_info.class_tb.member_id
+                    lecture_info.save()
+                else:
+                    main_trainer_id = lecture_info.main_trainer_id
+                    main_trainer_name = lecture_info.main_trainer.name
                 try:
                     lecture_data_dict[lecture_id]
                 except KeyError:
@@ -3827,6 +4026,8 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                      'lecture_minute': lecture_info.lecture_minute,
                                                      'lecture_type_cd': lecture_info.lecture_type_cd,
                                                      'lecture_reg_dt': lecture_info.reg_dt,
+                                                     'lecture_main_trainer_id': main_trainer_id,
+                                                     'lecture_main_trainer_name': main_trainer_name,
                                                      'lecture_ticket_list': [],
                                                      'lecture_ticket_state_cd_list': [],
                                                      'lecture_ticket_id_list': []}
@@ -4045,6 +4246,10 @@ def delete_ticket_info_logic(request):
                             member_ticket_info.member_ticket_rem_count = 0
                             member_ticket_info.state_cd = STATE_CD_FINISH
                             member_ticket_info.save()
+
+                        member_payment_history = MemberPaymentHistoryTb.objects.filter(
+                            class_tb_id=class_id, member_ticket_tb_id=member_ticket_info.member_ticket_id, use=USE)
+                        member_payment_history.update(use=UN_USE)
 
         except ValueError:
             error = '오류가 발생했습니다. [1]'
@@ -4686,7 +4891,8 @@ class GetProgramListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                     shared_program_flag = SHARED_PROGRAM
                 else:
                     share_member_num = MemberClassTb.objects.filter(class_tb_id=program_info.class_tb.class_id,
-                                                                    auth_cd__contains=AUTH_TYPE_VIEW).count() - 1
+                                                                    auth_cd__contains=AUTH_TYPE_VIEW,
+                                                                    own_cd=OWN_TYPE_SHARE).count()
 
                 program_dict = {'program_id': program_info.class_tb.class_id,
                                 'program_total_member_num': total_member_num,
@@ -4786,7 +4992,8 @@ def add_program_info_logic(request):
                 class_info.save()
 
                 member_class_info = MemberClassTb(member_id=request.user.id, class_tb_id=class_info.class_id,
-                                                  auth_cd=AUTH_TYPE_VIEW, mod_member_id=request.user.id, use=USE)
+                                                  auth_cd=AUTH_TYPE_VIEW, mod_member_id=request.user.id,
+                                                  own_cd=OWN_TYPE_OWNER, use=USE)
                 member_class_info.save()
 
                 one_to_one_lecture_info = LectureTb(class_tb_id=class_info.class_id, name='개인 수업',
@@ -4992,7 +5199,7 @@ def update_share_program_info_logic(request):
             class_member_info.save()
         except ObjectDoesNotExist:
             class_member_info = MemberClassTb(class_tb_id=class_id, member_id=trainer_id, auth_cd=auth_cd,
-                                              mod_member_id=request.user.id, use=USE)
+                                              mod_member_id=request.user.id, own_cd=OWN_TYPE_SHARE, use=USE)
             class_member_info.save()
 
         if auth_cd == AUTH_TYPE_DELETE:
@@ -5066,11 +5273,18 @@ class GetShareProgramDataViewAjax(LoginRequiredMixin, AccessTestMixin, View):
             error = '오류가 발생했습니다.'
 
         if error is None:
+            member_program_data = MemberClassTb.objects.select_related(
+                'class_tb', 'member').filter(class_tb_id=class_id, own_cd=OWN_TYPE_EMPLOYEE,
+                                             use=USE)
+            exclude_member = Q()
+            for member_program_info in member_program_data:
+                exclude_member |= Q(member_id=member_program_info.member_id)
             program_auth_data = ProgramAuthTb.objects.select_related('class_tb', 'member',
                                                                      'function_auth_tb').filter(class_tb_id=class_id,
-                                                                                                use=USE)
+                                                                                                use=USE).exclude(exclude_member)
 
             for program_auth_info in program_auth_data:
+
                 if program_auth_info.auth_type_cd is None:
                     function_auth_type_cd_name = str(program_auth_info.function_auth_tb.function_auth_type_cd)
                 else:
@@ -5431,7 +5645,7 @@ def delete_background_img_info_logic(request):
     return render(request, template_name)
 
 
-class GetTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):
+class GetMyInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
         # context = {}
@@ -5494,7 +5708,7 @@ class GetTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
 
 # 회원수정 api
-def update_trainer_info_logic(request):
+def update_my_info_logic(request):
     # member_id = request.POST.get('id')
     # email = request.POST.get('email', '')
     first_name = request.POST.get('first_name', '')
@@ -6543,6 +6757,593 @@ class DeleteProgramNoticeInfoView(LoginRequiredMixin, AccessTestMixin, View):
         return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
 
 
+# 상품 추가
+def add_shop_info_logic(request):
+    class_id = request.session.get('class_id', '')
+    name = request.POST.get('name', '')
+    note = request.POST.get('note', '')
+    price = request.POST.get('price', 0)
+    error = None
+
+    try:
+        price = int(price)
+    except ValueError:
+        error = '상품 금액은 숫자만 입력 가능합니다.'
+
+    if name == '' or name is None:
+        error = '상품명을 입력해주세요. '
+
+    if error is None:
+        try:
+            with transaction.atomic():
+
+                shop_info = ShopTb(class_tb_id=class_id, name=name, price=price, note=note, use=USE)
+                shop_info.save()
+
+        except InternalError:
+            error = error
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id, from_member_name=request.user.first_name,
+                         class_tb_id=class_id, log_info=name+' 상품', log_how='추가', use=USE)
+        log_data.save()
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
+# 상품 삭제
+def delete_shop_info_logic(request):
+    class_id = request.session.get('class_id', '')
+    shop_id = request.POST.get('shop_id', '')
+    error = None
+    shop_info = None
+    now = timezone.now()
+
+    try:
+        shop_info = ShopTb.objects.get(class_tb_id=class_id, shop_id=shop_id)
+    except ObjectDoesNotExist:
+        error = '오류가 발생했습니다. [0]'
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                shop_info.state_cd = STATE_CD_FINISH
+                shop_info.use = UN_USE
+                shop_info.save()
+
+        except ValueError:
+            error = '오류가 발생했습니다. [1]'
+        except IntegrityError:
+            error = '오류가 발생했습니다. [2]'
+        except TypeError:
+            error = '오류가 발생했습니다. [3]'
+        except ValidationError:
+            error = '오류가 발생했습니다. [4]'
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id, from_member_name=request.user.first_name,
+                         class_tb_id=class_id, log_info=shop_info.name+' 상품', log_how='삭제', use=USE)
+        log_data.save()
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
+# 상품 수정
+def update_shop_info_logic(request):
+    class_id = request.session.get('class_id', '')
+    shop_id = request.POST.get('shop_id', '')
+    name = request.POST.get('name', '')
+    note = request.POST.get('note', '')
+    price = request.POST.get('price', '')
+    error = None
+    shop_info = None
+
+    try:
+        shop_info = ShopTb.objects.get(class_tb_id=class_id, shop_id=shop_id)
+    except ObjectDoesNotExist:
+        error = '오류가 발생했습니다. [0]'
+
+    if error is None:
+        if name != '' and name is not None:
+            shop_info.name = name
+        if note != '' and note is not None:
+            shop_info.note = note
+        if price != '' and price is not None:
+            shop_info.price = price
+        shop_info.save()
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id, from_member_name=request.user.first_name,
+                         class_tb_id=class_id, log_info=shop_info.name+' 상품', log_how='변경', use=USE)
+        log_data.save()
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
+class GetShopInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        class_id = self.request.session.get('class_id')
+        shop_id = request.GET.get('shop_id')
+        error = None
+        shop_dict = {}
+        try:
+            shop_info = ShopTb.objects.get(shop_id=shop_id, use=USE)
+        except ObjectDoesNotExist:
+            error = '상품 정보를 가져오지 못했습니다.'
+
+        if error is None:
+            shop_dict = {'shop_id': str(shop_info.shop_id),
+                         'shop_name': shop_info.name,
+                         'shop_price': shop_info.price,
+                         'shop_note': shop_info.note,
+                         'shop_mod_dt': str(shop_info.mod_dt),
+                         'shop_reg_dt': str(shop_info.reg_dt)
+                         }
+
+        return JsonResponse(shop_dict, json_dumps_params={'ensure_ascii': True})
+
+
+class GetShopIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        class_id = self.request.session.get('class_id', '')
+        member_sort = request.GET.get('sort_val', SORT_MEMBER_NAME)
+        sort_order_by = request.GET.get('sort_order_by', SORT_ASC)
+        keyword = request.GET.get('keyword', '')
+
+        shop_data = ShopTb.objects.filter(class_tb_id=class_id, state_cd=STATE_CD_IN_PROGRESS, use=USE).order_by('name')
+        shop_list = []
+        for shop_info in shop_data:
+            shop_dict = {'shop_id':shop_info.shop_id,
+                         'shop_name': shop_info.name,
+                         'shop_price': shop_info.price,
+                         'shop_note': shop_info.note}
+            shop_list.append(shop_dict)
+
+        return JsonResponse({'current_shop_data': shop_list}, json_dumps_params={'ensure_ascii': True})
+
+
+# 수강권/상품 결제 내역 추가
+def add_member_shop_info_logic(request):
+    class_id = request.session.get('class_id', '')
+    member_id = request.POST.get('member_id', None)
+    shop_id = request.POST.get('shop_id', None)
+    name = request.POST.get('name', '')
+    price = request.POST.get('price', 0)
+    payment_price = request.POST.get('payment_price', 0)
+    pay_method = request.POST.get('pay_method')
+    note = request.POST.get('note', '')
+    state_cd = request.POST.get('state_cd')
+
+    today = datetime.date.today()
+    start_date = today
+    end_date = None
+    error = None
+
+    if state_cd == STATE_CD_FINISH:
+        end_date = today
+
+    if member_id == '' or member_id is None:
+        error = '회원 정보를 불러오지 못했습니다.'
+    if shop_id == '' or shop_id is None:
+        error = '상품 정보를 불러오지 못했습니다.'
+
+    if price == '':
+        price = 0
+    else:
+        try:
+            price = int(price)
+        except ValueError:
+            error = '상품 가격은 숫자만 입력 가능합니다.'
+
+    if payment_price == '':
+        payment_price = 0
+    else:
+        try:
+            payment_price = int(payment_price)
+        except ValueError:
+            error = '납부 금액은 숫자만 입력 가능합니다.'
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                member_shop_info = MemberShopTb(class_tb_id=class_id, member_id=member_id, shop_tb_id=shop_id,
+                                                price=price, payment_price=payment_price, pay_method=pay_method,
+                                                start_date=start_date, end_date=end_date, note=note, state_cd=state_cd,
+                                                use=USE)
+                member_shop_info.save()
+                if payment_price > 0:
+                    member_payment_history_info = MemberPaymentHistoryTb(class_tb_id=class_id,
+                                                                         member_id=member_id,
+                                                                         member_shop_tb_id=member_shop_info.member_shop_id,
+                                                                         payment_price=payment_price,
+                                                                         refund_price=0,
+                                                                         pay_method=pay_method,
+                                                                         pay_date=start_date, note=note, use=USE)
+                    member_payment_history_info.save()
+
+        except InternalError:
+            error = error
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id, from_member_name=request.user.first_name,
+                         class_tb_id=class_id, log_info=name + ' 상품 결제 내역', log_how='추가', use=USE)
+        log_data.save()
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
+class GetMemberShopHistoryViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        class_id = self.request.session.get('class_id', '')
+        member_id = request.GET.get('member_id')
+        day = request.GET.get('day')
+        page = request.GET.get('page', 1)
+        sort = request.GET.get('sort_val', SORT_SHOP_START_DATE)
+        today = datetime.date.today()
+        member_shop_list = []
+        ordered_member_shop_dict = collections.OrderedDict()
+        error = None
+
+        if member_id == '':
+            error = '회원 정보를 불러오지 못했습니다.'
+        # context = {}
+        if error is None:
+            try:
+                check_date = today - datetime.timedelta(days=int(day))
+                member_shop_data = MemberShopTb.objects.select_related(
+                    'shop_tb').filter(class_tb_id=class_id, member_id=member_id,
+                                      start_date__gte=check_date, use=USE).order_by('-start_date', '-reg_dt')
+            except ValueError:
+                member_shop_data = MemberShopTb.objects.select_related(
+                    'shop_tb').filter(class_tb_id=class_id, member_id=member_id, use=USE).order_by('-start_date',
+                                                                                                   '-reg_dt')
+
+            paginator = Paginator(member_shop_data, SCHEDULE_PAGINATION_COUNTER)
+            try:
+                member_shop_data = paginator.page(page)
+            except EmptyPage:
+                member_shop_data = []
+            member_shop_idx = paginator.count - SCHEDULE_PAGINATION_COUNTER * (int(page) - 1)
+
+            ordered_member_shop_dict['max_page'] = paginator.num_pages
+            ordered_member_shop_dict['this_page'] = page
+
+        if error is None:
+            for member_shop_info in member_shop_data:
+                shop_tb = member_shop_info.shop_tb
+                shop_id = ''
+                shop_name = ''
+                shop_price = 0
+                shop_note = ''
+                if shop_tb is not None :
+                    shop_id = member_shop_info.shop_tb.shop_id
+                    shop_name = member_shop_info.shop_tb.name
+                    shop_price = member_shop_info.price
+                    shop_note = member_shop_info.shop_tb.note
+                member_shop_dict = {'member_shop_idx': str(member_shop_idx),
+                                    'member_shop_id': member_shop_info.member_shop_id,
+                                    'member_id': member_shop_info.member_id,
+                                    'payment_price': member_shop_info.payment_price,
+                                    'refund_price': member_shop_info.refund_price,
+                                    'start_date': str(member_shop_info.start_date),
+                                    'end_date': str(member_shop_info.end_date),
+                                    'note': member_shop_info.note,
+                                    'state_cd': member_shop_info.state_cd,
+                                    'shop_id': shop_id,
+                                    'shop_name': shop_name,
+                                    'shop_price': shop_price,
+                                    'shop_note': shop_note
+                                    }
+                member_shop_list.append(member_shop_dict)
+                member_shop_idx -= 1
+            ordered_member_shop_dict['member_shop_list'] = member_shop_list
+
+        return JsonResponse(ordered_member_shop_dict, json_dumps_params={'ensure_ascii': True})
+
+
+# 상품 구매 내역 일괄 삭제
+def delete_member_shop_data_logic(request):
+    class_id = request.session.get('class_id', '')
+    member_shop_id = request.POST.get('member_shop_id', '')
+    error = None
+    member_shop_info = None
+    member_name = ''
+    shop_name = ''
+    try:
+        member_shop_info = MemberShopTb.objects.get(member_shop_id=member_shop_id)
+    except ObjectDoesNotExist:
+        error = '오류가 발생했습니다. [0]'
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                member_name = member_shop_info.member.name
+                shop_name = member_shop_info.shop_tb.name
+                member_shop_info.delete()
+
+        except ValueError:
+            error = '오류가 발생했습니다. [1]'
+        except IntegrityError:
+            error = '오류가 발생했습니다. [2]'
+        except TypeError:
+            error = '오류가 발생했습니다. [3]'
+        except ValidationError:
+            error = '오류가 발생했습니다. [4]'
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id, from_member_name=request.user.first_name,
+                         class_tb_id=class_id, log_info=member_name + '님의 '
+                                                        + shop_name+' 상품 구매 내역', log_how='삭제', use=USE)
+        log_data.save()
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
+# 수강권/상품 결제 내역 추가
+def add_member_payment_history_info_logic(request):
+    class_id = request.session.get('class_id', '')
+
+    member_shop_id = request.POST.get('member_shop_id', None)
+    member_ticket_id = request.POST.get('member_ticket_id', None)
+    member_id = request.POST.get('member_id', None)
+    payment_price = request.POST.get('payment_price', 0)
+    refund_price = request.POST.get('refund_price', 0)
+    pay_date = request.POST.get('pay_date')
+    pay_method = request.POST.get('pay_method')
+    note = request.POST.get('note')
+    log_message = ''
+    error = None
+
+    if member_shop_id == '':
+        member_shop_id = None
+    if member_ticket_id == '':
+        member_ticket_id = None
+
+    if payment_price == '':
+        payment_price = 0
+    else:
+        try:
+            payment_price = int(payment_price)
+        except ValueError:
+            error = '납부 금액은 숫자만 입력 가능합니다.'
+
+    if refund_price == '':
+        refund_price = 0
+    else:
+        try:
+            refund_price = int(refund_price)
+        except ValueError:
+            error = '환불 금액은 숫자만 입력 가능합니다.'
+
+    if member_shop_id is None and member_ticket_id is None:
+        error = '오류가 발생했습니다.[0]'
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                if member_ticket_id is not None:
+                    try:
+                        member_ticket_info = MemberTicketTb.objects.get(member_ticket_id=member_ticket_id)
+                        if member_ticket_info.state_cd == STATE_CD_REFUND:
+                            error = '이미 환불된 구매 내역입니다.'
+                        else:
+                            if payment_price > 0:
+                                member_ticket_info.payment_price += payment_price
+                                member_ticket_info.save()
+                            if refund_price > 0:
+                                member_ticket_info.refund_price = refund_price
+                                member_ticket_info.refund_date = pay_date
+                                member_ticket_info.state_cd = STATE_CD_REFUND
+                                member_ticket_info.save()
+                        log_message = member_ticket_info.member.name + '님 ' + member_ticket_info.ticket_tb.name + ' 수강권'
+                    except ObjectDoesNotExist:
+                        error = '수강권 정보를 불러오지 못했습니다.'
+
+                if member_shop_id is not None:
+                    try:
+                        member_shop_info = MemberShopTb.objects.get(member_shop_id=member_shop_id)
+                        if member_shop_info.state_cd == STATE_CD_REFUND:
+                            error = '이미 환불된 구매 내역입니다.'
+                        else:
+                            if payment_price > 0:
+                                member_shop_info.payment_price += payment_price
+                                if member_shop_info.payment_price >= member_shop_info.price:
+                                    member_shop_info.state_cd = STATE_CD_FINISH
+                                    member_shop_info.end_date = pay_date
+                                else:
+                                    member_shop_info.state_cd = STATE_CD_IN_PROGRESS
+                                member_shop_info.save()
+                            if refund_price > 0:
+                                member_shop_info.refund_price = refund_price
+                                member_shop_info.state_cd = STATE_CD_REFUND
+                                member_shop_info.end_date = pay_date
+                                member_shop_info.save()
+                        log_message = member_shop_info.member.name + '님 ' + member_shop_info.shop_tb.name + '상품'
+                    except ObjectDoesNotExist:
+                        error = '상품 구매 정보를 불러오지 못했습니다.'
+
+                if error is None:
+                    member_payment_history_info = MemberPaymentHistoryTb(class_tb_id=class_id,
+                                                                         member_id=member_id,
+                                                                         member_ticket_tb_id=member_ticket_id,
+                                                                         member_shop_tb_id=member_shop_id,
+                                                                         payment_price=payment_price,
+                                                                         refund_price=refund_price,
+                                                                         pay_method=pay_method,
+                                                                         pay_date=pay_date, note=note, use=USE)
+                    member_payment_history_info.save()
+
+        except InternalError:
+            error = error
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id, from_member_name=request.user.first_name,
+                         class_tb_id=class_id, log_info=log_message + ' 결제 내역', log_how='추가', use=USE)
+        log_data.save()
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
+class GetMemberPaymentHistoryViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        class_id = self.request.session.get('class_id', '')
+        member_shop_id = request.GET.get('member_shop_id', None)
+        member_ticket_id = request.GET.get('member_ticket_id', None)
+        member_payment_list = []
+        member_payment_data = []
+        ordered_member_payment_dict = collections.OrderedDict()
+        error = None
+
+        if member_shop_id == '':
+            member_shop_id = None
+        if member_ticket_id == '':
+            member_ticket_id = None
+
+        if member_ticket_id is not None:
+            member_payment_data = MemberPaymentHistoryTb.objects.select_related(
+                'member_ticket_tb').filter(class_tb_id=class_id, member_ticket_tb_id=member_ticket_id,
+                                           use=USE).order_by('-pay_date', '-reg_dt')
+
+        if member_shop_id is not None:
+            member_payment_data = MemberPaymentHistoryTb.objects.select_related(
+                'member_shop_tb').filter(class_tb_id=class_id, member_shop_tb_id=member_shop_id,
+                                         use=USE).order_by('-pay_date', '-reg_dt')
+
+        if error is None:
+            member_payment_history_idx = len(member_payment_data)
+            for member_payment_info in member_payment_data:
+                member_payment_dict = {'member_payment_history_idx': member_payment_history_idx,
+                                       'member_payment_history_id': member_payment_info.member_payment_history_id,
+                                       'payment_price': member_payment_info.payment_price,
+                                       'refund_price': member_payment_info.refund_price,
+                                       'pay_date': str(member_payment_info.pay_date),
+                                       'pay_method': member_payment_info.pay_method,
+                                       'note': str(member_payment_info.note)
+                                       }
+                member_payment_list.append(member_payment_dict)
+                member_payment_history_idx -= 1
+            ordered_member_payment_dict['member_payment_list'] = member_payment_list
+        return JsonResponse(ordered_member_payment_dict, json_dumps_params={'ensure_ascii': True})
+
+
+# 상품 결제 내역 삭제
+def delete_member_payment_history_info_logic(request):
+    class_id = request.session.get('class_id', '')
+    member_payment_history_id = request.POST.get('member_payment_history_id', '')
+    error = None
+    member_payment_history_info = None
+    member_name = ''
+    shop_name = ''
+    try:
+        member_payment_history_info = MemberPaymentHistoryTb.objects.get(member_payment_history_id=member_payment_history_id)
+    except ObjectDoesNotExist:
+        error = '오류가 발생했습니다. [0]'
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                member_name = member_payment_history_info.member.name
+                member_shop_tb = member_payment_history_info.member_shop_tb
+                member_ticket_tb = member_payment_history_info.member_ticket_tb
+                if member_shop_tb is not None and member_shop_tb != '':
+                    shop_name = member_shop_tb.shop_tb.name
+                    sum_payment_price = MemberPaymentHistoryTb.objects.filter(member_shop_tb_id=member_shop_tb.member_shop_id,
+                                                                              use=USE).aggregate(sum_payment_price=Sum('payment_price'))
+                    sum_refund_price = MemberPaymentHistoryTb.objects.filter(member_shop_tb_id=member_shop_tb.member_shop_id,
+                                                                             use=USE).aggregate(sum_refund_price=Sum('refund_price'))
+
+                    member_shop_tb.payment_price = sum_payment_price['sum_payment_price']\
+                                                   - member_payment_history_info.payment_price
+                    member_shop_tb.refund_price = sum_refund_price['sum_refund_price']\
+                                                  - member_payment_history_info.refund_price
+                    if member_shop_tb.payment_price >= member_shop_tb.price:
+                        member_shop_tb.state_cd = STATE_CD_FINISH
+                    if member_shop_tb.payment_price == 0:
+                        member_shop_tb.state_cd = STATE_CD_NOT_PROGRESS
+                    else:
+                        member_shop_tb.state_cd = STATE_CD_IN_PROGRESS
+
+                    if member_shop_tb.refund_price > 0:
+                        member_shop_tb.state_cd = STATE_CD_REFUND
+
+                    member_shop_tb.save()
+                if member_ticket_tb is not None and member_ticket_tb != '':
+                    shop_name = member_ticket_tb.ticket_tb.name
+                    sum_payment_price = MemberPaymentHistoryTb.objects.filter(member_ticket_tb_id=member_ticket_tb.member_ticket_id,
+                                                                              use=USE).aggregate(sum_payment_price=Sum('payment_price'))
+                    sum_refund_price = MemberPaymentHistoryTb.objects.filter(member_ticket_tb_id=member_ticket_tb.member_ticket_id,
+                                                                             use=USE).aggregate(sum_refund_price=Sum('refund_price'))
+
+                    member_ticket_tb.payment_price = sum_payment_price['sum_payment_price']\
+                                                     - member_payment_history_info.payment_price
+                    member_ticket_tb.refund_price = sum_refund_price['sum_refund_price']\
+                                                    - member_payment_history_info.refund_price
+
+                    if member_payment_history_info.refund_price > 0:
+                        schedule_data_count = ScheduleTb.objects.filter(member_ticket_tb_id=member_ticket_tb.member_ticket_id).count()
+                        schedule_data_finish_count = ScheduleTb.objects.filter(Q(state_cd=STATE_CD_FINISH)
+                                                                               | Q(state_cd=STATE_CD_ABSENCE),
+                                                                               member_ticket_tb_id=member_ticket_tb.member_ticket_id).count()
+
+                        member_ticket_avail_count = 0
+                        member_ticket_rem_count = 0
+                        if member_ticket_tb.member_ticket_reg_count >= schedule_data_count:
+                            member_ticket_avail_count = member_ticket_tb.member_ticket_reg_count - schedule_data_count
+
+                        if member_ticket_tb.member_ticket_reg_count >= schedule_data_finish_count:
+                            member_ticket_rem_count = member_ticket_tb.member_ticket_reg_count - schedule_data_finish_count
+                        member_ticket_tb.member_ticket_avail_count = member_ticket_avail_count
+                        member_ticket_tb.member_ticket_rem_count = member_ticket_rem_count
+                        member_ticket_tb.refund_price = 0
+                        member_ticket_tb.refund_date = None
+                        member_ticket_tb.state_cd = STATE_CD_IN_PROGRESS
+                    member_ticket_tb.save()
+
+                member_payment_history_info.delete()
+
+        except ValueError:
+            error = '오류가 발생했습니다. [1]'
+        except IntegrityError:
+            error = '오류가 발생했습니다. [2]'
+        except TypeError:
+            error = '오류가 발생했습니다. [3]'
+        except ValidationError:
+            error = '오류가 발생했습니다. [4]'
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id, from_member_name=request.user.first_name,
+                         class_tb_id=class_id, log_info=member_name + '님의 ' + shop_name+' 결제 내역',
+                         log_how='삭제', use=USE)
+        log_data.save()
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
 # 출석 체크 완료 기능
 def attend_mode_check_logic(request):
     class_id = request.session.get('class_id', '')
@@ -6672,7 +7473,8 @@ def attend_mode_finish_logic(request):
                                                                 schedule_info.note, schedule_info.private_note,
                                                                 ON_SCHEDULE_TYPE,
                                                                 member_id, PERMISSION_STATE_CD_APPROVE,
-                                                                STATE_CD_FINISH, UN_USE, SCHEDULE_DUPLICATION_ENABLE)
+                                                                STATE_CD_FINISH, UN_USE, SCHEDULE_DUPLICATION_ENABLE,
+                                                                schedule_info.trainer.member_id)
                             error = schedule_result['error']
 
                 else:
@@ -7073,7 +7875,7 @@ def delete_member_profile_img_logic(request):
             error = func_delete_profile_image_logic(member_info.profile_url)
 
     if error is None:
-        member_info.profile_url = ''
+        member_info.profile_url = '/static/common/icon/icon_account.png'
         member_info.save()
 
     if error is not None:
@@ -7087,6 +7889,929 @@ def delete_member_profile_img_logic(request):
         log_data.save()
 
     return render(request, 'ajax/trainer_error_ajax.html')
+
+
+# 프로필 사진 수정
+def update_trainer_profile_img_logic(request):
+    error = None
+    member_info = None
+    img_url = None
+    member_id = request.POST.get('trainer_id', '')
+    class_id = request.session.get('class_id', '')
+    # group_name = request.session.get('group_name', 'trainer')
+    group_name = 'trainer'
+
+    try:
+        member_info = MemberTb.objects.get(member_id=member_id)
+    except ObjectDoesNotExist:
+        error = '강사 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        if member_info.user.is_active:
+            error = '회원가입이 완료된 강사의 프로필 이미지는 등록/수정이 불가능합니다.'
+        if str(member_info.reg_info) != str(request.user.id):
+            error = '직접 등록한 강사만 프로필 이미지만 등록/수정이 가능합니다.'
+
+    if error is None:
+        if member_info.profile_url is not None and member_info.profile_url != '':
+            error = func_delete_profile_image_logic(member_info.profile_url)
+
+    if error is None:
+        max_range = 9999999999
+        random_file_name = str(random.randrange(0, max_range)).zfill(len(str(max_range)))
+        if request.method == 'POST':
+            try:
+                img_url = func_upload_profile_image_logic(request.POST.get('profile_img_file'),
+                                                          str(member_id)+'/'+str(random_file_name), group_name)
+                if img_url is None:
+                    error = '프로필 이미지 변경에 실패했습니다.[1]'
+            except MultiValueDictKeyError:
+                error = '프로필 이미지 변경에 실패했습니다.[2]'
+
+    if error is None:
+        member_info.profile_url = img_url
+        member_info.save()
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=member_info.name+' 강사 프로필', log_how='변경', use=USE)
+        log_data.save()
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
+# 프로필 사진 삭제
+def delete_trainer_profile_img_logic(request):
+    error = None
+    member_info = None
+    member_id = request.POST.get('trainer_id', '')
+    class_id = request.session.get('class_id', '')
+
+    try:
+        member_info = MemberTb.objects.get(member_id=member_id)
+    except ObjectDoesNotExist:
+        error = '강사 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        if member_info.user.is_active:
+            error = '회원가입이 완료된 강사의 프로필 이미지는 삭제가 불가능합니다.'
+        if str(member_info.reg_info) != str(request.user.id):
+            error = '직접 등록한 강사만 프로필 이미지 삭제 가능합니다.'
+
+    if error is None:
+        if member_info.profile_url is not None and member_info.profile_url != '':
+            error = func_delete_profile_image_logic(member_info.profile_url)
+
+    if error is None:
+        member_info.profile_url = '/static/common/icon/icon_account.png'
+        member_info.save()
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=member_info.name+' 강사 프로필', log_how='삭제', use=USE)
+        log_data.save()
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
+class GetTrainerIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        class_id = self.request.session.get('class_id', '')
+        trainer_sort = request.GET.get('sort_val', SORT_TRAINER_NAME)
+        sort_order_by = request.GET.get('sort_order_by', SORT_ASC)
+        keyword = request.GET.get('keyword', '')
+        current_trainer_data = []
+        error = None
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+            class_trainer_info = class_info.member
+        except ObjectDoesNotExist:
+            error = '지점 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            current_trainer_data = func_get_trainer_ing_list(class_id, request.user.id, keyword)
+            finish_trainer_num = len(func_get_class_trainer_end_list(class_id, keyword))
+            sort_info = int(trainer_sort)
+            trainer_data = {'trainer_id': class_trainer_info.member_id,
+                            'trainer_user_id': class_trainer_info.user.username,
+                            'trainer_name': class_trainer_info.name,
+                            'trainer_phone': str(class_trainer_info.phone),
+                            'trainer_email': str(class_trainer_info.user.email),
+                            'trainer_sex': str(class_trainer_info.sex),
+                            'trainer_profile_url': class_trainer_info.profile_url,
+                            'trainer_birthday_dt': str(class_trainer_info.birthday_dt)}
+            if sort_info == SORT_TRAINER_NAME:
+                current_trainer_data = sorted(current_trainer_data, key=lambda elem: elem['trainer_name'],
+                                              reverse=int(sort_order_by))
+                current_trainer_data.insert(0, trainer_data)
+
+        # context['total_member_num'] = len(member_data)
+        # if page != 0:
+        #     paginator = Paginator(member_data, 20)  # Show 20 contacts per page
+        #     try:
+        #         member_data = paginator.page(page)
+        #     except EmptyPage:
+        #         member_data = None
+        #
+        # context['member_data'] = member_data
+        # end_dt = timezone.now()
+
+        return JsonResponse({'current_trainer_data': current_trainer_data, 'finish_trainer_num': finish_trainer_num,
+                             'error': error},
+                            json_dumps_params={'ensure_ascii': True})
+
+
+class GetTrainerEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        # start_dt = timezone.now()
+        class_id = self.request.session.get('class_id', '')
+        # page = request.GET.get('page', 0)
+        trainer_sort = request.GET.get('sort_val', SORT_TRAINER_NAME)
+        sort_order_by = request.GET.get('sort_order_by', SORT_ASC)
+        keyword = request.GET.get('keyword', '')
+
+        finish_trainer_data = func_get_trainer_end_list(class_id, request.user.id, keyword)
+        current_trainer_num = len(func_get_class_trainer_ing_list(class_id, keyword))
+
+        sort_info = int(trainer_sort)
+        if sort_info == SORT_TRAINER_NAME:
+            finish_trainer_data = sorted(finish_trainer_data, key=lambda elem: elem['trainer_name'],
+                                         reverse=int(sort_order_by))
+
+        # context['total_member_num'] = len(member_data)
+        # if page != 0:
+        #     paginator = Paginator(member_data, 20)  # Show 20 contacts per page
+        #     try:
+        #         member_data = paginator.page(page)
+        #     except EmptyPage:
+        #         member_data = None
+        #
+        # end_dt = timezone.now()
+        return JsonResponse({'finish_trainer_data': finish_trainer_data, 'current_trainer_num': current_trainer_num},
+                            json_dumps_params={'ensure_ascii': True})
+
+
+def add_trainer_program_info_logic(request):
+    trainer_id = request.POST.get('trainer_id', '')
+    auth_cd = request.POST.get('auth_cd', '')
+    class_id = request.session.get('class_id', '')
+
+    error = None
+    member_info = None
+    if trainer_id is None or trainer_id == '':
+        error = '강사 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        if str(request.user.id) == str(trainer_id):
+            error = '본인은 등록할수 없습니다.'
+
+    if error is None:
+        try:
+            member_info = MemberTb.objects.get(member_id=trainer_id)
+        except ObjectDoesNotExist:
+            error = '강사 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            class_member_info = MemberClassTb.objects.select_related(
+                'class_tb', 'member').get(class_tb_id=class_id, member_id=trainer_id, use=USE)
+            class_member_info.auth_cd = auth_cd
+            class_member_info.own_cd = OWN_TYPE_EMPLOYEE
+            class_member_info.mod_member_id = request.user.id
+            class_member_info.save()
+        except ObjectDoesNotExist:
+            class_member_info = MemberClassTb(class_tb_id=class_id, member_id=trainer_id, auth_cd=auth_cd,
+                                              mod_member_id=request.user.id, own_cd=OWN_TYPE_EMPLOYEE, use=USE)
+            class_member_info.save()
+
+        function_list = ProductFunctionAuthTb.objects.select_related(
+            'function_auth_tb', 'product_tb').filter(product_tb_id=6,
+                                                     use=USE).order_by('product_tb_id',
+                                                                       'function_auth_tb_id',
+                                                                       'auth_type_cd')
+        for function_info in function_list:
+            if function_info.auth_type_cd is None:
+                function_auth_type_cd_name = str(function_info.function_auth_tb.function_auth_type_cd)
+            else:
+                function_auth_type_cd_name = str(function_info.function_auth_tb.function_auth_type_cd) \
+                                             + str(function_info.auth_type_cd)
+
+            enable_flag = request.POST.get(function_auth_type_cd_name, '')
+            if enable_flag is not None and enable_flag != '':
+                try:
+                    program_auth_info = ProgramAuthTb.objects.get(class_tb_id=class_id, member_id=trainer_id,
+                                                                  function_auth_tb=function_info.function_auth_tb,
+                                                                  auth_type_cd=function_info.auth_type_cd)
+                except ObjectDoesNotExist:
+                    program_auth_info = ProgramAuthTb(class_tb_id=class_id, member_id=trainer_id,
+                                                      function_auth_tb=function_info.function_auth_tb,
+                                                      auth_type_cd=function_info.auth_type_cd,
+                                                      use=USE)
+
+                program_auth_info.enable_flag = enable_flag
+                program_auth_info.save()
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+    else:
+        log_how = '강사 추가'
+        log_data = LogTb(log_type='LP02', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=member_info.name + '님 에게 \''
+                                  + request.session.get('class_type_name', '') + '\' 지점',
+                         log_how=log_how, log_detail='', use=USE)
+        log_data.save()
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
+def update_trainer_program_info_logic(request):
+    trainer_id = request.POST.get('trainer_id', '')
+    # auth_cd = request.POST.get('auth_cd', '')
+    class_id = request.session.get('class_id', '')
+
+    error = None
+    member_info = None
+    if trainer_id is None or trainer_id == '':
+        error = '강사 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        if str(request.user.id) == str(trainer_id):
+            error = '본인은 등록할수 없습니다.'
+    if error is None:
+        try:
+            member_info = MemberTb.objects.get(member_id=trainer_id)
+        except ObjectDoesNotExist:
+            error = '강사 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            class_member_info = MemberClassTb.objects.select_related(
+                'class_tb', 'member').get(class_tb_id=class_id, member_id=trainer_id, use=USE)
+            # class_member_info.auth_cd = auth_cd
+            class_member_info.own_cd = OWN_TYPE_EMPLOYEE
+            class_member_info.mod_member_id = request.user.id
+            class_member_info.save()
+        except ObjectDoesNotExist:
+            error = '강사 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        function_list = ProductFunctionAuthTb.objects.select_related(
+            'function_auth_tb', 'product_tb').filter(product_tb_id=6,
+                                                     use=USE).order_by('product_tb_id',
+                                                                       'function_auth_tb_id',
+                                                                       'auth_type_cd')
+        for function_info in function_list:
+            if function_info.auth_type_cd is None:
+                function_auth_type_cd_name = str(function_info.function_auth_tb.function_auth_type_cd)
+            else:
+                function_auth_type_cd_name = str(function_info.function_auth_tb.function_auth_type_cd) \
+                                             + str(function_info.auth_type_cd)
+
+            enable_flag = request.POST.get(function_auth_type_cd_name, '')
+            if enable_flag is not None and enable_flag != '':
+                try:
+                    program_auth_info = ProgramAuthTb.objects.get(class_tb_id=class_id, member_id=trainer_id,
+                                                                  function_auth_tb=function_info.function_auth_tb,
+                                                                  auth_type_cd=function_info.auth_type_cd)
+                except ObjectDoesNotExist:
+                    program_auth_info = ProgramAuthTb(class_tb_id=class_id, member_id=trainer_id,
+                                                      function_auth_tb=function_info.function_auth_tb,
+                                                      auth_type_cd=function_info.auth_type_cd,
+                                                      use=USE)
+
+                program_auth_info.enable_flag = enable_flag
+                program_auth_info.save()
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+    else:
+        log_how = '강사 권한 변경'
+        log_data = LogTb(log_type='LP02', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=member_info.name + '님 에게 \''
+                                  + request.session.get('class_type_name', '') + '\' 지점',
+                         log_how=log_how, log_detail='', use=USE)
+        log_data.save()
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
+class GetTrainerProgramDataViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        class_id = self.request.session.get('class_id', '')
+        trainer_id = request.GET.get('trainer_id', '')
+        error = None
+        member_program_auth_list = collections.OrderedDict()
+
+        if class_id is None or class_id == '':
+            error = '오류가 발생했습니다.'
+
+        if error is None:
+            program_auth_data = ProgramAuthTb.objects.select_related('class_tb', 'member',
+                                                                     'function_auth_tb').filter(class_tb_id=class_id,
+                                                                                                member_id=trainer_id,
+                                                                                                use=USE)
+
+            for program_auth_info in program_auth_data:
+                if program_auth_info.auth_type_cd is None:
+                    function_auth_type_cd_name = str(program_auth_info.function_auth_tb.function_auth_type_cd)
+                else:
+                    function_auth_type_cd_name = str(program_auth_info.function_auth_tb.function_auth_type_cd) \
+                                                 + str(program_auth_info.auth_type_cd)
+
+                try:
+                    member_program_auth_list[program_auth_info.member_id]
+                except KeyError:
+                    member_program_auth_list[program_auth_info.member_id] = {}
+                    member_result = func_get_trainer_info(class_id, program_auth_info.member_id)
+                    member_program_auth_list[program_auth_info.member_id]['member_info'] \
+                        = member_result['member_info']
+
+                member_program_auth_list[program_auth_info.member_id][function_auth_type_cd_name] \
+                    = program_auth_info.enable_flag
+
+        if error is not None:
+            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+            messages.error(request, error)
+        return JsonResponse(member_program_auth_list, json_dumps_params={'ensure_ascii': True})
+
+
+class GetTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        # context = {}
+        # context = super(GetTrainerInfoView, self).get_context_data(**kwargs)
+        trainer_id = request.GET.get('trainer_id', '')
+        class_id = request.session.get('class_id', '')
+        error = None
+        # class_info = None
+
+        # center_name = '없음'
+        user_member_info = None
+        class_info = None
+        # off_repeat_schedule_data = None
+        trainer_data = collections.OrderedDict()
+
+        if class_id is None or class_id == '':
+            error = '오류가 발생했습니다.'
+        if trainer_id is None or trainer_id == '':
+            error = '오류가 발생했습니다.[2]'
+
+        if error is None:
+            try:
+                class_info = MemberClassTb.objects.get(class_tb_id=class_id, member_id=trainer_id)
+            except ObjectDoesNotExist:
+                error = '지점 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            try:
+                user_member_info = MemberTb.objects.get(member_id=trainer_id)
+            except ObjectDoesNotExist:
+                error = '회원 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            connection_check = 0
+            if class_info.auth_cd == AUTH_TYPE_VIEW:
+                connection_check = 2
+            elif class_info.auth_cd == AUTH_TYPE_WAIT:
+                connection_check = 1
+            if user_member_info.reg_info is None or str(user_member_info.reg_info) != str(request.user.id):
+                # 연결이 안되어 있는 경우 회원 정보 표시 안함
+                if connection_check != 2:
+                    user_member_info.sex = ''
+                    user_member_info.birthday_dt = ''
+                    if user_member_info.phone is None or user_member_info.phone == '':
+                        user_member_info.phone = ''
+                    else:
+                        user_member_info.phone = '*******' + user_member_info.phone[7:]
+                    user_member_info.user.email = ''
+                    user_member_info.profile_url = '/static/common/icon/icon_account.png'
+            if user_member_info.profile_url is None or user_member_info.profile_url == '':
+                user_member_info.profile_url = '/static/common/icon/icon_account.png'
+
+            trainer_data = {'trainer_id': request.user.id,
+                            'trainer_user_id': user_member_info.user.username,
+                            'trainer_name': user_member_info.name,
+                            'trainer_phone': str(user_member_info.phone),
+                            'trainer_email': str(user_member_info.user.email),
+                            'trainer_sex': str(user_member_info.sex),
+                            'trainer_birthday_dt': str(user_member_info.birthday_dt),
+                            'trainer_profile_url': user_member_info.profile_url,
+                            'trainer_phone_is_active': str(user_member_info.phone_is_active),
+                            'trainer_connection_check': connection_check,
+                            'trainer_is_active': str(user_member_info.user.is_active),
+                            'program': {'program_id': class_id,
+                                        'program_subject_type_name': class_info.class_tb.get_class_type_cd_name(),
+                                        'program_program_owner_id': class_info.member_id,
+                                        'program_program_owner_name': class_info.member.name,
+                                      }
+                           }
+
+        return JsonResponse(trainer_data, json_dumps_params={'ensure_ascii': True})
+
+
+class GetTrainerLectureListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        class_id = self.request.session.get('class_id', '')
+        trainer_id = request.GET.get('trainer_id', '')
+        lecture_data = LectureTb.objects.select_related(
+            'main_trainer').filter(class_tb_id=class_id, state_cd=STATE_CD_IN_PROGRESS,
+                                   main_trainer_id=trainer_id, use=USE).order_by('lecture_id')
+
+        trainer_lecture_list = []
+        # 수업과 연관되어있는 수강권 정보 셋팅
+        for lecture_info in lecture_data:
+            lecture_id = str(lecture_info.lecture_id)
+            main_trainer_id = lecture_info.main_trainer_id
+            main_trainer_name = lecture_info.main_trainer.name
+            lecture_data_dict = {'lecture_id': lecture_id,
+                                 'lecture_name': lecture_info.name,
+                                 'lecture_note': lecture_info.note,
+                                 'lecture_max_num': lecture_info.member_num,
+                                 'lecture_ing_color_cd': lecture_info.ing_color_cd,
+                                 'lecture_ing_font_color_cd': lecture_info.ing_font_color_cd,
+                                 'lecture_end_color_cd': lecture_info.end_color_cd,
+                                 'lecture_end_font_color_cd': lecture_info.end_font_color_cd,
+                                 'lecture_minute': lecture_info.lecture_minute,
+                                 'lecture_type_cd': lecture_info.lecture_type_cd,
+                                 'lecture_mod_dt': str(lecture_info.mod_dt),
+                                 'lecture_reg_dt': str(lecture_info.reg_dt),
+                                 'lecture_state_cd': lecture_info.state_cd,
+                                 'main_trainer_id': main_trainer_id,
+                                 'main_trainer_name': main_trainer_name}
+            trainer_lecture_list.append(lecture_data_dict)
+
+        return JsonResponse({'trainer_lecture_data': trainer_lecture_list},
+                             json_dumps_params={'ensure_ascii': True})
+
+
+# 회원수정
+def update_trainer_info_logic(request):
+    trainer_id = request.POST.get('trainer_id')
+    first_name = request.POST.get('first_name', '')
+    phone = request.POST.get('phone', '')
+    sex = request.POST.get('sex', '')
+    birthday_dt = request.POST.get('birthday', '')
+    class_id = request.session.get('class_id', '')
+    error = None
+    member = None
+
+    if trainer_id == '':
+        error = '강사 ID를 확인해 주세요.'
+
+    if error is None:
+        try:
+            member = MemberTb.objects.get(member_id=trainer_id)
+        except ObjectDoesNotExist:
+            error = '강사 ID를 확인해 주세요.'
+    if error is None:
+        if member.user.is_active:
+            error = '강사 정보를 수정할수 없습니다.'
+        if str(request.user.id) != str(member.reg_info):
+            error = '다른 강사가 등록한 강사는 수정할수 없습니다.'
+    if error is None:
+        try:
+            with transaction.atomic():
+                # 회원의 이름을 변경하는 경우 자동으로 ID 변경되도록 설정
+                if member.user.first_name != first_name:
+                    username = first_name
+                    i = 0
+                    count = MemberTb.objects.filter(name=username).count()
+                    max_range = (100 * (10 ** len(str(count)))) - 1
+                    for i in range(0, 100):
+                        username += str(random.randrange(0, max_range)).zfill(len(str(max_range)))
+                        try:
+                            User.objects.get(username=username)
+                        except ObjectDoesNotExist:
+                            break
+
+                    if i == 100:
+                        error = 'ID 변경에 실패했습니다. 다시 시도해주세요.'
+                        raise InternalError
+
+                    member.user.username = username
+                    member.user.first_name = first_name
+                    member.user.save()
+
+                member.name = first_name
+                member.phone = phone
+                member.sex = sex
+                if birthday_dt is not None and birthday_dt != '':
+                    member.birthday_dt = birthday_dt
+                member.save()
+
+        except ValueError:
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError:
+            error = '등록 값에 문제가 있습니다.'
+        except TypeError:
+            error = '등록 값에 문제가 있습니다.'
+        except ValidationError:
+            error = '등록 값에 문제가 있습니다.'
+        except InternalError:
+            error = error
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=member.name+' 강사 정보', log_how='변경', use=USE)
+        log_data.save()
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
+def update_trainer_connection_info_logic(request):
+    trainer_id = request.POST.get('trainer_id', '')
+    auth_cd = request.POST.get('trainer_auth_cd', '')
+    class_id = request.session.get('class_id', '')
+
+    error = None
+    member_info = None
+    if trainer_id is None or trainer_id == '':
+        error = '강사 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        if str(request.user.id) == str(trainer_id):
+            error = '본인은 등록할수 없습니다.'
+
+    if error is None:
+        try:
+            member_info = MemberTb.objects.get(member_id=trainer_id)
+        except ObjectDoesNotExist:
+            error = '강사 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            class_member_info = MemberClassTb.objects.select_related(
+                'class_tb', 'member').get(class_tb_id=class_id, member_id=trainer_id, use=USE)
+            class_member_info.auth_cd = auth_cd
+            class_member_info.own_cd = OWN_TYPE_EMPLOYEE
+            class_member_info.mod_member_id = request.user.id
+            class_member_info.save()
+        except ObjectDoesNotExist:
+            class_member_info = MemberClassTb(class_tb_id=class_id, member_id=trainer_id, auth_cd=auth_cd,
+                                              mod_member_id=request.user.id, own_cd=OWN_TYPE_EMPLOYEE, use=USE)
+            class_member_info.save()
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+    else:
+        log_how = '강사 연결'
+        log_data = LogTb(log_type='LP02', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=member_info.name + '님 에게 \''
+                                  + request.session.get('class_type_name', '') + '\' 지점',
+                         log_how=log_how, log_detail='', use=USE)
+        log_data.save()
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
+# 강사 삭제
+def delete_trainer_info_logic(request):
+    class_id = request.session.get('class_id', '')
+    trainer_id = request.POST.get('trainer_id')
+    user_id = request.user.id
+    error = None
+    member_class_data = None
+    lecture_data = None
+    member = None
+    if trainer_id == '':
+        error = '강사 ID를 확인해 주세요.'
+
+    if error is None:
+        try:
+            member = MemberTb.objects.get(member_id=trainer_id)
+        except ObjectDoesNotExist:
+            error = '강사 ID를 확인해 주세요.'
+
+    if error is None:
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+            user_id = class_info.member.member_id
+        except ObjectDoesNotExist:
+            user_id = request.user.id
+
+    if error is None:
+        member_class_data = MemberClassTb.objects.filter(class_tb_id=class_id, member_id=trainer_id,
+                                                         own_cd=OWN_TYPE_EMPLOYEE)
+
+        lecture_data = LectureTb.objects.filter(class_tb_id=class_id, main_trainer_id=trainer_id, use=USE)
+
+    if error is None:
+
+        schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, trainer_id=trainer_id,
+                                                  state_cd=STATE_CD_NOT_PROGRESS)
+
+        repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id, repeat_trainer_id=trainer_id)
+
+        try:
+            with transaction.atomic():
+                # 등록된 일정 정리
+                if len(schedule_data) > 0:
+                    # 예약된 일정 삭제
+                    schedule_data.update(trainer_id=user_id)
+                if len(repeat_schedule_data) > 0:
+                    # 반복일정 삭제
+                    repeat_schedule_data.update(repeat_trainer_id=user_id)
+
+                member_class_data.update(auth_cd=AUTH_TYPE_DELETE)
+                lecture_data.update(main_trainer_id=user_id)
+
+                if member.user.is_active == 0 and str(member.reg_info) == str(request.user.id):
+                    member.contents = member.user.username + ':' + str(trainer_id)
+                    member.use = UN_USE
+                    member.save()
+
+        except ValueError:
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError:
+            error = '등록 값에 문제가 있습니다.'
+        except TypeError:
+            error = '등록 값의 형태가 문제 있습니다.'
+        except ValidationError:
+            error = '등록 값의 형태가 문제 있습니다'
+        except InternalError:
+            error = '등록 값에 문제가 있습니다.'
+
+    if error is not None:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=member.name+' 강사 정보', log_how='삭제', use=USE)
+        log_data.save()
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
+class GetTrainerClosedDateListView(LoginRequiredMixin, AccessTestMixin, View):
+    def get(self, request):
+        class_id = request.session.get('class_id', '')
+        trainer_id = request.GET.get('trainer_id', '')
+        error = None
+        today = datetime.date.today()
+        trainer_closed_list = []
+
+        if trainer_id is None or trainer_id == '':
+            error = '회원 정보를 불러오지 못했습니다.'
+
+        if error is not None:
+            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+            messages.error(request, error)
+
+        return JsonResponse({'trainer_closed_list': trainer_closed_list}, json_dumps_params={'ensure_ascii': True})
+
+
+def add_trainer_closed_date_logic(request):
+    class_id = request.session.get('class_id', '')
+    member_id = request.POST.get('member_id', '')
+    start_date = request.POST.get('start_date', '')
+    end_date = request.POST.get('end_date', '')
+    repeat_week_type = request.POST.get('week_info', '')
+    title = request.POST.get('title', '')
+    contents = request.POST.get('contents', '')
+    is_member_view = request.POST.get('is_member_view', '1')
+
+    error = None
+    schedule_closed_id = ''
+    start_date_info = None
+    end_date_info = None
+    repeat_schedule_date_list = []
+
+    if member_id is None:
+        member_id = ''
+    if repeat_week_type == '':
+        error = '요일을 선택해주세요.'
+    if start_date == '':
+        error = '시작 날짜를 선택해 주세요.'
+    elif end_date == '':
+        error = '종료 날짜를 선택해 주세요.'
+
+    if error is None:
+        try:
+            start_date_info = datetime.datetime.strptime(start_date, '%Y-%m-%d')
+            end_date_info = datetime.datetime.strptime(end_date, '%Y-%m-%d')
+            if (start_date_info - end_date_info) > datetime.timedelta(days=365):
+                error = '1년까지만 불가 일정을 등록할수 있습니다.'
+        except ValueError:
+            error = '날짜 오류가 발생했습니다.[0]'
+        except IntegrityError:
+            error = '날짜 오류가 발생했습니다.[1]'
+        except TypeError:
+            error = '날짜 오류가 발생했습니다.[2]'
+
+    if error is None:
+        if member_id != '':
+            try:
+                MemberTb.objects.get(member_id=member_id)
+            except ObjectDoesNotExist:
+                error = '회원 정보를 불러오지 못했습니다.'
+
+    # 등록할 날짜 list 가져오기
+    if error is None:
+        week_order = ['SUN', 'MON', 'TUE', 'WED', 'THS', 'FRI', 'SAT']
+        week_order = {key: i for i, key in enumerate(week_order)}
+        week_data = repeat_week_type.split('/')
+        week_data = sorted(week_data, key=lambda week_info: week_order.get(week_info))
+        repeat_week_type = "/".join(week_data)
+        repeat_schedule_date_list = func_get_repeat_schedule_date_list(repeat_week_type,
+                                                                       start_date_info,
+                                                                       end_date_info)
+        if len(repeat_schedule_date_list) == 0:
+            error = '등록할 수 있는 일정이 없습니다.'
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                schedule_closed_info = ScheduleClosedTb(class_tb_id=class_id, member_id=member_id,
+                                                        start_date=start_date_info, end_date=end_date_info,
+                                                        title=title, contents=contents,
+                                                        week_info=repeat_week_type,
+                                                        is_member_view=is_member_view, use=USE)
+
+                schedule_closed_info.save()
+
+                schedule_closed_id = schedule_closed_info.schedule_closed_id
+
+                # 반복일정 데이터 등록
+                for repeat_schedule_date_info in repeat_schedule_date_list:
+                    repeat_schedule_info_date = str(repeat_schedule_date_info).split(' ')[0]
+
+                    closed_date = datetime.datetime.strptime(repeat_schedule_info_date, '%Y-%m-%d')
+
+                    schedule_closed_day = ScheduleClosedDayTb(schedule_closed_tb_id=schedule_closed_id,
+                                                              closed_date=closed_date, use=USE)
+                    schedule_closed_day.save()
+
+        except ValueError:
+            error = '오류가 발생했습니다. [1]'
+        except IntegrityError:
+            error = '오류가 발생했습니다. [2]'
+        except TypeError:
+            error = '오류가 발생했습니다. [3]'
+        except ValidationError:
+            error = '오류가 발생했습니다. [4]'
+        except InternalError:
+            error = '오류가 발생했습니다. [5]'
+
+    if error is not None:
+        messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info='불가 일정', log_how='추가', use=USE)
+        log_data.save()
+
+    return JsonResponse({'schedule_closed_id': str(schedule_closed_id)}, json_dumps_params={'ensure_ascii': True})
+
+
+def update_trainer_closed_date_logic(request):
+    class_id = request.session.get('class_id', '')
+    schedule_closed_id = request.POST.get('schedule_closed_id', '')
+    member_id = request.POST.get('member_id', '')
+    start_date = request.POST.get('start_date', '')
+    end_date = request.POST.get('end_date', '')
+    week_info = request.POST.get('week_info', '')
+    title = request.POST.get('title', '')
+    contents = request.POST.get('contents', '')
+    is_member_view = request.POST.get('is_member_view', '')
+
+    error = None
+    schedule_closed_info = None
+    start_date_info = None
+    end_date_info = None
+
+    if member_id is None:
+        member_id = ''
+
+    try:
+        schedule_closed_info = ScheduleClosedTb.objects.get(schedule_closed_id=schedule_closed_id)
+    except ObjectDoesNotExist:
+        error = '오류가 발생했습니다. [0]'
+
+    if error is None:
+        if week_info == '':
+            week_info = schedule_closed_info.week_info
+        if start_date == '':
+            start_date = str(schedule_closed_info.start_date)
+        if end_date == '':
+            end_date = str(schedule_closed_info.end_date)
+        if title == '':
+            title = schedule_closed_info.title
+        if contents == '':
+            contents = schedule_closed_info.contents
+        if is_member_view == '':
+            is_member_view = schedule_closed_info.is_member_view
+
+    if error is None:
+        try:
+            start_date_info = datetime.datetime.strptime(start_date, '%Y-%m-%d')
+            end_date_info = datetime.datetime.strptime(end_date, '%Y-%m-%d')
+            if (start_date_info - end_date_info) > datetime.timedelta(days=365):
+                error = '1년까지만 불가 일정을 등록할수 있습니다.'
+        except ValueError:
+            error = '날짜 오류가 발생했습니다.[0]'
+        except IntegrityError:
+            error = '날짜 오류가 발생했습니다.[1]'
+        except TypeError:
+            error = '날짜 오류가 발생했습니다.[2]'
+
+    if error is None:
+        if member_id != '':
+            try:
+                MemberTb.objects.get(member_id=member_id)
+            except ObjectDoesNotExist:
+                error = '회원 정보를 불러오지 못했습니다.'
+
+    try:
+        with transaction.atomic():
+            schedule_closed_info.week_info = week_info
+            schedule_closed_info.start_date = start_date_info
+            schedule_closed_info.end_date = end_date_info
+            schedule_closed_info.title = title
+            schedule_closed_info.contents = contents
+            schedule_closed_info.is_member_view = is_member_view
+
+            schedule_closed_info.save()
+            schedule_closed_id = schedule_closed_info.schedule_closed_id
+    except ValueError:
+        error = '오류가 발생했습니다. [1]'
+    except IntegrityError:
+        error = '오류가 발생했습니다. [2]'
+    except TypeError:
+        error = '오류가 발생했습니다. [3]'
+    except ValidationError:
+        error = '오류가 발생했습니다. [4]'
+    except InternalError:
+        error = '오류가 발생했습니다. [5]'
+
+    if error is not None:
+        messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info='불가 일정', log_how='수정', use=USE)
+        log_data.save()
+
+    return JsonResponse({'schedule_closed_id': str(schedule_closed_id)}, json_dumps_params={'ensure_ascii': True})
+
+
+def delete_trainer_closed_date_logic(request):
+    class_id = request.session.get('class_id', '')
+    schedule_closed_id = request.POST.get('schedule_closed_id', '')
+    error = None
+
+    if schedule_closed_id == '':
+        error = '삭제할 불가 일정을 선택해주세요.'
+
+    if error is None:
+        try:
+            schedule_close_info = ScheduleClosedTb.objects.get(schedule_closed_id=schedule_closed_id)
+            schedule_close_info.delete()
+        except ObjectDoesNotExist:
+            error = '오류가 발생했습니다. [0]'
+
+    if error is not None:
+        messages.error(request, error)
+    else:
+        log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+                         from_member_name=request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info='불가 일정', log_how='삭제', use=USE)
+        log_data.save()
+
+    return JsonResponse({'schedule_closed_id': str(schedule_closed_id)}, json_dumps_params={'ensure_ascii': True})
+
 
 
 class GetTrainerMemberTicketPriceBugListView(LoginRequiredMixin, AccessTestMixin, View):

@@ -358,7 +358,7 @@ class Mypage_func{
         //first_name, phone, contents, country, address, sex, birthday
         //업무 시간 설정
         $.ajax({
-            url:"/trainer/update_trainer_info/",
+            url:"/trainer/update_my_info/",
             type:'POST',
             data: data,
             dataType : 'html',
@@ -401,7 +401,7 @@ class Mypage_func{
 
     static read(callback, error_callback){
         $.ajax({
-            url:"/trainer/get_trainer_info/",
+            url:"/trainer/get_my_info/",
             type:'GET',
             dataType : 'JSON',
     

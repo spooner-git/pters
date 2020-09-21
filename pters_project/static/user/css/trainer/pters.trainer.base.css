@@ -259,7 +259,7 @@
 
 
 
-#shade_for_popup_basic{
+.shade_for_popup_basic{
     position: absolute;
     top:0;
     left:0;
@@ -389,7 +389,7 @@ html, body{
     height: 100%;
 }
     #section_side{
-        /* flex:0 0 200px; */
+        flex:0 0 200px;
         display: inline-block;
         width: 200px;
         background-color: var(--bg-light);
@@ -400,7 +400,7 @@ html, body{
         position: relative;
         /* flex: 1 0 0; */
         display: inline-block;
-        width: 100%;
+        width: calc(100% - 200px);
     }
     #section_content{
         position: relative;
@@ -440,7 +440,7 @@ html, body{
         display: none;
     }
     #section_center{
-        width: 100%;
+        width: 100% !important;
     }
     #section_up_menu{
         display: none;
