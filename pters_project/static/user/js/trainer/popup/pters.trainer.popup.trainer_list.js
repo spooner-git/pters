@@ -221,7 +221,7 @@ class Trainer_list {
                         <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:var(--font-main); letter-spacing: -1px; height:28px;">
                             <span style="display:inline-block;">${title}</span>
                             <span style="display:none;">${title}</span>
-                            <div style="display:inline-block; color:var(--font-highlight); font-weight:900;">${this.data_length + 1}</div>
+                            <div style="display:inline-block; color:var(--font-highlight); font-weight:900;">${this.data_length}</div>
                         </div>
                     </div>
                     <div class="trainer_bottom_tools_wrap">

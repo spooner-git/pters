@@ -343,7 +343,7 @@ class Trainer{
                 trainer_upper_box:`   <div class="trainer_upper_box">
                                         <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:var(--font-main); letter-spacing: -1px; height:28px;">
                                             <div style="display:inline-block;">강사 </div>
-                                            <div style="display:inline-block; color:var(--font-highlight); font-weight:900;">${this.list_type == "ing" ? this.trainer_ing_length + 1 : this.trainer_end_length}</div>
+                                            <div style="display:inline-block; color:var(--font-highlight); font-weight:900;">${this.list_type == "ing" ? this.trainer_ing_length : this.trainer_end_length}</div>
                                         </div>
                                         <div class="trainer_tools_wrap">
                                             <div class="search_trainer" onclick="${this.instance}.search_trainer_tool_visible(event, this);">

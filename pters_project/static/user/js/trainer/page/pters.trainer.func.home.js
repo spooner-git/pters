@@ -473,6 +473,7 @@ class Home {
             let diff_date = DateRobot.diff_date(end_date, this.today);
             let rem_count = data.current_member_data[i].member_ticket_rem_count;
             let reg_count = data.current_member_data[i].member_ticket_reg_count;
+            let member_ticket_payment_check = data.current_member_data[i].member_ticket_payment_check;
             if(diff_date > 7 && rem_count > 3){
                 passed_number++;
                 continue;
@@ -504,6 +505,10 @@ class Home {
             end_info = rem_info + ' / ' + date_info;
             if(rem_count <= 3 && diff_date <= 7){
                 end_info = `<span style='color:#ff0022;'>${rem_info} / ${date_info}</span>`;
+            }
+
+            if(member_ticket_payment_check > 0){
+                end_info += ` / <span style='color:#ff0022;'>미납</span>`
             }
 
             let id = `home_end_alert_${member_id}`;
