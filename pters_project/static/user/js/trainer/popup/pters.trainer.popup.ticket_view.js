@@ -671,7 +671,7 @@ class Ticket_view{
             title = "제한 없음";
         }
         let placeholder = `제한 없음`;
-        let icon = NONE;
+        let icon = CImg.time();
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let style = null;
