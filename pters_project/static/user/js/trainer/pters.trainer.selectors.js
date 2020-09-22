@@ -2797,7 +2797,7 @@ class ShopSelector{
         let html_to_join = [];
         let length = this.received_data.length;
         if(length == 0){
-            html_to_join.push(CComponent.no_data_row('수업 목록이 비어있습니다.'));
+            html_to_join.push(CComponent.no_data_row('상품 목록이 비어있습니다.'));
         }
         for(let i=0; i<length; i++){
             let data = this.received_data[i];

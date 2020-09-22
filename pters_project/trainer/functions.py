@@ -205,7 +205,12 @@ def func_get_class_member_end_list(class_id, keyword):
 
 # 진행중 회원 리스트 가져오기
 def func_get_member_ing_list(class_id, user_id, keyword):
-
+    query_ip_member_shop_count = "select count(*) from MEMBER_SHOP_TB AS B " \
+                                 "WHERE (B.STATE_CD = \'NP\' or B.STATE_CD = \'IP\') " \
+                                 "and B.MEMBER_ID=" \
+                                 "(select C.MEMBER_ID from LECTURE_TB as C " \
+                                 "where C.ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID`)" \
+                                 "and B.CLASS_TB_ID= " + str(class_id) + " and B.USE=1 "
     all_member_ticket_list = ClassMemberTicketTb.objects.select_related(
         'member_ticket_tb__ticket_tb',
         'member_ticket_tb__member__user'
@@ -213,7 +218,10 @@ def func_get_member_ing_list(class_id, user_id, keyword):
              Q(member_ticket_tb__member__user__username__contains=keyword),
              Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS) | Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
              class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW,
-             member_ticket_tb__use=USE, use=USE).order_by('member_ticket_tb__member_id', 'member_ticket_tb__end_date')
+             member_ticket_tb__use=USE,
+             use=USE).annotate(member_shop_ip_count=RawSQL(query_ip_member_shop_count,
+                                                           [])).order_by('member_ticket_tb__member_id',
+                                                                         'member_ticket_tb__end_date')
 
     return func_get_member_from_member_ticket_list(all_member_ticket_list, None, user_id)
 
@@ -221,6 +229,12 @@ def func_get_member_ing_list(class_id, user_id, keyword):
 # 종료된 회원 리스트 가져오기
 def func_get_member_end_list(class_id, user_id, keyword):
 
+    query_ip_member_shop_count = "select count(*) from MEMBER_SHOP_TB AS E " \
+                                 "WHERE (E.STATE_CD = \'NP\' or E.STATE_CD = \'IP\') " \
+                                 "and E.MEMBER_ID=" \
+                                 "(select F.MEMBER_ID from LECTURE_TB as F " \
+                                 "where F.ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID`) " \
+                                 "and E.CLASS_TB_ID= " + str(class_id) + " and E.USE=1 "
     query_ip_member_ticket_count = "select count(*) from LECTURE_TB as C where C.MEMBER_ID" \
                                    " =(select B.MEMBER_ID from LECTURE_TB as B where B.ID =" \
                                    " `CLASS_LECTURE_TB`.`LECTURE_TB_ID`)" \
@@ -236,7 +250,8 @@ def func_get_member_end_list(class_id, user_id, keyword):
         Q(member_ticket_tb__member__name__contains=keyword) |
         Q(member_ticket_tb__member__user__username__contains=keyword),
         class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__use=USE,
-        use=USE).annotate(member_ticket_ip_count=RawSQL(query_ip_member_ticket_count, [])
+        use=USE).annotate(member_shop_ip_count=RawSQL(query_ip_member_shop_count,[]),
+                          member_ticket_ip_count=RawSQL(query_ip_member_ticket_count, [])
                           ).filter(member_ticket_ip_count=0).order_by('member_ticket_tb__member_id',
                                                                       'member_ticket_tb__end_date')
 
@@ -291,6 +306,8 @@ def func_get_member_from_member_ticket_list(all_member_ticket_list, lecture_id, 
             member_ticket_rem_count += member_ticket_info.member_ticket_rem_count
             member_ticket_avail_count += member_ticket_info.member_ticket_avail_count
             if member_ticket_info.price > member_ticket_info.payment_price:
+                member_ticket_payment_check += 1
+            if all_member_ticket_info.member_shop_ip_count > 0:
                 member_ticket_payment_check += 1
 
             if member_info.reg_info is None or str(member_info.reg_info) != str(user_id):

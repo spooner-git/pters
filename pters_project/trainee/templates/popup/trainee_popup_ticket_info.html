@@ -59,7 +59,7 @@
                     <!--<div class="wrapper_my_history_detail_member_ticket_end_date obj_table_cell_x6"></div>-->
                     <div class="wrapper_my_history_detail_member_ticket_reg_count obj_table_cell_x6">등록횟수</div>
                     <div class="wrapper_my_history_detail_member_ticket_rem_count obj_table_cell_x6">남은횟수</div>
-                    <div class="wrapper_my_history_detail_member_ticket_price obj_table_cell_x6">가격</div>
+                    <div class="wrapper_my_history_detail_member_ticket_price obj_table_cell_x6">가격/납부</div>
                     <div class="wrapper_my_history_detail_member_ticket_status obj_table_cell_x6">상태</div>
                 </div>
                 {% for member_ticket_info in member_ticket_data %}
@@ -89,7 +89,7 @@
                             {{ member_ticket_info.member_ticket_tb.member_ticket_rem_count }}
                         {% endif %}
                     </div>
-                    <div class="wrapper_my_history_detail_member_ticket_price obj_table_cell_x6">{{ member_ticket_info.member_ticket_tb.price | intcomma }}원</div>
+                    <div class="wrapper_my_history_detail_member_ticket_price obj_table_cell_x6">{{ member_ticket_info.member_ticket_tb.price | intcomma }}원<br/>/{{ member_ticket_info.member_ticket_tb.payment_price | intcomma }}원</div>
                     <div class="wrapper_my_history_detail_member_ticket_status obj_table_cell_x6">{{ member_ticket_info.status }}</div>
                 </div>
                 {% endfor %}

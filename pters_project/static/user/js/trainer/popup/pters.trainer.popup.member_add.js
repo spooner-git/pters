@@ -31,7 +31,7 @@ class Member_add{
                 ticket_effective_days:[],
                 ticket_reg_count:[null],
                 ticket_price:[null],
-                ticket_payment_price:0,
+                ticket_payment_price:[null],
                 pay_method:{value:["NONE"], text:["선택 안함"]},
                 start_date:null,
                 start_date_text:null,
@@ -166,7 +166,7 @@ class Member_add{
         return this.data.ticket_price;
     }
     set payment_price(number){
-        this.data.ticket_payment_price = number;
+        this.data.ticket_payment_price = [number];
         this.render_content();
     }
 
@@ -765,7 +765,7 @@ class Member_add{
     dom_row_member_payment_price_input(){
         let unit = '원';
         let id = 'input_payment_price';
-        let title = UnitRobot.numberWithCommas(this.data.ticket_payment_price);
+        let title = this.data.ticket_payment_price.length == 0 || this.data.ticket_payment_price[0] == null ? '' : UnitRobot.numberWithCommas(this.data.ticket_payment_price[0]);
         let placeholder = '납부 금액';
         let icon = NONE;
         let icon_r_visible = HIDE;
@@ -814,12 +814,12 @@ class Member_add{
     dom_row_payment_price_simple_input_machine(){
         // let button_style = {"flex":"1 1 0", "padding":"10px 8px", "color":"var(--font-sub-normal)"};
         let button_style = {"flex":"1 1 0", "padding":"6px 0px", "color":"var(--font-sub-normal)", "background-color":"var(--bg-light)", "border-radius":"3px"};
-        let button_perfect = CComponent.button ("payment_button_perfect", "완납", button_style, ()=>{ this.data.ticket_payment_price = Number(this.data.ticket_price[0]);this.render_content(); });
-        let button_100 = CComponent.button ("payment_button_100", "+ 100만", button_style, ()=>{ this.data.ticket_payment_price = Number(this.data.ticket_payment_price) + 1000000;this.render_content(); });
-        let button_50 = CComponent.button ("payment_button_50", "+ 50만", button_style, ()=>{ this.data.ticket_payment_price = Number(this.data.ticket_payment_price) + 500000;this.render_content(); });
-        let button_10 = CComponent.button ("payment_button_10", "+ 10만", button_style, ()=>{ this.data.ticket_payment_price = Number(this.data.ticket_payment_price) + 100000;this.render_content(); });
-        let button_1 = CComponent.button ("payment_button_1", "+ 1만", button_style, ()=>{ this.data.ticket_payment_price = Number(this.data.ticket_payment_price) + 10000;this.render_content(); });
-        let button_delete = CComponent.button ("payment_button_delete", "지우기", button_style, ()=>{ this.data.ticket_payment_price = 0;this.render_content(); });
+        let button_perfect = CComponent.button ("payment_button_perfect", "완납", button_style, ()=>{ this.data.ticket_payment_price[0] = Number(this.data.ticket_price[0]);this.render_content(); });
+        let button_100 = CComponent.button ("payment_button_100", "+ 100만", button_style, ()=>{ this.data.ticket_payment_price[0] = Number(this.data.ticket_payment_price[0]) + 1000000;this.render_content(); });
+        let button_50 = CComponent.button ("payment_button_50", "+ 50만", button_style, ()=>{ this.data.ticket_payment_price[0] = Number(this.data.ticket_payment_price[0]) + 500000;this.render_content(); });
+        let button_10 = CComponent.button ("payment_button_10", "+ 10만", button_style, ()=>{ this.data.ticket_payment_price[0] = Number(this.data.ticket_payment_price[0]) + 100000;this.render_content(); });
+        let button_1 = CComponent.button ("payment_button_1", "+ 1만", button_style, ()=>{ this.data.ticket_payment_price[0] = Number(this.data.ticket_payment_price[0]) + 10000;this.render_content(); });
+        let button_delete = CComponent.button ("payment_button_delete", "지우기", button_style, ()=>{ this.data.ticket_payment_price[0] = 0;this.render_content(); });
 
         // let wrapper_style = "display:flex;padding:0px 0 0px 20px;font-size:12px;";
         // let divider_style = "flex-basis:1px;height:20px;margin-top:10px;background-color:var(--bg-light);display:none;";
@@ -934,7 +934,7 @@ class Member_add{
                     "end_date":DateRobot.to_yyyymmdd(this.data.end_date.year, this.data.end_date.month, this.data.end_date.date),
                     "counts":this.data.ticket_reg_count[0],
                     "price":this.data.ticket_price[0],
-                    "payment_price":this.data.ticket_payment_price,
+                    "payment_price":this.data.ticket_payment_price[0],
                     "pay_method":this.data.pay_method.value[0]
         };
 
@@ -946,7 +946,7 @@ class Member_add{
             "end_date":DateRobot.to_yyyymmdd(this.data.end_date.year, this.data.end_date.month, this.data.end_date.date),
             "counts":this.data.ticket_reg_count[0],
             "price":this.data.ticket_price[0],
-            "payment_price":this.data.ticket_payment_price,
+            "payment_price":this.data.ticket_payment_price[0],
             "pay_method":this.data.pay_method.value[0]
         };
 

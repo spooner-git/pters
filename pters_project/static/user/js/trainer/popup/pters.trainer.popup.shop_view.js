@@ -148,7 +148,6 @@ class Shop_view{
         let icon_r_visible = HIDE;
         let icon_r_text = "";
         let disabled = false;
-        console.log(title);
         let pattern = '[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+:.,()\\[\\]\\s 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{1,20}';
         let pattern_message = "+ - _ : ()[] 제외 특수문자는 입력 불가";
         let required = "required";
@@ -157,7 +156,6 @@ class Shop_view{
             this.name = user_input_data;
             this.if_user_changed_any_information = true;
         }, pattern, pattern_message, required);
-        console.log(sub_html)
         let html = `
         <div class="member_add_upper_box">
             <div style="display:inline-block;width:100%;">
@@ -551,6 +549,7 @@ class Shop_simple_view{
         let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+:.,\\s 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
         let pattern_message = "+ - _ : ., 제외 특수문자는 입력 불가";
         let required = "";
+        console.log(title);
         let html_data = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             
         }, pattern, pattern_message, required);
