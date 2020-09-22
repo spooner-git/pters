@@ -307,8 +307,11 @@ def func_get_member_from_member_ticket_list(all_member_ticket_list, lecture_id, 
             member_ticket_avail_count += member_ticket_info.member_ticket_avail_count
             if member_ticket_info.price > member_ticket_info.payment_price:
                 member_ticket_payment_check += 1
-            if all_member_ticket_info.member_shop_ip_count > 0:
-                member_ticket_payment_check += 1
+            try:
+                if all_member_ticket_info.member_shop_ip_count > 0:
+                    member_ticket_payment_check += 1
+            except AttributeError:
+                member_ticket_payment_check = member_ticket_payment_check
 
             if member_info.reg_info is None or str(member_info.reg_info) != str(user_id):
                 if member_ticket_info.member_auth_cd != AUTH_TYPE_VIEW:

@@ -67,11 +67,11 @@
                             {% if request.session.setting_member_lecture_main_trainer_view_available == 1 %}
                             <div class="obj_table_cell_x2" style="width:50%">
                                 {% if schedule_info.trainer %}
-                                    <img src="{{ schedule_info.trainer.profile_url }}" class="obj_box_photo"> {{ schedule_info.trainer.name }}
+                                    <img src="{{ schedule_info.trainer.profile_url }}" class="obj_box_photo" style="width:24px; height:24px;"> {{ schedule_info.trainer.name }}
                                 {% elif schedule_info.lecture_tb.main_trainer %}
-                                    <img src="{{ schedule_info.lecture_tb.main_trainer.profile_url }}" class="obj_box_photo"> {{ schedule_info.lecture_tb.main_trainer.name }}
+                                    <img src="{{ schedule_info.lecture_tb.main_trainer.profile_url }}" class="obj_box_photo" style="width:24px; height:24px;"> {{ schedule_info.lecture_tb.main_trainer.name }}
                                 {% else %}
-                                    <img src="{{ schedule_info.class_tb.member.profile_url }}" class="obj_box_photo"> {{ schedule_info.class_tb.member.name }}
+                                    <img src="{{ schedule_info.class_tb.member.profile_url }}" class="obj_box_photo" style="width:24px; height:24px;"> {{ schedule_info.class_tb.member.name }}
                                 {% endif %}
                             </div>
                             {% endif %}

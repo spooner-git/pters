@@ -167,11 +167,11 @@
                     {% if request.session.setting_member_lecture_main_trainer_view_available == 1 %}
                         {% if ticket_lecture_info.lecture_tb.main_trainer %}
                             <div style="height:30px;line-height:30px;overflow: hidden;text-overflow: ellipsis;">
-                                <img src="{{ ticket_lecture_info.lecture_tb.main_trainer.profile_url }}" class="obj_box_photo"> {{ ticket_lecture_info.lecture_tb.main_trainer.name }}
+                                <img src="{{ ticket_lecture_info.lecture_tb.main_trainer.profile_url }}" class="obj_box_photo" style="width:24px; height:24px;"> {{ ticket_lecture_info.lecture_tb.main_trainer.name }}
                             </div>
                         {% else %}
                             <div style="height:30px;line-height:30px;overflow: hidden;text-overflow: ellipsis;">
-                                <img src="{{ ticket_lecture_info.class_tb.member.profile_url }}" class="obj_box_photo"> {{ ticket_lecture_info.class_tb.member.name }}
+                                <img src="{{ ticket_lecture_info.class_tb.member.profile_url }}" class="obj_box_photo" style="width:24px; height:24px;"> {{ ticket_lecture_info.class_tb.member.name }}
                             </div>
                         {% endif %}
                     {% endif %}
