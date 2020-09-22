@@ -31,7 +31,7 @@ class Member_add{
                 ticket_effective_days:[],
                 ticket_reg_count:[null],
                 ticket_price:[null],
-                ticket_payment_price:[null],
+                ticket_payment_price:[0],
                 pay_method:{value:["NONE"], text:["선택 안함"]},
                 start_date:null,
                 start_date_text:null,
@@ -120,7 +120,7 @@ class Member_add{
         this.data.ticket_effective_days = data.effective_days;
         this.data.ticket_reg_count = data.reg_count;
         this.data.ticket_price = data.reg_price;
-        this.data.ticket_payment_price = data.reg_price;
+        // this.data.ticket_payment_price = data.reg_price;
         //시작일자가 없는 경우 오늘로 셋팅
         if(this.data.start_date == null){
             this.data.start_date = {year: this.dates.current_year, month:this.dates.current_month, date:this.dates.current_date};
