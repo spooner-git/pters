@@ -490,4 +490,6 @@ urlpatterns = [
         views.GetTrainerMemberTicketPriceBugListView.as_view(), name='get_trainer_member_ticket_price_bug_list'),
     url(r'^holding_test/$', views.holding_test_logic, name='holding_test'),
     url(r'^member_setting_test/$', views.member_setting_test_logic, name='member_setting_test')
+
+
 ]

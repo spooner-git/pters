@@ -21,7 +21,7 @@
                 <div id="ticket_lesson_history" class="wrapper_my_ticket_lesson_history" onclick="ticket_lesson_history();">일정 내역</div>
                 <div id="ticket_lecture_list" class="wrapper_my_ticket_lecture_list" onclick="ticket_lecture_list();">참여가능 수업</div>
                 <div id="ticket_closed_history" class="wrapper_my_ticket_closed_history" onclick="ticket_closed_list();">일시정지</div>
-                <div id="ticket_shop_history" class="wrapper_my_ticket_shop_history" onclick="ticket_shop_list();">상품</div>
+{#                <div id="ticket_shop_history" class="wrapper_my_ticket_shop_history" onclick="ticket_shop_list();">상품</div>#}
             </div>
         </div>
         <div id="wrapper_my_ticket_detail">
@@ -161,10 +161,16 @@
                     </div>
                     <div class="obj_font_size_14_weight_500" style="flex: 1 1 0;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
                         <div style="height:30px;line-height:30px;">{% if ticket_lecture_info.lecture_tb.lecture_type_cd == 'ONE_TO_ONE' %}개인 수업{% else %}그룹 수업{% endif %}</div>
-                        <div style="height:30px;line-height:30px;overflow: hidden;text-overflow: ellipsis;">{{ ticket_lecture_info.lecture_tb.name }}</div>
+                        <div style="height:30px;line-height:30px;overflow: hidden;text-overflow: ellipsis;">{{ ticket_lecture_info.lecture_tb.name }} - {{ ticket_lecture_info.lecture_tb.main_trainer }}</div>
+                    {% if ticket_lecture_info.lecture_tb.main_trainer %}
                         <div style="height:30px;line-height:30px;overflow: hidden;text-overflow: ellipsis;">
                             <img src="{{ ticket_lecture_info.lecture_tb.main_trainer.profile_url }}" class="obj_box_photo"> {{ ticket_lecture_info.lecture_tb.main_trainer.name }}
                         </div>
+                    {% else %}
+                        <div style="height:30px;line-height:30px;overflow: hidden;text-overflow: ellipsis;">
+                            <img src="{{ ticket_lecture_info.class_tb.member.profile_url }}" class="obj_box_photo"> {{ ticket_lecture_info.class_tb.member.name }}
+                        </div>
+                    {% endif %}
                     </div>
                 </div>
             {% endfor %}

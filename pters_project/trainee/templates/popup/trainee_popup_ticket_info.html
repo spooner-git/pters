@@ -34,9 +34,15 @@
                         <div class="obj_font_size_14_weight_500" style="flex: 1 1 0;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
                             <div style="height:40px;line-height:40px;">{% if ticket_lecture_info.lecture_tb.lecture_type_cd == 'ONE_TO_ONE' %}개인 수업{% else %}그룹 수업{% endif %}</div>
                             <div style="height:40px;line-height:40px;overflow: hidden;text-overflow: ellipsis;">{{ ticket_lecture_info.lecture_tb.name }}</div>
+                        {% if ticket_lecture_info.lecture_tb.main_trainer %}
                             <div style="height:40px;line-height:28px;overflow: hidden;text-overflow: ellipsis;">
                                 <img src="{{ ticket_lecture_info.lecture_tb.main_trainer.profile_url }}" class="obj_box_photo" style="width:24px; height:24px;"> <span>{{ ticket_lecture_info.lecture_tb.main_trainer.name }}</span>
                             </div>
+                        {% else %}
+                            <div style="height:40px;line-height:28px;overflow: hidden;text-overflow: ellipsis;">
+                                <img src="{{ ticket_lecture_info.class_tb.member.profile_url }}" class="obj_box_photo" style="width:24px; height:24px;"> <span>{{ ticket_lecture_info.class_tb.member.name }}</span>
+                            </div>
+                        {% endif %}
                         </div>
                     </div>
                 {% endfor %}
