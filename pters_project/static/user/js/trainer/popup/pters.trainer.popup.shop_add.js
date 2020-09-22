@@ -35,13 +35,13 @@ class Shop_add{
         return this.data.price;
     }
 
-    set note(data){
-        this.data.note = data;
+    set memo(data){
+        this.data.memo = data;
         this.render_content();
     }
 
-    get note(){
-        return this.data.note;
+    get memo(){
+        return this.data.memo;
     }
 
     init(){
@@ -123,7 +123,7 @@ class Shop_add{
         let icon_r_text = "";
         let style = null;
         let input_disabled = false;
-        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+.,@一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{1,20}";
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+.,@ 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{1,20}";
         let pattern_message = ". , + - _ @ 제외 특수문자는 입력 불가";
         let required = "required";
         let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, input_disabled, (input_data)=>{
@@ -235,7 +235,7 @@ class Shop_add{
         let data_for_new = {
                     "name": this.data.name,
                     "price":this.data.price,
-                    "note":this.data.note,
+                    "note":this.data.memo,
         };
 
         Shop_func.create(data_for_new, ()=>{
