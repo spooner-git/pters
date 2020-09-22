@@ -143,13 +143,14 @@
                                                         {% endif %}
                                                     {% endif %}
                                                 </div>
-
-                                                {% if lecture_schedule_info.trainer %}
-                                                    <div class="obj_font_size_12_weight_500" style="padding-left:10px; margin-bottom:10px;">담당 : <img src="{{ lecture_schedule_info.trainer.profile_url }}" class="obj_box_photo" alt="사진"> {{ lecture_schedule_info.trainer.name }}</div>
-                                                {% elif lecture_schedule_info.lecture_tb.main_trainer %}
-                                                    <div class="obj_font_size_12_weight_500" style="padding-left:10px; margin-bottom:10px;">담당 : <img src="{{ lecture_schedule_info.lecture_tb.main_trainer.profile_url }}" class="obj_box_photo" alt="사진"> {{ lecture_schedule_info.lecture_tb.main_trainer.name }}</div>
-                                                {% else %}
-                                                    <div class="obj_font_size_12_weight_500" style="padding-left:10px; margin-bottom:10px;">담당 : <img src="{{ lecture_schedule_info.lecture_tb.class_tb.member.profile_url }}" class="obj_box_photo" alt="사진"> {{ lecture_schedule_info.lecture_tb.class_tb.member.name }}</div>
+                                                {% if request.session.setting_member_lecture_main_trainer_view_available == 1 %}
+                                                    {% if lecture_schedule_info.trainer %}
+                                                        <div class="obj_font_size_12_weight_500" style="padding-left:10px; margin-bottom:10px;">담당 : <img src="{{ lecture_schedule_info.trainer.profile_url }}" class="obj_box_photo" alt="사진"> {{ lecture_schedule_info.trainer.name }}</div>
+                                                    {% elif lecture_schedule_info.lecture_tb.main_trainer %}
+                                                        <div class="obj_font_size_12_weight_500" style="padding-left:10px; margin-bottom:10px;">담당 : <img src="{{ lecture_schedule_info.lecture_tb.main_trainer.profile_url }}" class="obj_box_photo" alt="사진"> {{ lecture_schedule_info.lecture_tb.main_trainer.name }}</div>
+                                                    {% else %}
+                                                        <div class="obj_font_size_12_weight_500" style="padding-left:10px; margin-bottom:10px;">담당 : <img src="{{ lecture_schedule_info.lecture_tb.class_tb.member.profile_url }}" class="obj_box_photo" alt="사진"> {{ lecture_schedule_info.lecture_tb.class_tb.member.name }}</div>
+                                                    {% endif %}
                                                 {% endif %}
                                             </div>
                                             <div class="func_radio_element_button"><div class="func_radio_element_button_outer"><div class="func_radio_element_button_inner"></div></div></div>
