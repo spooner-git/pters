@@ -169,7 +169,7 @@ class Member {
             
 
             let remain_count_text = '잔여 '+member_rem+'회';
-            end_date_text = '-'+end_date_text+' ('+remain_date+'일)';
+            end_date_text = '~'+end_date_text+' ('+remain_date+'일)';
             let member_counts_text;
 
             if(member_reg >= 99999){

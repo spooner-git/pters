@@ -1071,6 +1071,7 @@ def func_get_trainer_setting_list(context, class_id, user_id):
     setting_trainer_statistics_lock = UN_USE
     setting_trainer_attend_mode_out_lock = str(UN_USE)
     setting_member_lecture_max_num_view_available = USE
+    setting_member_lecture_main_trainer_view_available = USE
     setting_member_disable_schedule_visible = UN_USE
     setting_schedule_sign_enable = USE
     setting_member_private_class_auto_permission = USE
@@ -1149,6 +1150,8 @@ def func_get_trainer_setting_list(context, class_id, user_id):
             setting_trainer_attend_mode_out_lock = setting_info.setting_info
         if setting_info.setting_type_cd == 'LT_RES_MEMBER_LECTURE_MAX_NUM_VIEW':
             setting_member_lecture_max_num_view_available = int(setting_info.setting_info)
+        if setting_info.setting_type_cd == 'LT_RES_MEMBER_LECTURE_MAIN_TRAINER_VIEW':
+            setting_member_lecture_main_trainer_view_available = int(setting_info.setting_info)
         if setting_info.setting_type_cd == 'LT_RES_MEMBER_DISABLE_SCHEDULE_VISIBLE':
             setting_member_disable_schedule_visible = int(setting_info.setting_info)
         if setting_info.setting_type_cd == 'SCHEDULE_SIGN_ENABLE':
@@ -1235,6 +1238,7 @@ def func_get_trainer_setting_list(context, class_id, user_id):
     context['setting_trainer_statistics_lock'] = setting_trainer_statistics_lock
     context['setting_trainer_attend_mode_out_lock'] = setting_trainer_attend_mode_out_lock
     context['setting_member_lecture_max_num_view_available'] = setting_member_lecture_max_num_view_available
+    context['setting_member_lecture_main_trainer_view_available'] = setting_member_lecture_main_trainer_view_available
     context['setting_member_disable_schedule_visible'] = setting_member_disable_schedule_visible
     context['setting_schedule_sign_enable'] = setting_schedule_sign_enable
     context['setting_member_private_class_auto_permission'] = setting_member_private_class_auto_permission
