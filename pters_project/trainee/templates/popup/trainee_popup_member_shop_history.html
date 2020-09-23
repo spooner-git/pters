@@ -13,84 +13,28 @@
         <div class="obj_box_popup_topper">
 {#            <div class="obj_font_size_12_weight_500 obj_font_color_white">{{ member_ticket_info.ticket_tb.ticket_type_cd_nm }}</div>#}
             <div class="wrapper_my_ticket_title">
-                <div class="obj_font_size_13_weight_500 obj_font_color_white" style="float:right">수강권</div>
-                <div class="obj_font_size_18_weight_bold obj_font_color_white">{{ ticket_info.name }}</div>
-            </div>
-
-            <div class="wrapper_my_ticket_tab obj_font_color_white obj_font_size_13_weight_normal">
-                <div id="ticket_basic_info" class="wrapper_my_ticket_basic_info" onclick="ticket_basic_info();">기본 정보</div>
-                <div id="ticket_lesson_history" class="wrapper_my_ticket_lesson_history" onclick="ticket_lesson_history();">수강권 내역</div>
+                <div class="obj_font_size_13_weight_500 obj_font_color_white" style="float:right"></div>
+                <div class="obj_font_size_18_weight_bold obj_font_color_white">상품 구매 내역</div>
             </div>
         </div>
         <div class="">
-            <div id="wrapper_my_ticket_detail">
-                 {% for ticket_lecture_info in ticket_info.ticket_lecture_data %}
-                    <div class="wrapper_my_ticket_detail_date obj_box_full" style="display:flex">
-                        <div class="obj_font_size_11_weight_normal obj_font_color_light_grey" style="flex-basis:70px;">
-                            <div style="height:40px;line-height:40px;">수업 종류</div>
-                            <div style="height:40px;line-height:40px;">수업명</div>
-                            {% if request.session.setting_member_lecture_main_trainer_view_available == 1 %}
-                            <div style="height:40px;line-height:28px;">담당</div>
-                            {% endif %}
-                        </div>
-                        <div class="obj_font_size_14_weight_500" style="flex: 1 1 0;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
-                            <div style="height:40px;line-height:40px;">{% if ticket_lecture_info.lecture_tb.lecture_type_cd == 'ONE_TO_ONE' %}개인 수업{% else %}그룹 수업{% endif %}</div>
-                            <div style="height:40px;line-height:40px;overflow: hidden;text-overflow: ellipsis;">{{ ticket_lecture_info.lecture_tb.name }}</div>
-                        {% if request.session.setting_member_lecture_main_trainer_view_available == 1 %}
-                            {% if ticket_lecture_info.lecture_tb.main_trainer %}
-                                <div style="height:40px;line-height:28px;overflow: hidden;text-overflow: ellipsis;">
-                                    <img src="{{ ticket_lecture_info.lecture_tb.main_trainer.profile_url }}" class="obj_box_photo" style="width:24px; height:24px;"> <span>{{ ticket_lecture_info.lecture_tb.main_trainer.name }}</span>
-                                </div>
-                            {% else %}
-                                <div style="height:40px;line-height:28px;overflow: hidden;text-overflow: ellipsis;">
-                                    <img src="{{ ticket_lecture_info.class_tb.member.profile_url }}" class="obj_box_photo" style="width:24px; height:24px;"> <span>{{ ticket_lecture_info.class_tb.member.name }}</span>
-                                </div>
-                            {% endif %}
-                        {% endif %}
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-
-            <div id="wrapper_my_history_detail" style="display:none;">
+            <div id="wrapper_my_history_detail">
                 <div class="wrapper_my_history_detail_title obj_table_raw obj_font_size_11_weight_normal obj_font_color_light_grey">
-                    <div class="wrapper_my_history_detail_member_ticket_count obj_table_cell_x6">회차</div>
-                    <div class="wrapper_my_history_detail_member_ticket_start_date obj_table_cell_x6">기간</div>
-                    <!--<div class="wrapper_my_history_detail_member_ticket_end_date obj_table_cell_x6"></div>-->
-                    <div class="wrapper_my_history_detail_member_ticket_reg_count obj_table_cell_x6">등록횟수</div>
-                    <div class="wrapper_my_history_detail_member_ticket_rem_count obj_table_cell_x6">남은횟수</div>
-                    <div class="wrapper_my_history_detail_member_ticket_price obj_table_cell_x6">가격/납부</div>
-                    <div class="wrapper_my_history_detail_member_ticket_status obj_table_cell_x6">상태</div>
+                    <div class="wrapper_my_history_detail_member_shop_count obj_table_cell_x4">순번</div>
+                    <div class="wrapper_my_history_detail_member_shop_start_date obj_table_cell_x4">구매일</div>
+                    <div class="wrapper_my_history_detail_member_shop_name obj_table_cell_x4">상품명</div>
+                    <div class="wrapper_my_history_detail_member_shop_price obj_table_cell_x4">가격 / 납부</div>
                 </div>
-                {% for member_ticket_info in member_ticket_data %}
+                {% for member_shop_info in member_shop_data %}
                 <div class="wrapper_my_history_detail_info obj_table_raw obj_font_size_11_weight_500">
-                    <div class="wrapper_my_history_detail_member_ticket_count obj_table_cell_x6">{{ forloop.revcounter }}</div>
-                    <div class="wrapper_my_history_detail_member_ticket_start_date obj_table_cell_x6">
-                        {{ member_ticket_info.member_ticket_tb.start_date | date:"Y.m.d(l)"|cut:"요일"  }}
-                        ~ {% if member_ticket_info.member_ticket_tb.end_date|date:"Y-m-d" == "9999-12-31" %}
-                            소진시 까지
-                        {% else %}
-                            {{ member_ticket_info.member_ticket_tb.end_date | date:"Y.m.d(l)"|cut:"요일"  }}
-                        {% endif %}
+                    <div class="wrapper_my_history_detail_member_shop_count obj_table_cell_x4">{{ forloop.revcounter }}</div>
+                    <div class="wrapper_my_history_detail_member_shop_start_date obj_table_cell_x4">
+                        {{ member_shop_info.start_date | date:"Y.m.d(l)"|cut:"요일"  }}
                     </div>
-                    <!--<div class="wrapper_my_history_detail_member_ticket_end_date obj_table_cell_x7">
-                    </div>-->
-                    <div class="wrapper_my_history_detail_member_ticket_reg_count obj_table_cell_x6">
-                        {% if member_ticket_info.member_ticket_tb.member_ticket_reg_count >= 99999 %}
-                            무제한
-                        {% else %}
-                            {{ member_ticket_info.member_ticket_tb.member_ticket_reg_count }}
-                        {% endif %}
+                    <div class="wrapper_my_history_detail_member_shop_name obj_table_cell_x4">
+                        {{ member_shop_info.shop_tb.name }}
                     </div>
-                    <div class="wrapper_my_history_detail_member_ticket_rem_count obj_table_cell_x6">
-                        {% if member_ticket_info.member_ticket_tb.member_ticket_reg_count >= 99999 %}
-                            무제한
-                        {% else %}
-                            {{ member_ticket_info.member_ticket_tb.member_ticket_rem_count }}
-                        {% endif %}
-                    </div>
-                    <div class="wrapper_my_history_detail_member_ticket_price obj_table_cell_x6">{{ member_ticket_info.member_ticket_tb.price | intcomma }}원<br/>/{{ member_ticket_info.member_ticket_tb.payment_price | intcomma }}원</div>
-                    <div class="wrapper_my_history_detail_member_ticket_status obj_table_cell_x6">{{ member_ticket_info.status }}</div>
+                    <div class="wrapper_my_history_detail_member_shop_price obj_table_cell_x4">{{ member_shop_info.price | intcomma }}원<br/>/{{ member_shop_info.payment_price | intcomma }}원</div>
                 </div>
                 {% endfor %}
             </div>
@@ -104,21 +48,7 @@
 {% endblock %}
 {% block popup_base_js %}
 <script type="text/javascript">
-    $('#ticket_basic_info').addClass('ticket_info_selected');
     //popup_member_shop_history_swipe_close();
-    function ticket_basic_info(){
-        $('#ticket_basic_info').addClass('ticket_info_selected');
-        $('#ticket_lesson_history').removeClass('ticket_info_selected');
-        $('#wrapper_my_ticket_detail').show();
-        $('#wrapper_my_history_detail').hide();
-    }
-    function ticket_lesson_history(){
-        $('#ticket_basic_info').removeClass('ticket_info_selected');
-        $('#ticket_lesson_history').addClass('ticket_info_selected');
-        $('#wrapper_my_ticket_detail').hide();
-        $('#wrapper_my_history_detail').show();
-
-    }
     function popup_member_shop_history_swipe_close(){
         let ts;
         let tsy;
