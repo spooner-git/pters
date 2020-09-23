@@ -38,7 +38,7 @@ from .functions import func_get_class_member_ticket_count, func_get_member_ticke
     func_get_trainee_select_schedule, func_get_trainee_ing_member_ticket_list, func_check_select_date_reserve_setting, \
     func_get_trainee_ticket_list, func_get_class_list_only_view, func_get_trainee_setting_list, \
     func_get_trainee_closed_schedule
-from .models import MemberTicketTb, ProgramNoticeHistoryTb, MemberClosedDateHistoryTb
+from .models import MemberTicketTb, ProgramNoticeHistoryTb, MemberClosedDateHistoryTb, MemberShopTb
 
 logger = logging.getLogger(__name__)
 
@@ -415,6 +415,14 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
         if error is None:
             if class_id != '' and class_id is not None:
                 context = func_get_trainee_ticket_list(context, class_id, request.user.id)
+        if error is None:
+            today = datetime.date.today()
+            select_date = today - datetime.timedelta(days=90)
+            member_shop_data = MemberShopTb.objects.select_related(
+                'shop_tb').filter(class_tb_id=class_id, member_id=request.user.id,
+                                  start_date__gte=select_date, start_date__lte=today, use=USE)
+
+            context['member_shop_data'] = member_shop_data
 
         context['check_password_changed'] = 1
         if sns_id != '' and sns_id is not None:
@@ -2124,6 +2132,57 @@ class PopupTicketInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(PopupTicketInfoView, self).get_context_data(**kwargs)
+        ticket_id = self.request.GET.get('ticket_id')
+        error = None
+        ticket_info = None
+
+        member_ticket_list = ClassMemberTicketTb.objects.select_related(
+            'class_tb__member',
+            'member_ticket_tb__ticket_tb',
+            'member_ticket_tb__member'
+        ).filter(auth_cd=AUTH_TYPE_VIEW,
+                 member_ticket_tb__ticket_tb__ticket_id=ticket_id, member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
+                 member_ticket_tb__member_id=self.request.user.id,
+                 use=USE).order_by('member_ticket_tb__state_cd', '-member_ticket_tb__start_date',
+                                   '-member_ticket_tb__end_date',
+                                   '-member_ticket_tb__reg_dt')
+
+        for member_ticket_info in member_ticket_list:
+            if member_ticket_info.class_tb.member.phone is not None and member_ticket_info.class_tb.member.phone != '':
+                member_ticket_info.class_tb.member.phone = member_ticket_info.class_tb.member.phone[0:3] + '-' + \
+                                                     member_ticket_info.class_tb.member.phone[3:7] + '-' + \
+                                                     member_ticket_info.class_tb.member.phone[7:11]
+            if member_ticket_info.class_tb.member.profile_url is None or member_ticket_info.class_tb.member.profile_url == '':
+                member_ticket_info.class_tb.member.profile_url = '/static/common/icon/icon_account.png'
+            try:
+                member_ticket_info.status \
+                    = CommonCdTb.objects.get(common_cd=member_ticket_info.member_ticket_tb.state_cd).common_cd_nm
+            except ObjectDoesNotExist:
+                member_ticket_info.status = ''
+
+        if error is None:
+            try:
+                ticket_info = TicketTb.objects.get(ticket_id=ticket_id)
+            except ObjectDoesNotExist:
+                error = '수강권 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            ticket_info.ticket_lecture_data = TicketLectureTb.objects.select_related(
+                'lecture_tb'
+            ).filter(ticket_tb_id=ticket_id, ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+                     lecture_tb__state_cd=STATE_CD_IN_PROGRESS, lecture_tb__use=USE,
+                     use=USE).order_by('lecture_tb__reg_dt')
+
+        context['ticket_info'] = ticket_info
+        context['member_ticket_data'] = member_ticket_list
+        return context
+
+
+class PopupMemberShopHistoryView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'popup/trainee_popup_member_shop_history.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PopupMemberShopHistoryView, self).get_context_data(**kwargs)
         ticket_id = self.request.GET.get('ticket_id')
         error = None
         ticket_info = None
