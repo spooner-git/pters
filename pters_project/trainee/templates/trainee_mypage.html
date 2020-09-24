@@ -48,13 +48,13 @@
                 <div class="wrapper_member_shop_sub_title obj_font_size_11_weight_bold obj_font_color_dark_grey">상품 구매 정보 (최근 90일)</div>
                 <div class="wrapper_member_shop_sub_title2 obj_font_size_11_weight_bold obj_font_color_dark_grey"
                      onclick="layer_popup.open_layer_popup(POPUP_AJAX_CALL, 'popup_member_shop_history', 90,
-                                                            POPUP_FROM_BOTTOM, {'ticket_id':'13674', 'member_ticket_id':'29433'} )">전체 보기</div>
+                                                            POPUP_FROM_BOTTOM, {} )">전체 보기</div>
                 {% for member_shop_info in member_shop_data %}
                 <div class="obj_box_card">
                     <div class="wrapper_member_shop_title">
-                        <div class="obj_font_size_15_weight_bold">{{member_shop_info.shop_tb.name}}</div>
-                        <div class="obj_font_size_13_weight_500 obj_font_color_grey">구매일 : {{member_shop_info.start_date}}</div>
-                        <div class="obj_font_size_13_weight_500 obj_font_color_grey">가격 : {{member_shop_info.price | intcomma}}원 / 납부 금액 : {{member_shop_info.payment_price | intcomma}}원</div>
+                        <div class="obj_font_size_13_weight_bold">{{member_shop_info.shop_tb.name}}</div>
+                        <div class="obj_font_size_11_weight_500 obj_font_color_grey">구매일 : {{member_shop_info.start_date}}</div>
+                        <div class="obj_font_size_11_weight_500 obj_font_color_grey">가격 : {{member_shop_info.price | intcomma}}원 / 납부 금액 : {{member_shop_info.payment_price | intcomma}}원</div>
                     </div>
                 </div>
                 {% endfor %}
