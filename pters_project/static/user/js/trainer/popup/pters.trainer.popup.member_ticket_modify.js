@@ -28,6 +28,7 @@ class Member_ticket_modify{
             end_date_text:null,
             reg_count: null,
             price:null,
+            payment_price:null,
             pay_method:{value:[], text:[]},
             status:null,
             note:null,
@@ -44,6 +45,7 @@ class Member_ticket_modify{
         this.simple_input = {
             count : OFF,
             price : OFF,
+            payment_price : OFF,
             period : OFF
         };
 
@@ -118,6 +120,12 @@ class Member_ticket_modify{
                     `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>`;
         let price  = CComponent.dom_tag('가격') + this.dom_row_price_input() + 
                     `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>`;
+        let payment_price  = CComponent.dom_tag('납부 금액') + this.dom_row_payment_price_input() +
+                    `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>`;
+        if(this.data.status == "RF"){
+            payment_price  = CComponent.dom_tag('환불 금액') + this.dom_row_payment_price_input() +
+                    `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>`;
+        }
         let pay_method = CComponent.dom_tag("지불 방법") + this.dom_row_ticket_pay_method_select() +
                     `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>`;
         let note = CComponent.dom_tag('특이사항') + this.dom_row_note_input();
@@ -137,6 +145,7 @@ class Member_ticket_modify{
                 + start
                 + end
                 + price
+                + payment_price
                 + pay_method
                 + note +
             '</div>';
@@ -207,7 +216,7 @@ class Member_ticket_modify{
                     let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_TICKET_REFUND, 100, popup_style, null, ()=>{
                         let start_date = DateRobot.to_yyyymmdd(this.data.start_date.year, this.data.start_date.month, this.data.start_date.date);
-                        let external_data = {"member_ticket_id":this.data.member_ticket_id,"state_cd":"RF", "member_ticket_name":this.data.member_ticket_name, "member_ticket_price":this.data.price, "member_ticket_start_date":start_date};
+                        let external_data = {"member_ticket_id":this.data.member_ticket_id,"state_cd":"RF", "member_ticket_name":this.data.member_ticket_name, "member_ticket_price":this.data.price, "member_ticket_payment_price":this.data.payment_price, "member_ticket_start_date":start_date};
                         member_ticket_refund = new Member_ticket_refund('.popup_member_ticket_refund', external_data, 'member_ticket_refund');
                     });}
                 },
@@ -232,7 +241,7 @@ class Member_ticket_modify{
                         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_TICKET_HOLDING, 100, popup_style, null, ()=>{
                             let start_date = DateRobot.to_yyyymmdd(this.data.start_date.year, this.data.start_date.month, this.data.start_date.date);
                             let end_date = DateRobot.to_yyyymmdd(this.data.end_date.year, this.data.end_date.month, this.data.end_date.date);
-                            let external_data = {"member_ticket_id":this.data.member_ticket_id,"member_ticket_name":this.data.member_ticket_name, "member_ticket_price":this.data.price,
+                            let external_data = {"member_ticket_id":this.data.member_ticket_id,"member_ticket_name":this.data.member_ticket_name, "member_ticket_price":this.data.price, "member_ticket_payment_price":this.data.payment_price,
                                                  "member_ticket_start_date":start_date, "member_ticket_end_date":end_date};
                             member_ticket_holding = new Member_ticket_holding('.popup_member_ticket_holding', external_data, 'member_ticket_holding');
                         });}
@@ -623,6 +632,72 @@ class Member_ticket_modify{
         return html;
     }
 
+    dom_row_payment_price_input(){
+        let id = 'member_ticket_payment_price_modify';
+        let title = this.data.payment_price == null || this.data.payment_price == 'None' ? '' : UnitRobot.numberWithCommas(this.data.payment_price);
+        let icon = NONE;
+        let icon_r_visible = SHOW;
+        let status = '미납';
+        if(this.data.payment_price >= this.data.price){
+            status = '완납';
+        }
+        else{
+            status = '납부중';
+        }
+        if(this.data.payment_price == 0){
+            status = '미납';
+        }
+        if(this.data.status == "RF"){
+            status = '환불';
+            title = UnitRobot.numberWithCommas(this.data.refund_price);
+        }
+        let icon_r_text = `<span style="color:orange">${status}</span>`;
+        let style = null;
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            let user_option = {
+                add_payment:{text:"결제 내역 추가", callback:()=>{
+                    layer_popup.close_layer_popup();
+                    if(this.data.status == "RF"){
+                        show_error_message({title:'이미 환불 처리된 상품입니다.'});
+                        return false;
+                    }
+                    let member_add_initial_data = {member_id: this.data.member_id, member_ticket_id: this.data.member_ticket_id,
+                                                   shop_price:this.data.price, current_price:this.data.payment_price};
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_PAYMENT_ADD, 100, POPUP_FROM_BOTTOM, null, ()=>{
+                        member_payment_add_popup = new Member_Payment_add('.popup_member_payment_add', member_add_initial_data, 'member_payment_add_popup');}
+                    );
+                    // 상세 결제 내역 띄우기
+                }},
+                detail:{text:"결제 내역 상세 보기", callback:()=>{
+                    layer_popup.close_layer_popup();
+                    let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                        layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_PAYMENT_HISTORY, 100, popup_style, null, ()=>{
+                        member_payment_history = new Member_payment_history('.popup_member_payment_history', this.data.member_ticket_id, null);
+                    });
+                }}
+            };
+
+            if(this.data.status == "IP"){
+                delete user_option.resume;
+                delete user_option.delete;
+            }else{
+                // delete user_option.holding;
+                delete user_option.refund;
+                delete user_option.finish;
+            }
+
+            let options_padding_top_bottom = 16;
+            // let button_height = 8 + 8 + 52;
+            let button_height = 52;
+            let layer_popup_height = options_padding_top_bottom + button_height + 52*Object.keys(user_option).length;
+            let root_content_height = $root_content.height();
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_OPTION_SELECTOR, 100*(layer_popup_height)/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
+                option_selector = new OptionSelector('#wrapper_popup_option_selector_function', this, user_option);
+            });
+        });
+        return html;
+    }
+
     dom_row_ticket_pay_method_select(){
         // let option_data = {
         //     value:["NONE", "CASH", "CARD", "TRANS", "CASH+CARD", "CARD+TRANS", "CASH+TRANS"],
@@ -687,7 +762,7 @@ class Member_ticket_modify{
 
         let data = {"member_ticket_id":this.data.member_ticket_id, "note":this.data.note, 
                     "start_date":start_date, "end_date":end_date, 
-                    "price":this.data.price, "refund_price":this.data.refund_price, 
+                    "price":this.data.price, "payment_price":this.data.payment_price,  "refund_price":this.data.refund_price,
                     "refund_date":this.data.refund_date == "None" ? "" : refund_date, "member_ticket_reg_count":this.data.reg_count,
                     "pay_method":this.data.pay_method.value[0]
                 };
@@ -720,6 +795,10 @@ class Member_ticket_modify{
             return false;
         }
         else{
+            if(this.data.payment_price > this.data.price){
+                show_error_message({title:'수강권 가격보다 납부 금액이 많습니다.'});
+                return false;
+            }
             return true;
         }
     }

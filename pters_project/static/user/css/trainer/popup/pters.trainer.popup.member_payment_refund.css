@@ -1,0 +1,47 @@
+.popup_member_payment_refund{
+	/* -webkit-overflow-scrolling: touch; */
+}
+
+.popup_member_payment_refund .obj_box_full{
+	padding: 16px 18px;
+}
+
+.popup_member_payment_refund .obj_input_box_full{
+	padding: 4px 8px 4px 18px;
+}
+
+.popup_member_payment_refund .popup_toolbox{
+	/* position: sticky;
+	position: -webkit-sticky; */
+	position: relative;
+	top: 0;
+	padding: 0 20px 24px 60px;
+}
+.popup_member_payment_refund .member_payment_refund_upper_box{
+	height: 28px;
+	line-height: 28px;
+}
+
+.popup_member_payment_refund .popup_content{
+	padding-top: 1px;
+	padding-bottom: 20px;
+}
+
+.popup_member_payment_refund .member_payment_auth{
+	display: flex;
+	font-size: 15px;
+	font-weight: 500;
+	padding: 3px 5px;
+}
+
+.popup_member_payment_refund .auth_title{
+	flex-basis: 60px;
+	color: var(--font-sub-dark);
+}
+.popup_member_payment_refund .auth_setting{
+	flex: 1 1 0;
+	color: var(--font-sub-dark);
+	text-align: right;
+}
+
+

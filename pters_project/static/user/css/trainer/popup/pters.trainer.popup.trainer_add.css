@@ -1,0 +1,47 @@
+.popup_trainer_add{
+	/* -webkit-overflow-scrolling: touch; */
+}
+
+.popup_trainer_add .obj_box_full{
+	padding: 16px 18px;
+}
+
+.popup_trainer_add .obj_input_box_full{
+	padding: 4px 8px 4px 18px;
+}
+
+.popup_trainer_add .popup_toolbox{
+	/* position: sticky;
+	position: -webkit-sticky; */
+	position: relative;
+	top: 0;
+	padding: 0 20px 24px 60px;
+}
+.popup_trainer_add .trainer_add_upper_box{
+	height: 28px;
+	line-height: 28px;
+}
+
+.popup_trainer_add .popup_content{
+	padding-top: 1px;
+	padding-bottom: 20px;
+}
+
+.popup_trainer_add .trainer_auth{
+	display: flex;
+	font-size: 15px;
+	font-weight: 500;
+	padding: 3px 5px;
+}
+
+.popup_trainer_add .auth_title{
+	flex-basis: 60px;
+	color: var(--font-sub-dark);
+}
+.popup_trainer_add .auth_setting{
+	flex: 1 1 0;
+	color: var(--font-sub-dark);
+	text-align: right;
+}
+
+

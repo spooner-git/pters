@@ -1,0 +1,571 @@
+{% extends "base.html" %}
+{% load static_url %}
+
+{% block local_css %}
+    <meta name="description" content="PTERS 피터스로 개인 레슨과 그룹레슨, 수업을 더욱 쉽게 관리해보세요.">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="PTERS 피터스 | 레슨관리 앱">
+    <meta property="og:description" content="회원 모드 소개 | PTERS 피터스로 개인 레슨과 그룹레슨, 수업을 더욱 쉽게 예약할 수 있습니다.">
+    <!-- <meta property="og:image" content="http://www.mysite.com/myimage.jpg"> -->
+    <link rel="stylesheet" href={% static_url "user/css/login/login.registration.css" %}>
+    <style>
+        p{
+            word-break: keep-all;
+        }
+        #root_nav{
+            /* display: none; */
+            padding: 0 20px;
+            height: 60px;
+        }
+        #root_nav > div{
+                display: flex;
+                width: 100%;
+                max-width: 1024px;
+                margin: 0 auto;
+                /* padding: 0 20px; */
+                box-sizing: border-box;
+            }
+            #login_wrapper{
+                flex-basis: 40px;
+                max-width: 150px;
+                line-height: 60px;
+                margin: 0 auto;
+            }
+                #logo{
+                    width: 32px;
+                    height: 32px;
+                    vertical-align: middle;
+                    margin-right: 10px;
+                    margin-bottom: 3px;
+                }
+            #menu_wrapper{
+                flex: 1 1 0;
+                text-align: left;
+                line-height: 60px;
+                overflow: hidden;
+            }
+                #menu_wrapper > ul{
+                    overflow-x: auto;
+                    list-style-type: none;
+                    margin: 0;
+                    padding: 0;
+                    display: flex;
+                }
+                #menu_wrapper > ul > li{
+                    /* display: inline-block; */
+                    flex: 1 1 0;
+                    min-width: 90px;
+                    width: 90px;
+                    font-size: 13px;
+                    font-weight: bold;
+                    text-align: center;
+                    letter-spacing: -0.7px;
+                }
+                #menu_wrapper > ul > li > a{
+                    color: #1f1d1e;
+                }
+
+        #root_content{
+            /* background-color: #ffffff; */
+            background-color: #fbfbfb;
+            height: calc(100% - 60px);
+        }
+        .login_content{
+            background-image: url('/static/common/img/home_bg/bg_big.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            position: relative;
+            margin: 0;
+            padding: 20px 20px 40px;
+            margin-bottom: 20px;
+        }
+        .social_login_box_wrapper{
+            width: 100%;
+            display:flex;
+            margin-top: 8px;
+            flex-direction: row;
+        }
+        .social_login_box_wrapper .social_login_box{
+            /* display: flex; */
+            flex: 1 1 0;
+        }
+        @media(max-width:340px){
+            .social_login_box_wrapper{
+                display:flex;
+                flex-direction: column;
+            }
+            .social_login_box_wrapper .social_login_box{
+                flex: 1 1 0;
+                flex-basis: 52px;
+            }
+        }
+
+        #front_page_login{
+            padding-bottom: 20px;
+        }
+
+        .front_page_section{
+            min-height: 200px;
+        }
+        .front_page_section .article_wrapper{
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .front_page_section .article_wrapper .flex_2_divided_1{
+            flex: 1 1 0;
+            position: relative;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        .front_page_section .article_wrapper .flex_2_divided_2{
+            flex: 2 1 0;
+            position: relative;
+        }
+
+        .front_page_section .tag_wrapper{
+            position: relative;
+            text-align: left;
+        }
+        .front_page_section .tag_wrapper > h1{
+            font-size: 11px;
+            font-weight: 500;
+            color: #fe4e65;
+            margin-top: 0;
+            margin-bottom: 5px;
+        }
+        .front_page_section .tag_wrapper > h2{
+            font-size: 16px;
+            font-weight: bold;
+            color: #3b3b3b;
+            margin: 0;
+        }
+
+
+        #page_1{
+            height: auto;
+        }
+        #page_1 .flex_2_divided_1{
+            text-align: center;
+        }
+        #page1_description{
+            color: #ffffff;
+            font-size: 20px;
+            font-weight: bold;
+            letter-spacing: -1px;
+            padding: 20px;
+        }
+        .page_description{
+            color: #ffffff;
+            font-size: 20px;
+            font-weight: bold;
+            letter-spacing: -1px;
+            padding: 20px;
+        }
+        .page_description_additional{
+            font-size: 15px;
+            font-weight:normal
+        }
+        #page1_image{
+            /* height: 100%; */
+            width: 100%;
+            height: auto;
+            background-image: url('/static/common/img/front_page/pters_service_summary.png');
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+            min-height: 500px;
+        }
+        .page_image{
+            width: 100%;
+            height: 100%;
+            /* min-height: 500px; */
+            min-height: 600px;
+            
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .price_product_wrap{
+            display: inline-block;
+            width: 100%;
+            max-width: 230px;
+            margin: 10px;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: left;
+        }
+        .price_product_description_row{
+            display: flex;
+            color: #ffffff;
+            font-size: 11px;
+            padding: 5px 0;
+        }
+        .price_product_description_row > div:nth-of-type(1){
+            flex-basis: 24px;
+        }
+        .price_product_description_row > div:nth-of-type(2){
+            flex-basis: 52px;
+        }
+        .price_product_description_row > div:nth-of-type(3){
+            flex: 1 1 0;
+        }
+     
+
+        #mobile_button_for_show{
+            width: 100%;
+            height: 40px;
+            line-height: 40px;
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+            cursor: pointer;
+            
+        }
+        #mobile_button_for_show img{
+            width: 24px;
+            vertical-align: middle;
+            animation: blinker 1s linear infinite;
+        }
+
+        #IE_block_explain{
+            display: none;
+            width: 100%;
+            min-height: 200px;
+        }
+
+        @keyframes blinker {
+            90% {
+                opacity: 0.3;
+            }
+        }
+        #description_wrapper{
+
+        }
+        /* PC버전 화면 */
+        @media(min-width:800px){
+            #mobile_button_for_show{
+                display: none;
+            }
+            #description_wrapper{
+
+            }
+            #root_nav{
+                display: block;
+                position: sticky;
+                position: -webkit-sticky;
+                top: 0;
+                width: 100%;
+                height: 60px;
+                background-color: #ffffff;
+                z-index: 1;
+                box-sizing: border-box;
+            }
+            #root_nav > div{
+                display: flex;
+                width: 100%;
+                max-width: 1024px;
+                margin: 0 auto;
+                /* padding: 0 20px; */
+                box-sizing: border-box;
+            }
+            #login_wrapper{
+                flex-basis: 40px;
+                max-width: 150px;
+                line-height: 60px;
+                margin: 0 auto;
+            }
+                #logo{
+                    width: 32px;
+                    height: 32px;
+                    vertical-align: middle;
+                    margin-right: 10px;
+                    margin-bottom: 3px;
+                }
+            #menu_wrapper{
+                flex: 1 1 0;
+                text-align: left;
+                line-height: 60px;
+            }
+                #menu_wrapper > ul{
+                    list-style-type: none;
+                    margin: 0;
+                    padding: 0;
+                }
+                #menu_wrapper > ul > li{
+                    flex: unset;
+                    display: inline-block;
+                    width: 90px;
+                    font-size: 13px;
+                    font-weight: bold;
+                    text-align: center;
+                    letter-spacing: -0.7px;
+                }
+                #menu_wrapper > ul > li > a{
+                    color: #1f1d1e;
+                }
+
+            #root_content{
+                /* background-color: #f4f4f4; */
+                height: calc(100% - 60px);
+            }
+            #front_page_login{
+                padding-bottom: 40px;
+            }
+            .front_page_section .article_wrapper{
+                flex-direction: row;
+                max-width: 1024px;
+                margin: 0 auto;
+                height: 600px;
+                padding:40px 0;
+            }
+            .front_page_section .article_wrapper .flex_2_divided_1{
+                flex: 4 1 0;
+                /* padding: 40px 0; */
+                text-align: right;
+                /* background-image:url('/static/common/img/front_page/pters_service_summary.png');
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-position: center; */
+            }
+            .front_page_section .article_wrapper .flex_2_divided_2{
+                flex: 2 1 0;
+            }
+            .front_page_section .tag_wrapper{
+                position: absolute;
+                top: 40px;
+                left: 0;
+            }
+            .page_description{
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #ffffff;
+                padding: 0;
+                margin-left: 50px; 
+            }
+            .page_description_additional{
+                font-size: 15px;
+                font-weight:normal
+            }
+
+            #page_1{
+                height: 500px;
+            }
+            #page1_description{
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #ffffff;
+                padding: 0;
+                margin-left: 50px;
+            }
+            #page1_image{
+                height: 100%;
+                width: 100%;
+                min-height: unset;
+            }
+            .page_image{
+                height: 100%;
+                width: auto;
+                background-position: right;
+            }
+            
+
+            #login_box{
+                display: flex;
+                max-width: 1024px;
+                padding-top: 40px;
+                box-sizing: border-box;
+            }
+            .login_content{
+                flex: 3 1 0;
+                height: 340px;
+                background-size: contain;
+                padding-top: 0;
+                background-image: url('/static/common/img/home_bg/bg_big.png');
+                background-size: 60%;
+                background-position: right;
+                margin: 0 20px;
+                margin-left: 10px;
+                padding: 0;
+                margin-bottom: unset;
+            }
+            .login_foot{
+                flex: 2 1 0;
+                max-width: 360px;
+                /* height: 430px; */
+                background-color: #ffffff;
+                padding: 20px;
+                padding-bottom: 0;
+                box-sizing: border-box;
+                border-radius: 4px;
+            }
+        }
+
+
+    </style>
+{% endblock %}
+{% block content %}
+    <nav id="root_nav">
+        <div>
+            <div id="login_wrapper">
+                <a href="/"><img src="/static/common/icon/logo/PTERS_logo_short.png" alt="PTERS 로고" id="logo"></a>
+            </div>
+            <div id="menu_wrapper">
+                <ul>
+                    <li><a style="cursor: pointer;" href="/for_trainee/">피터스?</a></li>
+                </ul>
+            </div>
+        </div>
+        
+    </nav>
+
+    <div id="root_content">
+        <div id="description_wrapper">
+            <section class="front_page_section" style="background-image: linear-gradient(to right, #fe4e65 25%, #ff869e);" id="what_page" hidden>
+                <div id="page_1" class="article_wrapper">
+                    <article class="flex_2_divided_1">
+                        <!-- <img id="page1_image" src="/static/common/img/front_page/pters_service_summary.png" alt=""> -->
+                        <div id="page1_image"></div>
+                    </article>
+                    <article class="flex_2_divided_2">
+                        <div id="page1_description">
+                            <div style="width:16px;height:2px;background-color:#ffffff"></div>
+                            <p>단 하나의 서비스를 통해<br>강사가 겪는 불편함을 해결합니다.</p>
+                            <div style="width:16px;height:2px;background-color:#ffffff"></div>
+                            <p>개인/기업 누구나<br>업무 방식을 개선 할 수 있습니다.</p>
+                            <div style="width:16px;height:2px;background-color:#ffffff"></div>
+                            <p style="margin-bottom:0">모든 기기를 지원하고 있어<br>언제 어디서든지 이용 가능합니다.</p>
+                            <p style="font-size:13px;font-weight: 500;margin:0">(*회원용 예약 서비스 지원)</p>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="front_page_section" style="background-color:#fbfbfb;" id="feature_page">
+                <div id="page_2" class="article_wrapper">
+                    <article class="flex_2_divided_1">
+                        <div class="tag_wrapper">
+                            <h1>주요 기능 01.</h1>
+                            <h2>홈 화면</h2>
+                        </div>
+                        <div id="page2_image" class="page_image" style="background-image:url('/static/common/img/front_page/member/pters_student_main.png')"></div>
+                    </article>
+                    <article class="flex_2_divided_2">
+                        <div id="page1_description" style="color:#3b3b3b" class="page_description">
+                            <div style="width:16px;height:2px;background-color:#3b3b3b"></div>
+                            <p>한눈에 파악하는<br>다양한 정보</p>
+                            <div class="page_description_additional">
+                                <span style="font-weight: bold;">내 다음 일정</span>부터, 등록한 수강권의 <span style="font-weight: bold;">횟수 정보</span>와 <span style="font-weight: bold;">참여가능한 수업 목록</span>까지 요약된 정보를 간편하게 확인할 수 있습니다.
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="front_page_section" style="background-color:#ffffff;">
+                <div id="page_3" class="article_wrapper">
+                    <article class="flex_2_divided_1">
+                        <div class="tag_wrapper">
+                            <h1>주요 기능 02.</h1>
+                            <h2>월간 일정</h2>
+                        </div>
+                        <div id="page3_image" class="page_image" style="background-image:url('/static/common/img/front_page/member/pters_student_calendar.png')"></div>
+                    </article>
+                    <article class="flex_2_divided_2">
+                        <div id="page1_description" style="color:#3b3b3b" class="page_description">
+                            <div style="width:16px;height:2px;background-color:#3b3b3b"></div>
+                            <p>예약 일정과 지난일정까지<br>계획적으로 살펴보세요.</p>
+                            <div class="page_description_additional">
+                                <span style="font-weight: bold;">월간일정표</span>로 과거 일정부터 예약된 일정까지 모두 확인하세요. <br> 나의 현황을 살펴보고 보다 계획적이고 능동적으로 수업에 참여해볼까요?
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="front_page_section" style="background-color:#fbfbfb;" id="feature_page">
+                <div id="page_2" class="article_wrapper">
+                    <article class="flex_2_divided_1">
+                        <div class="tag_wrapper">
+                            <h1>주요 기능 03.</h1>
+                            <h2>예약하기</h2>
+                        </div>
+                        <div id="page2_image" class="page_image" style="background-image:url('/static/common/img/front_page/member/pters_group_reserve.png')"></div>
+                    </article>
+                    <article class="flex_2_divided_2">
+                        <div id="page1_description" style="color:#3b3b3b" class="page_description">
+                            <div style="width:16px;height:2px;background-color:#3b3b3b"></div>
+                            <p>원하는 날짜 시간 고르고<br>터치 한번에 예약 끝!</p>
+                            <!-- <div class="page_description_additional">
+                                비어있는 시간에 예약 가능한 <span style="font-weight:bold">1:1레슨</span> 타입과 강사가 개설한 일정에 선착순 예약하는 <span style="font-weight:bold">그룹레슨</span> 타입을 지원합니다.
+                                <br>일정을 출석처리하면 회원들의 <span style="font-weight:bold">남은 횟수가 자동 차감</span> 저장됩니다.
+                            </div> -->
+                            <div class="page_description_additional">
+                                참여가능한 날짜와 시간에 예약이 가능한지 바로 살펴보세요. 이제는 문자와 전화로 강사님께 여쭤보지 말고 <span style="font-weight: bold;">쉽고 간편하게 터치 한번에 예약</span>하기로 해요!
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="front_page_section" style="background-color:#ffffff;">
+                <div id="page_3" class="article_wrapper">
+                    <article class="flex_2_divided_1">
+                        <div class="tag_wrapper">
+                            <h1>주요 기능 04.</h1>
+                            <h2>공지 사항 확인</h2>
+                        </div>
+                        <div id="page3_image" class="page_image" style="background-image:url('/static/common/img/front_page/member/pters_student_notice.png')"></div>
+                    </article>
+                    <article class="flex_2_divided_2">
+                        <div id="page1_description" style="color:#3b3b3b" class="page_description">
+                            <div style="width:16px;height:2px;background-color:#3b3b3b"></div>
+                            <p>강사님의 공지도<br>앱에서 간편하게 확인</p>
+                            <div class="page_description_additional">
+                                강사님이 회원님들께 공유하는 <span style="font-weight:bold">공지사항</span>도 쉽고 간편하게 확인하세요. 강사님이 올리는 중요한 정보를 놓치지 말자구요!
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+
+
+            <section class="front_page_section" style="background-color:#fbfbfb;color:#5c5859">
+                <div id="page_8" class="article_wrapper" style="display:block;height:auto;padding:40px 20px 0 20px;">
+                    <div>
+                        <p style="margin-top: 0;">
+                            <span style="font-size:11px;font-weight:500">고객센터 / </span>
+                            <span style="font-size:8px;">운영시간: 10:00 ~ 18:00 (점심시간: 13:00 ~ 14:00)</span>
+                        </p>
+                    </div>
+                    <div style="font-size:11px">
+                        <p style="text-decoration: underline;margin:5px 0">070-8816-1010</p>
+                        <p style="text-decoration: underline;margin:5px 0">support@pters.co.kr</p>
+                    </div>
+                    <div style="font-size:11px;font-weight:bold;margin-top:25px">
+                        ⓒ SPOONER
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block local_js_footer %}
+<script type="text/javascript">
+
+    if(varUA.match('MSIE') != null || varUA.match('msie') != null || varUA.match('rv:11.0')){
+        $('#root_nav, .login_foot, #description_wrapper').css('display','none');
+        $('#IE_block_explain').css('display','block');
+    }
+    
+
+</script>
+{% endblock %}

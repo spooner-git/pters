@@ -268,8 +268,54 @@ class CComponent{
         return html;
     }
 
+    //수강권 선택 팝업에 사용되는 행
+    static select_shop_row (multiple_select, checked, location, ticket_id, ticket_name, ticket_price, onclick){
+        let html = `
+                    <li class="select_ticket_row str_${location}" id="select_ticket_row_${ticket_id}">
+                        <div class="obj_table_raw">
+                            <div class="cell_ticket_color">
+                                
+                            </div>
+                            <div class="cell_ticket_info">
+                                <div>${ticket_name}</div>
+                                <div style="display:none">가격 - ${ticket_price}원 / 횟수 - ${ticket_reg_count} / 유효기간 - ${ticket_effective_days}일</div>
+                            </div>
+                            <div class="cell_ticket_selected ${checked == 0 ? '' : 'ticket_selected'}">
+                                ${CImg.confirm("", checked == 0 ? {"display":"none"} : {"display":"block"})}
+                            </div>
+                        </div>
+                    </li>
+                    `;
+
+        if(multiple_select > 1){
+            $(document).off('click', `#select_ticket_row_${ticket_id}`).on('click', `#select_ticket_row_${ticket_id}`, function(e){
+                if(!$(this).find('.cell_ticket_selected').hasClass('ticket_selected')){
+                    if($(`.str_${location} .ticket_selected`).length >= multiple_select){
+                        show_error_message(`${multiple_select} 개까지 선택할 수 있습니다.`);
+                        return false;
+                    }
+                    $(this).find('.cell_ticket_selected').addClass('ticket_selected');
+                    $(this).find('svg').css('display', 'block');
+                    onclick('add');
+                }else{
+                    $(this).find('.cell_ticket_selected').removeClass('ticket_selected');
+                    $(this).find('svg').css('display', 'none');
+                    onclick('substract');
+                }
+            });
+        }else if(multiple_select == 1){
+            $(document).off('click', `#select_ticket_row_${ticket_id}`).on('click', `#select_ticket_row_${ticket_id}`, function(e){
+
+                onclick('add_single');
+
+            });
+        }
+        return html;
+    }
+
     //수업 선택 팝업에 사용되는 행
-    static select_lecture_row (multiple_select, checked, location, lecture_id, lecture_name, color_code, max_member_num, ing_member_num, lecture_state_cd, lecture_time, onclick){
+    static select_lecture_row (multiple_select, checked, location, lecture_id, lecture_name, color_code,
+                               max_member_num, ing_member_num, lecture_state_cd, lecture_time, main_trainer_id, main_trainer_name, onclick){
         let html = `
                     <li class="select_lecture_row slr_${location}" id="select_lecture_row_${lecture_id}" ${lecture_state_cd == "end" ? "style='opacity:0.6'": ""}>
                         <div class="obj_table_raw">
@@ -279,8 +325,8 @@ class CComponent{
                             </div>
                             <div class="cell_lecture_info">
                                 <div>${lecture_state_cd == "end" ? "(비활성)": ""} ${lecture_name}</div>
-                                <div class="lecture_additional_info" ${lecture_state_cd == "end" ? "style='display:none'": ""}>정원: ${max_member_num} 명 / 진행중  ${ing_member_num} 명 / 수업시간 ${lecture_time} 분</div>
-                                <div class="lecture_additional_info" ${lecture_state_cd == "ing" ? "style='display:none'": ""}>정원: ${max_member_num} 명 / 수업시간 ${lecture_time} 분</div>
+                                <div class="lecture_additional_info" ${lecture_state_cd == "end" ? "style='display:none'": ""}>정원: ${max_member_num} 명 / 진행중  ${ing_member_num} 명 / 수업시간 ${lecture_time} 분  / 담당강사  ${main_trainer_name}</div>
+                                <div class="lecture_additional_info" ${lecture_state_cd == "ing" ? "style='display:none'": ""}>정원: ${max_member_num} 명 / 수업시간 ${lecture_time} 분  / 담당강사  ${main_trainer_name}</div>
                             </div>
                             <div class="cell_lecture_selected ${checked == 0 ? 'none' : 'lecture_selected'}">
                                 ${CImg.confirm("", checked == 0 ? {"display":"none"} : {"display":"block"})}
@@ -559,7 +605,7 @@ class CComponent{
     }
 
     //회원의 수강권 이력에 사용되는 행
-    static ticket_history_row (numbering, ticket_id, date, ticket_name, ticket_price, ticket_refund_price, reg_count, remain_count, avail_count, status_code, note, onclick){
+    static ticket_history_row (numbering, ticket_id, date, ticket_name, ticket_price, ticket_payment_price, ticket_refund_price, reg_count, remain_count, avail_count, status_code, note, onclick){
         let status_color = "";
         if(status_code == "IP"){
             status_color = "green";
@@ -574,7 +620,11 @@ class CComponent{
                         </div>
                         <div class="obj_table_raw table_date_info">
                             <div class="cell_ticket_num"></div>
-                            <div class="cell_ticket_info">등록금액: ${ticket_price} ${status_code == "RF" ? ' 환불금액: -' + ticket_refund_price : ""}</div>
+                            <div class="cell_ticket_info">수강권 가격: ${ticket_price}</div>
+                        </div>
+                        <div class="obj_table_raw table_date_info">
+                            <div class="cell_ticket_num"></div>
+                            <div class="cell_ticket_info">납부 금액: ${ticket_price} ${status_code == "RF" ? ' 환불금액: -' + ticket_refund_price : ""}</div>
                         </div>
                         <div class="obj_table_raw table_date_info">
                             <div class="cell_ticket_num"></div>

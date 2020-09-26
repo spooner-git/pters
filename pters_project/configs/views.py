@@ -405,6 +405,7 @@ def func_setting_data_update(request, group):
         request.session['setting_trainer_attend_mode_out_lock'] = context['setting_trainer_attend_mode_out_lock']
 
         request.session['setting_member_lecture_max_num_view_available'] = context['setting_member_lecture_max_num_view_available']
+        request.session['setting_member_lecture_main_trainer_view_available'] = context['setting_member_lecture_main_trainer_view_available']
         request.session['setting_member_disable_schedule_visible'] = context['setting_member_disable_schedule_visible']
         request.session['setting_schedule_sign_enable'] = context['setting_schedule_sign_enable']
         request.session['setting_member_private_class_auto_permission'] = context['setting_member_private_class_auto_permission']
@@ -489,7 +490,7 @@ def get_function_auth_type_cd(request):
 
                 auth_info['active'] = 1
                 auth_info['limit_num'] = function_info.counts
-                auth_info['limit_type'] = function_info.product_tb.name
+                auth_info['limit_type'] = str(function_info.product_tb.name)
                 request.session['auth_info'][function_auth_type_cd_name] = auth_info
             payment_data_counter += 1
 
@@ -517,7 +518,8 @@ def get_function_auth_type_cd(request):
         if str(trainer_id) != str(request.user.id):
             function_list = ProgramAuthTb.objects.select_related('function_auth_tb').filter(class_tb_id=class_id,
                                                                                             member_id=request.user.id)
-
+            check_trainer_data = False
+            check_shop_data = False
             for function_info in function_list:
                 if function_info.auth_type_cd is None:
                     function_auth_type_cd_name = str(function_info.function_auth_tb.function_auth_type_cd)
@@ -528,7 +530,36 @@ def get_function_auth_type_cd(request):
                 if str(function_info.enable_flag) == '0':
                     request.session['auth_info'][function_auth_type_cd_name]['limit_num'] = function_info.enable_flag
                 request.session['auth_info'][function_auth_type_cd_name]['limit_type'] = str('공유 지점')
-
+                if str(function_info.function_auth_tb.function_auth_type_cd) == 'auth_trainer':
+                    check_trainer_data = True
+                if str(function_info.function_auth_tb.function_auth_type_cd) == 'auth_shop':
+                    check_shop_data = True
+            if check_trainer_data is False:
+                request.session['auth_info']['auth_trainer_create']['active'] = 0
+                request.session['auth_info']['auth_trainer_create']['limit_num'] = 0
+                request.session['auth_info']['auth_trainer_create']['limit_type'] = str('공유 지점')
+                request.session['auth_info']['auth_trainer_delete']['active'] = 0
+                request.session['auth_info']['auth_trainer_delete']['limit_num'] = 0
+                request.session['auth_info']['auth_trainer_delete']['limit_type'] = str('공유 지점')
+                request.session['auth_info']['auth_trainer_read']['active'] = 0
+                request.session['auth_info']['auth_trainer_read']['limit_num'] = 0
+                request.session['auth_info']['auth_trainer_read']['limit_type'] = str('공유 지점')
+                request.session['auth_info']['auth_trainer_update']['active'] = 0
+                request.session['auth_info']['auth_trainer_update']['limit_num'] = 0
+                request.session['auth_info']['auth_trainer_update']['limit_type'] = str('공유 지점')
+            if check_shop_data is False:
+                request.session['auth_info']['auth_shop_create']['active'] = 0
+                request.session['auth_info']['auth_shop_create']['limit_num'] = 0
+                request.session['auth_info']['auth_shop_create']['limit_type'] = str('공유 지점')
+                request.session['auth_info']['auth_shop_delete']['active'] = 0
+                request.session['auth_info']['auth_shop_delete']['limit_num'] = 0
+                request.session['auth_info']['auth_shop_delete']['limit_type'] = str('공유 지점')
+                request.session['auth_info']['auth_shop_read']['active'] = 0
+                request.session['auth_info']['auth_shop_read']['limit_num'] = 0
+                request.session['auth_info']['auth_shop_read']['limit_type'] = str('공유 지점')
+                request.session['auth_info']['auth_shop_update']['active'] = 0
+                request.session['auth_info']['auth_shop_update']['limit_num'] = 0
+                request.session['auth_info']['auth_shop_update']['limit_type'] = str('공유 지점')
 
 def get_background_url(request):
     class_id = request.session.get('class_id', '')
@@ -603,7 +634,7 @@ def delete_profile_img_logic(request):
             error = func_delete_profile_image_logic(member_info.profile_url)
 
     if error is None:
-        member_info.profile_url = ''
+        member_info.profile_url = '/static/common/icon/icon_account.png'
         member_info.save()
 
     if error is not None:

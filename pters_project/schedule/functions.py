@@ -290,7 +290,7 @@ def func_refresh_lecture_status(lecture_id, lecture_schedule_id, lecture_repeat_
 def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
                       lecture_info, lecture_schedule_id, start_datetime, end_datetime,
                       note, private_note, en_dis_type, user_id, permission_state_cd, state_cd, extension_flag,
-                      duplication_enable_flag):
+                      duplication_enable_flag, trainer_id):
     error = None
     context = {'error': None, 'schedule_id': ''}
     if member_ticket_id == '':
@@ -324,7 +324,11 @@ def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
         end_color_cd = lecture_info.end_color_cd
         ing_font_color_cd = lecture_info.ing_font_color_cd
         end_font_color_cd = lecture_info.end_font_color_cd
-
+        if trainer_id is None or trainer_id == '':
+            if lecture_info.main_trainer is None:
+                trainer_id = lecture_info.class_tb.member_id
+            else:
+                trainer_id = lecture_info.main_trainer.member_id
         if lecture_info.lecture_type_cd == LECTURE_TYPE_ONE_TO_ONE:
             # lecture_info = None
             # lecture_id = None
@@ -353,6 +357,7 @@ def func_add_schedule(class_id, member_ticket_id, repeat_schedule_id,
                                                ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
                                                ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
                                                extension_flag=extension_flag,
+                                               trainer_id=trainer_id,
                                                # Test 용
                                                # alarm_dt=start_datetime-datetime.timedelta(minutes=5),
                                                reg_member_id=user_id,
@@ -439,7 +444,7 @@ def func_add_schedule_update(class_id, member_ticket_id, repeat_schedule_id,
                              lecture_info, lecture_schedule_id,
                              start_datetime, end_datetime,
                              note, private_note, en_dis_type, user_id, permission_state_cd, state_cd, extension_flag,
-                             duplication_enable_flag):
+                             duplication_enable_flag, trainer_id):
     error = None
     context = {'error': None, 'schedule_id': ''}
     if member_ticket_id == '':
@@ -464,6 +469,8 @@ def func_add_schedule_update(class_id, member_ticket_id, repeat_schedule_id,
         end_color_cd = lecture_info.end_color_cd
         ing_font_color_cd = lecture_info.ing_font_color_cd
         end_font_color_cd = lecture_info.end_font_color_cd
+        if trainer_id is None or trainer_id == '':
+            trainer_id = lecture_info.main_trainer.member_id
 
         if lecture_info.lecture_type_cd == LECTURE_TYPE_ONE_TO_ONE:
             # lecture_info = None
@@ -494,6 +501,7 @@ def func_add_schedule_update(class_id, member_ticket_id, repeat_schedule_id,
                                                ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
                                                ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
                                                extension_flag=extension_flag,
+                                               trainer_id=trainer_id,
                                                # Test 용
                                                # alarm_dt=start_datetime-datetime.timedelta(minutes=5),
                                                reg_member_id=user_id,
@@ -564,12 +572,19 @@ def func_add_schedule_update(class_id, member_ticket_id, repeat_schedule_id,
 # 일정 등록
 def func_add_repeat_schedule(class_id, member_ticket_id, lecture_id, lecture_schedule_id, repeat_type,
                              week_type, start_date, end_date, start_time, end_time, en_dis_type,
-                             user_id):
+                             user_id, trainer_id):
     error = None
     context = {'error': None, 'schedule_info': None}
 
     if member_ticket_id == '':
         member_ticket_id = None
+    if trainer_id is None or trainer_id == '':
+        try:
+            lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
+            trainer_id = lecture_info.main_trainer.member_id
+        except ObjectDoesNotExist:
+            trainer_id = user_id
+
     try:
         with transaction.atomic():
             repeat_schedule_info = RepeatScheduleTb(class_tb_id=class_id, member_ticket_tb_id=member_ticket_id,
@@ -581,6 +596,7 @@ def func_add_repeat_schedule(class_id, member_ticket_id, lecture_id, lecture_sch
                                                     start_time=start_time,
                                                     end_time=end_time,
                                                     state_cd=STATE_CD_NOT_PROGRESS, en_dis_type=en_dis_type,
+                                                    repeat_trainer_id=trainer_id,
                                                     reg_member_id=user_id,
                                                     mod_member_id=user_id)
 
@@ -1186,7 +1202,7 @@ def send_fire_base_push_multi_without_badge(registration_ids, title, message):
     return error
 
 
-def func_get_trainer_schedule_all(class_id, start_date, end_date):
+def func_get_trainer_schedule_all(class_id, start_date, end_date, selected_trainer_id):
     # 수업에 해당되는 회원의 숫자 불러오기
     query = "select count(B."+ScheduleTb._meta.get_field('schedule_id').column+") from "+ScheduleTb._meta.db_table +\
             " as B where B."+ScheduleTb._meta.get_field('lecture_schedule_id').column+" =`"+ScheduleTb._meta.db_table +\
@@ -1203,17 +1219,19 @@ def func_get_trainer_schedule_all(class_id, start_date, end_date):
 
     # 그룹 수업에 속한 회원들의 일정은 제외하고 불러온다.
     schedule_data = ScheduleTb.objects.select_related(
-        'member_ticket_tb__member', 'reg_member', 'mod_member',
-        'lecture_tb').filter(class_tb=class_id, start_dt__gte=start_date, start_dt__lt=end_date,
-                             lecture_schedule_id__isnull=True,
-                             use=USE).annotate(lecture_current_member_num=RawSQL(query, []),
-                                               lecture_wait_member_num=RawSQL(query_wait, [])).order_by('start_dt',
-                                                                                                        'reg_dt')
+        'member_ticket_tb__member', 'reg_member', 'mod_member', 'class_tb__member',
+        'lecture_tb__main_trainer').filter(class_tb=class_id, start_dt__gte=start_date, start_dt__lt=end_date,
+                                           lecture_schedule_id__isnull=True,
+                                           use=USE).annotate(lecture_current_member_num=RawSQL(query, []),
+                                                             lecture_wait_member_num=RawSQL(query_wait,
+                                                                                            [])).order_by('start_dt',
+                                                                                                          'reg_dt')
 
     ordered_schedule_dict = collections.OrderedDict()
     temp_schedule_date = None
     date_schedule_list = []
     for schedule_info in schedule_data:
+
         # 날짜별로 모아주기 위해서 날짜 분리
         schedule_start_date_split = str(schedule_info.start_dt).split(' ')
         schedule_end_date_split = str(schedule_info.end_dt).split(' ')
@@ -1255,9 +1273,22 @@ def func_get_trainer_schedule_all(class_id, start_date, end_date):
             lecture_wait_member_num = ''
         mod_member_id = ''
         mod_member_name = ''
+        trainer_id = schedule_info.class_tb.member_id
+        trainer_name = schedule_info.class_tb.member.name
+
         if schedule_info.mod_member is not None and schedule_info.mod_member != '':
             mod_member_id = schedule_info.mod_member_id
             mod_member_name = schedule_info.mod_member.name
+        if schedule_info.trainer is not None and schedule_info.trainer != '':
+            trainer_id = schedule_info.trainer_id
+            trainer_name = schedule_info.trainer.name
+        if schedule_info.en_dis_type != ON_SCHEDULE_TYPE:
+            trainer_id = ''
+            trainer_name = ''
+
+        if selected_trainer_id != 'all' and trainer_id != selected_trainer_id:
+            continue
+
         # array 에 값을 추가후 dictionary 에 추가
         date_schedule_list.append({'schedule_id': str(schedule_info.schedule_id),
                                    'start_time': schedule_start_time,
@@ -1269,6 +1300,8 @@ def func_get_trainer_schedule_all(class_id, start_date, end_date):
                                    'private_note': schedule_info.private_note,
                                    'reg_member_id': str(schedule_info.reg_member_id),
                                    'reg_member_name': schedule_info.reg_member.name,
+                                   'main_trainer_id': str(trainer_id),
+                                   'main_trainer_name': trainer_name,
                                    'mod_member_id': str(mod_member_id),
                                    'mod_member_name': mod_member_name,
                                    'mod_dt': str(schedule_info.mod_dt),
@@ -1381,9 +1414,15 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
 
             mod_member_id = ''
             mod_member_name = ''
+            trainer_id = lecture_member_schedule_info.class_tb.member_id
+            trainer_name = lecture_member_schedule_info.class_tb.member.name
             if lecture_member_schedule_info.mod_member is not None and lecture_member_schedule_info.mod_member != '':
                 mod_member_id = lecture_member_schedule_info.mod_member_id
                 mod_member_name = lecture_member_schedule_info.mod_member.name
+            if lecture_member_schedule_info.trainer is not None and lecture_member_schedule_info.trainer != '':
+                trainer_id = lecture_member_schedule_info.trainer_id
+                trainer_name = lecture_member_schedule_info.trainer.name
+
             lecture_schedule_info = {'schedule_id': str(lecture_member_schedule_info.schedule_id),
                                      'member_id': str(lecture_member_schedule_info.member_ticket_tb.member.member_id),
                                      'member_name': lecture_member_schedule_info.member_ticket_tb.member.name,
@@ -1397,6 +1436,8 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
                                      'permission_state_cd': lecture_member_schedule_info.permission_state_cd,
                                      'note': lecture_member_schedule_info.note,
                                      'private_note': lecture_member_schedule_info.private_note,
+                                     'main_trainer_id': str(trainer_id),
+                                     'main_trainer_name': trainer_name,
                                      'reg_member_id': str(lecture_member_schedule_info.reg_member_id),
                                      'reg_member_name': lecture_member_schedule_info.reg_member.name,
                                      'mod_member_id': str(mod_member_id),
@@ -1409,9 +1450,14 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
 
         mod_member_id = ''
         mod_member_name = ''
+        trainer_id = schedule_info.class_tb.member_id
+        trainer_name = schedule_info.class_tb.member.name
         if schedule_info.mod_member is not None and schedule_info.mod_member != '':
             mod_member_id = schedule_info.mod_member_id
             mod_member_name = schedule_info.mod_member.name
+        if schedule_info.trainer is not None and schedule_info.trainer != '':
+            trainer_id = schedule_info.trainer_id
+            trainer_name = schedule_info.trainer.name
         # array 에 값을 추가후 dictionary 에 추가
         date_schedule_list.append({'schedule_id': str(schedule_info.schedule_id),
                                    'start_dt': str(schedule_info.start_dt).split(' ')[0],
@@ -1424,6 +1470,8 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
                                    'note': schedule_info.note,
                                    'private_note': schedule_info.private_note,
                                    'extension_flag': schedule_info.extension_flag,
+                                   'main_trainer_id': str(trainer_id),
+                                   'main_trainer_name': trainer_name,
                                    'reg_member_id': str(schedule_info.reg_member_id),
                                    'reg_member_name': schedule_info.reg_member.name,
                                    'mod_member_id': str(mod_member_id),
@@ -1650,6 +1698,108 @@ def func_get_member_schedule_all_by_schedule_dt(class_id, member_id, page):
     return ordered_schedule_dict
 
 
+def func_get_lecture_trainer_schedule_all_by_schedule_dt(class_id, trainer_id, page):
+    ordered_schedule_dict = collections.OrderedDict()
+    # 회원의 일정중 강사가 볼수 있는 수강정보의 일정을 불러오기 위한 query
+    query_auth = "select " + ClassMemberTicketTb._meta.get_field('auth_cd').column + \
+                 " from " + ClassMemberTicketTb._meta.db_table + \
+                 " as B where B." + ClassMemberTicketTb._meta.get_field('member_ticket_tb').column + " = " \
+                 "`" + ScheduleTb._meta.db_table + "`.`" + \
+                 ScheduleTb._meta.get_field('member_ticket_tb').column + \
+                 "` and B.CLASS_TB_ID = " + str(class_id) + \
+                 " and B." + ClassMemberTicketTb._meta.get_field('use').column + "=" + str(USE)
+
+    query = "select count(B."+ScheduleTb._meta.get_field('schedule_id').column+") from "+ScheduleTb._meta.db_table +\
+            " as B where B."+ScheduleTb._meta.get_field('lecture_schedule_id').column+" =`"+ScheduleTb._meta.db_table +\
+            "`.`"+ScheduleTb._meta.get_field('schedule_id').column+"` " \
+            " AND B."+ScheduleTb._meta.get_field('state_cd').column+" != \'PC\'" \
+            " AND B."+ScheduleTb._meta.get_field('permission_state_cd').column+" = \'AP\'" \
+            " AND B."+ScheduleTb._meta.get_field('use').column+"="+str(USE)
+
+    trainer_schedule_data = ScheduleTb.objects.select_related(
+        'member_ticket_tb__member', 'reg_member', 'member_ticket_tb__ticket_tb',
+        'lecture_tb').filter(
+        class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, use=USE, lecture_schedule_id__isnull=True,
+        trainer_id=trainer_id).annotate(lecture_current_member_num=RawSQL(query, [])).order_by('-start_dt', '-reg_dt')
+
+    paginator = Paginator(trainer_schedule_data, SCHEDULE_PAGINATION_COUNTER)
+    try:
+        trainer_schedule_data = paginator.page(page)
+    except EmptyPage:
+        trainer_schedule_data = []
+    schedule_idx = paginator.count - SCHEDULE_PAGINATION_COUNTER*(int(page)-1)
+
+    ordered_schedule_dict['max_page'] = paginator.num_pages
+    ordered_schedule_dict['this_page'] = page
+
+    schedule_list = []
+    # temp_member_ticket_id = None
+    for trainer_schedule_info in trainer_schedule_data:
+        # member_ticket_tb = trainer_schedule_info.member_ticket_tb
+        # member_ticket_id = str(member_ticket_tb.member_ticket_id)
+        lecture_info = trainer_schedule_info.lecture_tb
+        schedule_type = trainer_schedule_info.en_dis_type
+        member_name = ''
+
+        # 수강권에 따른 일정 정보 전달을 위해 초기화
+        # if temp_member_ticket_id != member_ticket_id:
+        #     temp_member_ticket_id = member_ticket_id
+
+        # 그룹 수업인 경우 그룹 정보 할당
+        try:
+            lecture_id = lecture_info.lecture_id
+            lecture_name = lecture_info.name
+            lecture_max_member_num = lecture_info.member_num
+            if lecture_info.lecture_type_cd != LECTURE_TYPE_ONE_TO_ONE:
+                schedule_type = GROUP_SCHEDULE
+            else:
+                member_name = trainer_schedule_info.member_ticket_tb.member.name
+        except AttributeError:
+            lecture_id = ''
+            lecture_name = '개인수업'
+            lecture_max_member_num = '1'
+
+        end_dt_time = str(trainer_schedule_info.end_dt).split(' ')[1]
+        if end_dt_time == '00:00:00':
+            end_dt_time = '24:00'
+
+        mod_member_id = ''
+        mod_member_name = ''
+        if trainer_schedule_info.mod_member is not None and trainer_schedule_info.mod_member != '':
+            mod_member_id = trainer_schedule_info.mod_member_id
+            mod_member_name = trainer_schedule_info.mod_member.name
+        end_dt = str(trainer_schedule_info.start_dt).split(' ')[0] + ' ' + end_dt_time
+        # 일정 정보를 추가하고 수강권에 할당
+        schedule_info = {
+                         'schedule_idx': str(schedule_idx),
+                         'schedule_id': str(trainer_schedule_info.schedule_id),
+                         'lecture_id': str(lecture_id),
+                         'lecture_name': lecture_name,
+                         'lecture_max_member_num': lecture_max_member_num,
+                         'lecture_current_member_num': trainer_schedule_info.lecture_current_member_num,
+                         'schedule_type': schedule_type,
+                         'member_name': member_name,
+                         'start_dt': str(trainer_schedule_info.start_dt),
+                         'end_dt': str(end_dt),
+                         'state_cd': trainer_schedule_info.state_cd,
+                         'permission_state_cd': trainer_schedule_info.permission_state_cd,
+                         'note': trainer_schedule_info.note,
+                         'private_note': trainer_schedule_info.private_note,
+                         'reg_member_id': str(trainer_schedule_info.reg_member_id),
+                         'reg_member_name': trainer_schedule_info.reg_member.name,
+                         'mod_member_id': str(mod_member_id),
+                         'mod_member_name': mod_member_name,
+                         'mod_dt': str(trainer_schedule_info.mod_dt),
+                         'reg_dt': str(trainer_schedule_info.reg_dt),
+                         'daily_record_id': trainer_schedule_info.daily_record_tb_id
+                         }
+        schedule_list.append(schedule_info)
+        schedule_idx -= 1
+        # ordered_schedule_dict[member_ticket_id] = schedule_list
+        ordered_schedule_dict['trainer_schedule'] = schedule_list
+    return ordered_schedule_dict
+
+
 def func_get_permission_wait_schedule_all(class_id, page):
     # ordered_schedule_dict = collections.OrderedDict()
     # 회원의 일정중 강사가 볼수 있는 수강정보의 일정을 불러오기 위한 query
@@ -1846,6 +1996,99 @@ def func_get_member_schedule_all_by_monthly(class_id, member_id, page):
                          'member_ticket_refund_date': str(member_ticket_tb.refund_date),
                          'member_ticket_refund_price': member_ticket_tb.refund_price,
                          'member_ticket_note': str(member_ticket_tb.note),
+                         'month_num': month_num
+                         }
+        # schedule_idx -= 1
+        try:
+            monthly_schedule_data_dict[month_num]
+        except KeyError:
+            monthly_schedule_data_dict[month_num] = {'schedule_data': [],
+                                                     'month_num': month_num}
+        monthly_schedule_data_dict[month_num]['schedule_data'].append(schedule_info)
+
+    return monthly_schedule_data_dict
+
+
+def func_get_lecture_trainer_schedule_all_by_monthly(class_id, trainer_id, page):
+    monthly_schedule_data_dict = collections.OrderedDict()
+    # 회원의 일정중 강사가 볼수 있는 수강정보의 일정을 불러오기 위한 query
+    query_auth = "select " + ClassMemberTicketTb._meta.get_field('auth_cd').column + \
+                 " from " + ClassMemberTicketTb._meta.db_table + \
+                 " as B where B." + ClassMemberTicketTb._meta.get_field('member_ticket_tb').column + " = " \
+                 "`" + ScheduleTb._meta.db_table + "`.`" + \
+                 ScheduleTb._meta.get_field('member_ticket_tb').column + \
+                 "` and B.CLASS_TB_ID = " + str(class_id) + \
+                 " and B." + ClassMemberTicketTb._meta.get_field('use').column + "=" + str(USE)
+
+    trainer_schedule_data = ScheduleTb.objects.select_related(
+        'member_ticket_tb__member', 'reg_member', 'member_ticket_tb__ticket_tb',
+        'lecture_tb').filter(
+        class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, use=USE, lecture_schedule_id__isnull=True,
+        trainer_id=trainer_id).order_by('start_dt', 'reg_dt')
+    # paginator = Paginator(member_schedule_data, MEMBER_SCHEDULE_PAGINATION_COUNTER)
+    # try:
+    #     member_schedule_data = paginator.page(page)
+    # except EmptyPage:
+    #     member_schedule_data = []
+    # schedule_idx = paginator.count
+    # schedule_list = []
+    # temp_member_ticket_id = None
+    for trainer_schedule_info in trainer_schedule_data:
+        # member_ticket_tb = trainer_schedule_info.member_ticket_tb
+        # member_ticket_id = str(member_ticket_tb.member_ticket_id)
+        lecture_info = trainer_schedule_info.lecture_tb
+        schedule_type = trainer_schedule_info.en_dis_type
+
+        # 수강권에 따른 일정 정보 전달을 위해 초기화
+        # if temp_member_ticket_id != member_ticket_id:
+        #     temp_member_ticket_id = member_ticket_id
+
+        # 그룹 수업인 경우 그룹 정보 할당
+        try:
+            lecture_id = lecture_info.lecture_id
+            lecture_name = lecture_info.name
+            lecture_max_member_num = lecture_info.member_num
+            if lecture_info.lecture_type_cd != LECTURE_TYPE_ONE_TO_ONE:
+                schedule_type = GROUP_SCHEDULE
+        except AttributeError:
+            lecture_id = ''
+            lecture_name = '개인수업'
+            lecture_max_member_num = '1'
+
+        end_dt_time = str(trainer_schedule_info.end_dt).split(' ')[1]
+        if end_dt_time == '00:00:00':
+            end_dt_time = '24:00'
+
+        end_dt = str(trainer_schedule_info.start_dt).split(' ')[0] + ' ' + end_dt_time
+        member_schedule_start_dt_split = str(trainer_schedule_info.start_dt).split('-')
+        month_num = member_schedule_start_dt_split[0] + '-' + member_schedule_start_dt_split[1]
+
+        mod_member_id = ''
+        mod_member_name = ''
+        if trainer_schedule_info.mod_member is not None and trainer_schedule_info.mod_member != '':
+            mod_member_id = trainer_schedule_info.mod_member_id
+            mod_member_name = trainer_schedule_info.mod_member.name
+        # 일정 정보를 추가하고 수강권에 할당
+        schedule_info = {
+                         # 'schedule_idx': str(schedule_idx),
+                         'schedule_id': str(trainer_schedule_info.schedule_id),
+                         'lecture_id': str(lecture_id),
+                         'lecture_name': lecture_name,
+                         'lecture_max_member_num': lecture_max_member_num,
+                         'schedule_type': schedule_type,
+                         'start_dt': str(trainer_schedule_info.start_dt),
+                         'end_dt': str(end_dt),
+                         'state_cd': trainer_schedule_info.state_cd,
+                         'permission_state_cd': trainer_schedule_info.permission_state_cd,
+                         'note': trainer_schedule_info.note,
+                         'private_note': trainer_schedule_info.private_note,
+                         'reg_member_id': str(trainer_schedule_info.reg_member_id),
+                         'reg_member_name': trainer_schedule_info.reg_member.name,
+                         'mod_member_id': str(mod_member_id),
+                         'mod_member_name': mod_member_name,
+                         'mod_dt': str(trainer_schedule_info.mod_dt),
+                         'reg_dt': str(trainer_schedule_info.reg_dt),
+                         'daily_record_id': trainer_schedule_info.daily_record_tb_id,
                          'month_num': month_num
                          }
         # schedule_idx -= 1
