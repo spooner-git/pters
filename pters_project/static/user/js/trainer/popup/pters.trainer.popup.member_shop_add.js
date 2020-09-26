@@ -210,7 +210,7 @@ class Member_Shop_add{
         let button_50 = CComponent.button ("button_50", "+ 50만", button_style, ()=>{ this.data.shop_price = Number(this.data.shop_price) + 500000;this.render_content(); });
         let button_10 = CComponent.button ("button_10", "+ 10만", button_style, ()=>{ this.data.shop_price = Number(this.data.shop_price) + 100000;this.render_content(); });
         let button_1 = CComponent.button ("button_1", "+ 1만", button_style, ()=>{ this.data.shop_price = Number(this.data.shop_price) + 10000;this.render_content(); });
-        let button_delete = CComponent.button ("button_delete", "지우기", button_style, ()=>{ this.data.shop_price = null;this.render_content(); });
+        let button_delete = CComponent.button ("button_delete", "지우기", button_style, ()=>{ this.data.shop_price = 0;this.render_content(); });
 
         // let wrapper_style = "display:flex;padding:0px 0 0px 20px;font-size:12px;";
         // let divider_style = "flex-basis:1px;height:20px;margin-top:10px;background-color:var(--bg-light);display:none;";
