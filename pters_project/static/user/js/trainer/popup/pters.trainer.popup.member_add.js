@@ -30,7 +30,7 @@ class Member_add{
                 ticket_name:[],
                 ticket_effective_days:[],
                 ticket_reg_count:[null],
-                ticket_price:[null],
+                ticket_price:[0],
                 ticket_payment_price:[0],
                 pay_method:{value:["NONE"], text:["선택 안함"]},
                 start_date:null,
@@ -741,7 +741,7 @@ class Member_add{
     dom_row_member_reg_price_input(){
         let unit = '원';
         let id = 'input_reg_price';
-        let title = this.data.ticket_price.length == 0 || this.data.ticket_price[0] == null ? '' : UnitRobot.numberWithCommas(this.data.ticket_price[0]);
+        let title = UnitRobot.numberWithCommas(this.data.ticket_price[0]);
         let placeholder = '가격';
         let icon = NONE;
         let icon_r_visible = HIDE;
@@ -765,7 +765,11 @@ class Member_add{
     dom_row_member_payment_price_input(){
         let unit = '원';
         let id = 'input_payment_price';
-        let title = this.data.ticket_payment_price.length == 0 || this.data.ticket_payment_price[0] == null ? '' : UnitRobot.numberWithCommas(this.data.ticket_payment_price[0]);
+        if(this.data.ticket_price[0]<this.data.ticket_payment_price){
+            show_error_message({title:'수강권 가격보다 납부금액이 많습니다.'});
+            this.data.ticket_payment_price[0] = this.data.ticket_price[0];
+        }
+        let title = UnitRobot.numberWithCommas(this.data.ticket_payment_price[0]);
         let placeholder = '납부 금액';
         let icon = NONE;
         let icon_r_visible = HIDE;
@@ -794,7 +798,7 @@ class Member_add{
         let button_50 = CComponent.button ("button_50", "+ 50만", button_style, ()=>{ this.data.ticket_price[0] = Number(this.data.ticket_price[0]) + 500000;this.render_content(); });
         let button_10 = CComponent.button ("button_10", "+ 10만", button_style, ()=>{ this.data.ticket_price[0] = Number(this.data.ticket_price[0]) + 100000;this.render_content(); });
         let button_1 = CComponent.button ("button_1", "+ 1만", button_style, ()=>{ this.data.ticket_price[0] = Number(this.data.ticket_price[0]) + 10000;this.render_content(); });
-        let button_delete = CComponent.button ("button_delete", "지우기", button_style, ()=>{ this.data.ticket_price[0] = null;this.render_content(); });
+        let button_delete = CComponent.button ("button_delete", "지우기", button_style, ()=>{ this.data.ticket_price[0] = 0;this.render_content(); });
         
         // let wrapper_style = "display:flex;padding:0px 0 0px 20px;font-size:12px;";
         // let divider_style = "flex-basis:1px;height:20px;margin-top:10px;background-color:var(--bg-light);display:none;";
@@ -1003,7 +1007,7 @@ class Member_add{
                 show_error_message({title:'종료일을 입력 해주세요.'});
                 return false;
             }
-            if(this.data.ticket_payment_price > this.data.ticket_price[0]){
+            if(this.data.ticket_payment_price[0] > this.data.ticket_price[0]){
                 show_error_message({title:'수강권 가격보다 납부금액이 많습니다.'});
                 return false;
             }

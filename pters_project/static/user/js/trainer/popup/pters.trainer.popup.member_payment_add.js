@@ -191,6 +191,11 @@ class Member_Payment_add{
     dom_row_member_payment_price_input(){
         let unit = '원';
         let id = 'input_payment_price';
+
+        if(Number(this.data.shop_price) - Number(this.data.current_price)<this.data.payment_price){
+            show_error_message({title:'가격보다 납부금액이 많습니다.'});
+            this.data.payment_price = Number(this.data.shop_price) - Number(this.data.current_price);
+        }
         let title = UnitRobot.numberWithCommas(this.data.payment_price);
         let placeholder = '납부 금액';
         let icon = NONE;
@@ -411,6 +416,10 @@ class Member_Payment_add{
             return false;
         }
         else{
+            if(Number(this.data.shop_price) - Number(this.data.current_price)<this.data.payment_price){
+                show_error_message({title:'가격보다 납부금액이 많습니다.'});
+                return false;
+            }
             return true;
         }
     }

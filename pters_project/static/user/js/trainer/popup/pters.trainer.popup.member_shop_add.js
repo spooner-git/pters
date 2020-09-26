@@ -230,6 +230,10 @@ class Member_Shop_add{
     dom_row_member_payment_price_input(){
         let unit = '원';
         let id = 'input_payment_price';
+        if(this.data.shop_price<this.data.shop_payment_price){
+            show_error_message({title:'상품 가격보다 납부금액이 많습니다.'});
+            this.data.shop_payment_price = this.data.shop_price;
+        }
         let title = UnitRobot.numberWithCommas(this.data.shop_payment_price);
         let placeholder = '납부 금액';
         let icon = NONE;
@@ -405,6 +409,11 @@ class Member_Shop_add{
             return false;
         }
         else{
+
+            if(this.data.shop_price<this.data.shop_payment_price){
+                show_error_message({title:'상품 가격보다 납부금액이 많습니다.'});
+                return false;
+            }
             return true;
         }
     }

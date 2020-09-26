@@ -1190,14 +1190,15 @@ class Member_view{
                     );
                     // 상세 결제 내역 띄우기
                 }},
-                add_refund:{text:"환불 내역 추가", callback:()=>{
+                add_refund:{text:"상품 환불", callback:()=>{
                     layer_popup.close_layer_popup();
                     if(refund_price > 0){
                         show_error_message({title:'이미 환불 처리된 상품입니다.'});
                         return false;
                     }
                     let member_refund_initial_data = {member_id: member_id, member_shop_id: member_shop_id,
-                                                      shop_price:price, current_price:payment_price};
+                                                      shop_price:price, current_price:payment_price,
+                                                      member_shop_start_date:start_date};
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_PAYMENT_REFUND, 100, POPUP_FROM_BOTTOM, null, ()=>{
                         member_payment_refund_popup = new Member_Payment_refund('.popup_member_payment_refund', member_refund_initial_data, 'member_payment_refund_popup');}
                     );

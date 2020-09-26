@@ -25,6 +25,7 @@ class Member_Payment_refund{
                 note:null,
                 pay_date:null,
                 pay_date_text:null,
+                member_shop_start_date:null,
                 state_cd: OFF
         };
 
@@ -48,6 +49,7 @@ class Member_Payment_refund{
         this.data.member_shop_id = this.data_from_external.member_shop_id;
         this.data.shop_price = this.data_from_external.shop_price;
         this.data.current_price = this.data_from_external.current_price;
+        this.data.member_shop_start_date = this.data_from_external.member_shop_start_date;
         this.init();
     }
 
@@ -159,7 +161,7 @@ class Member_Payment_refund{
     }
 
     dom_row_toolbox(){
-        let title = '환불 내역 추가';
+        let title = '상품 환불';
         let html = `<div class="member_payment_refund_upper_box" style="display:table;">
                         <div style="display:table-cell;width:200px;">
                             <span style="font-size:20px;font-weight:bold; letter-spacing: -0.9px; color: var(--font-main);">
@@ -190,6 +192,11 @@ class Member_Payment_refund{
     dom_row_member_refund_price_input(){
         let unit = '원';
         let id = 'input_refund_price';
+
+        if(Number(this.data.current_price)<this.data.refund_price){
+            show_error_message({title:'납부금액보다 환불금액이 많습니다.'});
+            this.data.refund_price = Number(this.data.current_price);
+        }
         let title = UnitRobot.numberWithCommas(this.data.refund_price);
         let placeholder = '환불 금액';
         let icon = NONE;
@@ -274,8 +281,12 @@ class Member_Payment_refund{
                 let month = this.data.pay_date == null ? this.dates.current_month : this.data.pay_date.month;
                 let date = this.data.pay_date == null ? this.dates.current_date : this.data.pay_date.date;
 
-                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'pay_date', title:'시작일', pay_date:this.date_start,
-                                                                                                data:{year:year, month:month, date:date},
+                let year_min = Number(this.data.member_shop_start_date.split('-')[0]);
+                let month_min = Number(this.data.member_shop_start_date.split('-')[1]);
+                let date_min = Number(this.data.member_shop_start_date.split('-')[2]);
+
+                date_selector = new DatePickerSelector('#wrapper_popup_date_selector_function', null, {myname:'pay_date', title:'환불 일자', pay_date:this.date_start,
+                                                                                                data:{year:year, month:month, date:date}, min:{year:year_min, month:month_min, date:date_min},
                                                                                                 // min:{year:year, month:month, date:date},
                                                                                                 callback_when_set: (object)=>{ //날짜 선택 팝업에서 "확인"버튼을 눌렀을때 실행될 내용
                                                                                                     this.pay_date = object;
@@ -410,6 +421,11 @@ class Member_Payment_refund{
             return false;
         }
         else{
+
+            if(Number(this.data.current_price)<this.data.refund_price){
+                show_error_message({title:'납부금액보다 환불금액이 많습니다.'});
+                return false;
+            }
             return true;
         }
     }
