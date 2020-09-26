@@ -86,6 +86,9 @@ class Member_payment_history{
                                     member_view_popup.init();
                                 }catch(e){}
                                 try{
+                                    member_ticket_history.init();
+                                }catch(e){}
+                                try{
                                     layer_popup.close_layer_popup();
                                 }catch(e){}
                                 try{

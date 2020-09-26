@@ -1046,6 +1046,16 @@ class CComponent{
         }else if(status_code == "RF"){
             status_color = "orange";
         }
+        let payment_text = "완납";
+        let payment_color = "green";
+        if(ticket_price > ticket_payment_price){
+            payment_text = "미납";
+            payment_color = "red";
+        }
+        if(ticket_refund_price > 0){
+            payment_text = "환불";
+            payment_color = "orange";
+        }
         let html = `<li class="ticket_history_row" id="ticket_history_row_${ticket_id}">
                         <div class="obj_table_raw table_basic_info">
                             <div class="cell_ticket_num">${numbering}</div>
@@ -1074,6 +1084,10 @@ class CComponent{
                                 등록 ${reg_count >= 99999 ? "제한없음" : reg_count + '회'} /
                                 잔여 ${reg_count >= 99999 ? "제한없음" : remain_count + '회'} / 
                                 예약가능 ${reg_count >= 99999 ? "제한없음" : avail_count + '회'}</div>
+                        </div>
+                        <div class="obj_table_raw table_date_info">
+                            <div class="cell_ticket_num"></div>
+                            <div class="cell_ticket_info" style="color:${payment_color}">${payment_text}</div>
                         </div>
                         <div class="obj_table_raw table_memo_info" style="color:#ff7184;">
                             <div class="cell_ticket_num"></div>
