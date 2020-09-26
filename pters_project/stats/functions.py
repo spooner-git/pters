@@ -49,7 +49,7 @@ def get_sales_data(class_id, month_first_day, finish_date):
             # 이달의 결제 정보 가져오기
             payment_data = MemberPaymentHistoryTb.objects.filter(
                 Q(pay_date__gte=month_first_day) & Q(pay_date__lte=month_last_day), class_tb_id=class_id,
-                use=USE).order_by('pay_date', 'reg_dt')
+                use=USE).order_by('-pay_date', '-reg_dt')
 
             month_price_info = {'month': str(month_first_day.date()),
                                 'price': payment_data.aggregate(sum_payment_price=Coalesce(Sum('payment_price'), 0))['sum_payment_price'],
@@ -140,7 +140,7 @@ def get_sales_info(class_id, month_first_day, sort_val):
         payment_data = MemberPaymentHistoryTb.objects.select_related(
             'member_ticket_tb__ticket_tb', 'member_shop_tb__shop_tb').filter(
             Q(pay_date__gte=month_first_day) & Q(pay_date__lte=month_last_day),
-            class_tb_id=class_id, use=USE).order_by('pay_date', 'reg_dt')
+            class_tb_id=class_id, use=USE).order_by('-pay_date', '-reg_dt')
 
         if str(sort_val) == str(SORT_NONE_STATISTICS):
             payment_data = payment_data.filter(pay_method='NONE')
