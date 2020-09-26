@@ -103,7 +103,7 @@ class Shop_list {
             let shop_price = data.shop_price;
 
             let onclick = `shop.event_view_shop(${shop_id})`;
-            let html = `<article class="shop_wrapper anim_fade_in_vibe_top" data-shop_id="${shop_id}" data-name="${shop_name}"
+            let html = `<article class="shop_wrapper anim_fade_in_vibe_top" data-shop_id="${shop_id}" data-text="${shop_name}"
                                  data-price="${shop_price}" onclick="${onclick}">
                             <div class="shop_data_wrapper">
                                 <div class="shop_data_l">
@@ -229,7 +229,7 @@ class Shop_list {
         Array.from(document.getElementsByClassName('shop_wrapper')).forEach((el)=>{
             let name = el.dataset.text;
             if(name.match(value)){
-                el.style.display = 'table';
+                el.style.display = 'block';
                 // $("#root_content").scrollTop(1);
             }else{
                 el.style.display = 'none';

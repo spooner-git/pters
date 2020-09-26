@@ -281,6 +281,7 @@ class Ticket_list {
         let value = event.target.value;
         this.search_value = value;
         Array.from(document.getElementsByClassName('ticket_wrapper')).forEach((el)=>{
+            console.log(el.dataset);
             let name = el.dataset.text;
             if(name.match(value)){
                 el.style.display = 'block';
