@@ -516,24 +516,39 @@ def get_function_auth_type_cd(request):
                 request.session['auth_info'][function_auth_type_cd_name] = auth_info
 
         if str(trainer_id) != str(request.user.id):
+            program_auth_count = MemberClassTb.objects.filter(class_tb_id=class_id,
+                                                              member_id=request.user.id,
+                                                              auth_cd=AUTH_TYPE_VIEW, use=USE).count()
+
+            request.session['auth_info']['program_auth'] = program_auth_count
             function_list = ProgramAuthTb.objects.select_related('function_auth_tb').filter(class_tb_id=class_id,
                                                                                             member_id=request.user.id)
             check_trainer_data = False
             check_shop_data = False
+            if program_auth_count == 0:
+                request.session['class_id'] = ''
             for function_info in function_list:
                 if function_info.auth_type_cd is None:
                     function_auth_type_cd_name = str(function_info.function_auth_tb.function_auth_type_cd)
                 else:
                     function_auth_type_cd_name = str(function_info.function_auth_tb.function_auth_type_cd) \
                                                  + str(function_info.auth_type_cd)
-                request.session['auth_info'][function_auth_type_cd_name]['active'] = function_info.enable_flag
+                if program_auth_count == 0:
+                    request.session['auth_info'][function_auth_type_cd_name]['active'] = '0'
+                    request.session['auth_info'][function_auth_type_cd_name]['limit_num'] = '0'
+                else:
+                    request.session['auth_info'][function_auth_type_cd_name]['active'] = function_info.enable_flag
+
                 if str(function_info.enable_flag) == '0':
                     request.session['auth_info'][function_auth_type_cd_name]['limit_num'] = function_info.enable_flag
+
                 request.session['auth_info'][function_auth_type_cd_name]['limit_type'] = str('공유 지점')
+
                 if str(function_info.function_auth_tb.function_auth_type_cd) == 'auth_trainer':
                     check_trainer_data = True
                 if str(function_info.function_auth_tb.function_auth_type_cd) == 'auth_shop':
                     check_shop_data = True
+
             if check_trainer_data is False:
                 request.session['auth_info']['auth_trainer_create']['active'] = 0
                 request.session['auth_info']['auth_trainer_create']['limit_num'] = 0
@@ -560,6 +575,7 @@ def get_function_auth_type_cd(request):
                 request.session['auth_info']['auth_shop_update']['active'] = 0
                 request.session['auth_info']['auth_shop_update']['limit_num'] = 0
                 request.session['auth_info']['auth_shop_update']['limit_type'] = str('공유 지점')
+
 
 def get_background_url(request):
     class_id = request.session.get('class_id', '')

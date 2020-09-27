@@ -601,6 +601,10 @@ class PassInspector{
                         return false;
                     }
                 }
+                if(data.program_auth == 0){
+                    show_error_message({title:'지점 연결 해제', comment:'지점 연결이 해제되었습니다.'});
+                    window.location.replace('/');
+                }
                 if(callback != undefined){
                     callback(data);
                 }
@@ -615,6 +619,7 @@ class PassInspector{
             error:function (){
                 console.log('server error');
                 show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
+                window.location.replace('/');
             }
         });
     }

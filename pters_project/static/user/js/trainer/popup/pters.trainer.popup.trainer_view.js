@@ -547,9 +547,17 @@ class Trainer_view{
         }else if(this.data.connection == UNCONNECTED){
             icon_r_text = "<span style='color:#fe4e65'>미연결</span>";
         }
+
         let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             onclick();
         });
+
+        if(this.trainer_id == this.data.program_owner_id){
+        let icon_r_visible = HIDE;
+            icon_r_text = '';
+            html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            });
+        }
         return html;
     }
 
