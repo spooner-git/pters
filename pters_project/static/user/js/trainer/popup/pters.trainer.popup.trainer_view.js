@@ -29,6 +29,7 @@ class Trainer_view{
             memo: null,
             email: null,
             profile_img: null,
+            program_owner_id: null,
 
             connection: null,
             active: null,
@@ -166,6 +167,7 @@ class Trainer_view{
             this.data.active = data.trainer_is_active;
             this.data.email = data.trainer_email;
             this.data.profile_img = data.trainer_profile_url;
+            this.data.program_owner_id = data.program.program_program_owner_id;
             Trainer_auth_func.read({"trainer_id":this.trainer_id}, (data)=>{
                 let my_auth = data[this.trainer_id];
                 if(my_auth != undefined){
@@ -240,7 +242,8 @@ class Trainer_view{
         let top_left = `<span class="icon_left" onclick="trainer_view_popup.upper_left_menu();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
         let top_right = `<span class="icon_right" onclick="trainer_view_popup.upper_right_menu();">${CImg.more()}</span>`;
-        if(this.trainer_id == user_id){
+
+        if(this.trainer_id == this.data.program_owner_id){
             top_right = '';
         }
         let content =   `<form id="${this.form_id}">

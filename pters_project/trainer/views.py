@@ -8327,8 +8327,8 @@ class GetTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):
                             'trainer_is_active': str(user_member_info.user.is_active),
                             'program': {'program_id': class_id,
                                         'program_subject_type_name': class_info.class_tb.get_class_type_cd_name(),
-                                        'program_program_owner_id': class_info.member_id,
-                                        'program_program_owner_name': class_info.member.name,
+                                        'program_program_owner_id': class_info.class_tb.member_id,
+                                        'program_program_owner_name': class_info.class_tb.member.name,
                                       }
                            }
 
@@ -8523,6 +8523,10 @@ def delete_trainer_info_logic(request):
             user_id = class_info.member.member_id
         except ObjectDoesNotExist:
             user_id = request.user.id
+
+    if error is None:
+        if user_id == trainer_id:
+            error = '지점 소유자는 삭제할수 없습니다.'
 
     if error is None:
         member_class_data = MemberClassTb.objects.filter(class_tb_id=class_id, member_id=trainer_id,
