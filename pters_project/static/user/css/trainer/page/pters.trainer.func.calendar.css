@@ -214,7 +214,7 @@
 @media(min-width:600px){
 	#calendar_wrap .pages{
 		padding-bottom: 0;
-		height: calc(100% - 60px);
+		height: calc(100% - 101px);
 	}
 }
 
