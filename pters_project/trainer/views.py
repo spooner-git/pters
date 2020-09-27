@@ -8487,7 +8487,7 @@ def update_trainer_connection_info_logic(request):
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
     else:
-        log_how = '강사 연결'
+        log_how = '강사 연결 요청'
         if auth_cd == AUTH_TYPE_DELETE:
             log_how = '강사 연결 해제'
         log_data = LogTb(log_type='LP02', auth_member_id=request.user.id,
@@ -8956,6 +8956,7 @@ def holding_test_logic(request):
         member_ticket_tb.save()
 
     return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+
 
 def member_setting_test_logic(request):
     context = {}
