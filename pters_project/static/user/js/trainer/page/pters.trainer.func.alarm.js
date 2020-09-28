@@ -467,13 +467,18 @@ class Alarm {
             let invitor_name = data.member_info.member_name;
             let invitor_user_id = data.member_info.member_user_id;
 
-
+            let connect_title = `"${program_name}"<br>지점 공유 참가 요청`;
+            let connect_contents = `"${program_name}"지점에 공유 참가 요청`;
+            if(data.connection_type == 'EMPLOYEE'){
+                connect_title = `"${program_name}"<br>지점 강사 연결 요청`;
+                connect_contents = `"${program_name}"지점에 강사 연결 요청`;
+            }
             let onclick_accept = ()=>{
-                let message = {title:`"${program_name}"<br>지점 공유 참가 요청`, comment:'수락 하시겠습니까?'};
+                let message = {title:`${connect_title}`, comment:'수락 하시겠습니까?'};
                 show_user_confirm (message, ()=>{
                     Setting_shared_func.send_accept({"class_id":program, "program_connection_check":1}, ()=>{
                         layer_popup.close_layer_popup();
-                        show_error_message({title:"지점 메뉴에서 공유 지점을 확인할 수 있습니다."});
+                        show_error_message({title:"지점 메뉴에서 연결된 지점을 확인할 수 있습니다."});
                         this.init();
                     }, ()=>{});
                 });
@@ -481,7 +486,7 @@ class Alarm {
             };
 
             let onclick_decline =()=>{
-                let message = {title:`"${program_name}"<br>지점 공유 참가 요청`, comment:'<span style="color:red;">거절</span> 하시겠습니까?'};
+                let message = {title:`${connect_title}`, comment:'<span style="color:red;">거절</span> 하시겠습니까?'};
                 show_user_confirm (message, ()=>{
                     Setting_shared_func.send_accept({"class_id":program, "program_connection_check":2}, ()=>{
                         layer_popup.close_layer_popup();
@@ -494,7 +499,7 @@ class Alarm {
             let button_style = {"line-height":"35px", "font-size":"14px", "font-weight":"500", "background-color":"var(--bg-light)", "border-radius":"3px"};
 
             let comp = `<div style="padding:20px 20px 15px 20px;box-shadow:var(--box-shadow-article);border:var(--border-article);">
-                            <div style="padding:5px 0 20px 0;font-size:14px;font-weight:bold;">${invitor_name} (${invitor_user_id}) 님께서 "${program_name}" 지점에 공유 참가 요청을 보내셨습니다.</div>
+                            <div style="padding:5px 0 20px 0;font-size:14px;font-weight:bold;">${invitor_name} (${invitor_user_id}) 님께서 ${connect_contents}을 보냈습니다.</div>
                             <div style="display:flex;">
                                 <div style="flex:1 1 0;padding:3px;">${CComponent.button (`share_invited_${program}_decline`, "거절", button_style, onclick_decline)}</div>
                                 <div style="flex:1 1 0;padding:3px;">${CComponent.button (`share_invited_${program}_accept`, "수락", button_style, onclick_accept)}</div>

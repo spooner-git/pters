@@ -140,6 +140,7 @@ urlpatterns = [
     # 강사 관리 기능 ###################################################################################################
     # 진행중 회원 목록 조회 - refactoring
     url(r'^get_trainer_ing_list/$', views.GetTrainerIngListViewAjax.as_view(), name='get_trainer_ing_list'),
+    url(r'^get_trainer_ing_list_connect/$', views.GetTrainerIngListConnectViewAjax.as_view(), name='get_trainer_ing_list_connect'),
     # 진행 완료 회원 목록 조회 - refactoring
     url(r'^get_trainer_end_list/$', views.GetTrainerEndListViewAjax.as_view(), name='get_trainer_end_list'),
     # 강사 추가 기능

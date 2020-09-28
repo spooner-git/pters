@@ -153,13 +153,29 @@
 			/* display: none; */
 			visibility: hidden;
 		}
+		.cal_trainer_select{
+			width: 100%;
+			height: 30px;
+			padding-left: 10px;
+		}
 	}
+
+	@media(min-width:651px){
+		.cal_trainer_select{
+			width: 170px;
+			height: 30px;
+			padding-left: 10px;
+		}
+	}
+
 	.cal_search_upper_box > .cal_search_date_display{
 		flex: 1 1 0;
 		font-weight:bold;
 		color:var(--font-main);
 		cursor: pointer;
+		text-align:right;
 	}
+
 
 	.cal_search_upper_box .swap_cal{
 		display: inline-block;
