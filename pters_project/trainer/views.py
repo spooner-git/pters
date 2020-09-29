@@ -8980,3 +8980,66 @@ def member_setting_test_logic(request):
                 # schedule_alarm_info.delete()
 
     return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+
+
+def update_schedule_trainer_test(request):
+    context = {}
+    schedule_data = ScheduleTb.objects.select_related('class_tb__member').filter(en_dis_type=ON_SCHEDULE_TYPE)
+
+    for schedule_info in schedule_data:
+        schedule_info.trainer_id = schedule_info.class_tb.member_id
+        schedule_info.save()
+    return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+
+
+def update_repeat_schedule_trainer_test(request):
+    context = {}
+    repeat_schedule_data = RepeatScheduleTb.objects.select_related(
+        'class_tb__member').filter(en_dis_type=ON_SCHEDULE_TYPE)
+
+    for repeat_schedule_info in repeat_schedule_data:
+        repeat_schedule_info.repeat_trainer_id = repeat_schedule_info.class_tb.member_id
+        repeat_schedule_info.save()
+
+    return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+
+
+def update_lecture_trainer_test(request):
+    context = {}
+    lecture_data = LectureTb.objects.select_related('class_tb__member').filter()
+
+    for lecture_info in lecture_data:
+        lecture_info.main_trainer_id = lecture_info.class_tb.member_id
+        lecutre_info.save()
+
+    return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+
+
+def update_member_ticket_payment_test(request):
+    context = {}
+    member_ticket_data = MemberTicketTb.objects.select_related('ticket_tb__class_tb', 'member').filter()
+
+    for member_ticket_info in member_ticket_data:
+        member_payment_history_info = MemberPaymentHistoryTb(class_tb_id=member_ticket_info.ticket_tb.class_tb_id,
+                                                             member_id=member_ticket_info.member_id,
+                                                             member_ticket_tb_id=member_ticket_info.member_ticket_id,
+                                                             member_shop_tb_id=None,
+                                                             payment_price=member_ticket_info.price,
+                                                             refund_price=0,
+                                                             pay_method=member_ticket_info.pay_method,
+                                                             pay_date=member_ticket_info.start_date,
+                                                             note='', use=USE)
+        member_payment_history_info.save()
+        if member_ticket_info.refund_price > 0:
+            member_payment_history_info = MemberPaymentHistoryTb(class_tb_id=member_ticket_info.ticket_tb.class_tb_id,
+                                                                 member_id=member_ticket_info.member_id,
+                                                                 member_ticket_tb_id=member_ticket_info.member_ticket_id,
+                                                                 member_shop_tb_id=None,
+                                                                 payment_price=0,
+                                                                 refund_price=member_ticket_info.refund_price,
+                                                                 pay_method=member_ticket_info.pay_method,
+                                                                 pay_date=member_ticket_info.refund_date,
+                                                                 note='', use=USE)
+            member_payment_history_info.save()
+
+    return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
