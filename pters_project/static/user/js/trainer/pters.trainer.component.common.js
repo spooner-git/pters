@@ -285,8 +285,53 @@ class CComponent{
         return html;
     }
 
+    //수강권 선택 팝업에 사용되는 행
+    static select_shop_row (multiple_select, checked, location, shop_id, shop_name, shop_price, shop_note, onclick){
+        let html = `
+                    <li class="select_shop_row str_${location}" id="select_shop_row_${shop_id}">
+                        <div class="obj_table_raw">
+                            <div class="cell_shop_color">
+                                
+                            </div>
+                            <div class="cell_shop_info">
+                                <div>${shop_name}</div>
+                                <div style="font-size:12px;color:var(--font-sub-normal);line-height:20px">${UnitRobot.numberWithCommas(shop_price)} 원 / ${shop_note}</div>                            </div>
+                            <div class="cell_shop_selected ${checked == 0 ? '' : 'shop_selected'}">
+                                ${CImg.confirm("", checked == 0 ? {"display":"none"} : {"display":"block"})}
+                            </div>
+                        </div>
+                    </li>
+                    `;
+
+        if(multiple_select > 1){
+            $(document).off('click', `#select_shop_row_${shop_id}`).on('click', `#select_shop_row_${shop_id}`, function(e){
+                if(!$(this).find('.cell_shop_selected').hasClass('shop_selected')){
+                    if($(`.str_${location} .shop_selected`).length >= multiple_select){
+                        show_error_message({title:`${multiple_select} 개까지 선택할 수 있습니다.`});
+                        return false;
+                    }
+                    $(this).find('.cell_shop_selected').addClass('shop_selected');
+                    $(this).find('svg').css('display', 'block');
+                    onclick('add');
+                }else{
+                    $(this).find('.cell_shop_selected').removeClass('shop_selected');
+                    $(this).find('svg').css('display', 'none');
+                    onclick('substract');
+                }
+            });
+        }else if(multiple_select == 1){
+            $(document).off('click', `#select_shop_row_${shop_id}`).on('click', `#select_shop_row_${shop_id}`, function(e){
+
+                onclick('add_single');
+
+            });
+        }
+        return html;
+    }
+
     //수업 선택 팝업에 사용되는 행
-    static select_lecture_row (multiple_select, checked, location, lecture_id, lecture_name, color_code, max_member_num, ing_member_num, lecture_state_cd, lecture_time, onclick){
+    static select_lecture_row (multiple_select, checked, location, lecture_id, lecture_name, color_code,
+                               max_member_num, ing_member_num, lecture_state_cd, lecture_time, main_trainer_id, main_trainer_name, onclick){
         let html = `
                     <li class="select_lecture_row slr_${location}" id="select_lecture_row_${lecture_id}" ${lecture_state_cd == "end" ? "style='opacity:0.6'": ""}>
                         <div class="obj_table_raw">
@@ -295,9 +340,9 @@ class CComponent{
                                 </div>
                             </div>
                             <div class="cell_lecture_info">
-                                <div class="lecture_name_info" style="max-width:${windowWidth-100}px;">${lecture_state_cd == "end" ? "(비활성)": ""} ${lecture_name}</div>
-                                <div class="lecture_additional_info" ${lecture_state_cd == "end" ? "style='display:none'": ""}>정원: ${max_member_num} 명 / 진행중  ${ing_member_num} 명 / 수업시간 ${lecture_time} 분</div>
-                                <div class="lecture_additional_info" ${lecture_state_cd == "ing" ? "style='display:none'": ""}>정원: ${max_member_num} 명 / 수업시간 ${lecture_time} 분</div>
+                                <div class="lecture_name_info">${lecture_state_cd == "end" ? "(비활성)": ""} ${lecture_name}</div>
+                                <div class="lecture_additional_info" ${lecture_state_cd == "end" ? "style='display:none'": ""}>정원: ${max_member_num} 명 / 진행중: ${ing_member_num} 명 / 수업시간: ${lecture_time} 분  / 담당강사: ${main_trainer_name}</div>
+                                <div class="lecture_additional_info" ${lecture_state_cd == "ing" ? "style='display:none'": ""}>정원: ${max_member_num} 명 / 수업시간: ${lecture_time} 분  / 담당강사: ${main_trainer_name}</div>
                             </div>
                             <div class="cell_lecture_selected ${checked == 0 ? 'none' : 'lecture_selected'}">
                                 ${CImg.confirm("", checked == 0 ? {"display":"none"} : {"display":"block"})}
@@ -527,6 +572,64 @@ class CComponent{
 
             });
         // }
+        return html;
+    }
+
+    //강사 선택 팝업에 사용되는 행
+    static select_trainer_row (multiple_select, checked, location, trainer_id, trainer_name, trainer_profile_url, disable_zero_avail_count, onclick){
+        let html = `
+                    <li class="select_trainer_row smr_${location}" id="select_trainer_row_${trainer_id}" style=""}>
+                        <div class="obj_table_raw">
+                            <div style="display:table-cell; width:35px; height:35px; padding-right:10px;">
+                                <img src="${trainer_profile_url}" style="width:35px; height:35px; border-radius: 50%;">
+                            </div>
+                            <div style="display:table-cell; vertical-align: middle;">
+                                <div class="cell_trainer_name">
+                                    ${trainer_name}
+                                </div>
+                            </div>
+                            <div style="display:table-cell; line-height:35px; float:right;">
+                                <div class="cell_trainer_selected ${checked == 0 ? '' : 'trainer_selected'}">
+                                    ${CImg.confirm("", checked == 0 ? {"display":"none"} : {"display":"block"})}
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    `;
+
+        if(multiple_select > 1){
+            $(document).off('click', `#select_trainer_row_${trainer_id}`).on('click', `#select_trainer_row_${trainer_id}`, function(e){
+                if(disable_zero_avail_count == ON && checked == 0){
+                    return false;
+                }
+                let trainer_select_count = $(`.smr_${location} .trainer_selected`).length;
+                if(!$(this).find('.cell_trainer_selected').hasClass('trainer_selected')){
+                    if($(`.smr_${location} .trainer_selected`).length >= multiple_select){
+                        show_error_message({title:`${multiple_select} 명까지 선택할 수 있습니다.`});
+                        return false;
+                    }
+                    $(this).find('.cell_trainer_selected').addClass('trainer_selected');
+                    $(this).find('svg').css('display', 'block');
+                    onclick('add');
+                    trainer_select_count++;
+
+                }else{
+                    $(this).find('.cell_trainer_selected').removeClass('trainer_selected');
+                    $(this).find('svg').css('display', 'none');
+                    onclick('substract');
+                    trainer_select_count--;
+                }
+                $('#select_trainer_max_num').text(trainer_select_count);
+            });
+        }else if(multiple_select == 1){
+            $(document).off('click', `#select_trainer_row_${trainer_id}`).on('click', `#select_trainer_row_${trainer_id}`, function(e){
+                // if(disable_zero_avail_count == ON && checked == 0){
+                //     return false;
+                // }
+                onclick('add_single');
+
+            });
+        }
         return html;
     }
 
@@ -770,6 +873,58 @@ class CComponent{
         return html;
     }
 
+    //회원의 일정 이력에 사용되는 행
+    static trainer_schedule_history_row (numbering, schedule_id, date, schedule_name, member_name, lecture_current_member_num, lecture_max_member_num, attend_status, permission_status, memo, daily_record_id, sign_use, callback){
+        let permission_status_name = "";
+        if(permission_status == SCHEDULE_WAIT){
+            permission_status_name = '('+APPROVE_SCHEDULE_STATUS[permission_status]+')';
+        }
+        let sign_image = `<img src="https://s3.ap-northeast-2.amazonaws.com/pters-image-master/${schedule_id}.png" style="width:100%;max-height:44px;filter:var(--transform-invert);" onerror="this.onerror=null;this.src='/static/common/icon/icon_no_signature.png'">`;
+        let tag_daily_record = daily_record_id == null ? "" : "<div style='display:inline-block;font-size:10px;padding:0 2px;border:1px solid var(--font-main);border-radius:5px;margin-left:3px;'>일지</div>";
+        let html = `<li class="schedule_history_row" id="schedule_history_row_${schedule_id}">`;
+        let raw_1 = `<div class="obj_table_raw">
+                        <div class="cell_schedule_num">${numbering}</div>
+                        <div class="cell_schedule_info">${schedule_name}(${lecture_current_member_num}/${lecture_max_member_num}) ${tag_daily_record}</div>
+                        <div class="cell_schedule_attend"></div>
+                    </div>`;
+        if(member_name != ''){
+            raw_1 = `<div class="obj_table_raw">
+                        <div class="cell_schedule_num">${numbering}</div>
+                        <div class="cell_schedule_info">${schedule_name} ${tag_daily_record} <br/>회원명 : ${member_name}</div>
+                        <div class="cell_schedule_attend"></div>
+                    </div>`;
+        }
+        let raw_2 = `<div class="obj_table_raw table_date_info">
+                        <div class="cell_schedule_num" style="${sign_use == ON ? "" : "display:none;"};color:${SCHEDULE_STATUS_COLOR[attend_status]}">${SCHEDULE_STATUS[attend_status]}</div>
+                        <div class="cell_schedule_info">${date}</div>
+                    </div>`;
+        let raw_3 = `<div class="obj_table_raw table_memo_info">
+                        <div class="cell_schedule_num"></div>
+                        <div class="cell_schedule_info">${memo}</div>
+                    </div>`;
+
+        let sub_assemble = `<div style="display:flex;">
+                                <div style="flex:1 1 0;">${raw_1} ${raw_2}</div>
+                                <div style="flex-basis:80px;text-align:right;">${attend_status == SCHEDULE_FINISH ? sign_image : ""}<br/>${permission_status_name}</div>
+                            </div>`;
+        if(sign_use == OFF){
+            sub_assemble = `<div style="display:flex;">
+                                <div style="flex:1 1 0;">${raw_1} ${raw_2}</div>
+                                <div style="flex-basis:80px;text-align:right;"><span style="color:${SCHEDULE_STATUS_COLOR[attend_status]}">${SCHEDULE_STATUS[attend_status]}<br/>${permission_status_name}</span></div>
+                            </div>`;
+        }
+
+        html += sub_assemble;
+        if(memo != ''){
+            html += raw_3;
+        }
+        html += '</li>';
+        $(document).off('click', `#schedule_history_row_${schedule_id}`).on('click', `#schedule_history_row_${schedule_id}`, function(){
+            callback();
+        });
+        return html;
+    }
+
     static closed_date_history_row (numbering, closed_date_history_id, date, closed_date_reason_type_name, extension_flag, memo, callback){
         let extension_flag_name = "";
         if(extension_flag == ON){
@@ -809,13 +964,97 @@ class CComponent{
         });
         return html;
     }
+
+    static member_shop_history_row (numbering, member_shop_id, start_date, shop_name, shop_price, payment_price, refund_price, state_cd_name, memo, callback){
+
+        let html = `<li class="member_shop_history_row" id="member_shop_history_row_${member_shop_id}">`;
+        let raw_1 = `<div class="obj_table_raw">
+                        <div class="cell_member_shop_num" style="width:15px;">${numbering}</div>
+                        <div class="cell_member_shop_info">${shop_name}</div>
+                        <div class="cell_member_shop_price">가격:${UnitRobot.numberWithCommas(shop_price)}원</div>
+                    </div>`;
+        let raw_2 = `<div class="obj_table_raw table_date_info">
+                        <div class="cell_member_shop_info">구매일:${start_date}</div>
+                        <div class="cell_member_shop_price">납부:${UnitRobot.numberWithCommas(payment_price)}원</div>
+                    </div>`;
+
+        if(payment_price > 0 && refund_price > 0){
+            raw_2 = `<div class="obj_table_raw table_date_info">
+                        <div class="cell_member_shop_info">구매일:${start_date}</div>
+                        <div class="cell_member_shop_price">납부:${UnitRobot.numberWithCommas(payment_price)}원 / 환불:${UnitRobot.numberWithCommas(refund_price)}원</div>
+                    </div>`;
+        }
+        if(refund_price > 0){
+            raw_2 = `<div class="obj_table_raw table_date_info">
+                        <div class="cell_member_shop_info">구매일:${start_date}</div>
+                        <div class="cell_member_shop_price">환불:${UnitRobot.numberWithCommas(refund_price)}원</div>
+                    </div>`;
+        }
+        let raw_3 = `<div class="obj_table_raw table_memo_info">
+                        <div class="cell_member_shop_info">${memo}</div>
+                    </div>`;
+
+        let sub_assemble = `<div style="display:flex;">
+                                <div style="flex:1 1 0;">${raw_1} ${raw_2}</div>
+                                <div style="flex-basis:80px;text-align:right;"><span style="color:var(--font-highlight);">${state_cd_name}</span></div>
+                            </div>`;
+
+        html += sub_assemble;
+        if(memo != ''){
+            html += raw_3;
+        }
+        html += '</li>';
+        $(document).off('click', `#member_shop_history_row_${member_shop_id}`).on('click', `#member_shop_history_row_${member_shop_id}`, function(){
+            callback();
+        });
+        return html;
+    }
+
+    static member_payment_history_row (numbering, member_payment_id, state_cd_name, pay_date, pay_price, pay_method, memo, callback){
+
+        let html = `<li class="member_payment_history_row" id="member_payment_history_row_${member_payment_id}">`;
+        let raw_1 = `<div class="obj_table_raw">
+                        <div class="cell_member_payment_num" style="width:15px;">${numbering}</div>
+                        <div class="cell_member_payment_info">거래일:${pay_date}</div>
+                        <div class="cell_member_payment_price">금액:${UnitRobot.numberWithCommas(pay_price)}원 / ${pay_method}</div>
+                    </div>`;
+        let raw_3 = `<div class="obj_table_raw table_memo_info">
+                        <div class="cell_member_payment_info">${memo}</div>
+                    </div>`;
+
+        let sub_assemble = `<div style="display:flex;">
+                                <div style="flex:1 1 0;">${raw_1}</div>
+                                <div style="flex-basis:80px;text-align:right;"><span style="color:var(--font-highlight);">${state_cd_name}</span></div>
+                            </div>`;
+
+        html += sub_assemble;
+        if(memo != ''){
+            html += raw_3;
+        }
+        html += '</li>';
+        $(document).off('click', `#member_payment_history_row_${member_payment_id}`).on('click', `#member_payment_history_row_${member_payment_id}`, function(){
+            callback();
+        });
+        return html;
+    }
+
     //회원의 수강권 이력에 사용되는 행
-    static ticket_history_row (numbering, ticket_id, date, ticket_name, ticket_pay_method, ticket_price, ticket_refund_price, reg_count, remain_count, avail_count, status_code, note, onclick){
+    static ticket_history_row (numbering, ticket_id, date, ticket_name, ticket_pay_method, ticket_price, ticket_payment_price, ticket_refund_price, reg_count, remain_count, avail_count, status_code, note, onclick){
         let status_color = "";
         if(status_code == "IP"){
             status_color = "green";
         }else if(status_code == "RF"){
             status_color = "orange";
+        }
+        let payment_text = "완납";
+        let payment_color = "green";
+        if(ticket_price > ticket_payment_price){
+            payment_text = "미납";
+            payment_color = "red";
+        }
+        if(ticket_refund_price > 0){
+            payment_text = "환불";
+            payment_color = "orange";
         }
         let html = `<li class="ticket_history_row" id="ticket_history_row_${ticket_id}">
                         <div class="obj_table_raw table_basic_info">
@@ -825,7 +1064,11 @@ class CComponent{
                         </div>
                         <div class="obj_table_raw table_date_info">
                             <div class="cell_ticket_num"></div>
-                            <div class="cell_ticket_info">등록 금액: ${ticket_price}원 ${status_code == "RF" ? ' / 환불금액: -' + ticket_refund_price +'원' : ""}</div>
+                            <div class="cell_ticket_info">수강권 가격: ${ticket_price}원</div>
+                        </div>
+                        <div class="obj_table_raw table_date_info">
+                            <div class="cell_ticket_num"></div>
+                            <div class="cell_ticket_info">납부 금액: ${ticket_payment_price}원 ${status_code == "RF" ? ' / 환불금액: -' + ticket_refund_price +'원' : ""}</div>
                         </div>
                         <div class="obj_table_raw table_date_info">
                             <div class="cell_ticket_num"></div>
@@ -841,6 +1084,10 @@ class CComponent{
                                 등록 ${reg_count >= 99999 ? "제한없음" : reg_count + '회'} /
                                 잔여 ${reg_count >= 99999 ? "제한없음" : remain_count + '회'} / 
                                 예약가능 ${reg_count >= 99999 ? "제한없음" : avail_count + '회'}</div>
+                        </div>
+                        <div class="obj_table_raw table_date_info">
+                            <div class="cell_ticket_num"></div>
+                            <div class="cell_ticket_info" style="color:${payment_color}">${payment_text}</div>
                         </div>
                         <div class="obj_table_raw table_memo_info" style="color:#ff7184;">
                             <div class="cell_ticket_num"></div>
@@ -1245,6 +1492,31 @@ class CImg{
         let svg = `<svg style="${CComponent.data_to_style_code(style)}" ${CImg.data_to_onclick_event(onclick)} width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                         <g id="데스크탑/아이콘/수강권/5C5859" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                             <path id="Combined-Shape" fill="${CImg.data_to_svg_color(svg_color[0], "var(--img-main)")}" d="M20.0092049,2 C21.0521248,2 21.9179427,2.81786914 21.9944987,3.85525484 L22,4.0048815 L22,9 L21.973251,9.0005144 C21.6759259,9.00925926 19,9.16666667 19,12 C19,14.9166667 21.8356481,14.9976852 21.9931842,14.9999357 L22,15 L22,19.9951185 C22,21.055601 21.1878772,21.9182879 20.1577802,21.9945229 L20.0092049,22 L3.99079514,22 C2.94787523,22 2.08205726,21.1878772 2.00550133,20.1577802 L2,20.0092049 L2,3.99079514 C2,2.94787523 2.81212277,2.08205726 3.84221976,2.00550133 L3.99079514,2 L20.0092049,2 Z M20,4 L14.8669375,3.99953522 C14.9331941,4.11446364 14.9772573,4.24406027 14.9932723,4.38266744 L15,4.5 C15,5.01283584 14.6172798,5.43550716 14.1173326,5.49327227 L14,5.5 C13.4477153,5.5 13,5.05613518 13,4.5 C13,4.31780297 13.0483067,4.14698644 13.1330147,3.9998705 L4,4 L4,20 L13.1336375,20.0014609 C13.0486419,19.8544213 13,19.6833094 13,19.5 C13,18.9871642 13.3827202,18.5644928 13.8826674,18.5067277 L14,18.5 C14.5128358,18.5 14.9355072,18.8827202 14.9932723,19.3826674 L15,19.5 C15,19.6826037 14.9514774,19.8537761 14.8664175,20.0011143 L20,20 L20,16.5 C20,16.5 17,16.0003033 17,12 C17,7.99969669 20,7.5 20,7.5 L20,4 Z M14,15.5 C14.5128358,15.5 14.9355072,15.8827202 14.9932723,16.3826674 L15,16.5 C15,17.0128358 14.6172798,17.4355072 14.1173326,17.4932723 L14,17.5 C13.4477153,17.5 13,17.0561352 13,16.5 C13,15.9871642 13.3827202,15.5644928 13.8826674,15.5067277 L14,15.5 Z M14,12.5 C14.5128358,12.5 14.9355072,12.8827202 14.9932723,13.3826674 L15,13.5 C15,14.0128358 14.6172798,14.4355072 14.1173326,14.4932723 L14,14.5 C13.4477153,14.5 13,14.0561352 13,13.5 C13,12.9871642 13.3827202,12.5644928 13.8826674,12.5067277 L14,12.5 Z M14,9.5 C14.5128358,9.5 14.9355072,9.88272018 14.9932723,10.3826674 L15,10.5 C15,11.0128358 14.6172798,11.4355072 14.1173326,11.4932723 L14,11.5 C13.4477153,11.5 13,11.0561352 13,10.5 C13,9.98716416 13.3827202,9.56449284 13.8826674,9.50672773 L14,9.5 Z M14,6.5 C14.5128358,6.5 14.9355072,6.88272018 14.9932723,7.38266744 L15,7.5 C15,8.01283584 14.6172798,8.43550716 14.1173326,8.49327227 L14,8.5 C13.4477153,8.5 13,8.05613518 13,7.5 C13,6.98716416 13.3827202,6.56449284 13.8826674,6.50672773 L14,6.5 Z"></path>
+                        </g>
+                    </svg>
+                    `;
+        return svg;
+    }
+
+    static trainer(svg_color, style, onclick){
+        if(svg_color == undefined){
+            svg_color = [];
+        }
+        let svg = `<svg style="${CComponent.data_to_style_code(style)}" ${CImg.data_to_onclick_event(onclick)} width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <g id="아이콘/강사/5C5859" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <path id="Combined-Shape" fill="${CImg.data_to_svg_color(svg_color[0], "var(--img-main)")}" d="M10.0184713,18.0003512 C10.2797037,18.0079012 13.2355556,18.1777778 14,22 L14,22 L12,22 C11.6,20 10,20 10,20 L10,20 L6,20 C6,20 4.4,20 4,22 L4,22 L2,22 C2.76444444,18.1777778 5.7202963,18.0079012 5.98152867,18.0003512 Z M8,8 C10.4852814,8 12.5,10.0147186 12.5,12.5 C12.5,14.9852814 10.4852814,17 8,17 C5.51471863,17 3.5,14.9852814 3.5,12.5 C3.5,10.0147186 5.51471863,8 8,8 Z M18.0135393,12.0003015 C18.2322184,12.0076894 21.0392157,12.1960784 22,17 L22,17 L20,17 C19.4,14 18,14 18,14 L18,14 L13.5,14 C13.5,12.137931 15.2336504,12.0095125 15.4727746,12.000656 Z M8,10 C6.61928813,10 5.5,11.1192881 5.5,12.5 C5.5,13.8807119 6.61928813,15 8,15 C9.38071187,15 10.5,13.8807119 10.5,12.5 C10.5,11.1192881 9.38071187,10 8,10 Z M16,2 C18.4852814,2 20.5,4.01471863 20.5,6.5 C20.5,8.98528137 18.4852814,11 16,11 C13.5147186,11 11.5,8.98528137 11.5,6.5 C11.5,4.01471863 13.5147186,2 16,2 Z M16,4 C14.6192881,4 13.5,5.11928813 13.5,6.5 C13.5,7.88071187 14.6192881,9 16,9 C17.3807119,9 18.5,7.88071187 18.5,6.5 C18.5,5.11928813 17.3807119,4 16,4 Z" ></path>
+                        </g>
+                    </svg>
+                    `;
+        return svg;
+    }
+    static shop(svg_color, style, onclick){
+        if(svg_color == undefined){
+            svg_color = [];
+        }
+        let svg = `<svg style="${CComponent.data_to_style_code(style)}" ${CImg.data_to_onclick_event(onclick)} width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <g id="아이콘/상품/5C5859" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <path id="Combined-Shape" fill="${CImg.data_to_svg_color(svg_color[0], "var(--img-main)")}" d="M16 6V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H2v13c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6h-6zm-6-2h4v2h-4V4zM9 18V9l7.5 4L9 18z" ></path>
                         </g>
                     </svg>
                     `;

@@ -2751,6 +2751,134 @@ class TicketSelector{
     }
 }
 
+class ShopSelector{
+    constructor(install_target, target_instance, multiple_select, appendix, callback){
+        // this.targetHTML = install_target;
+        this.target = {install : install_target};
+        this.target_instance = target_instance;
+        this.unique_instance = install_target.replace(/#./gi, "");
+        this.callback = callback;
+        this.appendix = appendix;
+        this.received_data;
+        this.multiple_select = multiple_select;
+        this.data = {
+            id: this.target_instance.shop.id,
+            name: this.target_instance.shop.name,
+            price: this.target_instance.shop.price,
+        };
+        this.init();
+    }
+
+    init(){
+        this.request_list(()=>{
+            this.render();
+            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
+        });
+    }
+
+    clear(){
+        setTimeout(()=>{
+            document.querySelector(this.target.install).innerHTML = "";
+        }, 300);
+    }
+
+    render(){
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();ticket_select.clear();">${CImg.arrow_left()}</span>`;
+        let top_center = `<span class="icon_center"><span id="">${this.appendix.title == null ? '$nbsp;' :this.appendix.title}</span></span>`;
+        let top_right = `<span class="icon_right" onclick="shop_select.upper_right_menu();"><span style="color:var(--font-highlight);font-weight: 500;">완료</span></span>`;
+        let content =   `<section>${this.dom_list()}</section>`;
+
+        let html = PopupBase.base(top_left, top_center, top_right, content, "");
+
+        document.querySelector(this.target.install).innerHTML = html;
+    }
+
+    dom_list(){
+        let html_to_join = [];
+        let length = this.received_data.length;
+        if(length == 0){
+            html_to_join.push(CComponent.no_data_row('상품 목록이 비어있습니다.'));
+        }
+        for(let i=0; i<length; i++){
+            let data = this.received_data[i];
+            let shop_id = data.shop_id;
+            let shop_name = data.shop_name;
+            let shop_price = data.shop_price;
+            let shop_note = data.shop_note;
+            let checked = this.target_instance.shop.id == shop_id ? 1 : 0;
+            let html = CComponent.select_shop_row(
+                this.multiple_select, checked, this.unique_instance, shop_id, shop_name, shop_price, shop_note,(add_or_substract)=>{
+                    if(add_or_substract == "add"){
+                        this.data.id.push(shop_id);
+                        this.data.name.push(shop_name);
+                        this.data.price.push(shop_price);
+                    }else if(add_or_substract == "substract"){
+                        this.data.id.splice(this.data.id.indexOf(shop_id), 1);
+                        this.data.name.splice(this.data.id.indexOf(shop_id), 1);
+                        this.data.price.splice(this.data.id.indexOf(shop_id), 1);
+                    }else if(add_or_substract == "add_single"){
+                        this.data.id = [];
+                        this.data.name = [];
+                        this.data.price = [];
+                        this.data.id.push(shop_id);
+                        this.data.name.push(shop_name);
+                        this.data.price.push(shop_price);
+                    }
+
+                    // this.target_instance.ticket = this.data; //타겟에 선택된 데이터를 set
+
+                    if(this.multiple_select == 1){
+                        this.upper_right_menu();
+                    }
+                }
+            );
+            if(checked > 0){
+                html_to_join.unshift(html);
+            }else{
+                html_to_join.push(html);
+            }
+        }
+        if(this.appendix.new_add == SHOW){
+            let dom_add_new_shop = this.dom_add_new_shop();
+            html_to_join.unshift(dom_add_new_shop);
+        }
+        // document.querySelector(this.targetHTML).innerHTML = html_to_join.join('');
+        return html_to_join.join('');
+    }
+
+    dom_add_new_shop(){
+        let id = "add_new_shop";
+        let title = "새로운 상품 생성";
+        let icon = CImg.plus();
+        let icon_r_visible = SHOW;
+        let icon_r_text = "";
+        let style = {"padding":"15px 16px", "border-bottom":"var(--border-article-dark)"};
+        let html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SHOP_ADD, 100, POPUP_FROM_BOTTOM, null, ()=>{
+                shop_add_popup = new Shop_add('.popup_shop_add', ()=>{
+                    this.init();
+                    return false;
+                });
+            });
+        });
+
+        return html;
+    }
+
+    request_list (callback){
+        shop.request_shop_list((data)=>{
+            this.received_data = data.current_shop_data;
+            callback();
+        });
+    }
+
+    upper_right_menu(){
+        this.callback(this.data);
+        layer_popup.close_layer_popup();
+        this.clear();
+    }
+}
+
 class LectureSelector{
     constructor(install_target, target_instance, multiple_select, appendix, callback){
         this.target = {install : install_target};
@@ -2766,7 +2894,9 @@ class LectureSelector{
             state_cd: [],
             max: [],
             type_cd: [],
-            color: []
+            color: [],
+            main_trainer_id: [],
+            main_trainer_name: []
         };
 
         this.data.id = this.appendix.lecture_id.slice();
@@ -2775,6 +2905,8 @@ class LectureSelector{
         this.data.max = this.appendix.max.slice();
         this.data.type_cd = this.appendix.type_cd.slice();
         this.data.color = this.appendix.color.slice();
+        this.data.main_trainer_id = this.appendix.main_trainer_id.slice();
+        this.data.main_trainer_name = this.appendix.main_trainer_name.slice();
 
         this.init();
     }
@@ -2819,15 +2951,20 @@ class LectureSelector{
             let lecture_type_cd = data.lecture_type_cd;
             let lecture_ing_member_num = data.lecture_ing_member_num;
             let lecture_time = data.lecture_minute;
+            let main_trainer_id = data.main_trainer_id;
+            let main_trainer_name = data.main_trainer_name;
             let checked = this.appendix.lecture_id.indexOf(lecture_id) >= 0 ? 1 : 0;
             let html = CComponent.select_lecture_row(
-                this.multiple_select, checked, this.unique_instance, lecture_id, lecture_name, lecture_color_code, lecture_max_num, lecture_ing_member_num, lecture_state_cd, lecture_time, (add_or_substract)=>{
+                this.multiple_select, checked, this.unique_instance, lecture_id, lecture_name, lecture_color_code, lecture_max_num,
+                lecture_ing_member_num, lecture_state_cd, lecture_time, main_trainer_id, main_trainer_name,(add_or_substract)=>{
                     if(add_or_substract == "add"){
                         this.data.name.push(lecture_name);
                         this.data.max.push(lecture_max_num);
                         // this.data.state_cd.push(lecture_state_cd);
                         this.data.type_cd.push(lecture_type_cd);
                         this.data.color.push(lecture_color_code);
+                        this.data.main_trainer_id.push(main_trainer_id);
+                        this.data.main_trainer_name.push(main_trainer_name);
                         this.data.id.push(lecture_id);
                     }else if(add_or_substract == "substract"){
                         this.data.name.splice(this.data.id.indexOf(lecture_id), 1); // 이름으로 찾기 x, 고유한 ID로
@@ -2835,6 +2972,8 @@ class LectureSelector{
                         this.data.state_cd.splice(this.data.id.indexOf(lecture_id), 1); // 이름으로 찾기 x, 고유한 ID로
                         this.data.type_cd.splice(this.data.id.indexOf(lecture_id), 1); // 이름으로 찾기 x, 고유한 ID로
                         this.data.color.splice(this.data.id.indexOf(lecture_id), 1);
+                        this.data.main_trainer_id.splice(this.data.id.indexOf(lecture_id), 1);
+                        this.data.main_trainer_name.splice(this.data.id.indexOf(lecture_id), 1);
                         this.data.id.splice(this.data.id.indexOf(lecture_id), 1);
                     }else if(add_or_substract == "add_single"){
                         this.data.id = [];
@@ -2843,12 +2982,16 @@ class LectureSelector{
                         this.data.state_cd = [];
                         this.data.type_cd = [];
                         this.data.color = [];
+                        this.data.main_trainer_id = [];
+                        this.data.main_trainer_name = [];
                         this.data.id.push(lecture_id);
                         this.data.name.push(lecture_name);
                         this.data.max.push(lecture_max_num);
                         // this.data.state_cd.push(lecture_state_cd);
                         this.data.type_cd.push(lecture_type_cd);
                         this.data.color.push(lecture_color_code);
+                        this.data.main_trainer_id.push(main_trainer_id);
+                        this.data.main_trainer_name.push(main_trainer_name);
                     }
 
                     // this.target_instance.lecture = this.data;
@@ -4217,6 +4360,249 @@ class MemberContactsSelector{
             this.render();
             func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
         }
+    }
+}
+
+
+class TrainerSelector{
+    constructor(install_target, target_instance, multiple_select, appendix, callback){
+        this.target = {install:install_target};
+        // this.target_instance = target_instance;
+        this.unique_instance = install_target.replace(/#./gi, "");
+        this.received_data;
+        // this.received_data_main_trainer;
+        this.callback = callback;
+        this.appendix = appendix;
+        this.multiple_select = multiple_select;
+        this.data = {
+            id: [],
+            name: [],
+            id_other:[],
+            name_other:[],
+            ticket_id_other:[]
+        };
+        this.data.id = this.appendix.trainer_id.slice();
+        this.data.name = this.appendix.trainer_name.slice();
+        console.log(this.data.id);
+        console.log(this.data.name);
+        this.hide_entire_trianer_list = true;
+
+        this.init();
+    }
+
+    init(){
+        this.request_list(()=>{
+            this.render();
+            func_set_webkit_overflow_scrolling(`${this.target.install} .wrapper_middle`);
+        });
+    }
+
+    clear(){
+        setTimeout(()=>{
+            document.querySelector(this.target.install).innerHTML = "";
+        }, 300);
+    }
+
+    render(){
+        let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();trainer_select.clear();">${CImg.arrow_left()}</span>`;
+        let top_center = `<span class="icon_center"><span id="">${this.appendix.title}</span></span>`;
+        let top_right = `<span class="icon_right"  onclick="trainer_select.upper_right_menu();"><span style="color:var(--font-highlight);font-weight: 500;">완료</span></span>`;
+        let content =   `<section>
+                            ${this.dom_assembly()}
+                        </section>`;
+
+        let html = PopupBase.base(top_left, top_center, top_right, content, "");
+
+        document.querySelector(this.target.install).innerHTML = html;
+    }
+
+    dom_assembly(){
+        // let lecture_member_list = `<div>${this.dom_list_lecture_trainer()}</div>`;
+        let all_trainer_list = `<div>${this.dom_list()}</div>`;
+
+        let html;
+        // if(this.appendix.lecture_id != null){ //특정 수업의 회원들을 조회할 때
+        //     if(this.appendix.entire_trainer == SHOW){ //전체 회원 리스트도 함께 표기
+        //         html = lecture_trainer_list + all_trainer_list;
+        //     }else{ //전체 회원리스트는 숨기기
+        //         html = lecture_trainer_list;
+        //     }
+        // }else{
+            html = all_trainer_list;
+        // }
+
+
+        return html;
+    }
+
+    dom_list (){
+        let html_to_join = [];
+        let length = this.received_data.length;
+        let select_trainer_num = 0;
+        // if(length == 0){
+        //     html_to_join.push(CComponent.no_data_row('목록이 비어있습니다.', {"border-bottom":0}));
+        // }
+        // let trainer_id = user_id;
+        // let trainer_name = user_name;
+        // let trainer_profile_url = user_profile_url;
+        // let checked = this.appendix.trainer_id == trainer_id ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
+        // let html = CComponent.select_trainer_row (
+        //     this.multiple_select, checked, this.unique_instance, trainer_id, trainer_name, trainer_profile_url, this.appendix.disable_zero_avail_count, (add_or_substract)=>{
+        //         if(add_or_substract == "add"){
+        //             this.data.id.push(trainer_id);
+        //             this.data.name.push(trainer_name);
+        //         }else if(add_or_substract == "substract"){
+        //             this.data.name.splice(this.data.id.indexOf(trainer_id), 1);
+        //             this.data.id.splice(this.data.id.indexOf(trainer_id), 1);
+        //         }else if(add_or_substract == "add_single"){
+        //             this.data.id = [];
+        //             this.data.name = [];
+        //             this.data.id.push(trainer_id);
+        //             this.data.name.push(trainer_name);
+        //         }
+        //         if(this.multiple_select == 1){
+        //             this.upper_right_menu();
+        //         }
+        //     }
+        // );
+        // if(checked!=0){
+        //     select_trainer_num++;
+        // }
+        // if(checked > 0){
+        //     html_to_join.unshift(html);
+        // }else{
+        //     html_to_join.push(html);
+        // }
+
+        for(let i=0; i<length; i++){
+            let data = this.received_data[i];
+            let trainer_id = data.trainer_id;
+            let trainer_name = data.trainer_name;
+            let trainer_profile_url = data.trainer_profile_url;
+            let checked = this.appendix.trainer_id == trainer_id ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
+            let html = CComponent.select_trainer_row (
+                this.multiple_select, checked, this.unique_instance, trainer_id, trainer_name, trainer_profile_url, this.appendix.disable_zero_avail_count, (add_or_substract)=>{
+                    if(add_or_substract == "add"){
+                        this.data.id.push(trainer_id);
+                        this.data.name.push(trainer_name);
+                    }else if(add_or_substract == "substract"){
+                        this.data.name.splice(this.data.id.indexOf(trainer_id), 1);
+                        this.data.id.splice(this.data.id.indexOf(trainer_id), 1);
+                    }else if(add_or_substract == "add_single"){
+                        this.data.id = [];
+                        this.data.name = [];
+                        this.data.id.push(trainer_id);
+                        this.data.name.push(trainer_name);
+                    }
+                    if(this.multiple_select == 1){
+                        this.upper_right_menu();
+                    }
+                }
+            );
+            if(checked!=0){
+                select_trainer_num++;
+            }
+            if(checked > 0){
+                html_to_join.unshift(html);
+            }else{
+                html_to_join.push(html);
+            }
+        }
+
+        html_to_join.push(CComponent.no_data_row('지점 연결된 강사만 선택 가능합니다.',
+                                                {"color":"grey","text-align":"center", "border-bottom":0}));
+
+        return html_to_join.join('');
+    }
+
+    dom_list_main_trainer (){
+        let html_to_join = [];
+        let length = this.received_data_main_trainer.length;
+        let select_trainer_num = 0;
+        if(length == 0){
+            html_to_join.push(CComponent.no_data_row('목록이 비어있습니다.', {"border-bottom":0}));
+        }
+        for(let i=0; i<length; i++){
+            let data = this.received_data_main_trainer[i];
+            let trainer_id = data.trainer_id;
+            let trainer_name = data.trainer_name;
+            // let trainer_rem_count = data.trainer_ticket_rem_count;
+            // let trainer_reg_count = data.trainer_ticket_reg_count;
+            // let trainer_avail_count = data.trainer_ticket_avail_count;
+            // let member_expiry = data.end_date;
+            // let member_fix_state_cd = data.trainer_fix_state_cd;
+            let trainer_profile_url = data.trainer_profile_url;
+            let checked = this.appendix.trainer_id.indexOf(trainer_id) >= 0 ? 1 : 0; //타겟이 이미 가진 회원 데이터를 get
+            // if(trainer_expiry == '9999-12-31'){
+            //     trainer_expiry = '소진시';
+            // }
+            // if(this.appendix.disable_zero_avail_count == ON && trainer_avail_count == 0){
+            //     checked = 0;
+            // }
+            let html = CComponent.select_trainer_row (
+                this.multiple_select, checked, this.unique_instance, trainer_id, trainer_name, trainer_profile_url, this.appendix.disable_zero_avail_count, (add_or_substract)=>{
+
+                    if(add_or_substract == "add"){
+                        this.data.id.push(trainer_id);
+                        this.data.name.push(trainer_name);
+                    }else if(add_or_substract == "substract"){
+                        this.data.name.splice(this.data.id.indexOf(trainer_id), 1);
+                        this.data.id.splice(this.data.id.indexOf(trainer_id), 1);
+                    }else if(add_or_substract == "add_single"){
+                        this.data.id = [];
+                        this.data.name = [];
+                        this.data.id.push(trainer_id);
+                        this.data.name.push(trainer_name);
+                    }
+                    if(this.multiple_select == 1){
+                        this.upper_right_menu();
+                    }
+                }
+            );
+            if(checked!=0){
+                select_trainer_num++;
+            }
+            if(checked > 0){
+                html_to_join.unshift(html);
+            }else{
+                html_to_join.push(html);
+            }
+        }
+
+        html_to_join.unshift(`<div class="select_trainer_max_num" >
+                                 <span>담당</span><span> (0명)</span>
+                            </div>`);
+        // ${this.received_data_main_trainer.length}
+
+        // document.querySelector(this.targetHTML).innerHTML = html_to_join.join('');
+        return html_to_join.join('');
+    }
+
+    request_list (callback){
+        //Lecture_id를 클래스가 전달받은 경우, 해당 lecture에 속한 회원 리스트를 받아온다.
+        //Lecture_id를 클래스가 받지 못한 경우, 모든 진행 회원 리스트를 받아온다.
+        if(this.appendix.lecture_id == null){
+            trainer.request_trainer_list("connect", (data)=>{
+                this.received_data = data.current_trainer_data;
+                callback();
+            });
+        }else{
+
+            trainer.request_trainer_list("connect", (data)=>{
+                this.received_data = data.current_trainer_data;
+                let data_ = {"lecture_id": this.appendix.lecture_id};
+                // Lecture_func.read_lecture_trainers(data_, (data)=>{
+                //     this.received_data_main_trainer = data.lecture_ing_trainer_list;
+                //     callback();
+                // });
+            });
+        }
+    }
+
+    upper_right_menu(){
+        this.callback(this.data);
+        layer_popup.close_layer_popup();
+        this.clear();
     }
 }
 

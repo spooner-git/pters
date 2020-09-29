@@ -22,6 +22,8 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
+    url(r'^index_trainee/$', views.index_trainee, name='index_trainee'),
+    url(r'^for_trainee/$', views.TraineeFunctionIntroduceView.as_view(), name='for_trainee'),
 
     url(r'^check/$', views.CheckView.as_view(), name='check'),
     url(r'^introduce/$', views.ServiceIntroduceView.as_view(), name='introduce'),

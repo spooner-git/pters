@@ -161,6 +161,7 @@ class Member {
             let member_phone = data.member_phone;
             let member_reg = data.member_ticket_reg_count;
             let member_rem = data.member_ticket_rem_count;
+            let member_ticket_payment_check = data.member_ticket_payment_check;
             let end_date = data.end_date;
             let end_date_text = DateRobot.to_text(end_date, '', '', SHORT);
             let remain_date = Math.round((new Date(end_date).getTime() - new Date().getTime()) / (1000*60*60*24));
@@ -168,7 +169,7 @@ class Member {
             
 
             let remain_count_text = '잔여 '+member_rem+'회';
-            end_date_text = '-'+end_date_text+' ('+remain_date+'일)';
+            end_date_text = '~'+end_date_text+' ('+remain_date+'일)';
             let member_counts_text;
 
             if(member_reg >= 99999){
@@ -196,6 +197,9 @@ class Member {
                 }
             }else{
                 member_counts_text = '종료됨';
+            }
+            if(member_ticket_payment_check > 0){
+                member_counts_text += ` / <span style='color:#ff0022;'>미납</span>`
             }
 
             
@@ -234,7 +238,7 @@ class Member {
         }
 
         if(html_temp.length == 0){
-            html_temp.push(`<div style="font-size:14px;padding:16px;" class="anim_fade_in_vibe_top">등록된 회원이 없습니다.</div>`);
+            html_temp.push(`<div style="font-size:14px;padding:16px;" class="anim_fade_in_vibe_top">회원 목록이 없습니다.</div>`);
         }
         document.querySelector('#member_content_wrap').innerHTML = html_temp.join("");
     }
@@ -367,8 +371,8 @@ class Member {
         user_options_array.push(`'${SORT_REG_COUNT+'_'+SORT_ORDER_DESC}':{text:'등록 횟수 적은 순', callback:()=>{member.sort_val = '${SORT_REG_COUNT}'; member.sort_order_by= ${SORT_ORDER_ASC};member.sort_value_text = '등록 횟수 적은 순';member.init();layer_popup.close_layer_popup();}}`);
         user_options_array.push(`'${SORT_REMAIN_COUNT+'_'+SORT_ORDER_ASC}':{text:'잔여 횟수 많은 순', callback:()=>{member.sort_val = '${SORT_REMAIN_COUNT}'; member.sort_order_by= ${SORT_ORDER_DESC};member.sort_value_text = '잔여 횟수 많은 순';member.init();layer_popup.close_layer_popup();}}`);
         user_options_array.push(`'${SORT_REMAIN_COUNT+'_'+SORT_ORDER_DESC}':{text:'잔여 횟수 적은 순', callback:()=>{member.sort_val = '${SORT_REMAIN_COUNT}'; member.sort_order_by= ${SORT_ORDER_ASC};member.sort_value_text = '잔여 횟수 적은 순';member.init();layer_popup.close_layer_popup();}}`);
-        user_options_array.push(`'${SORT_START_DATE+'_'+SORT_ORDER_ASC}':{text:'시작 일자 최근 순', callback:()=>{member.sort_val = '${SORT_START_DATE}'; member.sort_order_by= ${SORT_ORDER_DESC};member.sort_value_text = '시작 일자 최근 순';member.init();layer_popup.close_layer_popup();}}`);
-        user_options_array.push(`'${SORT_START_DATE+'_'+SORT_ORDER_DESC}':{text:'시작 일자 과거 순', callback:()=>{member.sort_val = '${SORT_START_DATE}'; member.sort_order_by= ${SORT_ORDER_ASC};member.sort_value_text = '시작 일자 과거 순';member.init();layer_popup.close_layer_popup();}}`);
+        // user_options_array.push(`'${SORT_START_DATE+'_'+SORT_ORDER_ASC}':{text:'시작 일자 최근 순', callback:()=>{member.sort_val = '${SORT_START_DATE}'; member.sort_order_by= ${SORT_ORDER_DESC};member.sort_value_text = '시작 일자 최근 순';member.init();layer_popup.close_layer_popup();}}`);
+        // user_options_array.push(`'${SORT_START_DATE+'_'+SORT_ORDER_DESC}':{text:'시작 일자 과거 순', callback:()=>{member.sort_val = '${SORT_START_DATE}'; member.sort_order_by= ${SORT_ORDER_ASC};member.sort_value_text = '시작 일자 과거 순';member.init();layer_popup.close_layer_popup();}}`);
         user_options_array.push(`'${SORT_END_DATE+'_'+SORT_ORDER_ASC}':{text:'남은 일자 많은 순', callback:()=>{member.sort_val = '${SORT_END_DATE}'; member.sort_order_by= ${SORT_ORDER_DESC};member.sort_value_text = '남은 일자 많은 순';member.init();layer_popup.close_layer_popup();}}`);
         user_options_array.push(`'${SORT_END_DATE+'_'+SORT_ORDER_DESC}':{text:'남은 일자 적은 순', callback:()=>{member.sort_val = '${SORT_END_DATE}'; member.sort_order_by= ${SORT_ORDER_ASC};member.sort_value_text = '남은 일자 적은 순';member.init();layer_popup.close_layer_popup();}}`);
         let user_option = `{`;
@@ -1179,6 +1183,96 @@ class Member_func{
         //데이터 형태 {"member_id":""};
         $.ajax({
             url:'/trainer/get_member_closed_date_history/',
+            type:'GET',
+            data: data,
+            dataType : 'html',
+
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function(){
+
+            },
+
+            //통신성공시 처리
+            success:function(data_){
+                let data = JSON.parse(data_);
+                check_app_version(data.app_version);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message({title:data.messageArray[0]});
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(data);
+                }
+            },
+
+            //통신 실패시 처리
+            error:function(data){
+                if(error_callback != undefined){
+                    error_callback(data);
+                }
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
+                // location.reload();
+            }
+        });
+    }
+
+    static member_shop_list_history(data, callback, error_callback){
+        //데이터 형태 {"member_id":""};
+        $.ajax({
+            url:'/trainer/get_member_shop_history/',
+            type:'GET',
+            data: data,
+            dataType : 'html',
+
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function(){
+
+            },
+
+            //통신성공시 처리
+            success:function(data_){
+                let data = JSON.parse(data_);
+                check_app_version(data.app_version);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message({title:data.messageArray[0]});
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(data);
+                }
+            },
+
+            //통신 실패시 처리
+            error:function(data){
+                if(error_callback != undefined){
+                    error_callback(data);
+                }
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
+                // location.reload();
+            }
+        });
+    }
+
+    static member_payment_list_history(data, callback, error_callback){
+        //데이터 형태 {"member_id":""};
+        $.ajax({
+            url:'/trainer/get_member_payment_history/',
             type:'GET',
             data: data,
             dataType : 'html',

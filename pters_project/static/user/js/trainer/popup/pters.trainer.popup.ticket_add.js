@@ -25,6 +25,8 @@ class Ticket_add{
                 lecture_color:[],
                 lecture_state_cd:[],
                 lecture_type_cd:[],
+                main_trainer_id:[],
+                main_trainer_name:[],
                 ticket_effective_days:null,
                 count:null,
                 price:null,
@@ -58,11 +60,14 @@ class Ticket_add{
         this.data.lecture_state_cd = data.state_cd;
         this.data.lecture_type_cd = data.type_cd;
         this.data.lecture_color = data.color;
+        this.data.main_trainer_id = data.main_trainer_id;
+        this.data.main_trainer_name = data.main_trainer_name;
         this.render_content();
     }
 
     get lecture(){
-        return {id:this.data.lecture_id, name:this.data.lecture_name, max:this.data.lecture_max, state_cd:this.data.lecture_state_cd, type_cd:this.data.lecture_type_cd, color:this.data.lecture_color};
+        return {id:this.data.lecture_id, name:this.data.lecture_name, max:this.data.lecture_max, state_cd:this.data.lecture_state_cd,
+            type_cd:this.data.lecture_type_cd, color:this.data.lecture_color, main_trainer_id:this.data.main_trainer_id, main_trainer_name:this.data.main_trainer_name};
     }
 
     set period(text){
@@ -213,7 +218,7 @@ class Ticket_add{
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SELECT, 100, popup_style, null, ()=>{
                 let appendix = {'title':'수업', lecture_id:this.data.lecture_id, lecture_name:this.data.lecture_name, lecture_state_cd:this.data.lecture_state_cd,
-                                max:this.data.lecture_max, type_cd:this.data.lecture_type_cd, color:this.data.lecture_color};
+                                max:this.data.lecture_max, type_cd:this.data.lecture_type_cd, color:this.data.lecture_color, main_trainer_id:this.data.main_trainer_id, main_trainer_name:this.data.main_trainer_name};
                 lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 999, appendix, (set_data)=>{
                     this.lecture = set_data; //타겟에 선택된 데이터를 set
                     this.render_content();
@@ -236,7 +241,7 @@ class Ticket_add{
             html_to_join.push(
                 CComponent.icon_button(lecture_id, lecture_name, icon, icon_button_style, ()=>{
                     let root_content_height = $root_content.height();
-                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SIMPLE_VIEW, 100*(235/root_content_height), POPUP_FROM_BOTTOM, {'lecture_id':lecture_id}, ()=>{
+                    layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SIMPLE_VIEW, 100*(300/root_content_height), POPUP_FROM_BOTTOM, {'lecture_id':lecture_id}, ()=>{
                         lecture_simple_view_popup = new Lecture_simple_view('.popup_lecture_simple_view', lecture_id, 'lecture_simple_view_popup');
                         //수업 간단 정보 팝업 열기
                     });
@@ -525,8 +530,8 @@ class Ticket_add{
         let icon_r_text = "";
         let style = null;
         let disabled = false;
-        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+:.,\\s 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
-        let pattern_message = "+ - _ : ., 제외 특수문자는 입력 불가";
+        let pattern = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_+:.,%\\s 一-龠々ぁ-んーァ-ヾ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]{0,255}";
+        let pattern_message = "+ - _ : .,% 제외 특수문자는 입력 불가";
         let required = "";
         let html = CComponent.create_input_row (id, title, placeholder, icon, icon_r_visible, icon_r_text, style, disabled, (input_data)=>{
             let user_input_data = input_data;

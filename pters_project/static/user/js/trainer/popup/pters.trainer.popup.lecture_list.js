@@ -125,7 +125,7 @@ class Lecture_list {
             let lecture_member_number = data.lecture_ing_member_num;
             let lecture_class_hour = data.lecture_minute;
             let lecture_ing_bg_color = data.lecture_ing_color_cd;
-
+            let main_trainer_name = data.main_trainer_name;
             
             let onclick = `lecture_list_popup.event_view_lecture(${lecture_id})`;
             let html = `<article class="lecture_wrapper anim_fade_in_vibe_top" data-text="${lecture_name}" data-lectureid="${lecture_id}" onclick="${onclick}" style="color:${this.list_status_type == "ing" ? "" : 'var(--font-inactive)'}">
@@ -139,7 +139,7 @@ class Lecture_list {
                                         ${lecture_name} 
                                     </div>
                                     <div class="lecture_note">
-                                        정원 - ${lecture_max_member_number}명 / 수업시간 - ${lecture_class_hour}분
+                                        담당: ${main_trainer_name} / 정원: ${lecture_max_member_number}명 / 수업시간: ${lecture_class_hour}분
                                     </div>
                                 </div>
                                 <div class="lecture_data_r">

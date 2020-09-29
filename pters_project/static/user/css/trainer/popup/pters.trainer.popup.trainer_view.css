@@ -1,0 +1,43 @@
+.popup_trainer_view{
+	/* -webkit-overflow-scrolling: touch; */
+	overflow: hidden;
+}
+
+.popup_trainer_view .obj_box_full{
+	padding: 15px 0 15px 16px;
+}
+
+.popup_trainer_view .obj_input_box_full{
+	padding: 4px 0px 4px 18px;
+}
+
+.popup_trainer_view .popup_toolbox{
+	/* position: sticky;
+	position: -webkit-sticky; */
+	position: relative;
+	top: 0;
+	/* padding: 0 16px 20px 60px; */
+	padding: 0 16px 20px 16px;
+}
+
+.popup_trainer_view .popup_content{
+	padding-top: 1px;
+	padding-bottom: 20px;
+}
+
+.popup_trainer_view .trainer_current_ticket_article{
+	/* margin-left: 38px; */
+	margin-top: 10px;
+	padding: 5px 10px;
+	border: var(--border-article);
+	box-shadow: var(--box-shadow-article);
+	border-radius: 8px;
+}
+
+
+/* 간단 보기 */
+.popup_trainer_simple_view{
+}
+.popup_trainer_simple_view .obj_box_full{
+	padding: 0 16px;
+}

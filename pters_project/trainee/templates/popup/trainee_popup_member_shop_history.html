@@ -1,0 +1,76 @@
+{% extends "popup/trainee_base_popup.html" %}
+{% load static_url %}
+{% load humanize %}
+{% block popup_base_css %}
+    <link rel="stylesheet" href={% static_url "user/css/trainee/popup/pters.trainee.popup.member_shop_history.css" %}>
+{% endblock %}
+{% block popup_base_wrapper_top %}
+{% endblock %}
+    <!-- pters.trainee.popup.plan_view.css -->
+
+{% block popup_base_contents %}
+    <div class="popup_member_shop_history">
+        <div class="obj_box_popup_topper">
+{#            <div class="obj_font_size_12_weight_500 obj_font_color_white">{{ member_ticket_info.ticket_tb.ticket_type_cd_nm }}</div>#}
+            <div class="wrapper_my_ticket_title">
+                <div class="obj_font_size_13_weight_500 obj_font_color_white" style="float:right"></div>
+                <div class="obj_font_size_18_weight_bold obj_font_color_white">상품 구매 내역</div>
+            </div>
+        </div>
+        <div class="">
+            <div id="wrapper_my_history_detail">
+                <div class="wrapper_my_history_detail_title obj_table_raw obj_font_size_11_weight_normal obj_font_color_light_grey">
+                    <div class="wrapper_my_history_detail_member_shop_count obj_table_cell_x4">순번</div>
+                    <div class="wrapper_my_history_detail_member_shop_start_date obj_table_cell_x4">구매일</div>
+                    <div class="wrapper_my_history_detail_member_shop_name obj_table_cell_x4">상품명</div>
+                    <div class="wrapper_my_history_detail_member_shop_price obj_table_cell_x4">가격 / 납부</div>
+                </div>
+                {% for member_shop_info in member_shop_data %}
+                <div class="wrapper_my_history_detail_info obj_table_raw obj_font_size_11_weight_500">
+                    <div class="wrapper_my_history_detail_member_shop_count obj_table_cell_x4">{{ forloop.revcounter }}</div>
+                    <div class="wrapper_my_history_detail_member_shop_start_date obj_table_cell_x4">
+                        {{ member_shop_info.start_date | date:"Y.m.d(l)"|cut:"요일"  }}
+                    </div>
+                    <div class="wrapper_my_history_detail_member_shop_name obj_table_cell_x4">
+                        {{ member_shop_info.shop_tb.name }}
+                    </div>
+                    <div class="wrapper_my_history_detail_member_shop_price obj_table_cell_x4">{{ member_shop_info.price | intcomma }}원<br/>/{{ member_shop_info.payment_price | intcomma }}원</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block popoup_base_wrapper_bottom_inside %}
+    <div class="obj_button_big obj_font_bg_main_color_white" onclick="layer_popup.close_layer_popup()">확인</div>
+{% endblock %}
+{% block popup_base_js %}
+<script type="text/javascript">
+    //popup_member_shop_history_swipe_close();
+    function popup_member_shop_history_swipe_close(){
+        let ts;
+        let tsy;
+        let selector_body = $('.popup_member_shop_history');
+        selector_body.bind("touchstart", function(e){
+            ts = e.originalEvent.touches[0].clientX;
+            tsy = e.originalEvent.touches[0].clientY;
+        });
+
+        /**
+         * @param e.originalEvent.changedTouches 터치 변화.
+         */
+        selector_body.bind("touchend", function(e){
+            let te = e.originalEvent.changedTouches[0].clientX;
+            let tey = e.originalEvent.changedTouches[0].clientY;
+            if(Math.abs(ts - te) < 100){
+               if(tsy>tey+50){
+                    console.log('test1');
+                }else if(tsy<tey-50){
+                    layer_popup.close_layer_popup();
+                }
+            }
+        });
+    }
+</script>
+{% endblock %}

@@ -31,6 +31,8 @@ urlpatterns = [
 
     # 강사 전체 스케쥴 조회(OFF/개인/그룹) - refactoring
     url(r'^get_trainer_schedule_info/$', views.GetTrainerScheduleInfoView.as_view(), name='get_trainer_schedule_info'),
+    # 회원 스케쥴 조회 - 수업 - refactoring
+    url(r'^get_lecture_trainer_schedule_all/$', views.GetLectureTrainerScheduleAllView.as_view(), name='get_lecture_trainer_schedule_all'),
 
     # 회원 스케쥴 조회 - 수업 - refactoring
     url(r'^get_member_schedule_all/$', views.GetMemberScheduleAllView.as_view(), name='get_member_schedule_all'),
@@ -49,16 +51,16 @@ urlpatterns = [
     # 회원 반복 일정 조회 - refactoring
     url(r'^get_member_repeat_schedule/$', views.GetMemberRepeatScheduleView.as_view(),
         name='get_member_repeat_schedule'),
+    # 강사 반복 일정 조회
+    url(r'^get_trainer_repeat_schedule/$', views.GetTrainerRepeatScheduleView.as_view(),
+        name='get_trainer_repeat_schedule'),
 
-
-    url(r'^add_closed_date/$', views.add_closed_date_logic,
-        name='add_closed_date'),
-    url(r'^update_closed_date/$', views.update_closed_date_logic,
-        name='update_closed_date'),
-    url(r'^delete_closed_date/$', views.delete_closed_date_logic,
-        name='delete_closed_date'),
-    url(r'^get_trainer_closed_date/$', views.GetTrainerClosedDateView.as_view(),
-        name='get_trainer_closed_date'),
+    url(r'^add_program_closed_date/$', views.add_program_closed_date_logic,
+        name='add_program_closed_date'),
+    url(r'^update_program_closed_date/$', views.update_program_closed_date_logic,
+        name='update_program_closed_date'),
+    url(r'^delete_program_closed_date/$', views.delete_program_closed_date_logic,
+        name='delete_program_closed_date'),
 
     # 회원 기능 ##########################################
     # 회원 정보 조회 - refactoring
@@ -128,11 +130,46 @@ urlpatterns = [
     url(r'^delete_member_closed_date/$', views.delete_member_closed_date_logic,
         name='delete_member_closed_date'),
 
-
     # 회원 프로필 업데이트/삭제
     url(r'^update_member_profile_img', views.update_member_profile_img_logic, name='update_member_profile_img'),
     url(r'^delete_member_profile_img', views.delete_member_profile_img_logic, name='delete_member_profile_img'),
 
+    url(r'^update_trainer_profile_img', views.update_trainer_profile_img_logic, name='update_trainer_profile_img'),
+    url(r'^delete_trainer_profile_img', views.delete_trainer_profile_img_logic, name='delete_trainer_profile_img'),
+
+    # 강사 관리 기능 ###################################################################################################
+    # 진행중 회원 목록 조회 - refactoring
+    url(r'^get_trainer_ing_list/$', views.GetTrainerIngListViewAjax.as_view(), name='get_trainer_ing_list'),
+    url(r'^get_trainer_ing_list_connect/$', views.GetTrainerIngListConnectViewAjax.as_view(), name='get_trainer_ing_list_connect'),
+    # 진행 완료 회원 목록 조회 - refactoring
+    url(r'^get_trainer_end_list/$', views.GetTrainerEndListViewAjax.as_view(), name='get_trainer_end_list'),
+    # 강사 추가 기능
+    url(r'^add_trainer_program_info/$', views.add_trainer_program_info_logic, name='add_trainer_program_info'),
+    url(r'^update_trainer_program_info/$', views.update_trainer_program_info_logic, name='update_trainer_program_info'),
+
+    # 강사 연결 내역 조회
+    url(r'^get_trainer_program_data/$', views.GetTrainerProgramDataViewAjax.as_view(), name='get_trainer_program_data'),
+    url(r'^get_trainer_info/$', views.GetTrainerInfoView.as_view(), name='get_trainer_info'),
+    # 강사 수업 정보 조회
+    url(r'^get_trainer_lecture_list/$', views.GetTrainerLectureListViewAjax.as_view(), name='get_trainer_lecture_list'),
+
+    # 강사 정보 수정 - refactoring
+    url(r'^update_trainer_info/$', views.update_trainer_info_logic, name='update_trainer_info'),
+    url(r'^update_trainer_connection_info/$', views.update_trainer_connection_info_logic,
+        name='update_trainer_connection_info'),
+    # 강사 정보 삭제 - refactoring
+    url(r'^delete_trainer_info/$', views.delete_trainer_info_logic, name='delete_trainer_info'),
+
+    # 강사 휴무 내역
+    url(r'^get_trainer_closed_date/$', views.GetTrainerClosedDateListView.as_view(),
+        name='get_trainer_closed_date'),
+
+    url(r'^add_trainer_closed_date/$', views.add_trainer_closed_date_logic,
+        name='add_trainer_closed_date'),
+    url(r'^update_trainer_closed_date/$', views.update_trainer_closed_date_logic,
+        name='update_trainer_closed_date'),
+    url(r'^delete_trainer_closed_date/$', views.delete_trainer_closed_date_logic,
+        name='delete_trainer_closed_date'),
 
     # 수업 기능 ##########################################################################################################
     # 수업 추가 - refactoring
@@ -210,7 +247,7 @@ urlpatterns = [
     url(r'^get_share_program_data/$', views.GetShareProgramDataViewAjax.as_view(), name='get_share_program_data'),
 
     # 나에게 지점 공유 권한 내역 조회
-    url(r'^get_shared_program_data/$', views.GetSharedProgramDataViewAjax.as_view(), name='get_share_program_data'),
+    url(r'^get_shared_program_data/$', views.GetSharedProgramDataViewAjax.as_view(), name='get_shared_program_data'),
 
     # 지점 공유 연결 안된 정보 조회
     url(r'^get_trainer_program_connection_list/$', views.GetTrainerProgramConnectionListView.as_view(),
@@ -240,10 +277,10 @@ urlpatterns = [
 
 
     # Mypage/Setting 기능 ###############################################################################################
-    # 강사 정보 조회
-    url(r'^get_trainer_info/$', views.GetTrainerInfoView.as_view(), name='get_trainer_info'),
-    # 강사 정보 수정
-    url(r'^update_trainer_info/$', views.update_trainer_info_logic, name='update_trainer_info'),
+    # 내 정보 조회
+    url(r'^get_my_info/$', views.GetMyInfoView.as_view(), name='get_my_info'),
+    # 내 정보 수정
+    url(r'^update_my_info/$', views.update_my_info_logic, name='update_my_info'),
     # 푸시 - to 외부 Setting 수정
     url(r'^update_setting_push/$', views.update_setting_push_logic, name='update_setting_push'),
 
@@ -318,6 +355,36 @@ urlpatterns = [
     # 강사 공지사항 삭제
     url(r'^delete_program_notice_info/$', views.DeleteProgramNoticeInfoView.as_view(),
         name='delete_program_notice_info'),
+
+    # 상품 관리 기능 ###############################################################################################
+    # 상푸 추가
+    url(r'^add_shop_info/$', views.add_shop_info_logic, name='add_shop_info'),
+    # 상품 삭제
+    url(r'^delete_shop_info/$', views.delete_shop_info_logic, name='delete_shop_info'),
+    # 상품 수정
+    url(r'^update_shop_info/$', views.update_shop_info_logic, name='update_shop_info'),
+    # 상품 정보 조회
+    url(r'^get_shop_info/$', views.GetShopInfoViewAjax.as_view(), name='get_shop_info'),
+    # 상품 목록 조회
+    url(r'^get_shop_ing_list/$', views.GetShopIngListViewAjax.as_view(), name='get_shop_ing_list'),
+
+    # 상품 구매 추가
+    url(r'^add_member_shop_info/$', views.add_member_shop_info_logic, name='add_member_shop_info'),
+    # 상품 구매 내역 조회
+    url(r'^get_member_shop_history/$', views.GetMemberShopHistoryViewAjax.as_view(), name='get_member_shop_history'),
+    # 상품 구매 내역 및 결제 내역 일괄 삭제
+    url(r'^delete_member_shop_data/$', views.delete_member_shop_data_logic, name='delete_member_shop_data'),
+
+    # 상품 결제 내역 추가
+    url(r'^add_member_payment_history_info/$', views.add_member_payment_history_info_logic,
+        name='add_member_payment_history_info'),
+    # 상품 결제 내역 조회
+    url(r'^get_member_payment_history/$', views.GetMemberPaymentHistoryViewAjax.as_view(),
+        name='get_member_payment_history'),
+    # 상품 결제 내역 삭제
+    url(r'^delete_member_shop_payment_history_info/$', views.delete_member_payment_history_info_logic,
+        name='delete_member_shop_payment_history_info'),
+
 
     # Attend Mode 기능 ###############################################################################################
     # 일정선택후 휴대폰 번호 입력시 확인 기능
@@ -423,5 +490,13 @@ urlpatterns = [
     url(r'^get_trainer_member_ticket_price_bug_list/$',
         views.GetTrainerMemberTicketPriceBugListView.as_view(), name='get_trainer_member_ticket_price_bug_list'),
     url(r'^holding_test/$', views.holding_test_logic, name='holding_test'),
-    url(r'^member_setting_test/$', views.member_setting_test_logic, name='member_setting_test')
+    url(r'^member_setting_test/$', views.member_setting_test_logic, name='member_setting_test'),
+    url(r'^update_schedule_trainer_test/$', views.update_schedule_trainer_test, name='update_schedule_trainer_test'),
+    url(r'^update_repeat_schedule_trainer_test/$', views.update_repeat_schedule_trainer_test,
+        name='update_repeat_schedule_trainer_test'),
+
+    url(r'^update_lecture_trainer_test/$', views.update_lecture_trainer_test, name='update_lecture_trainer_test'),
+    url(r'^update_member_ticket_payment_test/$', views.update_member_ticket_payment_test,
+        name='update_member_ticket_payment_test')
+
 ]

@@ -211,13 +211,15 @@ $(document).ready(function(){
         }else if($(this).val()=="등록 횟수 적은 순" || $(this).val()=="残り回数が少ない" || $(this).val()=="Registration Count(L)"){
             member_sort_val = SORT_REG_COUNT;
             member_sort_order_by = SORT_ASC;
-        }else if($(this).val()=="시작 일자 과거 순" || $(this).val()=="開始が過去" || $(this).val()=="Start Date(P)"){
-            member_sort_val = SORT_START_DATE;
-            member_sort_order_by = SORT_ASC;
-        }else if($(this).val()=="시작 일자 최근 순" || $(this).val()=="開始が最近" || $(this).val()=="Start Date(R)"){
-            member_sort_val = SORT_START_DATE;
-            member_sort_order_by = SORT_DESC;
-        }else if($(this).val()=="수정 일시 과거 순" || $(this).val()=="開始が過去" || $(this).val()=="Mod Date(P)"){
+        }
+        // else if($(this).val()=="시작 일자 과거 순" || $(this).val()=="開始が過去" || $(this).val()=="Start Date(P)"){
+        //     member_sort_val = SORT_START_DATE;
+        //     member_sort_order_by = SORT_ASC;
+        // }else if($(this).val()=="시작 일자 최근 순" || $(this).val()=="開始が最近" || $(this).val()=="Start Date(R)"){
+        //     member_sort_val = SORT_START_DATE;
+        //     member_sort_order_by = SORT_DESC;
+        // }
+        else if($(this).val()=="수정 일시 과거 순" || $(this).val()=="開始が過去" || $(this).val()=="Mod Date(P)"){
             member_sort_val = SORT_MOD_DATETIME;
             member_sort_order_by = SORT_ASC;
         }else if($(this).val()=="수정 일시 최근 순" || $(this).val()=="開始が最近" || $(this).val()=="Mod Date(R)"){

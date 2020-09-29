@@ -30,6 +30,8 @@ class Plan_add{
             lecture_type_cd:[],
             member_id:[],
             member_name:[],
+            main_trainer_id:[],
+            main_trainer_name:[],
             date: null,
             date_text: null,
             start_time:"",
@@ -66,12 +68,16 @@ class Plan_add{
         this.data.lecture_state_cd = data.state_cd;
         this.data.lecture_type_cd = data.type_cd;
         this.data.lecture_color = data.color;
+        this.data.main_trainer_id = data.main_trainer_id;
+        this.data.main_trainer_name = data.main_trainer_name;
         this.member = {id:[], name: []}; //수업을 선택했기 때문에, 회원란을 모두 비워준다.
         this.render_content();
     }
 
     get lecture(){
-        return {id:this.data.lecture_id, name:this.data.lecture_name, max:this.data.lecture_max_num, state_cd:this.data.lecture_state_cd, type_cd:this.data.lecture_type_cd, color:this.data.lecture_color};
+        return {id:this.data.lecture_id, name:this.data.lecture_name, max:this.data.lecture_max_num,
+                state_cd:this.data.lecture_state_cd, type_cd:this.data.lecture_type_cd, color:this.data.lecture_color,
+                main_trainer_id:this.data.main_trainer_name, main_trainer_name:this.data.main_trainer_name};
     }
 
 
@@ -83,6 +89,16 @@ class Plan_add{
 
     get member(){
         return {id:this.data.member_id, name:this.data.member_name};
+    }
+
+    set trainer(data){
+        this.data.main_trainer_id = data.id;
+        this.data.main_trainer_name = data.name;
+        this.render_content();
+    }
+
+    get trainer(){
+        return {id:this.data.main_trainer_id, name:this.data.main_trainer_name};
     }
 
     set date(data){
@@ -171,7 +187,6 @@ class Plan_add{
     }
 
     set_initial_data(data){
-        console.log(data);
         this.user_data = data;
         let user_data_date = this.user_data.user_selected_date;
         this.data.date = user_data_date.year == null ? null : {year: user_data_date.year, month:user_data_date.month, date:user_data_date.date};
@@ -258,6 +273,7 @@ class Plan_add{
     
     dom_assembly_content(){
         let lecture_select_row = this.dom_row_lecture_select();
+        let trainer_select_row = this.dom_row_trainer_select();
         let member_select_row = this.dom_row_member_select();
         let date_select_row = this.dom_row_date_select();
         let start_time_select_row = this.dom_row_start_time_select();
@@ -277,6 +293,7 @@ class Plan_add{
         if(this.time_selector == CLASSIC){
             html =  `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('수업', null, true) + lecture_select_row + '</div>' +
                     `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('회원', null, this.data.lecture_type_cd[0] === LECTURE_TYPE_ONE_TO_ONE ? true : false) + member_select_row+'</div>' +
+                    `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('담당', null, true) + trainer_select_row+'</div>' +
                     '<div class="obj_input_box_full">' +  
                                                     CComponent.dom_tag('일자', null, true) + date_select_row + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>' +
                                                     CComponent.dom_tag('진행 시간', null, true) + classic_time_selector +'<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>' +
@@ -286,8 +303,9 @@ class Plan_add{
 
         }else if(this.time_selector == BASIC){
             html =  `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('수업', null, true) + lecture_select_row + '</div>' +
+                    `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('담당', null, true) + trainer_select_row+'</div>' +
                     `<div class="obj_input_box_full" style="display:${display}">` + CComponent.dom_tag('회원', null, this.data.lecture_type_cd[0] === LECTURE_TYPE_ONE_TO_ONE ? true : false) + member_select_row+'</div>' +
-                    '<div class="obj_input_box_full">' +  
+                    '<div class="obj_input_box_full">' +
                                                     CComponent.dom_tag('일자', null, true) + date_select_row + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>' +
                                                     CComponent.dom_tag('진행 시간', null, true) + start_time_select_row + end_time_select_row  +'<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>' +
                                                     CComponent.dom_tag('반복') + repeat_select_row + '</div>' +
@@ -344,7 +362,8 @@ class Plan_add{
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SELECT, 100, popup_style, {'member_id':null}, ()=>{
                 let appendix = {'title':'수업', lecture_id:this.data.lecture_id, lecture_name:this.data.lecture_name, lecture_state_cd:this.data.lecture_state_cd,
-                                max:this.data.lecture_max_num, type_cd:this.data.lecture_type_cd, color:this.data.lecture_color};
+                                max:this.data.lecture_max_num, type_cd:this.data.lecture_type_cd, color:this.data.lecture_color,
+                                main_trainer_id:this.data.main_trainer_id, main_trainer_name:this.data.main_trainer_name};
                 lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 1, appendix, (set_data)=>{
                     //수업을 추가
                     this.lecture = set_data;
@@ -380,6 +399,31 @@ class Plan_add{
                     });
                 });
             });
+        });
+        return html;
+    }
+
+    dom_row_trainer_select(){
+        let id = 'select_trainer';
+        let title = this.data.main_trainer_name.length == 0 ? '담당' : this.data.main_trainer_name.join(', ');
+        let icon = CImg.member();
+        let icon_r_visible = SHOW;
+        let icon_r_text = "";
+        let style = this.data.main_trainer_name.length == 0 ? {"color":"var(--font-inactive)", "height":"auto"} : {"height":"auto"};
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
+            if(this.data.lecture_id.length != 0){
+                let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
+                layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TRAINER_SELECT, 100, popup_style, {'trainer_id':null}, ()=>{
+                    let appendix = {title:"담당", disable_zero_avail_count:ON, entire_member:NONE, trainer_id:this.data.main_trainer_id, trainer_name:this.data.main_trainer_name};
+                    trainer_select = new TrainerSelector('#wrapper_box_trainer_select', this, 1, appendix, (set_data)=>{
+
+                        this.trainer = set_data;
+                        this.render_content();
+                    });
+                });
+            }else{
+                show_error_message({title:'수업을 먼저 선택해주세요.'});
+            }
         });
         return html;
     }
@@ -706,7 +750,6 @@ class Plan_add{
         let power = this.data.schedule_holding_extension_flag;
         let style = {"margin-top":"10px", "margin-left":"40px"};
         let onclick = (on_off)=>{
-            console.log('test');
             this.data.schedule_holding_extension_flag = on_off;
             this.render_content();
         };
@@ -762,6 +805,7 @@ class Plan_add{
         let en_dis_type = 0;
         let member_ids = [];
         let lecture_id = '';
+        let trainer_id = '';
         if(this.list_type == "closed"){
             en_dis_type = 3;
             start_dt = DateRobot.to_yyyymmdd(this.data.date.year, this.data.date.month, this.data.date.date)+ ' 00:00';
@@ -771,12 +815,15 @@ class Plan_add{
             en_dis_type = 1;
             member_ids = this.data.member_id;
             lecture_id = this.data.lecture_id[0];
+            trainer_id = this.data.main_trainer_id[0];
         }
         let data = {"lecture_id":lecture_id,
                     "start_dt": start_dt,
                     "end_dt": end_dt,
                     "note":this.data.memo, "private_note":this.data.private_memo, "duplication_enable_flag": 1,
-                    "en_dis_type":en_dis_type, "member_ids":member_ids,
+                    "en_dis_type":en_dis_type,
+                    "trainer_id":trainer_id,
+                    "member_ids":member_ids,
                     "extension_flag":this.data.schedule_holding_extension_flag,
                     //repeat 관련
                     "repeat_freq":"WW", 
@@ -823,7 +870,8 @@ class Plan_add{
                 Plan_func.create(url, data, (received)=>{
                     let repeat_schedule_id = received.repeat_schedule_id;
                     let repeat_confirm = 1;
-                    let confirm_data = {"repeat_schedule_id":repeat_schedule_id, "repeat_confirm":repeat_confirm, "member_ids":this.data.member_id};
+                    let confirm_data = {"repeat_schedule_id":repeat_schedule_id, "repeat_confirm":repeat_confirm,
+                                        "member_ids":this.data.member_id, "trainer_id":this.data.main_trainer_id};
                     Plan_func.create(confirm_url, confirm_data, ()=>{
                         Loading.hide();
                         this.data_sending_now = false;

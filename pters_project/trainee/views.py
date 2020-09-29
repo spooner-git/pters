@@ -38,7 +38,7 @@ from .functions import func_get_class_member_ticket_count, func_get_member_ticke
     func_get_trainee_select_schedule, func_get_trainee_ing_member_ticket_list, func_check_select_date_reserve_setting, \
     func_get_trainee_ticket_list, func_get_class_list_only_view, func_get_trainee_setting_list, \
     func_get_trainee_closed_schedule
-from .models import MemberTicketTb, ProgramNoticeHistoryTb, MemberClosedDateHistoryTb
+from .models import MemberTicketTb, ProgramNoticeHistoryTb, MemberClosedDateHistoryTb, MemberShopTb
 
 logger = logging.getLogger(__name__)
 
@@ -415,6 +415,14 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
         if error is None:
             if class_id != '' and class_id is not None:
                 context = func_get_trainee_ticket_list(context, class_id, request.user.id)
+        if error is None:
+            today = datetime.date.today()
+            select_date = today - datetime.timedelta(days=90)
+            member_shop_data = MemberShopTb.objects.select_related(
+                'shop_tb').filter(class_tb_id=class_id, member_id=request.user.id,
+                                  start_date__gte=select_date, start_date__lte=today, use=USE)
+
+            context['member_shop_data'] = member_shop_data
 
         context['check_password_changed'] = 1
         if sns_id != '' and sns_id is not None:
@@ -1625,6 +1633,16 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id, member_ticke
                     if str(setting_member_private_class_auto_permission) == str(USE):
                         permission_state_cd = PERMISSION_STATE_CD_APPROVE
                         log_how = '예약 확정'
+
+                if lecture_info.main_trainer is not None and lecture_info.main_trainer != '':
+                    trainer_id = lecture_info.main_trainer_id
+                else:
+                    trainer_id = lecture_info.class_tb.member_id
+
+                if lecture_schedule_info is not None and lecture_schedule_info != '':
+                    if lecture_schedule_info.trainer is not None and lecture_schedule_info.trainer != '':
+                        trainer_id = lecture_schedule_info.trainer_id
+
                 if lecture_schedule_info is not None and lecture_schedule_info != '':
                     lecture_schedule_num = ScheduleTb.objects.filter(lecture_schedule_id=lecture_schedule_id,
                                                                      permission_state_cd=PERMISSION_STATE_CD_APPROVE,
@@ -1636,7 +1654,7 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id, member_ticke
                                                     lecture_info, lecture_schedule_id,
                                                     start_date, end_date, note, private_note,
                                                     ON_SCHEDULE_TYPE, request.user.id, permission_state_cd,
-                                                    STATE_CD_NOT_PROGRESS, UN_USE, schedule_duplication)
+                                                    STATE_CD_NOT_PROGRESS, UN_USE, schedule_duplication, trainer_id)
                 error = schedule_result['error']
 
                 if error is not None:
@@ -1886,12 +1904,21 @@ class PopupCalendarPlanReserveView(LoginRequiredMixin, AccessTestMixin, Template
                 context['one_to_one_lecture_time_duration'] = 60
                 context['one_to_one_lecture_id'] = ''
                 context['one_to_one_lecture_start_time'] = 'A-0'
+                context['one_to_one_lecture_trainer_profile_url'] = ''
+                context['one_to_one_lecture_trainer_name'] = ''
             else:
                 context['one_to_one_lecture_check'] = True
                 lecture_tb_info = ticket_lecture_data[0].lecture_tb
                 context['one_to_one_lecture_time_duration'] = lecture_tb_info.lecture_minute
                 context['one_to_one_lecture_id'] = lecture_tb_info.lecture_id
                 context['one_to_one_lecture_start_time'] = lecture_tb_info.start_time
+
+                if lecture_tb_info.main_trainer is None:
+                    context['one_to_one_lecture_trainer_profile_url'] = lecture_tb_info.class_tb.member.profile_url
+                    context['one_to_one_lecture_trainer_name'] = lecture_tb_info.class_tb.member.name
+                else:
+                    context['one_to_one_lecture_trainer_profile_url'] = lecture_tb_info.main_trainer.profile_url
+                    context['one_to_one_lecture_trainer_name'] = lecture_tb_info.main_trainer.name
         # try:
         #     lecture_tb_info = LectureTb.objects.get(class_tb_id=class_id, lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, use=USE)
         #     context['one_to_one_lecture_time_duration'] = lecture_tb_info.lecture_minute
@@ -2148,6 +2175,20 @@ class PopupTicketInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
         context['ticket_info'] = ticket_info
         context['member_ticket_data'] = member_ticket_list
+        return context
+
+
+class PopupMemberShopHistoryView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'popup/trainee_popup_member_shop_history.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PopupMemberShopHistoryView, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id')
+        error = None
+        member_shop_data = MemberShopTb.objects.select_related('shop_tb').filter(class_tb_id=class_id,
+                                                                                 member_id=self.request.user.id,
+                                                                                 use=USE)
+        context['member_shop_data'] = member_shop_data
         return context
 
 

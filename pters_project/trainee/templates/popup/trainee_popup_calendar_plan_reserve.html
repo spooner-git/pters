@@ -47,7 +47,7 @@
             <div class="wrapper_reserve_form _target_link_to_tab" id="reserve_form_personal">
                 <div class="obj_box_full">
                     <div class="obj_table_raw wrapper_ticket_info">
-                        <div class="wrapper_ticket_icon_personal obj_table_cell_x3"><img src="/static/common/icon/member_icon_person_black.png"></div>
+                        <div class="wrapper_ticket_icon_personal obj_table_cell_x3"><img src="/static/common/icon/member_icon_person_black.png" alt="사진"></div>
                         <div class="wrapper_ticket_name obj_table_cell_x3 obj_font_size_13_weight_normal ">
                             {% if one_to_one_lecture_data|length == 1 %}
                                 {% for one_to_one_lecture_info in one_to_one_lecture_data %}
@@ -61,6 +61,14 @@
                                     <option data-lecture_id="{{ one_to_one_lecture_info.lecture_tb_id }}"
                                             data-lecture_minute="{{ one_to_one_lecture_info.lecture_tb.lecture_minute }}"
                                             data-lecture_start_time="{{ one_to_one_lecture_info.lecture_tb.start_time }}"
+                                            {% if one_to_one_lecture_info.lecture_tb.main_trainer %}
+                                                data-lecture_main_trainer_name="{{ one_to_one_lecture_info.lecture_tb.main_trainer.name }}"
+                                                data-lecture_main_trainer_profile_url="{{ one_to_one_lecture_info.lecture_tb.main_trainer.profile_url }}"
+                                            {% else %}
+                                                data-lecture_main_trainer_name="{{ one_to_one_lecture_info.lecture_tb.class_tb.member.name }}"
+                                                data-lecture_main_trainer_profile_url="{{ one_to_one_lecture_info.lecture_tb.class_tb.member.profile_url }}"
+                                            {% endif %}
+
                                             {% if forloop.first %}selected{% endif %}>
                                         {{ one_to_one_lecture_info.lecture_tb.name }}
                                     </option>
@@ -73,6 +81,18 @@
                         </div>
                         <div class="wrapper_ticket_reserve_avail_count obj_table_cell_x3 obj_font_size_12_weight_normal">(예약 가능: {% if member_ticket_reg_count >= 99999 %}무제한{% else %}{{ member_ticket_avail_count }}  번{% endif %})</div>
                     </div>
+                    {% for one_to_one_lecture_info in one_to_one_lecture_data %}
+                        {% if one_to_one_lecture_info.lecture_tb.main_trainer %}
+                            {% if forloop.counter0 == 0 %}
+                                <div id="one_to_one_lecture_main_trainer" class="obj_font_size_12_weight_500" style="padding-left:10px; margin-bottom:10px;"> 담당 : <img src="{{ one_to_one_lecture_info.lecture_tb.main_trainer.profile_url }}" class="obj_box_photo"> {{ one_to_one_lecture_info.lecture_tb.main_trainer.name }}</div>
+                            {% endif %}
+                        {% else %}
+                            {% if forloop.counter0 == 0 %}
+                                <div id="one_to_one_lecture_main_trainer" class="obj_font_size_12_weight_500" style="padding-left:10px; margin-bottom:10px;"> 담당 : <img src="{{ one_to_one_lecture_info.lecture_tb.class_tb.member.profile_url }}" class="obj_box_photo"> {{ one_to_one_lecture_info.lecture_tb.class_tb.member.name }}</div>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+
                     <div class="wrapper_reserve_form_data_private">
                         <div class="obj_table_raw">
                             <select class="obj_font_size_14_weight_500 obj_font_color_light_grey"  title="time_select">
@@ -106,19 +126,30 @@
                                 {% for lecture_schedule_info in lecture_schedule_data %}
                                     {% if lecture_info.lecture_id == lecture_schedule_info.lecture_tb.lecture_id %}
                                         <div class="func_radio_element obj_font_size_14_weight_500" data-lecture-schedule-id="{{ lecture_schedule_info.schedule_id }}" data-date="{{ select_date | date:'Y-m-d' }}" data-start-time="{{ lecture_schedule_info.start_dt | date:'H:i'}}" data-end-time="{{ lecture_schedule_info.end_dt | date:'H:i'}}">
-                                            <div class="func_radio_element_title">{{ lecture_schedule_info.start_dt | date:'H:i'}} ~ {{ lecture_schedule_info.end_dt | date:'H:i'}}
-                                                {% if request.session.setting_member_lecture_max_num_view_available == 1 %}
-                                                    ({{ lecture_schedule_info.lecture_current_member_num }}/{{ lecture_schedule_info.lecture_tb.member_num }}명)
-                                                    {% if lecture_schedule_info.lecture_current_member_num == lecture_schedule_info.lecture_tb.member_num %}
-                                                        {% if lecture_schedule_info.lecture_wait_member_num < request.session.setting_member_public_class_wait_member_num and request.session.setting_member_public_class_wait_member_num > 0%}
-                                                            [대기 예약]
+                                            <div>
+                                                <div class="func_radio_element_title">{{ lecture_schedule_info.start_dt | date:'H:i'}} ~ {{ lecture_schedule_info.end_dt | date:'H:i'}}
+                                                    {% if request.session.setting_member_lecture_max_num_view_available == 1 %}
+                                                        ({{ lecture_schedule_info.lecture_current_member_num }}/{{ lecture_schedule_info.lecture_tb.member_num }}명)
+                                                        {% if lecture_schedule_info.lecture_current_member_num == lecture_schedule_info.lecture_tb.member_num %}
+                                                            {% if lecture_schedule_info.lecture_wait_member_num < request.session.setting_member_public_class_wait_member_num and request.session.setting_member_public_class_wait_member_num > 0%}
+                                                                [대기 예약]
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    {% else %}
+                                                        {% if lecture_schedule_info.lecture_current_member_num == lecture_schedule_info.lecture_tb.member_num %}
+                                                            {% if lecture_schedule_info.lecture_wait_member_num < request.session.setting_member_public_class_wait_member_num and request.session.setting_member_public_class_wait_member_num > 0%}
+                                                                [대기 예약]
+                                                            {% endif %}
                                                         {% endif %}
                                                     {% endif %}
-                                                {% else %}
-                                                    {% if lecture_schedule_info.lecture_current_member_num == lecture_schedule_info.lecture_tb.member_num %}
-                                                        {% if lecture_schedule_info.lecture_wait_member_num < request.session.setting_member_public_class_wait_member_num and request.session.setting_member_public_class_wait_member_num > 0%}
-                                                            [대기 예약]
-                                                        {% endif %}
+                                                </div>
+                                                {% if request.session.setting_member_lecture_main_trainer_view_available == 1 %}
+                                                    {% if lecture_schedule_info.trainer %}
+                                                        <div class="obj_font_size_12_weight_500" style="padding-left:10px; margin-bottom:10px;">담당 : <img src="{{ lecture_schedule_info.trainer.profile_url }}" class="obj_box_photo" alt="사진"> {{ lecture_schedule_info.trainer.name }}</div>
+                                                    {% elif lecture_schedule_info.lecture_tb.main_trainer %}
+                                                        <div class="obj_font_size_12_weight_500" style="padding-left:10px; margin-bottom:10px;">담당 : <img src="{{ lecture_schedule_info.lecture_tb.main_trainer.profile_url }}" class="obj_box_photo" alt="사진"> {{ lecture_schedule_info.lecture_tb.main_trainer.name }}</div>
+                                                    {% else %}
+                                                        <div class="obj_font_size_12_weight_500" style="padding-left:10px; margin-bottom:10px;">담당 : <img src="{{ lecture_schedule_info.lecture_tb.class_tb.member.profile_url }}" class="obj_box_photo" alt="사진"> {{ lecture_schedule_info.lecture_tb.class_tb.member.name }}</div>
                                                     {% endif %}
                                                 {% endif %}
                                             </div>
@@ -154,6 +185,8 @@
         let one_to_one_lecture_time_duration = '{{ one_to_one_lecture_time_duration }}';
         let one_to_one_lecture_id = '{{ one_to_one_lecture_id }}';
         let one_to_one_lecture_start_time = "{{ one_to_one_lecture_start_time }}";
+        let one_to_one_lecture_trainer_profile_url = "{{ one_to_one_lecture_trainer_profile_url }}";
+        let one_to_one_lecture_trainer_name = "{{ one_to_one_lecture_trainer_name }}";
         $(document).ready(function(){
 
             $('#form_plan_add').find('input').val('');
@@ -196,7 +229,10 @@
             let selected_option = data.selectedOptions[0];
             let lecture_minute = selected_option.getAttribute('data-lecture_minute');
             let lecture_start_time = selected_option.getAttribute('data-lecture_start_time');
+            let lecture_main_trainer_name = selected_option.getAttribute('data-lecture_main_trainer_name');
+            let lecture_main_trainer_profile_url = selected_option.getAttribute('data-lecture_main_trainer_profile_url');
             let one_to_one_lecture_id_select = selected_option.getAttribute('data-lecture_id');
+
             $('#form_plan_add').find('input').val('');
             $('#form_content_lecture_id').val(one_to_one_lecture_id_select);
 
@@ -227,6 +263,8 @@
                     lecture_minute, lecture_start_time);
                 {#                func_lecture_time_dom_draw('#reserve_form_lecture', selected_date, schedule_json, setting_info);#}
             });
+            let main_trainer_html = `담당 : <img src="${lecture_main_trainer_profile_url}" class="obj_box_photo"> ${lecture_main_trainer_name}`;
+            $('#one_to_one_lecture_main_trainer').html(main_trainer_html);
 
         }
 
