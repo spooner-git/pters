@@ -74,6 +74,8 @@ class Trainer{
             url = '/trainer/get_trainer_ing_list/';
         }else if(list_type == 'end'){
             url = '/trainer/get_trainer_end_list/';
+        }else if(list_type == 'connect'){
+            url = '/trainer/get_trainer_ing_list_connect/';
         }
         $.ajax({
             url:url,
@@ -142,12 +144,12 @@ class Trainer{
             whole_data = jsondata.current_trainer_data;
             length = whole_data.length;
             this.trainer_ing_length = length;
-            this.trainer_list_type_text = "진행중";
+            this.trainer_list_type_text = "연결중";
         }else if(list_type == "end"){
             whole_data = jsondata.finish_trainer_data;
             length = whole_data.length;
             this.trainer_end_length = length;
-            this.trainer_list_type_text = "종료";
+            this.trainer_list_type_text = "연결 해제";
         }
 
         this.trainer_length = length;
@@ -194,7 +196,7 @@ class Trainer{
         }
 
         if(html_temp.length == 0){
-            html_temp.push(`<div style="font-size:14px;padding:16px;" class="anim_fade_in_vibe_top">등록된 강사가 없습니다.</div>`);
+            html_temp.push(`<div style="font-size:14px;padding:16px;" class="anim_fade_in_vibe_top">강사 목록이 없습니다.</div>`);
         }
         document.querySelector('#trainer_content_wrap').innerHTML = html_temp.join("");
     }
@@ -215,7 +217,7 @@ class Trainer{
             html = '';
         }
         
-        document.querySelector('.trainer_search_tool').innerHTML = html;
+        document.querySelector('.search_bar').innerHTML = html;
     }
     
     event_view_trainer(trainer_id){
@@ -228,7 +230,7 @@ class Trainer{
 
         let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
         layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TRAINER_VIEW, 100, popup_style, {'trainer_id':trainer_id}, ()=>{
-            trainer_view_popup = new Trainer_view('.popup_trainer_view', trainer_id, 'trainer_view_popup');
+            trainer_view_popup = new Trainer_view('.popup_trainer_view', {'trainer_id':trainer_id, "list_type":this.list_type}, 'trainer_view_popup');
         });
 
     }
@@ -357,9 +359,9 @@ class Trainer{
                                     <div class="search_bar"></div>
                                     <div class="trainer_bottom_tools_wrap" style="padding: 6px 16px;">
                                         <div class="list_type_tab_wrap">
-                                            <div onclick="${this.instance}.switch_type('ing');" class="list_tab_content ${this.list_type == "ing" ? "tab_selected": ""}">진행중</div>
+                                            <div onclick="${this.instance}.switch_type('ing');" class="list_tab_content ${this.list_type == "ing" ? "tab_selected": ""}">연결중</div>
                                             <div class="list_tab_divider"></div>
-                                            <div onclick="${this.instance}.switch_type('end');" class="list_tab_content ${this.list_type == "end" ? "tab_selected" : ""}">종료</div>
+                                            <div onclick="${this.instance}.switch_type('end');" class="list_tab_content ${this.list_type == "end" ? "tab_selected" : ""}">연결 해제</div>
                                         </div>
                                         <div class="list_sort_select_wrap" 
                                         onclick="layer_popup.open_layer_popup(${POPUP_BASIC}, '${POPUP_ADDRESS_OPTION_SELECTOR}', 100*(${layer_popup_height})/${root_content_height}, ${POPUP_FROM_BOTTOM}, null, ()=>{

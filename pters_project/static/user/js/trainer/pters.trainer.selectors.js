@@ -4509,6 +4509,9 @@ class TrainerSelector{
             }
         }
 
+        html_to_join.push(CComponent.no_data_row('지점 연결된 강사만 선택 가능합니다.',
+                                                {"color":"grey","text-align":"center", "border-bottom":0}));
+
         return html_to_join.join('');
     }
 
@@ -4579,13 +4582,13 @@ class TrainerSelector{
         //Lecture_id를 클래스가 전달받은 경우, 해당 lecture에 속한 회원 리스트를 받아온다.
         //Lecture_id를 클래스가 받지 못한 경우, 모든 진행 회원 리스트를 받아온다.
         if(this.appendix.lecture_id == null){
-            trainer.request_trainer_list("ing", (data)=>{
+            trainer.request_trainer_list("connect", (data)=>{
                 this.received_data = data.current_trainer_data;
                 callback();
             });
         }else{
 
-            trainer.request_trainer_list("ing", (data)=>{
+            trainer.request_trainer_list("connect", (data)=>{
                 this.received_data = data.current_trainer_data;
                 let data_ = {"lecture_id": this.appendix.lecture_id};
                 // Lecture_func.read_lecture_trainers(data_, (data)=>{

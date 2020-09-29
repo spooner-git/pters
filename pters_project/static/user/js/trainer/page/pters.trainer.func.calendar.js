@@ -1612,7 +1612,7 @@ class Calendar {
     request_trainer_data (callback, load_image, async){
 
         $.ajax({
-            url: '/trainer/get_trainer_ing_list/',
+            url: '/trainer/get_trainer_ing_list_connect/',
             type : 'GET',
             dataType: "JSON",
             async: async,
@@ -1688,7 +1688,7 @@ class Calendar {
                                         </div>
                                         <div class="cal_search_upper_box">
                                             <div class="cal_search_date_display page_title">
-                                                <select style="width:170px; height:30px; padding-left:10px;"
+                                                <select class="cal_trainer_select"
                                                  onchange="${this.instance}.select_trainer_calendar(this)">
                                                     <option data-select-trainer-id="all" ${all_checked}>전체</option>
                                                     ${trainer_option}
@@ -1727,7 +1727,7 @@ class Calendar {
                                         </div>
                                         <div class="cal_search_upper_box">
                                             <div class="cal_search_date_display page_title">
-                                                <select style="width:170px; height:30px; padding-left:10px;"
+                                                <select class="cal_trainer_select"
                                                  onchange="${this.instance}.select_trainer_calendar(this)">
                                                     <option data-select-trainer-id="all" ${all_checked}>전체</option>
                                                     ${trainer_option}

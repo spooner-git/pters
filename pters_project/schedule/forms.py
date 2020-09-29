@@ -4,10 +4,10 @@ from django import forms
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.db import IntegrityError
 
-from configs.const import SCHEDULE_DUPLICATION_ENABLE, USE, ON_SCHEDULE_TYPE, UN_USE
+from configs.const import SCHEDULE_DUPLICATION_ENABLE, USE, ON_SCHEDULE_TYPE, UN_USE, AUTH_TYPE_VIEW
 from login.models import MemberTb
 from schedule.functions import func_get_lecture_member_ticket_id
-from trainer.models import LectureTb
+from trainer.models import LectureTb, MemberClassTb
 
 
 def null_string_validator(value, text):

@@ -64,7 +64,7 @@ from .functions import func_get_trainer_setting_list, \
     update_user_setting_data, update_program_setting_data, func_get_member_ticket_info, func_get_trainer_info, \
     update_alarm_setting_data, func_add_hold_member_ticket_info, func_delete_hold_member_ticket_info, \
     func_get_trainer_ing_list, func_get_class_trainer_end_list, func_get_trainer_end_list, \
-    func_get_class_trainer_ing_list
+    func_get_class_trainer_ing_list, func_get_trainer_ing_list_connect
 from .models import ClassMemberTicketTb, LectureTb, ClassTb, MemberClassTb, BackgroundImgTb, \
     SettingTb, TicketTb, TicketLectureTb, CenterTrainerTb, LectureMemberTb, ProgramAuthTb, ProgramBoardTb, \
     ProgramNoticeTb, BugMemberTicketPriceTb, ScheduleClosedTb, ScheduleClosedDayTb, ShopTb
@@ -3344,6 +3344,12 @@ def add_lecture_info_logic(request):
         main_trainer_id = request.user.id
     if member_num == 1 or member_num == '1':
         lecture_type_cd = LECTURE_TYPE_ONE_TO_ONE
+
+    check_class_auth = MemberClassTb.objects.filter(class_tb_id=class_id, member_id=main_trainer_id,
+                                                    auth_cd=AUTH_TYPE_VIEW, use=USE).count()
+    if check_class_auth == 0:
+        error = '선택한 강사가 지점 연결 수락후 등록 가능 합니다.'
+
     try:
         with transaction.atomic():
             lecture_info = LectureTb(class_tb_id=class_id, member_num=member_num, lecture_type_cd=lecture_type_cd,
@@ -3559,6 +3565,12 @@ def update_lecture_info_logic(request):
         # 수업에 고정회원 가능 여부 체크
         if len(lecture_member_fix_data) > int(member_num):
             error = '수정하려는 정원보다 고정 회원이 많습니다.'
+    if error is None:
+        if main_trainer_id != lecture_info.main_trainer_id:
+            check_class_auth = MemberClassTb.objects.filter(class_tb_id=class_id, member_id=main_trainer_id,
+                                                            auth_cd=AUTH_TYPE_VIEW, use=USE).count()
+            if check_class_auth == 0:
+                error = '선택한 강사가 지점 연결 수락후 선택 가능 합니다.'
 
     if error is None:
         lecture_info.member_num = member_num
@@ -5373,7 +5385,7 @@ def update_trainer_program_connection_info_logic(request):
                              class_tb_id=class_info.class_id,
                              log_info=class_info.member.name + ' 님의 \''
                                       + class_info.get_class_type_cd_name()+'\' 지점',
-                             log_how='공유 거절',
+                             log_how='연결 신청 거절',
                              log_detail='', use=USE)
             log_data.save()
 
@@ -5395,7 +5407,7 @@ def update_trainer_program_connection_info_logic(request):
                              class_tb_id=class_info.class_id,
                              log_info=class_info.member.name + ' 님의 \''
                                       + class_info.get_class_type_cd_name()+'\' 지점',
-                             log_how='공유 신청 수락',
+                             log_how='연결 신청 수락',
                              log_detail='', use=USE)
             log_data.save()
 
@@ -5435,7 +5447,7 @@ def delete_trainer_program_connection_logic(request):
                              class_tb_id=class_info.class_id,
                              log_info=class_info.member.name + ' 님의 \''
                                       + class_info.get_class_type_cd_name()+'\' 지점',
-                             log_how='공유 해제',
+                             log_how='연결 해제',
                              log_detail='', use=USE)
             log_data.save()
             request.session['class_id'] = None
@@ -5483,6 +5495,8 @@ class GetTrainerProgramConnectionListView(LoginRequiredMixin, AccessTestMixin, T
                     member_program_auth_list[member_program_info.class_tb_id]['program_name'] \
                         = member_program_info.class_tb.get_class_type_cd_name()
 
+                member_program_auth_list[member_program_info.class_tb_id]['connection_type']\
+                    = member_program_info.own_cd
                 member_program_auth_list[member_program_info.class_tb_id][function_auth_type_cd_name] \
                     = program_auth_info.enable_flag
 
@@ -8017,7 +8031,8 @@ class GetTrainerIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                             'trainer_email': str(class_trainer_info.user.email),
                             'trainer_sex': str(class_trainer_info.sex),
                             'trainer_profile_url': class_trainer_info.profile_url,
-                            'trainer_birthday_dt': str(class_trainer_info.birthday_dt)}
+                            'trainer_birthday_dt': str(class_trainer_info.birthday_dt),
+                            'trainer_connection_type': AUTH_TYPE_VIEW}
             if sort_info == SORT_TRAINER_NAME:
                 current_trainer_data = sorted(current_trainer_data, key=lambda elem: elem['trainer_name'],
                                               reverse=int(sort_order_by))
@@ -8033,6 +8048,44 @@ class GetTrainerIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         #
         # context['member_data'] = member_data
         # end_dt = timezone.now()
+
+        return JsonResponse({'current_trainer_data': current_trainer_data, 'finish_trainer_num': finish_trainer_num,
+                             'error': error},
+                            json_dumps_params={'ensure_ascii': True})
+
+
+class GetTrainerIngListConnectViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        class_id = self.request.session.get('class_id', '')
+        trainer_sort = request.GET.get('sort_val', SORT_TRAINER_NAME)
+        sort_order_by = request.GET.get('sort_order_by', SORT_ASC)
+        keyword = request.GET.get('keyword', '')
+        current_trainer_data = []
+        error = None
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+            class_trainer_info = class_info.member
+        except ObjectDoesNotExist:
+            error = '지점 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            current_trainer_data = func_get_trainer_ing_list_connect(class_id, request.user.id, keyword)
+            finish_trainer_num = len(func_get_class_trainer_end_list(class_id, keyword))
+            sort_info = int(trainer_sort)
+            trainer_data = {'trainer_id': class_trainer_info.member_id,
+                            'trainer_user_id': class_trainer_info.user.username,
+                            'trainer_name': class_trainer_info.name,
+                            'trainer_phone': str(class_trainer_info.phone),
+                            'trainer_email': str(class_trainer_info.user.email),
+                            'trainer_sex': str(class_trainer_info.sex),
+                            'trainer_profile_url': class_trainer_info.profile_url,
+                            'trainer_birthday_dt': str(class_trainer_info.birthday_dt),
+                            'trainer_connection_type': AUTH_TYPE_VIEW}
+            if sort_info == SORT_TRAINER_NAME:
+                current_trainer_data = sorted(current_trainer_data, key=lambda elem: elem['trainer_name'],
+                                              reverse=int(sort_order_by))
+                current_trainer_data.insert(0, trainer_data)
 
         return JsonResponse({'current_trainer_data': current_trainer_data, 'finish_trainer_num': finish_trainer_num,
                              'error': error},
@@ -8093,10 +8146,11 @@ def add_trainer_program_info_logic(request):
     if error is None:
         try:
             class_member_info = MemberClassTb.objects.select_related(
-                'class_tb', 'member').get(class_tb_id=class_id, member_id=trainer_id, use=USE)
+                'class_tb', 'member').get(class_tb_id=class_id, member_id=trainer_id)
             class_member_info.auth_cd = auth_cd
             class_member_info.own_cd = OWN_TYPE_EMPLOYEE
             class_member_info.mod_member_id = request.user.id
+            class_member_info.use=USE
             class_member_info.save()
         except ObjectDoesNotExist:
             class_member_info = MemberClassTb(class_tb_id=class_id, member_id=trainer_id, auth_cd=auth_cd,
@@ -8483,6 +8537,38 @@ def update_trainer_connection_info_logic(request):
                                               mod_member_id=request.user.id, own_cd=OWN_TYPE_EMPLOYEE, use=USE)
             class_member_info.save()
 
+    if error is None:
+        if auth_cd == AUTH_TYPE_DELETE:
+            lecture_data = LectureTb.objects.filter(class_tb_id=class_id, main_trainer_id=trainer_id, use=USE)
+            schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, trainer_id=trainer_id,
+                                                      end_dt__gt=timezone.now(), state_cd=STATE_CD_NOT_PROGRESS)
+            repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
+                                                                   end_date__gt=datetime.date.today(),
+                                                                   repeat_trainer_id=trainer_id)
+
+            try:
+                with transaction.atomic():
+                    # 등록된 일정 정리
+                    if len(schedule_data) > 0:
+                        # 예약된 일정 삭제
+                        schedule_data.update(trainer_id=request.user.id)
+                    if len(repeat_schedule_data) > 0:
+                        # 반복일정 삭제
+                        repeat_schedule_data.update(repeat_trainer_id=request.user.id)
+
+                    lecture_data.update(main_trainer_id=request.user.id)
+
+            except ValueError:
+                error = '등록 값에 문제가 있습니다.'
+            except IntegrityError:
+                error = '등록 값에 문제가 있습니다.'
+            except TypeError:
+                error = '등록 값의 형태가 문제 있습니다.'
+            except ValidationError:
+                error = '등록 값의 형태가 문제 있습니다'
+            except InternalError:
+                error = '등록 값에 문제가 있습니다.'
+
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
@@ -8508,6 +8594,7 @@ def delete_trainer_info_logic(request):
     user_id = request.user.id
     error = None
     member_class_data = None
+    program_auth_data = None
     lecture_data = None
     member = None
     if trainer_id == '':
@@ -8520,17 +8607,19 @@ def delete_trainer_info_logic(request):
             error = '강사 ID를 확인해 주세요.'
 
     if error is None:
-        try:
-            class_info = ClassTb.objects.get(class_id=class_id)
-            user_id = class_info.member.member_id
-        except ObjectDoesNotExist:
-            user_id = request.user.id
+        user_id = request.user.id
+        # try:
+        #     class_info = ClassTb.objects.get(class_id=class_id)
+        #     user_id = class_info.member.member_id
+        # except ObjectDoesNotExist:
+        #     user_id = request.user.id
 
     if error is None:
         if user_id == trainer_id:
             error = '지점 소유자는 삭제할수 없습니다.'
 
     if error is None:
+        program_auth_data = ProgramAuthTb.objects.filter(class_tb_id=class_id, member_id=trainer_id)
         member_class_data = MemberClassTb.objects.filter(class_tb_id=class_id, member_id=trainer_id,
                                                          own_cd=OWN_TYPE_EMPLOYEE)
 
@@ -8539,9 +8628,10 @@ def delete_trainer_info_logic(request):
     if error is None:
 
         schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, trainer_id=trainer_id,
-                                                  state_cd=STATE_CD_NOT_PROGRESS)
+                                                  end_dt__gt=timezone.now(), state_cd=STATE_CD_NOT_PROGRESS)
 
-        repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id, repeat_trainer_id=trainer_id)
+        repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id, end_date__gt=datetime.date.today(),
+                                                               repeat_trainer_id=trainer_id)
 
         try:
             with transaction.atomic():
@@ -8553,7 +8643,8 @@ def delete_trainer_info_logic(request):
                     # 반복일정 삭제
                     repeat_schedule_data.update(repeat_trainer_id=user_id)
 
-                member_class_data.update(auth_cd=AUTH_TYPE_DELETE)
+                program_auth_data.delete()
+                member_class_data.delete()
                 lecture_data.update(main_trainer_id=user_id)
 
                 if member.user.is_active == 0 and str(member.reg_info) == str(request.user.id):

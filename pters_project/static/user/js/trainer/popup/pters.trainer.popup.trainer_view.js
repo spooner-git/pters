@@ -1,8 +1,9 @@
 class Trainer_view{
-    constructor(install_target, trainer_id, instance){
+    constructor(install_target, external_data, instance){
         this.target = {install: install_target, toolbox:'section_trainer_view_toolbox', content:'section_trainer_view_content'};
         this.instance = instance;
-        this.trainer_id = trainer_id;
+        this.trainer_id = external_data.trainer_id;
+        this.trainer_ing_type = external_data.list_type;
         this.form_id = 'id_trainer_view_form';
 
         this.if_user_changed_any_information = false;
@@ -243,9 +244,11 @@ class Trainer_view{
         let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
         let top_right = `<span class="icon_right" onclick="trainer_view_popup.upper_right_menu();">${CImg.more()}</span>`;
 
-        if(this.trainer_id == this.data.program_owner_id){
+        console.log(this.trainer_ing_type);
+        if(this.trainer_id == this.data.program_owner_id || this.trainer_id == user_id || this.trainer_ing_type == "ing"){
             top_right = '';
         }
+
         let content =   `<form id="${this.form_id}">
                             <section id="${this.target.toolbox}" class="obj_box_full popup_toolbox" style="border:0">${this.dom_assembly_toolbox()}</section>
                             <section id="${this.target.content}" class="popup_content">${this.dom_assembly_content()}</section>
@@ -273,9 +276,11 @@ class Trainer_view{
         let top_left = `<span class="icon_left" onclick="trainer_view_popup.upper_left_menu();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span>&nbsp;</span></span>`;
         let top_right = `<span class="icon_right" onclick="trainer_view_popup.upper_right_menu();">${CImg.more()}</span>`;
-        if(this.trainer_id == user_id){
+
+        if(this.trainer_id == this.data.program_owner_id || this.trainer_id == user_id || this.trainer_ing_type == "ing"){
             top_right = '';
         }
+
         return {left: top_left, center:top_center, right:top_right};
     }
 
@@ -391,7 +396,8 @@ class Trainer_view{
             ${CComp.element("div", "일정", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_repeat_info", class:`list_tab_content ${this.list_type == "repeat_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("repeat_info");}})}
             ${CComp.element("div", "권한", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_auth_info", class:`list_tab_content ${this.list_type == "auth_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("auth_info");}})}
         </div>`;
-        if(this.trainer_id == user_id){
+
+        if(this.trainer_id == this.data.program_owner_id || this.trainer_id == user_id){
             html =
             `<div class="list_type_tab_wrap" style="width:100%;padding-left:45px;text-align:left;box-sizing:border-box;height:auto">
                 ${CComp.element("div", "기본 정보", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_basic_info", class:`list_tab_content ${this.list_type == "basic_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("basic_info");}})}
@@ -462,7 +468,9 @@ class Trainer_view{
             onclick = ()=>{
                 let user_option = {
                         connect:{text:"연결 해제", callback:()=>{
-                            show_user_confirm ({title:`정말 연결을 해제하시겠습니까?`}, ()=>{
+                            show_user_confirm ({title:`정말 연결을 해제하시겠습니까?`,
+                                                comment:`다시 복구할 수 없습니다. <br/> <span style="color:var(--font-highlight);">관련 수업 및 현시간 이후 일정에서도 담당강사가 본인으로 할당됩니다.<br/>과거 일정은 변경되지 않습니다.<br/>해당 강사는 종료 탭으로 이동됩니다.</span>`
+                                                }, ()=>{
                                 layer_popup.close_layer_popup();
                                 layer_popup.close_layer_popup();
                                 let data = {"trainer_id":this.trainer_id, "trainer_auth_cd":AUTH_TYPE_DELETE};
@@ -486,7 +494,7 @@ class Trainer_view{
             onclick = ()=>{
                 let user_option = {
                         connect:{text:"연결 요청 취소", callback:()=>{
-                            show_user_confirm ({title:`연결 요청을 취소하겠습니까?`}, ()=>{
+                            show_user_confirm ({title:`연결 요청을 취소하겠습니까?`, comment:`해당 강사는 종료 탭으로 이동됩니다.`}, ()=>{
                                 layer_popup.close_layer_popup();
                                 layer_popup.close_layer_popup();
                                 let data = {"trainer_id":this.trainer_id, "trainer_auth_cd":AUTH_TYPE_DELETE};
@@ -552,8 +560,8 @@ class Trainer_view{
             onclick();
         });
 
-        if(this.trainer_id == this.data.program_owner_id){
-        let icon_r_visible = HIDE;
+        if(this.trainer_id == this.data.program_owner_id || this.trainer_id == user_id){
+            icon_r_visible = HIDE;
             icon_r_text = '';
             html = CComponent.create_row (id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             });
@@ -1304,7 +1312,7 @@ class Trainer_view{
             delete:{text:"강사 삭제", callback:()=>{
                     let message = {
                         title:`"${this.data.name}" <br>강사 정보를 삭제 하시겠습니까?`,
-                        comment:`다시 복구할 수 없습니다. <br> <span style="color:var(--font-highlight);">관련 일정/수업에서도 담당강사가 본인으로 할당됩니다.</span>`
+                        comment:`다시 복구할 수 없습니다. <br> <span style="color:var(--font-highlight);">관련 수업 및 현시간 이후 일정에서도 담당강사가 본인으로 할당됩니다.<br/>과거 일정은 변경되지 않습니다.</span>`
                     }
                     show_user_confirm(message, ()=>{
                         let auth_inspect = pass_inspector.trainer_delete();
@@ -1445,7 +1453,7 @@ class Trainer_simple_view{
                 layer_popup.all_close_layer_popup();
                 let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                 layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_TRAINER_VIEW, 100, popup_style, {'trainer_id':this.trainer_id}, ()=>{
-                    trainer_view_popup = new Trainer_view('.popup_trainer_view', this.trainer_id, 'trainer_view_popup');
+                    trainer_view_popup = new Trainer_view('.popup_trainer_view',{'trainer_id':this.trainer_id, "list_type":"ing"}, 'trainer_view_popup');
                 });
                 sideGoPage("trainer");
             });
