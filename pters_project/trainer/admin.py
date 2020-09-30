@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 from .models import ClassTb, MemberClassTb, ClassMemberTicketTb, LectureTb, SettingTb, TicketTb, TicketLectureTb, \
-    LectureMemberTb, ProgramAuthTb, ProgramNoticeTb
+    LectureMemberTb, ProgramAuthTb, ProgramNoticeTb, ShopTb
 
 
 @admin.register(ClassTb)
@@ -19,7 +19,7 @@ class ClassTbAdmin(admin.ModelAdmin):
 
 @admin.register(MemberClassTb)
 class MemberClassTbAdmin(admin.ModelAdmin):
-    list_display = ('member_class_id', 'member', 'class_tb', 'auth_cd',
+    list_display = ('member_class_id', 'member', 'class_tb', 'auth_cd', 'own_cd',
                     'mod_member_id', 'reg_dt', 'mod_dt', 'use')
 
     def get_queryset(self, request):
@@ -128,4 +128,14 @@ class SettingTbAdmin(admin.ModelAdmin):
             'member',
             'class_tb__member',
             'member_ticket_tb__member',
+        )
+
+
+@admin.register(ShopTb)
+class ShopTbAdmin(admin.ModelAdmin):
+    list_display = ('shop_id', 'class_tb', 'name', 'price', 'note', 'state_cd', 'reg_dt', 'mod_dt', 'use')
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related(
+            'class_tb__member',
         )

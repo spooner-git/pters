@@ -144,7 +144,7 @@ class MemberClassTb(TimeStampedModel):
     class_tb = models.ForeignKey(ClassTb, verbose_name='지점', on_delete=models.CASCADE, null=True)
     auth_cd = models.CharField('권한 코드', db_column='AUTH_CD', max_length=20, blank=True,
                                default='')  # Field name made lowercase.
-    own_cd = models.CharField('권한 코드', db_column='OWN_CD', max_length=20, blank=True,
+    own_cd = models.CharField('소유 코드', db_column='OWN_CD', max_length=20, blank=True,
                               default=OWN_TYPE_OWNER)  # Field name made lowercase.
     mod_member_id = models.CharField('최종수정 회원 ID', db_column='MOD_MEMBER_ID', max_length=20, blank=True, default='')
 
@@ -363,6 +363,22 @@ class ScheduleClosedDayTb(TimeStampedModel):
         verbose_name_plural = '불가 일정 상세'
 
 
+class ShopTb(TimeStampedModel):
+    shop_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    class_tb = models.ForeignKey(ClassTb, verbose_name='지점', on_delete=models.CASCADE,
+                                 null=True)  # Field name made lowercase.
+    name = models.CharField('상품명', db_column='NAME', max_length=45, blank=True, null=True)
+    price = models.IntegerField('가격', db_column='PRICE', default=0)
+    note = models.CharField('설명', db_column='NOTE', max_length=200, blank=True, null=True)
+    state_cd = models.CharField('상태', db_column='STATE_CD', max_length=10, blank=True, default=STATE_CD_IN_PROGRESS)
+
+    class Meta:
+        managed = False
+        db_table = 'SHOP_TB'
+        verbose_name = '상품'
+        verbose_name_plural = '상품'
+
+
 # ################################################## 아직 사용 안함 ###################################################
 class ProgramGroupTb(TimeStampedModel):
     program_group_id = models.AutoField(db_column='ID', primary_key=True, null=False)
@@ -447,18 +463,6 @@ class ProgramBoardCommentTb(TimeStampedModel):
         managed = False
         db_table = 'PROGRAM_BOARD_COMMENT_TB'
 
-
-class ShopTb(TimeStampedModel):
-    shop_id = models.AutoField(db_column='ID', primary_key=True, null=False)
-    class_tb = models.ForeignKey(ClassTb, verbose_name='회원', on_delete=models.CASCADE, null=True)  # Field name made lowercase.
-    name = models.CharField('상품명', db_column='NAME', max_length=45, blank=True, null=True)
-    price = models.IntegerField('가격', db_column='PRICE', default=0)
-    note = models.CharField('설명', db_column='NOTE', max_length=200, blank=True, null=True)
-    state_cd = models.CharField('상태', db_column='STATE_CD', max_length=10, blank=True, default=STATE_CD_IN_PROGRESS)
-
-    class Meta:
-        managed = False
-        db_table = 'SHOP_TB'
 
 
 # #######################################  이제 사용 안함  ##################################################

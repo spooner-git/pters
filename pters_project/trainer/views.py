@@ -9135,3 +9135,14 @@ def update_member_ticket_payment_test(request):
             member_payment_history_info.save()
 
     return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+
+
+def update_member_ticket_payment_test1(request):
+    context = {}
+    member_ticket_data = MemberTicketTb.objects.select_related('ticket_tb__class_tb', 'member').filter()
+
+    for member_ticket_info in member_ticket_data:
+        member_ticket_info.payment_price = member_ticket_info.price
+        member_ticket_info.save()
+
+    return JsonResponse(context, json_dumps_params={'ensure_ascii': True})

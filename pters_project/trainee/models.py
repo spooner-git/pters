@@ -101,6 +101,8 @@ class MemberShopTb(TimeStampedModel):
     class Meta:
         managed = False
         db_table = 'MEMBER_SHOP_TB'
+        verbose_name = '회원 상품 구매 이력'
+        verbose_name_plural = '회원 상품 구매 이력'
 
 
 class MemberPaymentHistoryTb(TimeStampedModel):
@@ -118,6 +120,8 @@ class MemberPaymentHistoryTb(TimeStampedModel):
     class Meta:
         managed = False
         db_table = 'MEMBER_PAYMENT_HISTORY_TB'
+        verbose_name = '회원 납부 이력'
+        verbose_name_plural = '회원 납부 이력'
 
 
 # 수강권 연결 정보 (이제 사용 안함)

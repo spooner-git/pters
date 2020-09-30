@@ -497,6 +497,8 @@ urlpatterns = [
 
     url(r'^update_lecture_trainer_test/$', views.update_lecture_trainer_test, name='update_lecture_trainer_test'),
     url(r'^update_member_ticket_payment_test/$', views.update_member_ticket_payment_test,
-        name='update_member_ticket_payment_test')
+        name='update_member_ticket_payment_test'),
+    url(r'^update_member_ticket_payment_test1/$', views.update_member_ticket_payment_test1,
+            name='update_member_ticket_payment_test1')
 
 ]
