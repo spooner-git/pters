@@ -251,11 +251,12 @@ def add_schedule_logic(request):
         lecture_info = schedule_input_form.get_lecture_info()
         member_list = schedule_input_form.get_member_list(class_id)
 
-        check_class_auth = MemberClassTb.objects.filter(class_tb_id=class_id, member_id=trainer_id,
-                                                        auth_cd=AUTH_TYPE_VIEW, use=USE).count()
+        if str(en_dis_type) == str(ON_SCHEDULE_TYPE):
+            check_class_auth = MemberClassTb.objects.filter(class_tb_id=class_id, member_id=trainer_id,
+                                                            auth_cd=AUTH_TYPE_VIEW, use=USE).count()
 
-        if check_class_auth == 0:
-            error = '선택한 강사가 지점 연결 수락후 등록 가능 합니다.'
+            if check_class_auth == 0:
+                error = '선택한 강사가 지점 연결 수락후 등록 가능 합니다.'
 
         if error is None:
             # 폼 검사 종료
@@ -606,12 +607,6 @@ def update_schedule_logic(request):
         error = '시작 시각을 선택해주세요.'
 
     if error is None:
-        check_class_auth = MemberClassTb.objects.filter(class_tb_id=class_id, member_id=main_trainer_id,
-                                                        auth_cd=AUTH_TYPE_VIEW, use=USE).count()
-        if check_class_auth == 0:
-            error = '선택한 강사가 지점 연결 수락후 선택 가능 합니다.'
-
-    if error is None:
         check_time = False
         schedule_end_datetime_split = schedule_end_datetime.split(' ')
         if schedule_end_datetime_split[1] == '24:00' or schedule_end_datetime_split[1] == '24:0':
@@ -637,6 +632,13 @@ def update_schedule_logic(request):
             except ObjectDoesNotExist:
                 error = '일정 정보를 불러오지 못했습니다.'
 
+            if error is None:
+                if str(schedule_info.en_dis_type) == str(ON_SCHEDULE_TYPE):
+                    check_class_auth = MemberClassTb.objects.filter(class_tb_id=class_id, member_id=main_trainer_id,
+                                                                    auth_cd=AUTH_TYPE_VIEW, use=USE).count()
+                    if check_class_auth == 0:
+                        error = '선택한 강사가 지점 연결 수락후 선택 가능 합니다.'
+                        
             if error is None:
                 before_log_info_schedule_start_dt = str(schedule_info.start_dt).split(':')
                 before_log_info_schedule_end_dt = str(schedule_info.end_dt).split(' ')[1].split(':')
