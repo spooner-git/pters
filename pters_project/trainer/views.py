@@ -9075,7 +9075,8 @@ def member_setting_test_logic(request):
 
 def update_schedule_trainer_test(request):
     context = {}
-    schedule_data = ScheduleTb.objects.select_related('class_tb__member').filter(en_dis_type=ON_SCHEDULE_TYPE)
+    schedule_data = ScheduleTb.objects.select_related('class_tb__member').filter(trainer=None,
+                                                                                 en_dis_type=ON_SCHEDULE_TYPE)
 
     for schedule_info in schedule_data:
         schedule_info.trainer_id = schedule_info.class_tb.member_id

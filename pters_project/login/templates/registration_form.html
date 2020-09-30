@@ -136,7 +136,7 @@
                                 <input class="pters_login_input" type="text" name="recommend_username" id="id_recommend_username" placeholder="추천인 아이디" minlength="4" maxlength="40" title="추천인 아이디"
                                 pattern="[a-zA-Z0-9-._@]{4,40}" onkeyup="limit_char_auto_correction(event.target);$('#recommend_id_confirm').text('');" data-error-message="" data-valid="true">
                             </div>
-                            <div class="activation_button" id="recommend_id_confirm_button" onclick="check_recommend_id();" style="pointer-events:none;">확인</div>
+                            <div class="activation_button" id="recommend_id_confirm_button" onclick="check_recommend_id();" style="">확인</div>
                             <div class="input_description">
                                 <div class="input_description_text" id="recommend_id_confirm"></div>
                             </div>
@@ -181,7 +181,7 @@
 {% endblock %}
 
 {% block local_js_footer %}
-    <script type="text/javascript" src="{% static_url "user/js/trainer/pters.trainer.component.common.js" %}"></script>
+{#    <script type="text/javascript" src="{% static_url "user/js/trainer/pters.trainer.component.common.js" %}"></script>#}
     <script type="text/javascript" src="{% static_url "user/js/login/login.registration.js" %}"></script>
     <script type="text/javascript">
         // 구글 reCAPTCHA 보이지 않게 하기
