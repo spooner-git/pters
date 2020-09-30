@@ -9101,7 +9101,7 @@ def update_lecture_trainer_test(request):
 
     for lecture_info in lecture_data:
         lecture_info.main_trainer_id = lecture_info.class_tb.member_id
-        lecutre_info.save()
+        lecture_info.save()
 
     return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
 
