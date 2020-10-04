@@ -634,8 +634,15 @@ def update_schedule_logic(request):
 
             if error is None:
                 if str(schedule_info.en_dis_type) == str(ON_SCHEDULE_TYPE):
+                    if main_trainer_id is None or main_trainer_id == '':
+                        if schedule_info.trainer_id is None or schedule_info.trainer_id == '':
+                            main_trainer_id = request.user.id
+                        else:
+                            main_trainer_id = schedule_info.trainer_id
+
                     check_class_auth = MemberClassTb.objects.filter(class_tb_id=class_id, member_id=main_trainer_id,
                                                                     auth_cd=AUTH_TYPE_VIEW, use=USE).count()
+
                     if check_class_auth == 0:
                         error = '선택한 강사가 지점 연결 수락후 선택 가능 합니다.'
                         
