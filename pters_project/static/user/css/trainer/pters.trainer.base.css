@@ -401,6 +401,7 @@ html, body{
         /* flex: 1 0 0; */
         display: inline-block;
         width: calc(100% - 200px);
+        height: 100%;
     }
     #section_content{
         position: relative;
