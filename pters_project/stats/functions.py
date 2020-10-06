@@ -333,7 +333,7 @@ def get_stats_member_data(class_id, month_first_day, finish_date):
                 'member_ticket_tb__ticket_tb').filter(Q(member_ticket_tb__start_date__gte=month_first_day)
                                                       & Q(member_ticket_tb__start_date__lte=month_last_day),
                                                       class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW,
-                                                      member_ticket_tb__use=USE, ticket_tb__use=USE,
+                                                      member_ticket_tb__use=USE, member_ticket_tb__ticket_tb__use=USE,
                                                       use=USE).order_by('member_ticket_tb__start_date',
                                                                         'member_ticket_tb__reg_dt')
 
@@ -344,7 +344,7 @@ def get_stats_member_data(class_id, month_first_day, finish_date):
                     ).filter(~Q(member_ticket_tb_id=price_info.member_ticket_tb_id), class_tb_id=class_id,
                              member_ticket_tb__member_id=price_info.member_ticket_tb.member_id,
                              member_ticket_tb__start_date__lte=price_info.member_ticket_tb.start_date,
-                             member_ticket_tb__use=USE, auth_cd=AUTH_TYPE_VIEW, ticket_Tb__use=USE,
+                             member_ticket_tb__use=USE, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__ticket_tb__use=USE,
                              use=USE).latest('reg_dt')
                     if price_member_ticket_info.member_ticket_tb.start_date < price_info.member_ticket_tb.start_date:
                         month_re_reg_member += 1
@@ -358,10 +358,12 @@ def get_stats_member_data(class_id, month_first_day, finish_date):
 
             # 환불 정보 가져오기
             refund_price_data = ClassMemberTicketTb.objects.select_related(
-                'member_ticket_tb').filter(Q(member_ticket_tb__refund_date__gte=month_first_day)
-                                     & Q(member_ticket_tb__refund_date__lte=month_last_day),
-                                     class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__use=USE,
-                                     use=USE).order_by('member_ticket_tb__refund_date', 'member_ticket_tb__reg_dt')
+                'member_ticket_tb__ticket_tb').filter(Q(member_ticket_tb__refund_date__gte=month_first_day)
+                                                      & Q(member_ticket_tb__refund_date__lte=month_last_day),
+                                                      class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW,
+                                                      member_ticket_tb__use=USE, member_ticket_tb__ticket_tb__use=USE,
+                                                      use=USE).order_by('member_ticket_tb__refund_date',
+                                                                        'member_ticket_tb__reg_dt')
 
             for refund_price_info in refund_price_data:
                 if refund_price_info.member_ticket_tb.payment_price != refund_price_info.member_ticket_tb.refund_price:
