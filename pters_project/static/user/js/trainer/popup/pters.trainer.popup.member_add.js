@@ -756,6 +756,7 @@ class Member_add{
                 input_data = Number(input_data);
             }
             this.reg_price = input_data;
+            this.data.ticket_payment_price[0] = this.data.ticket_price[0];
         }, pattern, pattern_message, required);
         
         let price_simple_input = this.dom_row_price_simple_input_machine();
@@ -765,7 +766,8 @@ class Member_add{
     dom_row_member_payment_price_input(){
         let unit = '원';
         let id = 'input_payment_price';
-        if(this.data.ticket_price[0]<this.data.ticket_payment_price){
+
+        if(this.data.ticket_price[0]<this.data.ticket_payment_price[0]){
             show_error_message({title:'수강권 가격보다 납부금액이 많습니다.'});
             this.data.ticket_payment_price[0] = this.data.ticket_price[0];
         }
