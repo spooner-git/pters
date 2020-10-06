@@ -4261,6 +4261,7 @@ def delete_ticket_info_logic(request):
                         if member_ticket_info.state_cd == STATE_CD_IN_PROGRESS:
                             member_ticket_info.member_ticket_rem_count = 0
                             member_ticket_info.state_cd = STATE_CD_FINISH
+                            member_ticket_info.use = UN_USE
                             member_ticket_info.save()
 
                         member_payment_history = MemberPaymentHistoryTb.objects.filter(

@@ -330,20 +330,22 @@ def get_stats_member_data(class_id, month_first_day, finish_date):
 
             # 결제 정보 가져오기
             price_data = ClassMemberTicketTb.objects.select_related(
-                'member_ticket_tb').filter(Q(member_ticket_tb__start_date__gte=month_first_day)
-                                           & Q(member_ticket_tb__start_date__lte=month_last_day),
-                                           class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__use=USE,
-                                           use=USE).order_by('member_ticket_tb__start_date', 'member_ticket_tb__reg_dt')
+                'member_ticket_tb__ticket_tb').filter(Q(member_ticket_tb__start_date__gte=month_first_day)
+                                                      & Q(member_ticket_tb__start_date__lte=month_last_day),
+                                                      class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW,
+                                                      member_ticket_tb__use=USE, ticket_tb__use=USE,
+                                                      use=USE).order_by('member_ticket_tb__start_date',
+                                                                        'member_ticket_tb__reg_dt')
 
             for price_info in price_data:
                 try:
                     price_member_ticket_info = ClassMemberTicketTb.objects.select_related(
-                        'member_ticket_tb').filter(~Q(member_ticket_tb_id=price_info.member_ticket_tb_id),
-                                                   class_tb_id=class_id,
-                                                   member_ticket_tb__member_id=price_info.member_ticket_tb.member_id,
-                                                   member_ticket_tb__start_date__lte=price_info.member_ticket_tb.start_date,
-                                                   member_ticket_tb__use=USE, auth_cd=AUTH_TYPE_VIEW,
-                                                   use=USE).latest('reg_dt')
+                        'member_ticket_tb__ticket_tb'
+                    ).filter(~Q(member_ticket_tb_id=price_info.member_ticket_tb_id), class_tb_id=class_id,
+                             member_ticket_tb__member_id=price_info.member_ticket_tb.member_id,
+                             member_ticket_tb__start_date__lte=price_info.member_ticket_tb.start_date,
+                             member_ticket_tb__use=USE, auth_cd=AUTH_TYPE_VIEW, ticket_Tb__use=USE,
+                             use=USE).latest('reg_dt')
                     if price_member_ticket_info.member_ticket_tb.start_date < price_info.member_ticket_tb.start_date:
                         month_re_reg_member += 1
                     else:
