@@ -2881,6 +2881,10 @@ def update_member_ticket_info_logic(request):
         if member_ticket_info.state_cd == STATE_CD_REFUND:
             member_ticket_info.member_ticket_avail_count = 0
         member_ticket_info.save()
+    if error is None:
+        member_payment_history_data = MemberPaymentHistoryTb.objects.filter(member_ticket_tb_id=member_ticket_id,
+                                                                            payment_price__gt=0)
+        member_payment_history_data.update(pay_method=pay_method)
 
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
