@@ -120,7 +120,7 @@ class Member_add{
         this.data.ticket_effective_days = data.effective_days;
         this.data.ticket_reg_count = data.reg_count;
         this.data.ticket_price = data.reg_price;
-        // this.data.ticket_payment_price = data.reg_price;
+        this.data.ticket_payment_price = data.reg_price;
         //시작일자가 없는 경우 오늘로 셋팅
         if(this.data.start_date == null){
             this.data.start_date = {year: this.dates.current_year, month:this.dates.current_month, date:this.dates.current_date};
@@ -756,7 +756,6 @@ class Member_add{
                 input_data = Number(input_data);
             }
             this.reg_price = input_data;
-            this.data.ticket_payment_price[0] = this.data.ticket_price[0];
         }, pattern, pattern_message, required);
         
         let price_simple_input = this.dom_row_price_simple_input_machine();
