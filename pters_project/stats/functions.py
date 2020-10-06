@@ -9,7 +9,7 @@ from configs.const import USE, ON_SCHEDULE_TYPE, STATS_RE_REG, STATS_NEW_REG, ST
     STATE_CD_FINISH, AUTH_TYPE_VIEW, STATE_CD_REFUND, SORT_ALL_STATISTICS, SORT_CASH_STATISTICS, SORT_CARD_STATISTICS, \
     SORT_NONE_STATISTICS, SORT_TRANS_STATISTICS, LECTURE_TYPE_ONE_TO_ONE
 from schedule.models import ScheduleTb
-from trainee.models import MemberPaymentHistoryTb
+from trainee.models import MemberPaymentHistoryTb, MemberTicketTb
 from trainer.models import ClassMemberTicketTb
 
 
@@ -47,13 +47,26 @@ def get_sales_data(class_id, month_first_day, finish_date):
             # 이번달 마지막날 구하기
             month_last_day = next_month_first_day - datetime.timedelta(days=1)
             # 이달의 결제 정보 가져오기
-            payment_data = MemberPaymentHistoryTb.objects.filter(
+            query_auth = " select B.AUTH_CD from CLASS_LECTURE_TB as B where" + \
+                         " B.LECTURE_TB_ID = `MEMBER_TICKET_TB_ID` and B.USE = " + str(USE)
+
+            payment_data = MemberPaymentHistoryTb.objects.select_related(
+                'member_ticket_tb').filter(
                 Q(pay_date__gte=month_first_day) & Q(pay_date__lte=month_last_day), class_tb_id=class_id,
+                member_ticket_tb__isnull=False,
+                use=USE).order_by('-pay_date', '-reg_dt').annotate(auth_cd=RawSQL(query_auth,
+                                                                                  [])).filter(auth_cd=AUTH_TYPE_VIEW)
+            payment_data |= MemberPaymentHistoryTb.objects.filter(
+                Q(pay_date__gte=month_first_day) & Q(pay_date__lte=month_last_day), class_tb_id=class_id,
+                member_ticket_tb__isnull=True,
                 use=USE).order_by('-pay_date', '-reg_dt')
 
+            price = payment_data.aggregate(sum_payment_price=Coalesce(Sum('payment_price'), 0))['sum_payment_price']
+            refund_price = payment_data.aggregate(sum_refund_price=Coalesce(Sum('refund_price'), 0))['sum_refund_price']
+
             month_price_info = {'month': str(month_first_day.date()),
-                                'price': payment_data.aggregate(sum_payment_price=Coalesce(Sum('payment_price'), 0))['sum_payment_price'],
-                                'refund_price': payment_data.aggregate(sum_refund_price=Coalesce(Sum('refund_price'), 0))['sum_refund_price']}
+                                'price': price,
+                                'refund_price': refund_price}
 
             month_price_list.append(month_price_info)
 
@@ -137,10 +150,18 @@ def get_sales_info(class_id, month_first_day, sort_val):
             next_month_first_day = next_month_first_day.replace(year=next_year)
         month_last_day = next_month_first_day - datetime.timedelta(days=1)
 
-        payment_data = MemberPaymentHistoryTb.objects.select_related(
-            'member_ticket_tb__ticket_tb', 'member_shop_tb__shop_tb').filter(
-            Q(pay_date__gte=month_first_day) & Q(pay_date__lte=month_last_day),
-            class_tb_id=class_id, use=USE).order_by('-pay_date', '-reg_dt')
+        query_auth = " select B.AUTH_CD from CLASS_LECTURE_TB as B where" + \
+                     " B.LECTURE_TB_ID = `MEMBER_TICKET_TB_ID` and B.USE = " + str(USE)
+
+        payment_data = MemberPaymentHistoryTb.objects.filter(
+            Q(pay_date__gte=month_first_day) & Q(pay_date__lte=month_last_day), class_tb_id=class_id,
+            member_ticket_tb__isnull=False,
+            use=USE).order_by('-pay_date', '-reg_dt').annotate(auth_cd=RawSQL(query_auth,
+                                                                              [])).filter(auth_cd=AUTH_TYPE_VIEW)
+        payment_data |= MemberPaymentHistoryTb.objects.filter(
+            Q(pay_date__gte=month_first_day) & Q(pay_date__lte=month_last_day), class_tb_id=class_id,
+            member_ticket_tb__isnull=True,
+            use=USE).order_by('-pay_date', '-reg_dt')
 
         if str(sort_val) == str(SORT_NONE_STATISTICS):
             payment_data = payment_data.filter(pay_method='NONE')
