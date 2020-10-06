@@ -44,7 +44,7 @@
             <div class="registration_content" style="height: auto">
                 <form action="{% url "login:add_member_info" %}" id="id_add_member_form" method="post">
                     {% csrf_token %}
-                    <input type="hidden" name="next_page" id="id_next_page" value="{% url 'trainer:index' %}">
+                    <input type="hidden" name="next_page" id="id_next_page" value="{% url 'index' %}">
                     <input type="hidden" name="group_type" id="id_group_type" value="{{ request.session.group_name }}" autocomplete="off">
                     <input type="hidden" name="recommended_member_id" id="id_recommended_member_id" value="">
                     <input type="hidden" name="recommended_member_username" id="id_recommended_member_username" value="">

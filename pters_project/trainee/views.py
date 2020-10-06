@@ -416,13 +416,14 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
             if class_id != '' and class_id is not None:
                 context = func_get_trainee_ticket_list(context, class_id, request.user.id)
         if error is None:
-            today = datetime.date.today()
-            select_date = today - datetime.timedelta(days=90)
-            member_shop_data = MemberShopTb.objects.select_related(
-                'shop_tb').filter(class_tb_id=class_id, member_id=request.user.id,
-                                  start_date__gte=select_date, start_date__lte=today, use=USE)
+            if class_id != '' and class_id is not None:
+                today = datetime.date.today()
+                select_date = today - datetime.timedelta(days=90)
+                member_shop_data = MemberShopTb.objects.select_related(
+                    'shop_tb').filter(class_tb_id=class_id, member_id=request.user.id,
+                                      start_date__gte=select_date, start_date__lte=today, use=USE)
 
-            context['member_shop_data'] = member_shop_data
+                context['member_shop_data'] = member_shop_data
 
         context['check_password_changed'] = 1
         if sns_id != '' and sns_id is not None:

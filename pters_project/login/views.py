@@ -475,7 +475,7 @@ class AddSocialMemberInfoView(RegistrationView, View):
                     coupon_member.save()
 
         if error is None:
-            return redirect('/trainer/')
+            return redirect('/')
         if error is not None:
             logger.error(name + '[' + username + ']' + error)
             messages.error(request, error)
