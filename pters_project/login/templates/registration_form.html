@@ -1,7 +1,20 @@
 {% extends "base.html" %}
 {% load static_url %}
+{% block title_block %}
+    <title>PTERS | 피터스 - 일반 회원가입</title>
+{% endblock %}
 {% block local_css %}
-    <meta name="registertrainer" content="trainer_register">
+    <meta property="og:url" content="https://www.pters.co.kr/login/register/">
+    <meta name="application-name" content="PTERS | 피터스 - 일반 회원가입">
+    <meta name="msapplication-tooltip" content="PTERS | 피터스 - 일반 회원가입">
+    <meta id="meta_og_title" property="og:title" content="PTERS | 피터스 - 일반 회원가입">
+    <meta name="description" content="PTERS 피터스에 회원가입해서 무료로 레슨을 관리해보세요.">
+    <meta property="og:description" content="PTERS 피터스에 회원가입해서 무료로 레슨을 관리해보세요.">
+    <meta name="keywords" content="피터스, pters, pt, 레슨, 필라테스, 발레, 골프, 요가, 수업, 스케쥴, 관리">
+    <link rel="canonical" href="https://www.pters.co.kr/login/register/">
+    <meta property="og:type" content="website">
+    <meta id="meta_og_image" property="og:image" content="https://www.pters.co.kr/static/common/img/front_page/pters_service_summary.png">
+
     <meta name="google-signin-scope" content="profile email">
     <meta name="google-signin-client_id" content="751903262384-dbtt6ho5imk5gssgn1rqpe3vs3linq15.apps.googleusercontent.com">
     <link rel="stylesheet" href={% static_url "user/css/login/login.registration.css" %}>

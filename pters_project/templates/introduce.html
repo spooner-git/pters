@@ -1,12 +1,20 @@
 {% extends "base.html" %}
 {% load static_url %}
 
+{% block title_block %}
+    <title>PTERS | 피터스 - 서비스 소개</title>
+{% endblock %}
 {% block local_css %}
-    <meta name="description" content="강사님들을 위한 레슨 관리 앱 PTERS 피터스로 관리업무 시간은 줄이고 레슨과 수업에 집중해보세요.">
+    <meta property="og:url" content="https://www.pters.co.kr/introduce/">
+    <meta name="application-name" content="PTERS | 피터스 - 서비스 소개">
+    <meta name="msapplication-tooltip" content="PTERS | 피터스 - 서비스 소개">
+    <meta id="meta_og_title" property="og:title" content="PTERS | 피터스 - 서비스 소개">
+    <meta name="description" content="레슨 관리 앱 PTERS 피터스로 레슨을 효율적으로 예약 해보세요.">
+    <meta property="og:description" content="레슨 관리 앱 PTERS 피터스로 레슨을 효율적으로 예약 해보세요.">
+    <meta name="keywords" content="피터스, pters, pt, 레슨, 필라테스, 발레, 골프, 요가, 수업, 스케쥴, 관리">
+    <link rel="canonical" href="https://www.pters.co.kr/introduce/">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="PTERS | 피터스 | 레슨관리">
-    <meta property="og:description" content="강사님들을 위한 레슨 관리 앱 PTERS 피터스로 관리업무 시간은 줄이고 레슨과 수업에 집중해보세요.">
-    <meta property="og:image" content="/static/common/img/front_page/pters_service_summary.png">
+    <meta id="meta_og_image" property="og:image" content="https://www.pters.co.kr/static/common/img/front_page/pters_service_summary.png">
     <link rel="stylesheet" href={% static_url "user/css/login/login.registration.css" %}>
     <style>
         p{
