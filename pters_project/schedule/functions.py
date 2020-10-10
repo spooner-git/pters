@@ -206,8 +206,7 @@ def func_refresh_member_ticket_count(class_id, member_ticket_id):
             error = '수강권 정보를 불러오지 못했습니다.[1]'
 
     if error is None:
-        schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, member_ticket_tb_id=member_ticket_id,
-                                                  use=USE)
+        schedule_data = ScheduleTb.objects.filter(member_ticket_tb_id=member_ticket_id, use=USE)
         if member_ticket_info.member_ticket_reg_count >= len(schedule_data):
             member_ticket_info.member_ticket_avail_count = member_ticket_info.member_ticket_reg_count\
                                                            - len(schedule_data)
@@ -215,7 +214,6 @@ def func_refresh_member_ticket_count(class_id, member_ticket_id):
             error = '오류가 발생했습니다.[0]'
 
         end_schedule_counter = schedule_data.filter(Q(state_cd=STATE_CD_FINISH) | Q(state_cd=STATE_CD_ABSENCE),
-                                                    class_tb_id=class_id,
                                                     use=USE).count()
 
         if member_ticket_info.member_ticket_reg_count >= end_schedule_counter:
@@ -1507,8 +1505,7 @@ def func_get_member_schedule_all_by_member_ticket(class_id, member_id, page):
 
     member_schedule_data = ScheduleTb.objects.select_related(
         'member_ticket_tb__member', 'reg_member', 'mod_member','member_ticket_tb__ticket_tb',
-        'lecture_tb').filter(
-        class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, use=USE, member_ticket_tb__member_id=member_id,
+        'lecture_tb').filter(en_dis_type=ON_SCHEDULE_TYPE, use=USE, member_ticket_tb__member_id=member_id,
         member_ticket_tb__use=USE).annotate(auth_cd=RawSQL(query_auth,
                                                            [])).filter(auth_cd=AUTH_TYPE_VIEW).order_by(
         '-member_ticket_tb__start_date', '-member_ticket_tb__end_date', '-member_ticket_tb__reg_dt', 'start_dt')
@@ -1608,8 +1605,7 @@ def func_get_member_schedule_all_by_schedule_dt(class_id, member_id, page):
 
     member_schedule_data = ScheduleTb.objects.select_related(
         'member_ticket_tb__member', 'reg_member', 'member_ticket_tb__ticket_tb',
-        'lecture_tb').filter(
-        class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, use=USE, member_ticket_tb__member_id=member_id,
+        'lecture_tb').filter(en_dis_type=ON_SCHEDULE_TYPE, use=USE, member_ticket_tb__member_id=member_id,
         member_ticket_tb__use=USE).annotate(auth_cd=RawSQL(query_auth,
                                                            [])).filter(auth_cd=AUTH_TYPE_VIEW).order_by('-start_dt',
                                                                                                         '-reg_dt')
@@ -1718,8 +1714,7 @@ def func_get_lecture_trainer_schedule_all_by_schedule_dt(class_id, trainer_id, p
 
     trainer_schedule_data = ScheduleTb.objects.select_related(
         'member_ticket_tb__member', 'reg_member', 'member_ticket_tb__ticket_tb',
-        'lecture_tb').filter(
-        class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, use=USE, lecture_schedule_id__isnull=True,
+        'lecture_tb').filter(en_dis_type=ON_SCHEDULE_TYPE, use=USE, lecture_schedule_id__isnull=True,
         trainer_id=trainer_id).annotate(lecture_current_member_num=RawSQL(query, [])).order_by('-start_dt', '-reg_dt')
 
     paginator = Paginator(trainer_schedule_data, SCHEDULE_PAGINATION_COUNTER)

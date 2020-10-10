@@ -132,8 +132,8 @@ def func_get_trainee_lecture_schedule(context, user_id, class_id, start_date, en
 
         if query_ticket_counter > 0:
             ticket_lecture_data = TicketLectureTb.objects.select_related(
-                'lecture_tb').filter(query_ticket_list, class_tb_id=class_id, lecture_tb__state_cd=STATE_CD_IN_PROGRESS,
-                                     lecture_tb__use=USE, use=USE)
+                'lecture_tb__class_tb').filter(query_ticket_list, lecture_tb__class_tb_id=class_id, lecture_tb__state_cd=STATE_CD_IN_PROGRESS,
+                                               lecture_tb__use=USE, use=USE)
 
         for ticket_lecture_info in ticket_lecture_data:
             query_lecture_list |= Q(lecture_tb_id=ticket_lecture_info.lecture_tb_id)
@@ -264,7 +264,7 @@ def func_get_class_member_ticket_count(context, class_id, user_id):
             member_ticket_info = class_member_ticket_info.member_ticket_tb
             # 자유형 문제
             ticket_single_lecture_count = TicketLectureTb.objects.filter(
-                class_tb_id=class_id, lecture_tb__lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE,
+                lecture_tb__class_tb_id=class_id, lecture_tb__lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE,
                 ticket_tb_id=member_ticket_info.ticket_tb_id, ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
                 lecture_tb__state_cd=STATE_CD_IN_PROGRESS, use=USE).count()
 

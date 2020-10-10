@@ -1886,10 +1886,10 @@ class PopupCalendarPlanReserveView(LoginRequiredMixin, AccessTestMixin, Template
                 query_ticket_list |= Q(ticket_tb_id=ticket_info.ticket_id)
 
             ticket_lecture_data = TicketLectureTb.objects.select_related(
-                'lecture_tb').filter(query_ticket_list, class_tb_id=class_id,
-                                     lecture_tb__lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE,
-                                     lecture_tb__state_cd=STATE_CD_IN_PROGRESS,
-                                     lecture_tb__use=USE, use=USE).order_by('reg_dt')
+                'lecture_tb__class_tb').filter(query_ticket_list, lecture_tb__class_tb_id=class_id,
+                                               lecture_tb__lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE,
+                                               lecture_tb__state_cd=STATE_CD_IN_PROGRESS,
+                                               lecture_tb__use=USE, use=USE).order_by('reg_dt')
             lecture_list = []
             ticket_lecture_list = []
             for ticket_lecture_info in ticket_lecture_data:
@@ -1933,9 +1933,12 @@ class PopupCalendarPlanReserveView(LoginRequiredMixin, AccessTestMixin, Template
         for lecture_schedule_info in context['lecture_schedule_data']:
 
             ticket_lecture_data = TicketLectureTb.objects.select_related(
-                'ticket_tb').filter(class_tb_id=class_id, ticket_tb__state_cd=STATE_CD_IN_PROGRESS, ticket_tb__use=USE,
-                                    lecture_tb_id=lecture_schedule_info.lecture_tb_id,
-                                    lecture_tb__state_cd=STATE_CD_IN_PROGRESS, lecture_tb__use=USE, use=USE)
+                'ticket_tb', 'lecture_tb__class_tb').filter(lecture_tb__class_tb_id=class_id,
+                                                            ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+                                                            ticket_tb__use=USE,
+                                                            lecture_tb_id=lecture_schedule_info.lecture_tb_id,
+                                                            lecture_tb__state_cd=STATE_CD_IN_PROGRESS,
+                                                            lecture_tb__use=USE, use=USE)
 
             query_ticket_data = Q()
             for ticket_lecture_info in ticket_lecture_data:
@@ -1944,7 +1947,7 @@ class PopupCalendarPlanReserveView(LoginRequiredMixin, AccessTestMixin, Template
             class_member_ticket_data = ClassMemberTicketTb.objects.select_related('member_ticket_tb__member').filter(
                 query_ticket_data,
                 Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS) | Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
-                auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__member_id=self.request.user.id, use=USE)
+                class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__member_id=self.request.user.id, use=USE)
             # member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
 
             lecture_member_ticket_avail_count = 0
@@ -2005,7 +2008,7 @@ class PopupMemberTicketInfoView(LoginRequiredMixin, AccessTestMixin, TemplateVie
     def get_context_data(self, **kwargs):
         context = super(PopupMemberTicketInfoView, self).get_context_data(**kwargs)
         member_ticket_id = self.request.GET.get('member_ticket_id')
-
+        class_id = self.request.session.get('class_id')
         error = None
         member_ticket_info = None
         ticket_info = None
@@ -2013,7 +2016,8 @@ class PopupMemberTicketInfoView(LoginRequiredMixin, AccessTestMixin, TemplateVie
         closed_date_history_data = None
 
         class_list = ClassMemberTicketTb.objects.select_related(
-            'class_tb__member').filter(member_ticket_tb_id=member_ticket_id, auth_cd=AUTH_TYPE_VIEW,
+            'class_tb__member').filter(class_tb_id=class_id,
+                                       member_ticket_tb_id=member_ticket_id, auth_cd=AUTH_TYPE_VIEW,
                                        member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW, use=USE)
 
         for class_info in class_list:
@@ -2031,7 +2035,8 @@ class PopupMemberTicketInfoView(LoginRequiredMixin, AccessTestMixin, TemplateVie
 
         if error is None:
 
-            member_ticket_abs_count = ScheduleTb.objects.filter(member_ticket_tb_id=member_ticket_id,
+            member_ticket_abs_count = ScheduleTb.objects.filter(class_tb_id=class_id,
+                                                                member_ticket_tb_id=member_ticket_id,
                                                                 state_cd=STATE_CD_ABSENCE, use=USE).count()
             member_ticket_info.member_ticket_abs_count = member_ticket_abs_count
         if error is None:
@@ -2039,7 +2044,8 @@ class PopupMemberTicketInfoView(LoginRequiredMixin, AccessTestMixin, TemplateVie
             query_permission = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `SCHEDULE_TB`.`PERMISSION_STATE_CD`"
             # 자유형 문제
             schedule_list = ScheduleTb.objects.select_related(
-                'lecture_tb').filter(member_ticket_tb_id=member_ticket_id,
+                'lecture_tb').filter(class_tb_id=class_id,
+                                     member_ticket_tb_id=member_ticket_id,
                                      use=USE).annotate(status=RawSQL(query_status,
                                                                      []),
                                                        permission=RawSQL(query_permission,
@@ -2053,8 +2059,9 @@ class PopupMemberTicketInfoView(LoginRequiredMixin, AccessTestMixin, TemplateVie
 
         if error is None:
             ticket_info.ticket_lecture_data = TicketLectureTb.objects.select_related(
-                'lecture_tb'
-            ).filter(ticket_tb_id=member_ticket_info.ticket_tb_id, ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+                'lecture_tb__class_tb'
+            ).filter(lecture_tb__class_tb_id=class_id,
+                     ticket_tb_id=member_ticket_info.ticket_tb_id, ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
                      lecture_tb__state_cd=STATE_CD_IN_PROGRESS, lecture_tb__use=USE,
                      use=USE).order_by('lecture_tb__reg_dt')
         if error is None:

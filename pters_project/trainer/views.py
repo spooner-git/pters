@@ -3822,8 +3822,9 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                        name__contains=keyword, use=USE).order_by('lecture_id')
 
         lecture_ticket_data = TicketLectureTb.objects.select_related(
-            'lecture_tb__main_trainer', 'class_tb__member',
-            'ticket_tb').filter(class_tb_id=class_id, lecture_tb__state_cd=STATE_CD_IN_PROGRESS,
+            'lecture_tb__main_trainer', 'class_tb__member', 'lecture_tb__class_tb',
+            'ticket_tb').filter(class_tb_id=class_id, lecture_tb__class_tb_id=class_id,
+                                lecture_tb__state_cd=STATE_CD_IN_PROGRESS,
                                 lecture_tb__name__contains=keyword, lecture_tb__use=USE,
                                 use=USE).order_by('lecture_tb_id', 'ticket_tb_id')
 
@@ -3844,6 +3845,7 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
             try:
                 lecture_data_dict[lecture_id]
             except KeyError:
+
                 lecture_data_dict[lecture_id] = {'lecture_id': lecture_id,
                                                  'lecture_name': lecture_tb.name,
                                                  'lecture_note': lecture_tb.note,
@@ -3861,6 +3863,11 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                  'lecture_ticket_list': [],
                                                  'lecture_ticket_state_cd_list': [],
                                                  'lecture_ticket_id_list': []}
+
+                if lecture_tb.class_tb_id != class_id:
+                    lecture_data_dict[lecture_id]['lecture_name'] =\
+                        '(' + lecture_tb.class_tb.get_class_type_cd_name() + ' 지점) ' + lecture_tb.name
+
             if ticket_tb.use == USE:
                 lecture_data_dict[lecture_id]['lecture_ticket_list'].append(ticket_tb.name)
                 lecture_data_dict[lecture_id]['lecture_ticket_state_cd_list'].append(ticket_tb.state_cd)
@@ -4010,6 +4017,11 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                  'lecture_ticket_list': [],
                                                  'lecture_ticket_state_cd_list': [],
                                                  'lecture_ticket_id_list': []}
+
+            if lecture_tb.class_tb_id != class_id:
+                lecture_data_dict[lecture_id]['lecture_name'] =\
+                    '(' + lecture_tb.class_tb.get_class_type_cd_name() + ' 지점) ' + lecture_tb.name
+
             if ticket_tb.use == USE:
                 lecture_data_dict[lecture_id]['lecture_ticket_list'].append(ticket_tb.name)
                 lecture_data_dict[lecture_id]['lecture_ticket_state_cd_list'].append(ticket_tb.state_cd)
@@ -4610,7 +4622,11 @@ class GetTicketIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                'ticket_lecture_end_color_cd_list': [],
                                                'ticket_lecture_end_font_color_cd_list': []}
             if lecture_tb.use == USE:
-                ticket_data_dict[ticket_id]['ticket_lecture_list'].append(lecture_tb.name)
+                if lecture_tb.class_tb_id == class_id:
+                    ticket_data_dict[ticket_id]['ticket_lecture_list'].append(lecture_tb.name)
+                else:
+                    ticket_data_dict[ticket_id]['ticket_lecture_list'].append(
+                        '(' + lecture_tb.class_tb.get_class_type_cd_name() + ' 지점) ' + lecture_tb.name)
                 ticket_data_dict[ticket_id]['ticket_lecture_state_cd_list'].append(lecture_tb.state_cd)
                 ticket_data_dict[ticket_id]['ticket_lecture_id_list'].append(lecture_tb.lecture_id)
                 ticket_data_dict[ticket_id]['ticket_lecture_ing_color_cd_list'].append(lecture_tb.ing_color_cd)
@@ -4736,7 +4752,12 @@ class GetTicketEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                'ticket_lecture_end_color_cd_list': [],
                                                'ticket_lecture_end_font_color_cd_list': []}
             if lecture_tb.use == USE:
-                ticket_data_dict[ticket_id]['ticket_lecture_list'].append(lecture_tb.name)
+
+                if lecture_tb.class_tb_id == class_id:
+                    ticket_data_dict[ticket_id]['ticket_lecture_list'].append(lecture_tb.name)
+                else:
+                    ticket_data_dict[ticket_id]['ticket_lecture_list'].append(
+                        '(' + lecture_tb.class_tb.get_class_type_cd_name() + ' 지점) ' + lecture_tb.name)
                 ticket_data_dict[ticket_id]['ticket_lecture_state_cd_list'].append(lecture_tb.state_cd)
                 ticket_data_dict[ticket_id]['ticket_lecture_id_list'].append(lecture_tb.lecture_id)
                 ticket_data_dict[ticket_id]['ticket_lecture_ing_color_cd_list'].append(lecture_tb.ing_color_cd)

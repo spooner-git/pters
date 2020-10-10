@@ -262,12 +262,12 @@ def func_get_member_ing_list(class_id, user_id, keyword):
                                  "where C.ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID`)" \
                                  "and B.CLASS_TB_ID= " + str(class_id) + " and B.USE=1 "
     all_member_ticket_list = ClassMemberTicketTb.objects.select_related(
-        'member_ticket_tb__ticket_tb',
+        'member_ticket_tb__ticket_tb__class_tb',
         'member_ticket_tb__member__user'
     ).filter(Q(member_ticket_tb__member__name__contains=keyword) |
              Q(member_ticket_tb__member__user__username__contains=keyword),
              Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS) | Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
-             class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW,
+             class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__ticket_tb__class_tb_id=class_id,
              member_ticket_tb__use=USE,
              use=USE).annotate(member_shop_ip_count=RawSQL(query_ip_member_shop_count,
                                                            [])).order_by('member_ticket_tb__member_id',
@@ -294,13 +294,14 @@ def func_get_member_end_list(class_id, user_id, keyword):
                                    " and (C.STATE_CD=\'IP\' OR C.STATE_CD=\'HD\') and C.USE=1"
 
     all_member_ticket_list = ClassMemberTicketTb.objects.select_related(
-        'member_ticket_tb__ticket_tb',
+        'member_ticket_tb__ticket_tb__class_tb',
         'member_ticket_tb__member__user').filter(
         ~Q(member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS), ~Q(member_ticket_tb__state_cd=STATE_CD_HOLDING),
         Q(member_ticket_tb__member__name__contains=keyword) |
         Q(member_ticket_tb__member__user__username__contains=keyword),
         class_tb_id=class_id, auth_cd=AUTH_TYPE_VIEW, member_ticket_tb__use=USE,
-        use=USE).annotate(member_shop_ip_count=RawSQL(query_ip_member_shop_count,[]),
+        member_ticket_tb__ticket_tb__class_tb_id=class_id,
+        use=USE).annotate(member_shop_ip_count=RawSQL(query_ip_member_shop_count, []),
                           member_ticket_ip_count=RawSQL(query_ip_member_ticket_count, [])
                           ).filter(member_ticket_ip_count=0).order_by('member_ticket_tb__member_id',
                                                                       'member_ticket_tb__end_date')
@@ -567,8 +568,8 @@ def func_get_member_lecture_list(class_id, member_id):
 
         if query_ticket_counter > 0:
             ticket_lecture_data = TicketLectureTb.objects.select_related(
-                'lecture_tb').filter(query_ticket_list, class_tb_id=class_id, lecture_tb__state_cd=STATE_CD_IN_PROGRESS,
-                                     use=USE)
+                'lecture_tb__class_tb').filter(query_ticket_list, lecture_tb__class_tb_id=class_id,
+                                               lecture_tb__state_cd=STATE_CD_IN_PROGRESS, use=USE)
 
             for ticket_lecture_info in ticket_lecture_data:
                 lecture_tb = ticket_lecture_info.lecture_tb
@@ -690,8 +691,9 @@ def func_get_member_ticket_list(class_id, member_id):
 
     ticket_data = TicketTb.objects.filter(class_tb_id=class_id, use=USE).order_by('ticket_id')
     ticket_lecture_data = TicketLectureTb.objects.select_related(
-        'ticket_tb', 'lecture_tb').filter(class_tb_id=class_id, ticket_tb__use=USE,
-                                          use=USE).order_by('ticket_tb_id', 'lecture_tb__state_cd', 'lecture_tb_id')
+        'ticket_tb', 'lecture_tb__class_tb').filter(class_tb_id=class_id, ticket_tb__use=USE,
+                                                    use=USE).order_by('ticket_tb_id', 'lecture_tb__state_cd',
+                                                                      'lecture_tb_id')
 
     ticket_data_dict = {}
     for ticket_lecture_info in ticket_lecture_data:
@@ -709,7 +711,10 @@ def func_get_member_ticket_list(class_id, member_id):
                                            'ticket_lecture_end_color_cd_list': [],
                                            'ticket_lecture_end_font_color_cd_list': []}
         if lecture_tb.use == USE:
-            ticket_data_dict[ticket_id]['ticket_lecture_list'].append(lecture_tb.name)
+            if lecture_tb.class_tb_id == class_id:
+                ticket_data_dict[ticket_id]['ticket_lecture_list'].append(lecture_tb.name)
+            else:
+                ticket_data_dict[ticket_id]['ticket_lecture_list'].append('('+lecture_tb.class_tb.get_class_type_cd_name()+' 지점)'+lecture_tb.name)
             ticket_data_dict[ticket_id]['ticket_lecture_state_cd_list'].append(lecture_tb.state_cd)
             ticket_data_dict[ticket_id]['ticket_lecture_id_list'].append(lecture_tb.lecture_id)
             ticket_data_dict[ticket_id]['ticket_lecture_ing_color_cd_list'].append(lecture_tb.ing_color_cd)
@@ -1344,6 +1349,11 @@ def func_get_ticket_info(class_id, ticket_id, user_id):
         ticket_tb = ticket_lecture_info.ticket_tb
         lecture_tb = ticket_lecture_info.lecture_tb
         if lecture_tb.use == USE:
+
+            if lecture_tb.class_tb_id == class_id:
+                ticket_lecture_list.append(lecture_tb.name)
+            else:
+                ticket_lecture_list.append('('+lecture_tb.class_tb.get_class_type_cd_name()+' 지점) '+lecture_tb.name)
             ticket_lecture_list.append(lecture_tb.name)
             ticket_lecture_state_cd_list.append(lecture_tb.state_cd)
             ticket_lecture_id_list.append(str(lecture_tb.lecture_id))

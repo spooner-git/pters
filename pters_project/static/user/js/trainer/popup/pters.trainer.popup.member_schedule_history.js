@@ -38,6 +38,7 @@ class Member_schedule_history{
         let top_center = `<span class="icon_center"><span id="">일정 이력</span></span>`;
         let top_right = `<span class="icon_right"></span>`;
         let content;
+        console.log(data);
         if(this.sort_val == SORT_SCHEDULE_DT){
             content = `<section style="margin-top:8px;" id="list_wrap">
                             ${this.dom_arrange_select()}
@@ -127,7 +128,7 @@ class Member_schedule_history{
         let html_to_join = [];
         let html;
 
-        let item_length = Object.keys(received_data).length;
+        // let item_length = Object.keys(received_data).length;
 
         let member_ticket_list = [];
         for(let ticket in received_data){
