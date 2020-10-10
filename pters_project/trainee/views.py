@@ -2151,7 +2151,7 @@ class PopupTicketInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         ).filter(auth_cd=AUTH_TYPE_VIEW,
                  member_ticket_tb__ticket_tb__ticket_id=ticket_id, member_ticket_tb__member_auth_cd=AUTH_TYPE_VIEW,
                  member_ticket_tb__member_id=self.request.user.id,
-                 use=USE).order_by('member_ticket_tb__state_cd', '-member_ticket_tb__start_date',
+                 use=USE).order_by('class_tb_id', 'member_ticket_tb__state_cd', '-member_ticket_tb__start_date',
                                    '-member_ticket_tb__end_date',
                                    '-member_ticket_tb__reg_dt')
 
@@ -2179,7 +2179,7 @@ class PopupTicketInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                 'lecture_tb'
             ).filter(ticket_tb_id=ticket_id, ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
                      lecture_tb__state_cd=STATE_CD_IN_PROGRESS, lecture_tb__use=USE,
-                     use=USE).order_by('lecture_tb__reg_dt')
+                     use=USE).order_by('class_tb_id', 'lecture_tb__reg_dt')
 
         context['ticket_info'] = ticket_info
         context['member_ticket_data'] = member_ticket_list
