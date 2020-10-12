@@ -1166,6 +1166,7 @@ class Ticket_simple_view{
 
     set_initial_data (){
         Ticket_func.read({"ticket_id": this.ticket_id}, (data)=>{
+            console.log(data);
             this.data.name = data.ticket_info.ticket_name;
             this.data.lecture_id = data.ticket_info.ticket_lecture_id_list;
             this.data.lecture_name = data.ticket_info.ticket_lecture_list;

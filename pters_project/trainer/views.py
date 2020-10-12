@@ -3864,7 +3864,7 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                  'lecture_ticket_state_cd_list': [],
                                                  'lecture_ticket_id_list': []}
 
-                if lecture_tb.class_tb_id != class_id:
+                if str(lecture_tb.class_tb_id) != str(class_id):
                     lecture_data_dict[lecture_id]['lecture_name'] =\
                         '(' + lecture_tb.class_tb.get_class_type_cd_name() + ' 지점) ' + lecture_tb.name
 
@@ -4018,7 +4018,7 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                  'lecture_ticket_state_cd_list': [],
                                                  'lecture_ticket_id_list': []}
 
-            if lecture_tb.class_tb_id != class_id:
+            if str(lecture_tb.class_tb_id) != str(class_id):
                 lecture_data_dict[lecture_id]['lecture_name'] =\
                     '(' + lecture_tb.class_tb.get_class_type_cd_name() + ' 지점) ' + lecture_tb.name
 
@@ -4590,10 +4590,10 @@ class GetTicketIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                               name__contains=keyword,
                                               use=USE).order_by('ticket_id')
         ticket_lecture_data = TicketLectureTb.objects.select_related(
-            'ticket_tb', 'lecture_tb').filter(class_tb_id=class_id, ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
-                                              ticket_tb__name__contains=keyword,
-                                              ticket_tb__use=USE,
-                                              use=USE).order_by('ticket_tb_id', 'lecture_tb__state_cd', 'lecture_tb_id')
+            'ticket_tb', 'lecture_tb__class_tb').filter(class_tb_id=class_id, ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
+                                                        ticket_tb__name__contains=keyword, ticket_tb__use=USE,
+                                                        use=USE).order_by('ticket_tb_id', 'lecture_tb__state_cd',
+                                                                          'lecture_tb_id')
 
         ticket_data_dict = {}
         for ticket_lecture_info in ticket_lecture_data:
@@ -4622,7 +4622,7 @@ class GetTicketIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                'ticket_lecture_end_color_cd_list': [],
                                                'ticket_lecture_end_font_color_cd_list': []}
             if lecture_tb.use == USE:
-                if lecture_tb.class_tb_id == class_id:
+                if str(lecture_tb.class_tb_id) == str(class_id):
                     ticket_data_dict[ticket_id]['ticket_lecture_list'].append(lecture_tb.name)
                 else:
                     ticket_data_dict[ticket_id]['ticket_lecture_list'].append(
@@ -4720,11 +4720,11 @@ class GetTicketEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                               name__contains=keyword,
                                               use=USE).order_by('ticket_id')
         ticket_lecture_data = TicketLectureTb.objects.select_related(
-            'ticket_tb', 'lecture_tb').filter(class_tb_id=class_id, ticket_tb__state_cd=STATE_CD_FINISH,
-                                              ticket_tb__name__contains=keyword,
-                                              ticket_tb__use=USE, use=USE).order_by('ticket_tb_id',
-                                                                                    'lecture_tb__state_cd',
-                                                                                    'lecture_tb_id')
+            'ticket_tb', 'lecture_tb__class_tb').filter(class_tb_id=class_id, ticket_tb__state_cd=STATE_CD_FINISH,
+                                                        ticket_tb__name__contains=keyword,
+                                                        ticket_tb__use=USE, use=USE).order_by('ticket_tb_id',
+                                                                                              'lecture_tb__state_cd',
+                                                                                              'lecture_tb_id')
 
         ticket_data_dict = {}
         for ticket_lecture_info in ticket_lecture_data:
@@ -4753,7 +4753,7 @@ class GetTicketEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                'ticket_lecture_end_font_color_cd_list': []}
             if lecture_tb.use == USE:
 
-                if lecture_tb.class_tb_id == class_id:
+                if str(lecture_tb.class_tb_id) == str(class_id):
                     ticket_data_dict[ticket_id]['ticket_lecture_list'].append(lecture_tb.name)
                 else:
                     ticket_data_dict[ticket_id]['ticket_lecture_list'].append(

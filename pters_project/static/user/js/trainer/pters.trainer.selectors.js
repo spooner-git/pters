@@ -2659,7 +2659,7 @@ class TicketSelector{
         let html_to_join = [];
         let length = this.received_data.length;
         if(length == 0){
-            html_to_join.push(CComponent.no_data_row('수업 목록이 비어있습니다.'));
+            html_to_join.push(CComponent.no_data_row('수강권 목록이 비어있습니다.'));
         }
 
         for(let i=0; i<length; i++){
@@ -2886,8 +2886,10 @@ class LectureSelector{
         this.unique_instance = install_target.replace(/#./gi, "");
         this.callback = callback;
         this.received_data;
+        this.received_other_program_data;
         this.appendix = appendix;
         this.multiple_select = multiple_select;
+        this.hide_entire_lecture_list = true;
         this.data = {
             id: [],
             name: [],
@@ -3011,6 +3013,105 @@ class LectureSelector{
             let dom_add_new_lecture = this.dom_add_new_lecture();
             html_to_join.unshift(dom_add_new_lecture);
         }
+        // document.querySelector(this.targetHTML).innerHTML = html_to_join.join('');
+        return html_to_join.join('');
+    }
+
+    dom_list_other_program (){
+        let html_to_join = [];
+        let length = this.received_other_program_data.length;
+        let select_member_num = 0;
+        if(length == 0){
+            html_to_join.push(CComponent.no_data_row('목록이 비어있습니다.', {"border-bottom":0}));
+        }
+        for(let i=0; i<length; i++){
+            let data = this.received_other_program_data[i];
+            let lecture_id = data.lecture_id;
+            let lecture_name = data.lecture_name;
+            let lecture_color_code = data.lecture_ing_color_cd;
+            let lecture_max_num = data.lecture_max_num;
+            let lecture_state_cd = data.lecture_ing_member_num == undefined ? "end" : "ing";
+            let lecture_type_cd = data.lecture_type_cd;
+            let lecture_ing_member_num = data.lecture_ing_member_num;
+            let lecture_time = data.lecture_minute;
+            let main_trainer_id = data.main_trainer_id;
+            let main_trainer_name = data.main_trainer_name;
+            let checked = this.appendix.lecture_id.indexOf(lecture_id) >= 0 ? 1 : 0;
+            let html = CComponent.select_lecture_row(
+                this.multiple_select, checked, this.unique_instance, lecture_id, lecture_name, lecture_color_code, lecture_max_num,
+                lecture_ing_member_num, lecture_state_cd, lecture_time, main_trainer_id, main_trainer_name,(add_or_substract)=>{
+                    if(add_or_substract == "add"){
+                        this.data.name.push(lecture_name);
+                        this.data.max.push(lecture_max_num);
+                        // this.data.state_cd.push(lecture_state_cd);
+                        this.data.type_cd.push(lecture_type_cd);
+                        this.data.color.push(lecture_color_code);
+                        this.data.main_trainer_id.push(main_trainer_id);
+                        this.data.main_trainer_name.push(main_trainer_name);
+                        this.data.id.push(lecture_id);
+                    }else if(add_or_substract == "substract"){
+                        this.data.name.splice(this.data.id.indexOf(lecture_id), 1); // 이름으로 찾기 x, 고유한 ID로
+                        this.data.max.splice(this.data.id.indexOf(lecture_id), 1); // 이름으로 찾기 x, 고유한 ID로
+                        this.data.state_cd.splice(this.data.id.indexOf(lecture_id), 1); // 이름으로 찾기 x, 고유한 ID로
+                        this.data.type_cd.splice(this.data.id.indexOf(lecture_id), 1); // 이름으로 찾기 x, 고유한 ID로
+                        this.data.color.splice(this.data.id.indexOf(lecture_id), 1);
+                        this.data.main_trainer_id.splice(this.data.id.indexOf(lecture_id), 1);
+                        this.data.main_trainer_name.splice(this.data.id.indexOf(lecture_id), 1);
+                        this.data.id.splice(this.data.id.indexOf(lecture_id), 1);
+                    }else if(add_or_substract == "add_single"){
+                        this.data.id = [];
+                        this.data.name = [];
+                        this.data.max = [];
+                        this.data.state_cd = [];
+                        this.data.type_cd = [];
+                        this.data.color = [];
+                        this.data.main_trainer_id = [];
+                        this.data.main_trainer_name = [];
+                        this.data.id.push(lecture_id);
+                        this.data.name.push(lecture_name);
+                        this.data.max.push(lecture_max_num);
+                        // this.data.state_cd.push(lecture_state_cd);
+                        this.data.type_cd.push(lecture_type_cd);
+                        this.data.color.push(lecture_color_code);
+                        this.data.main_trainer_id.push(main_trainer_id);
+                        this.data.main_trainer_name.push(main_trainer_name);
+                    }
+
+                    // this.target_instance.lecture = this.data;
+
+                    if(this.multiple_select == 1){
+                        this.upper_right_menu();
+                    }
+                }
+            );
+            if(checked > 0){
+                html_to_join.unshift(html);
+            }else{
+                html_to_join.push(html);
+            }
+        }
+
+        if(this.hide_entire_lecture_list == true){
+            html_to_join = [];
+        }
+
+        let img_expand = CImg.arrow_expand("", {"width":"18px", "height":"18px", "vertical-align":"middle"});
+        let img_fold = CImg.arrow_expand("", {"width":"18px", "height":"18px", "vertical-align":"middle", "transform":"rotate(180deg)"})
+
+        let button_title = `<span>다른 지점 수업</span><span style="float:right;">${this.hide_entire_lecture_list == true ? "펼치기 "+img_expand : "접기" + img_fold}</span>`;
+        html_to_join.unshift(`<div class="select_member_max_num">
+                                ${CComponent.text_button("entire_member_toggle", button_title, {"display":"block"}, ()=>{
+                                    this.hide_entire_lecture_list = this.hide_entire_lecture_list == true ? false : true;
+                                    if(this.hide_entire_lecture_list){
+                                        
+                                    }
+                                    else{
+                                        this.render();
+                                    }
+                                })}
+                                
+                            </div>`);
+
         // document.querySelector(this.targetHTML).innerHTML = html_to_join.join('');
         return html_to_join.join('');
     }

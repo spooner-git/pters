@@ -1329,9 +1329,10 @@ def func_get_trainer_setting_list(context, class_id, user_id):
 
 def func_get_ticket_info(class_id, ticket_id, user_id):
     ticket_lecture_data = TicketLectureTb.objects.select_related(
-        'ticket_tb', 'lecture_tb').filter(ticket_tb_id=ticket_id,
-                                          ticket_tb__state_cd=STATE_CD_IN_PROGRESS, ticket_tb__use=USE,
-                                          use=USE).order_by('ticket_tb_id', 'lecture_tb__state_cd', 'lecture_tb_id')
+        'ticket_tb', 'lecture_tb__class_tb').filter(ticket_tb_id=ticket_id,
+                                                    ticket_tb__state_cd=STATE_CD_IN_PROGRESS, ticket_tb__use=USE,
+                                                    use=USE).order_by('ticket_tb', 'lecture_tb__state_cd',
+                                                                      'lecture_tb_id')
 
     ticket_lecture_list = []
     ticket_lecture_state_cd_list = []
@@ -1350,11 +1351,11 @@ def func_get_ticket_info(class_id, ticket_id, user_id):
         lecture_tb = ticket_lecture_info.lecture_tb
         if lecture_tb.use == USE:
 
-            if lecture_tb.class_tb_id == class_id:
+            if str(lecture_tb.class_tb_id) == str(class_id):
                 ticket_lecture_list.append(lecture_tb.name)
             else:
                 ticket_lecture_list.append('('+lecture_tb.class_tb.get_class_type_cd_name()+' 지점) '+lecture_tb.name)
-            ticket_lecture_list.append(lecture_tb.name)
+
             ticket_lecture_state_cd_list.append(lecture_tb.state_cd)
             ticket_lecture_id_list.append(str(lecture_tb.lecture_id))
             ticket_lecture_ing_color_cd_list.append(lecture_tb.ing_color_cd)
