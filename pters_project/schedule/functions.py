@@ -576,12 +576,17 @@ def func_add_repeat_schedule(class_id, member_ticket_id, lecture_id, lecture_sch
 
     if member_ticket_id == '':
         member_ticket_id = None
+
     if trainer_id is None or trainer_id == '':
-        try:
-            lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
-            trainer_id = lecture_info.main_trainer.member_id
-        except ObjectDoesNotExist:
-            trainer_id = user_id
+        if lecture_id is not None and lecture_id != '':
+            try:
+                lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
+                if lecture_info.main_trainer is None:
+                    trainer_id = lecture_info.class_tb.member_id
+                else:
+                    trainer_id = lecture_info.main_trainer.member_id
+            except ObjectDoesNotExist:
+                trainer_id = user_id
 
     try:
         with transaction.atomic():
