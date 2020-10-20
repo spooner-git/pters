@@ -1324,7 +1324,7 @@ def func_get_trainer_setting_list(context, class_id, user_id):
 
 def func_get_ticket_info(class_id, ticket_id, user_id):
     ticket_lecture_data = TicketLectureTb.objects.select_related(
-        'ticket_tb', 'lecture_tb').filter(ticket_tb_id=ticket_id,
+        'ticket_tb', 'lecture_tb__main_trainer', 'lecture_tb__class_tb_member').filter(ticket_tb_id=ticket_id,
                                           ticket_tb__state_cd=STATE_CD_IN_PROGRESS, ticket_tb__use=USE,
                                           use=USE).order_by('ticket_tb_id', 'lecture_tb__state_cd', 'lecture_tb_id')
 
@@ -1351,8 +1351,16 @@ def func_get_ticket_info(class_id, ticket_id, user_id):
             ticket_lecture_ing_font_color_cd_list.append(lecture_tb.ing_font_color_cd)
             ticket_lecture_end_color_cd_list.append(lecture_tb.end_color_cd)
             ticket_lecture_end_font_color_cd_list.append(lecture_tb.end_font_color_cd)
-            ticket_lecture_main_trainer_id_list.append(lecture_tb.main_trainer_id)
-            ticket_lecture_main_trainer_name_list.append(lecture_tb.main_trainer.name)
+            main_trainer_id = ''
+            main_trainer_name = ''
+            if lecture_tb.main_trainer is None:
+                main_trainer_id = lecture_tb.class_tb.member_id
+                main_trainer_name = lecture_tb.class_tb.member.name
+            else:
+                main_trainer_id = lecture_tb.main_trainer.member_id
+                main_trainer_name = lecture_tb.main_trainer.name
+            ticket_lecture_main_trainer_id_list.append(main_trainer_id)
+            ticket_lecture_main_trainer_name_list.append(main_trainer_name)
 
     if ticket_tb is None:
         try:

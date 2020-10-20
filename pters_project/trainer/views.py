@@ -5017,7 +5017,7 @@ def add_program_info_logic(request):
                                                     ing_color_cd='#fbf3bd', end_color_cd='#d2d1cf',
                                                     ing_font_color_cd='#282828', end_font_color_cd='#282828',
                                                     state_cd=STATE_CD_IN_PROGRESS,
-                                                    lecture_minute=60,
+                                                    lecture_minute=60, main_trainer_id=request.user.id,
                                                     lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, member_num=1, use=USE)
                 one_to_one_lecture_info.save()
 
@@ -5034,6 +5034,7 @@ def add_program_info_logic(request):
                                                ing_color_cd='#d8d6ff', end_color_cd='#d2d1cf',
                                                ing_font_color_cd='#282828', end_font_color_cd='#282828',
                                                state_cd=STATE_CD_IN_PROGRESS, lecture_minute=60,
+                                               main_trainer_id=request.user.id,
                                                lecture_type_cd=LECTURE_TYPE_NORMAL, member_num=2, use=USE)
                 group_lecture_info.save()
 
