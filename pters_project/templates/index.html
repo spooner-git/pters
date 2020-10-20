@@ -656,12 +656,12 @@
     }
   */
     $("#download_img_ios").click(function(){
-        {#adn_btn_ok('102076','types2');#}
+        adn_btn_ok('102076','types2');
         window.open("{{request.session.ios_url}}");
     });
 
     $("#download_img_android").click(function(){
-        {#adn_btn_ok('102076','types3');#}
+        adn_btn_ok('102076','types3');
         window.open("{{request.session.android_url}}");
     });
 
@@ -849,7 +849,8 @@ function show_description(){
     go_to("what");
 }
 </script>
-{#<script type="text/javascript" async src="//fin.rainbownine.net/js/adn_tags_1.0.0.js"></script>#}
-
+<!-- ADN Tracker[구글플레이] start -->
+<!--<script type="text/javascript" async src="//fin.rainbownine.net/js/adn_tags_1.0.0.js"></script>-->
+<!-- ADN Tracker[구글플레이] end -->
 
 {% endblock %}

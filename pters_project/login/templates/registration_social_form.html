@@ -46,7 +46,7 @@
                             <input class="pters_login_input" type="text" name="recommend_username" id="id_recommend_username" placeholder="추천인 아이디" minlength="4" maxlength="40" title="추천인 아이디"
                             pattern="[a-zA-Z0-9-._@]{4,40}" onkeyup="limit_char_auto_correction(event.target);$('#recommend_id_confirm').text('');" data-error-message="" data-valid="true">
                         </div>
-                        <div class="activation_button" id="recommend_id_confirm_button" onclick="check_recommend_id();" style="pointer-events:;">확인</div>
+                        <div class="activation_button" id="recommend_id_confirm_button" onclick="check_recommend_id();" >확인</div>
                         <div class="input_description">
                             <div class="input_description_text" id="recommend_id_confirm"></div>
                         </div>
@@ -123,8 +123,8 @@
                     alert(id_recommend_username+'님을 추천인을 등록하려면 추천인 아이디 확인을 해주세요.');
                     $('#id_recommend_username').val('');
                 }else{
-                    //adn_btn_ok('102076','types1');
-                    mobConv();
+                    adn_btn_ok('102076','types1');
+                    //mobConv();
                     document.getElementById('sns-form').submit();
                 }
 
@@ -175,20 +175,7 @@
             last_scroll_top = current_scroll_top;
         }
     </script>
-{#    <script type="text/javascript" async src="//fin.rainbownine.net/js/adn_tags_1.0.0.js"></script>#}
-    <script type="text/javascript">
-    //<!--
-    function mobConv() {
-        var cn = new EN();
-        cn.setData("uid", "pters1010");
-        cn.setData("ordcode", "");
-        cn.setData("qty", "1");
-        cn.setData("price", "1");
-        cn.setData("pnm", encodeURIComponent(encodeURIComponent("counsel")));
-        cn.setSSL(true);
-        cn.sendConv();
-    }
-    //-->
-    </script>
-    <script src="https://cdn.megadata.co.kr/js/en_script/3.6/enliple_min3.6.js" defer="defer"></script>
+<!-- ADN Tracker[가입 완료] start -->
+<!--<script type="text/javascript" async src="//fin.rainbownine.net/js/adn_tags_1.0.0.js"></script>-->
+<!-- ADN Tracker[가입 완료] end -->
 {% endblock %}
