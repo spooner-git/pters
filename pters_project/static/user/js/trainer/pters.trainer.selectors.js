@@ -2931,7 +2931,11 @@ class LectureSelector{
         let top_center = `<span class="icon_center"><span id="">${this.appendix.title}</span></span>`;
         let top_right = `<span class="icon_right" onclick="lecture_select.upper_right_menu();"><span style="color:var(--font-highlight);font-weight: 500;">완료</span></span>`;
         let content =   `<section>${this.dom_list()}</section>`;
-        
+        let content_other_program = `<section>${this.dom_list_other_program()}</section>`;
+        if(this.appendix.entire_lecture == SHOW){ //전체 회원 리스트도 함께 표기
+            content = content + content_other_program;
+        }
+
         let html = PopupBase.base(top_left, top_center, top_right, content, "");
 
         document.querySelector(this.target.install).innerHTML = html;
@@ -3009,10 +3013,11 @@ class LectureSelector{
                 html_to_join.push(html);
             }
         }
-        if(this.appendix.new_add == SHOW){
-            let dom_add_new_lecture = this.dom_add_new_lecture();
-            html_to_join.unshift(dom_add_new_lecture);
-        }
+
+        html_to_join.unshift(`<div class="select_member_max_num" >
+                                <span>이 지점 수업</span><span> (${this.received_data.length}개)</span>
+                            </div>`);
+
         // document.querySelector(this.targetHTML).innerHTML = html_to_join.join('');
         return html_to_join.join('');
     }
@@ -3030,16 +3035,15 @@ class LectureSelector{
             let lecture_name = data.lecture_name;
             let lecture_color_code = data.lecture_ing_color_cd;
             let lecture_max_num = data.lecture_max_num;
-            let lecture_state_cd = data.lecture_ing_member_num == undefined ? "end" : "ing";
+            let lecture_state_cd = "ing";
             let lecture_type_cd = data.lecture_type_cd;
-            let lecture_ing_member_num = data.lecture_ing_member_num;
             let lecture_time = data.lecture_minute;
             let main_trainer_id = data.main_trainer_id;
             let main_trainer_name = data.main_trainer_name;
             let checked = this.appendix.lecture_id.indexOf(lecture_id) >= 0 ? 1 : 0;
-            let html = CComponent.select_lecture_row(
+            let html = CComponent.select_lecture_other_program_row(
                 this.multiple_select, checked, this.unique_instance, lecture_id, lecture_name, lecture_color_code, lecture_max_num,
-                lecture_ing_member_num, lecture_state_cd, lecture_time, main_trainer_id, main_trainer_name,(add_or_substract)=>{
+                lecture_state_cd, lecture_time, main_trainer_id, main_trainer_name,(add_or_substract)=>{
                     if(add_or_substract == "add"){
                         this.data.name.push(lecture_name);
                         this.data.max.push(lecture_max_num);
@@ -3098,20 +3102,14 @@ class LectureSelector{
         let img_expand = CImg.arrow_expand("", {"width":"18px", "height":"18px", "vertical-align":"middle"});
         let img_fold = CImg.arrow_expand("", {"width":"18px", "height":"18px", "vertical-align":"middle", "transform":"rotate(180deg)"})
 
-        let button_title = `<span>다른 지점 수업</span><span style="float:right;">${this.hide_entire_lecture_list == true ? "펼치기 "+img_expand : "접기" + img_fold}</span>`;
+        let button_title = `<span style="font-size:14px;">다른 지점 수업</span><span style="float:right; font-size:14px;">${this.hide_entire_lecture_list == true ? "펼치기 "+img_expand : "접기" + img_fold}</span>`;
         html_to_join.unshift(`<div class="select_member_max_num">
                                 ${CComponent.text_button("entire_member_toggle", button_title, {"display":"block"}, ()=>{
                                     this.hide_entire_lecture_list = this.hide_entire_lecture_list == true ? false : true;
-                                    if(this.hide_entire_lecture_list){
-                                        
-                                    }
-                                    else{
-                                        this.render();
-                                    }
+                                    this.render();
                                 })}
                                 
                             </div>`);
-
         // document.querySelector(this.targetHTML).innerHTML = html_to_join.join('');
         return html_to_join.join('');
     }
@@ -3138,15 +3136,18 @@ class LectureSelector{
     request_list (callback){
         lecture.request_lecture_list("ing", (data)=>{
             this.received_data = data.current_lecture_data;
-            lecture.request_lecture_list("end", (data)=>{
-                let length = data.finish_lecture_data.length;
-                for(let i=0; i<length; i++){
-                    let lecture_id = data.finish_lecture_data[i].lecture_id;
-                    if(this.data.id.indexOf(lecture_id) != -1){
-                        this.received_data.push(data.finish_lecture_data[i]);
+            lecture.request_lecture_list("other_program", (data)=>{
+               this.received_other_program_data = data.current_lecture_data;
+                lecture.request_lecture_list("end", (data)=>{
+                    let length = data.finish_lecture_data.length;
+                    for(let i=0; i<length; i++){
+                        let lecture_id = data.finish_lecture_data[i].lecture_id;
+                        if(this.data.id.indexOf(lecture_id) != -1){
+                            this.received_data.push(data.finish_lecture_data[i]);
+                        }
                     }
-                }
-                callback();
+                    callback();
+                });
             });
         });
     }

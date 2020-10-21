@@ -195,8 +195,8 @@ urlpatterns = [
         name='get_lecture_ing_member_list'),
 
     # # 권한이 있는 다른 지점 수업 list 조회 - refactoring
-    # url(r'^get_lecture_ing_list_other_program/$', views.GetLectureIngListOtherProgramViewAjax.as_view(),
-    #     name='get_lecture_ing_list'),
+    url(r'^get_lecture_ing_list_other_program/$', views.GetLectureIngListOtherProgramViewAjax.as_view(),
+        name='get_lecture_ing_list'),
 
 
     # 수강권 기능 #########################################################################################################

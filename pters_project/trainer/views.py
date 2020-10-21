@@ -4012,8 +4012,8 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                  'lecture_minute': lecture_tb.lecture_minute,
                                                  'lecture_type_cd': lecture_tb.lecture_type_cd,
                                                  'lecture_reg_dt': lecture_tb.reg_dt,
-                                                 'lecture_main_trainer_id': main_trainer_id,
-                                                 'lecture_main_trainer_name': main_trainer_name,
+                                                 'main_trainer_id': main_trainer_id,
+                                                 'main_trainer_name': main_trainer_name,
                                                  'lecture_ticket_list': [],
                                                  'lecture_ticket_state_cd_list': [],
                                                  'lecture_ticket_id_list': []}
@@ -4054,8 +4054,8 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                      'lecture_minute': lecture_info.lecture_minute,
                                                      'lecture_type_cd': lecture_info.lecture_type_cd,
                                                      'lecture_reg_dt': lecture_info.reg_dt,
-                                                     'lecture_main_trainer_id': main_trainer_id,
-                                                     'lecture_main_trainer_name': main_trainer_name,
+                                                     'main_trainer_id': main_trainer_id,
+                                                     'main_trainer_name': main_trainer_name,
                                                      'lecture_ticket_list': [],
                                                      'lecture_ticket_state_cd_list': [],
                                                      'lecture_ticket_id_list': []}
@@ -4134,6 +4134,85 @@ class GetLectureIngMemberListViewAjax(LoginRequiredMixin, AccessTestMixin, View)
             messages.error(request, error)
 
         return JsonResponse({'lecture_ing_member_list': member_list}, json_dumps_params={'ensure_ascii': True})
+
+
+class GetLectureIngListOtherProgramViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        class_id = self.request.session.get('class_id', '')
+        lecture_sort = self.request.GET.get('sort_val', SORT_TICKET_NAME)
+        sort_order_by = self.request.GET.get('sort_order_by', SORT_ASC)
+        keyword = self.request.GET.get('keyword', '')
+        sort_info = int(lecture_sort)
+        error = None
+
+        member_program_data = MemberClassTb.objects.select_related(
+            'class_tb', 'member').filter(member_id=request.user.id, auth_cd=AUTH_TYPE_VIEW, use=USE)
+
+        class_id_list = Q()
+        for member_program_info in member_program_data:
+            if member_program_info.class_tb_id != class_id:
+                class_id_list |= Q(class_tb_id=member_program_info.class_tb_id)
+
+        program_auth_data = ProgramAuthTb.objects.select_related('class_tb', 'member',
+                                                                 'function_auth_tb').filter(class_id_list,
+                                                                                            member_id=request.user.id,
+                                                                                            function_auth_tb_id=38,
+                                                                                            auth_type_cd='_update',
+                                                                                            use=USE)
+
+        for program_auth_info in program_auth_data:
+            class_id_list |= Q(class_tb_id=program_auth_info.class_tb_id)
+
+        lecture_data = LectureTb.objects.select_related(
+            'main_trainer', 'class_tb__member').filter(class_id_list, state_cd=STATE_CD_IN_PROGRESS,
+                                                       name__contains=keyword, use=USE).order_by('class_tb_id', 'name')
+
+        lecture_data_dict = {}
+
+        # 수업에 수강권이 연결되어있지 않은 경우 처리
+        for lecture_info in lecture_data:
+            lecture_id = str(lecture_info.lecture_id)
+            main_trainer_id = lecture_info.class_tb.member_id
+            main_trainer_name = lecture_info.class_tb.member.name
+            if lecture_info.main_trainer is None or lecture_info.main_trainer == '':
+                lecture_info.main_trainer_id = lecture_info.class_tb.member_id
+                lecture_info.save()
+            else:
+                main_trainer_id = lecture_info.main_trainer_id
+                main_trainer_name = lecture_info.main_trainer.name
+
+            try:
+                lecture_data_dict[lecture_id]
+            except KeyError:
+                lecture_data_dict[lecture_id] = {'lecture_id': lecture_id,
+                                                 'lecture_name': lecture_info.name,
+                                                 'lecture_note': lecture_info.note,
+                                                 'lecture_max_num': lecture_info.member_num,
+                                                 'lecture_ing_color_cd': lecture_info.ing_color_cd,
+                                                 'lecture_ing_font_color_cd': lecture_info.ing_font_color_cd,
+                                                 'lecture_end_color_cd': lecture_info.end_color_cd,
+                                                 'lecture_end_font_color_cd': lecture_info.end_font_color_cd,
+                                                 'lecture_minute': lecture_info.lecture_minute,
+                                                 'lecture_type_cd': lecture_info.lecture_type_cd,
+                                                 'lecture_reg_dt': lecture_info.reg_dt,
+                                                 'main_trainer_id': main_trainer_id,
+                                                 'main_trainer_name': main_trainer_name,}
+
+                if str(lecture_info.class_tb_id) != str(class_id):
+                    lecture_data_dict[lecture_id]['lecture_name'] =\
+                        '(' + lecture_info.class_tb.get_class_type_cd_name() + ' 지점) ' + lecture_info.name
+
+        lecture_list = []
+
+        for lecture_info in lecture_data_dict:
+            lecture_list.append(lecture_data_dict[lecture_info])
+
+        if error is not None:
+            logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+            messages.error(request, error)
+
+        return JsonResponse({'current_lecture_data': lecture_list}, json_dumps_params={'ensure_ascii': True})
 
 
 # 패키지 추가
@@ -4588,11 +4667,12 @@ class GetTicketIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         # start_time = timezone.now()
         ticket_data = TicketTb.objects.filter(class_tb_id=class_id, state_cd=STATE_CD_IN_PROGRESS,
                                               name__contains=keyword,
-                                              use=USE).order_by('ticket_id')
+                                              use=USE).order_by('class_tb_id', 'ticket_id')
         ticket_lecture_data = TicketLectureTb.objects.select_related(
             'ticket_tb', 'lecture_tb__class_tb').filter(class_tb_id=class_id, ticket_tb__state_cd=STATE_CD_IN_PROGRESS,
                                                         ticket_tb__name__contains=keyword, ticket_tb__use=USE,
-                                                        use=USE).order_by('ticket_tb_id', 'lecture_tb__state_cd',
+                                                        use=USE).order_by('class_tb_id', 'ticket_tb_id',
+                                                                          'lecture_tb__state_cd',
                                                                           'lecture_tb_id')
 
         ticket_data_dict = {}
@@ -4718,11 +4798,12 @@ class GetTicketEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
         ticket_data = TicketTb.objects.filter(class_tb_id=class_id, state_cd=STATE_CD_FINISH,
                                               name__contains=keyword,
-                                              use=USE).order_by('ticket_id')
+                                              use=USE).order_by('class_tb_id', 'ticket_id')
         ticket_lecture_data = TicketLectureTb.objects.select_related(
             'ticket_tb', 'lecture_tb__class_tb').filter(class_tb_id=class_id, ticket_tb__state_cd=STATE_CD_FINISH,
                                                         ticket_tb__name__contains=keyword,
-                                                        ticket_tb__use=USE, use=USE).order_by('ticket_tb_id',
+                                                        ticket_tb__use=USE, use=USE).order_by('class_tb_id',
+                                                                                              'ticket_tb_id',
                                                                                               'lecture_tb__state_cd',
                                                                                               'lecture_tb_id')
 

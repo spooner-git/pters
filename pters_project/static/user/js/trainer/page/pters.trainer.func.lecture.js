@@ -294,6 +294,8 @@ class Lecture {
             url = '/trainer/get_lecture_ing_list/';
         }else if (status=='end'){
             url = '/trainer/get_lecture_end_list/';
+        }else if (status=='other_program'){
+            url = '/trainer/get_lecture_ing_list_other_program/';
         }
 
         $.ajax({

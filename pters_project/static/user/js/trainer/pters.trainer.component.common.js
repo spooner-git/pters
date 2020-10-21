@@ -379,6 +379,55 @@ class CComponent{
         return html;
     }
 
+    //수업 선택 팝업에 사용되는 행
+    static select_lecture_other_program_row (multiple_select, checked, location, lecture_id, lecture_name, color_code,
+                               max_member_num, lecture_state_cd, lecture_time, main_trainer_id, main_trainer_name, onclick){
+                let html = `
+                    <li class="select_lecture_row slr_${location}" id="select_lecture_row_${lecture_id}" ${lecture_state_cd == "end" ? "style='opacity:0.6'": ""}>
+                        <div class="obj_table_raw">
+                            <div class="cell_lecture_color">
+                                <div style="background-color:${color_code}" class="lecture_color_bar">
+                                </div>
+                            </div>
+                            <div class="cell_lecture_info">
+                                <div class="lecture_name_info">${lecture_state_cd == "end" ? "(비활성)": ""} ${lecture_name}</div>
+                                <div class="lecture_additional_info" ${lecture_state_cd == "end" ? "style='display:none'": ""}>정원: ${max_member_num} 명 / 수업시간: ${lecture_time} 분  / 담당강사: ${main_trainer_name}</div>
+                                <div class="lecture_additional_info" ${lecture_state_cd == "ing" ? "style='display:none'": ""}>정원: ${max_member_num} 명 / 수업시간: ${lecture_time} 분  / 담당강사: ${main_trainer_name}</div>
+                            </div>
+                            <div class="cell_lecture_selected ${checked == 0 ? 'none' : 'lecture_selected'}">
+                                ${CImg.confirm("", checked == 0 ? {"display":"none"} : {"display":"block"})}
+                            </div>
+                        </div>
+                    </li>
+                    `;
+
+        if(multiple_select > 1){
+            $(document).off('click', `#select_lecture_row_${lecture_id}`).on('click', `#select_lecture_row_${lecture_id}`, function(e){
+                if(!$(this).find('.cell_lecture_selected').hasClass('lecture_selected')){
+                    if($(`.slr_${location} .lecture_selected`).length >= multiple_select){
+                        show_error_message({title:`${multiple_select} 개까지 선택할 수 있습니다.`});
+                        return false;
+                    }
+                    // $(this).find('.cell_lecture_selected img').addClass('lecture_selected');
+                    $(this).find('.cell_lecture_selected').addClass('lecture_selected');
+                    $(this).find('svg').css('display', 'block');
+                    onclick('add');
+                }else{
+                    // $(this).find('.cell_lecture_selected img').removeClass('lecture_selected');
+                    $(this).find('.cell_lecture_selected').removeClass('lecture_selected');
+                    $(this).find('svg').css('display', 'none');
+                    onclick('substract');
+                }
+            });
+        }else if(multiple_select == 1){
+            $(document).off('click', `#select_lecture_row_${lecture_id}`).on('click', `#select_lecture_row_${lecture_id}`, function(e){
+
+                onclick('add_single');
+
+            });
+        }
+        return html;
+    }
     //회원 선택 팝업에 사용되는 행
     static select_member_row (multiple_select, checked, location, member_id, member_name, member_reg_count, member_avail_count, member_expiry, member_fix_state_cd, member_profile_url, disable_zero_avail_count, onclick){
         let fix_member_check = '';
