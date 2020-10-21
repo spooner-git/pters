@@ -4150,63 +4150,65 @@ class GetLectureIngListOtherProgramViewAjax(LoginRequiredMixin, AccessTestMixin,
             'class_tb', 'member').filter(member_id=request.user.id, auth_cd=AUTH_TYPE_VIEW, use=USE)
 
         class_id_list = Q()
+        counter = 0
+        lecture_data_dict = {}
+        lecture_list = []
+
         for member_program_info in member_program_data:
             if member_program_info.class_tb_id != class_id:
                 class_id_list |= Q(class_tb_id=member_program_info.class_tb_id)
+                counter += 1
 
-        program_auth_data = ProgramAuthTb.objects.select_related('class_tb', 'member',
-                                                                 'function_auth_tb').filter(class_id_list,
-                                                                                            member_id=request.user.id,
-                                                                                            function_auth_tb_id=38,
-                                                                                            auth_type_cd='_update',
-                                                                                            use=USE)
+        if counter > 0:
+            program_auth_data = ProgramAuthTb.objects.select_related('class_tb', 'member',
+                                                                     'function_auth_tb').filter(class_id_list,
+                                                                                                member_id=request.user.id,
+                                                                                                function_auth_tb_id=38,
+                                                                                                auth_type_cd='_update',
+                                                                                                use=USE)
 
-        for program_auth_info in program_auth_data:
-            class_id_list |= Q(class_tb_id=program_auth_info.class_tb_id)
+            for program_auth_info in program_auth_data:
+                class_id_list |= Q(class_tb_id=program_auth_info.class_tb_id)
 
-        lecture_data = LectureTb.objects.select_related(
-            'main_trainer', 'class_tb__member').filter(class_id_list, state_cd=STATE_CD_IN_PROGRESS,
-                                                       name__contains=keyword, use=USE).order_by('class_tb_id', 'name')
+            lecture_data = LectureTb.objects.select_related(
+                'main_trainer', 'class_tb__member').filter(class_id_list, state_cd=STATE_CD_IN_PROGRESS,
+                                                           name__contains=keyword, use=USE).order_by('class_tb_id', 'name')
 
-        lecture_data_dict = {}
+            # 수업에 수강권이 연결되어있지 않은 경우 처리
+            for lecture_info in lecture_data:
+                lecture_id = str(lecture_info.lecture_id)
+                main_trainer_id = lecture_info.class_tb.member_id
+                main_trainer_name = lecture_info.class_tb.member.name
+                if lecture_info.main_trainer is None or lecture_info.main_trainer == '':
+                    lecture_info.main_trainer_id = lecture_info.class_tb.member_id
+                    lecture_info.save()
+                else:
+                    main_trainer_id = lecture_info.main_trainer_id
+                    main_trainer_name = lecture_info.main_trainer.name
 
-        # 수업에 수강권이 연결되어있지 않은 경우 처리
-        for lecture_info in lecture_data:
-            lecture_id = str(lecture_info.lecture_id)
-            main_trainer_id = lecture_info.class_tb.member_id
-            main_trainer_name = lecture_info.class_tb.member.name
-            if lecture_info.main_trainer is None or lecture_info.main_trainer == '':
-                lecture_info.main_trainer_id = lecture_info.class_tb.member_id
-                lecture_info.save()
-            else:
-                main_trainer_id = lecture_info.main_trainer_id
-                main_trainer_name = lecture_info.main_trainer.name
+                try:
+                    lecture_data_dict[lecture_id]
+                except KeyError:
+                    lecture_data_dict[lecture_id] = {'lecture_id': lecture_id,
+                                                     'lecture_name': lecture_info.name,
+                                                     'lecture_note': lecture_info.note,
+                                                     'lecture_max_num': lecture_info.member_num,
+                                                     'lecture_ing_color_cd': lecture_info.ing_color_cd,
+                                                     'lecture_ing_font_color_cd': lecture_info.ing_font_color_cd,
+                                                     'lecture_end_color_cd': lecture_info.end_color_cd,
+                                                     'lecture_end_font_color_cd': lecture_info.end_font_color_cd,
+                                                     'lecture_minute': lecture_info.lecture_minute,
+                                                     'lecture_type_cd': lecture_info.lecture_type_cd,
+                                                     'lecture_reg_dt': lecture_info.reg_dt,
+                                                     'main_trainer_id': main_trainer_id,
+                                                     'main_trainer_name': main_trainer_name,}
 
-            try:
-                lecture_data_dict[lecture_id]
-            except KeyError:
-                lecture_data_dict[lecture_id] = {'lecture_id': lecture_id,
-                                                 'lecture_name': lecture_info.name,
-                                                 'lecture_note': lecture_info.note,
-                                                 'lecture_max_num': lecture_info.member_num,
-                                                 'lecture_ing_color_cd': lecture_info.ing_color_cd,
-                                                 'lecture_ing_font_color_cd': lecture_info.ing_font_color_cd,
-                                                 'lecture_end_color_cd': lecture_info.end_color_cd,
-                                                 'lecture_end_font_color_cd': lecture_info.end_font_color_cd,
-                                                 'lecture_minute': lecture_info.lecture_minute,
-                                                 'lecture_type_cd': lecture_info.lecture_type_cd,
-                                                 'lecture_reg_dt': lecture_info.reg_dt,
-                                                 'main_trainer_id': main_trainer_id,
-                                                 'main_trainer_name': main_trainer_name,}
+                    if str(lecture_info.class_tb_id) != str(class_id):
+                        lecture_data_dict[lecture_id]['lecture_name'] =\
+                            '(' + lecture_info.class_tb.get_class_type_cd_name() + ' 지점) ' + lecture_info.name
 
-                if str(lecture_info.class_tb_id) != str(class_id):
-                    lecture_data_dict[lecture_id]['lecture_name'] =\
-                        '(' + lecture_info.class_tb.get_class_type_cd_name() + ' 지점) ' + lecture_info.name
-
-        lecture_list = []
-
-        for lecture_info in lecture_data_dict:
-            lecture_list.append(lecture_data_dict[lecture_info])
+            for lecture_info in lecture_data_dict:
+                lecture_list.append(lecture_data_dict[lecture_info])
 
         if error is not None:
             logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
