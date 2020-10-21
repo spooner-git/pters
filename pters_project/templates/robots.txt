@@ -1,8 +1,11 @@
 User-agent:*
 Allow:/
-Disallow:/admin/
-Disallow:/accounts/
+Disallow:/admin_spooner/
+Disallow:/spooner_adm/
+Disallow:/stats/
+Disallow:/board/
+Disallow:/schedule/
 Disallow:/trainer/
 Disallow:/trainee/
 
-Sitemap: http://www.pters.co.kr/sitemap.xml
+Sitemap: https://www.pters.co.kr/sitemap.xml
