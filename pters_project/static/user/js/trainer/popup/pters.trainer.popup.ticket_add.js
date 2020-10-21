@@ -218,7 +218,8 @@ class Ticket_add{
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_LECTURE_SELECT, 100, popup_style, null, ()=>{
                 let appendix = {'title':'수업', lecture_id:this.data.lecture_id, lecture_name:this.data.lecture_name, lecture_state_cd:this.data.lecture_state_cd,
-                                max:this.data.lecture_max, type_cd:this.data.lecture_type_cd, color:this.data.lecture_color, main_trainer_id:this.data.main_trainer_id, main_trainer_name:this.data.main_trainer_name};
+                                max:this.data.lecture_max, type_cd:this.data.lecture_type_cd, color:this.data.lecture_color, main_trainer_id:this.data.main_trainer_id,
+                                main_trainer_name:this.data.main_trainer_name, entire_lecture:SHOW};
                 lecture_select = new LectureSelector('#wrapper_box_lecture_select', this, 999, appendix, (set_data)=>{
                     this.lecture = set_data; //타겟에 선택된 데이터를 set
                     this.render_content();
