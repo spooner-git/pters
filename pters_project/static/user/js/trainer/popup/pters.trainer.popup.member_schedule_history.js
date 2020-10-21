@@ -23,7 +23,8 @@ class Member_schedule_history{
 
     init(){
         this.request_list((data)=>{
-            this.render(data);
+            this.data = data;
+            this.render();
         });
     }
 
@@ -33,28 +34,27 @@ class Member_schedule_history{
         }, 300);
     }
 
-    render(data){
+    render(){
         let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();member_schedule_history.clear();">${CImg.arrow_left()}</span>`;
         let top_center = `<span class="icon_center"><span id="">일정 이력</span></span>`;
         let top_right = `<span class="icon_right"></span>`;
         let content;
-        console.log(data);
         if(this.sort_val == SORT_SCHEDULE_DT){
             content = `<section style="margin-top:8px;" id="list_wrap">
                             ${this.dom_arrange_select()}
-                            ${this.dom_list_by_time(data)}
+                            ${this.dom_list_by_time(this.data)}
                         </section>`;
         }
         else if(this.sort_val == SORT_SCHEDULE_MONTHLY){
             content = `<section style="margin-top:8px;" id="list_wrap">
                             ${this.dom_arrange_select()}
-                            ${this.dom_list_by_monthly(data)}
+                            ${this.dom_list_by_monthly(this.data)}
                         </section>`;
         }
         else if(this.sort_val == SORT_MEMBER_TICKET){
             content =   `<section style="margin-top:8px;" id="list_wrap">
                             ${this.dom_arrange_select()}
-                            ${this.dom_list_by_ticket(data)}
+                            ${this.dom_list_by_ticket(this.data)}
                         </section>`;
         }
         let wrapper_middle_content = this.dom_list_content_wrap(content);
@@ -400,9 +400,11 @@ class Member_schedule_history{
                                             this.render();
                                         }
                                       };
-            let button_title = this.expand[i+1] == SHOW
-                ? "접기" + CImg.arrow_expand(["var(--img-sub1)"], {"transform":"rotate(180deg)", "width":"17px", "vertical-align":"middle", "margin-bottom":"2px"}) 
-                : "펼치기" + CImg.arrow_expand(["var(--img-sub1)"], {"width":"17px", "vertical-align":"middle", "margin-bottom":"2px"});
+            let button_title = "펼치기" + CImg.arrow_expand(["var(--img-sub1)"], {"width":"17px", "vertical-align":"middle", "margin-bottom":"2px"});
+            if(this.expand[i+1] == SHOW){
+              button_title = "접기" + CImg.arrow_expand(["var(--img-sub1)"], {"transform":"rotate(180deg)", "width":"17px", "vertical-align":"middle", "margin-bottom":"2px"});
+            }
+            console.log(i+"::"+this.expand[i+1]);
             expand_button = CComponent.text_button(i+1, button_title, {"float":"right", "font-size":"12px", "color":"var(--font-sub-normal)", "font-weight":"500"}, ()=>{button_onclick();});
             expand_style = this.expand[i+1] == SHOW ? "block" : "none";
 
