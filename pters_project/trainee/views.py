@@ -2335,29 +2335,33 @@ class PopupProgramNoticeView(TemplateView):
         if program_notice_id is None or program_notice_id == '':
             error = '공지사항 정보를 불러오지 못했습니다.[0]'
 
-        try:
-            program_notice_history_info = ProgramNoticeHistoryTb.objects.get(program_notice_tb_id=program_notice_id,
-                                                                             member_id=self.request.user.id, use=USE)
-            program_notice_info = program_notice_history_info.program_notice_tb
-            if program_notice_info.member.profile_url is None or program_notice_info.member.profile_url == '':
-                program_notice_info.member.profile_url = '/static/common/icon/icon_account.png'
-            program_notice_info.hits += 1
-            program_notice_info.save()
-        except ObjectDoesNotExist:
-            program_notice_history_info = ProgramNoticeHistoryTb(program_notice_tb_id=program_notice_id,
-                                                                 member_id=self.request.user.id,
-                                                                 class_tb_id=class_id, use=USE)
-            program_notice_history_info.save()
-
-        if program_notice_info is None:
+        program_notice_history_count = ProgramNoticeHistoryTb.objects.filter(program_notice_tb_id=program_notice_id,
+                                                                             member_id=self.request.user.id,
+                                                                             use=USE).count()
+        if program_notice_history_count < 2:
             try:
-                program_notice_info = ProgramNoticeTb.objects.get(program_notice_id=program_notice_id)
+                program_notice_history_info = ProgramNoticeHistoryTb.objects.get(program_notice_tb_id=program_notice_id,
+                                                                                 member_id=self.request.user.id, use=USE)
+                program_notice_info = program_notice_history_info.program_notice_tb
                 if program_notice_info.member.profile_url is None or program_notice_info.member.profile_url == '':
                     program_notice_info.member.profile_url = '/static/common/icon/icon_account.png'
                 program_notice_info.hits += 1
                 program_notice_info.save()
             except ObjectDoesNotExist:
-                error = '공지사항 정보를 불러오지 못했습니다.[1]'
+                program_notice_history_info = ProgramNoticeHistoryTb(program_notice_tb_id=program_notice_id,
+                                                                     member_id=self.request.user.id,
+                                                                     class_tb_id=class_id, use=USE)
+                program_notice_history_info.save()
+
+            if program_notice_info is None:
+                try:
+                    program_notice_info = ProgramNoticeTb.objects.get(program_notice_id=program_notice_id)
+                    if program_notice_info.member.profile_url is None or program_notice_info.member.profile_url == '':
+                        program_notice_info.member.profile_url = '/static/common/icon/icon_account.png'
+                    program_notice_info.hits += 1
+                    program_notice_info.save()
+                except ObjectDoesNotExist:
+                    error = '공지사항 정보를 불러오지 못했습니다.[1]'
 
         if error is None:
             context['program_notice_info'] = program_notice_info
