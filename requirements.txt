@@ -11,7 +11,7 @@ cffi==1.14.0
 colorama==0.4.3
 ConfigArgParse==1.2.3
 confusable-homoglyphs==3.0.0
-cryptography==2.9.2
+cryptography==3.2
 cycler==0.10.0
 Cython==0.28.5
 Django==1.11.18
