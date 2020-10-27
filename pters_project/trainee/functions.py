@@ -9,7 +9,8 @@ from django.utils import timezone
 
 from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, USE, MEMBER_RESERVE_PROHIBITION_ON, LECTURE_TYPE_ONE_TO_ONE, \
     STATE_CD_IN_PROGRESS, STATE_CD_ABSENCE, AUTH_TYPE_VIEW, AUTH_TYPE_WAIT, AUTH_TYPE_DELETE, \
-    MEMBER_RESERVE_PROHIBITION_OFF, FROM_TRAINER_LESSON_ALARM_ON, STATE_CD_HOLDING, CLOSED_SCHEDULE_TYPE
+    MEMBER_RESERVE_PROHIBITION_OFF, FROM_TRAINER_LESSON_ALARM_ON, STATE_CD_HOLDING, CLOSED_SCHEDULE_TYPE, \
+    STATE_CD_NOT_PROGRESS
 from login.models import CommonCdTb
 from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb
 from trainer.models import ClassTb, ClassMemberTicketTb, SettingTb, TicketLectureTb
@@ -143,7 +144,7 @@ def func_get_trainee_lecture_schedule(context, user_id, class_id, start_date, en
             if query_lecture_counter > 0:
                 lecture_schedule_data = ScheduleTb.objects.select_related(
                     'lecture_tb').filter(query_lecture_list, class_tb_id=class_id, lecture_tb__isnull=False,
-                                         member_ticket_tb__isnull=True,
+                                         member_ticket_tb__isnull=True, state_cd=STATE_CD_NOT_PROGRESS,
                                          en_dis_type=ON_SCHEDULE_TYPE, start_dt__gte=start_date,
                                          start_dt__lt=end_date, use=USE
                                          ).annotate(lecture_current_member_num=RawSQL(query, []),
