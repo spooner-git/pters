@@ -6899,10 +6899,10 @@ def add_shop_info_logic(request):
     try:
         price = int(price)
     except ValueError:
-        error = '상품 금액은 숫자만 입력 가능합니다.'
+        error = '부가 상품 금액은 숫자만 입력 가능합니다.'
 
     if name == '' or name is None:
-        error = '상품명을 입력해주세요. '
+        error = '부가 상품명을 입력해주세요. '
 
     if error is None:
         try:
@@ -6919,7 +6919,7 @@ def add_shop_info_logic(request):
         messages.error(request, error)
     else:
         log_data = LogTb(log_type='LC01', auth_member_id=request.user.id, from_member_name=request.user.first_name,
-                         class_tb_id=class_id, log_info=name+' 상품', log_how='추가', use=USE)
+                         class_tb_id=class_id, log_info=name+' 부가 상품', log_how='추가', use=USE)
         log_data.save()
 
     return render(request, 'ajax/trainer_error_ajax.html')
@@ -6959,7 +6959,7 @@ def delete_shop_info_logic(request):
         messages.error(request, error)
     else:
         log_data = LogTb(log_type='LC01', auth_member_id=request.user.id, from_member_name=request.user.first_name,
-                         class_tb_id=class_id, log_info=shop_info.name+' 상품', log_how='삭제', use=USE)
+                         class_tb_id=class_id, log_info=shop_info.name+' 부가 상품', log_how='삭제', use=USE)
         log_data.save()
 
     return render(request, 'ajax/trainer_error_ajax.html')
@@ -6994,7 +6994,7 @@ def update_shop_info_logic(request):
         messages.error(request, error)
     else:
         log_data = LogTb(log_type='LC01', auth_member_id=request.user.id, from_member_name=request.user.first_name,
-                         class_tb_id=class_id, log_info=shop_info.name+' 상품', log_how='변경', use=USE)
+                         class_tb_id=class_id, log_info=shop_info.name+' 부가 상품', log_how='변경', use=USE)
         log_data.save()
 
     return render(request, 'ajax/trainer_error_ajax.html')
@@ -7010,7 +7010,7 @@ class GetShopInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         try:
             shop_info = ShopTb.objects.get(shop_id=shop_id, use=USE)
         except ObjectDoesNotExist:
-            error = '상품 정보를 가져오지 못했습니다.'
+            error = '부가 상품 정보를 가져오지 못했습니다.'
 
         if error is None:
             shop_dict = {'shop_id': str(shop_info.shop_id),
@@ -7067,7 +7067,7 @@ def add_member_shop_info_logic(request):
     if member_id == '' or member_id is None:
         error = '회원 정보를 불러오지 못했습니다.'
     if shop_id == '' or shop_id is None:
-        error = '상품 정보를 불러오지 못했습니다.'
+        error = '부가 상품 정보를 불러오지 못했습니다.'
 
     if price == '':
         price = 0
@@ -7075,7 +7075,7 @@ def add_member_shop_info_logic(request):
         try:
             price = int(price)
         except ValueError:
-            error = '상품 가격은 숫자만 입력 가능합니다.'
+            error = '부가 상품 가격은 숫자만 입력 가능합니다.'
 
     if payment_price == '':
         payment_price = 0
@@ -7111,7 +7111,7 @@ def add_member_shop_info_logic(request):
         messages.error(request, error)
     else:
         log_data = LogTb(log_type='LC01', auth_member_id=request.user.id, from_member_name=request.user.first_name,
-                         class_tb_id=class_id, log_info=name + ' 상품 결제 내역', log_how='추가', use=USE)
+                         class_tb_id=class_id, log_info=name + ' 부가 상품 결제 내역', log_how='추가', use=USE)
         log_data.save()
 
     return render(request, 'ajax/trainer_error_ajax.html')

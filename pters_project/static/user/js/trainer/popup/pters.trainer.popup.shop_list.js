@@ -17,7 +17,7 @@ class Shop_list {
 
         this.sort_val = SORT_SHOP_NAME;
         this.sort_order_by = SORT_ORDER_ASC;
-        this.sort_value_text = '상품명 가나다순';
+        this.sort_value_text = '부가 상품명 가나다순';
 
         this.received_data_cache = null; // 재랜더링시 스크롤 위치를 기억하도록 먼저 이전 데이터를 그려주기 위해
         this.init();
@@ -120,7 +120,7 @@ class Shop_list {
         }
 
         if(html_temp.length == 0){
-            html_temp.push(`<div style="font-size:14px;padding:16px;" class="anim_fade_in_vibe_top">등록된 상품이 없습니다.</div>`);
+            html_temp.push(`<div style="font-size:14px;padding:16px;" class="anim_fade_in_vibe_top">등록된 부가 상품이 없습니다.</div>`);
         }
 
         return html_temp.join("");
@@ -150,7 +150,7 @@ class Shop_list {
 
         // 계속 추가되더라도 동적으로 처리하기 위해 작성 - hkkim 20191001
         let user_options_array = [];
-        user_options_array.push(`'${SORT_SHOP_NAME+'_'+SORT_ORDER_ASC}':{text:'상품명 가나다순', callback:()=>{shop_list_popup.sort_val = ${SORT_SHOP_NAME}; shop_list_popup.sort_order_by= ${SORT_ORDER_ASC}; shop_list_popup.sort_value_text = '상품명 가나다순';shop_list_popup.init();layer_popup.close_layer_popup();}}`);
+        user_options_array.push(`'${SORT_SHOP_NAME+'_'+SORT_ORDER_ASC}':{text:'부가 상품명 가나다순', callback:()=>{shop_list_popup.sort_val = ${SORT_SHOP_NAME}; shop_list_popup.sort_order_by= ${SORT_ORDER_ASC}; shop_list_popup.sort_value_text = '부가 상품명 가나다순';shop_list_popup.init();layer_popup.close_layer_popup();}}`);
         let user_option = `{`;
         for(let i=0; i<user_options_array.length; i++){
             user_option += user_options_array[i] + ',';
@@ -163,7 +163,7 @@ class Shop_list {
         let layer_popup_height = options_padding_top_bottom + button_height + 52*user_options_array.length;
         let root_content_height = $root_content.height();
 
-        let title = "상품";
+        let title = "부가 상품";
         let html = `<div class="shop_upper_box">
                         <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:var(--font-main); letter-spacing: -1px; height:28px;">
                             <span style="display:inline-block;">${title}</span>

@@ -184,12 +184,12 @@ def get_sales_info(class_id, month_first_day, sort_val):
                     price = payment_info.refund_price
 
             if payment_info.member_shop_tb is not None and payment_info.member_shop_tb != '':
-                trade_info = '상품 구매'
+                trade_info = '부가 상품 구매'
                 trade_type = STATS_RE_REG
                 package_name = payment_info.member_shop_tb.shop_tb.name
 
                 if payment_info.refund_price > 0:
-                    trade_info = '상품 환불'
+                    trade_info = '부가 상품 환불'
                     trade_type = STATS_ALL_REFUND
                     price = payment_info.refund_price
             price_info = {'date': str(payment_info.pay_date),
