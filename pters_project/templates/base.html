@@ -125,6 +125,7 @@ onclick="layer_popup.close_layer_popup();"></div>
 {% block local_js_footer %}
 {% endblock %}
 
+{% if request.session.app_name == 'PTERS' %}
 <!-- ADN Tracker[공통] start -->
 <script type="text/javascript">
 var adn_param = adn_param || [];
@@ -157,7 +158,7 @@ adn_mobile_panel_param.push([{
 </script>
 <script type="text/javascript" async src="//fin.rainbownine.net/js/adn_mobile_closingad_1.1.2.js"></script>
 <!-- ADN 크로징 설치 end -->
-
+{% endif %}
 </body>
 
 

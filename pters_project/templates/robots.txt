@@ -1,8 +1,8 @@
-User-agent:*
-Allow:/
-Disallow:/admin/
-Disallow:/accounts/
-Disallow:/trainer/
-Disallow:/trainee/
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /accounts/
+Disallow: /trainer/
+Disallow: /trainee/
 
 Sitemap: http://www.pters.co.kr/sitemap.xml
