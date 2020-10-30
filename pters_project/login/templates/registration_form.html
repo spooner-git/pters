@@ -184,12 +184,21 @@
             </div>
 
             <!-- 가입 완료 버튼 영역 -->
+
             <div class="registration_foot" style="margin-top:40px; transform: initial; padding-bottom:0px;">
+                {% if request.session.app_name == 'PTERS' %}
                 <div class="social_login_box" onclick="adn_btn_ok('102076','types1'); registration_member_info(document.getElementById('id_add_member_form'));" style="width:100%; background-color: {{ request.session.main_color_cd }}; margin-top:12px; margin-bottom:20px;">
                     <div class="social_login_img" style="display:none;"></div>
                     <span class="social_login_text" style="color:#ffffff; text-align: center;">가입 완료</span>
                     <div style="display:none; width:60px;"></div>
                 </div>
+                {% else %}
+                <div class="social_login_box" onclick="registration_member_info(document.getElementById('id_add_member_form'));" style="width:100%; background-color: {{ request.session.main_color_cd }}; margin-top:12px; margin-bottom:20px;">
+                    <div class="social_login_img" style="display:none;"></div>
+                    <span class="social_login_text" style="color:#ffffff; text-align: center;">가입 완료</span>
+                    <div style="display:none; width:60px;"></div>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
