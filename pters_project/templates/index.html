@@ -3,15 +3,17 @@
 
 {% block local_css %}
     {% if request.session.app_name == 'PTERS' %}
-        <meta property="og:url" content="https://www.pters.co.kr/">
-        <meta name="application-name" content="{{ request.session.app_name }} | 피터스 | 레슨 관리">
-        <meta name="msapplication-tooltip" content="{{ request.session.app_name }} | 피터스 | 레슨 관리">
-        <meta id="meta_og_title" property="og:title" content="{{ request.session.app_name }} | 피터스 | 레슨 관리">
+        <meta name="application-name" content="PTERS | 피터스 | 레슨 관리">
+        <meta name="msapplication-tooltip" content="PTERS | 피터스 | 레슨 관리">
         <meta name="description" content="PTERS 피터스는 퍼스널 트레이닝, 요가, 필라테스, 발레, 당구, 골프, 과외 등 레슨 강사를 위한 올인원 서비스입니다.">
-        <meta property="og:description" content="PTERS 피터스는 퍼스널 트레이닝, 요가, 필라테스, 발레, 당구, 골프, 과외 등 레슨 강사를 위한 올인원 서비스입니다.">
         <meta name="keywords" content="피터스, pters, pt, 레슨, 필라테스, 발레, 골프, 요가, 수업, 스케쥴, 관리">
-        <link rel="canonical" href="https://www.pters.co.kr/">
+        <meta name="title" content="PTERS | 피터스 | 레슨 관리">
+        <meta name="author" content="PTERS | 피터스">
+        <meta property="og:title" id="meta_og_title" content="PTERS | 피터스 | 레슨 관리">
+        <meta property="og:url" content="https://www.pters.co.kr/">
+        <meta property="og:description" content="PTERS 피터스는 퍼스널 트레이닝, 요가, 필라테스, 발레, 당구, 골프, 과외 등 레슨 강사를 위한 올인원 서비스입니다.">
         <meta property="og:type" content="website">
+        <link rel="canonical" href="https://www.pters.co.kr/">
     {% endif %}
     <!-- <meta property="og:image" content="http://www.mysite.com/myimage.jpg"> -->
     <link rel="stylesheet" href={% static_url "user/css/login/login.registration.css" %}>
@@ -445,9 +447,9 @@
                     <!-- <li><a onclick="go_to('what');" style="cursor: pointer;" href="{% url 'login:check_registration' %}">피터스?</a></li>
                     <li><a onclick="go_to('feature');" style="cursor: pointer;">주요기능 소개</a></li>
                     <li><a onclick="go_to('price')" style="cursor: pointer;display:none;">요금 안내</a></li> -->
-                    <li><a style="cursor: pointer;" href="/introduce/">피터스?</a></li>
-                    <li><a style="cursor: pointer;" href="/for_tutor/">강사 기능</a></li>
-                    <li><a style="cursor: pointer;" href="/for_tutee/">수강회원 기능</a></li>
+                    <li><a style="cursor: pointer;" href="/introduce/" data-url="introduce">피터스?</a></li>
+                    <li><a style="cursor: pointer;" href="/for_tutor/" data-url="tutor">강사 기능</a></li>
+                    <li><a style="cursor: pointer;" href="/for_tutee/" data-url="tutee">수강회원 기능</a></li>
                     <!-- <li><a onclick="go_to('price')" style="cursor: pointer;display:none;">요금 안내</a></li> -->
                 </ul>
             </div>

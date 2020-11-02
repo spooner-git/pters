@@ -15,8 +15,8 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="naver-site-verification" content="d74a442006981bada42f20d0897ef31a178ceebe" />
     <meta name="google-site-verification" content="EPm2stOoq7M_LaK0htEQNqbitGznovZCakPO78TPtsk" />
-    <meta name="naver-site-verification" content="919ceda7d377b0d22cf390ca79de5dc21dc3d0fa"/>
     <meta name="google-signin-scope" content="profile email">
     <meta name="google-signin-client_id" content="751903262384-dbtt6ho5imk5gssgn1rqpe3vs3linq15.apps.googleusercontent.com">
     <link rel="icon" href="/static/common/{{ request.session.domain_url }}-favicon.ico">
@@ -125,6 +125,7 @@ onclick="layer_popup.close_layer_popup();"></div>
 {% block local_js_footer %}
 {% endblock %}
 
+{% if request.session.app_name == 'PTERS' %}
 <!-- ADN Tracker[공통] start -->
 <script type="text/javascript">
 var adn_param = adn_param || [];
@@ -157,7 +158,7 @@ adn_mobile_panel_param.push([{
 </script>
 <script type="text/javascript" async src="//fin.rainbownine.net/js/adn_mobile_closingad_1.1.2.js"></script>
 <!-- ADN 크로징 설치 end -->
-
+{% endif %}
 </body>
 
 
