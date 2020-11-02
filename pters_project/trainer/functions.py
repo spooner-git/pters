@@ -1519,9 +1519,8 @@ def func_get_lecture_info(class_id, lecture_id, user_id):
 def func_update_lecture_member_fix_status_cd(class_id, member_id):
     error = None
     member_lecture_list = func_get_member_lecture_list(class_id, member_id)
-    member_lecture_fix_data = LectureMemberTb.objects.filter(class_tb_id=class_id,
-                                                             member_id=member_id,
-                                                             fix_state_cd='FIX', use=USE)
+    member_lecture_fix_data = LectureMemberTb.objects.select_related(
+        'lecture_tb').filter(class_tb_id=class_id, member_id=member_id, fix_state_cd='FIX', use=USE)
 
     for member_lecture_fix_info in member_lecture_fix_data:
         try:

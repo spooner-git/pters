@@ -37,10 +37,11 @@ def func_update_finish_member_ticket_data():
     now = timezone.now()
     today = datetime.date.today()
     yesterday = today - datetime.timedelta(days=1)
-
+    start_time = timezone.now()
     # 일시정지 반영
-    holding_data = MemberClosedDateHistoryTb.objects.filter(start_date__lte=today, reason_type_cd='HD',
-                                                            end_date__gte=yesterday, use=USE).order_by('start_date')
+    holding_data = MemberClosedDateHistoryTb.objects.select_related(
+        'member_ticket_tb').filter(start_date__lte=today, reason_type_cd='HD',
+                                   end_date__gte=yesterday, use=USE).order_by('start_date')
 
     for holding_info in holding_data:
         member_ticket_tb = holding_info.member_ticket_tb
@@ -54,16 +55,17 @@ def func_update_finish_member_ticket_data():
                 member_ticket_tb.state_cd = STATE_CD_IN_PROGRESS
 
         member_ticket_tb.save()
+    print('1:'+str(timezone.now()-start_time))
     # token_data = PushInfoTb.objects.filter(member_id=member_id, last_login__lte=now-90일, use=USE)
     # token_data.delete()
-
+    start_time = timezone.now()
     query_setting_ticket_auto_finish = "SELECT A.SETTING_INFO FROM SETTING_TB AS A" \
                                        " WHERE A.CLASS_TB_ID=`CLASS_LECTURE_TB`.`CLASS_TB_ID`" \
                                        " AND A.SETTING_TYPE_CD = \'LT_LECTURE_AUTO_FINISH\' " \
                                        " AND A.USE=1"
     # 지난 수강권 처리
     class_member_ticket_data = ClassMemberTicketTb.objects.select_related(
-        'member_ticket_tb__ticket_tb').filter(
+        'member_ticket_tb__ticket_tb', 'member_ticket_tb__member').filter(
         auth_cd='VIEW', member_ticket_tb__end_date__lt=datetime.date.today(),
         member_ticket_tb__state_cd=STATE_CD_IN_PROGRESS, member_ticket_tb__use=USE,
         use=USE).annotate(setting_ticket_auto_finish=RawSQL(query_setting_ticket_auto_finish,
@@ -95,9 +97,12 @@ def func_update_finish_member_ticket_data():
         if member_ticket_info is not None and member_ticket_info != '':
             func_update_lecture_member_fix_status_cd(class_member_ticket_info.class_tb_id, member_ticket_info.member_id)
 
+    print('2:'+str(timezone.now()-start_time))
+
 
 def func_update_finish_pass_data():
     today = datetime.date.today()
+    start_time = timezone.now()
 
     billing_data = BillingInfoTb.objects.filter(next_payment_date__lt=today, use=USE)
 
@@ -110,6 +115,7 @@ def func_update_finish_pass_data():
             billing_info.state_cd = 'END'
             # billing_info.use = UN_USE
             billing_info.save()
+    print('3:'+str(timezone.now()-start_time))
 
 
 # 일정 알림 push 처리
@@ -417,14 +423,14 @@ class SendAllSchedulePushAlarmDataView(View):
                 }
                 schedule_list.append(schedule_info)
 
-        check_async = False
-        if DEBUG is False:
-            check_async = True
-        if len(schedule_list) > 0:
-            if check_async:
-                task_send_aws_lambda_for_push_alarm.delay({'alarm_schedule': list(schedule_list)})
-            else:
-                error = send_aws_lambda_for_push_alarm({'alarm_schedule': list(schedule_list)})
+        # check_async = False
+        # if DEBUG is False:
+        #     check_async = True
+        # if len(schedule_list) > 0:
+        #     if check_async:
+        #         task_send_aws_lambda_for_push_alarm.delay({'alarm_schedule': list(schedule_list)})
+        #     else:
+        #         error = send_aws_lambda_for_push_alarm({'alarm_schedule': list(schedule_list)})
 
         # print(str(timezone.now()-start_time))
         # print(str(schedule_data))
