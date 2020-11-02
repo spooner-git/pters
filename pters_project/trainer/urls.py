@@ -502,6 +502,8 @@ urlpatterns = [
     url(r'^update_member_ticket_payment_test/$', views.update_member_ticket_payment_test,
         name='update_member_ticket_payment_test'),
     url(r'^update_member_ticket_payment_test1/$', views.update_member_ticket_payment_test1,
-            name='update_member_ticket_payment_test1')
+            name='update_member_ticket_payment_test1'),
+    url(r'^update_member_shop_payment_test/$', views.update_member_shop_payment_test,
+            name='update_member_shop_payment_test')
 
 ]

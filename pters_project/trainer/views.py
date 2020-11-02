@@ -7064,6 +7064,9 @@ def add_member_shop_info_logic(request):
     if state_cd == STATE_CD_FINISH:
         end_date = today
 
+    if payment_price >= price:
+        state_cd = STATE_CD_FINISH
+
     if member_id == '' or member_id is None:
         error = '회원 정보를 불러오지 못했습니다.'
     if shop_id == '' or shop_id is None:
@@ -9254,5 +9257,17 @@ def update_member_ticket_payment_test1(request):
     for member_ticket_info in member_ticket_data:
         member_ticket_info.payment_price = member_ticket_info.price
         member_ticket_info.save()
+
+    return JsonResponse(context, json_dumps_params={'ensure_ascii': True})
+
+
+def update_member_shop_payment_test(request):
+    context = {}
+    member_shop_data = MemberShopTb.objects.filter()
+
+    for member_shop_info in member_shop_data:
+        if member_shop_info.payment_price >= member_shop_info.price:
+            member_shop_info.state_cd = STATE_CD_FINISH
+            member_shop_info.save()
 
     return JsonResponse(context, json_dumps_params={'ensure_ascii': True})

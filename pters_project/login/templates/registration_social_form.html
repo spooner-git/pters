@@ -123,7 +123,10 @@
                     alert(id_recommend_username+'님을 추천인을 등록하려면 추천인 아이디 확인을 해주세요.');
                     $('#id_recommend_username').val('');
                 }else{
+
+                {% if request.session.app_name == 'PTERS' %}
                     adn_btn_ok('102076','types1');
+                {% endif %}
                     //mobConv();
                     document.getElementById('sns-form').submit();
                 }
