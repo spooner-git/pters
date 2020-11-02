@@ -125,7 +125,6 @@ def func_update_finish_pass_data():
             billing_info.state_cd = 'END'
             # billing_info.use = UN_USE
             billing_info.save()
-    print('3:'+str(timezone.now()-start_time))
 
 
 # 일정 알림 push 처리
