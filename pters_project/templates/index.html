@@ -255,6 +255,118 @@
         #description_wrapper{
             /* display: none; */
         }
+        .flex_wrap{
+            display: flex;
+            flex-direction: column;
+        }
+        .flex_children{
+            flex: 1 1 0;
+            padding: 30px 50px;
+            box-sizing: border-box;
+        }
+
+        .what_can_do_sample_children{
+            background-color: #fbfbfb;
+            margin: 10px 20px;
+            border-radius: 5px;
+        }
+
+        .studios_sample_wrap{
+            display:grid;
+            grid-template-columns: repeat(1, 1fr);
+        }
+        .studios_sample_children{
+            border:1px solid #e8e8e8;
+            margin: 10px 5px;
+            background-color:white;
+            padding: 1px;
+            text-align: left;
+        }
+        .studios_sample_children_image{
+            padding-top:60%;
+            position: relative;
+        }
+        .studios_sample_children_image > div{
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top:0;
+            left: 0;
+            text-align: center;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .studios_sample_children_content{
+            padding:20px
+        }
+        .studios_sample_children_title{
+            font-size:15px;
+            font-weight:500;
+            margin-top:0
+        }
+        .studios_sample_children_detail{
+            font-size:15px;
+            font-weight:normal;
+        }
+        .chip_studio_field{
+            display: inline-block;
+            width: auto;
+            padding:3px 8px;
+            background-color: #3498db;
+            border-radius: 5px;
+            color: white;
+        }
+        .studios_sample_children_detail_field{
+            display: flex;
+        }
+        .studios_sample_children_detail_field > div:first-child{
+            min-width: 35px;
+            padding:3px 0;
+        }
+        .studios_sample_children_detail_field > div:last-child{
+            flex: 1 1 0;
+        }
+        .studios_sample_children_detail_name{
+            margin-top: 15px;
+            color: #5c5859;
+        }
+        
+        .functions_sample_children_wrap{
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            padding:0 10px;
+            font-size: 18px;
+            font-weight: 500;
+        }
+        .functions_sample_children{
+            background-color: #ffffff;
+            border: 1px solid #e8e8e8;
+            margin: 10px 15px;
+            padding: 10px 30px;
+            margin: 5px;
+        }
+        .functions_sample_children_image{
+            height: 120px;
+            line-height: 120px;
+        }
+        .pters_button_round_square{
+            display: inline-block;
+            width: 250px;
+            height: 45px;
+            line-height: 45px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: 250ms;
+            background-color: #fe4e65;
+            border: 1px solid #fe4e65;
+            color:#ffffff;
+        }
+        .pters_button_round_square:hover{
+            color: #fe4e65;
+            font-weight: bold;
+            background-color: #ffffff;
+        }
         /* PC버전 화면 */
         @media(min-width:800px){
             #mobile_button_for_show{
@@ -359,7 +471,7 @@
                 transform: translateY(-50%);
                 color: #ffffff;
                 padding: 0;
-                margin-left: 50px; 
+                /* margin-left: 50px;  */
             }
             .page_description_additional{
                 font-size: 15px;
@@ -428,9 +540,68 @@
                 max-width: 100%;
                 width:auto !important;
             }
+            .flex_wrap{
+                /* display: flex; */
+                flex-direction: row;
+            }
+            .flex_children{
+                padding: 30px;
+            }
+            .what_can_do_sample_children{
+                background-color: #fbfbfb;
+                margin: 5px;
+            }
+            .functions_sample_children_wrap{
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+            }
+            .functions_sample_children{
+                padding: 10px 30px;
+            }
+            .studios_sample_wrap{
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .studios_sample_children{
+                padding: 1px;
+            }
         }
 
 
+    </style>
+    <style>
+        /*히어로 동작*/
+        #hero_content_show{
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgb(0 0 0 / 0.75);
+            z-index: -1;
+            top: 0;
+            left: 0;
+        }
+        .hero_button{
+            cursor: pointer;
+        }
+        .hero_button:hover{
+            transition: 350ms;
+            opacity: 0.8;
+            border-color: #fe4e65;
+            box-shadow: 0 0 5px 1px #cccccc;
+            transform: scale(1.05);
+        }
+        .hero_content_wrap{
+            display: none;
+        }
+        .hero_content{
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            color:white;
+            width: 80%;
+            max-width: 650px;
+            text-align: center;
+        }
     </style>
 {% endblock %}
 {% block content %}
@@ -442,13 +613,9 @@
             </div>
             <div id="menu_wrapper">
                 <ul>
-                    <!-- <li><a onclick="go_to('what');" style="cursor: pointer;" href="{% url 'login:check_registration' %}">피터스?</a></li>
-                    <li><a onclick="go_to('feature');" style="cursor: pointer;">주요기능 소개</a></li>
-                    <li><a onclick="go_to('price')" style="cursor: pointer;display:none;">요금 안내</a></li> -->
                     <li><a style="cursor: pointer;" href="/introduce/">피터스?</a></li>
                     <li><a style="cursor: pointer;" href="/for_tutor/">강사 기능</a></li>
                     <li><a style="cursor: pointer;" href="/for_tutee/">수강회원 기능</a></li>
-                    <!-- <li><a onclick="go_to('price')" style="cursor: pointer;display:none;">요금 안내</a></li> -->
                 </ul>
             </div>
         </div>
@@ -589,13 +756,323 @@
             </div>
         </section>
 
-        <section id="mobile_button_for_show" onclick="show_description();" style="display:none;">
-            <p style="margin:0;line-height:10px;color:#B8B4B4;font-size:12px;font-weight:500;letter-spacing: -0.3px;">서비스 소개 보기<br><img src="/static/common/icon/icon_arrow_expand_grey.png" alt=""></p>
+        <section class="" id="" style="background:#f5f2f3;padding:15px 25px;">
+            <div style="max-width:1024px;margin:0 auto;font-size:14px">
+                <p style="margin:3px 0;text-decoration: underline;">지점 내 강사 공유 및 관리 기능이 업데이트 되었습니다. (2020.10.01)</p>
+                <p style="margin:3px 0;text-decoration: underline;">부가상품 기능이 업데이트 되었습니다. (2020.10.01)</p>
+            </div>
         </section>
 
         <div id="description_wrapper">
             {% if request.session.domain_url == 'pters' %}
-            <section class="front_page_section" style="background-image: linear-gradient(to right, #fe4e65 25%, #ff869e);" id="what_page">
+            <section class="front_page_section" id="what_page" style="background:white;background-image:linear-gradient(to right, #fe4e65 25%, #ff869e)">
+                <div id="" class="" style="max-width:1024px;margin:0 auto;padding:35px 0">
+                    <div style="color:#3b3b3b;position: relative;top:unset;transform:unset" class="page_description">
+                        <div style="width:5px;height:34px;background-color:white;display:inline-block;vertical-align: middle;margin-right:3px"></div>
+                        <span style="font-size:24px;vertical-align: middle;color:white">무엇이 가능한가요?</span>
+                    </div>
+                    <div style="text-align:center;margin-top:50px" class="flex_wrap">
+                        <div class="flex_children what_can_do_sample_children">
+                            <div style="height:150px;line-height:150px">
+                                <img src="/static/common/img/front_page/pters_circle.png" alt="피터스 공유 기능" style="width:100%;max-width:180px;vertical-align: middle;">
+                            </div>
+                            <p style="font-size:18px;font-weight:500;color:#fe4e65">레슨 업무 정보를<br>일원 관리!</p>
+                            <p style="font-size:15px;font-weight:normal">
+                                피터스는 회원 횟수 관리, 실시간 예약 등 모든 업무를 클라우드로 일원관리 가능한 예약 관리 시스템입니다.<br>종이와 엑셀로 하는 예약 관리로부터 디지털화 된 관리로 변경함으로써 예약 현황을 관리자와 회원 모두 일목요연하게 확인할 수 있습니다.
+                            </p>
+                        </div>
+                        <div class="flex_children what_can_do_sample_children">
+                            <div style="height:150px;line-height:150px">
+                                <img src="/static/common/img/front_page/pters_device.png" alt="피터스 클라우드 기능" style="width:100%;max-width:200px;vertical-align: middle;">
+                            </div>
+                            <p style="font-size:18px;font-weight:500;color:#fe4e65">웹, 앱으로 접속!<br>가볍게 도입하는 예약서비스</p>
+                            <p style="font-size:15px;font-weight:normal">
+                                웹브라우저, 앱, PC 모두 지원하는 회원제 비즈니스를 위한 시스템입니다.<br>대형 업장에서만 사용하던 예약 관리 시스템을 누구나 쉽게 사용할 수 있도록,
+                                별도 상담과 설치가 필요없이 가입만으로 사용할 수 있습니다.
+                            </p>
+                        </div>
+                        <div class="flex_children what_can_do_sample_children">
+                            <div style="height:150px;line-height:150px">
+                                <img src="/static/common/img/front_page/pters_up.png" alt="피터스 AWS" style="width:100%;max-width:200px;height:100%;vertical-align: middle;">
+                            </div>
+                            <p style="font-size:18px;font-weight:500;color:#fe4e65">매출 향상을 목표로!<br>예약수를 최대화</p>
+                            <p style="font-size:15px;font-weight:normal">
+                                고객들의 적극적인 예약을 유도하고,
+                                예약 선착순제 도입으로 기존보다 많은 고객을 유치하여 매출 향상을 실현합니다.<br>또, 고객 정보와 예약 이력도 수시로 확인 가능하기 때문에, 보다 체계적인 고객 관리가 가능해집니다.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="front_page_section" style="" id="what_page">
+                <div id="" class="" style="max-width:1024px;margin:0 auto;padding:35px 0">
+                    <div style="color:#3b3b3b;position: relative;top:unset;transform:unset" class="page_description">
+                        <div style="width:5px;height:34px;background-color:#fe4e65;display:inline-block;vertical-align: middle;margin-right:3px"></div>
+                        <span style="font-size:24px;vertical-align: middle;">주요 기능</span>
+                    </div>
+                    <div style="text-align:center;margin-top:50px" class="functions_sample_children_wrap">
+                        <div class="flex_children functions_sample_children hero_button">
+                            <div class="hero_title">
+                                <div class="functions_sample_children_image">
+                                    <img src="/static/common/img/front_page/icon_plan.png" alt="피터스 일정 관리" style="width:100%;max-width:60px;vertical-align: middle;">
+                                </div>
+                                <p>일정 관리</p>
+                            </div>
+                            <div class="hero_content_wrap">
+                                <div class="hero_content">
+                                    <span>주간, 월간 일정표로 한눈에 스케쥴을 확인하세요!</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex_children functions_sample_children hero_button">
+                            <div class="hero_title">
+                                <div class="functions_sample_children_image">
+                                    <img src="/static/common/img/front_page/icon_people.png" alt="피터스 출결 관리" style="width:100%;max-width:60px;vertical-align: middle;">
+                                </div>
+                                <p>출결 관리</p>
+                            </div>
+                            <div class="hero_content_wrap">
+                                <div class="hero_content">
+                                    <span>일정 참석자들의 출석, 결석을 체크하면 자동으로 잔여횟수가 관리됩니다.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex_children functions_sample_children hero_button">
+                            <div class="hero_title">
+                                <div class="functions_sample_children_image">
+                                    <img src="/static/common/img/front_page/icon_member.png" alt="피터스 회원 관리" style="width:100%;max-width:60px;vertical-align: middle;">
+                                </div>
+                                <p>회원 관리</p>
+                            </div>
+                            <div class="hero_content_wrap">
+                                <div class="hero_content">
+                                    <span>회원을 체계적으로 관리해보세요</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex_children functions_sample_children hero_button">
+                            <div class="hero_title">
+                                <div class="functions_sample_children_image">
+                                    <img src="/static/common/img/front_page/icon_lecture.png" alt="피터스 수강회원 전용모드" style="width:100%;max-width:60px;vertical-align: middle;">
+                                </div>
+                                <p>수강회원 전용모드</p>
+                            </div>
+                            <div class="hero_content_wrap">
+                                <div class="hero_content">
+                                    <span>수강회원님이 실시간으로 예약하고, 본인의 일정이력도 체계적으로 관리가 가능합니다.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="text-align:center;margin-top:0px;margin-bottom:20px;" class="functions_sample_children_wrap">
+                        <div class="flex_children functions_sample_children hero_button">
+                            <div class="hero_title">
+                                <div class="functions_sample_children_image">
+                                    <img src="/static/common/img/front_page/icon_ticket.png" alt="피터스 수강권" style="width:100%;max-width:60px;vertical-align: middle;">
+                                </div>
+                                <p>수강권</p>
+                            </div>
+                            <div class="hero_content_wrap">
+                                <div class="hero_content">
+                                    <span>다양한 수업 구성으로 수강권을 구성해보세요!</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex_children functions_sample_children hero_button">
+                            <div class="hero_title">
+                                <div class="functions_sample_children_image">
+                                    <img src="/static/common/img/front_page/icon_notice.png" alt="피터스 회원 공지" style="width:100%;max-width:60px;vertical-align: middle;">
+                                </div>
+                                <p>회원 공지</p>
+                            </div>
+                            <div class="hero_content_wrap">
+                                <div class="hero_content">
+                                    <span>회원님들께 단체로 공지할 수 있습니다.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex_children functions_sample_children hero_button">
+                            <div class="hero_title">
+                                <div class="functions_sample_children_image">
+                                    <img src="/static/common/img/front_page/icon_graph.png" alt="피터스 매출 통계" style="width:100%;max-width:60px;vertical-align: middle;">
+                                </div>
+                                <p>매출 통계</p>
+                            </div>
+                            <div class="hero_content_wrap">
+                                <div class="hero_content">
+                                    <span>수강권뿐만 아니라 부가상품 판매 매출까지 꼼꼼히 기록하세요!</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex_children functions_sample_children hero_button">
+                            <div class="hero_title">
+                                <div class="functions_sample_children_image">
+                                    <img src="/static/common/img/front_page/icon_business.png" alt="피터스 강사 공유 기능" style="width:100%;max-width:60px;vertical-align: middle;">
+                                </div>
+                                <p>강사 공유 관리</p>
+                            </div>
+                            <div class="hero_content_wrap">
+                                <div class="hero_content">
+                                    <span>피터스 강사들을 내 지점에 초대하고, 담당 수업을 지정할 수 있습니다.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="text-align:center;margin-top:0px" class="flex_wrap">
+                        <div class="flex_children">
+                            <a href="/for_tutor/">
+                                <div class="pters_button_round_square">
+                                    <span>강사 기능 둘러보기</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="flex_children">
+                            <a href="/for_tutee">
+                                <div class="pters_button_round_square">
+                                    <span>수강회원 기능 둘러보기</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="front_page_section" style="background-image: linear-gradient(to right, #f7f7f7 25%, #f7f7f7);" id="what_page">
+                <div id="" class="" style="max-width:1024px;margin:0 auto;padding:35px 0">
+                    <div style="color:#3b3b3b;position: relative;top:unset;transform:unset" class="page_description">
+                        <div style="width:5px;height:34px;background-color:#fe4e65;display:inline-block;vertical-align: middle;margin-right:3px"></div>
+                        <span style="font-size:24px;vertical-align: middle;">활용 사례</span>
+                    </div>
+                    <div style="text-align:center;margin-top:50px" class="flex_wrap studios_sample_wrap">
+                        <div class="flex_children studios_sample_children">
+                            <div class="studios_sample_children_image">
+                                <div style="background-image:url('/static/common/img/front_page/studio_example/bns_1.jpg')">
+                                    <!-- <img src="/static/common/img/front_page/studio_example/bns_1.jpg" alt="피터스 도입 사례" style="width:100%;max-width:180px;vertical-align: middle;"> -->
+                                </div>
+                            </div>
+                            <div class="studios_sample_children_content">
+                                <p class="studios_sample_children_title">"스케쥴 관리가 쉬워져서 직원들이<br>일하기 좋은 환경이 되었습니다."</p>
+                                <div class="studios_sample_children_detail">
+                                    <div class="studios_sample_children_detail_field">
+                                        <div>업종:</div>
+                                        <div>
+                                            <div class="chip_studio_field">발레 교습소</div>
+                                        </div>
+                                    </div>
+                                    <div class="studios_sample_children_detail_name">
+                                        <span>BNS 발레 강남점</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex_children studios_sample_children">
+                            <div class="studios_sample_children_image">
+                                <div style="background-image:url('/static/common/img/front_page/studio_example/bns_2.jpg')">
+                                    <!-- <img src="/static/common/img/front_page/pters_device.png" alt="피터스 클라우드 기능" style="width:100%;max-width:200px;vertical-align: middle;"> -->
+                                </div>
+                            </div>
+                            <div class="studios_sample_children_content">
+                                <p class="studios_sample_children_title">"직원관리가 효율적으로 가능해졌고,<br>회원님들의 만족도가 높아졌습니다."</p>
+                                <div class="studios_sample_children_detail">
+                                    <div class="studios_sample_children_detail_field">
+                                        <div>업종:</div>
+                                        <div>
+                                            <div class="chip_studio_field">발레 교습소</div>
+                                        </div>
+                                    </div>
+                                    <div class="studios_sample_children_detail_name">
+                                        <span>BNS 발레 강남점</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex_children studios_sample_children">
+                            <div class="studios_sample_children_image">
+                                <div style="background-image:url('/static/common/img/front_page/studio_example/bns_3.jpg')">
+                                    <!-- <img src="/static/common/img/front_page/pters_up.png" alt="피터스 AWS" style="width:100%;max-width:200px;height:100%;vertical-align: middle;"> -->
+                                </div>
+                            </div>
+                            <div class="studios_sample_children_content">
+                                <p class="studios_sample_children_title">"예약을 관리하는 시간이 절반 이상 줄어들었습니다."</p>
+                                <div class="studios_sample_children_detail">
+                                    <div class="studios_sample_children_detail_field">
+                                        <div>업종:</div>
+                                        <div>
+                                            <div class="chip_studio_field">발레 교습소</div>
+                                        </div>
+                                    </div>
+                                    <div class="studios_sample_children_detail_name">
+                                        <span>BNS 발레 강남점</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex_children studios_sample_children">
+                            <div class="studios_sample_children_image">
+                                <div style="background-image:url('/static/common/img/front_page/studio_example/bns_3.jpg')">
+                                    <!-- <img src="/static/common/img/front_page/pters_up.png" alt="피터스 AWS" style="width:100%;max-width:200px;height:100%;vertical-align: middle;"> -->
+                                </div>
+                            </div>
+                            <div class="studios_sample_children_content">
+                                <p class="studios_sample_children_title">"카페에서 예약을 접수하던 것에 비해 회원님들이 편리하다며 좋아하십니다."</p>
+                                <div class="studios_sample_children_detail">
+                                    <div class="studios_sample_children_detail_field">
+                                        <div>업종:</div>
+                                        <div>
+                                            <div class="chip_studio_field">발레 교습소</div>
+                                        </div>
+                                    </div>
+                                    <div class="studios_sample_children_detail_name">
+                                        <span>BNS 발레 강남점</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex_children studios_sample_children">
+                            <div class="studios_sample_children_image">
+                                <div style="background-image:url('/static/common/img/front_page/studio_example/bns_2.jpg')">
+                                    <!-- <img src="/static/common/img/front_page/pters_up.png" alt="피터스 AWS" style="width:100%;max-width:200px;height:100%;vertical-align: middle;"> -->
+                                </div>
+                            </div>
+                            <div class="studios_sample_children_content">
+                                <p class="studios_sample_children_title">"일하는 방식을 개선하기 위해서 피터스를 도입하게 되었습니다."</p>
+                                <div class="studios_sample_children_detail">
+                                    <div class="studios_sample_children_detail_field">
+                                        <div>업종:</div>
+                                        <div>
+                                            <div class="chip_studio_field">발레 교습소</div>
+                                        </div>
+                                    </div>
+                                    <div class="studios_sample_children_detail_name">
+                                        <span>BNS 발레 강남점</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex_children studios_sample_children">
+                            <div class="studios_sample_children_image">
+                                <div style="background-image:url('/static/common/img/front_page/studio_example/bns_1.jpg')">
+                                    <!-- <img src="/static/common/img/front_page/pters_up.png" alt="피터스 AWS" style="width:100%;max-width:200px;height:100%;vertical-align: middle;"> -->
+                                </div>
+                            </div>
+                            <div class="studios_sample_children_content">
+                                <p class="studios_sample_children_title">"저렴한 비용으로 경제적으로 여러 지점을 한번에 관리하고 있습니다."</p>
+                                <div class="studios_sample_children_detail">
+                                    <div class="studios_sample_children_detail_field">
+                                        <div>업종</div>
+                                        <div>
+                                            <div class="chip_studio_field">발레 교습소</div>
+                                        </div>
+                                    </div>
+                                    <div class="studios_sample_children_detail_name">
+                                        <span>BNS 발레 강남점</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="front_page_section" style="background-image: linear-gradient(to right, #fe4e65 25%, #ff869e);" id="what_can_do_page">
                 <div id="page_1" class="article_wrapper">
                     <article class="flex_2_divided_1">
                         <!-- <img id="page1_image" src="/static/common/img/front_page/pters_service_summary.png" alt=""> -->
@@ -614,6 +1091,7 @@
                     </article>
                 </div>
             </section>
+            
             {% endif %}
             <section class="front_page_section" style="background-color:#fbfbfb;color:#5c5859">
                 <div id="page_8" class="article_wrapper" style="display:block;height:auto;padding:40px 20px 0 20px;">
@@ -632,7 +1110,6 @@
                     </div>
                 </div>
             </section>
-
         </div>
     </div>
 
@@ -642,8 +1119,25 @@
 <script type="text/javascript" src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.0.js" charset="utf-8"></script>
 <script type="text/javascript" src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
 <script type="text/javascript" src="https://apis.google.com/js/platform.js" async defer></script>
-<script type="text/javascript">
+<script>
+    //히어로 버튼 동작
+    $("div.hero_button").click(function(){
+        if($("#hero_content_show").length == 0){
+            $("html").append(
+                `<div id="hero_content_show"></div>`   
+            );
+        }
+        console.log($(this).find(".hero_content").clone());
+        $("#hero_content_show").html(
+            $(this).find(".hero_content").clone()
+        ).css({"z-index":"100"});
+    });
 
+    $(document).on("click", "#hero_content_show", function(){
+        $(this).css({"z-index":"-1"})
+    });
+</script>
+<script type="text/javascript">
     
     // var varUA = navigator.userAgent.toLowerCase();//useAgent값 얻기
     /*
@@ -655,6 +1149,7 @@
         $('#download_img_ios, #download_img_android').show();
     }
   */
+
     $("#download_img_ios").click(function(){
         adn_btn_ok('102076','types2');
         window.open("{{request.session.ios_url}}");
@@ -824,30 +1319,7 @@
       }
 */
 
-function go_to(location){
-    
-    let loc;
-    let $root_content = $('#root_content');
-    switch(location){
-        case 'feature':
-            loc = $('#feature_page').offset().top - 60 + $root_content.scrollTop();
-            $root_content.animate({scrollTop:loc}, 300);
-            break;
-        case 'price':
-            loc = $('#price_page').offset().top - 60 +  $root_content.scrollTop();
-            $root_content.animate({scrollTop:loc}, 300);
-            break;
-        case 'what':
-            loc = $('#what_page').offset().top - 60 +  $root_content.scrollTop();
-            $root_content.animate({scrollTop:loc}, 300);
-            break;
-    }
-}
 
-function show_description(){
-    $('#description_wrapper').show();
-    go_to("what");
-}
 </script>
 <!-- ADN Tracker[구글플레이] start -->
 <!--<script type="text/javascript" async src="//fin.rainbownine.net/js/adn_tags_1.0.0.js"></script>-->
