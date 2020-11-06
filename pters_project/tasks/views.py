@@ -73,6 +73,9 @@ def func_update_finish_member_ticket_data():
         # .annotate(setting_ticket_auto_finish=RawSQL(query_setting_ticket_auto_finish,
         #                                                     [])).filter(setting_ticket_auto_finish=USE)
     query_member_ticket_id_info = Q()
+    query_member_ticket_id_info2 = Q()
+    member_ticket_counting = 0
+
     for member_ticket_info in member_ticket_data:
         check_setting_data = 0
         for setting_info in setting_data:
@@ -80,34 +83,41 @@ def func_update_finish_member_ticket_data():
                 check_setting_data = 1
         if check_setting_data == 1:
             query_member_ticket_id_info |= Q(member_ticket_tb_id=member_ticket_info.member_ticket_id)
-    # print(str(query_member_ticket_id_info))
-    # print(str(len(member_ticket_data)))
-    if len(member_ticket_data) > 0:
-        member_ticket_data.update(member_ticket_avail_count=0, member_ticket_rem_count=0, state_cd=STATE_CD_FINISH)
+            query_member_ticket_id_info2 |= Q(member_ticket_id=member_ticket_info.member_ticket_id)
+            member_ticket_counting += 1
 
-        # print('2:'+str(timezone.now()-start_time))
-        # start_time = timezone.now()
-        schedule_data = ScheduleTb.objects.filter(query_member_ticket_id_info, end_dt__lte=now,
-                                                  use=USE).exclude(Q(state_cd=STATE_CD_FINISH)
-                                                                   | Q(state_cd=STATE_CD_ABSENCE))
-        schedule_data_delete = ScheduleTb.objects.filter(
-            query_member_ticket_id_info, end_dt__gt=now,
-            use=USE).exclude(Q(state_cd=STATE_CD_FINISH) | Q(state_cd=STATE_CD_ABSENCE))
-        # repeat_schedule_data = RepeatScheduleTb.objects.filter(query_member_ticket_id_info)
-        if len(schedule_data) > 0:
-            schedule_data.update(state_cd=STATE_CD_FINISH)
-        if len(schedule_data_delete) > 0:
-            schedule_data_delete.update(use=UN_USE)
-        # if len(repeat_schedule_data) > 0:
-        #     repeat_schedule_data.update(use=UN_USE)
+    if member_ticket_counting > 0:
+        member_ticket_data = MemberTicketTb.objects.filter(query_member_ticket_id_info2,
+                                                           end_date__lt=datetime.date.today(),
+                                                           state_cd=STATE_CD_IN_PROGRESS,
+                                                           use=USE)
 
-        # print('3:' + str(timezone.now() - start_time))
-        # start_time = timezone.now()
+        if len(member_ticket_data) > 0:
+            member_ticket_data.update(member_ticket_avail_count=0, member_ticket_rem_count=0, state_cd=STATE_CD_FINISH)
 
-        for member_ticket_info in member_ticket_data:
-            func_update_lecture_member_fix_status_cd(member_ticket_info.ticket_tb.class_tb_id, member_ticket_info.member_id)
-    #
-    #     print('4:'+str(timezone.now()-start_time))
+            # print('2:'+str(timezone.now()-start_time))
+            # start_time = timezone.now()
+            schedule_data = ScheduleTb.objects.filter(query_member_ticket_id_info, end_dt__lte=now,
+                                                      use=USE).exclude(Q(state_cd=STATE_CD_FINISH)
+                                                                       | Q(state_cd=STATE_CD_ABSENCE))
+            schedule_data_delete = ScheduleTb.objects.filter(
+                query_member_ticket_id_info, end_dt__gt=now,
+                use=USE).exclude(Q(state_cd=STATE_CD_FINISH) | Q(state_cd=STATE_CD_ABSENCE))
+            # repeat_schedule_data = RepeatScheduleTb.objects.filter(query_member_ticket_id_info)
+            if len(schedule_data) > 0:
+                schedule_data.update(state_cd=STATE_CD_FINISH)
+            if len(schedule_data_delete) > 0:
+                schedule_data_delete.update(use=UN_USE)
+            # if len(repeat_schedule_data) > 0:
+            #     repeat_schedule_data.update(use=UN_USE)
+
+            # print('3:' + str(timezone.now() - start_time))
+            # start_time = timezone.now()
+
+            for member_ticket_info in member_ticket_data:
+                func_update_lecture_member_fix_status_cd(member_ticket_info.ticket_tb.class_tb_id, member_ticket_info.member_id)
+        #
+        #     print('4:'+str(timezone.now()-start_time))
 
 
 def func_update_finish_pass_data():
