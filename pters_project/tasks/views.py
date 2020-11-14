@@ -100,14 +100,14 @@ def func_update_finish_member_ticket_data():
             schedule_data = ScheduleTb.objects.filter(query_member_ticket_id_info, end_dt__lte=now,
                                                       use=USE).exclude(Q(state_cd=STATE_CD_FINISH)
                                                                        | Q(state_cd=STATE_CD_ABSENCE))
-            schedule_data_delete = ScheduleTb.objects.filter(
-                query_member_ticket_id_info, end_dt__gt=now,
-                use=USE).exclude(Q(state_cd=STATE_CD_FINISH) | Q(state_cd=STATE_CD_ABSENCE))
+            # schedule_data_delete = ScheduleTb.objects.filter(
+            #     query_member_ticket_id_info, end_dt__gt=now,
+            #     use=USE).exclude(Q(state_cd=STATE_CD_FINISH) | Q(state_cd=STATE_CD_ABSENCE))
             # repeat_schedule_data = RepeatScheduleTb.objects.filter(query_member_ticket_id_info)
             if len(schedule_data) > 0:
                 schedule_data.update(state_cd=STATE_CD_FINISH)
-            if len(schedule_data_delete) > 0:
-                schedule_data_delete.update(use=UN_USE)
+            # if len(schedule_data_delete) > 0:
+            #     schedule_data_delete.update(use=UN_USE)
             # if len(repeat_schedule_data) > 0:
             #     repeat_schedule_data.update(use=UN_USE)
 
