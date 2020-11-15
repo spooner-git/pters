@@ -2784,6 +2784,7 @@ def update_member_ticket_info_logic(request):
     class_id = request.session.get('class_id', '')
     error = None
     member_ticket_info = None
+    refund_check = False
 
     if member_ticket_id is None or member_ticket_id == '':
         error = '수강권 정보를 불러오지 못했습니다.'
@@ -2803,12 +2804,12 @@ def update_member_ticket_info_logic(request):
             end_date = member_ticket_info.end_date
         if price is None or price == '':
             price = member_ticket_info.price
-        if payment_price is None or payment_price == '':
-            payment_price = member_ticket_info.payment_price
         if pay_method is None or pay_method == '':
             pay_method = member_ticket_info.pay_method
         if refund_price is None or refund_price == '':
             refund_price = member_ticket_info.refund_price
+        else:
+            refund_check = True
         if refund_date is None or refund_date == '':
             refund_date = member_ticket_info.refund_date
         if member_ticket_reg_count is None or member_ticket_reg_count == '':
@@ -2821,15 +2822,6 @@ def update_member_ticket_info_logic(request):
             price = int(price)
         except ValueError:
             error = '수강권 금액은 숫자만 입력 가능합니다.'
-
-        try:
-            payment_price = int(payment_price)
-        except ValueError:
-            error = '수강권 금액은 숫자만 입력 가능합니다.'
-
-        if error is None:
-            if payment_price > price:
-                error = '수강권 가격보다 납부 금액이 많습니다.'
 
         try:
             member_ticket_reg_count = int(member_ticket_reg_count)
@@ -2867,7 +2859,6 @@ def update_member_ticket_info_logic(request):
         member_ticket_info.start_date = start_date
         member_ticket_info.end_date = end_date
         member_ticket_info.price = price
-        member_ticket_info.payment_price = payment_price
         member_ticket_info.pay_method = pay_method
         member_ticket_info.refund_price = refund_price
         member_ticket_info.refund_date = refund_date
@@ -2882,9 +2873,26 @@ def update_member_ticket_info_logic(request):
             member_ticket_info.member_ticket_avail_count = 0
         member_ticket_info.save()
     if error is None:
-        member_payment_history_data = MemberPaymentHistoryTb.objects.filter(member_ticket_tb_id=member_ticket_id,
-                                                                            payment_price__gt=0)
-        member_payment_history_data.update(pay_method=pay_method)
+        if refund_check:
+            try:
+                member_payment_history_info = MemberPaymentHistoryTb.objects.get(member_ticket_tb_id=member_ticket_id,
+                                                                                 refund_price__gt=0, use=USE)
+                member_payment_history_info.refund_price = refund_price
+                member_payment_history_info.save()
+            except ObjectDoesNotExist:
+                member_payment_history_info = MemberPaymentHistoryTb(class_tb_id=class_id,
+                                                                     member_id=member_ticket_info.member_id,
+                                                                     member_ticket_tb_id=member_ticket_id,
+                                                                     member_shop_tb_id=None,
+                                                                     payment_price=0,
+                                                                     refund_price=refund_price,
+                                                                     pay_method='NONE',
+                                                                     pay_date=refund_date, note='', use=USE)
+                member_payment_history_info.save()
+        else:
+            member_payment_history_data = MemberPaymentHistoryTb.objects.filter(member_ticket_tb_id=member_ticket_id,
+                                                                                payment_price__gt=0)
+            member_payment_history_data.update(pay_method=pay_method)
 
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)

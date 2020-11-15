@@ -28,12 +28,12 @@ class Member_ticket_modify{
             end_date_text:null,
             reg_count: null,
             price:null,
-            payment_price:null,
+            payment_price:0,
             pay_method:{value:[], text:[]},
             status:null,
             note:null,
             refund_date:null,
-            refund_price:null
+            refund_price:0
         };
 
         this.date_start = 0;
@@ -120,10 +120,12 @@ class Member_ticket_modify{
                     `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>`;
         let price  = CComponent.dom_tag('가격') + this.dom_row_price_input() + 
                     `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>`;
-        let payment_price  = CComponent.dom_tag('납부 금액') + this.dom_row_payment_price_input() +
-                    `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>`;
+        let payment_price;
         if(this.data.status == "RF"){
             payment_price  = CComponent.dom_tag('환불 금액') + this.dom_row_payment_price_input() +
+                    `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>`;
+        }else{
+            payment_price  = CComponent.dom_tag('납부 금액') + this.dom_row_payment_price_input() +
                     `<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>`;
         }
         let pay_method = CComponent.dom_tag("지불 방법") + this.dom_row_ticket_pay_method_select() +
