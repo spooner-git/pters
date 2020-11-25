@@ -204,15 +204,15 @@
                         }
                     }
 
-                    let off_time_len = schedule_json.offTimeArray_lecture_id.length;
-                    for(let i=0; i<off_time_len; i++){
-                        if(schedule_json.offTimeArray_lecture_type_cd[i] == "ONE_TO_ONE"){
-                            if (schedule_json.offTimeArray_lecture_id[i] != "None" && schedule_json.offTimeArray_lecture_id[i] != one_to_one_lecture_id) {
-                                schedule_json.offTimeArray_start_date.splice(i, 1);
-                                schedule_json.offTimeArray_end_date.splice(i, 1);
-                            }
-                        }
-                    }
+{#                    let off_time_len = schedule_json.offTimeArray_lecture_id.length;#}
+{#                    for(let i=0; i<off_time_len; i++){#}
+{#                        if(schedule_json.offTimeArray_lecture_type_cd[i] == "ONE_TO_ONE"){#}
+{#                            if (schedule_json.offTimeArray_lecture_id[i] != "None" && schedule_json.offTimeArray_lecture_id[i] != one_to_one_lecture_id) {#}
+{#                                schedule_json.offTimeArray_start_date.splice(i, 1);#}
+{#                                schedule_json.offTimeArray_end_date.splice(i, 1);#}
+{#                            }#}
+{#                        }#}
+{#                    }#}
                 }
                 func_start_time_dom_draw('select[title="time_select"]', selected_date, schedule_json, setting_info,
                     one_to_one_lecture_time_duration, one_to_one_lecture_start_time);
@@ -249,15 +249,15 @@
                         }
                     }
 
-                    let off_time_len = schedule_json.offTimeArray_lecture_id.length;
-                    for (let i = 0; i < off_time_len; i++) {
-                        if(schedule_json.offTimeArray_lecture_type_cd[i] == "ONE_TO_ONE"){
-                            if (schedule_json.offTimeArray_lecture_id[i] != "None" && schedule_json.offTimeArray_lecture_id[i] != one_to_one_lecture_id_select) {
-                                schedule_json.offTimeArray_start_date.splice(i, 1);
-                                schedule_json.offTimeArray_end_date.splice(i, 1);
-                            }
-                        }
-                    }
+{#                    let off_time_len = schedule_json.offTimeArray_lecture_id.length;#}
+{#                    for (let i = 0; i < off_time_len; i++) {#}
+{#                        if(schedule_json.offTimeArray_lecture_type_cd[i] == "ONE_TO_ONE"){#}
+{#                            if (schedule_json.offTimeArray_lecture_id[i] != "None" && schedule_json.offTimeArray_lecture_id[i] != one_to_one_lecture_id_select) {#}
+{#                                schedule_json.offTimeArray_start_date.splice(i, 1);#}
+{#                                schedule_json.offTimeArray_end_date.splice(i, 1);#}
+{#                            }#}
+{#                        }#}
+{#                    }#}
                 }
                 func_start_time_dom_draw('select[title="time_select"]', selected_date, schedule_json, setting_info,
                     lecture_minute, lecture_start_time);
