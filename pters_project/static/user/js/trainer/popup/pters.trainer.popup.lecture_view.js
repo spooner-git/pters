@@ -498,7 +498,7 @@ class Lecture_view{
 
     dom_row_option_select_capacity(){
         let user_option = {
-            stay:{text:"지난 일정은 변경하지 않음", callback:()=>{this.update_this_to_all_plans = OFF;layer_popup.close_layer_popup();this.send_data();layer_popup.enable_shade_click_close(); }},
+            stay:{text:"이미 등록된 일정은 변경하지 않음", callback:()=>{this.update_this_to_all_plans = OFF;layer_popup.close_layer_popup();this.send_data();layer_popup.enable_shade_click_close(); }},
             change:{text:"모두 변경", callback:()=>{this.update_this_to_all_plans = ON;layer_popup.close_layer_popup();this.send_data();layer_popup.enable_shade_click_close(); }},
             cancel:{text:"변경 취소", callback:()=>{layer_popup.close_layer_popup();this.init();layer_popup.enable_shade_click_close();}}
         };
