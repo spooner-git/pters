@@ -50,6 +50,7 @@ class Member_ticket_refund{
     set_initial_data (){
         this.data.member_ticket_id = this.external_data.member_ticket_id;
         this.data.refund_date = DateRobot.to_yyyymmdd(this.dates.current_year, this.dates.current_month, this.dates.current_date);
+        this.data.refund_price = this.external_data.member_ticket_payment_price;
         this.data.member_ticket_name = this.external_data.member_ticket_name;
         this.data.member_ticket_price = this.external_data.member_ticket_price;
         this.data.member_ticket_payment_price = this.external_data.member_ticket_payment_price;
@@ -152,6 +153,7 @@ class Member_ticket_refund{
         let unit = '';
         let id = 'member_ticket_price_refund';
         let title = this.data.refund_price == null || this.data.refund_price == 'None' ? '' : UnitRobot.numberWithCommas(this.data.refund_price);
+        console.log(this.data.refund_price);
         let placeholder = '가격';
         let icon = NONE;
         let icon_r_visible = HIDE;
