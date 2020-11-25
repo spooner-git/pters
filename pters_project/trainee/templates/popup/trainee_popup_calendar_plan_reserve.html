@@ -192,29 +192,33 @@
             $('#form_plan_add').find('input').val('');
             $('#form_content_lecture_id').val(one_to_one_lecture_id);
             func_get_ajax_schedule_data_temp(selected_date.replace(/\./gi, '-'), function(schedule_json){
-
+                let result_schedule_json_data = JSON.parse(JSON.stringify(schedule_json));
                 if(schedule_json.setting_single_lecture_duplicate == 1){
                     let class_time_len = schedule_json.classTimeArray_lecture_id.length;
-                    for(let i=0; i<class_time_len; i++){
+                    for(let i=class_time_len-1; i>=0; i--){
                         if(schedule_json.classTimeArray_lecture_type_cd[i] == "ONE_TO_ONE"){
                             if (schedule_json.classTimeArray_lecture_id[i] != "None" && schedule_json.classTimeArray_lecture_id[i] != one_to_one_lecture_id) {
-                                schedule_json.classTimeArray_start_date.splice(i, 1);
-                                schedule_json.classTimeArray_end_date.splice(i, 1);
+                                result_schedule_json_data.classTimeArray_start_date.splice(i, 1);
+                                result_schedule_json_data.classTimeArray_end_date.splice(i, 1);
+                                result_schedule_json_data.classTimeArray_lecture_id.splice(i, 1);
+                                result_schedule_json_data.classTimeArray_lecture_type_cd.splice(i, 1);
                             }
                         }
                     }
 
-{#                    let off_time_len = schedule_json.offTimeArray_lecture_id.length;#}
-{#                    for(let i=0; i<off_time_len; i++){#}
-{#                        if(schedule_json.offTimeArray_lecture_type_cd[i] == "ONE_TO_ONE"){#}
-{#                            if (schedule_json.offTimeArray_lecture_id[i] != "None" && schedule_json.offTimeArray_lecture_id[i] != one_to_one_lecture_id) {#}
-{#                                schedule_json.offTimeArray_start_date.splice(i, 1);#}
-{#                                schedule_json.offTimeArray_end_date.splice(i, 1);#}
-{#                            }#}
-{#                        }#}
-{#                    }#}
+                    let off_time_len = schedule_json.offTimeArray_lecture_id.length;
+                    for(let i=off_time_len-1; i>=0; i--){
+                        if(schedule_json.offTimeArray_lecture_type_cd[i] == "ONE_TO_ONE"){
+                            if (schedule_json.offTimeArray_lecture_id[i] != "None" && schedule_json.offTimeArray_lecture_id[i] != one_to_one_lecture_id) {
+                                result_schedule_json_data.offTimeArray_start_date.splice(i, 1);
+                                result_schedule_json_data.offTimeArray_end_date.splice(i, 1);
+                                result_schedule_json_data.offTimeArray_lecture_id.splice(i, 1);
+                                result_schedule_json_data.offTimeArray_lecture_type_cd.splice(i, 1);
+                            }
+                        }
+                    }
                 }
-                func_start_time_dom_draw('select[title="time_select"]', selected_date, schedule_json, setting_info,
+                func_start_time_dom_draw('select[title="time_select"]', selected_date, result_schedule_json_data, setting_info,
                     one_to_one_lecture_time_duration, one_to_one_lecture_start_time);
                 {#                func_lecture_time_dom_draw('#reserve_form_lecture', selected_date, schedule_json, setting_info);#}
             });
@@ -237,29 +241,33 @@
             $('#form_content_lecture_id').val(one_to_one_lecture_id_select);
 
             func_get_ajax_schedule_data_temp(selected_date.replace(/\./gi, '-'), function(schedule_json){
+                let result_schedule_json_data = JSON.parse(JSON.stringify(schedule_json));
                 if(schedule_json.setting_single_lecture_duplicate == 1) {
-
                     let class_time_len = schedule_json.classTimeArray_lecture_id.length;
-                    for(let i=0; i<class_time_len; i++){
+                    for(let i=class_time_len-1; i>=0; i--){
                         if(schedule_json.classTimeArray_lecture_type_cd[i] == "ONE_TO_ONE"){
                             if (schedule_json.classTimeArray_lecture_id[i] != "None" && schedule_json.classTimeArray_lecture_id[i] != one_to_one_lecture_id_select) {
-                                schedule_json.classTimeArray_start_date.splice(i, 1);
-                                schedule_json.classTimeArray_end_date.splice(i, 1);
+                                result_schedule_json_data.classTimeArray_start_date.splice(i, 1);
+                                result_schedule_json_data.classTimeArray_end_date.splice(i, 1);
+                                result_schedule_json_data.classTimeArray_lecture_id.splice(i, 1);
+                                result_schedule_json_data.classTimeArray_lecture_type_cd.splice(i, 1);
                             }
                         }
                     }
 
-{#                    let off_time_len = schedule_json.offTimeArray_lecture_id.length;#}
-{#                    for (let i = 0; i < off_time_len; i++) {#}
-{#                        if(schedule_json.offTimeArray_lecture_type_cd[i] == "ONE_TO_ONE"){#}
-{#                            if (schedule_json.offTimeArray_lecture_id[i] != "None" && schedule_json.offTimeArray_lecture_id[i] != one_to_one_lecture_id_select) {#}
-{#                                schedule_json.offTimeArray_start_date.splice(i, 1);#}
-{#                                schedule_json.offTimeArray_end_date.splice(i, 1);#}
-{#                            }#}
-{#                        }#}
-{#                    }#}
+                    let off_time_len = schedule_json.offTimeArray_lecture_id.length;
+                    for (let i = off_time_len-1; i >= 0; i--) {
+                        if(schedule_json.offTimeArray_lecture_type_cd[i] == "ONE_TO_ONE"){
+                            if (schedule_json.offTimeArray_lecture_id[i] != "None" && schedule_json.offTimeArray_lecture_id[i] != one_to_one_lecture_id_select) {
+                                result_schedule_json_data.offTimeArray_start_date.splice(i, 1);
+                                result_schedule_json_data.offTimeArray_end_date.splice(i, 1);
+                                result_schedule_json_data.offTimeArray_lecture_id.splice(i, 1);
+                                result_schedule_json_data.offTimeArray_lecture_type_cd.splice(i, 1);
+                            }
+                        }
+                    }
                 }
-                func_start_time_dom_draw('select[title="time_select"]', selected_date, schedule_json, setting_info,
+                func_start_time_dom_draw('select[title="time_select"]', selected_date, result_schedule_json_data, setting_info,
                     lecture_minute, lecture_start_time);
                 {#                func_lecture_time_dom_draw('#reserve_form_lecture', selected_date, schedule_json, setting_info);#}
             });
