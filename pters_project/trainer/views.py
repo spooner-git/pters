@@ -3608,19 +3608,19 @@ def update_lecture_info_logic(request):
         #                                                      end_dt__gt=timezone.now(), en_dis_type=ON_SCHEDULE_TYPE)
         # else:
         # 오늘 이전의 일정
-        schedule_data_past = ScheduleTb.objects.filter(class_tb_id=class_id, lecture_tb_id=lecture_id,
-                                                       end_dt__lte=timezone.now(), en_dis_type=ON_SCHEDULE_TYPE)
+        # schedule_data_past = ScheduleTb.objects.filter(class_tb_id=class_id, lecture_tb_id=lecture_id,
+        #                                                end_dt__lte=timezone.now(), en_dis_type=ON_SCHEDULE_TYPE)
         # 오늘 이후의 일정
         schedule_data_future = ScheduleTb.objects.filter(class_tb_id=class_id, lecture_tb_id=lecture_id,
                                                          end_dt__gt=timezone.now(), en_dis_type=ON_SCHEDULE_TYPE)
         if str(update_this_to_all_plans) == str(USE):
-            schedule_data_past.update(ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
-                                      ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
-                                      max_mem_count=member_num, trainer_id=main_trainer_id)
+            # schedule_data_past.update(ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
+            #                           ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
+            #                           max_mem_count=member_num, trainer_id=main_trainer_id)
 
-        schedule_data_future.update(ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
-                                    ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
-                                    max_mem_count=member_num, trainer_id=main_trainer_id)
+            schedule_data_future.update(ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
+                                        ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
+                                        max_mem_count=member_num, trainer_id=main_trainer_id)
 
     if error is not None:
         logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
