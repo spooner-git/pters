@@ -1408,7 +1408,7 @@ def func_get_trainer_schedule_info(class_id, schedule_id):
         lecture_member_schedule_data = ScheduleTb.objects.select_related(
             'member_ticket_tb__member', 'reg_member').filter(class_tb_id=class_id, lecture_schedule_id=schedule_id,
                                                              member_ticket_tb__isnull=False,
-                                                             use=USE).order_by('start_dt')
+                                                             use=USE).order_by('start_dt', 'reg_dt')
 
         for lecture_member_schedule_info in lecture_member_schedule_data:
             lecture_member_profile_url = lecture_member_schedule_info.member_ticket_tb.member.profile_url
