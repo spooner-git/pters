@@ -8,7 +8,7 @@ from .models import CommonCdTb, PushInfoTb, LogTb, MemberTb, SnsInfoTb, MemberOu
 class MemberTbAdmin(admin.ModelAdmin):
     list_display = ('member_id', 'get_user_group', 'name', 'phone_is_active', 'reg_info',
                     'phone', 'sex', 'birthday_dt', 'contents', 'reg_dt', 'mod_dt', 'use')
-    search_fields = ['name']
+    search_fields = ['name', 'phone']
 
     def get_user_group(self, obj):
         group_name = ''
