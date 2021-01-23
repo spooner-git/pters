@@ -1498,6 +1498,53 @@ def activate_sms_logic(request):
     return render(request, 'ajax/trainer_error_ajax.html')
 
 
+def activate_sms_find_id_logic(request):
+    token = request.POST.get('token', '')
+    recaptcha_test_session = request.session.get('recaptcha_session', '')
+    sms_count = request.session.get('sms_count', 0)
+    phone = request.POST.get('phone', '')
+
+    app_name = request.session.get('app_name', 'pters')
+
+    recaptcha_secret_key = settings.PTERS_reCAPTCHA_SECRET_KEY
+    sms_activation_count = settings.PTERS_SMS_ACTIVATION_MAX_COUNT
+    error = None
+
+    if phone == '':
+        error = '휴대폰 번호를 입력해주세요.'
+    else:
+        member_list = MemberTb.objects.filter(phone=phone, phone_is_active=ACTIVATE, use=USE)
+        if len(member_list) == 0:
+            error = '등록된 휴대폰 번호가 없습니다.'
+
+    if error is None:
+        if int(sms_count) < sms_activation_count:
+            if recaptcha_test_session != 'success':
+                # error = func_recaptcha_test(recaptcha_secret_key, token)
+                # 테스트
+                if error is None:
+                    request.session['recaptcha_session'] = 'success'
+                else:
+                    request.session['recaptcha_session'] = 'failed'
+        else:
+            error = '일일 문자 인증 횟수가 '+str(sms_activation_count)+'회 초과했습니다.'
+
+    if error is None:
+        max_range = 99999
+        request.session['sms_count'] = sms_count + 1
+        request.session['sms_activation_check'] = False
+        request.session['sms_activation_time'] = str(timezone.now())
+        sms_activation_number = str(random.randrange(0, max_range)).zfill(len(str(max_range)))
+        request.session['sms_activation_number'] = sms_activation_number
+        error = func_send_sms_auth(phone, sms_activation_number, app_name)
+
+    if error is not None:
+        logger.error('error:'+str(error)+':'+str(timezone.now()))
+        messages.error(request, error)
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
 def activate_email_logic(request):
     token = request.POST.get('token', '')
     recaptcha_test_session = request.session.get('recaptcha_session', '')
@@ -1677,6 +1724,44 @@ class ActivateSmsConfirmView(View):
         return render(request, self.template_name)
 
 
+class ActivateSmsConfirmFindIdView(View):
+    template_name = 'ajax/registration_error_ajax.html'
+
+    def post(self, request):
+        user_activation_code = request.POST.get('user_activation_code')
+        sms_activation_number = request.session.get('sms_activation_number')
+        sms_activation_time = request.session.get('sms_activation_time')
+        now = timezone.now()
+        error = None
+
+        if sms_activation_time is None or sms_activation_time == '':
+            request.session['sms_activation_check'] = False
+            error = '오류가 발생했습니다. 다시 시도해주세요.'
+
+        if error is None:
+            sms_activation_time = datetime.datetime.strptime(sms_activation_time, '%Y-%m-%d %H:%M:%S.%f')
+
+            time_interval = str(now-sms_activation_time)
+            time_interval_data = time_interval.split('.')[0].split(':')
+            time_interval_minutes = time_interval_data[1]
+            time_interval_seconds = time_interval_data[2]
+
+            if user_activation_code == sms_activation_number:
+                if(int(time_interval_minutes)*60+int(time_interval_seconds)) > settings.SMS_ACTIVATION_SECONDS:
+                    error = '입력 시한이 지났습니다.'
+                    request.session['sms_activation_check'] = False
+                else:
+                    request.session['sms_activation_check'] = True
+            else:
+                request.session['sms_activation_check'] = False
+                error = '문자 인증번호가 일치하지 않습니다.'
+
+        if error is not None:
+            messages.error(request, error)
+
+        return render(request, self.template_name)
+
+
 class ActivateEmailConfirmView(View):
     template_name = 'ajax/registration_error_ajax.html'
 
@@ -1723,46 +1808,44 @@ class FindIdView(TemplateView):
         context = super(FindIdView, self).get_context_data(**kwargs)
         return context
 
-    def post(self, request):
-        name = request.POST.get('name', '')
-        phone = request.POST.get('phone', '')
-        email = request.POST.get('email', '')
-        find_id_type = request.POST.get('find_id_type', '')
-        error = None
-        member_username = ''
 
-        if find_id_type == 'phone':
-            if phone is None or phone == '':
-                error = '휴대폰 번호를 입력해주세요'
-        elif find_id_type == 'email':
-            if email is None or email == '':
-                error = '이메일을 입력해주세요.'
-        if name is None or name == '':
-            error = '이름을 입력해주세요.'
+def find_id_logic(request):
+    phone = request.POST.get('phone', '')
+    sms_activation_time = request.session.get('sms_activation_time')
+    sms_activation_check = request.session.get('sms_activation_check', False)
+    error = None
+    member_data = None
 
-        if error is None:
-            try:
-                member = None
-                if find_id_type == 'phone':
-                    member = MemberTb.objects.get(name=name, phone=phone)
-                elif find_id_type == 'email':
-                    member = MemberTb.objects.get(name=name, user__email=email)
+    if phone is None or phone == '':
+        error = '휴대폰 번호를 입력해주세요'
 
-                if member is not None:
-                    counter = 0
-                    for member_username_info in member.user.username:
-                        if counter < 3:
-                            member_username += member_username_info
-                        else:
-                            member_username += '*'
-                        counter += 1
+    if error is None:
+        if sms_activation_check is False:
+            error = '인증을 해주세요.'
 
-            except ObjectDoesNotExist:
-                error = '일치하는 회원 정보가 없습니다.'
+    if error is None:
+        if sms_activation_time is None or sms_activation_time == '':
+            sms_activation_time = str(timezone.now())
+            request.session['sms_activation_time'] = sms_activation_time
+        sms_activation_time = datetime.datetime.strptime(sms_activation_time, '%Y-%m-%d %H:%M:%S.%f')
 
-        if error is not None:
-            messages.error(self.request, error)
-        return render(request, self.template_name, {'username': member_username})
+        time_interval = str(timezone.now() - sms_activation_time)
+        time_interval_data = time_interval.split('.')[0].split(':')
+        time_interval_minutes = time_interval_data[1]
+        time_interval_seconds = time_interval_data[2]
+
+        if (int(time_interval_minutes) * 60 + int(
+                time_interval_seconds)) > settings.SMS_ACTIVATION_SECONDS:
+            error = '입력 시한이 지났습니다. 다시 인증을 해주세요.[0]'
+
+    if error is None:
+        member_data = MemberTb.objects.filter(phone=phone, use=USE)
+        if len(member_data) == 0:
+            error = '일치하는 회원 정보가 없습니다.'
+    if error is not None:
+        messages.error(request, error)
+
+    return render(request, 'ajax/find_id_ajax.html', {'username': member_data})
 
 
 class ResetPasswordView(TemplateView):

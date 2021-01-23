@@ -264,6 +264,70 @@ function activate_sms(){
     });
 }
 
+function activate_sms_find_id(){
+    // 인증 버튼 활성화
+    $('#id_activation_confirm_button').css({'color':'#fe4e65', 'border':'solid 1px #fe4e65', 'pointer-events':'auto'});
+
+    // 인증 관련 메시지 초기화
+    $('#id_activation_button').text('재인증').css({'color':'#fe4e65', 'border':'solid 1px #fe4e65'});
+    $('#id_activation_confirm').text(" ").css({'display':'none'});
+    $('#activation_timer').text('03:00').css({'display':'inline-block'});
+    activation_timer = 180;
+
+    // 인증 메시지 발송
+    $.ajax({
+        url:'/login/activate_sms_find_id/',
+        type:'POST',
+        data:{'token':document.getElementById('g-recaptcha-response').value,
+              'phone':document.getElementById('id_phone').value
+             },
+        dataType : 'html',
+
+        beforeSend:function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        //통신성공시 처리
+        success:function(data){
+            let jsondata = JSON.parse(data);
+            if(jsondata.messageArray.length > 0){
+                $('#id_activation_button').text('인증').css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2', 'pointer-events':'none'});
+                $('#id_activation_confirm_button').css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2', 'pointer-events':'none'});
+                $('#activation_timer').text("");
+                alert(jsondata.messageArray);
+            }else{
+                alert('인증번호가 발송되었습니다.');
+                activation_time_interval = setInterval(function(){
+                    activation_timer--;
+                    // 시간 종료시 처리
+                    if(activation_timer<0){
+                        $('#id_activation_confirm').text('인증 시간이 초과되었습니다.').css({'display':'block'}).css('color', '#fe4e65');
+                        $('#id_activation_confirm_button').css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2', 'pointer-events':'none'});
+                        clearInterval(activation_time_interval);
+                    }else{
+                        // 시간 표시
+                        let minutes = parseInt(activation_timer/60);
+                        let seconds = activation_timer - minutes*60;
+                        if(seconds<10){
+                            seconds = '0'+seconds;
+                        }
+                        $('#activation_timer').text(minutes+':'+seconds);
+                    }
+                }, 1000);
+            }
+        },
+        //보내기후 팝업창 닫기
+        complete:function(){
+
+        },
+        //통신 실패시 처리
+        error:function(){
+            alert("에러: 서버 통신 실패");
+        }
+    });
+}
+
 function check_activation_code(){
     let $id_activation_code = $('#id_activation_code');
     $.ajax({
@@ -302,6 +366,46 @@ function check_activation_code(){
         }
     });
 }
+
+function check_activation_code_find_id(){
+    let $id_activation_code = $('#id_activation_code');
+    $.ajax({
+        url:'/login/activate_sms_confirm_find_id/',
+        type:'POST',
+        data: {'user_activation_code': $id_activation_code.val()},
+        dataType : 'html',
+
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+
+        //통신성공시 처리
+        success:function(data){
+            let jsondata = JSON.parse(data);
+            if(jsondata.messageArray.length > 0){
+                $('#id_activation_confirm').text(jsondata.messageArray).css({'display':'block','color':'#fe4e65'});
+                $id_activation_code.attr('data-valid', 'false');
+            }else{
+                clearInterval(activation_time_interval);
+                $('#id_activation_button').text('인증').css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2', 'pointer-events':'none'});
+                $('#id_activation_confirm').text('확인').css({'display':'block','color':'green'});
+                $('#id_activation_confirm_button').css({'color':'#b8b4b4', 'border':'solid 1px #d6d2d2', 'pointer-events':'none'});
+                $id_activation_code.attr('data-valid', 'true');
+                $('#activation_timer').text("");
+                alert('확인되었습니다.');
+            }
+        },
+        complete:function(){
+
+        },
+        error:function(){
+
+        }
+    });
+}
+
 
 function registration_member_info(forms){
     // form 안에 있는 값 검사

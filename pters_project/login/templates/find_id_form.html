@@ -12,15 +12,12 @@
     </style>
 {% endblock %}
 {% block content %}
+    <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response">
     <div id="root_content">
         <div id="registration_box">
             <!-- 헤더 영역 -->
             <div class="registration_top" style="border-bottom:0px;">
-                {% if username %}
-                    <div class="registration_left" onclick="location.href='{% url "login:find_id" %}'"><</div>
-                {% else %}
-                    <div class="registration_left" onclick="location.href='{% url "login:index" %}'">X</div>
-                {% endif %}
+                <div class="registration_left" onclick="location.href='{% url "index" %}'">X</div>
                 <div class="registration_title" style="display:none;">아이디 찾기</div>
                 <div class="registration_right"></div>
             </div>
@@ -34,50 +31,40 @@
                     <div class="wrapper_registration_content_title" style="margin-bottom:40px; height:24px;">
                         <div class="registration_content_title" style="font-size: 20px; font-weight: bold; color: #1f1d1e; letter-spacing: -1px; text-align: center;">아이디 찾기</div>
                     </div>
-                    {% if username %}
+                    <div id="find_id_phone" style="">
+                        <!-- 휴대폰 번호 입력 영역 -->
+                        <div style="margin-top:8px;">
+                            <input class="pters_login_input" type="text" name="phone" id="id_phone" placeholder="휴대폰 번호" minlength="10" maxlength="11" title="휴대폰 번호"
+                                   autocomplete="off" style="width:70%;" pattern="[0-9]{10,11}" onkeyup="limit_char_auto_correction(event.target); check_sms_activation_button(event.target);"
+                                   data-error-message="" data-valid="false">
+                            <div class="activation_button" id="id_activation_button" onclick="activate_sms_find_id();" style="pointer-events:none;">인증</div>
+                        </div>
+
+                        <!-- 인증 번호 입력 영역 -->
+                        <div style="margin-top:8px;">
+                            <div id="wrapper_id_activation" style="width: 70%; border: solid 1px #d6d2d2; display:inline-block">
+                                <input class="pters_login_input" type="text" name="activation_code" id="id_activation_code" placeholder="인증 번호" minlength="3" maxlength="8" title="휴대폰 인증"
+                                       style="width:70%; border:0" pattern="[0-9]{3,8}" onkeyup="limit_char_auto_correction(event.target);" data-error-message="" data-valid="false">
+                                <div id="activation_timer" style="display:none; width:20%; text-align:right; padding-right:12px; color: #ff001f; font-size: 13px; font-weight: 500; letter-spacing: -0.5px;">
+                                    03:00
+                                </div>
+                            </div>
+                            <div class="activation_button" id="id_activation_confirm_button" onclick="check_activation_code_find_id();" style="pointer-events:none;">확인</div>
+                            <div class="input_description">
+                                <div class="input_description_text" id="id_activation_confirm"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="find_id_username" style="display:none;">
                         <div style="margin-top:8px;" >
                             고객님의 아이디 찾기가 완료됐습니다.
                         </div>
-                        <div style="margin-top:8px;" >
-                            아이디 : {{ username }}
+                        <div id="find_id_username_info" style="margin-top:8px;" >
                         </div>
-                    {% else %}
-                        <div class="group_select_box_on" id="group_select_phone_box" onclick="check_find_id_select('phone');">
-                            휴대폰 번호로 확인
-                        </div>
-                        <div class="group_select_box_off" id="group_select_email_box" onclick="check_find_id_select('email');" style="{% if member.phone != "" %}float:right;{% endif %}">
-                            이메일로 확인
-                        </div>
-
-                        <!-- 아이디 입력 영역 -->
-                       <div style="margin-top:8px;">
-                            <input class="pters_login_input" type="text" name="name" id="id_name" placeholder="이름" minlength="2" maxlength="20" title="이름" data-valid="true">
-                        </div>
-                        <!-- 휴대폰 번호 입력 영역 -->
-                        <div style="margin-top:8px;" id="input_phone">
-                            <input class="pters_login_input" type="text" name="phone" id="id_phone" placeholder="휴대폰 번호" minlength="10" maxlength="11" title="휴대폰 번호"
-                                   autocomplete="off" pattern="[0-9]{10,11}" onkeyup="limit_char_auto_correction(event.target);"
-                                   data-error-message="" data-valid="false" onkeyup="enter_key();">
-                        </div>
-                        <!-- 이메일 입력 영역 -->
-                        <div style="margin-top:8px; display:none;" id="input_email">
-                            <input class="pters_login_input" type="text" name="email" id="id_email" placeholder="이메일 주소" minlength="10" maxlength="30" title="이메일 주소"
-                                   autocomplete="off" data-valid="true" onkeyup="enter_key();">
-                        </div>
-                    {% endif %}
+                    </div>
                 </form>
             </div>
 
-            {% if username %}
-            <!-- 로그인 버튼 영역 -->
-            <div class="registration_foot" style="margin-top:40px; transform: initial; padding-bottom:0px;">
-                <div class="social_login_box" onclick="location.href='{% url "login:index" %}'" style="width:100%; background-color: #fe4e65; margin-top:12px; margin-bottom:20px;">
-                    <div class="social_login_img"></div>
-                    <span class="social_login_text" style="color:#ffffff;">로그인</span>
-                    <div style="display:table-cell; width:60px;"></div>
-                </div>
-            </div>
-            {% else %}
             <!-- 아이디 찾기 버튼 영역 -->
             <div class="registration_foot" style="margin-top:40px; transform: initial; padding-bottom:0px;">
                 <div class="social_login_box" onclick="find_id_info();" style="width:100%; background-color: #fe4e65; margin-top:12px; margin-bottom:20px;">
@@ -86,7 +73,16 @@
                     <div style="display:table-cell; width:60px;"></div>
                 </div>
             </div>
-            {% endif %}
+            <!-- 아이디 찾기 버튼 영역 -->
+            <div class="registration_finish_foot" style="display:none; margin-top:40px; transform: initial; padding-bottom:0px;">
+                <div class="social_login_box" onclick="location.href='{% url "index" %}'" style="width:100%; background-color: #fe4e65; margin-top:12px; margin-bottom:20px;">
+                    <div class="social_login_img"></div>
+                    <span class="social_login_text" style="color:#ffffff;">로그인 하러 가기</span>
+                    <div style="display:table-cell; width:60px;"></div>
+                </div>
+            </div>
+
+
         </div>
     </div>
 
@@ -98,7 +94,7 @@
         window.addEventListener('load', function () {
             {% for message in messages %}
                 {% if message.tags == "error" %}
-                    show_error_message('{{ message }}');
+                    alert('{{ message }}');
                 {% endif %}
             {% endfor %}
         });
@@ -169,7 +165,52 @@
 
         function find_id_info(){
             // form 안에 있는 값 검사
-            document.getElementById("id_find_member_form").submit();
+
+            let $id_find_member_form = $('#id_find_member_form');
+            $.ajax({
+                url:'/login/find_id_logic/',
+                type:'POST',
+                data: $id_find_member_form.serializeArray(),
+                dataType : 'html',
+
+                beforeSend: function (xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                },
+
+                //통신성공시 처리
+                success:function(data){
+                    let jsondata = JSON.parse(data);
+                    if(jsondata.messageArray.length > 0){
+                        let error_message = '';
+                        for(let i=0; i<jsondata.messageArray.length; i++){
+                            error_message += jsondata.messageArray[i];
+                            break;
+                        }
+                        alert(error_message);
+                    }else{
+                        alert('확인되었습니다.');
+                        let html_data='';
+                        for(let i=0; i<jsondata.username.length; i++){
+                            html_data += `<div>아이디 : ${jsondata.username[i]}</div><br/>`;
+                        }
+
+                        document.getElementById('find_id_username_info').innerHTML = html_data;
+                        $('#find_id_username').css('display', 'block');
+                        $('#find_id_phone').css('display', 'none');
+                        $('.registration_foot').css('display', 'none');
+                        $('.registration_finish_foot').css('display', 'block');
+
+                    }
+                },
+                complete:function(){
+
+                },
+                error:function(){
+
+                }
+            });
         }
 
     </script>

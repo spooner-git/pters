@@ -86,7 +86,9 @@ urlpatterns = [
 
     # 문자 인증 처리 기능
     url(r'^activate_sms/$', views.activate_sms_logic, name='activate_sms'),
+    url(r'^activate_sms_find_id/$', views.activate_sms_find_id_logic, name='activate_sms_find_id'),
     url(r'^activate_sms_confirm/$', views.ActivateSmsConfirmView.as_view(), name='activate_sms_confirm'),
+    url(r'^activate_sms_confirm_find_id/$', views.ActivateSmsConfirmFindIdView.as_view(), name='activate_sms_confirm_find_id'),
 
     # 이메일 인증 처리 기능
     url(r'^activate_email/$', views.activate_email_logic, name='activate_email'),
@@ -100,6 +102,7 @@ urlpatterns = [
 
     # 비밀번호 초기화 문자 인증 처리 기능
     url(r'^find_id/$', views.FindIdView.as_view(), name='find_id'),
+    url(r'^find_id_logic/$', views.find_id_logic, name='find_id_logic'),
     url(r'^reset_password/$', views.ResetPasswordView.as_view(), name='reset_password'),
     url(r'^reset_password2/$', views.ResetPassword2View.as_view(), name='reset_password2'),
     url(r'^reset_password3/$', views.reset_password3, name='reset_password3'),

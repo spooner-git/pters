@@ -1,0 +1,7 @@
+{
+    "username" :
+    [{% for username_info in username %}"{{ username_info.user.username }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
+    "messageArray" :
+        [{% for message in messages %}"{% if message.tags == "error" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}]
+}
