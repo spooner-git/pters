@@ -4,6 +4,11 @@ class Setting_reserve{
         this.data_sending_now = false;
 
         this.data = {
+                setting_member_reserve_time_available:'00:00-23:59',
+                start_avail_time:null,
+                end_avail_time:null,
+                start_avail_time_text:null,
+                end_avail_time_text:null,
                 stop_reserve:OFF,
                 time_for_private_reserve:{value:[], text:[]},
                 // start_time_for_private_reserve:{value:[], text:[]},
@@ -46,6 +51,17 @@ class Setting_reserve{
 
     set_initial_data (){
         Setting_reserve_func.read((data)=>{
+            this.data.setting_member_reserve_time_available = data.setting_member_reserve_time_available;
+            this.data.start_avail_time = this.data.setting_member_reserve_time_available.split('-')[0];
+            this.data.end_avail_time = this.data.setting_member_reserve_time_available.split('-')[1];
+            if(this.data.end_avail_time == "23:59") this.data.end_avail_time = "24:00";
+            this.data.start_avail_time_text = TimeRobot.to_text(this.data.start_avail_time);
+            this.data.end_avail_time_text = TimeRobot.to_text(this.data.end_avail_time);
+            console.log(this.data.setting_member_reserve_time_available);
+            console.log(this.data.start_avail_time);
+            console.log(this.data.end_avail_time);
+            console.log(this.data.start_avail_time_text);
+            console.log(this.data.end_avail_time_text);
             this.data.stop_reserve = data.setting_member_reserve_prohibition;
 
             // this.data.start_time_for_private_reserve.value[0] = data.setting_member_start_time;
@@ -130,6 +146,9 @@ class Setting_reserve{
                         this.dom_row_available_reserve_date() + 
                         this.dom_row_available_reserve_time() + 
                         this.dom_row_available_cancel_time() +
+                    '</article>' +
+                    '<article class="obj_input_box_full">' +
+                        this.dom_row_reserve_avail_time() +
                     '</article>' +
                     '<article class="obj_input_box_full">' +
                         this.dom_row_capacity_visible() +
@@ -433,7 +452,7 @@ class Setting_reserve{
         let html = `
             <div style="display:table;width:100%;">
                 <div style="display:table-cell;width:auto;vertical-align:bottom">${title_row}</div>
-                <div style="display:table-cell;width:80px;vertical-align:middle">${member_public_class_wait_member_num_row}</div>
+                <div style="display:table-cell;width:150px;vertical-align:middle">${member_public_class_wait_member_num_row}</div>
             </div>
            `;
         return html;
@@ -499,6 +518,116 @@ class Setting_reserve{
         return html;
     }
 
+    dom_row_reserve_avail_time(){
+        let html_to_join = [];
+        let title_row = CComponent.text_button ("setting_avail_time_text", '예약 허용 시간대', {"font-size":"15px", "font-weight":"500", "letter-spacing":"-0.8px"}, ()=>{});
+        let start_time_selector = this.dom_row_start_time_select();
+        let end_time_selector = this.dom_row_end_time_select();
+        let id = `reserve_avail_time`;
+        let style = null;
+        let html = `${title_row} 
+                    <div style=\"margin-bottom:15px;\"><span style='font-size:12px;color:var(--font-main);letter-spacing:-0.6px;font-weight:normal'>설정한 시간에만 예약이 가능합니다.</span></div>
+                    ${start_time_selector}
+                    ${end_time_selector}`;
+        html_to_join.push(html);
+
+        return html_to_join.join('');
+
+    }
+    dom_row_start_time_select(){
+        let id = `select_start_avail_time`;
+        let title = this.data.start_avail_time_text == null ? '시작 시각*' : this.data.start_avail_time_text;
+        let icon = CImg.time();
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
+        let style = null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ //data : 직전 셋팅값
+            //행을 클릭했을때 실행할 내용
+            let root_content_height = $root_content.height();
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', 100*255/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
+
+                //data의 선택 시작시간이 빈값이라면 현재 시간으로 셋팅한다.
+                let hour = this.data.start_avail_time == null ? 0 : this.data.start_avail_time.split(':')[0];
+                let minute = this.data.start_avail_time == null ? 0 : this.data.start_avail_time.split(':')[1];
+
+                time_selector = new TimeSelector2('#wrapper_popup_time_selector_function', null, {myname:'time', title:'시작 시각', data:{hour:hour, minute:minute},
+                                                                                                callback_when_set: (object)=>{
+                                                                                                    this.data.start_avail_time = TimeRobot.to_hhmm(object.data.hour, object.data.minute).complete;
+                                                                                                    this.data.start_avail_time_text = object.text;
+                                                                                                    this.render_content();
+
+                                                                                                    if(this.data.end_avail_time != null){
+                                                                                                        let compare = TimeRobot.compare(`${object.data.hour}:${object.data.minute}`, this.data.end_avail_time);
+                                                                                                        if(compare == true){
+                                                                                                            //유저가 선택할 수 있는 최저 시간을 셋팅한다. 이시간보다 작은값을 선택하려면 메세지를 띄우기 위함
+                                                                                                            this.data.end_avail_time = TimeRobot.to_hhmm(object.data.hour, object.data.minute).complete;
+                                                                                                            this.data.end_avail_time_text = object.text;
+                                                                                                            this.render_content();
+                                                                                                        }
+                                                                                                    }
+                                                                                                    //셀렉터에서 선택된 값(object)을 this.data_to_send에 셋팅하고 rerender 한다.
+                                                                                                }});
+            });
+        });
+        return html;
+    }
+
+    dom_row_end_time_select(){
+        let id = `select_end_avail_time`;
+        let title = this.data.end_avail_time_text == null ? '종료 시각*' : this.data.end_avail_time_text;
+        let icon = NONE;
+        let icon_r_visible = HIDE;
+        let icon_r_text = "";
+        let style = this.data.start_avail_time == this.data.end_avail_time && this.data.end_avail_time != null ? {"color":"var(--font-highlight)"} : null;
+        let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{ //data : 직전 셋팅값
+            //행을 클릭했을때 실행할 내용
+            if(this.data.start_avail_time == null){
+                show_error_message({title:'시작 시각을 먼저 선택해주세요'});
+                return false;
+            }
+            let root_content_height = $root_content.height();
+            layer_popup.open_layer_popup(POPUP_BASIC, 'popup_basic_time_selector', 100*255/root_content_height, POPUP_FROM_BOTTOM, null, ()=>{
+
+                //data_to_send의 선택 시작시간이 빈값이라면 시작 시간으로 셋팅한다.
+                let hour_init = this.data.end_avail_time == null ? this.data[day].start_avail_time.split(':')[0] : this.data.end_avail_time.split(':')[0];
+                let minute_init = this.data.end_avail_time == null ? this.data[day].start_avail_time.split(':')[1] : this.data.end_avail_time.split(':')[1];
+
+                //유저가 선택할 수 있는 최저 시간을 셋팅한다. 이시간보다 작은값을 선택하려면 메세지를 띄우기 위함
+                let hour_min = this.data.start_avail_time.split(':')[0];
+                let minute_min = this.data.start_avail_time.split(':')[1];
+
+                time_selector = new TimeSelector2('#wrapper_popup_time_selector_function', null, {myname:'time', title:'종료 시각',
+                                                                                                data:{hour:hour_init, minute:minute_init}, min:{hour:hour_min, minute:minute_min},
+                                                                                                callback_when_set: (object)=>{
+                                                                                                    this.data.end_avail_time = TimeRobot.to_hhmm(object.data.hour, object.data.minute).complete;
+                                                                                                    this.data.end_avail_time_text = object.text;
+                                                                                                    this.render_content();
+                                                                                                    //셀렉터에서 선택된 값(object)을 this.data_to_send에 셋팅하고 rerender 한다.
+                                                                                                }});
+            });
+        });
+
+        return html;
+    }
+
+
+    art_data(start_time, end_time){
+        let merged;
+        if(end_time == '24:00'){
+            end_time = '23:59';
+        }
+        if(start_time == null && end_time == null){
+            merged = `00:00-23:59`;
+        }else if(start_time == null && end_time != null){
+            merged = `00:00-${end_time}`;
+        }else if(start_time != null && end_time == null){
+            merged = `${start_time}-23:59`;
+        }else{
+            merged = start_time + '-' + end_time;
+        }
+
+        return merged;
+    }
 
     send_data(){
         let auth_inspect = pass_inspector.setting_update();
@@ -514,7 +643,8 @@ class Setting_reserve{
             this.data_sending_now = true;
         }
         let data = {
-            "setting_member_reserve_time_available":'00:00-23:59', //예약 가능 시간대
+
+            "setting_member_reserve_time_available": this.art_data(this.data.start_avail_time, this.data.end_avail_time) , //예약 가능 시간대
             "setting_member_reserve_prohibition":this.data.stop_reserve, // 예약 일시 정지
             // "setting_member_time_duration":this.data.time_for_private_reserve.value[0], //개인 수업 예약 시간
             // "setting_member_start_time": this.data.start_time_for_private_reserve.value[0], //개인 수업 예약 시작 시각
