@@ -59,7 +59,8 @@ urlpatterns = [
     url(r'^trainee_alarm/$', views.AlarmView.as_view(), name='trainee_alarm'),
     url(r'^get_alarm_ajax/$', views.AlarmViewAjax.as_view(), name='get_alarm_ajax'),
 
-
+    url(r'^get_lecture_trainer_work_time_setting_data/$', views.GetLectureTrainerWorkTimeSettingDataView.as_view(),
+        name='get_lecture_trainer_work_time_setting_data'),
 
     # 페이지 #####################################################################################################
     # 회원 design template 페이지

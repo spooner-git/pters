@@ -83,9 +83,37 @@ $(document).on('click', '.func_tab_element', function(){
     $target_to_hide.hide();
 });
 
+function func_get_sub_trainer_setting_data(data, callback){
+    let ajax_url = '/trainee/get_lecture_trainer_work_time_setting_data/';
+    $.ajax({
+        url: ajax_url,
+        type : 'GET',
+        data : data,
+        dataType : 'json',
+
+        beforeSend:function(xhr, settings){
+            func_ajax_before_send(xhr, settings, ajax_url, data);
+        },
 
 
+        success:function(data){
+            console.log(data);
+            // let jsondata = JSON.parse(data);
+            let jsondata = data;
+            callback(jsondata);
 
+            return jsondata;
+        },
+
+        complete:function(){
+            func_ajax_after_send(ajax_url, data);
+        },
+
+        error:function(){
+            console.log('server error');
+        }
+    });
+}
 
 function func_get_ajax_schedule_data_temp(input_reference_date, callback){
     let ajax_url = '/trainee/get_trainee_schedule/';
@@ -141,8 +169,8 @@ function func_start_time_calc(selected_date, schedule_json, setting_info, one_to
     let thisDay = new Date(this_year, Number(this_month)-1, this_date).getDay();
 
 
-    let workStartTime_ = time_h_m_to_hh_mm(setting_info.setting_trainer_work_time_available[thisDay].split('-')[0]);
-    let workEndTime_ = time_h_m_to_hh_mm(setting_info.setting_trainer_work_time_available[thisDay].split('-')[1]);
+    let workStartTime_ = time_h_m_to_hh_mm(setting_info.setting_trainer_work_time_available_trainer[thisDay].split('-')[0]);
+    let workEndTime_ = time_h_m_to_hh_mm(setting_info.setting_trainer_work_time_available_trainer[thisDay].split('-')[1]);
     if(workEndTime_ == "23:59"){
         workEndTime_ = "24:00";
     }

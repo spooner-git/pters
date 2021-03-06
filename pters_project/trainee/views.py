@@ -8,6 +8,7 @@ from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import InternalError, IntegrityError, transaction
 from django.db.models import Q
 from django.db.models.expressions import RawSQL
+from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.views import View
@@ -1532,6 +1533,47 @@ class AlarmViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         return render(request, self.template_name, context)
 
 
+class GetLectureTrainerWorkTimeSettingDataView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        trainer_id = request.GET.get('trainer_id')
+        class_id = request.session.get('class_id', '')
+
+        lt_work_sun_time_avail_trainer = '00:00-24:00'
+        lt_work_mon_time_avail_trainer = '00:00-24:00'
+        lt_work_tue_time_avail_trainer = '00:00-24:00'
+        lt_work_wed_time_avail_trainer = '00:00-24:00'
+        lt_work_ths_time_avail_trainer = '00:00-24:00'
+        lt_work_fri_time_avail_trainer = '00:00-24:00'
+        lt_work_sat_time_avail_trainer = '00:00-24:00'
+
+        setting_data = SettingTb.objects.filter(class_tb_id=class_id, member_id=trainer_id, use=USE)
+
+        for setting_info in setting_data:
+            if setting_info.setting_type_cd == 'LT_WORK_SUN_TIME_AVAIL_TRAINER':
+                lt_work_sun_time_avail_trainer = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_MON_TIME_AVAIL_TRAINER':
+                lt_work_mon_time_avail_trainer = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_TUE_TIME_AVAIL_TRAINER':
+                lt_work_tue_time_avail_trainer = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_WED_TIME_AVAIL_TRAINER':
+                lt_work_wed_time_avail_trainer = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_THS_TIME_AVAIL_TRAINER':
+                lt_work_ths_time_avail_trainer = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_FRI_TIME_AVAIL_TRAINER':
+                lt_work_fri_time_avail_trainer = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_SAT_TIME_AVAIL_TRAINER':
+                lt_work_sat_time_avail_trainer = setting_info.setting_info
+
+        sub_trainer_setting_info = {
+            'setting_trainer_work_time_available_trainer':
+                [lt_work_sun_time_avail_trainer, lt_work_mon_time_avail_trainer, lt_work_tue_time_avail_trainer,
+                 lt_work_wed_time_avail_trainer, lt_work_ths_time_avail_trainer, lt_work_fri_time_avail_trainer,
+                 lt_work_sat_time_avail_trainer]
+        }
+        return JsonResponse(sub_trainer_setting_info, json_dumps_params={'ensure_ascii': True})
+
+
 def pt_add_logic_func(schedule_date, start_date, end_date, user_id, member_ticket_id, class_id, request, lecture_info,
                       lecture_schedule_id, setting_single_lecture_duplicate):
 
@@ -1907,6 +1949,7 @@ class PopupCalendarPlanReserveView(LoginRequiredMixin, AccessTestMixin, Template
                 context['one_to_one_lecture_start_time'] = 'A-0'
                 context['one_to_one_lecture_trainer_profile_url'] = ''
                 context['one_to_one_lecture_trainer_name'] = ''
+                context['one_to_one_lecture_trainer_id'] = ''
             else:
                 context['one_to_one_lecture_check'] = True
                 lecture_tb_info = ticket_lecture_data[0].lecture_tb
@@ -1917,9 +1960,11 @@ class PopupCalendarPlanReserveView(LoginRequiredMixin, AccessTestMixin, Template
                 if lecture_tb_info.main_trainer is None:
                     context['one_to_one_lecture_trainer_profile_url'] = lecture_tb_info.class_tb.member.profile_url
                     context['one_to_one_lecture_trainer_name'] = lecture_tb_info.class_tb.member.name
+                    context['one_to_one_lecture_trainer_id'] = lecture_tb_info.class_tb.member_id
                 else:
                     context['one_to_one_lecture_trainer_profile_url'] = lecture_tb_info.main_trainer.profile_url
                     context['one_to_one_lecture_trainer_name'] = lecture_tb_info.main_trainer.name
+                    context['one_to_one_lecture_trainer_id'] = lecture_tb_info.main_trainer_id
         # try:
         #     lecture_tb_info = LectureTb.objects.get(class_tb_id=class_id, lecture_type_cd=LECTURE_TYPE_ONE_TO_ONE, use=USE)
         #     context['one_to_one_lecture_time_duration'] = lecture_tb_info.lecture_minute

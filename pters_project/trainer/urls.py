@@ -292,6 +292,7 @@ urlpatterns = [
         name='update_setting_calendar_setting'),
 
     url(r'^update_setting_work_time/$', views.update_setting_work_time_logic, name='update_setting_work_time'),
+    url(r'^update_setting_sub_trainer_work_time/$', views.update_setting_sub_trainer_work_time_logic, name='update_setting_sub_trainer_work_time'),
     url(r'^update_setting_auto_complete/$', views.update_setting_auto_complete_logic,
         name='update_setting_auto_complete'),
     # 출석체크 모드 Setting 수정
@@ -314,6 +315,7 @@ urlpatterns = [
 
     # Setting 정보 가져오기
     url(r'^get_trainer_setting_data/$', views.GetTrainerSettingDataView.as_view(), name='get_trainer_setting_data'),
+    url(r'^get_sub_trainer_setting_data/$', views.GetSubTrainerSettingDataView.as_view(), name='get_sub_trainer_setting_data'),
     url(r'^get_program_auth_data/$', views.GetProgramAuthDataView.as_view(), name='get_program_auth_data'),
     url(r'^get_trainer_auth_data/$', views.GetTrainerAuthDataView.as_view(), name='get_trainer_auth_data'),
 

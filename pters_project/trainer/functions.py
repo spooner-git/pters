@@ -1125,6 +1125,15 @@ def func_get_trainer_setting_list(context, class_id, user_id):
     lt_work_ths_time_avail = '00:00-24:00'
     lt_work_fri_time_avail = '00:00-24:00'
     lt_work_sat_time_avail = '00:00-24:00'
+
+    lt_work_sun_time_avail_trainer = '00:00-24:00'
+    lt_work_mon_time_avail_trainer = '00:00-24:00'
+    lt_work_tue_time_avail_trainer = '00:00-24:00'
+    lt_work_wed_time_avail_trainer = '00:00-24:00'
+    lt_work_ths_time_avail_trainer = '00:00-24:00'
+    lt_work_fri_time_avail_trainer = '00:00-24:00'
+    lt_work_sat_time_avail_trainer = '00:00-24:00'
+
     lt_res_05 = '7'
     lt_res_cancel_time = -1
     lt_res_enable_time = -1
@@ -1179,6 +1188,29 @@ def func_get_trainer_setting_list(context, class_id, user_id):
             lt_work_fri_time_avail = setting_info.setting_info
         if setting_info.setting_type_cd == 'LT_WORK_SAT_TIME_AVAIL':
             lt_work_sat_time_avail = setting_info.setting_info
+
+        if setting_info.setting_type_cd == 'LT_WORK_SUN_TIME_AVAIL_TRAINER':
+            if str(user_id) == str(setting_info.member_id):
+                lt_work_sun_time_avail_trainer = setting_info.setting_info
+        if setting_info.setting_type_cd == 'LT_WORK_MON_TIME_AVAIL_TRAINER':
+            if str(user_id) == str(setting_info.member_id):
+                lt_work_mon_time_avail_trainer = setting_info.setting_info
+        if setting_info.setting_type_cd == 'LT_WORK_TUE_TIME_AVAIL_TRAINER':
+            if str(user_id) == str(setting_info.member_id):
+                lt_work_tue_time_avail_trainer = setting_info.setting_info
+        if setting_info.setting_type_cd == 'LT_WORK_WED_TIME_AVAIL_TRAINER':
+            if str(user_id) == str(setting_info.member_id):
+                lt_work_wed_time_avail_trainer = setting_info.setting_info
+        if setting_info.setting_type_cd == 'LT_WORK_THS_TIME_AVAIL_TRAINER':
+            if str(user_id) == str(setting_info.member_id):
+                lt_work_ths_time_avail_trainer = setting_info.setting_info
+        if setting_info.setting_type_cd == 'LT_WORK_FRI_TIME_AVAIL_TRAINER':
+            if str(user_id) == str(setting_info.member_id):
+                lt_work_fri_time_avail_trainer = setting_info.setting_info
+        if setting_info.setting_type_cd == 'LT_WORK_SAT_TIME_AVAIL_TRAINER':
+            if str(user_id) == str(setting_info.member_id):
+                lt_work_sat_time_avail_trainer = setting_info.setting_info
+
         if setting_info.setting_type_cd == 'LT_RES_05':
             lt_res_05 = setting_info.setting_info
         if setting_info.setting_type_cd == 'LT_RES_CANCEL_TIME':
@@ -1291,6 +1323,15 @@ def func_get_trainer_setting_list(context, class_id, user_id):
     context['setting_trainer_work_ths_time_avail'] = lt_work_ths_time_avail
     context['setting_trainer_work_fri_time_avail'] = lt_work_fri_time_avail
     context['setting_trainer_work_sat_time_avail'] = lt_work_sat_time_avail
+
+    context['setting_trainer_work_sun_time_avail_trainer'] = lt_work_sun_time_avail_trainer
+    context['setting_trainer_work_mon_time_avail_trainer'] = lt_work_mon_time_avail_trainer
+    context['setting_trainer_work_tue_time_avail_trainer'] = lt_work_tue_time_avail_trainer
+    context['setting_trainer_work_wed_time_avail_trainer'] = lt_work_wed_time_avail_trainer
+    context['setting_trainer_work_ths_time_avail_trainer'] = lt_work_ths_time_avail_trainer
+    context['setting_trainer_work_fri_time_avail_trainer'] = lt_work_fri_time_avail_trainer
+    context['setting_trainer_work_sat_time_avail_trainer'] = lt_work_sat_time_avail_trainer
+
     context['setting_member_reserve_date_available'] = lt_res_05
     context['setting_member_reserve_enable_time'] = lt_res_enable_time
     context['setting_member_reserve_cancel_time'] = lt_res_cancel_time
@@ -1574,6 +1615,37 @@ def update_program_setting_data(class_id, setting_type_cd_data, setting_info_dat
                 except ObjectDoesNotExist:
                     setting_data = SettingTb(class_tb_id=class_id, setting_type_cd=setting_type_cd_info, use=USE)
                 setting_data.member_id = None
+                setting_data.setting_info = setting_info_data[idx]
+                setting_data.save()
+
+    except ValueError:
+        error = '등록 값에 문제가 있습니다.'
+    except IntegrityError:
+        error = '등록 값에 문제가 있습니다.'
+    except TypeError:
+        error = '등록 값에 문제가 있습니다.'
+    except ValidationError:
+        error = '등록 값에 문제가 있습니다.'
+    except InternalError:
+        error = '등록 값에 문제가 있습니다.'
+
+    return error
+
+
+def update_trainer_setting_data(class_id, trainer_id, setting_type_cd_data, setting_info_data):
+
+    error = None
+    try:
+        with transaction.atomic():
+
+            for idx, setting_type_cd_info in enumerate(setting_type_cd_data):
+                try:
+                    setting_data = SettingTb.objects.get(class_tb_id=class_id, member_id=trainer_id,
+                                                         setting_type_cd=setting_type_cd_info)
+                except ObjectDoesNotExist:
+                    setting_data = SettingTb(class_tb_id=class_id, member_id=trainer_id,
+                                             setting_type_cd=setting_type_cd_info, use=USE)
+                setting_data.member_id = trainer_id
                 setting_data.setting_info = setting_info_data[idx]
                 setting_data.save()
 

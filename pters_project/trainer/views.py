@@ -64,7 +64,7 @@ from .functions import func_get_trainer_setting_list, \
     update_user_setting_data, update_program_setting_data, func_get_member_ticket_info, func_get_trainer_info, \
     update_alarm_setting_data, func_add_hold_member_ticket_info, func_delete_hold_member_ticket_info, \
     func_get_trainer_ing_list, func_get_class_trainer_end_list, func_get_trainer_end_list, \
-    func_get_class_trainer_ing_list, func_get_trainer_ing_list_connect
+    func_get_class_trainer_ing_list, func_get_trainer_ing_list_connect, update_trainer_setting_data
 from .models import ClassMemberTicketTb, LectureTb, ClassTb, MemberClassTb, BackgroundImgTb, \
     SettingTb, TicketTb, TicketLectureTb, CenterTrainerTb, LectureMemberTb, ProgramAuthTb, ProgramBoardTb, \
     ProgramNoticeTb, BugMemberTicketPriceTb, ScheduleClosedTb, ScheduleClosedDayTb, ShopTb
@@ -3872,9 +3872,9 @@ class GetLectureIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                  'lecture_ticket_state_cd_list': [],
                                                  'lecture_ticket_id_list': []}
 
-                if lecture_tb.class_tb_id != class_id:
-                    lecture_data_dict[lecture_id]['lecture_name'] =\
-                        '(' + lecture_tb.class_tb.get_class_type_cd_name() + ' 지점) ' + lecture_tb.name
+                # if lecture_tb.class_tb_id != class_id:
+                #     lecture_data_dict[lecture_id]['lecture_name'] =\
+                #         '(' + lecture_tb.class_tb.get_class_type_cd_name() + ' 지점) ' + lecture_tb.name
 
             if ticket_tb.use == USE:
                 lecture_data_dict[lecture_id]['lecture_ticket_list'].append(ticket_tb.name)
@@ -4026,9 +4026,9 @@ class GetLectureEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                  'lecture_ticket_state_cd_list': [],
                                                  'lecture_ticket_id_list': []}
 
-            if lecture_tb.class_tb_id != class_id:
-                lecture_data_dict[lecture_id]['lecture_name'] =\
-                    '(' + lecture_tb.class_tb.get_class_type_cd_name() + ' 지점) ' + lecture_tb.name
+            # if lecture_tb.class_tb_id != class_id:
+            #     lecture_data_dict[lecture_id]['lecture_name'] =\
+            #         '(' + lecture_tb.class_tb.get_class_type_cd_name() + ' 지점) ' + lecture_tb.name
 
             if ticket_tb.use == USE:
                 lecture_data_dict[lecture_id]['lecture_ticket_list'].append(ticket_tb.name)
@@ -6077,6 +6077,60 @@ def update_setting_work_time_logic(request):
     return render(request, 'ajax/trainer_error_ajax.html')
 
 
+def update_setting_sub_trainer_work_time_logic(request):
+    # setting_trainer_work_time_available = request.POST.get('setting_trainer_work_time_available', '00:00-23:59')
+    trainer_id = request.POST.get('trainer_id')
+    setting_trainer_work_sun_time_avail_trainer = request.POST.get('setting_trainer_work_sun_time_avail_trainer', '00:00-24:00')
+    setting_trainer_work_mon_time_avail_trainer = request.POST.get('setting_trainer_work_mon_time_avail_trainer', '00:00-24:00')
+    setting_trainer_work_tue_time_avail_trainer = request.POST.get('setting_trainer_work_tue_time_avail_trainer', '00:00-24:00')
+    setting_trainer_work_wed_time_avail_trainer = request.POST.get('setting_trainer_work_wed_time_avail_trainer', '00:00-24:00')
+    setting_trainer_work_ths_time_avail_trainer = request.POST.get('setting_trainer_work_ths_time_avail_trainer', '00:00-24:00')
+    setting_trainer_work_fri_time_avail_trainer = request.POST.get('setting_trainer_work_fri_time_avail_trainer', '00:00-24:00')
+    setting_trainer_work_sat_time_avail_trainer = request.POST.get('setting_trainer_work_sat_time_avail_trainer', '00:00-24:00')
+    class_id = request.session.get('class_id', '')
+
+    if setting_trainer_work_sun_time_avail_trainer is None or setting_trainer_work_sun_time_avail_trainer == '':
+        setting_trainer_work_sun_time_avail_trainer = '00:00-24:00'
+    if setting_trainer_work_mon_time_avail_trainer is None or setting_trainer_work_mon_time_avail_trainer == '':
+        setting_trainer_work_mon_time_avail_trainer = '00:00-24:00'
+    if setting_trainer_work_tue_time_avail_trainer is None or setting_trainer_work_tue_time_avail_trainer == '':
+        setting_trainer_work_tue_time_avail_trainer = '00:00-24:00'
+    if setting_trainer_work_wed_time_avail_trainer is None or setting_trainer_work_wed_time_avail_trainer == '':
+        setting_trainer_work_wed_time_avail_trainer = '00:00-24:00'
+    if setting_trainer_work_ths_time_avail_trainer is None or setting_trainer_work_ths_time_avail_trainer == '':
+        setting_trainer_work_ths_time_avail_trainer = '00:00-24:00'
+    if setting_trainer_work_fri_time_avail_trainer is None or setting_trainer_work_fri_time_avail_trainer == '':
+        setting_trainer_work_fri_time_avail_trainer = '00:00-24:00'
+    if setting_trainer_work_sat_time_avail_trainer is None or setting_trainer_work_sat_time_avail_trainer == '':
+        setting_trainer_work_sat_time_avail_trainer = '00:00-24:00'
+
+    setting_type_cd_data = ['LT_WORK_SUN_TIME_AVAIL_TRAINER', 'LT_WORK_MON_TIME_AVAIL_TRAINER',
+                            'LT_WORK_TUE_TIME_AVAIL_TRAINER', 'LT_WORK_WED_TIME_AVAIL_TRAINER',
+                            'LT_WORK_THS_TIME_AVAIL_TRAINER', 'LT_WORK_FRI_TIME_AVAIL_TRAINER',
+                            'LT_WORK_SAT_TIME_AVAIL_TRAINER']
+    setting_info_data = [setting_trainer_work_sun_time_avail_trainer, setting_trainer_work_mon_time_avail_trainer,
+                         setting_trainer_work_tue_time_avail_trainer, setting_trainer_work_wed_time_avail_trainer,
+                         setting_trainer_work_ths_time_avail_trainer, setting_trainer_work_fri_time_avail_trainer,
+                         setting_trainer_work_sat_time_avail_trainer]
+
+    error = update_trainer_setting_data(class_id, trainer_id, setting_type_cd_data, setting_info_data)
+
+    if error is None:
+        request.session['setting_trainer_work_sun_time_avail_trainer'] = setting_trainer_work_sun_time_avail_trainer
+        request.session['setting_trainer_work_mon_time_avail_trainer'] = setting_trainer_work_mon_time_avail_trainer
+        request.session['setting_trainer_work_tue_time_avail_trainer'] = setting_trainer_work_tue_time_avail_trainer
+        request.session['setting_trainer_work_wed_time_avail_trainer'] = setting_trainer_work_wed_time_avail_trainer
+        request.session['setting_trainer_work_ths_time_avail_trainer'] = setting_trainer_work_ths_time_avail_trainer
+        request.session['setting_trainer_work_fri_time_avail_trainer'] = setting_trainer_work_fri_time_avail_trainer
+        request.session['setting_trainer_work_sat_time_avail_trainer'] = setting_trainer_work_sat_time_avail_trainer
+
+    else:
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+    return render(request, 'ajax/trainer_error_ajax.html')
+
+
 # 강사 기본 setting 업데이트 api
 def update_setting_auto_complete_logic(request):
     setting_schedule_auto_finish = request.POST.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
@@ -6326,6 +6380,49 @@ class GetTrainerSettingDataView(LoginRequiredMixin, AccessTestMixin, View):
     def get(self, request):
         func_setting_data_update(request, 'trainer')
         return JsonResponse(request.session['setting_data'], json_dumps_params={'ensure_ascii': True})
+
+
+class GetSubTrainerSettingDataView(LoginRequiredMixin, AccessTestMixin, View):
+
+    def get(self, request):
+        trainer_id = request.GET.get('trainer_id')
+        class_id = request.session.get('class_id', '')
+
+        lt_work_sun_time_avail_trainer = '00:00-24:00'
+        lt_work_mon_time_avail_trainer = '00:00-24:00'
+        lt_work_tue_time_avail_trainer = '00:00-24:00'
+        lt_work_wed_time_avail_trainer = '00:00-24:00'
+        lt_work_ths_time_avail_trainer = '00:00-24:00'
+        lt_work_fri_time_avail_trainer = '00:00-24:00'
+        lt_work_sat_time_avail_trainer = '00:00-24:00'
+
+        setting_data = SettingTb.objects.filter(class_tb_id=class_id, member_id=trainer_id, use=USE)
+
+        for setting_info in setting_data:
+            if setting_info.setting_type_cd == 'LT_WORK_SUN_TIME_AVAIL_TRAINER':
+                lt_work_sun_time_avail_trainer = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_MON_TIME_AVAIL_TRAINER':
+                lt_work_mon_time_avail_trainer = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_TUE_TIME_AVAIL_TRAINER':
+                lt_work_tue_time_avail_trainer = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_WED_TIME_AVAIL_TRAINER':
+                lt_work_wed_time_avail_trainer = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_THS_TIME_AVAIL_TRAINER':
+                lt_work_ths_time_avail_trainer = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_FRI_TIME_AVAIL_TRAINER':
+                lt_work_fri_time_avail_trainer = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_SAT_TIME_AVAIL_TRAINER':
+                lt_work_sat_time_avail_trainer = setting_info.setting_info
+
+        sub_trainer_setting_info = {'setting_trainer_work_sun_time_avail_trainer': lt_work_sun_time_avail_trainer,
+                                    'setting_trainer_work_mon_time_avail_trainer': lt_work_mon_time_avail_trainer,
+                                    'setting_trainer_work_tue_time_avail_trainer': lt_work_tue_time_avail_trainer,
+                                    'setting_trainer_work_wed_time_avail_trainer': lt_work_wed_time_avail_trainer,
+                                    'setting_trainer_work_ths_time_avail_trainer': lt_work_ths_time_avail_trainer,
+                                    'setting_trainer_work_fri_time_avail_trainer': lt_work_fri_time_avail_trainer,
+                                    'setting_trainer_work_sat_time_avail_trainer': lt_work_sat_time_avail_trainer}
+
+        return JsonResponse(sub_trainer_setting_info, json_dumps_params={'ensure_ascii': True})
 
 
 class GetProgramAuthDataView(LoginRequiredMixin, AccessTestMixin, View):

@@ -540,4 +540,94 @@ class Setting_worktime_func{
     }
 }
 
+class Setting_trainer_worktime_func{
+    static update(data, callback, error_callback){
+        //업무 시간 설정
+        $.ajax({
+            url:"/trainer/update_setting_sub_trainer_work_time/",
+            type:'POST',
+            data: data,
+            dataType : 'html',
+
+            beforeSend:function(xhr, settings){
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+
+            //통신성공시 처리
+            success:function (data_){
+                let data = JSON.parse(data_);
+                check_app_version(data.app_version);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message({title:data.messageArray[0]});
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(data);
+                }
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function (){
+
+            },
+
+            //통신 실패시 처리
+            error:function (){
+                if(error_callback != undefined){
+                    error_callback();
+                }
+                console.log('server error');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
+            }
+        });
+    }
+
+    static read(data, callback, error_callback){
+        $.ajax({
+            url:"/trainer/get_sub_trainer_setting_data/",
+            type:'GET',
+            data:data,
+            dataType : 'JSON',
+
+            beforeSend:function(xhr, settings){
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+
+            //통신성공시 처리
+            success:function (data){
+                check_app_version(data.app_version);
+                if(data.messageArray != undefined){
+                    if(data.messageArray.length > 0){
+                        show_error_message({title:data.messageArray[0]});
+                        return false;
+                    }
+                }
+                if(callback != undefined){
+                    callback(data);
+                }
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function (){
+
+            },
+
+            //통신 실패시 처리
+            error:function (){
+                if(error_callback != undefined){
+                    error_callback();
+                }
+                console.log('server error');
+                show_error_message({title:'통신 오류 발생', comment:'잠시후 다시 시도해주세요.'});
+            }
+        });
+    }
+}
+
 

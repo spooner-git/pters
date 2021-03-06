@@ -381,6 +381,14 @@ def func_setting_data_update(request, group):
         request.session['setting_trainer_work_fri_time_avail'] = context['setting_trainer_work_fri_time_avail']
         request.session['setting_trainer_work_sat_time_avail'] = context['setting_trainer_work_sat_time_avail']
 
+        request.session['setting_trainer_work_sun_time_avail_trainer'] = context['setting_trainer_work_sun_time_avail_trainer']
+        request.session['setting_trainer_work_mon_time_avail_trainer'] = context['setting_trainer_work_mon_time_avail_trainer']
+        request.session['setting_trainer_work_tue_time_avail_trainer'] = context['setting_trainer_work_tue_time_avail_trainer']
+        request.session['setting_trainer_work_wed_time_avail_trainer'] = context['setting_trainer_work_wed_time_avail_trainer']
+        request.session['setting_trainer_work_ths_time_avail_trainer'] = context['setting_trainer_work_ths_time_avail_trainer']
+        request.session['setting_trainer_work_fri_time_avail_trainer'] = context['setting_trainer_work_fri_time_avail_trainer']
+        request.session['setting_trainer_work_sat_time_avail_trainer'] = context['setting_trainer_work_sat_time_avail_trainer']
+
         request.session['setting_member_reserve_date_available'] = context['setting_member_reserve_date_available']
         request.session['setting_member_reserve_enable_time'] = context['setting_member_reserve_enable_time']
         request.session['setting_member_reserve_cancel_time'] = context['setting_member_reserve_cancel_time']
