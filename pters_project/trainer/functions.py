@@ -1393,8 +1393,8 @@ def func_get_ticket_info(class_id, ticket_id, user_id):
 
             if lecture_tb.class_tb_id == class_id:
                 ticket_lecture_list.append(lecture_tb.name)
-            else:
-                ticket_lecture_list.append('('+lecture_tb.class_tb.get_class_type_cd_name()+' 지점) '+lecture_tb.name)
+            # else:
+            #     ticket_lecture_list.append('('+lecture_tb.class_tb.get_class_type_cd_name()+' 지점) '+lecture_tb.name)
             ticket_lecture_list.append(lecture_tb.name)
             ticket_lecture_state_cd_list.append(lecture_tb.state_cd)
             ticket_lecture_id_list.append(str(lecture_tb.lecture_id))

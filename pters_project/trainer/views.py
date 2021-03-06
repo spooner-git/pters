@@ -4630,6 +4630,7 @@ class GetTicketIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                'ticket_lecture_end_color_cd_list': [],
                                                'ticket_lecture_end_font_color_cd_list': []}
             if lecture_tb.use == USE:
+                ticket_data_dict[ticket_id]['ticket_lecture_list'].append(lecture_tb.name)
                 # if lecture_tb.class_tb_id == class_id:
                 #     ticket_data_dict[ticket_id]['ticket_lecture_list'].append(lecture_tb.name)
                 # else:
@@ -4761,6 +4762,7 @@ class GetTicketEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                'ticket_lecture_end_font_color_cd_list': []}
             if lecture_tb.use == USE:
 
+                ticket_data_dict[ticket_id]['ticket_lecture_list'].append(lecture_tb.name)
                 # if lecture_tb.class_tb_id == class_id:
                 #     ticket_data_dict[ticket_id]['ticket_lecture_list'].append(lecture_tb.name)
                 # else:
