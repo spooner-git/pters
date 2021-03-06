@@ -4630,11 +4630,11 @@ class GetTicketIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                'ticket_lecture_end_color_cd_list': [],
                                                'ticket_lecture_end_font_color_cd_list': []}
             if lecture_tb.use == USE:
-                if lecture_tb.class_tb_id == class_id:
-                    ticket_data_dict[ticket_id]['ticket_lecture_list'].append(lecture_tb.name)
-                else:
-                    ticket_data_dict[ticket_id]['ticket_lecture_list'].append(
-                        '(' + lecture_tb.class_tb.get_class_type_cd_name() + ' 지점) ' + lecture_tb.name)
+                # if lecture_tb.class_tb_id == class_id:
+                #     ticket_data_dict[ticket_id]['ticket_lecture_list'].append(lecture_tb.name)
+                # else:
+                #     ticket_data_dict[ticket_id]['ticket_lecture_list'].append(
+                #         '(' + lecture_tb.class_tb.get_class_type_cd_name() + ' 지점) ' + lecture_tb.name)
                 ticket_data_dict[ticket_id]['ticket_lecture_state_cd_list'].append(lecture_tb.state_cd)
                 ticket_data_dict[ticket_id]['ticket_lecture_id_list'].append(lecture_tb.lecture_id)
                 ticket_data_dict[ticket_id]['ticket_lecture_ing_color_cd_list'].append(lecture_tb.ing_color_cd)
@@ -4761,11 +4761,11 @@ class GetTicketEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                                                'ticket_lecture_end_font_color_cd_list': []}
             if lecture_tb.use == USE:
 
-                if lecture_tb.class_tb_id == class_id:
-                    ticket_data_dict[ticket_id]['ticket_lecture_list'].append(lecture_tb.name)
-                else:
-                    ticket_data_dict[ticket_id]['ticket_lecture_list'].append(
-                        '(' + lecture_tb.class_tb.get_class_type_cd_name() + ' 지점) ' + lecture_tb.name)
+                # if lecture_tb.class_tb_id == class_id:
+                #     ticket_data_dict[ticket_id]['ticket_lecture_list'].append(lecture_tb.name)
+                # else:
+                #     ticket_data_dict[ticket_id]['ticket_lecture_list'].append(
+                #         '(' + lecture_tb.class_tb.get_class_type_cd_name() + ' 지점) ' + lecture_tb.name)
                 ticket_data_dict[ticket_id]['ticket_lecture_state_cd_list'].append(lecture_tb.state_cd)
                 ticket_data_dict[ticket_id]['ticket_lecture_id_list'].append(lecture_tb.lecture_id)
                 ticket_data_dict[ticket_id]['ticket_lecture_ing_color_cd_list'].append(lecture_tb.ing_color_cd)
