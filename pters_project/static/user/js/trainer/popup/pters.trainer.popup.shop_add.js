@@ -94,7 +94,7 @@ class Shop_add{
         let memo = this.dom_row_shop_memo_input();
         let html =
             '<div class="obj_input_box_full">'
-                + CComponent.dom_tag('상품명', null, true) + name + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag('부가 상품명', null, true) + name + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('가격') + price + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
                 + CComponent.dom_tag('설명') + memo + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
                 +'</div>';
@@ -103,7 +103,7 @@ class Shop_add{
     }
 
     dom_row_toolbox(){
-        let title = '새로운 상품';
+        let title = '새로운 부가 상품';
         let html = `<div class="shop_add_upper_box" style="display:table;">
                         <div style="display:table-cell;width:200px;">
                             <span style="font-size:20px;font-weight:bold; letter-spacing: -0.9px; color: var(--font-main);">
@@ -117,7 +117,7 @@ class Shop_add{
     dom_row_shop_name_input(){
         let id = 'input_shop_name';
         let title = this.data.name == null ? '' : this.data.name;
-        let placeholder = '상품명';
+        let placeholder = '부가 상품명';
         let icon = CImg.members();
         let icon_r_visible = HIDE;
         let icon_r_text = "";

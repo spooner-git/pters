@@ -1225,11 +1225,11 @@ class Trainer_view{
     }
 
     dom_sub_assembly_shop(){
-        let shop = this.dom_row_share_menu_title("상품", "shop");
-        let shop_auth_create = this.dom_row_share_menu_auth_toggle("상품", "등록", "shop", "create");
-        let shop_auth_read = this.dom_row_share_menu_auth_toggle("상품", "조회", "shop", "read");
-        let shop_auth_update = this.dom_row_share_menu_auth_toggle("상품", "수정", "shop", "update");
-        let shop_auth_delete = this.dom_row_share_menu_auth_toggle("상품", "삭제", "shop", "delete");
+        let shop = this.dom_row_share_menu_title("부가 상품", "shop");
+        let shop_auth_create = this.dom_row_share_menu_auth_toggle("부가 상품", "등록", "shop", "create");
+        let shop_auth_read = this.dom_row_share_menu_auth_toggle("부가 상품", "조회", "shop", "read");
+        let shop_auth_update = this.dom_row_share_menu_auth_toggle("부가 상품", "수정", "shop", "update");
+        let shop_auth_delete = this.dom_row_share_menu_auth_toggle("부가 상품", "삭제", "shop", "delete");
 
         let child_assemble = this.data.auth.shop.read == ON ? shop_auth_read + shop_auth_create +  shop_auth_update + shop_auth_delete : "";
 

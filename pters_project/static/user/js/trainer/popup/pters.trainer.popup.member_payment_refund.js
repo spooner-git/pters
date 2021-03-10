@@ -161,7 +161,7 @@ class Member_Payment_refund{
     }
 
     dom_row_toolbox(){
-        let title = '상품 환불';
+        let title = '부가 상품 환불';
         let html = `<div class="member_payment_refund_upper_box" style="display:table;">
                         <div style="display:table-cell;width:200px;">
                             <span style="font-size:20px;font-weight:bold; letter-spacing: -0.9px; color: var(--font-main);">

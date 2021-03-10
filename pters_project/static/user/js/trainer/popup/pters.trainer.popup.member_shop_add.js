@@ -140,7 +140,7 @@ class Member_Shop_add{
         }
         let html =
             '<div class="obj_input_box_full">'
-                + CComponent.dom_tag('상품', null, true) + shop + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
+                + CComponent.dom_tag('부가 상품', null, true) + shop + '<div class="gap" style="margin-left:42px; border-top:var(--border-article); margin-top:4px; margin-bottom:4px;"></div>'
                 + shop_sub_assembly +
             '</div>';
 
@@ -148,7 +148,7 @@ class Member_Shop_add{
     }
 
     dom_row_toolbox(){
-        let title = '새로운 상품';
+        let title = '새로운 부가 상품';
         let html = `<div class="member_shop_add_upper_box" style="display:table;">
                         <div style="display:table-cell;width:200px;">
                             <span style="font-size:20px;font-weight:bold; letter-spacing: -0.9px; color: var(--font-main);">
@@ -161,7 +161,7 @@ class Member_Shop_add{
 
     dom_row_shop_select(){
         let id = 'input_shop_select';
-        let title = this.data.shop_id == null ? '상품' : this.data.shop_name;
+        let title = this.data.shop_id == null ? '부가 상품' : this.data.shop_name;
         let icon = CImg.shop();
         let icon_r_visible = SHOW;
         let icon_r_text = "";
@@ -169,7 +169,7 @@ class Member_Shop_add{
         let html = CComponent.create_row(id, title, icon, icon_r_visible, icon_r_text, style, ()=>{
             let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
             layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_SHOP_SELECT, 100, popup_style, null, ()=>{
-                shop_select = new ShopSelector('#wrapper_box_shop_select', this, 1, {"title":"상품 선택"}, (set_data)=>{
+                shop_select = new ShopSelector('#wrapper_box_shop_select', this, 1, {"title":"부가 상품 선택"}, (set_data)=>{
                     this.shop = set_data;
                     // this.render_content();
                 });
@@ -231,7 +231,7 @@ class Member_Shop_add{
         let unit = '원';
         let id = 'input_payment_price';
         if(this.data.shop_price<this.data.shop_payment_price){
-            show_error_message({title:'상품 가격보다 납부금액이 많습니다.'});
+            show_error_message({title:'부가 상품 가격보다 납부금액이 많습니다.'});
             this.data.shop_payment_price = this.data.shop_price;
         }
         let title = UnitRobot.numberWithCommas(this.data.shop_payment_price);
@@ -346,8 +346,8 @@ class Member_Shop_add{
         if(inspect.barrier == BLOCKED){
             this.data_sending_now = false;
             let message = {
-                title:'상품 등록을 완료하지 못했습니다.',
-                comment:`[${inspect.limit_type}] 이용자께서는 상품을 최대 ${inspect.limit_num}개 까지 등록하실 수 있습니다.
+                title:'부가 상품 등록을 완료하지 못했습니다.',
+                comment:`[${inspect.limit_type}] 이용자께서는 부가 상품을 최대 ${inspect.limit_num}개 까지 등록하실 수 있습니다.
                         <p style="font-size:14px;font-weight:bold;margin-bottom:0;color:var(--font-highlight);">PTERS패스 상품을 둘러 보시겠습니까?</p>`
             };
             show_user_confirm (message, ()=>{
@@ -411,7 +411,7 @@ class Member_Shop_add{
         else{
 
             if(this.data.shop_price<this.data.shop_payment_price){
-                show_error_message({title:'상품 가격보다 납부금액이 많습니다.'});
+                show_error_message({title:'부가 상품 가격보다 납부금액이 많습니다.'});
                 return false;
             }
             return true;

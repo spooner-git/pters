@@ -32,7 +32,7 @@ class Member_shop_history{
 
     render(data){
         let top_left = `<span class="icon_left" onclick="layer_popup.close_layer_popup();member_shop_history.clear();">${CImg.arrow_left()}</span>`;
-        let top_center = `<span class="icon_center"><span id="">상품 구매 이력</span></span>`;
+        let top_center = `<span class="icon_center"><span id="">부가 상품 구매 이력</span></span>`;
         let top_right = `<span class="icon_right"></span>`;
         let content;
         content = `<section style="margin-top:8px;" id="list_wrap">
@@ -125,7 +125,7 @@ class Member_shop_history{
                     add_payment:{text:"결제 내역 추가", callback:()=>{
                         layer_popup.close_layer_popup();
                         if(refund_price > 0){
-                            show_error_message({title:'이미 환불 처리된 상품입니다.'});
+                            show_error_message({title:'이미 환불 처리된 부가 상품입니다.'});
                             return false;
                         }
                         let member_add_initial_data = {member_id: data.member_id, member_shop_id: member_shop_id,
@@ -135,10 +135,10 @@ class Member_shop_history{
                         );
                         // 상세 결제 내역 띄우기
                     }},
-                    add_refund:{text:"상품 환불", callback:()=>{
+                    add_refund:{text:"부가 상품 환불", callback:()=>{
                         layer_popup.close_layer_popup();
                         if(refund_price > 0){
-                            show_error_message({title:'이미 환불 처리된 상품입니다.'});
+                            show_error_message({title:'이미 환불 처리된 부가 상품입니다.'});
                             return false;
                         }
                         let member_refund_initial_data = {member_id: data.member_id, member_shop_id: member_shop_id,
@@ -156,10 +156,10 @@ class Member_shop_history{
                             member_payment_history = new Member_payment_history('.popup_member_payment_history', null, member_shop_id);
                         });
                     }},
-                    delete:{text:"상품 구매 내역 삭제", callback:()=>{
+                    delete:{text:"부가 상품 구매 내역 삭제", callback:()=>{
                         layer_popup.close_layer_popup();
                         let message = {
-                            title:`정말 선택하신 상품 구매 내역을 삭제하시겠습니까?`,
+                            title:`정말 선택하신 부가 상품 구매 내역을 삭제하시겠습니까?`,
                             comment:`${CImg.warning(["#fe4e65"], {"vertical-align":"middle", "margin-bottom":"4px"})}
                                     <br>
                                     <div style="text-align:center;margin-top:5px; color:var(--font-highlight);">
@@ -168,7 +168,7 @@ class Member_shop_history{
                         };
                         show_user_confirm(message, ()=>{
                             layer_popup.close_layer_popup();
-                            Loading.show(`${shop_name} 상품 구매 내역을 삭제 중입니다.<br>최대 2~4분까지 소요될 수 있습니다.`);
+                            Loading.show(`${shop_name} 부가 상품 구매 내역을 삭제 중입니다.<br>최대 2~4분까지 소요될 수 있습니다.`);
                             Shop_func.delete_member_shop({"member_shop_id":member_shop_id}, ()=>{
                                 Loading.hide();
                                 try{

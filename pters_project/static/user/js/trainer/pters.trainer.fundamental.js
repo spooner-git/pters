@@ -875,7 +875,7 @@ class PassInspector{
     shop_create(){
         let limit_number = Number(this.data.auth_shop_create.active);
         // let limit_type = "수업 작성 권한이 없습니다.";
-        let limit_type = `${this.data.auth_shop_create.limit_type}의 상품 추가 권한이 없습니다.`;
+        let limit_type = `${this.data.auth_shop_create.limit_type}의 부가 상품 추가 권한이 없습니다.`;
 
         if(limit_number == 0){
             return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
@@ -886,7 +886,7 @@ class PassInspector{
     shop_read(){
         let limit_number = Number(this.data.auth_shop_read.active);
         // let limit_type = "수업 읽기 권한이 없습니다.";
-        let limit_type = `${this.data.auth_shop_read.limit_type}의 상품 조회 권한이 없습니다.`;
+        let limit_type = `${this.data.auth_shop_read.limit_type}의 부가 상품 조회 권한이 없습니다.`;
 
         if(limit_number == 0){
             return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
@@ -897,7 +897,7 @@ class PassInspector{
     shop_update(){
         let limit_number = Number(this.data.auth_shop_update.active);
         // let limit_type = "수업 수정 권한이 없습니다.";
-        let limit_type = `${this.data.auth_shop_update.limit_type}의 상품 수정 권한이 없습니다.`;
+        let limit_type = `${this.data.auth_shop_update.limit_type}의 부가 상품 수정 권한이 없습니다.`;
 
         if(limit_number == 0){
             return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};
@@ -908,7 +908,7 @@ class PassInspector{
     shop_delete(){
         let limit_number = Number(this.data.auth_shop_delete.active);
         // let limit_type = "수업 삭제 권한이 없습니다.";
-        let limit_type = `${this.data.auth_shop_delete.limit_type}의 상품 삭제 권한이 없습니다.`;
+        let limit_type = `${this.data.auth_shop_delete.limit_type}의 부가 상품 삭제 권한이 없습니다.`;
 
         if(limit_number == 0){
             return {barrier:BLOCKED, limit_num: limit_number, limit_type: limit_type};

@@ -2797,7 +2797,7 @@ class ShopSelector{
         let html_to_join = [];
         let length = this.received_data.length;
         if(length == 0){
-            html_to_join.push(CComponent.no_data_row('상품 목록이 비어있습니다.'));
+            html_to_join.push(CComponent.no_data_row('부가 상품 목록이 비어있습니다.'));
         }
         for(let i=0; i<length; i++){
             let data = this.received_data[i];
@@ -2848,7 +2848,7 @@ class ShopSelector{
 
     dom_add_new_shop(){
         let id = "add_new_shop";
-        let title = "새로운 상품 생성";
+        let title = "새로운 부가 상품 생성";
         let icon = CImg.plus();
         let icon_r_visible = SHOW;
         let icon_r_text = "";

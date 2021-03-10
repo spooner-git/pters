@@ -470,7 +470,7 @@ class Member_view{
             ${CComp.element("div", "수강권", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_ticket_info", class:`list_tab_content ${this.list_type == "ticket_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("ticket_info");}})}
             ${CComp.element("div", "일정", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_repeat_info", class:`list_tab_content ${this.list_type == "repeat_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("repeat_info");}})}
             ${CComp.element("div", "일시정지", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_member_closed_info", class:`list_tab_content ${this.list_type == "member_closed_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("member_closed_info");}})}
-            ${CComp.element("div", "상품", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_member_shop_info", class:`list_tab_content ${this.list_type == "member_shop_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("member_shop_info");}})}
+            ${CComp.element("div", "부가 상품", {"padding":"5px 5px", "text-align":"center"}, {id:"tab_select_member_shop_info", class:`list_tab_content ${this.list_type == "member_shop_info" ? "tab_selected anim_pulse_strong" : ""}`}, {type:"click", exe:()=>{this.switch_type("member_shop_info");}})}
         </div>`;
         return html;
     }
@@ -988,19 +988,19 @@ class Member_view{
         }
         html_to_join.unshift(
             `<div style="margin-top:10px;margin-bottom:10px;height:33px;">`+
-                CComp.button("view_shop_date_history", `${CImg.history([""], {"vertical-align":"middle", "margin-bottom":"3px", "margin-right":"2px", "width":"18px"})} 상품 구매 이력`, {"font-size":"12px", "float":"left", "padding-left":"0"}, null, ()=>{
+                CComp.button("view_shop_date_history", `${CImg.history([""], {"vertical-align":"middle", "margin-bottom":"3px", "margin-right":"2px", "width":"18px"})} 부가 상품 구매 이력`, {"font-size":"12px", "float":"left", "padding-left":"0"}, null, ()=>{
                     let popup_style = $root_content.width() > 650 ? POPUP_FROM_BOTTOM : POPUP_FROM_RIGHT;
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_MEMBER_SHOP_HISTORY, 100, popup_style, null, ()=>{
                         member_shop_history = new Member_shop_history('.popup_member_shop_history', this.member_id, null);
                     });
                 }) +
-                CComp.button("add_member_shop_info", `${CImg.plus([""], {"vertical-align":"middle", "margin-bottom":"3px", "margin-right":"2px", "width":"18px"})} 상품 구매`, {"font-size":"12px", "float":"right", "padding-right":"0"}, null, ()=>{
+                CComp.button("add_member_shop_info", `${CImg.plus([""], {"vertical-align":"middle", "margin-bottom":"3px", "margin-right":"2px", "width":"18px"})} 부가 상품 구매`, {"font-size":"12px", "float":"right", "padding-right":"0"}, null, ()=>{
                     let member_add_initial_data = {member_id: this.member_id};
                     layer_popup.open_layer_popup(POPUP_BASIC, POPUP_ADDRESS_MEMBER_SHOP_ADD, 100, POPUP_FROM_BOTTOM, null, ()=>{
                         member_shop_add_popup = new Member_Shop_add('.popup_member_shop_add', member_add_initial_data, 'member_shop_add_popup');}
                     );
                 }) +
-            `${html_to_join.length == 0 ? `<div style="width:100%; font-size:12px;color:var(--font-sub-dark);padding:5px; display:inline-block;">구매한 상품 내역이 없습니다.</div>` : ""}
+            `${html_to_join.length == 0 ? `<div style="width:100%; font-size:12px;color:var(--font-sub-dark);padding:5px; display:inline-block;">구매한 부가 상품 내역이 없습니다.</div>` : ""}
             `
         );
         return html_to_join.join("");
@@ -1180,7 +1180,7 @@ class Member_view{
                 add_payment:{text:"결제 내역 추가", callback:()=>{
                     layer_popup.close_layer_popup();
                     if(refund_price > 0){
-                        show_error_message({title:'이미 환불 처리된 상품입니다.'});
+                        show_error_message({title:'이미 환불 처리된 부가 상품입니다.'});
                         return false;
                     }
                     let member_add_initial_data = {member_id: member_id, member_shop_id: member_shop_id,
@@ -1190,10 +1190,10 @@ class Member_view{
                     );
                     // 상세 결제 내역 띄우기
                 }},
-                add_refund:{text:"상품 환불", callback:()=>{
+                add_refund:{text:"부가 상품 환불", callback:()=>{
                     layer_popup.close_layer_popup();
                     if(refund_price > 0){
-                        show_error_message({title:'이미 환불 처리된 상품입니다.'});
+                        show_error_message({title:'이미 환불 처리된 부가 상품입니다.'});
                         return false;
                     }
                     let member_refund_initial_data = {member_id: member_id, member_shop_id: member_shop_id,
@@ -1215,7 +1215,7 @@ class Member_view{
                     layer_popup.close_layer_popup();
 
                     let message = {
-                        title:`정말 ${shop_name} 상품 구매 내역을 삭제하시겠습니까?`,
+                        title:`정말 ${shop_name} 부가 상품 구매 내역을 삭제하시겠습니까?`,
                         comment:`${CImg.warning(["#fe4e65"], {"vertical-align":"middle", "margin-bottom":"4px"})}
                                 <br>
                                 <div style="text-align:center;margin-top:5px; color:var(--font-highlight);">
@@ -1224,7 +1224,7 @@ class Member_view{
                     };
                     show_user_confirm(message, ()=>{
                         layer_popup.close_layer_popup();
-                        Loading.show(`${shop_name} 상품 구매 내역을 삭제 중입니다.<br>최대 2~4분까지 소요될 수 있습니다.`);
+                        Loading.show(`${shop_name} 부가 상품 구매 내역을 삭제 중입니다.<br>최대 2~4분까지 소요될 수 있습니다.`);
                         Shop_func.delete_member_shop({"member_shop_id":member_shop_id}, ()=>{
                             Loading.hide();
                             try{

@@ -14,7 +14,7 @@ class Shop{
 
         this.sort_val = SORT_SHOP_NAME;
         this.sort_order_by = SORT_ORDER_ASC;
-        this.sort_value_text = '상품명 가나다순';
+        this.sort_value_text = '부가 상품명 가나다순';
 
     }
 
@@ -148,7 +148,7 @@ class Shop{
         }
 
         if(html_temp.length == 0){
-            html_temp.push(`<div style="font-size:14px;padding:16px;" class="anim_fade_in_vibe_top">등록된 상품이 없습니다.</div>`);
+            html_temp.push(`<div style="font-size:14px;padding:16px;" class="anim_fade_in_vibe_top">등록된 부가 상품이 없습니다.</div>`);
         }
         document.querySelector('#shop_content_wrap').innerHTML = html_temp.join("");
     }
@@ -228,7 +228,7 @@ class Shop{
     static_component (){
         // 계속 추가되더라도 동적으로 처리하기 위해 작성 - hkkim 20191001
         let user_options_array = [];
-        user_options_array.push(`'${SORT_SHOP_NAME+'_'+SORT_ORDER_ASC}':{text:'상품명 가나다순', callback:()=>{shop.sort_val = ${SORT_SHOP_NAME}; shop.sort_order_by= ${SORT_ORDER_ASC}; shop.sort_value_text = '상품명 가나다순';shop.init();layer_popup.close_layer_popup();}}`);
+        user_options_array.push(`'${SORT_SHOP_NAME+'_'+SORT_ORDER_ASC}':{text:'부가 상품명 가나다순', callback:()=>{shop.sort_val = ${SORT_SHOP_NAME}; shop.sort_order_by= ${SORT_ORDER_ASC}; shop.sort_value_text = '부가 상품명 가나다순';shop.init();layer_popup.close_layer_popup();}}`);
         let user_option = `{`;
         for(let i=0; i<user_options_array.length; i++){
             user_option += user_options_array[i] + ',';
@@ -245,7 +245,7 @@ class Shop{
             {
                 shop_upper_box:`   <div class="shop_upper_box">
                                         <div style="display:inline-block;width:200px;font-size:22px;font-weight:bold;color:var(--font-main); letter-spacing: -1px; height:28px;">
-                                            <div style="display:inline-block;">상품 </div>
+                                            <div style="display:inline-block;">부가 상품 </div>
                                             <div style="display:inline-block; color:var(--font-highlight); font-weight:900;">${this.shop_ing_length}</div>
                                         </div>
                                         <div class="shop_tools_wrap">

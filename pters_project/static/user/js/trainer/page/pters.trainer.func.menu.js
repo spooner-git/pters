@@ -223,7 +223,7 @@ class Menu {
 
     dom_menu_shop(){
         let id = 'menu_shop';
-        let title = '상품';
+        let title = '부가 상품';
         let icon = CImg.shop();
         let icon_r_visible = NONE;
         let icon_r_text = "";

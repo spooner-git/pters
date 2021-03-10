@@ -88,7 +88,7 @@ class MemberShopTb(TimeStampedModel):
     member_shop_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     class_tb = models.ForeignKey("trainer.ClassTb", verbose_name='지점', on_delete=models.CASCADE, null=True)
     member = models.ForeignKey(MemberTb, verbose_name='회원', on_delete=models.CASCADE, null=True)
-    shop_tb = models.ForeignKey("trainer.ShopTb", verbose_name='상품', on_delete=models.CASCADE, null=True)
+    shop_tb = models.ForeignKey("trainer.ShopTb", verbose_name='부가 상품', on_delete=models.CASCADE, null=True)
     price = models.IntegerField('가격', db_column='PRICE', default=0)
     payment_price = models.IntegerField('납부 금액', db_column='PAYMENT_PRICE', default=0)
     refund_price = models.IntegerField('환불 금액', db_column='REFUND_PRICE', default=0)
@@ -101,8 +101,8 @@ class MemberShopTb(TimeStampedModel):
     class Meta:
         managed = False
         db_table = 'MEMBER_SHOP_TB'
-        verbose_name = '회원 상품 구매 이력'
-        verbose_name_plural = '회원 상품 구매 이력'
+        verbose_name = '회원 부가 상품 구매 이력'
+        verbose_name_plural = '회원 부가 상품 구매 이력'
 
 
 class MemberPaymentHistoryTb(TimeStampedModel):
@@ -110,7 +110,7 @@ class MemberPaymentHistoryTb(TimeStampedModel):
     class_tb = models.ForeignKey("trainer.ClassTb", verbose_name='지점', on_delete=models.CASCADE, null=True)
     member = models.ForeignKey(MemberTb, verbose_name='회원', on_delete=models.CASCADE, null=True)
     member_ticket_tb = models.ForeignKey(MemberTicketTb, verbose_name='수강권', on_delete=models.CASCADE, null=True)
-    member_shop_tb = models.ForeignKey(MemberShopTb, verbose_name='상품', on_delete=models.CASCADE, null=True)
+    member_shop_tb = models.ForeignKey(MemberShopTb, verbose_name='부가 상품', on_delete=models.CASCADE, null=True)
     pay_method = models.CharField('결제 방법', db_column='PAY_METHOD', max_length=45, blank=True, default='')
     payment_price = models.IntegerField('납부 금액', db_column='PAYMENT_PRICE', default=0)
     refund_price = models.IntegerField('환불 금액', db_column='REFUND_PRICE', default=0)

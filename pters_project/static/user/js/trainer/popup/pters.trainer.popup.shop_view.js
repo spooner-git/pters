@@ -143,7 +143,7 @@ class Shop_view{
         let id = 'shop_name_view';
         let style = {"font-size":"20px", "font-weight":"bold"};
         let title = this.data.name == null ? '' : this.data.name;
-        let placeholder = '상품명*';
+        let placeholder = '부가 상품명*';
         let icon = DELETE;
         let icon_r_visible = HIDE;
         let icon_r_text = "";
@@ -159,7 +159,7 @@ class Shop_view{
         let html = `
         <div class="member_add_upper_box">
             <div style="display:inline-block;width:100%;">
-                <span style="position:absolute;top:0;font-size: 12px;display:block;color: var(--font-sub-normal);font-weight: 500;">상품</span>
+                <span style="position:absolute;top:0;font-size: 12px;display:block;color: var(--font-sub-normal);font-weight: 500;">부가 상품</span>
                 ${sub_html}
             </div>
             <span style="display:none;">${title}</span>
@@ -397,7 +397,7 @@ class Shop_view{
                         return false;
                     }
                     let message = {
-                        title:`"${this.data.name}" <br> 상품을 영구 삭제 하시겠습니까?`,
+                        title:`"${this.data.name}" <br> 부가 상품을 영구 삭제 하시겠습니까?`,
                         comment:`데이터를 복구할 수 없습니다. <br><br>
                                 ${CImg.warning(["#fe4e65"], {"vertical-align":"middle", "margin-bottom":"4px"})}
                                 `
@@ -504,7 +504,7 @@ class Shop_simple_view{
     dom_row_toolbox(){
         let text_button_style = {"color":"var(--font-highlight)", "font-size":"13px", "font-weight":"500", "padding":"10px 0"};
         let text_button = CComponent.text_button ("detail_shop_info", "더보기", text_button_style, ()=>{
-            show_user_confirm({title:`작업중이던 항목을 모두 닫고 상품 메뉴로 이동합니다.`}, ()=>{
+            show_user_confirm({title:`작업중이던 항목을 모두 닫고 부가 상품 메뉴로 이동합니다.`}, ()=>{
                 layer_popup.all_close_layer_popup();
                 if($(window).width() > 650){
                     sideGoPage("shop_page_type");

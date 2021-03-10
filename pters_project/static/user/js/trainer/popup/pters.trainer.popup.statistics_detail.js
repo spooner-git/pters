@@ -167,7 +167,7 @@ class Statistics_detail{
                         <div style=${title_style}>수강권</div><div style="${number_style}">${_new_num} 건</div><div style="${price_style}">${UnitRobot.numberWithCommas(_new)} 원</div>
                     </div>
                     <div style="display:flex">
-                        <div style=${title_style}>상품</div><div style="${number_style}">${_re_num} 건</div><div style="${price_style}">${UnitRobot.numberWithCommas(_re)} 원</div>
+                        <div style=${title_style}>부가 상품</div><div style="${number_style}">${_re_num} 건</div><div style="${price_style}">${UnitRobot.numberWithCommas(_re)} 원</div>
                     </div>
                     <div style="display:flex">
                         <div style=${title_style}>환불</div><div style="${number_style}">${_refund_num} 건</div><div style="${price_style};color:#fe4e65">-${UnitRobot.numberWithCommas(_refund)} 원</div>

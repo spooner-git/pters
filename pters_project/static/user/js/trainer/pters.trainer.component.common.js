@@ -1515,7 +1515,7 @@ class CImg{
             svg_color = [];
         }
         let svg = `<svg style="${CComponent.data_to_style_code(style)}" ${CImg.data_to_onclick_event(onclick)} width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                        <g id="아이콘/상품/5C5859" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                        <g id="아이콘/부가상품/5C5859" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                             <path id="Combined-Shape" fill="${CImg.data_to_svg_color(svg_color[0], "var(--img-main)")}" d="M16 6V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H2v13c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6h-6zm-6-2h4v2h-4V4zM9 18V9l7.5 4L9 18z" ></path>
                         </g>
                     </svg>

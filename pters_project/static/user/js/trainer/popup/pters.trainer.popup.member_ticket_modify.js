@@ -660,7 +660,7 @@ class Member_ticket_modify{
                 add_payment:{text:"결제 내역 추가", callback:()=>{
                     layer_popup.close_layer_popup();
                     if(this.data.status == "RF"){
-                        show_error_message({title:'이미 환불 처리된 상품입니다.'});
+                        show_error_message({title:'이미 환불 처리된 부가 상품입니다.'});
                         return false;
                     }
                     let member_add_initial_data = {member_id: this.data.member_id, member_ticket_id: this.data.member_ticket_id,
