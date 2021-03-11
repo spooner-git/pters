@@ -6390,16 +6390,58 @@ class GetSubTrainerSettingDataView(LoginRequiredMixin, AccessTestMixin, View):
         trainer_id = request.GET.get('trainer_id')
         class_id = request.session.get('class_id', '')
 
-        lt_work_sun_time_avail_trainer = '00:00-24:00'
-        lt_work_mon_time_avail_trainer = '00:00-24:00'
-        lt_work_tue_time_avail_trainer = '00:00-24:00'
-        lt_work_wed_time_avail_trainer = '00:00-24:00'
-        lt_work_ths_time_avail_trainer = '00:00-24:00'
-        lt_work_fri_time_avail_trainer = '00:00-24:00'
-        lt_work_sat_time_avail_trainer = '00:00-24:00'
+        lt_res_04 = '00:00-24:00'
+        lt_work_sun_time_avail = '00:00-24:00'
+        lt_work_mon_time_avail = '00:00-24:00'
+        lt_work_tue_time_avail = '00:00-24:00'
+        lt_work_wed_time_avail = '00:00-24:00'
+        lt_work_ths_time_avail = '00:00-24:00'
+        lt_work_fri_time_avail = '00:00-24:00'
+        lt_work_sat_time_avail = '00:00-24:00'
 
-        setting_data = SettingTb.objects.filter(class_tb_id=class_id, member_id=trainer_id, use=USE)
+        setting_data = SettingTb.objects.filter(class_tb_id=class_id, use=USE)
 
+        for setting_info in setting_data:
+            if setting_info.setting_type_cd == 'LT_RES_04':
+                lt_res_04 = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_SUN_TIME_AVAIL':
+                lt_work_sun_time_avail = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_MON_TIME_AVAIL':
+                lt_work_mon_time_avail = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_TUE_TIME_AVAIL':
+                lt_work_tue_time_avail = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_WED_TIME_AVAIL':
+                lt_work_wed_time_avail = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_THS_TIME_AVAIL':
+                lt_work_ths_time_avail = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_FRI_TIME_AVAIL':
+                lt_work_fri_time_avail = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_SAT_TIME_AVAIL':
+                lt_work_sat_time_avail = setting_info.setting_info
+
+        if lt_work_sun_time_avail == '':
+            lt_work_sun_time_avail = lt_res_04
+        if lt_work_mon_time_avail == '':
+            lt_work_mon_time_avail = lt_res_04
+        if lt_work_tue_time_avail == '':
+            lt_work_tue_time_avail = lt_res_04
+        if lt_work_wed_time_avail == '':
+            lt_work_wed_time_avail = lt_res_04
+        if lt_work_ths_time_avail == '':
+            lt_work_ths_time_avail = lt_res_04
+        if lt_work_fri_time_avail == '':
+            lt_work_fri_time_avail = lt_res_04
+        if lt_work_sat_time_avail == '':
+            lt_work_sat_time_avail = lt_res_04
+        lt_work_sun_time_avail_trainer = lt_work_sun_time_avail
+        lt_work_mon_time_avail_trainer = lt_work_mon_time_avail
+        lt_work_tue_time_avail_trainer = lt_work_tue_time_avail
+        lt_work_wed_time_avail_trainer = lt_work_wed_time_avail
+        lt_work_ths_time_avail_trainer = lt_work_ths_time_avail
+        lt_work_fri_time_avail_trainer = lt_work_fri_time_avail
+        lt_work_sat_time_avail_trainer = lt_work_sat_time_avail
+
+        setting_data = setting_data.filter(member_id=trainer_id, use=USE)
         for setting_info in setting_data:
             if setting_info.setting_type_cd == 'LT_WORK_SUN_TIME_AVAIL_TRAINER':
                 lt_work_sun_time_avail_trainer = setting_info.setting_info
