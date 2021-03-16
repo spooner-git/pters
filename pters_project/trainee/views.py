@@ -483,6 +483,9 @@ def add_trainee_schedule_logic(request):
     func_setting_data_update(request, 'trainee')
     setting_week_start_date = request.session.get('setting_week_start_date', 'SUN')
     setting_single_lecture_duplicate = request.session.get('setting_single_lecture_duplicate', UN_USE)
+    setting_member_reserve_date_available = request.session.get('setting_member_reserve_date_available', 15)
+    if setting_member_reserve_date_available is None or setting_member_reserve_date_available == '':
+        setting_member_reserve_date_available = 15
     error = None
     class_info = None
     start_date = None
@@ -680,7 +683,7 @@ def add_trainee_schedule_logic(request):
     if error is None:
         schedule_result = pt_add_logic_func(training_date, start_date, end_date, request.user.id, member_ticket_id,
                                             class_id, request, lecture_info, lecture_schedule_id,
-                                            setting_single_lecture_duplicate)
+                                            setting_single_lecture_duplicate, setting_member_reserve_date_available)
         error = schedule_result['error']
         context['schedule_id'] = schedule_result['schedule_id']
     # if error is None:
@@ -1617,14 +1620,14 @@ class GetLectureTrainerWorkTimeSettingDataView(LoginRequiredMixin, AccessTestMix
 
 
 def pt_add_logic_func(schedule_date, start_date, end_date, user_id, member_ticket_id, class_id, request, lecture_info,
-                      lecture_schedule_id, setting_single_lecture_duplicate):
+                      lecture_schedule_id, setting_single_lecture_duplicate, setting_member_reserve_date_available):
 
     class_type_name = request.session.get('class_type_name', '')
     error = None
     member_ticket_info = None
     # class_info = None
     today = datetime.datetime.today()
-    fifteen_days_after = today + datetime.timedelta(days=15)
+    setting_days_after = today + datetime.timedelta(days=int(setting_member_reserve_date_available))
     lecture_schedule_info = None
     # lecture_info = None
     note = ''
@@ -1695,7 +1698,7 @@ def pt_add_logic_func(schedule_date, start_date, end_date, user_id, member_ticke
     #         error = '수강권 정보를 불러오지 못했습니다.[3]'
 
     if error is None:
-        if start_date >= fifteen_days_after:
+        if start_date >= setting_days_after:
             error = '등록할 수 없는 날짜입니다.'
 
     if error is None:
